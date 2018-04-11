@@ -1,0 +1,857 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
+		1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B751207CBE8700906D80 /* ViewController.swift */; };
+		1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B753207CBE8700906D80 /* Main.storyboard */; };
+		1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B756207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld */; };
+		1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B759207CBE8900906D80 /* Assets.xcassets */; };
+		1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B75B207CBE8900906D80 /* LaunchScreen.storyboard */; };
+		1FD9B768207CBE8900906D80 /* Wisnuc_iOS_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B767207CBE8900906D80 /* Wisnuc_iOS_SwiftTests.swift */; };
+		1FD9B773207CBE8900906D80 /* Wisnuc_iOS_SwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B772207CBE8900906D80 /* Wisnuc_iOS_SwiftUITests.swift */; };
+		1FD9B788207CC6F400906D80 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B785207CC6F400906D80 /* LoginViewController.swift */; };
+		1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B78C207CC75500906D80 /* StringExtension.swift */; };
+		1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B78F207CC75500906D80 /* NetServerBrower.swift */; };
+		1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B793207CC77900906D80 /* BasicDefine.swift */; };
+		1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B798207CC78B00906D80 /* BaseRequest.swift */; };
+		1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B799207CC78B00906D80 /* Networker.swift */; };
+		1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B79A207CC78B00906D80 /* RequestConfig.swift */; };
+		1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B79B207CC78B00906D80 /* NetEngine.swift */; };
+		F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1FD9B764207CBE8900906D80 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FD9B744207CBE8700906D80 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FD9B74B207CBE8700906D80;
+			remoteInfo = "Wisnuc-iOS-Swift";
+		};
+		1FD9B76F207CBE8900906D80 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FD9B744207CBE8700906D80 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FD9B74B207CBE8700906D80;
+			remoteInfo = "Wisnuc-iOS-Swift";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1FD9B751207CBE8700906D80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1FD9B754207CBE8700906D80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1FD9B757207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Wisnuc_iOS_Swift.xcdatamodel; sourceTree = "<group>"; };
+		1FD9B759207CBE8900906D80 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1FD9B75C207CBE8900906D80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1FD9B75E207CBE8900906D80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1FD9B763207CBE8900906D80 /* Wisnuc-iOS-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Wisnuc-iOS-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FD9B767207CBE8900906D80 /* Wisnuc_iOS_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wisnuc_iOS_SwiftTests.swift; sourceTree = "<group>"; };
+		1FD9B769207CBE8900906D80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1FD9B76E207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Wisnuc-iOS-SwiftUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FD9B772207CBE8900906D80 /* Wisnuc_iOS_SwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wisnuc_iOS_SwiftUITests.swift; sourceTree = "<group>"; };
+		1FD9B774207CBE8900906D80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1FD9B785207CC6F400906D80 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		1FD9B78C207CC75500906D80 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		1FD9B78F207CC75500906D80 /* NetServerBrower.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetServerBrower.swift; sourceTree = "<group>"; };
+		1FD9B793207CC77900906D80 /* BasicDefine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicDefine.swift; sourceTree = "<group>"; };
+		1FD9B798207CC78B00906D80 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
+		1FD9B799207CC78B00906D80 /* Networker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networker.swift; sourceTree = "<group>"; };
+		1FD9B79A207CC78B00906D80 /* RequestConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestConfig.swift; sourceTree = "<group>"; };
+		1FD9B79B207CC78B00906D80 /* NetEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetEngine.swift; sourceTree = "<group>"; };
+		72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.release.xcconfig"; sourceTree = "<group>"; };
+		8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wisnuc_iOS_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1FD9B749207CBE8700906D80 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FD9B760207CBE8900906D80 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FD9B76B207CBE8900906D80 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1FD9B743207CBE8700906D80 = {
+			isa = PBXGroup;
+			children = (
+				1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */,
+				1FD9B766207CBE8900906D80 /* Wisnuc-iOS-SwiftTests */,
+				1FD9B771207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests */,
+				1FD9B74D207CBE8700906D80 /* Products */,
+				5E5BF15A5A246403982C3175 /* Pods */,
+				8F207FC9B9AE44C14EAC998A /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		1FD9B74D207CBE8700906D80 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */,
+				1FD9B763207CBE8900906D80 /* Wisnuc-iOS-SwiftTests.xctest */,
+				1FD9B76E207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B795207CC78B00906D80 /* Network */,
+				1FD9B792207CC77900906D80 /* Define */,
+				1FD9B78A207CC75500906D80 /* Tools */,
+				1FD9B780207CBEAD00906D80 /* Modules */,
+				1FD9B789207CC70600906D80 /* Other */,
+			);
+			path = "Wisnuc-iOS-Swift";
+			sourceTree = "<group>";
+		};
+		1FD9B766207CBE8900906D80 /* Wisnuc-iOS-SwiftTests */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B767207CBE8900906D80 /* Wisnuc_iOS_SwiftTests.swift */,
+				1FD9B769207CBE8900906D80 /* Info.plist */,
+			);
+			path = "Wisnuc-iOS-SwiftTests";
+			sourceTree = "<group>";
+		};
+		1FD9B771207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B772207CBE8900906D80 /* Wisnuc_iOS_SwiftUITests.swift */,
+				1FD9B774207CBE8900906D80 /* Info.plist */,
+			);
+			path = "Wisnuc-iOS-SwiftUITests";
+			sourceTree = "<group>";
+		};
+		1FD9B780207CBEAD00906D80 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B782207CC6F400906D80 /* Login */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		1FD9B782207CC6F400906D80 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B783207CC6F400906D80 /* ViewModel */,
+				1FD9B784207CC6F400906D80 /* Controller */,
+				1FD9B786207CC6F400906D80 /* Model */,
+				1FD9B787207CC6F400906D80 /* View */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		1FD9B783207CC6F400906D80 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		1FD9B784207CC6F400906D80 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B785207CC6F400906D80 /* LoginViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		1FD9B786207CC6F400906D80 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1FD9B787207CC6F400906D80 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1FD9B789207CC70600906D80 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B74F207CBE8700906D80 /* AppDelegate.swift */,
+				1FD9B751207CBE8700906D80 /* ViewController.swift */,
+				1FD9B753207CBE8700906D80 /* Main.storyboard */,
+				1FD9B759207CBE8900906D80 /* Assets.xcassets */,
+				1FD9B75B207CBE8900906D80 /* LaunchScreen.storyboard */,
+				1FD9B75E207CBE8900906D80 /* Info.plist */,
+				1FD9B756207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
+		1FD9B78A207CC75500906D80 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B78B207CC75500906D80 /* Extension */,
+				1FD9B78D207CC75500906D80 /* Category */,
+				1FD9B78E207CC75500906D80 /* NetServerBrower */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		1FD9B78B207CC75500906D80 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B78C207CC75500906D80 /* StringExtension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		1FD9B78D207CC75500906D80 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
+		1FD9B78E207CC75500906D80 /* NetServerBrower */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B78F207CC75500906D80 /* NetServerBrower.swift */,
+			);
+			path = NetServerBrower;
+			sourceTree = "<group>";
+		};
+		1FD9B792207CC77900906D80 /* Define */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B793207CC77900906D80 /* BasicDefine.swift */,
+			);
+			path = Define;
+			sourceTree = "<group>";
+		};
+		1FD9B795207CC78B00906D80 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B796207CC78B00906D80 /* APIs */,
+				1FD9B797207CC78B00906D80 /* NetHelper */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		1FD9B796207CC78B00906D80 /* APIs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = APIs;
+			sourceTree = "<group>";
+		};
+		1FD9B797207CC78B00906D80 /* NetHelper */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B798207CC78B00906D80 /* BaseRequest.swift */,
+				1FD9B799207CC78B00906D80 /* Networker.swift */,
+				1FD9B79A207CC78B00906D80 /* RequestConfig.swift */,
+				1FD9B79B207CC78B00906D80 /* NetEngine.swift */,
+			);
+			path = NetHelper;
+			sourceTree = "<group>";
+		};
+		5E5BF15A5A246403982C3175 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */,
+				72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		8F207FC9B9AE44C14EAC998A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FD9B777207CBE8900906D80 /* Build configuration list for PBXNativeTarget "Wisnuc-iOS-Swift" */;
+			buildPhases = (
+				C538C2D765CA23AA36581B6A /* [CP] Check Pods Manifest.lock */,
+				1FD9B748207CBE8700906D80 /* Sources */,
+				1FD9B749207CBE8700906D80 /* Frameworks */,
+				1FD9B74A207CBE8700906D80 /* Resources */,
+				86DDF45F5CCB6C594636B31F /* [CP] Embed Pods Frameworks */,
+				01AE116048A68D7A7E698839 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Wisnuc-iOS-Swift";
+			productName = "Wisnuc-iOS-Swift";
+			productReference = 1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1FD9B762207CBE8900906D80 /* Wisnuc-iOS-SwiftTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FD9B77A207CBE8900906D80 /* Build configuration list for PBXNativeTarget "Wisnuc-iOS-SwiftTests" */;
+			buildPhases = (
+				1FD9B75F207CBE8900906D80 /* Sources */,
+				1FD9B760207CBE8900906D80 /* Frameworks */,
+				1FD9B761207CBE8900906D80 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1FD9B765207CBE8900906D80 /* PBXTargetDependency */,
+			);
+			name = "Wisnuc-iOS-SwiftTests";
+			productName = "Wisnuc-iOS-SwiftTests";
+			productReference = 1FD9B763207CBE8900906D80 /* Wisnuc-iOS-SwiftTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1FD9B76D207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FD9B77D207CBE8900906D80 /* Build configuration list for PBXNativeTarget "Wisnuc-iOS-SwiftUITests" */;
+			buildPhases = (
+				1FD9B76A207CBE8900906D80 /* Sources */,
+				1FD9B76B207CBE8900906D80 /* Frameworks */,
+				1FD9B76C207CBE8900906D80 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1FD9B770207CBE8900906D80 /* PBXTargetDependency */,
+			);
+			name = "Wisnuc-iOS-SwiftUITests";
+			productName = "Wisnuc-iOS-SwiftUITests";
+			productReference = 1FD9B76E207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1FD9B744207CBE8700906D80 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0930;
+				LastUpgradeCheck = 0930;
+				ORGANIZATIONNAME = "wisnuc-imac";
+				TargetAttributes = {
+					1FD9B74B207CBE8700906D80 = {
+						CreatedOnToolsVersion = 9.3;
+					};
+					1FD9B762207CBE8900906D80 = {
+						CreatedOnToolsVersion = 9.3;
+						TestTargetID = 1FD9B74B207CBE8700906D80;
+					};
+					1FD9B76D207CBE8900906D80 = {
+						CreatedOnToolsVersion = 9.3;
+						TestTargetID = 1FD9B74B207CBE8700906D80;
+					};
+				};
+			};
+			buildConfigurationList = 1FD9B747207CBE8700906D80 /* Build configuration list for PBXProject "Wisnuc-iOS-Swift" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1FD9B743207CBE8700906D80;
+			productRefGroup = 1FD9B74D207CBE8700906D80 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */,
+				1FD9B762207CBE8900906D80 /* Wisnuc-iOS-SwiftTests */,
+				1FD9B76D207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1FD9B74A207CBE8700906D80 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */,
+				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
+				1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FD9B761207CBE8900906D80 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FD9B76C207CBE8900906D80 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		01AE116048A68D7A7E698839 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		86DDF45F5CCB6C594636B31F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/MDFInternationalization/MDFInternationalization.framework",
+				"${BUILT_PRODUCTS_DIR}/MDFTextAccessibility/MDFTextAccessibility.framework",
+				"${BUILT_PRODUCTS_DIR}/MaterialComponents/MaterialComponents.framework",
+				"${BUILT_PRODUCTS_DIR}/MotionAnimator/MotionAnimator.framework",
+				"${BUILT_PRODUCTS_DIR}/MotionInterchange/MotionInterchange.framework",
+				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFInternationalization.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFTextAccessibility.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MaterialComponents.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionAnimator.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionInterchange.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C538C2D765CA23AA36581B6A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Wisnuc-iOS-Swift-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1FD9B748207CBE8700906D80 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
+				1FD9B788207CC6F400906D80 /* LoginViewController.swift in Sources */,
+				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
+				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
+				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
+				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
+				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
+				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
+				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
+				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
+				1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FD9B75F207CBE8900906D80 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FD9B768207CBE8900906D80 /* Wisnuc_iOS_SwiftTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FD9B76A207CBE8900906D80 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FD9B773207CBE8900906D80 /* Wisnuc_iOS_SwiftUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1FD9B765207CBE8900906D80 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */;
+			targetProxy = 1FD9B764207CBE8900906D80 /* PBXContainerItemProxy */;
+		};
+		1FD9B770207CBE8900906D80 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */;
+			targetProxy = 1FD9B76F207CBE8900906D80 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1FD9B753207CBE8700906D80 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FD9B754207CBE8700906D80 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1FD9B75B207CBE8900906D80 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FD9B75C207CBE8900906D80 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1FD9B775207CBE8900906D80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1FD9B776207CBE8900906D80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1FD9B778207CBE8900906D80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1FD9B779207CBE8900906D80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1FD9B77B207CBE8900906D80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wisnuc-iOS-Swift.app/Wisnuc-iOS-Swift";
+			};
+			name = Debug;
+		};
+		1FD9B77C207CBE8900906D80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wisnuc-iOS-Swift.app/Wisnuc-iOS-Swift";
+			};
+			name = Release;
+		};
+		1FD9B77E207CBE8900906D80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Wisnuc-iOS-Swift";
+			};
+			name = Debug;
+		};
+		1FD9B77F207CBE8900906D80 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Wisnuc-iOS-Swift";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1FD9B747207CBE8700906D80 /* Build configuration list for PBXProject "Wisnuc-iOS-Swift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FD9B775207CBE8900906D80 /* Debug */,
+				1FD9B776207CBE8900906D80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FD9B777207CBE8900906D80 /* Build configuration list for PBXNativeTarget "Wisnuc-iOS-Swift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FD9B778207CBE8900906D80 /* Debug */,
+				1FD9B779207CBE8900906D80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FD9B77A207CBE8900906D80 /* Build configuration list for PBXNativeTarget "Wisnuc-iOS-SwiftTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FD9B77B207CBE8900906D80 /* Debug */,
+				1FD9B77C207CBE8900906D80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FD9B77D207CBE8900906D80 /* Build configuration list for PBXNativeTarget "Wisnuc-iOS-SwiftUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FD9B77E207CBE8900906D80 /* Debug */,
+				1FD9B77F207CBE8900906D80 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		1FD9B756207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				1FD9B757207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodel */,
+			);
+			currentVersion = 1FD9B757207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodel */;
+			path = Wisnuc_iOS_Swift.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 1FD9B744207CBE8700906D80 /* Project object */;
+}
