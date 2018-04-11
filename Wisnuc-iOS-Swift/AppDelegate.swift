@@ -8,6 +8,8 @@
 
 import UIKit
 import CoreData
+import MaterialComponents
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,8 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = nil
         let loginController = LoginViewController.init()
         _loginController = loginController;
-        let rootNaviController = UINavigationController.init(rootViewController: loginController)
-        self.window?.rootViewController = rootNaviController
+        UIApplication.shared.statusBarStyle = .lightContent
+        
+        let navigationController = UINavigationController.init(rootViewController:loginController)
+     
+        self.window?.rootViewController = navigationController
         self.window?.makeKeyAndVisible()
     }
     

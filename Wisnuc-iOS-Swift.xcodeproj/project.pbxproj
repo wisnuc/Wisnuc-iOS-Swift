@@ -23,6 +23,13 @@
 		1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B799207CC78B00906D80 /* Networker.swift */; };
 		1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B79A207CC78B00906D80 /* RequestConfig.swift */; };
 		1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B79B207CC78B00906D80 /* NetEngine.swift */; };
+		1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B7A0207DA43C00906D80 /* ColorDefine.swift */; };
+		1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */; };
+		1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B7A8207E152B00906D80 /* SizeTools.swift */; };
+		1FD9B7B0207E1A0500906D80 /* wechat_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7AD207E1A0400906D80 /* wechat_icon@3x.png */; };
+		1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7AE207E1A0400906D80 /* wechat_icon.png */; };
+		1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7AF207E1A0400906D80 /* wechat_icon@2x.png */; };
+		1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7BA207E1B6600906D80 /* Localizable.strings */; };
 		F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +73,16 @@
 		1FD9B799207CC78B00906D80 /* Networker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networker.swift; sourceTree = "<group>"; };
 		1FD9B79A207CC78B00906D80 /* RequestConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestConfig.swift; sourceTree = "<group>"; };
 		1FD9B79B207CC78B00906D80 /* NetEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetEngine.swift; sourceTree = "<group>"; };
+		1FD9B7A0207DA43C00906D80 /* ColorDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDefine.swift; sourceTree = "<group>"; };
+		1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNavigationController.swift; sourceTree = "<group>"; };
+		1FD9B7A8207E152B00906D80 /* SizeTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeTools.swift; sourceTree = "<group>"; };
+		1FD9B7AD207E1A0400906D80 /* wechat_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wechat_icon@3x.png"; sourceTree = "<group>"; };
+		1FD9B7AE207E1A0400906D80 /* wechat_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat_icon.png; sourceTree = "<group>"; };
+		1FD9B7AF207E1A0400906D80 /* wechat_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wechat_icon@2x.png"; sourceTree = "<group>"; };
+		1FD9B7B3207E1B0E00906D80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		1FD9B7B4207E1B0E00906D80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		1FD9B7B9207E1B6600906D80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		1FD9B7BB207E1B6B00906D80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.release.xcconfig"; sourceTree = "<group>"; };
 		8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wisnuc_iOS_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.debug.xcconfig"; sourceTree = "<group>"; };
@@ -122,6 +139,8 @@
 		1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXGroup;
 			children = (
+				1FD9B7AB207E19EE00906D80 /* Source */,
+				1FD9B7A3207DB3F700906D80 /* Foundations */,
 				1FD9B795207CC78B00906D80 /* Network */,
 				1FD9B792207CC77900906D80 /* Define */,
 				1FD9B78A207CC75500906D80 /* Tools */,
@@ -214,6 +233,7 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1FD9B7AA207E153300906D80 /* Size */,
 				1FD9B78B207CC75500906D80 /* Extension */,
 				1FD9B78D207CC75500906D80 /* Category */,
 				1FD9B78E207CC75500906D80 /* NetServerBrower */,
@@ -248,6 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				1FD9B793207CC77900906D80 /* BasicDefine.swift */,
+				1FD9B7A0207DA43C00906D80 /* ColorDefine.swift */,
 			);
 			path = Define;
 			sourceTree = "<group>";
@@ -277,6 +298,49 @@
 				1FD9B79B207CC78B00906D80 /* NetEngine.swift */,
 			);
 			path = NetHelper;
+			sourceTree = "<group>";
+		};
+		1FD9B7A3207DB3F700906D80 /* Foundations */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */,
+			);
+			path = Foundations;
+			sourceTree = "<group>";
+		};
+		1FD9B7AA207E153300906D80 /* Size */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B7A8207E152B00906D80 /* SizeTools.swift */,
+			);
+			path = Size;
+			sourceTree = "<group>";
+		};
+		1FD9B7AB207E19EE00906D80 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B7B7207E1B4400906D80 /* Localizable */,
+				1FD9B7AC207E19F900906D80 /* Image */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		1FD9B7AC207E19F900906D80 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B7AE207E1A0400906D80 /* wechat_icon.png */,
+				1FD9B7AF207E1A0400906D80 /* wechat_icon@2x.png */,
+				1FD9B7AD207E1A0400906D80 /* wechat_icon@3x.png */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		1FD9B7B7207E1B4400906D80 /* Localizable */ = {
+			isa = PBXGroup;
+			children = (
+				1FD9B7BA207E1B6600906D80 /* Localizable.strings */,
+			);
+			path = Localizable;
 			sourceTree = "<group>";
 		};
 		5E5BF15A5A246403982C3175 /* Pods */ = {
@@ -403,8 +467,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD9B7B0207E1A0500906D80 /* wechat_icon@3x.png in Resources */,
 				1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */,
 				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
+				1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */,
+				1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */,
+				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
 				1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -449,6 +517,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/CatalogByConvention/CatalogByConvention.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFInternationalization/MDFInternationalization.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFTextAccessibility/MDFTextAccessibility.framework",
 				"${BUILT_PRODUCTS_DIR}/MaterialComponents/MaterialComponents.framework",
@@ -460,6 +529,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CatalogByConvention.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFInternationalization.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFTextAccessibility.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MaterialComponents.framework",
@@ -500,9 +570,12 @@
 			files = (
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1FD9B788207CC6F400906D80 /* LoginViewController.swift in Sources */,
+				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
+				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
 				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
+				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
 				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
 				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
@@ -548,6 +621,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				1FD9B754207CBE8700906D80 /* Base */,
+				1FD9B7B3207E1B0E00906D80 /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -556,8 +630,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				1FD9B75C207CBE8900906D80 /* Base */,
+				1FD9B7B4207E1B0E00906D80 /* zh-Hans */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		1FD9B7BA207E1B6600906D80 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FD9B7B9207E1B6600906D80 /* zh-Hans */,
+				1FD9B7BB207E1B6B00906D80 /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -567,6 +651,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -627,6 +712,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
