@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import MaterialComponents
+//import 
 
 enum LoginState:Int{
     case wechat = 0
@@ -16,12 +17,16 @@ enum LoginState:Int{
 }
 
 class LoginViewController: UIViewController {
+    var state:LoginState?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = COR1
         self.view.addSubview(self.agreementButton)
-        self.view.addSubview(self.weChatView)
+        self.view.addSubview(self.weChatButton)
+        self.view.addSubview(self.wisnucLabel)
+        self.view.addSubview(self.wisnucImageView)
+        setUpFrame()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -34,11 +39,26 @@ class LoginViewController: UIViewController {
         super.viewWillDisappear(animated)
     }
     
+    
     deinit {
         
     }
     
-    @objc func agreementButtonClick (){
+    func setUpFrame() {
+        wisnucLabel.snp.makeConstraints { (make) in
+            make.bottom.equalTo(weChatButton.snp.top).offset(-50)
+            make.centerX.equalTo(self.view)
+            make.size.equalTo(CGSize(width: Int(getWidth(title: wisnucLabel.text!, font: wisnucLabel.font)), height: 20))
+        }
+        
+        wisnucImageView.snp.makeConstraints { (make) in
+            make.bottom.equalTo(wisnucLabel.snp.top).offset(-20)
+            make.centerX.equalTo(self.view)
+            make.size.equalTo(CGSize(width: 60, height: 60))
+        }
+    }
+    
+    @objc func agreementButtonClick () {
         let messageString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur " +
             "ultricies diam libero, eget porta arcu feugiat sit amet. Maecenas placerat felis sed risus " +
             "maximus tempus. Integer feugiat, augue in pellentesque dictum, justo erat ultricies leo, " +
@@ -58,6 +78,30 @@ class LoginViewController: UIViewController {
         materialAlertController.addAction(action)
         
         self.present(materialAlertController, animated: true, completion: nil)
+    }
+    
+    @objc func weChatViewButtonClick(){
+        let networkStatus = NetworkStatus()
+        networkStatus.getNetworkStatus { (status) in
+            switch status {
+            case .Disconnected:
+                let message  = MDCSnackbarMessage.init()
+                message.text = "无法连接服务器，请检查网络"
+                MDCSnackbarManager.show(message)
+                return
+            case .WIFI:
+                let message  = MDCSnackbarMessage.init()
+                message.text = "WIFI连接"
+                MDCSnackbarManager.show(message)
+                return
+
+            default:
+                break
+            }
+
+        }
+        
+        print("哈哈哈哈或")
     }
     
     
@@ -88,14 +132,16 @@ class LoginViewController: UIViewController {
         return bgView
     }()
     
-    lazy var weChatView: UIView = {
-        let innerWechatView = UIButton.init(frame: CGRect(x: 16, y: self.view.frame.size.height/2, width: __kWidth - 32, height: 44))
-        innerWechatView.backgroundColor = UIColor.cyan
-        innerWechatView.layer.shadowColor = UIColor.black.cgColor
-        innerWechatView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        innerWechatView.layer.shadowRadius = 2.0
-        innerWechatView.layer.shadowOpacity = 0.4
-        innerWechatView.isUserInteractionEnabled = true
+    lazy var weChatButton: UIButton = {
+        let innerWechatView = UIButton.init(frame: CGRect(x: 16, y: self.view.frame.size.height/2 + 50, width: __kWidth - 32, height: 44))
+        innerWechatView.backgroundColor = UIColor.init(red: 16/255.0, green: 124/255.0, blue: 108/255.0, alpha: 1)
+//        innerWechatView.layer.shadowColor = UIColor.black.cgColor
+//        innerWechatView.layer.shadowOffset = CGSize(width: 0, height: 2)
+//        innerWechatView.layer.shadowRadius = 2.0
+//        innerWechatView.layer.shadowOpacity = 0.4
+//        innerWechatView.isUserInteractionEnabled = true
+        
+        innerWechatView.layer.cornerRadius = 2.0
         
         let wechatImage = UIImage.init(named: "wechat_icon")
         let wechatImageView = UIImageView.init(image: wechatImage)
@@ -119,7 +165,22 @@ class LoginViewController: UIViewController {
             make.centerY.equalTo(innerWechatView.snp.centerY)
             make.size.equalTo(CGSize(width: 100, height: 20))
         }
+        
+        innerWechatView .addTarget(self, action: #selector(weChatViewButtonClick), for: UIControlEvents.touchUpInside)
         return innerWechatView
+    }()
+
+	lazy var wisnucImageView:UIImageView = {
+        let imageView = UIImageView.init(image: UIImage.init(named: "40"))
+        return imageView
+    }()
+    
+    lazy var wisnucLabel:UILabel = {
+        let label = UILabel.init()
+        label.font = UIFont.boldSystemFont(ofSize: 15)
+        label.textColor = UIColor.white
+        label.text = "WISNUC"
+        return label
     }()
     
     override func didReceiveMemoryWarning() {

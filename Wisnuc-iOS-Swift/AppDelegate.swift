@@ -9,31 +9,72 @@
 import UIKit
 import CoreData
 import MaterialComponents
+import RealReachability
 
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    var networkStatus:WSNetworkStatus?
     var window: UIWindow?
     var _loginController:LoginViewController?
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         self.initRootVC()
+        self.startNotifierNetworkStutas()
         return true
     }
     
     func initRootVC(){
         self.window?.rootViewController = nil
-        let loginController = LoginViewController.init()
-        _loginController = loginController;
-        UIApplication.shared.statusBarStyle = .lightContent
+        // 得到当前应用的版本号
+        let infoDictionary = Bundle.main.infoDictionary
+        let currentAppVersion = infoDictionary!["CFBundleShortVersionString"] as! String
         
-        let navigationController = UINavigationController.init(rootViewController:loginController)
-     
-        self.window?.rootViewController = navigationController
-        self.window?.makeKeyAndVisible()
+        // 取出之前保存的版本号
+        let userDefaults = UserDefaults.standard
+        let appVersion = userDefaults.string(forKey:kappVersionKey)
+        
+        // 如果 appVersion 为 nil 说明是第一次启动；如果 appVersion 不等于 currentAppVersion 说明是更新了
+        if appVersion == nil || appVersion != currentAppVersion {
+            let indexVC = FirstLaunchViewController();
+            window?.rootViewController = indexVC;
+            userDefaults.set(currentAppVersion, forKey:kappVersionKey)
+            userDefaults.synchronize()
+        } else{
+            let loginController = LoginViewController.init()
+            _loginController = loginController;
+            UIApplication.shared.statusBarStyle = .lightContent
+            let navigationController = UINavigationController.init(rootViewController:loginController)
+            
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
+        }
     }
+
+    
+    func startNotifierNetworkStutas() {
+        let realReachability = RealReachability.sharedInstance()
+        realReachability?.startNotifier()
+        NotificationCenter.default.addObserver(self, selector: #selector(networkChanged(_:)), name:NSNotification.Name.realReachabilityChanged , object: nil)
+    }
+    
+    @objc func networkChanged(_ noti:NSNotification){
+        let realReachability = noti.object as! RealReachability?
+        let status = realReachability?.currentReachabilityStatus()
+        switch status! {
+        case .RealStatusNotReachable:
+            return networkStatus = WSNetworkStatus.Disconnected
+        case .RealStatusViaWiFi:
+            return networkStatus = WSNetworkStatus.WIFI
+        case .RealStatusViaWWAN:
+            return networkStatus = WSNetworkStatus.ViaWWAN
+        default:
+            
+            break
+        }
+    }
+    
     
 
     func applicationWillResignActive(_ application: UIApplication) {

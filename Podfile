@@ -9,5 +9,6 @@ pod 'Alamofire'
 pod 'SnapKit', '~> 4.0.0'
 pod 'MaterialComponents'
 pod 'CatalogByConvention'
-
+pod 'RealReachability'
+pod 'WechatOpenSDK'
 end

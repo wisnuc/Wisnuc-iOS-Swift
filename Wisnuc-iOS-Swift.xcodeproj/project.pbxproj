@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DCC207F365B00860F31 /* NetworkStatus.swift */; };
+		1F169DD1207F528800860F31 /* MyStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD0207F528800860F31 /* MyStationView.swift */; };
+		1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */; };
+		1F169DD5207F677500860F31 /* GuideImage1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F169DD4207F677500860F31 /* GuideImage1.png */; };
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
 		1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B751207CBE8700906D80 /* ViewController.swift */; };
 		1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B753207CBE8700906D80 /* Main.storyboard */; };
@@ -30,6 +34,9 @@
 		1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7AE207E1A0400906D80 /* wechat_icon.png */; };
 		1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7AF207E1A0400906D80 /* wechat_icon@2x.png */; };
 		1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7BA207E1B6600906D80 /* Localizable.strings */; };
+		7EC1F13A697A383EEFD92640 /* 40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC1FF0972053B4E57BA352D /* 40@2x.png */; };
+		7EC1FDF23987D41BD9D8999F /* 40.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC1F2B08233D24AC8EE1E7C /* 40.png */; };
+		7EC1FF79C5327EFA3A9BC8D2 /* 40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC1F6E84952CA71A317B885 /* 40@3x.png */; };
 		F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +58,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1F169DCA207F06CC00860F31 /* Wisnuc-iOS-Swift-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Wisnuc-iOS-Swift-Bridging-Header.h"; sourceTree = "<group>"; };
+		1F169DCC207F365B00860F31 /* NetworkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkStatus.swift; sourceTree = "<group>"; };
+		1F169DD0207F528800860F31 /* MyStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationView.swift; sourceTree = "<group>"; };
+		1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
+		1F169DD4207F677500860F31 /* GuideImage1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GuideImage1.png; sourceTree = "<group>"; };
 		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1FD9B751207CBE8700906D80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -84,6 +96,9 @@
 		1FD9B7B9207E1B6600906D80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1FD9B7BB207E1B6B00906D80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.release.xcconfig"; sourceTree = "<group>"; };
+		7EC1F2B08233D24AC8EE1E7C /* 40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 40.png; sourceTree = "<group>"; };
+		7EC1F6E84952CA71A317B885 /* 40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "40@3x.png"; sourceTree = "<group>"; };
+		7EC1FF0972053B4E57BA352D /* 40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "40@2x.png"; sourceTree = "<group>"; };
 		8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wisnuc_iOS_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,6 +129,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F169DCB207F361D00860F31 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				1F169DCC207F365B00860F31 /* NetworkStatus.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		1F169DCF207F4DE100860F31 /* Bridge-Header */ = {
+			isa = PBXGroup;
+			children = (
+				1F169DCA207F06CC00860F31 /* Wisnuc-iOS-Swift-Bridging-Header.h */,
+			);
+			name = "Bridge-Header";
+			sourceTree = "<group>";
+		};
 		1FD9B743207CBE8700906D80 = {
 			isa = PBXGroup;
 			children = (
@@ -198,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				1FD9B785207CC6F400906D80 /* LoginViewController.swift */,
+				1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -212,6 +244,7 @@
 		1FD9B787207CC6F400906D80 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1F169DD0207F528800860F31 /* MyStationView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -219,6 +252,7 @@
 		1FD9B789207CC70600906D80 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				1F169DCF207F4DE100860F31 /* Bridge-Header */,
 				1FD9B74F207CBE8700906D80 /* AppDelegate.swift */,
 				1FD9B751207CBE8700906D80 /* ViewController.swift */,
 				1FD9B753207CBE8700906D80 /* Main.storyboard */,
@@ -233,6 +267,7 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1F169DCB207F361D00860F31 /* Network */,
 				1FD9B7AA207E153300906D80 /* Size */,
 				1FD9B78B207CC75500906D80 /* Extension */,
 				1FD9B78D207CC75500906D80 /* Category */,
@@ -328,9 +363,13 @@
 		1FD9B7AC207E19F900906D80 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				1F169DD4207F677500860F31 /* GuideImage1.png */,
 				1FD9B7AE207E1A0400906D80 /* wechat_icon.png */,
 				1FD9B7AF207E1A0400906D80 /* wechat_icon@2x.png */,
 				1FD9B7AD207E1A0400906D80 /* wechat_icon@3x.png */,
+				7EC1F6E84952CA71A317B885 /* 40@3x.png */,
+				7EC1F2B08233D24AC8EE1E7C /* 40.png */,
+				7EC1FF0972053B4E57BA352D /* 40@2x.png */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -431,6 +470,7 @@
 				TargetAttributes = {
 					1FD9B74B207CBE8700906D80 = {
 						CreatedOnToolsVersion = 9.3;
+						LastSwiftMigration = 0930;
 					};
 					1FD9B762207CBE8900906D80 = {
 						CreatedOnToolsVersion = 9.3;
@@ -474,6 +514,10 @@
 				1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
 				1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */,
+				7EC1FF79C5327EFA3A9BC8D2 /* 40@3x.png in Resources */,
+				7EC1FDF23987D41BD9D8999F /* 40.png in Resources */,
+				7EC1F13A697A383EEFD92640 /* 40@2x.png in Resources */,
+				1F169DD5207F677500860F31 /* GuideImage1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -524,6 +568,7 @@
 				"${BUILT_PRODUCTS_DIR}/MotionAnimator/MotionAnimator.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionInterchange/MotionInterchange.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
+				"${BUILT_PRODUCTS_DIR}/RealReachability/RealReachability.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -536,6 +581,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionAnimator.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionInterchange.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealReachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -569,6 +615,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
+				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
 				1FD9B788207CC6F400906D80 /* LoginViewController.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
@@ -577,10 +624,12 @@
 				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
+				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
 				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
 				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
+				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
 				1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -699,12 +748,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -754,11 +805,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				USER_HEADER_SEARCH_PATHS = "";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -768,8 +821,10 @@
 			baseConfigurationReference = A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -778,8 +833,12 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
 			};
 			name = Debug;
 		};
@@ -788,8 +847,10 @@
 			baseConfigurationReference = 72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -798,8 +859,11 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
 			};
 			name = Release;
 		};
