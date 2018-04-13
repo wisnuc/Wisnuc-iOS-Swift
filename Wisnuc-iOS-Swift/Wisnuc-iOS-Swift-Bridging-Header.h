@@ -3,4 +3,4 @@
 //
 @import UIKit;
 #import <RealReachability/RealReachability.h>
-//#import "WXApi.h"
+#import "WechatOpenSDK/WXApi.h"

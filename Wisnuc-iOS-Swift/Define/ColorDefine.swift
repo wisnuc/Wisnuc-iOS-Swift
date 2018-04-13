@@ -19,4 +19,4 @@ public func UIColorFromRGB(rgbValue: UInt) -> UIColor {
 }
 
 public let COR1 = UIColorFromRGB(rgbValue: 0x009788)
-
+public let WECHATLOGINBUTTONCOLOR = UIColorFromRGB(rgbValue: 0x00786a)

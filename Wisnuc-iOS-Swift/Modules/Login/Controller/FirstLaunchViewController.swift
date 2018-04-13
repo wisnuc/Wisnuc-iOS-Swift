@@ -24,12 +24,14 @@ class FirstLaunchViewController: UIViewController {
     }
     
     @objc func startButtonClick(){
-//        let loginController = LoginViewController.init()
-//        UIApplication.shared.statusBarStyle = .lightContent
-//        let navigationController = UINavigationController.init(rootViewController:loginController)
-//        UIApplication.shared.keyWindow
-//        self.window?.rootViewController = navigationController
-//        self.window?.makeKeyAndVisible()
+        let type:LoginState?
+        type = TokenManager.wechatLoginToken().count>0 ? .wechat:.token
+        let loginController = LoginViewController.init(type!)
+        UIApplication.shared.statusBarStyle = .lightContent
+        let navigationController = UINavigationController.init(rootViewController:loginController)
+        let window =  UIApplication.shared.keyWindow
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
     }
     
     lazy var mainScrollView: UIScrollView = {

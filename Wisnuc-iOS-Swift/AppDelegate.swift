@@ -13,15 +13,16 @@ import RealReachability
 
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     var networkStatus:WSNetworkStatus?
     var window: UIWindow?
     var _loginController:LoginViewController?
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        self.initRootVC()
-        self.startNotifierNetworkStutas()
+        registerWeChat()   // Wechat
+        initRootVC()
+        startNotifierNetworkStutas() // networkObserveNotification
         return true
     }
     
@@ -42,7 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             userDefaults.set(currentAppVersion, forKey:kappVersionKey)
             userDefaults.synchronize()
         } else{
-            let loginController = LoginViewController.init()
+            let type:LoginState?
+            type = TokenManager.wechatLoginToken().count>0 ? .wechat:.token
+            let loginController = LoginViewController.init(type!)
             _loginController = loginController;
             UIApplication.shared.statusBarStyle = .lightContent
             let navigationController = UINavigationController.init(rootViewController:loginController)
@@ -50,6 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window?.rootViewController = navigationController
             self.window?.makeKeyAndVisible()
         }
+    }
+    
+    func registerWeChat(){
+        WXApi.registerApp(KWxAppID)
     }
 
     
@@ -104,7 +111,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Fallback on earlier versions
         }
     }
-
+    
+    
+    func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
+        let res:Bool = WXApi.handleOpen(url, delegate: self)
+        return res;
+    }
+    
+    @available(iOS 9.0, *)
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        let res:Bool = WXApi.handleOpen(url, delegate: self)
+        return res;
+    }
+    
+    // MARK: - WXDelegate
+    
+    func onReq(_ req: BaseReq!) {
+        
+    }
+    
+    func onResp(_ resp: BaseResp!) {
+        let errorCodeInt32: Int32 = resp.errCode
+        let errorCodeInt = Int(errorCodeInt32)
+        switch  errorCodeInt {
+        case Int((WXSuccess).rawValue): //用户同意
+            Message.message(text: "授权成功")
+        case Int(WXErrCodeAuthDeny.rawValue)://用户拒绝授权
+            Message.message(text: "用户拒绝授权")
+        case Int(WXErrCodeSentFail.rawValue)://发送失败
+            Message.message(text: "用户拒绝授权")
+        case Int(WXErrCodeUnsupport.rawValue)://不支持
+            Message.message(text: "用户拒绝授权")
+        case Int(WXErrCodeUserCancel.rawValue)://用户取消
+            Message.message(text: "用户拒绝授权")
+        default:
+            break
+        }
+    }
+    
     // MARK: - Core Data stack
 
     @available(iOS 10.0, *)

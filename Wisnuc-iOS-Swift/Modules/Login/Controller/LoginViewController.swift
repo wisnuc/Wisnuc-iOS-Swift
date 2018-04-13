@@ -16,8 +16,29 @@ enum LoginState:Int{
     case token
 }
 
+private let ButtonHeight:CGFloat = 36
+private let MarginsWidth:CGFloat = 16
+
 class LoginViewController: UIViewController {
     var state:LoginState?
+    var commonLoginButon:UIButton?
+    var logintype:LoginState?{
+        didSet{
+            print("did set ")
+        }
+
+    }
+    
+    init(_ type:LoginState) {
+        super.init(nibName: nil, bundle: nil)
+        logintype = type
+    }
+    
+   
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,28 +102,47 @@ class LoginViewController: UIViewController {
     }
     
     @objc func weChatViewButtonClick(){
+          checkNetwork()
+
+    }
+    
+    
+    func checkNetwork(){
         let networkStatus = NetworkStatus()
         networkStatus.getNetworkStatus { (status) in
             switch status {
             case .Disconnected:
-                let message  = MDCSnackbarMessage.init()
-                message.text = "无法连接服务器，请检查网络"
-                MDCSnackbarManager.show(message)
+                Message.message(text: "无法连接服务器，请检查网络")
                 return
-            case .WIFI:
-                let message  = MDCSnackbarMessage.init()
-                message.text = "WIFI连接"
-                MDCSnackbarManager.show(message)
-                return
-
             default:
+                self.checkWechat()
                 break
             }
-
         }
-        
-        print("哈哈哈哈或")
     }
+    
+    func checkWechat() {
+//        if (WXApi.isWXAppInstalled()) {
+//            let req = SendAuthReq.init()
+//            req.scope = "snsapi_userinfo"
+//            req.state = "App"
+//            WXApi.send(req)
+//        }else{
+//            Message.message(text: "请先安装微信")
+//        }
+        
+       ActivityIndicator.startActivityIndicatorAnimation()
+        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 4.0) {
+            print("after!")
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            DispatchQueue.main.async {
+                self.weChatButton.removeFromSuperview()
+                self.view.addSubview(self.loginButton)
+            }
+        }
+    }
+    
+    
     
     
     lazy var agreementButton: UIView = {
@@ -133,8 +173,8 @@ class LoginViewController: UIViewController {
     }()
     
     lazy var weChatButton: UIButton = {
-        let innerWechatView = UIButton.init(frame: CGRect(x: 16, y: self.view.frame.size.height/2 + 50, width: __kWidth - 32, height: 44))
-        innerWechatView.backgroundColor = UIColor.init(red: 16/255.0, green: 124/255.0, blue: 108/255.0, alpha: 1)
+        let innerWechatView = UIButton.init(frame: CGRect(x: MarginsWidth, y: self.view.frame.size.height/2 + 50, width: __kWidth - MarginsWidth * 2, height: ButtonHeight))
+        innerWechatView.backgroundColor = WECHATLOGINBUTTONCOLOR
 //        innerWechatView.layer.shadowColor = UIColor.black.cgColor
 //        innerWechatView.layer.shadowOffset = CGSize(width: 0, height: 2)
 //        innerWechatView.layer.shadowRadius = 2.0
@@ -153,7 +193,7 @@ class LoginViewController: UIViewController {
         })
         
         let label = UILabel.init();
-        label.text = WBLocalizedString(forKey: "wechat_login")
+        label.text = LocalizedString(forKey: "wechat_login")
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = UIColor.white
         label.alpha = 0.87
@@ -168,6 +208,21 @@ class LoginViewController: UIViewController {
         
         innerWechatView .addTarget(self, action: #selector(weChatViewButtonClick), for: UIControlEvents.touchUpInside)
         return innerWechatView
+    }()
+    
+    lazy var loginButton: UIButton = {
+        let buttonTitleString = LocalizedString(forKey: "login")
+        let buttonTitleFont = UIFont.systemFont(ofSize: 14)
+        let button = UIButton.init(frame: CGRect(x: 0, y: 0, width: Int(getWidth(title: buttonTitleString, font: buttonTitleFont)) + 20, height: Int(ButtonHeight)))
+        button.center = CGPoint(x: view.center.x, y: view.center.y + 50 + ButtonHeight/2)
+        button.layer.cornerRadius = 2.0
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColorFromRGB(rgbValue: 0x0017f6f).cgColor
+        button.setTitle(buttonTitleString, for: UIControlState.normal)
+        button.setTitleColor(UIColor.white, for: UIControlState.normal)
+        button.titleLabel?.font = buttonTitleFont
+        button .addTarget(self, action: #selector(weChatViewButtonClick), for: UIControlEvents.touchUpInside)
+        return button
     }()
 
 	lazy var wisnucImageView:UIImageView = {

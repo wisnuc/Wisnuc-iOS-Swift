@@ -11,6 +11,9 @@
 		1F169DD1207F528800860F31 /* MyStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD0207F528800860F31 /* MyStationView.swift */; };
 		1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */; };
 		1F169DD5207F677500860F31 /* GuideImage1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F169DD4207F677500860F31 /* GuideImage1.png */; };
+		1F169DD820805B2000860F31 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD720805B2000860F31 /* Message.swift */; };
+		1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DDA208080DC00860F31 /* ActivityIndicator.swift */; };
+		1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DDD2080AB7800860F31 /* TokenManager.swift */; };
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
 		1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B751207CBE8700906D80 /* ViewController.swift */; };
 		1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B753207CBE8700906D80 /* Main.storyboard */; };
@@ -63,6 +66,9 @@
 		1F169DD0207F528800860F31 /* MyStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationView.swift; sourceTree = "<group>"; };
 		1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1F169DD4207F677500860F31 /* GuideImage1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GuideImage1.png; sourceTree = "<group>"; };
+		1F169DD720805B2000860F31 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		1F169DDA208080DC00860F31 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; wrapsLines = 0; };
+		1F169DDD2080AB7800860F31 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1FD9B751207CBE8700906D80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -143,6 +149,30 @@
 				1F169DCA207F06CC00860F31 /* Wisnuc-iOS-Swift-Bridging-Header.h */,
 			);
 			name = "Bridge-Header";
+			sourceTree = "<group>";
+		};
+		1F169DD620805B0500860F31 /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				1F169DD720805B2000860F31 /* Message.swift */,
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		1F169DD9208080BE00860F31 /* Activity Indicator */ = {
+			isa = PBXGroup;
+			children = (
+				1F169DDA208080DC00860F31 /* ActivityIndicator.swift */,
+			);
+			path = "Activity Indicator";
+			sourceTree = "<group>";
+		};
+		1F169DDC2080AB5900860F31 /* Token */ = {
+			isa = PBXGroup;
+			children = (
+				1F169DDD2080AB7800860F31 /* TokenManager.swift */,
+			);
+			path = Token;
 			sourceTree = "<group>";
 		};
 		1FD9B743207CBE8700906D80 = {
@@ -228,8 +258,8 @@
 		1FD9B784207CC6F400906D80 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				1FD9B785207CC6F400906D80 /* LoginViewController.swift */,
 				1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */,
+				1FD9B785207CC6F400906D80 /* LoginViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -267,6 +297,8 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1F169DD9208080BE00860F31 /* Activity Indicator */,
+				1F169DD620805B0500860F31 /* Message */,
 				1F169DCB207F361D00860F31 /* Network */,
 				1FD9B7AA207E153300906D80 /* Size */,
 				1FD9B78B207CC75500906D80 /* Extension */,
@@ -311,6 +343,7 @@
 		1FD9B795207CC78B00906D80 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				1F169DDC2080AB5900860F31 /* Token */,
 				1FD9B796207CC78B00906D80 /* APIs */,
 				1FD9B797207CC78B00906D80 /* NetHelper */,
 			);
@@ -616,7 +649,9 @@
 			files = (
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
+				1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */,
 				1FD9B788207CC6F400906D80 /* LoginViewController.swift in Sources */,
+				1F169DD820805B2000860F31 /* Message.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
@@ -629,6 +664,7 @@
 				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
+				1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */,
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
 				1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */,
 			);
@@ -833,12 +869,15 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/**",
+					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
+				);
 			};
 			name = Debug;
 		};
@@ -859,11 +898,14 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/**",
+					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
+				);
 			};
 			name = Release;
 		};
