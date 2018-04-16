@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             userDefaults.synchronize()
         } else{
             let type:LoginState?
-            type = TokenManager.wechatLoginToken().count>0 ? .wechat:.token
+            type = TokenManager.wechatLoginToken().count>0 ? .token:.wechat
             let loginController = LoginViewController.init(type!)
             _loginController = loginController;
             UIApplication.shared.statusBarStyle = .lightContent

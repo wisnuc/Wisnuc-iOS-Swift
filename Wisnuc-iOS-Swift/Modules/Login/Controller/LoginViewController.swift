@@ -14,27 +14,45 @@ import MaterialComponents
 enum LoginState:Int{
     case wechat = 0
     case token
+    case chooseStation
 }
 
 private let ButtonHeight:CGFloat = 36
-private let MarginsWidth:CGFloat = 16
+private let UserImageViewWidth:CGFloat = 114
+private let ImageViewBorderColor:CGColor = UIColor.init(red: 41/255.0, green: 165/255.0, blue: 151/255.0, alpha: 1).cgColor
+private let StationViewScale:CGFloat = __kHeight * 0.36
+
 
 class LoginViewController: UIViewController {
-    var state:LoginState?
-    var commonLoginButon:UIButton?
+    var commonLoginButon:UIButton!
+    var userName:String?
+    
     var logintype:LoginState?{
         didSet{
             print("did set ")
+            switch self.logintype {
+            case .wechat?:
+                actionForWechatLoginType()
+            case .token?:
+                actionForTokenLoginType()
+            case .chooseStation?:
+                actionForStationType()
+            default:
+                break
+            }
         }
-
+        
+        willSet{
+            print("will set ")
+        }
+        
     }
     
     init(_ type:LoginState) {
         super.init(nibName: nil, bundle: nil)
-        logintype = type
+        setSelfType(type)
     }
     
-   
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -44,10 +62,8 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = COR1
         self.view.addSubview(self.agreementButton)
-        self.view.addSubview(self.weChatButton)
         self.view.addSubview(self.wisnucLabel)
         self.view.addSubview(self.wisnucImageView)
-        setUpFrame()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,24 +76,32 @@ class LoginViewController: UIViewController {
         super.viewWillDisappear(animated)
     }
     
-    
     deinit {
         
     }
     
-    func setUpFrame() {
-        wisnucLabel.snp.makeConstraints { (make) in
-            make.bottom.equalTo(weChatButton.snp.top).offset(-50)
-            make.centerX.equalTo(self.view)
-            make.size.equalTo(CGSize(width: Int(getWidth(title: wisnucLabel.text!, font: wisnucLabel.font)), height: 20))
-        }
-        
-        wisnucImageView.snp.makeConstraints { (make) in
-            make.bottom.equalTo(wisnucLabel.snp.top).offset(-20)
-            make.centerX.equalTo(self.view)
-            make.size.equalTo(CGSize(width: 60, height: 60))
+    func setCommonButtonType() {
+        switch self.logintype {
+        case .wechat?:
+            self.commonLoginButon = self.weChatButton
+        case .token?:
+            self.commonLoginButon = self.loginButton
+        default:
+            break
         }
     }
+    
+    func setUpFrame() {
+        let size = CGSize(width: Int(labelWidthFrom(title: self.wisnucLabel.text!, font: self.wisnucLabel.font!)), height: 20)
+        self.wisnucLabel.frame = CGRect(origin: CGPoint(x: (__kWidth - size.width)/2, y: commonLoginButon.frame.minY - 50), size:size)
+        let imageViewSize = CGSize(width: UserImageViewWidth, height: UserImageViewWidth)
+        self.wisnucImageView.frame = CGRect(origin: CGPoint(x: (__kWidth - imageViewSize.width)/2, y: wisnucLabel.frame.minY - MarginsWidth - imageViewSize.width), size:imageViewSize)
+    }
+    
+    func  setSelfType(_ type:LoginState){
+        self.logintype = type
+    }
+    
     
     @objc func agreementButtonClick () {
         let messageString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur " +
@@ -104,6 +128,11 @@ class LoginViewController: UIViewController {
     @objc func weChatViewButtonClick(){
           checkNetwork()
 
+    }
+    
+    @objc func  loginButtonClick(){
+        self.setSelfType(.chooseStation)
+        
     }
     
     
@@ -136,14 +165,56 @@ class LoginViewController: UIViewController {
             print("after!")
             ActivityIndicator.stopActivityIndicatorAnimation()
             DispatchQueue.main.async {
-                self.weChatButton.removeFromSuperview()
-                self.view.addSubview(self.loginButton)
+                self.logintype = .token
             }
         }
     }
     
+    func actionForStationType() {
+        view.addSubview(self.stationView)
+        UIView.animate(withDuration: 0.5, delay: 0.2, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+            self.stationView.frame.origin.y = StationViewScale
+            self.wisnucImageView.center.y = StationViewScale/2
+            self.wisnucLabel.frame.origin.y = self.wisnucImageView.frame.maxY + MarginsWidth
+        }) { (completion) in
+            self.loginButton.removeFromSuperview()
+            self.agreementButton.removeFromSuperview()
+        }
+    }
+    
+    func actionForWechatLoginType() {
+        DispatchQueue.main.async {
+            if self.commonLoginButon != nil{
+                self.loginButton.removeFromSuperview()
+            }
+            self.commonLoginButon = self.weChatButton
+            self.view.addSubview(self.commonLoginButon!)
+            self.setUpFrame()
+            self.wisnucImageView.layer.borderColor = UIColor.clear.cgColor
+            self.wisnucImageView.image = UIImage.init(named: "40")
+        }
+    }
     
     
+    func actionForTokenLoginType() {
+        DispatchQueue.main.async {
+            if self.commonLoginButon != nil{
+                self.weChatButton.removeFromSuperview()
+            }
+            self.commonLoginButon = self.loginButton
+            self.view.addSubview(self.commonLoginButon!)
+            self.setUpFrame()
+            self.wisnucLabel.text = self.userName ?? "登录名" 
+            self.wisnucImageView.layer.borderColor = ImageViewBorderColor
+            self.wisnucImageView.image = UIImage.init(named: "touxiang.jpg")
+            
+        }
+    }
+    
+    lazy var stationView: MyStationView = {
+        let view = MyStationView(frame: CGRect(x: 0, y: __kHeight, width: __kWidth, height: __kHeight - __kHeight * 0.36))
+        return view
+    }()
     
     lazy var agreementButton: UIView = {
         let bgView = UIView.init(frame: CGRect(x: 0, y: __kHeight - 48, width: __kWidth, height: 48))
@@ -162,10 +233,10 @@ class LoginViewController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         bgView.addSubview(button)
  
-        let widthSize = getWidth(title: str, font:(button.titleLabel?.font)!)
+        let widthSize = labelWidthFrom(title: str, font:(button.titleLabel?.font)!)
 
         
-        let underline = UIView.init(frame: CGRect(origin: CGPoint(x:CGFloat(Float(button.center.x) - widthSize/2)  , y: button.center.y + button.frame.size.height/2 + 3), size: CGSize(width: Int(widthSize), height: 1)))
+        let underline = UIView.init(frame: CGRect(origin: CGPoint(x:button.center.x - widthSize/2  , y: button.center.y + button.frame.size.height/2 + 3), size: CGSize(width: Int(widthSize), height: 1)))
         underline.backgroundColor = UIColor.white
         
         bgView.addSubview(underline)
@@ -174,13 +245,7 @@ class LoginViewController: UIViewController {
     
     lazy var weChatButton: UIButton = {
         let innerWechatView = UIButton.init(frame: CGRect(x: MarginsWidth, y: self.view.frame.size.height/2 + 50, width: __kWidth - MarginsWidth * 2, height: ButtonHeight))
-        innerWechatView.backgroundColor = WECHATLOGINBUTTONCOLOR
-//        innerWechatView.layer.shadowColor = UIColor.black.cgColor
-//        innerWechatView.layer.shadowOffset = CGSize(width: 0, height: 2)
-//        innerWechatView.layer.shadowRadius = 2.0
-//        innerWechatView.layer.shadowOpacity = 0.4
-//        innerWechatView.isUserInteractionEnabled = true
-        
+        innerWechatView.backgroundColor = WechatLoginButtonColor
         innerWechatView.layer.cornerRadius = 2.0
         
         let wechatImage = UIImage.init(named: "wechat_icon")
@@ -203,7 +268,7 @@ class LoginViewController: UIViewController {
         label.snp.makeConstraints { (make) in
             make.left.equalTo(wechatImageView.snp.right).offset(8)
             make.centerY.equalTo(innerWechatView.snp.centerY)
-            make.size.equalTo(CGSize(width: 100, height: 20))
+            make.size.equalTo(CGSize(width: 100, height: labelHeightFrom(title: label.text!, font: label.font!)))
         }
         
         innerWechatView .addTarget(self, action: #selector(weChatViewButtonClick), for: UIControlEvents.touchUpInside)
@@ -213,28 +278,34 @@ class LoginViewController: UIViewController {
     lazy var loginButton: UIButton = {
         let buttonTitleString = LocalizedString(forKey: "login")
         let buttonTitleFont = UIFont.systemFont(ofSize: 14)
-        let button = UIButton.init(frame: CGRect(x: 0, y: 0, width: Int(getWidth(title: buttonTitleString, font: buttonTitleFont)) + 20, height: Int(ButtonHeight)))
+        let button = UIButton.init(frame: CGRect(x: 0, y: 0, width: Int(labelWidthFrom(title: buttonTitleString, font: buttonTitleFont)) + 20, height: Int(ButtonHeight)))
         button.center = CGPoint(x: view.center.x, y: view.center.y + 50 + ButtonHeight/2)
         button.layer.cornerRadius = 2.0
         button.layer.borderWidth = 1
-        button.layer.borderColor = UIColorFromRGB(rgbValue: 0x0017f6f).cgColor
+        button.layer.borderColor = UIColor.colorFromRGB(rgbValue: 0x0017f6f).cgColor
         button.setTitle(buttonTitleString, for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
         button.titleLabel?.font = buttonTitleFont
-        button .addTarget(self, action: #selector(weChatViewButtonClick), for: UIControlEvents.touchUpInside)
+        button .addTarget(self, action: #selector(loginButtonClick), for: UIControlEvents.touchUpInside)
         return button
     }()
 
 	lazy var wisnucImageView:UIImageView = {
-        let imageView = UIImageView.init(image: UIImage.init(named: "40"))
+        let imageView = UIImageView.init()
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
+        imageView.layer.cornerRadius = UserImageViewWidth/2
         return imageView
     }()
     
     lazy var wisnucLabel:UILabel = {
         let label = UILabel.init()
-        label.font = UIFont.boldSystemFont(ofSize: 15)
+        let string = "WISNUC"
+        let font = UIFont.boldSystemFont(ofSize: 15)
+        label.font = font
         label.textColor = UIColor.white
-        label.text = "WISNUC"
+        label.text = string
+        label.textAlignment = NSTextAlignment.center
         return label
     }()
     

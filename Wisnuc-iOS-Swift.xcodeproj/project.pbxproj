@@ -14,6 +14,13 @@
 		1F169DD820805B2000860F31 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD720805B2000860F31 /* Message.swift */; };
 		1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DDA208080DC00860F31 /* ActivityIndicator.swift */; };
 		1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DDD2080AB7800860F31 /* TokenManager.swift */; };
+		1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F588212208481A200394BD6 /* UIImageExtension.swift */; };
+		1F58821520848F9400394BD6 /* touxiang.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1F58821420848F9400394BD6 /* touxiang.jpg */; };
+		1F58821720849F8000394BD6 /* FontDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58821620849F8000394BD6 /* FontDefine.swift */; };
+		1F58821920849FA200394BD6 /* SizeDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58821820849FA200394BD6 /* SizeDefine.swift */; };
+		1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58821A20849FCA00394BD6 /* KeyStringDefine.swift */; };
+		1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58821C2084A56D00394BD6 /* UIColorExtension.swift */; };
+		1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58821E2084A7F900394BD6 /* StationModel.swift */; };
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
 		1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B751207CBE8700906D80 /* ViewController.swift */; };
 		1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B753207CBE8700906D80 /* Main.storyboard */; };
@@ -69,8 +76,15 @@
 		1F169DD720805B2000860F31 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		1F169DDA208080DC00860F31 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1F169DDD2080AB7800860F31 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
+		1F588212208481A200394BD6 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
+		1F58821420848F9400394BD6 /* touxiang.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = touxiang.jpg; sourceTree = "<group>"; };
+		1F58821620849F8000394BD6 /* FontDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontDefine.swift; sourceTree = "<group>"; };
+		1F58821820849FA200394BD6 /* SizeDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeDefine.swift; sourceTree = "<group>"; };
+		1F58821A20849FCA00394BD6 /* KeyStringDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStringDefine.swift; sourceTree = "<group>"; };
+		1F58821C2084A56D00394BD6 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		1F58821E2084A7F900394BD6 /* StationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationModel.swift; sourceTree = "<group>"; };
 		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1FD9B751207CBE8700906D80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1FD9B754207CBE8700906D80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1FD9B757207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Wisnuc_iOS_Swift.xcdatamodel; sourceTree = "<group>"; };
@@ -267,6 +281,7 @@
 		1FD9B786207CC6F400906D80 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1F58821E2084A7F900394BD6 /* StationModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -302,7 +317,6 @@
 				1F169DCB207F361D00860F31 /* Network */,
 				1FD9B7AA207E153300906D80 /* Size */,
 				1FD9B78B207CC75500906D80 /* Extension */,
-				1FD9B78D207CC75500906D80 /* Category */,
 				1FD9B78E207CC75500906D80 /* NetServerBrower */,
 			);
 			path = Tools;
@@ -312,15 +326,10 @@
 			isa = PBXGroup;
 			children = (
 				1FD9B78C207CC75500906D80 /* StringExtension.swift */,
+				1F588212208481A200394BD6 /* UIImageExtension.swift */,
+				1F58821C2084A56D00394BD6 /* UIColorExtension.swift */,
 			);
 			path = Extension;
-			sourceTree = "<group>";
-		};
-		1FD9B78D207CC75500906D80 /* Category */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Category;
 			sourceTree = "<group>";
 		};
 		1FD9B78E207CC75500906D80 /* NetServerBrower */ = {
@@ -336,6 +345,9 @@
 			children = (
 				1FD9B793207CC77900906D80 /* BasicDefine.swift */,
 				1FD9B7A0207DA43C00906D80 /* ColorDefine.swift */,
+				1F58821620849F8000394BD6 /* FontDefine.swift */,
+				1F58821820849FA200394BD6 /* SizeDefine.swift */,
+				1F58821A20849FCA00394BD6 /* KeyStringDefine.swift */,
 			);
 			path = Define;
 			sourceTree = "<group>";
@@ -396,6 +408,7 @@
 		1FD9B7AC207E19F900906D80 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				1F58821420848F9400394BD6 /* touxiang.jpg */,
 				1F169DD4207F677500860F31 /* GuideImage1.png */,
 				1FD9B7AE207E1A0400906D80 /* wechat_icon.png */,
 				1FD9B7AF207E1A0400906D80 /* wechat_icon@2x.png */,
@@ -546,6 +559,7 @@
 				1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */,
 				1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
+				1F58821520848F9400394BD6 /* touxiang.jpg in Resources */,
 				1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */,
 				7EC1FF79C5327EFA3A9BC8D2 /* 40@3x.png in Resources */,
 				7EC1FDF23987D41BD9D8999F /* 40.png in Resources */,
@@ -649,23 +663,29 @@
 			files = (
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
+				1F58821920849FA200394BD6 /* SizeDefine.swift in Sources */,
 				1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */,
 				1FD9B788207CC6F400906D80 /* LoginViewController.swift in Sources */,
 				1F169DD820805B2000860F31 /* Message.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
+				1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
 				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
+				1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */,
 				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
 				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
+				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,
 				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
 				1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */,
+				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
+				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
 				1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

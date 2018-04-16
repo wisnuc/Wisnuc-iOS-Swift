@@ -9,10 +9,18 @@
 import Foundation
 import UIKit
 
-public func getWidth(title:String,font:UIFont) -> Float{
+public func labelWidthFrom(title:String,font:UIFont) -> CGFloat{
     let label = UILabel.init(frame: CGRect(x: 0, y: 0, width: 1000, height: 0));
     label.text = title
     label.font = font
     label.sizeToFit()
-    return Float(label.frame.size.width)
+    return CGFloat(label.frame.size.width)
+}
+
+public func labelHeightFrom(title:String,font:UIFont) -> CGFloat{
+    let label = UILabel.init(frame: CGRect(x: 0, y: 0, width: 1000, height: 0));
+    label.text = title
+    label.font = font
+    label.sizeToFit()
+    return CGFloat(label.frame.size.height)
 }
