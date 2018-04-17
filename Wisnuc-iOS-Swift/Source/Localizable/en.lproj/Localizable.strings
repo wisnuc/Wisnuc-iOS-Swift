@@ -8,3 +8,6 @@
 "wechat_login" = "微信登录";
 "login" = "登录";
 "my_station" = "我的设备";
+"add_Device" = "添加设备";
+"station_checking" = "等待审核";
+

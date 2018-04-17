@@ -11,3 +11,4 @@ import Foundation
 import UIKit
 
 public let SmallTitleFont:UIFont = UIFont.systemFont(ofSize: 12)
+public let MiddleTitleFont:UIFont = UIFont.systemFont(ofSize: 14)

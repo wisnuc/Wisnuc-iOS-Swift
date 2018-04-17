@@ -191,7 +191,7 @@ class LoginViewController: UIViewController {
             self.view.addSubview(self.commonLoginButon!)
             self.setUpFrame()
             self.wisnucImageView.layer.borderColor = UIColor.clear.cgColor
-            self.wisnucImageView.image = UIImage.init(named: "40")
+            self.wisnucImageView.image = UIImage.init(named: "logo")
         }
     }
     

@@ -9,6 +9,6 @@
 import UIKit
 
 class StationModel: NSObject {
-    var array:NSArray
-    
+    var name:String?
+    var type:String?
 }

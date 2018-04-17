@@ -12,4 +12,5 @@ import UIKit
 
 public let COR1 = UIColor.colorFromRGB(rgbValue: 0x009788)
 public let WechatLoginButtonColor = UIColor.colorFromRGB(rgbValue: 0x00786a)
-public let SmallTitleColor = UIColor.init(white: 0.54, alpha: 1)
+public let LightGrayColor = UIColor.init(white: 0.54, alpha: 1)
+public let DarkGrayColor = UIColor.init(white: 0.87, alpha: 1)

@@ -11,4 +11,5 @@ pod 'MaterialComponents'
 pod 'CatalogByConvention'
 pod 'RealReachability'
 pod 'WechatOpenSDK'
+pod 'YYKit'
 end
