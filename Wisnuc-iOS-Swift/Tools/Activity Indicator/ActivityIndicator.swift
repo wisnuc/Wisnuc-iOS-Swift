@@ -24,7 +24,6 @@ class ActivityIndicator: NSObject{
     class func startActivityIndicatorAnimation(){
     
         DispatchQueue.main.async {
-           
             let width: CGFloat = __kWidth / 2
             let height: CGFloat = __kHeight / 2
         

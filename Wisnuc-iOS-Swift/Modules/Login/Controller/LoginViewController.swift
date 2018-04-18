@@ -26,7 +26,6 @@ private let StationViewScale:CGFloat = __kHeight * 0.36
 class LoginViewController: UIViewController {
     var commonLoginButon:UIButton!
     var userName:String?
-    
     var logintype:LoginState?{
         didSet{
             print("did set ")
@@ -65,6 +64,7 @@ class LoginViewController: UIViewController {
         self.view.addSubview(self.wisnucLabel)
         self.view.addSubview(self.wisnucImageView)
     }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -213,6 +213,7 @@ class LoginViewController: UIViewController {
     
     lazy var stationView: MyStationView = {
         let view = MyStationView(frame: CGRect(x: 0, y: __kHeight, width: __kWidth, height: __kHeight - __kHeight * 0.36))
+        view.delegate = self
         return view
     }()
     
@@ -314,5 +315,31 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+}
+
+// MARK: - Delegate
+extension LoginViewController:StationViewDelegate{
+    func stationViewTapAction(_ sender: MyStationTapGestureRecognizer) {
+        switch sender.stationButtonType {
+        case .checking?:
+            let titleString = LocalizedString(forKey: "station_checking")
+            let messageString = "\(String(describing: sender.stationName!)) 未通过审核"
+            Alert.alert(title: titleString, message: messageString)
+        case .offline?:
+            let titleString = LocalizedString(forKey: "station_offline")
+            let messageString = "\(String(describing: sender.stationName!)) 已离线"
+            Alert.alert(title: titleString, message: messageString)
+        case .local?:
+            let localNetVC = LocalNetworkLoginViewController.init()
+            self.navigationController?.pushViewController(localNetVC, animated: true)
+        default:
+            break
+        }
+    }
+    
+    func addStationButtonTap(_ sender: UIButton) {
+        let addStationVC = AddStationViewController.init()
+        self.navigationController?.pushViewController(addStationVC, animated: true)
+    }
 }
 

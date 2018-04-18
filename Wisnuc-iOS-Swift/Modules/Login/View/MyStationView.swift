@@ -32,8 +32,14 @@ private let IconHeight:CGFloat  = 18
 private let StationViewInnerImageViewTop_Width_Space:CGFloat = 20
 private let StationViewInnerLabelTop_Width_Space:CGFloat = 12
 
+@objc protocol StationViewDelegate{
+    func addStationButtonTap(_ sender:UIButton)
+    func stationViewTapAction(_ sender:MyStationTapGestureRecognizer)
+}
+
 class MyStationView: UIView {
     var stationArray:Array<StationModel>?
+    weak var delegate: StationViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,28 +54,20 @@ class MyStationView: UIView {
     }
     
     @objc func stationViewTap(_ gesture:MyStationTapGestureRecognizer){
-        switch gesture.stationButtonType {
-        case .checking?:
-            let titleString = LocalizedString(forKey: "station_checking")
-            let messageString = "\(String(describing: gesture.stationName!)) 未通过审核"
-            Alert.alert(title: titleString, message: messageString)
-        case .offline?:
-            let titleString = LocalizedString(forKey: "station_offline")
-            let messageString = "\(String(describing: gesture.stationName!)) 已离线"
-            Alert.alert(title: titleString, message: messageString)
-        default:
-            break
+        if let delegateOK = self.delegate{
+            delegateOK.stationViewTapAction(gesture)
         }
     }
     
     
     @objc func addButtonClick(_ sender:UIButton) {
-        
-        
+        if let delegateOK = self.delegate{
+            delegateOK.addStationButtonTap(sender)
+        }
     }
     
     @objc func detailButtonClick(_ sender:UIButton){
-        
+       
     }
     
     func getDataSource() {
@@ -123,10 +121,15 @@ class MyStationView: UIView {
             view.addGestureRecognizer(tapGesture)
             
             let button = detailButton(buttonType:StationButtonType(rawValue: model.type!)!)
-            
             view.addSubview(detailIconView(type: StationButtonType(rawValue: model.type!)!, center: CGPoint(x:button.right , y: button.top)))
             view.addSubview(button)
-            view.addSubview(functionOrStationNameLabel(text: model.name!, buttonMaxY: button.frame.maxY))
+            let functionLabel = functionOrStationNameLabel(text: model.name!, top: button.frame.maxY + StationViewInnerLabelTop_Width_Space)
+            view.addSubview(functionLabel)
+            
+            let describeLabel = functionOrStationNameLabel(text: describeString(type: StationButtonType(rawValue: model.type!)!), top: functionLabel.bottom + MarginsCloseWidth)
+            describeLabel.font = SmallTitleFont
+            describeLabel.textColor = LightGrayColor
+            view.addSubview(describeLabel)
             stationScrollView.addSubview(view)
         }
     }
@@ -137,16 +140,16 @@ class MyStationView: UIView {
         let view = UIView.init(frame: CGRect(x: CGFloat(addButtonIndex) * (ViewWidth + Width_Space) + Start_X, y: CGFloat(addButtonPage) * (ViewHeight + Height_Space) + Start_Y, width: ViewWidth, height: ViewHeight))
         let addButton = detailButton(buttonType: .addNew)
         view.addSubview(addButton)
-        view.addSubview(functionOrStationNameLabel(text: LocalizedString(forKey: "add_Device"), buttonMaxY: addButton.frame.maxY))
+        view.addSubview(functionOrStationNameLabel(text: LocalizedString(forKey: "add_Device"), top: addButton.frame.maxY + StationViewInnerLabelTop_Width_Space))
         stationScrollView.addSubview(view)
     }
     
-    func functionOrStationNameLabel(text:String,buttonMaxY:CGFloat) -> UILabel {
+    func functionOrStationNameLabel(text:String,top:CGFloat) -> UILabel {
         let labelText = text
         let labelFont = MiddleTitleFont
         let labelWidth = labelWidthFrom(title: labelText, font: labelFont)
         let labelHeight = labelHeightFrom(title: labelText, font: labelFont)
-        let label = UILabel.init(frame: CGRect(x: (ViewWidth - labelWidth)/2, y: buttonMaxY + StationViewInnerLabelTop_Width_Space, width:labelWidth , height: labelHeight))
+        let label = UILabel.init(frame: CGRect(x: (ViewWidth - labelWidth)/2, y: top, width:labelWidth , height: labelHeight))
         label.font = labelFont
         label.text = labelText
         label.textAlignment = NSTextAlignment.center
@@ -176,6 +179,23 @@ class MyStationView: UIView {
         button.frame = CGRect(x: (view.width - (buttonImage?.size.width)!)/2  , y: StationViewInnerImageViewTop_Width_Space, width: ButtonWidth, height: ButtonHeight)
         button.setImage(buttonImage, for: UIControlState.normal)
         return button
+    }
+    
+    func describeString(type:StationButtonType) ->String {
+        switch type {
+        case .normal:
+            return ""
+        case .checking:
+            return LocalizedString(forKey: "station_checking")
+        case .diskError:
+            return LocalizedString(forKey: "station_disk_error")
+        case .offline:
+            return LocalizedString(forKey: "station_offline")
+        case .local:
+            return LocalizedString(forKey: "station_local")
+        default:
+            return ""
+        }
     }
     
     func detailIconView(type:StationButtonType,center:CGPoint) -> UIImageView {
@@ -209,6 +229,11 @@ class MyStationView: UIView {
         lable.textColor = LightGrayColor
         return lable
     }()
+    
+//    lazy var myStationLabelView: UIView = {
+//        let view = UIView.init(frame: CGRect(x: 0, y: 0, width: 0, height: __kWidth))
+//        return <#value#>
+//    }()
     
     lazy var stationScrollView: UIScrollView = {
         let scrollView = UIScrollView.init(frame: CGRect(x: 0, y:myStationLabel.bottom + MarginsWidth , width: __kWidth, height: self.height - myStationLabel.bottom - MarginsWidth))

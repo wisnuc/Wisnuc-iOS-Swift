@@ -54,6 +54,13 @@
 		1F58825F2085FA7600394BD6 /* MyStationTapGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58825E2085FA7600394BD6 /* MyStationTapGestureRecognizer.swift */; };
 		1F5882612085FBDF00394BD6 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5882602085FBDF00394BD6 /* Alert.swift */; };
 		1F5882632085FDB400394BD6 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5882622085FDB400394BD6 /* UIViewControllerExtension.swift */; };
+		1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5882642086E96900394BD6 /* AddStationViewController.swift */; };
+		1F588269208719BB00394BD6 /* refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F588266208719BA00394BD6 /* refresh@2x.png */; };
+		1F58826A208719BB00394BD6 /* refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F588267208719BA00394BD6 /* refresh.png */; };
+		1F58826B208719BB00394BD6 /* refresh@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F588268208719BB00394BD6 /* refresh@3x.png */; };
+		1F83AE572087463F007CCCFD /* LocalNetworkLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83AE552087463F007CCCFD /* LocalNetworkLoginViewController.swift */; };
+		1F83AE582087463F007CCCFD /* LocalNetworkLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F83AE562087463F007CCCFD /* LocalNetworkLoginViewController.xib */; };
+		1F83AE5A20874A84007CCCFD /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83AE5920874A84007CCCFD /* BaseViewController.swift */; };
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
 		1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B751207CBE8700906D80 /* ViewController.swift */; };
 		1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B753207CBE8700906D80 /* Main.storyboard */; };
@@ -145,6 +152,13 @@
 		1F58825E2085FA7600394BD6 /* MyStationTapGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationTapGestureRecognizer.swift; sourceTree = "<group>"; };
 		1F5882602085FBDF00394BD6 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		1F5882622085FDB400394BD6 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
+		1F5882642086E96900394BD6 /* AddStationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStationViewController.swift; sourceTree = "<group>"; };
+		1F588266208719BA00394BD6 /* refresh@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh@2x.png"; sourceTree = "<group>"; };
+		1F588267208719BA00394BD6 /* refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh.png; sourceTree = "<group>"; };
+		1F588268208719BB00394BD6 /* refresh@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh@3x.png"; sourceTree = "<group>"; };
+		1F83AE552087463F007CCCFD /* LocalNetworkLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNetworkLoginViewController.swift; sourceTree = "<group>"; };
+		1F83AE562087463F007CCCFD /* LocalNetworkLoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalNetworkLoginViewController.xib; sourceTree = "<group>"; };
+		1F83AE5920874A84007CCCFD /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1FD9B751207CBE8700906D80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -251,6 +265,9 @@
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F588267208719BA00394BD6 /* refresh.png */,
+				1F588266208719BA00394BD6 /* refresh@2x.png */,
+				1F588268208719BB00394BD6 /* refresh@3x.png */,
 				1F5882572085F4C800394BD6 /* local_area.png */,
 				1F5882582085F4C800394BD6 /* local_area@2x.png */,
 				1F5882592085F4C800394BD6 /* local_area@3x.png */,
@@ -381,6 +398,9 @@
 			children = (
 				1F5882262085890300394BD6 /* LoginViewController.swift */,
 				1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */,
+				1F5882642086E96900394BD6 /* AddStationViewController.swift */,
+				1F83AE552087463F007CCCFD /* LocalNetworkLoginViewController.swift */,
+				1F83AE562087463F007CCCFD /* LocalNetworkLoginViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -494,6 +514,7 @@
 			isa = PBXGroup;
 			children = (
 				1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */,
+				1F83AE5920874A84007CCCFD /* BaseViewController.swift */,
 			);
 			path = Foundations;
 			sourceTree = "<group>";
@@ -657,6 +678,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F58825B2085F4C900394BD6 /* local_area@2x.png in Resources */,
+				1F83AE582087463F007CCCFD /* LocalNetworkLoginViewController.xib in Resources */,
+				1F58826A208719BB00394BD6 /* refresh.png in Resources */,
 				1FD9B7B0207E1A0500906D80 /* wechat_icon@3x.png in Resources */,
 				1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
@@ -685,10 +708,12 @@
 				1F58822E208591A100394BD6 /* add_station@3x.png in Resources */,
 				1F58824A2085F07E00394BD6 /* disk_warning.png in Resources */,
 				1F5882552085F0F800394BD6 /* station_review.png in Resources */,
+				1F588269208719BB00394BD6 /* refresh@2x.png in Resources */,
 				1F58823D2085DCAF00394BD6 /* device.png in Resources */,
 				1F5882422085F07000394BD6 /* offline.png in Resources */,
 				1F58823A2085DCAF00394BD6 /* device_circle@3x.png in Resources */,
 				1F5882502085F09F00394BD6 /* station_normal@2x.png in Resources */,
+				1F58826B208719BB00394BD6 /* refresh@3x.png in Resources */,
 				1F169DD5207F677500860F31 /* GuideImage1.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
 				1F5882492085F07E00394BD6 /* disk_warning@3x.png in Resources */,
@@ -793,8 +818,11 @@
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
+				1F83AE572087463F007CCCFD /* LocalNetworkLoginViewController.swift in Sources */,
+				1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */,
 				1F58821920849FA200394BD6 /* SizeDefine.swift in Sources */,
 				1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */,
+				1F83AE5A20874A84007CCCFD /* BaseViewController.swift in Sources */,
 				1F169DD820805B2000860F31 /* Message.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */,
@@ -1027,7 +1055,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/**",
 					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
@@ -1055,7 +1083,7 @@
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = (
 					"${SRCROOT}/**",
 					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",

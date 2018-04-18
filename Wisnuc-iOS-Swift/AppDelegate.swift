@@ -10,19 +10,22 @@ import UIKit
 import CoreData
 import MaterialComponents
 import RealReachability
-
+import CatalogByConvention
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     var networkStatus:WSNetworkStatus?
     var window: UIWindow?
     var _loginController:LoginViewController?
-    
+    var colorScheme: (MDCColorScheme & NSObjectProtocol)!
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         registerWeChat()   // Wechat
         initRootVC()
         startNotifierNetworkStutas() // networkObserveNotification
+        colorScheme = MDCBasicColorScheme(primaryColor: .init(white: 33 / 255.0, alpha: 1),
+                                          primaryLightColor: .init(white: 0.7, alpha: 1),
+                                          primaryDarkColor: .init(white: 0, alpha: 1))
         return true
     }
     
@@ -49,7 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             _loginController = loginController;
             UIApplication.shared.statusBarStyle = .lightContent
             let navigationController = UINavigationController.init(rootViewController:loginController)
-            
             self.window?.rootViewController = navigationController
             self.window?.makeKeyAndVisible()
         }
