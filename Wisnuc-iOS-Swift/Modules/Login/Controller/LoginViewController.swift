@@ -135,6 +135,10 @@ class LoginViewController: UIViewController {
         
     }
     
+    @objc func imageViewTap(_ sender:UIGestureRecognizer){
+        let logoutVC = LogOutViewController.init()
+        self.navigationController?.pushViewController(logoutVC, animated: true)
+    }
     
     func checkNetwork(){
         let networkStatus = NetworkStatus()
@@ -244,8 +248,8 @@ class LoginViewController: UIViewController {
         return bgView
     }()
     
-    lazy var weChatButton: UIButton = {
-        let innerWechatView = UIButton.init(frame: CGRect(x: MarginsWidth, y: self.view.frame.size.height/2 + 50, width: __kWidth - MarginsWidth * 2, height: ButtonHeight))
+    lazy var weChatButton: MDBaseButton = {
+        let innerWechatView = MDBaseButton.init(frame: CGRect(x: MarginsWidth, y: self.view.frame.size.height/2 + 50, width: __kWidth - MarginsWidth * 2, height: ButtonHeight))
         innerWechatView.backgroundColor = WechatLoginButtonColor
         innerWechatView.layer.cornerRadius = 2.0
         
@@ -276,10 +280,12 @@ class LoginViewController: UIViewController {
         return innerWechatView
     }()
     
-    lazy var loginButton: UIButton = {
+    lazy var loginButton: MDBaseButton = {
         let buttonTitleString = LocalizedString(forKey: "login")
-        let buttonTitleFont = UIFont.systemFont(ofSize: 14)
-        let button = UIButton.init(frame: CGRect(x: 0, y: 0, width: Int(labelWidthFrom(title: buttonTitleString, font: buttonTitleFont)) + 20, height: Int(ButtonHeight)))
+        let buttonTitleFont = MiddleTitleFont
+        let button = MDBaseButton.init(frame: CGRect(x: 0, y: 0, width: Int(labelWidthFrom(title: buttonTitleString, font: buttonTitleFont)) + 40, height: Int(ButtonHeight)))
+        button.setBackgroundColor(UIColor.clear)
+        button.setTitleFont(buttonTitleFont, for: UIControlState.normal)
         button.center = CGPoint(x: view.center.x, y: view.center.y + 50 + ButtonHeight/2)
         button.layer.cornerRadius = 2.0
         button.layer.borderWidth = 1
@@ -296,6 +302,9 @@ class LoginViewController: UIViewController {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.cornerRadius = UserImageViewWidth/2
+        imageView.isUserInteractionEnabled = true
+        let imageViewTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(imageViewTap(_ :)))
+        imageView .addGestureRecognizer(imageViewTapGesture)
         return imageView
     }()
     

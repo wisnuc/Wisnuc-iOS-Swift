@@ -7,14 +7,23 @@
 //
 
 import UIKit
-import MaterialComponents.MDCActivityIndicator
+import MaterialComponents
 
 private let stateLabelTopMargins:CGFloat = 112/2+20+96/2
 private let searchAnimationTopMargins:CGFloat = 240/2
 
+private let ViewWidth:CGFloat  = 234
+private let ViewHeight:CGFloat  = 234
+private let Start_X:CGFloat  = (__kWidth - ViewWidth)/2
+private let Start_Y:CGFloat  = 0
+private let Width_Space:CGFloat  = Start_X * 2
+
+
 enum StationSearchState:Int {
     case searching = 0
     case end
+    case notFound
+    case abort
 }
 
 class AddStationViewController: BaseViewController {
@@ -25,6 +34,10 @@ class AddStationViewController: BaseViewController {
                 searchingStateAction()
             case .end?:
                 searchEndStateAction()
+            case .notFound?:
+                searchNotFoundAction()
+            case .abort?:
+                searchAbortAction()
             default:
                 break
             }
@@ -34,18 +47,32 @@ class AddStationViewController: BaseViewController {
         }
     }
     
-    var deviceArray:Array<Any>?
+    var deviceArray:Array<FoundStationModel>?
+    var currentIndex:Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = LocalizedString(forKey: "添加设备")
-        self.view.backgroundColor = UIColor.white
-//        self.automaticallyAdjustsScrollViewInsets = true
+        setData()
+        setBasicStyle()
         setBeginSearchState()
     }
     
-    func setBeginSearchState() {
-        state = .searching
+    func setData(){
+        deviceArray = Array.init()
+        let model1 = FoundStationModel()
+        model1.type = DeviceForSearchState.applyToUse.rawValue
+        model1.name = "My Station"
+        
+        let model2 = FoundStationModel()
+        model2.type = DeviceForSearchState.initialization.rawValue
+        model2.name = "袅袅炊烟"
+        
+        let model3 = FoundStationModel()
+        model3.type = DeviceForSearchState.importTo.rawValue
+        model3.name = "闻上盒子"
+        deviceArray?.append(model1)
+        deviceArray?.append(model2)
+        deviceArray?.append(model3)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,6 +81,7 @@ class AddStationViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        state = .end
     }
 
     override func didReceiveMemoryWarning() {
@@ -63,6 +91,34 @@ class AddStationViewController: BaseViewController {
     
     @objc func reSearchClick(_ sender:UIButton){
         state = StationSearchState.searching
+    }
+    
+    @objc func rightBarButtonItemClick(_ sender:UIBarButtonItem){
+        let bottomSheetVC = BottomSheetDummyStaticViewController.init()
+        let transitionVC = MDCBottomSheetTransitionController.init()
+        bottomSheetVC.transitioningDelegate = transitionVC
+        bottomSheetVC.preferredContentSize = CGSize(width: 200, height: 200) 
+        self.present(bottomSheetVC, animated: true, completion: nil)
+    }
+    
+    // MARK: - User events
+    
+    @objc func didChangePage(_ sender: MDCPageControl) {
+        var offset = self.deviceBrowserScrollView.contentOffset
+        offset.x = CGFloat(sender.currentPage) * self.deviceBrowserScrollView.bounds.size.width
+        self.deviceBrowserScrollView.setContentOffset(offset, animated: true)
+    }
+    
+    func setBeginSearchState() {
+        state = .searching
+    }
+    
+    func setBasicStyle(){
+        self.title = LocalizedString(forKey: "添加设备")
+        self.view.backgroundColor = UIColor.white
+        let rightBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "more.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightBarButtonItemClick(_ :)))
+        appBar.navigationBar.rightBarButtonItem = rightBarButtonItem
+        //        self.automaticallyAdjustsScrollViewInsets = true
     }
     
     func searchingStateAction() {
@@ -78,7 +134,6 @@ class AddStationViewController: BaseViewController {
     
     func analogueTerminal() {
         DispatchQueue.global(qos:.default).asyncAfter(deadline: DispatchTime.now() + 4) {
-            self.deviceArray = Array.init()
             DispatchQueue.main.async {
                 self.setEndSearchState()
             }
@@ -104,12 +159,40 @@ class AddStationViewController: BaseViewController {
     }
     
     func searchEndStateAction(){
+        searchingAnimationView.removeFromSuperview()
+        reSearchButton.removeFromSuperview()
+        setScrollViewContent()
+    }
+    
+    func setScrollViewContent(){
+        self.view.addSubview(deviceBrowserScrollView)
+        self.view.addSubview(deviceBrowserPageControl)
+        self.deviceBrowserScrollView.contentSize = CGSize(width: __kWidth*CGFloat((deviceArray?.count)!), height: deviceBrowserScrollView.height)
+        self.deviceBrowserPageControl.numberOfPages = (deviceArray?.count)!
+        for(idx,_) in (deviceArray?.enumerated())!{
+            let circleView = UIView.init(frame: CGRect(x: CGFloat(idx) * (ViewWidth + Width_Space) + Start_X , y: Start_Y, width: ViewWidth, height: ViewHeight))
+            circleView.layer.masksToBounds = true
+            circleView.layer.borderWidth = 8
+            circleView.layer.borderColor = WhiteGrayColor.cgColor
+            circleView.layer.cornerRadius = circleView.width/2
+            circleView.layer.contents = UIImage.init(named: "station_w215i.png")?.cgImage;
+            self.deviceBrowserScrollView.addSubview(circleView)
+            
+//            let stationImage = UIImage.init(named: "station_w215i.png")
+//            let imageView = UIImageView.init(image: stationImage)
+//            imageView.frame = CGRect(x: 0, y: 0, width: (stationImage?.size.width)!, height: (stationImage?.size.height)!)
+//            imageView.center = circleView.center
+//            circleView.addSubview(imageView)
+        }
+    }
+    
+    func searchAbortAction(){
         
     }
     
     func setEndSearchState() {
         if deviceArray?.count==0{
-            searchNotFoundAction()
+            state = .notFound
         }else{
             state = .end
         }
@@ -153,15 +236,42 @@ class AddStationViewController: BaseViewController {
         return label
     }()
     
+    lazy var deviceBrowserScrollView: UIScrollView = {
+        let scrollView = UIScrollView.init(frame: CGRect(x: 0, y: stateLabel.bottom + MarginsWidth, width: __kWidth, height:deviceBrowserPageControl.bottom + 20))
+        scrollView.isPagingEnabled = true
+        scrollView.delegate = self
+        scrollView.bounces = true
+        scrollView.showsHorizontalScrollIndicator = true
+        return scrollView
+    }()
+    
+    lazy var deviceBrowserPageControl:MDCPageControl = {
+        let pageControl = MDCPageControl.init(frame: CGRect(x: 0, y: stateLabel.bottom + 259 + 43 , width: __kWidth, height: 16))
+        pageControl.autoresizingMask = [.flexibleTopMargin, .flexibleWidth]
+        pageControl.addTarget(self, action: #selector(didChangePage), for: .valueChanged)
+        return pageControl
+    }()
+    
+}
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+extension AddStationViewController:UIScrollViewDelegate{
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset
+        // 随着滑动改变pageControl的状态
+        let index = Int(offset.x / view.bounds.width)
+//        deviceBrowserPageControl.currentPage = index
+        deviceBrowserPageControl.scrollViewDidScroll(scrollView)
+        currentIndex = index
+        let model = deviceArray![index]
+        self.stateLabel.text = model.name
     }
-    */
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        deviceBrowserPageControl.scrollViewDidEndDecelerating(scrollView)
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        deviceBrowserPageControl.scrollViewDidEndScrollingAnimation(scrollView)
+    }
 
 }

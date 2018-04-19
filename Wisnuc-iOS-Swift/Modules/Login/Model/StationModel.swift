@@ -8,7 +8,18 @@
 
 import UIKit
 
+enum DeviceForSearchState:String {
+    case applyToUse = "applyToUse"
+    case initialization = "initialization"
+    case importTo = "importTo"
+}
+
 class StationModel: NSObject {
+    var name:String?
+    var type:String?
+}
+
+class FoundStationModel: NSObject {
     var name:String?
     var type:String?
 }

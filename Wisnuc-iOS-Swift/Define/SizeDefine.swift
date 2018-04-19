@@ -16,3 +16,10 @@ public let __kHeight = UIScreen.main.bounds.size.height
 public let MarginsWidth:CGFloat = 16
 public let MarginsCloseWidth:CGFloat = 8
 
+public let CommonButtonHeight:CGFloat = 36
+public let MarginsBottomHeight:CGFloat = 20
+
+public let MDCAppNavigationBarHeight:CGFloat = 76.0
+
+public let UserNameMax:NSInteger = 16
+public let PasswordMax:NSInteger = 30
