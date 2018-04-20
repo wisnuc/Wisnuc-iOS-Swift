@@ -83,6 +83,11 @@ class AddStationViewController: BaseViewController {
         super.viewWillDisappear(animated)
         state = .end
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -95,10 +100,8 @@ class AddStationViewController: BaseViewController {
     
     @objc func rightBarButtonItemClick(_ sender:UIBarButtonItem){
         let bottomSheetVC = BottomSheetDummyStaticViewController.init()
-        let transitionVC = MDCBottomSheetTransitionController.init()
-        bottomSheetVC.transitioningDelegate = transitionVC
-        bottomSheetVC.preferredContentSize = CGSize(width: 200, height: 200) 
-        self.present(bottomSheetVC, animated: true, completion: nil)
+        let bottomSheet = MDCBottomSheetController.init(contentViewController: bottomSheetVC)
+        self.present(bottomSheet, animated: true, completion: nil)
     }
     
     // MARK: - User events
@@ -107,6 +110,17 @@ class AddStationViewController: BaseViewController {
         var offset = self.deviceBrowserScrollView.contentOffset
         offset.x = CGFloat(sender.currentPage) * self.deviceBrowserScrollView.bounds.size.width
         self.deviceBrowserScrollView.setContentOffset(offset, animated: true)
+    }
+    
+    @objc func nextStepForSearchEndButtonClick(_ sender:MDBaseButton){
+        let model = deviceArray![sender.tag]
+        switch model.type {
+        case DeviceForSearchState.initialization.rawValue:
+            let initDiskVC = InitializationDiskViewController.init()
+            self.navigationController?.pushViewController(initDiskVC, animated: true)
+        default:
+            break
+        }
     }
     
     func setBeginSearchState() {
@@ -118,6 +132,11 @@ class AddStationViewController: BaseViewController {
         self.view.backgroundColor = UIColor.white
         let rightBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "more.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightBarButtonItemClick(_ :)))
         appBar.navigationBar.rightBarButtonItem = rightBarButtonItem
+        if #available(iOS 11.0, *) {
+            self.view.insetsLayoutMarginsFromSafeArea = true
+        } else {
+            // Fallback on earlier versions
+        }
         //        self.automaticallyAdjustsScrollViewInsets = true
     }
     
@@ -167,6 +186,7 @@ class AddStationViewController: BaseViewController {
     func setScrollViewContent(){
         self.view.addSubview(deviceBrowserScrollView)
         self.view.addSubview(deviceBrowserPageControl)
+        self.view.addSubview(nextStepForSearchEndButton)
         self.deviceBrowserScrollView.contentSize = CGSize(width: __kWidth*CGFloat((deviceArray?.count)!), height: deviceBrowserScrollView.height)
         self.deviceBrowserPageControl.numberOfPages = (deviceArray?.count)!
         for(idx,_) in (deviceArray?.enumerated())!{
@@ -184,6 +204,11 @@ class AddStationViewController: BaseViewController {
 //            imageView.center = circleView.center
 //            circleView.addSubview(imageView)
         }
+        let model = deviceArray?.first
+        let titleString = nextButtonString(state: DeviceForSearchState(rawValue: (model?.type)!)!)
+        nextStepForSearchEndButton.setTitle(titleString, for: UIControlState.normal)
+        stateLabel.text = model?.name
+        self.nextStepForSearchEndButton.tag = currentIndex
     }
     
     func searchAbortAction(){
@@ -195,6 +220,21 @@ class AddStationViewController: BaseViewController {
             state = .notFound
         }else{
             state = .end
+        }
+        
+    }
+    
+    func nextButtonString(state:DeviceForSearchState) ->String {
+        switch state {
+        case .applyToUse:
+            return LocalizedString(forKey: "station_apply_to_use")
+        case .initialization:
+            return LocalizedString(forKey: "station_init_next")
+        case .importTo:
+            return LocalizedString(forKey: "station_improt")
+//        default:
+//            return ""
+//           break
         }
     }
     
@@ -237,11 +277,11 @@ class AddStationViewController: BaseViewController {
     }()
     
     lazy var deviceBrowserScrollView: UIScrollView = {
-        let scrollView = UIScrollView.init(frame: CGRect(x: 0, y: stateLabel.bottom + MarginsWidth, width: __kWidth, height:deviceBrowserPageControl.bottom + 20))
+        let scrollView = UIScrollView.init(frame: CGRect(x: 0, y: stateLabel.bottom + MarginsWidth, width: __kWidth, height:deviceBrowserPageControl.bottom - stateLabel.bottom))
         scrollView.isPagingEnabled = true
         scrollView.delegate = self
         scrollView.bounces = true
-        scrollView.showsHorizontalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
     
@@ -249,9 +289,21 @@ class AddStationViewController: BaseViewController {
         let pageControl = MDCPageControl.init(frame: CGRect(x: 0, y: stateLabel.bottom + 259 + 43 , width: __kWidth, height: 16))
         pageControl.autoresizingMask = [.flexibleTopMargin, .flexibleWidth]
         pageControl.addTarget(self, action: #selector(didChangePage), for: .valueChanged)
+        pageControl.pageIndicatorTintColor = WhiteGrayColor
+        pageControl.hidesForSinglePage = true
+        pageControl.currentPageIndicatorTintColor = COR1
         return pageControl
     }()
     
+    lazy var nextStepForSearchEndButton: MDBaseButton = {
+        let button = MDBaseButton.init(frame: CGRect(x: MarginsWidth, y: __kHeight - CommonButtonHeight - MarginsBottomHeight, width: __kWidth - MarginsWidth*2, height: CommonButtonHeight))
+        
+        button.backgroundColor = COR1
+        button.setTitleColor(UIColor.white, for: UIControlState.normal)
+        button.addTarget(self, action: #selector(nextStepForSearchEndButtonClick(_ :)), for: UIControlEvents.touchUpInside)
+    
+        return button
+    }()
 }
 
 extension AddStationViewController:UIScrollViewDelegate{
@@ -264,6 +316,9 @@ extension AddStationViewController:UIScrollViewDelegate{
         currentIndex = index
         let model = deviceArray![index]
         self.stateLabel.text = model.name
+        let buttonTitle = nextButtonString(state: DeviceForSearchState(rawValue: model.type!)!)
+        self.nextStepForSearchEndButton.setTitle(buttonTitle, for: UIControlState.normal)
+        self.nextStepForSearchEndButton.tag = index
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

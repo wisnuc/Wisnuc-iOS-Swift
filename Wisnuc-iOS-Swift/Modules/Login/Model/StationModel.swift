@@ -23,3 +23,8 @@ class FoundStationModel: NSObject {
     var name:String?
     var type:String?
 }
+
+class DiskModel: NSObject {
+    var name:String?
+    var type:String?
+}

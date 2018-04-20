@@ -17,6 +17,15 @@
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
+		1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */; };
+		1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */; };
+		1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */; };
+		1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937E2089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift */; };
+		1F4E93812089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937F2089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib */; };
+		1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93832089BD3300DD1EA7 /* OSTools.swift */; };
+		1F4E93882089D64D00DD1EA7 /* disk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E93852089D64C00DD1EA7 /* disk@2x.png */; };
+		1F4E93892089D64D00DD1EA7 /* disk@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E93862089D64C00DD1EA7 /* disk@3x.png */; };
+		1F4E938A2089D64D00DD1EA7 /* disk.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E93872089D64D00DD1EA7 /* disk.png */; };
 		1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F588212208481A200394BD6 /* UIImageExtension.swift */; };
 		1F58821520848F9400394BD6 /* touxiang.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1F58821420848F9400394BD6 /* touxiang.jpg */; };
 		1F58821720849F8000394BD6 /* FontDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58821620849F8000394BD6 /* FontDefine.swift */; };
@@ -63,7 +72,6 @@
 		1F58826B208719BB00394BD6 /* refresh@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F588268208719BB00394BD6 /* refresh@3x.png */; };
 		1F83AE572087463F007CCCFD /* LocalNetworkLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83AE552087463F007CCCFD /* LocalNetworkLoginViewController.swift */; };
 		1F83AE582087463F007CCCFD /* LocalNetworkLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F83AE562087463F007CCCFD /* LocalNetworkLoginViewController.xib */; };
-		1F83AE5A20874A84007CCCFD /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F83AE5920874A84007CCCFD /* BaseViewController.swift */; };
 		1F83AE5E208830B8007CCCFD /* local_area_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F83AE5B208830B6007CCCFD /* local_area_white.png */; };
 		1F83AE5F208830B8007CCCFD /* local_area_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F83AE5C208830B7007CCCFD /* local_area_white@2x.png */; };
 		1F83AE60208830B8007CCCFD /* local_area_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F83AE5D208830B8007CCCFD /* local_area_white@3x.png */; };
@@ -141,6 +149,15 @@
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
+		1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationDiskViewController.swift; sourceTree = "<group>"; };
+		1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationDiskViewController.xib; sourceTree = "<group>"; };
+		1F4E937E2089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationCreatUserViewController.swift; sourceTree = "<group>"; };
+		1F4E937F2089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationCreatUserViewController.xib; sourceTree = "<group>"; };
+		1F4E93832089BD3300DD1EA7 /* OSTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSTools.swift; sourceTree = "<group>"; };
+		1F4E93852089D64C00DD1EA7 /* disk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disk@2x.png"; sourceTree = "<group>"; };
+		1F4E93862089D64C00DD1EA7 /* disk@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disk@3x.png"; sourceTree = "<group>"; };
+		1F4E93872089D64D00DD1EA7 /* disk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disk.png; sourceTree = "<group>"; };
 		1F588212208481A200394BD6 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		1F58821420848F9400394BD6 /* touxiang.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = touxiang.jpg; sourceTree = "<group>"; };
 		1F58821620849F8000394BD6 /* FontDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontDefine.swift; sourceTree = "<group>"; };
@@ -187,7 +204,6 @@
 		1F588268208719BB00394BD6 /* refresh@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh@3x.png"; sourceTree = "<group>"; };
 		1F83AE552087463F007CCCFD /* LocalNetworkLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNetworkLoginViewController.swift; sourceTree = "<group>"; };
 		1F83AE562087463F007CCCFD /* LocalNetworkLoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalNetworkLoginViewController.xib; sourceTree = "<group>"; };
-		1F83AE5920874A84007CCCFD /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1F83AE5B208830B6007CCCFD /* local_area_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = local_area_white.png; sourceTree = "<group>"; };
 		1F83AE5C208830B7007CCCFD /* local_area_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "local_area_white@2x.png"; sourceTree = "<group>"; };
 		1F83AE5D208830B8007CCCFD /* local_area_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "local_area_white@3x.png"; sourceTree = "<group>"; };
@@ -314,9 +330,20 @@
 			path = Token;
 			sourceTree = "<group>";
 		};
+		1F4E93822089BD2100DD1EA7 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				1F4E93832089BD3300DD1EA7 /* OSTools.swift */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F4E93872089D64D00DD1EA7 /* disk.png */,
+				1F4E93852089D64C00DD1EA7 /* disk@2x.png */,
+				1F4E93862089D64C00DD1EA7 /* disk@3x.png */,
 				1F3591F920889CAA00196CCB /* station_w215i.png */,
 				1F3591FA20889CAA00196CCB /* station_w215i@2x.png */,
 				1F3591FB20889CAA00196CCB /* station_w215i@3x.png */,
@@ -478,6 +505,10 @@
 				1F83AE7620886A13007CCCFD /* LogOutViewController.xib */,
 				1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */,
 				1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */,
+				1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */,
+				1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */,
+				1F4E937E2089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift */,
+				1F4E937F2089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -516,6 +547,7 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1F4E93822089BD2100DD1EA7 /* Other */,
 				1F169DD9208080BE00860F31 /* Activity Indicator */,
 				1F169DD620805B0500860F31 /* MessageAndAlert */,
 				1F169DCB207F361D00860F31 /* Network */,
@@ -590,8 +622,8 @@
 		1FD9B7A3207DB3F700906D80 /* Foundations */ = {
 			isa = PBXGroup;
 			children = (
+				1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */,
 				1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */,
-				1F83AE5920874A84007CCCFD /* BaseViewController.swift */,
 				1F83AE7320885FD5007CCCFD /* MDBaseButton.swift */,
 			);
 			path = Foundations;
@@ -760,6 +792,7 @@
 				1F58826A208719BB00394BD6 /* refresh.png in Resources */,
 				1FD9B7B0207E1A0500906D80 /* wechat_icon@3x.png in Resources */,
 				1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */,
+				1F4E93812089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib in Resources */,
 				1F83AE7D20886BDA007CCCFD /* change@3x.png in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
 				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
@@ -776,8 +809,10 @@
 				1F83AE7C20886BDA007CCCFD /* change.png in Resources */,
 				1F83AE67208838DD007CCCFD /* eye_off.png in Resources */,
 				1FA669DB208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib in Resources */,
+				1F4E938A2089D64D00DD1EA7 /* disk.png in Resources */,
 				1F58822D208591A100394BD6 /* add_station@2x.png in Resources */,
 				1F58823C2085DCAF00394BD6 /* device_circle.png in Resources */,
+				1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */,
 				1F58822C208591A100394BD6 /* add_station.png in Resources */,
 				1F5882482085F07E00394BD6 /* disk_warning@2x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
@@ -786,6 +821,7 @@
 				1F83AE7E20886BDA007CCCFD /* change2x.png in Resources */,
 				1F83AE7820886A13007CCCFD /* LogOutViewController.xib in Resources */,
 				1F5882562085F0F800394BD6 /* station_review@2x.png in Resources */,
+				1F4E93892089D64D00DD1EA7 /* disk@3x.png in Resources */,
 				1F5882232085885C00394BD6 /* logo@3x.png in Resources */,
 				1F83AE8320887936007CCCFD /* more@3x.png in Resources */,
 				1F83AE60208830B8007CCCFD /* local_area_white@3x.png in Resources */,
@@ -808,6 +844,7 @@
 				1F83AE68208838DD007CCCFD /* eye_open@2x.png in Resources */,
 				1F58823D2085DCAF00394BD6 /* device.png in Resources */,
 				1F5882422085F07000394BD6 /* offline.png in Resources */,
+				1F4E93882089D64D00DD1EA7 /* disk@2x.png in Resources */,
 				1F58823A2085DCAF00394BD6 /* device_circle@3x.png in Resources */,
 				1F5882502085F09F00394BD6 /* station_normal@2x.png in Resources */,
 				1F83AE7220883AA2007CCCFD /* help@2x.png in Resources */,
@@ -861,6 +898,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework",
 				"${BUILT_PRODUCTS_DIR}/CatalogByConvention/CatalogByConvention.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFInternationalization/MDFInternationalization.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFTextAccessibility/MDFTextAccessibility.framework",
@@ -875,6 +913,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BEMCheckBox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CatalogByConvention.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFInternationalization.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFTextAccessibility.framework",
@@ -921,13 +960,15 @@
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
 				1F83AE7420885FD5007CCCFD /* MDBaseButton.swift in Sources */,
 				1F83AE572087463F007CCCFD /* LocalNetworkLoginViewController.swift in Sources */,
+				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
+				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,
 				1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */,
 				1F58821920849FA200394BD6 /* SizeDefine.swift in Sources */,
 				1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */,
-				1F83AE5A20874A84007CCCFD /* BaseViewController.swift in Sources */,
 				1F169DD820805B2000860F31 /* Message.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */,
+				1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
@@ -935,6 +976,7 @@
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
 				1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */,
+				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
 				1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */,
 				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
 				1F5882302085D39D00394BD6 /* UIViewExtension.swift in Sources */,
@@ -1149,10 +1191,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
@@ -1160,10 +1199,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/**",
-					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
-				);
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
 			};
 			name = Debug;
 		};
@@ -1178,20 +1214,14 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/**",
-					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
-				);
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
 			};
 			name = Release;
 		};
@@ -1203,11 +1233,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -1224,11 +1250,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -1244,11 +1266,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -1264,11 +1282,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

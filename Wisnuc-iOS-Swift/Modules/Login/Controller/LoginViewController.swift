@@ -92,7 +92,7 @@ class LoginViewController: UIViewController {
     }
     
     func setUpFrame() {
-        let size = CGSize(width: Int(labelWidthFrom(title: self.wisnucLabel.text!, font: self.wisnucLabel.font!)), height: 20)
+        let size = CGSize(width: Int(labelWidthFrom(title: self.wisnucLabel.text!, font: self.wisnucLabel.font!) + 20), height: Int(labelHeightFrom(title: self.wisnucLabel.text!, font: self.wisnucLabel.font!)))
         self.wisnucLabel.frame = CGRect(origin: CGPoint(x: (__kWidth - size.width)/2, y: commonLoginButon.frame.minY - 50), size:size)
         let imageViewSize = CGSize(width: UserImageViewWidth, height: UserImageViewWidth)
         self.wisnucImageView.frame = CGRect(origin: CGPoint(x: (__kWidth - imageViewSize.width)/2, y: wisnucLabel.frame.minY - MarginsWidth - imageViewSize.width), size:imageViewSize)
@@ -176,7 +176,7 @@ class LoginViewController: UIViewController {
     
     func actionForStationType() {
         view.addSubview(self.stationView)
-        UIView.animate(withDuration: 0.5, delay: 0.2, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
             self.stationView.frame.origin.y = StationViewScale
             self.wisnucImageView.center.y = StationViewScale/2
             self.wisnucLabel.frame.origin.y = self.wisnucImageView.frame.maxY + MarginsWidth

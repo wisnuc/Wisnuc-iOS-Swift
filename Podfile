@@ -12,4 +12,5 @@ pod 'CatalogByConvention'
 pod 'RealReachability'
 pod 'WechatOpenSDK'
 pod 'YYKit'
+pod 'BEMCheckBox'
 end
