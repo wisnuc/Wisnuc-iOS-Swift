@@ -26,6 +26,13 @@
 		1F4E93882089D64D00DD1EA7 /* disk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E93852089D64C00DD1EA7 /* disk@2x.png */; };
 		1F4E93892089D64D00DD1EA7 /* disk@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E93862089D64C00DD1EA7 /* disk@3x.png */; };
 		1F4E938A2089D64D00DD1EA7 /* disk.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E93872089D64D00DD1EA7 /* disk.png */; };
+		1F4E938E208DB8B600DD1EA7 /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E938C208DB8B600DD1EA7 /* RadioButton.m */; };
+		1F4E9395208DBB7600DD1EA7 /* radio_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E938F208DBB7500DD1EA7 /* radio_button@2x.png */; };
+		1F4E9396208DBB7600DD1EA7 /* radio_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9390208DBB7500DD1EA7 /* radio_button.png */; };
+		1F4E9397208DBB7600DD1EA7 /* radio_button_unchecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9391208DBB7500DD1EA7 /* radio_button_unchecked@2x.png */; };
+		1F4E9398208DBB7600DD1EA7 /* radio_button@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9392208DBB7500DD1EA7 /* radio_button@3x.png */; };
+		1F4E9399208DBB7600DD1EA7 /* radio_button_unchecked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9393208DBB7600DD1EA7 /* radio_button_unchecked@3x.png */; };
+		1F4E939A208DBB7600DD1EA7 /* radio_button_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9394208DBB7600DD1EA7 /* radio_button_unchecked.png */; };
 		1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F588212208481A200394BD6 /* UIImageExtension.swift */; };
 		1F58821520848F9400394BD6 /* touxiang.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1F58821420848F9400394BD6 /* touxiang.jpg */; };
 		1F58821720849F8000394BD6 /* FontDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F58821620849F8000394BD6 /* FontDefine.swift */; };
@@ -158,6 +165,14 @@
 		1F4E93852089D64C00DD1EA7 /* disk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disk@2x.png"; sourceTree = "<group>"; };
 		1F4E93862089D64C00DD1EA7 /* disk@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disk@3x.png"; sourceTree = "<group>"; };
 		1F4E93872089D64D00DD1EA7 /* disk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disk.png; sourceTree = "<group>"; };
+		1F4E938C208DB8B600DD1EA7 /* RadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadioButton.m; sourceTree = "<group>"; };
+		1F4E938D208DB8B600DD1EA7 /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadioButton.h; sourceTree = "<group>"; };
+		1F4E938F208DBB7500DD1EA7 /* radio_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radio_button@2x.png"; sourceTree = "<group>"; };
+		1F4E9390208DBB7500DD1EA7 /* radio_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radio_button.png; sourceTree = "<group>"; };
+		1F4E9391208DBB7500DD1EA7 /* radio_button_unchecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radio_button_unchecked@2x.png"; sourceTree = "<group>"; };
+		1F4E9392208DBB7500DD1EA7 /* radio_button@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radio_button@3x.png"; sourceTree = "<group>"; };
+		1F4E9393208DBB7600DD1EA7 /* radio_button_unchecked@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radio_button_unchecked@3x.png"; sourceTree = "<group>"; };
+		1F4E9394208DBB7600DD1EA7 /* radio_button_unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radio_button_unchecked.png; sourceTree = "<group>"; };
 		1F588212208481A200394BD6 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		1F58821420848F9400394BD6 /* touxiang.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = touxiang.jpg; sourceTree = "<group>"; };
 		1F58821620849F8000394BD6 /* FontDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontDefine.swift; sourceTree = "<group>"; };
@@ -330,6 +345,15 @@
 			path = Token;
 			sourceTree = "<group>";
 		};
+		1F2B4593208DED5600C8971F /* BottomSheet */ = {
+			isa = PBXGroup;
+			children = (
+				1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */,
+				1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */,
+			);
+			path = BottomSheet;
+			sourceTree = "<group>";
+		};
 		1F4E93822089BD2100DD1EA7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
@@ -338,9 +362,24 @@
 			path = Other;
 			sourceTree = "<group>";
 		};
+		1F4E938B208DB8B600DD1EA7 /* RadioButton */ = {
+			isa = PBXGroup;
+			children = (
+				1F4E938C208DB8B600DD1EA7 /* RadioButton.m */,
+				1F4E938D208DB8B600DD1EA7 /* RadioButton.h */,
+			);
+			path = RadioButton;
+			sourceTree = "<group>";
+		};
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F4E9390208DBB7500DD1EA7 /* radio_button.png */,
+				1F4E938F208DBB7500DD1EA7 /* radio_button@2x.png */,
+				1F4E9392208DBB7500DD1EA7 /* radio_button@3x.png */,
+				1F4E9394208DBB7600DD1EA7 /* radio_button_unchecked.png */,
+				1F4E9391208DBB7500DD1EA7 /* radio_button_unchecked@2x.png */,
+				1F4E9393208DBB7600DD1EA7 /* radio_button_unchecked@3x.png */,
 				1F4E93872089D64D00DD1EA7 /* disk.png */,
 				1F4E93852089D64C00DD1EA7 /* disk@2x.png */,
 				1F4E93862089D64C00DD1EA7 /* disk@3x.png */,
@@ -503,8 +542,6 @@
 				1F83AE562087463F007CCCFD /* LocalNetworkLoginViewController.xib */,
 				1F83AE7520886A13007CCCFD /* LogOutViewController.swift */,
 				1F83AE7620886A13007CCCFD /* LogOutViewController.xib */,
-				1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */,
-				1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */,
 				1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */,
 				1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */,
 				1F4E937E2089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift */,
@@ -547,6 +584,8 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1F2B4593208DED5600C8971F /* BottomSheet */,
+				1F4E938B208DB8B600DD1EA7 /* RadioButton */,
 				1F4E93822089BD2100DD1EA7 /* Other */,
 				1F169DD9208080BE00860F31 /* Activity Indicator */,
 				1F169DD620805B0500860F31 /* MessageAndAlert */,
@@ -796,6 +835,7 @@
 				1F83AE7D20886BDA007CCCFD /* change@3x.png in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
 				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
+				1F4E9399208DBB7600DD1EA7 /* radio_button_unchecked@3x.png in Resources */,
 				1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */,
 				1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */,
 				1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */,
@@ -809,6 +849,7 @@
 				1F83AE7C20886BDA007CCCFD /* change.png in Resources */,
 				1F83AE67208838DD007CCCFD /* eye_off.png in Resources */,
 				1FA669DB208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib in Resources */,
+				1F4E9395208DBB7600DD1EA7 /* radio_button@2x.png in Resources */,
 				1F4E938A2089D64D00DD1EA7 /* disk.png in Resources */,
 				1F58822D208591A100394BD6 /* add_station@2x.png in Resources */,
 				1F58823C2085DCAF00394BD6 /* device_circle.png in Resources */,
@@ -816,6 +857,7 @@
 				1F58822C208591A100394BD6 /* add_station.png in Resources */,
 				1F5882482085F07E00394BD6 /* disk_warning@2x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
+				1F4E9396208DBB7600DD1EA7 /* radio_button.png in Resources */,
 				1F58821520848F9400394BD6 /* touxiang.jpg in Resources */,
 				1F58823B2085DCAF00394BD6 /* device@3x.png in Resources */,
 				1F83AE7E20886BDA007CCCFD /* change2x.png in Resources */,
@@ -832,8 +874,10 @@
 				1F58823E2085DCAF00394BD6 /* device_circle@2x.png in Resources */,
 				1F5882442085F07000394BD6 /* offline@2x.png in Resources */,
 				1F58825C2085F4C900394BD6 /* local_area@3x.png in Resources */,
+				1F4E939A208DBB7600DD1EA7 /* radio_button_unchecked.png in Resources */,
 				1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */,
 				1F5882252085885C00394BD6 /* logo.png in Resources */,
+				1F4E9397208DBB7600DD1EA7 /* radio_button_unchecked@2x.png in Resources */,
 				1F5882242085885C00394BD6 /* logo@2x.png in Resources */,
 				1F83AE6B208838DD007CCCFD /* eye_open@3x.png in Resources */,
 				1F83AE6C208838DD007CCCFD /* eye_off@2x.png in Resources */,
@@ -852,6 +896,7 @@
 				1F58826B208719BB00394BD6 /* refresh@3x.png in Resources */,
 				1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */,
 				1F169DD5207F677500860F31 /* GuideImage1.png in Resources */,
+				1F4E9398208DBB7600DD1EA7 /* radio_button@3x.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
 				1F5882492085F07E00394BD6 /* disk_warning@3x.png in Resources */,
 				1F83AE69208838DD007CCCFD /* eye_off@3x.png in Resources */,
@@ -972,6 +1017,7 @@
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
+				1F4E938E208DB8B600DD1EA7 /* RadioButton.m in Sources */,
 				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
@@ -1191,7 +1237,10 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
@@ -1199,7 +1248,10 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/**",
+					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
+				);
 			};
 			name = Debug;
 		};
@@ -1214,14 +1266,20 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/**",
+					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
+				);
 			};
 			name = Release;
 		};
@@ -1233,7 +1291,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -1250,7 +1312,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -1266,7 +1332,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -1282,7 +1352,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

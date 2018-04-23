@@ -19,7 +19,7 @@ class BaseViewController: UIViewController {
         appBar.navigationBar.titleView?.backgroundColor = .white
         // Step 2: Add the headerViewController as a child.
         self.addChildViewController(appBar.headerViewController)
-        
+//        print(appBar.headerViewController.headerView.height)
 //        let color = UIColor(white: 0.2, alpha:1)
 //        appBar.headerViewController.headerView.backgroundColor = color
         appBar.navigationBar.tintColor = UIColor.white

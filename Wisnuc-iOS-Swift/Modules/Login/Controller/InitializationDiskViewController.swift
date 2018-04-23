@@ -11,6 +11,8 @@ import MaterialComponents
 import BEMCheckBox
 
 private let InitMarginsTop:CGFloat = 24
+private let LineColor:UIColor = UIColor.init(white: 0.3, alpha: 1)
+private let checkBoxWidth:CGFloat = 18
 
 class InitializationDiskViewController: BaseViewController {
 
@@ -42,6 +44,7 @@ class InitializationDiskViewController: BaseViewController {
         view.addSubview(backgroudView)
         view.addSubview(diskSettingCardView)
         view.addSubview(selectDiskLabel)
+        
     }
     
     func setDisk() {
@@ -51,6 +54,28 @@ class InitializationDiskViewController: BaseViewController {
         }
         
         diskSettingCardView.addSubview(selectDiskTitleLabel)
+        diskSettingCardView.addSubview(selectDiskDetailButton)
+        diskSettingCardView.addSubview(cardLineView)
+        switch diskArray?.count {
+        case 0:
+            break
+        case 1 :
+            diskSettingCardView.addSubview(diskCombinationSingleRadioButton)
+        default:
+            diskSettingCardView.addSubview(diskCombinationSingleRadioButton)
+            diskSettingCardView.addSubview(diskCombinationRAID1RadioButton)
+        }
+        
+        diskAllCapacityDisplayLabel.text = "3.93TB"
+        diskAllCapacityDisplayLabel.sizeToFit()
+        
+        diskAvailableCapacityDisplayLabel.text = "1.96TB"
+        diskAvailableCapacityDisplayLabel.sizeToFit()
+        
+        diskSettingCardView.addSubview(diskAllCapacityDisplayLabel)
+        diskSettingCardView.addSubview(diskAllCapacityTitleLabel)
+        diskSettingCardView.addSubview(diskAvailableCapacityDisplayLabel)
+        diskSettingCardView.addSubview(diskAvailableCapacityTitleLabel)
     }
     
     func setDiskImageView(idx:Int,model:DiskModel)  {
@@ -79,28 +104,46 @@ class InitializationDiskViewController: BaseViewController {
         label.text = model.name!
         label.font = font
         self.view.addSubview(label)
-//        setSelectDiskCheckBox(center: label.center, idx: idx)
+        setSelectDiskCheckBox(center: label.center, idx: idx,model: model)
     }
     
-//    func setSelectDiskCheckBox(center:CGPoint,idx:Int) {
-//        let checkBox = BEMCheckBox.init(frame:CGRect(x: 0, y: 0, width: 16, height: 16))
-//        checkBox.center = CGPoint(x: center.x, y: center.y +  + MarginsCloseWidth + )
-//        self.view.addSubview(checkBox)
-//    }
+    func setSelectDiskCheckBox(center:CGPoint,idx:Int,model:DiskModel) {
+        let font = BoldMiddlePlusTitleFont
+        let checkBox = BEMCheckBox.init(frame:CGRect(x: 0, y: 0, width: checkBoxWidth, height: checkBoxWidth))
+        checkBox.center = CGPoint(x: center.x, y: center.y + checkBoxWidth/2 + MarginsCloseWidth +  labelHeightFrom(title: model.name!, font: font)/2)
+        checkBox.boxType = BEMBoxType.square
+        checkBox.onAnimationType = BEMAnimationType.bounce
+        checkBox.offAnimationType = BEMAnimationType.bounce
+        checkBox.onFillColor = UIColor.white
+        checkBox.onTintColor = UIColor.white
+        checkBox.onCheckColor = COR1
+        checkBox.tintColor = UIColor.white
+        checkBox.delegate = self
+        checkBox.tag = idx
+        self.view.addSubview(checkBox)
+    }
 
     @IBAction func nextButtonClick(_ sender: MDCButton) {
         let creatUserVC = InitializationCreatUserViewController.init()
         self.navigationController?.pushViewController(creatUserVC, animated: true)
     }
     
+    @objc func radioButtonClick(_ sender: RadioButton){
+    
+    }
+    
+    @objc func selectDiskDetailButtonClick(_ sender: UIButton){
+        
+    }
+    
     lazy var backgroudView: UIView = {
-        let view = UIView.init(frame: CGRect(x: 0, y: MDCAppNavigationBarHeight, width: __kWidth, height: __kHeight/2 - MDCAppNavigationBarHeight))
+        let view = UIView.init(frame: CGRect(x: 0, y: MDCAppNavigationBarHeight, width: __kWidth, height: __kHeight/2  - MDCAppNavigationBarHeight))
         view.backgroundColor = COR1
         return view
     }()
     
     lazy var diskSettingCardView: UIView = {
-        let cardView = UIView.init(frame: CGRect(x: MarginsCloseWidth, y: backgroudView.bottom - 184/2, width: __kWidth - MarginsCloseWidth*2, height: __kHeight - backgroudView.bottom - 184/2))
+        let cardView = UIView.init(frame: CGRect(x: MarginsCloseWidth, y: backgroudView.bottom - 104/2, width: __kWidth - MarginsCloseWidth*2, height: __kHeight - backgroudView.bottom - 104/2))
         cardView.backgroundColor = UIColor.white
         cardView.layer.masksToBounds = true
         cardView.layer.cornerRadius = 2
@@ -109,6 +152,7 @@ class InitializationDiskViewController: BaseViewController {
         cardView.layer.shadowOffset = CGSize.zero
         cardView.layer.shadowRadius = 2
         cardView.clipsToBounds = false
+
         return cardView
     }()
     
@@ -132,13 +176,96 @@ class InitializationDiskViewController: BaseViewController {
         return label
     }()
     
-//    lazy var diskCombinationSingleCheckBox: BEMCheckBox = {
-//        let checkBox = BEMCheckBox.init(frame: )
-//        return <#value#>
-//    }()
+    lazy var selectDiskDetailButton: UIButton = {
+        let button = UIButton.init(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        button.center = CGPoint(x: selectDiskTitleLabel.right + MarginsCloseWidth + button.width/2, y: selectDiskTitleLabel.center.y)
+        button.setImage(UIImage.init(named: "help.png"), for: UIControlState.normal)
+        button.addTarget(self, action: #selector(selectDiskDetailButtonClick(_:)), for: UIControlEvents.touchUpInside)
+        return button
+    }()
+    
+    lazy var diskCombinationSingleRadioButton: RadioButton = {
+        let text = "SINGLE"
+        let font = MiddleTitleFont
+        let radioButton = RadioButton.init(frame: CGRect(x: MarginsWidth, y: cardLineView.bottom - 22 - checkBoxWidth , width: checkBoxWidth + labelWidthFrom(title: text, font: font ) + 10, height: checkBoxWidth))
+        radioButton.setImage(UIImage.init(named: "radio_button"), for: UIControlState.selected)
+        radioButton.setImage(UIImage.init(named: "radio_button_unchecked"), for: UIControlState.normal)
+        radioButton.setTitleColor(LightGrayColor, for: UIControlState.normal)
+        radioButton.setSelected(true)
+        radioButton.tag = 1000
+        radioButton.setTitle(text, for: UIControlState.normal)
+        radioButton.titleLabel?.font = font
+        radioButton.imageView?.contentMode = UIViewContentMode.scaleAspectFit
+        radioButton.addTarget(self, action: #selector(radioButtonClick(_ :)), for: UIControlEvents.touchUpInside)
+        return radioButton
+    }()
+    
+    lazy var diskCombinationRAID1RadioButton: RadioButton = {
+        let text = "RAID1"
+        let font = MiddleTitleFont
+        let radioButton = RadioButton.init(frame: CGRect(x: diskCombinationSingleRadioButton.right + 44, y: diskCombinationSingleRadioButton.top, width: checkBoxWidth + labelWidthFrom(title: text, font: font ) + 10, height: checkBoxWidth))
+        radioButton.addTarget(self, action: #selector(radioButtonClick(_ :)), for: UIControlEvents.touchUpInside)
+        radioButton.groupButtons = [diskCombinationSingleRadioButton]
+        radioButton.setImage(UIImage.init(named: "radio_button"), for: UIControlState.selected)
+        radioButton.setImage(UIImage.init(named: "radio_button_unchecked"), for: UIControlState.normal)
+        radioButton.setTitleColor(LightGrayColor, for: UIControlState.normal)
+        radioButton.setTitle(text, for: UIControlState.normal)
+        radioButton.titleLabel?.font = font
+        radioButton.imageView?.contentMode = UIViewContentMode.scaleAspectFit
+        radioButton.tag = 2000
+        return radioButton
+    }()
+    
+    lazy var cardLineView: UIView = {
+        let view = UIView.init(frame: CGRect(x: 0, y: diskSettingCardView.height/2 - 30, width: diskSettingCardView.width, height: 1))
+        view.backgroundColor = Gray26Color
+        return view
+    }()
+    
+    lazy var diskAllCapacityDisplayLabel: UILabel = {
+        let text = ""
+        let font = MiddlePlusTitleFont
+        let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: cardLineView.bottom + 18, width: labelWidthFrom(title: text, font: font), height: labelHeightFrom(title: text, font: font)))
+        label.textColor = DarkGrayColor
+        
+        return label
+    }()
+    
+    lazy var diskAllCapacityTitleLabel: UILabel = {
+        let text =  LocalizedString(forKey: "磁盘容量总和")
+        let font = SmallTitleFont
+        let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: diskAllCapacityDisplayLabel.bottom + MarginsCloseWidth, width: diskSettingCardView.width - MarginsWidth*2, height: labelHeightFrom(title: text, font: font)))
+        label.text = text
+        label.textColor = LightGrayColor
+        return label
+    }()
+    
+    lazy var diskAvailableCapacityDisplayLabel: UILabel = {
+        let text = ""
+        let font = MiddlePlusTitleFont
+        let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: diskAllCapacityTitleLabel.bottom + MarginsFarWidth, width: labelWidthFrom(title: text, font: font), height: labelHeightFrom(title: text, font: font)))
+        label.textColor = DarkGrayColor
+        return label
+    }()
+    
+    lazy var diskAvailableCapacityTitleLabel: UILabel = {
+        let text = LocalizedString(forKey: "可用容量")
+        let font = MiddleTitleFont
+        let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: diskAvailableCapacityDisplayLabel.bottom + MarginsCloseWidth, width: diskSettingCardView.width - MarginsWidth*2, height: labelHeightFrom(title: text, font: font)))
+        label.text = text
+        label.textColor = LightGrayColor
+        return label
+    }()
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
+}
+
+extension InitializationDiskViewController : BEMCheckBoxDelegate{
+    func didTap(_ checkBox: BEMCheckBox) {
+        
+    }
 }

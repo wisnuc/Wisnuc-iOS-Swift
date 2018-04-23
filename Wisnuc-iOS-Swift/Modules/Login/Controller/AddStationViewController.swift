@@ -15,7 +15,7 @@ private let searchAnimationTopMargins:CGFloat = 240/2
 private let ViewWidth:CGFloat  = 234
 private let ViewHeight:CGFloat  = 234
 private let Start_X:CGFloat  = (__kWidth - ViewWidth)/2
-private let Start_Y:CGFloat  = 0
+private let Start_Y:CGFloat  = stateLabelTopMargins
 private let Width_Space:CGFloat  = Start_X * 2
 
 
@@ -178,6 +178,7 @@ class AddStationViewController: BaseViewController {
     }
     
     func searchEndStateAction(){
+        stateLabel.removeFromSuperview()
         searchingAnimationView.removeFromSuperview()
         reSearchButton.removeFromSuperview()
         setScrollViewContent()
@@ -189,7 +190,7 @@ class AddStationViewController: BaseViewController {
         self.view.addSubview(nextStepForSearchEndButton)
         self.deviceBrowserScrollView.contentSize = CGSize(width: __kWidth*CGFloat((deviceArray?.count)!), height: deviceBrowserScrollView.height)
         self.deviceBrowserPageControl.numberOfPages = (deviceArray?.count)!
-        for(idx,_) in (deviceArray?.enumerated())!{
+        for(idx,value) in (deviceArray?.enumerated())!{
             let circleView = UIView.init(frame: CGRect(x: CGFloat(idx) * (ViewWidth + Width_Space) + Start_X , y: Start_Y, width: ViewWidth, height: ViewHeight))
             circleView.layer.masksToBounds = true
             circleView.layer.borderWidth = 8
@@ -203,11 +204,21 @@ class AddStationViewController: BaseViewController {
 //            imageView.frame = CGRect(x: 0, y: 0, width: (stationImage?.size.width)!, height: (stationImage?.size.height)!)
 //            imageView.center = circleView.center
 //            circleView.addSubview(imageView)
+            let model = value
+            let font = stateLabel.font
+            let height = labelWidthFrom(title: model.name!, font: font!)
+            let width = self.view.width
+            let label = UILabel.init(frame: CGRect(x: CGFloat(idx) * (width + 0) + 0, y: 0, width: width, height: height))
+            label.font = font
+            label.text = value.name!
+            label.textColor = stateLabel.textColor!
+            label.textAlignment = NSTextAlignment.center
+            self.deviceBrowserScrollView.addSubview(label)
         }
         let model = deviceArray?.first
         let titleString = nextButtonString(state: DeviceForSearchState(rawValue: (model?.type)!)!)
         nextStepForSearchEndButton.setTitle(titleString, for: UIControlState.normal)
-        stateLabel.text = model?.name
+      
         self.nextStepForSearchEndButton.tag = currentIndex
     }
     
@@ -277,7 +288,7 @@ class AddStationViewController: BaseViewController {
     }()
     
     lazy var deviceBrowserScrollView: UIScrollView = {
-        let scrollView = UIScrollView.init(frame: CGRect(x: 0, y: stateLabel.bottom + MarginsWidth, width: __kWidth, height:deviceBrowserPageControl.bottom - stateLabel.bottom))
+        let scrollView = UIScrollView.init(frame: CGRect(x: 0, y: stateLabel.top, width: __kWidth, height:deviceBrowserPageControl.top - 10))
         scrollView.isPagingEnabled = true
         scrollView.delegate = self
         scrollView.bounces = true
@@ -315,7 +326,6 @@ extension AddStationViewController:UIScrollViewDelegate{
         deviceBrowserPageControl.scrollViewDidScroll(scrollView)
         currentIndex = index
         let model = deviceArray![index]
-        self.stateLabel.text = model.name
         let buttonTitle = nextButtonString(state: DeviceForSearchState(rawValue: model.type!)!)
         self.nextStepForSearchEndButton.setTitle(buttonTitle, for: UIControlState.normal)
         self.nextStepForSearchEndButton.tag = index
