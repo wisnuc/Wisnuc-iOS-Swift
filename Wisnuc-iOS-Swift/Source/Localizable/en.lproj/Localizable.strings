@@ -5,9 +5,10 @@
   Created by wisnuc-imac on 2018/4/11.
   Copyright © 2018年 wisnuc-imac. All rights reserved.
 */
-"wechat_login" = "微信登录";
-"login" = "登录";
-"my_station" = "我的设备";
-"add_Device" = "添加设备";
-"station_checking" = "等待审核";
 
+"wechat_login" = "WeChat Login";
+"login" = "Login";
+"my_station" = "My Device";
+"add_Device" = "Add Device";
+"station_checking" = "checking";
+"confirm" = "confirm";

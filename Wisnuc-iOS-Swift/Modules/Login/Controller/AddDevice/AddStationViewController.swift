@@ -32,10 +32,13 @@ class AddStationViewController: BaseViewController {
             switch state {
             case .searching?:
                 searchingStateAction()
+                
             case .end?:
                 searchEndStateAction()
+              
             case .notFound?:
                 searchNotFoundAction()
+               
             case .abort?:
                 searchAbortAction()
             default:
@@ -49,6 +52,8 @@ class AddStationViewController: BaseViewController {
     
     var deviceArray:Array<FoundStationModel>?
     var currentIndex:Int = 0
+    var rightButtonArray:Array<String> = []
+    var bottomSheet:BottomSheetDummyStaticViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,9 +103,12 @@ class AddStationViewController: BaseViewController {
         state = StationSearchState.searching
     }
     
-    @objc func rightBarButtonItemClick(_ sender:UIBarButtonItem){
-        let bottomSheetVC = BottomSheetDummyStaticViewController.init()
+    @objc func rightBarButtonItemClick(_ sender:UIBarButtonItem?){
+        let array = rightButtonArray
+        let bottomSheetVC = BottomSheetDummyStaticViewController.init(buttonArray: array)
+        bottomSheetVC.delegate = self
         let bottomSheet = MDCBottomSheetController.init(contentViewController: bottomSheetVC)
+        self.bottomSheet = bottomSheetVC
         self.present(bottomSheet, animated: true, completion: nil)
     }
     
@@ -140,15 +148,13 @@ class AddStationViewController: BaseViewController {
         //        self.automaticallyAdjustsScrollViewInsets = true
     }
     
-    func searchingStateAction() {
-        stateLabel.removeFromSuperview()
-        searchingAnimationView.removeFromSuperview()
-        reSearchButton.removeFromSuperview()
-        stateLabel.text = LocalizedString(forKey: "station_searching")
-        self.view.addSubview(stateLabel)
-        self.view.addSubview(searchingAnimationView)
-        startSearchingAnimation()
-        analogueTerminal()
+
+    func startSearchingAnimation() {
+        searchingAnimationView.startAnimating()
+    }
+    
+    func stopSearchingAnimation() {
+        searchingAnimationView.stopAnimating()
     }
     
     func analogueTerminal() {
@@ -159,29 +165,45 @@ class AddStationViewController: BaseViewController {
         }
     }
     
-    func startSearchingAnimation() {
-        searchingAnimationView.startAnimating()
+    func removeAllSuperView(){
+       ViewTools.removeAllSuperViewExceptNavigationBar(view: self.view)
     }
     
-    func stopSearchingAnimation() {
-        searchingAnimationView.stopAnimating()
+    func bottomSheetStateExchange(){
+        if bottomSheet != nil && (bottomSheet?.isViewLoaded)! {
+            bottomSheet?.dismiss(animated: true, completion: {
+                
+                self.rightBarButtonItemClick(Optional.none)
+            })
+        }
+    }
+    
+    func searchingStateAction() {
+        rightButtonArray = [LocalizedString(forKey: "手动添加"),LocalizedString(forKey: "通过IP地址添加")]
+        removeAllSuperView()
+        stateLabel.text = LocalizedString(forKey: "station_searching")
+        self.view.addSubview(stateLabel)
+        self.view.addSubview(searchingAnimationView)
+        bottomSheetStateExchange()
+        startSearchingAnimation()
+        analogueTerminal()
     }
     
     func searchNotFoundAction(){
+        rightButtonArray = [LocalizedString(forKey: "刷新"),LocalizedString(forKey: "手动添加"),LocalizedString(forKey: "通过IP地址添加")]
         stopSearchingAnimation()
-        stateLabel.removeFromSuperview()
-        searchingAnimationView.removeFromSuperview()
-        reSearchButton.removeFromSuperview()
+        removeAllSuperView()
         stateLabel.text = LocalizedString(forKey: "station_not_found")
         self.view.addSubview(stateLabel)
         self.view.addSubview(reSearchButton)
+        bottomSheetStateExchange()
     }
-    
+
     func searchEndStateAction(){
-        stateLabel.removeFromSuperview()
-        searchingAnimationView.removeFromSuperview()
-        reSearchButton.removeFromSuperview()
+        rightButtonArray = [LocalizedString(forKey: "刷新"),LocalizedString(forKey: "手动添加"),LocalizedString(forKey: "通过IP地址添加")]
+        removeAllSuperView()
         setScrollViewContent()
+        bottomSheetStateExchange()
     }
     
     func setScrollViewContent(){
@@ -232,7 +254,13 @@ class AddStationViewController: BaseViewController {
         }else{
             state = .end
         }
-        
+    }
+    
+    func presentToIPAddStation(){
+        let IPVC = IPAddDeviceViewController.init()
+        self.present(IPVC, animated: true) {
+            
+        }
     }
     
     func nextButtonString(state:DeviceForSearchState) ->String {
@@ -248,6 +276,7 @@ class AddStationViewController: BaseViewController {
 //           break
         }
     }
+
     
     lazy var reSearchButton: UIButton = {
         let button = UIButton.init(frame: searchingAnimationView.frame)
@@ -339,4 +368,30 @@ extension AddStationViewController:UIScrollViewDelegate{
         deviceBrowserPageControl.scrollViewDidEndScrollingAnimation(scrollView)
     }
 
+}
+
+extension AddStationViewController:BottomSheetDelegate{
+    func bottomSheetTap(_ indexPath: IndexPath) {
+        if state == .searching{
+            switch indexPath.row {
+            case 0:
+               break
+            case 1:
+                presentToIPAddStation()
+            default:
+                break
+            }
+        }else{
+            switch indexPath.row {
+            case 0:
+                state = StationSearchState.searching
+            case 1:break
+            case 2:
+                presentToIPAddStation()
+            default:
+                break
+            }
+        }
+        
+    }
 }
