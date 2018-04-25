@@ -24,6 +24,13 @@
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
+		1F359FA720907CD700E2FF36 /* InitLastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F359FA620907CD700E2FF36 /* InitLastView.swift */; };
+		1F359FAE2090819000E2FF36 /* ok.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FA82090818E00E2FF36 /* ok.png */; };
+		1F359FAF2090819000E2FF36 /* ok@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FA92090818F00E2FF36 /* ok@2x.png */; };
+		1F359FB02090819000E2FF36 /* no@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FAA2090818F00E2FF36 /* no@2x.png */; };
+		1F359FB12090819000E2FF36 /* no@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FAB2090818F00E2FF36 /* no@3x.png */; };
+		1F359FB22090819000E2FF36 /* no.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FAC2090818F00E2FF36 /* no.png */; };
+		1F359FB32090819000E2FF36 /* ok@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FAD2090819000E2FF36 /* ok@3x.png */; };
 		1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */; };
 		1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */; };
 		1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */; };
@@ -170,6 +177,13 @@
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
+		1F359FA620907CD700E2FF36 /* InitLastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitLastView.swift; sourceTree = "<group>"; };
+		1F359FA82090818E00E2FF36 /* ok.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ok.png; sourceTree = "<group>"; };
+		1F359FA92090818F00E2FF36 /* ok@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ok@2x.png"; sourceTree = "<group>"; };
+		1F359FAA2090818F00E2FF36 /* no@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no@2x.png"; sourceTree = "<group>"; };
+		1F359FAB2090818F00E2FF36 /* no@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "no@3x.png"; sourceTree = "<group>"; };
+		1F359FAC2090818F00E2FF36 /* no.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = no.png; sourceTree = "<group>"; };
+		1F359FAD2090819000E2FF36 /* ok@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ok@3x.png"; sourceTree = "<group>"; };
 		1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationDiskViewController.swift; sourceTree = "<group>"; };
 		1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationDiskViewController.xib; sourceTree = "<group>"; };
@@ -436,6 +450,12 @@
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F359FAC2090818F00E2FF36 /* no.png */,
+				1F359FAA2090818F00E2FF36 /* no@2x.png */,
+				1F359FAB2090818F00E2FF36 /* no@3x.png */,
+				1F359FA82090818E00E2FF36 /* ok.png */,
+				1F359FA92090818F00E2FF36 /* ok@2x.png */,
+				1F359FAD2090819000E2FF36 /* ok@3x.png */,
 				1F2B45A2208F290200C8971F /* close.png */,
 				1F2B45A3208F290200C8971F /* close@2x.png */,
 				1F2B45A1208F290200C8971F /* close@3x.png */,
@@ -623,6 +643,7 @@
 			isa = PBXGroup;
 			children = (
 				1F169DD0207F528800860F31 /* MyStationView.swift */,
+				1F359FA620907CD700E2FF36 /* InitLastView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -905,6 +926,7 @@
 				1F83AE8420887936007CCCFD /* more.png in Resources */,
 				1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */,
 				1F58824E2085F09F00394BD6 /* station_normal@3x.png in Resources */,
+				1F359FB02090819000E2FF36 /* no@2x.png in Resources */,
 				1F83AE8220887936007CCCFD /* more@2x.png in Resources */,
 				1F83AE7120883AA2007CCCFD /* help.png in Resources */,
 				1F83AE6A208838DD007CCCFD /* eye_open.png in Resources */,
@@ -919,6 +941,8 @@
 				1F2B45A4208F290200C8971F /* close@3x.png in Resources */,
 				1F58822C208591A100394BD6 /* add_station.png in Resources */,
 				1F5882482085F07E00394BD6 /* disk_warning@2x.png in Resources */,
+				1F359FB22090819000E2FF36 /* no.png in Resources */,
+				1F359FAF2090819000E2FF36 /* ok@2x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
 				1F4E9396208DBB7600DD1EA7 /* radio_button.png in Resources */,
 				1F58821520848F9400394BD6 /* touxiang.jpg in Resources */,
@@ -941,6 +965,7 @@
 				1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */,
 				1F5882252085885C00394BD6 /* logo.png in Resources */,
 				1F4E9397208DBB7600DD1EA7 /* radio_button_unchecked@2x.png in Resources */,
+				1F359FB12090819000E2FF36 /* no@3x.png in Resources */,
 				1F5882242085885C00394BD6 /* logo@2x.png in Resources */,
 				1F83AE6B208838DD007CCCFD /* eye_open@3x.png in Resources */,
 				1F83AE6C208838DD007CCCFD /* eye_off@2x.png in Resources */,
@@ -955,6 +980,8 @@
 				1F5882422085F07000394BD6 /* offline.png in Resources */,
 				1F4E93882089D64D00DD1EA7 /* disk@2x.png in Resources */,
 				1F58823A2085DCAF00394BD6 /* device_circle@3x.png in Resources */,
+				1F359FAE2090819000E2FF36 /* ok.png in Resources */,
+				1F359FB32090819000E2FF36 /* ok@3x.png in Resources */,
 				1F5882502085F09F00394BD6 /* station_normal@2x.png in Resources */,
 				1F83AE7220883AA2007CCCFD /* help@2x.png in Resources */,
 				1F83AE7020883AA2007CCCFD /* help@3x.png in Resources */,
@@ -1070,6 +1097,7 @@
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
 				1F83AE7420885FD5007CCCFD /* MDBaseButton.swift in Sources */,
 				1F83AE572087463F007CCCFD /* LocalNetworkLoginViewController.swift in Sources */,
+				1F359FA720907CD700E2FF36 /* InitLastView.swift in Sources */,
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
 				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,
 				1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */,

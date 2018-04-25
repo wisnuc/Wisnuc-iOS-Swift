@@ -12,7 +12,15 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InitializationCreatUserViewController" customModule="Wisnuc_iOS_Swift" customModuleProvider="target">
             <connections>
+                <outlet property="bgView" destination="OS4-IS-5sG" id="QVK-4y-WQl"/>
+                <outlet property="confirmPasswordTextField" destination="5vf-Jh-EOS" id="J6y-WK-ifU"/>
+                <outlet property="eyeButton" destination="oB8-p5-UKR" id="tHk-3Z-6Ex"/>
+                <outlet property="nameTextField" destination="5Ws-pS-6Pm" id="68f-jo-wya"/>
                 <outlet property="nextButton" destination="Eha-LU-sxB" id="dU7-rL-iJD"/>
+                <outlet property="passwordTextField" destination="GmU-Jg-pOy" id="PU3-c4-Bhm"/>
+                <outlet property="previousButton" destination="UeK-YT-rlm" id="Feb-p0-RZR"/>
+                <outlet property="titleLable" destination="uFb-vQ-6Xm" id="JXF-hr-9Cm"/>
+                <outlet property="userImageView" destination="jCI-CG-1KB" id="7Lv-nm-Htr"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,22 +29,117 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UeK-YT-rlm" customClass="MDCButton">
-                    <rect key="frame" x="57" y="617" width="46" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UeK-YT-rlm" customClass="MDCButton">
+                    <rect key="frame" x="16" y="617" width="167.5" height="30"/>
+                    <state key="normal" title="Button">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eha-LU-sxB" customClass="MDCButton">
-                    <rect key="frame" x="233" y="617" width="46" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eha-LU-sxB" customClass="MDCButton">
+                    <rect key="frame" x="191.5" y="617" width="167.5" height="30"/>
+                    <state key="normal" title="Button">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
                     <connections>
                         <action selector="nextButtonClick:" destination="-1" eventType="touchUpInside" id="lds-Iz-ecm"/>
                     </connections>
                 </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OS4-IS-5sG">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="260"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jCI-CG-1KB">
+                            <rect key="frame" x="130" y="98" width="115" height="115"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="115" id="8Wp-TR-gtS"/>
+                                <constraint firstAttribute="width" constant="115" id="hLO-ia-7Gx"/>
+                            </constraints>
+                        </imageView>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Ws-pS-6Pm">
+                            <rect key="frame" x="183.5" y="221" width="8" height="17"/>
+                            <nil key="textColor"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LKb-Xx-wqc">
+                            <rect key="frame" x="199.5" y="218.5" width="18" height="22"/>
+                            <state key="normal" image="change.png"/>
+                            <connections>
+                                <action selector="changeNameButtonClick:" destination="-1" eventType="touchUpInside" id="rcf-OP-soG"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="jCI-CG-1KB" firstAttribute="centerX" secondItem="OS4-IS-5sG" secondAttribute="centerX" id="42R-ZE-0gb"/>
+                        <constraint firstItem="jCI-CG-1KB" firstAttribute="top" secondItem="OS4-IS-5sG" secondAttribute="top" constant="98" id="4Gt-r4-hUP"/>
+                        <constraint firstItem="LKb-Xx-wqc" firstAttribute="centerY" secondItem="5Ws-pS-6Pm" secondAttribute="centerY" id="A9V-FP-Xqr"/>
+                        <constraint firstItem="LKb-Xx-wqc" firstAttribute="leading" secondItem="5Ws-pS-6Pm" secondAttribute="trailing" constant="8" id="BWV-e4-zoa"/>
+                        <constraint firstItem="jCI-CG-1KB" firstAttribute="centerX" secondItem="5Ws-pS-6Pm" secondAttribute="centerX" id="c9G-6R-OYa"/>
+                        <constraint firstAttribute="height" constant="260" id="f6o-h2-cuQ"/>
+                        <constraint firstItem="5Ws-pS-6Pm" firstAttribute="top" secondItem="jCI-CG-1KB" secondAttribute="bottom" constant="8" id="obc-Py-hxw"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uFb-vQ-6Xm">
+                    <rect key="frame" x="16" y="276" width="343" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="39s-Kn-6eP"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GmU-Jg-pOy" customClass="MDCTextField">
+                    <rect key="frame" x="16" y="328" width="343" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5vf-Jh-EOS" customClass="MDCTextField">
+                    <rect key="frame" x="16" y="374" width="343" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oB8-p5-UKR">
+                    <rect key="frame" x="335" y="331" width="24" height="24"/>
+                    <state key="normal" image="eye_open.png"/>
+                    <state key="selected" image="eye_off.png"/>
+                    <connections>
+                        <action selector="eyeButtonClick:" destination="-1" eventType="touchUpInside" id="9TV-OR-NTO"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="uFb-vQ-6Xm" secondAttribute="trailing" constant="16" id="2eu-PF-wHF"/>
+                <constraint firstItem="uFb-vQ-6Xm" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="Eb8-i0-4SC"/>
+                <constraint firstItem="GmU-Jg-pOy" firstAttribute="top" secondItem="uFb-vQ-6Xm" secondAttribute="bottom" constant="12" id="JU3-KZ-Zje"/>
+                <constraint firstItem="5vf-Jh-EOS" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="O5w-AM-9aW"/>
+                <constraint firstItem="Eha-LU-sxB" firstAttribute="height" secondItem="UeK-YT-rlm" secondAttribute="height" id="VpJ-py-sEa"/>
+                <constraint firstItem="OS4-IS-5sG" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="XL1-RE-dqA"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="GmU-Jg-pOy" secondAttribute="trailing" constant="16" id="Ztb-6h-7Bm"/>
+                <constraint firstItem="OS4-IS-5sG" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="aZP-AQ-ATv"/>
+                <constraint firstItem="Eha-LU-sxB" firstAttribute="leading" secondItem="UeK-YT-rlm" secondAttribute="trailing" constant="8" id="bHy-hF-jC4"/>
+                <constraint firstItem="5vf-Jh-EOS" firstAttribute="top" secondItem="GmU-Jg-pOy" secondAttribute="bottom" constant="16" id="hDV-jv-hr7"/>
+                <constraint firstItem="GmU-Jg-pOy" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="iGh-Vl-l89"/>
+                <constraint firstItem="UeK-YT-rlm" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="iwN-hc-T3p"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="oB8-p5-UKR" secondAttribute="trailing" constant="16" id="l2Y-87-yI9"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Eha-LU-sxB" secondAttribute="bottom" constant="20" id="mt2-fm-N5V"/>
+                <constraint firstItem="OS4-IS-5sG" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="qL4-wt-2hZ"/>
+                <constraint firstItem="uFb-vQ-6Xm" firstAttribute="top" secondItem="OS4-IS-5sG" secondAttribute="bottom" constant="16" id="rj5-l8-XM8"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Eha-LU-sxB" secondAttribute="trailing" constant="16" id="tcY-YQ-Lon"/>
+                <constraint firstItem="oB8-p5-UKR" firstAttribute="centerY" secondItem="GmU-Jg-pOy" secondAttribute="centerY" id="tlh-p7-73Z"/>
+                <constraint firstItem="Eha-LU-sxB" firstAttribute="width" secondItem="UeK-YT-rlm" secondAttribute="width" id="vdw-57-yTl"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="UeK-YT-rlm" secondAttribute="bottom" constant="20" id="zSq-C4-PrH"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="5vf-Jh-EOS" secondAttribute="trailing" constant="16" id="zfx-Sp-1hJ"/>
+            </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="34.5" y="53.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="change.png" width="18" height="18"/>
+        <image name="eye_off.png" width="24" height="24"/>
+        <image name="eye_open.png" width="24" height="24"/>
+    </resources>
 </document>
