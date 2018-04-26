@@ -16,6 +16,7 @@ public let COR2 = UIColor.init(red: 13/225.0, green: 112/225.0, blue: 100/225.0,
 public let lightGrayBackgroudColor = UIColor.colorFromRGB(rgbValue: 0x0f5f5f5)
 public let WechatLoginButtonColor = UIColor.colorFromRGB(rgbValue: 0x00786a)
 public let LightGrayColor = UIColor.init(white: 1-0.54, alpha: 1)
+public let GrayColor = UIColor.init(white: 1-0.75, alpha: 1)
 public let DarkGrayColor = UIColor.init(white: 1-0.87, alpha: 1)
 public let SkyBlueColor = UIColor.colorFromRGB(rgbValue: 0x00bcd5)
 public let WhiteGrayColor = UIColor.colorFromRGB(rgbValue: 0x0f2f1f4)

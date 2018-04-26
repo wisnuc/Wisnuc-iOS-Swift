@@ -24,4 +24,12 @@ class ViewTools: NSObject {
             viewValue.removeFromSuperview()
         }
     }
+    
+    class func automaticallyAdjustsScrollView(scrollView:UIScrollView,viewController:UIViewController){
+        if #available(iOS 11.0, *) {
+            scrollView.contentInsetAdjustmentBehavior = .never
+        } else {
+            viewController.automaticallyAdjustsScrollViewInsets = false
+        }
+    }
 }

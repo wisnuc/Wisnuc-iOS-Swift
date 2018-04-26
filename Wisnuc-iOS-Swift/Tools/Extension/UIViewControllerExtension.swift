@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import MaterialComponents
 
 extension UIViewController{
     class func currentViewController() -> UIViewController {
@@ -26,7 +27,11 @@ extension UIViewController{
                     if (controller?.childViewControllers.count)!>0{
                         controller = controller?.childViewControllers.last
                     }else{
-                        return controller!
+//                        if (controller?.isKind(of: MDCAppBar.self))!{
+//                            controller = controller?.childViewControllers.last
+//                        }else{
+                            return controller!
+//                        }
                     }
                 }
             }

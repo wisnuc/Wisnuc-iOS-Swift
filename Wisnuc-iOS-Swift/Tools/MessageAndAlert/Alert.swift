@@ -34,4 +34,16 @@ class Alert: NSObject {
 //    [materialAlertController addAction:disagreeAaction];
     //        [self presentViewController:materialAlertController animated:YES completion:NULL];
     
+    class func alert(title:String , message:String ,action1Title:String,action2Title:String ,handler1:@escaping MDCActionHandler,handler2:@escaping MDCActionHandler) {
+        let materialAlertController = MDCAlertController.init(title: title, message: message)
+        let controller = UIViewController.currentViewController()
+        
+        let action1 = MDCAlertAction(title: action1Title, handler: handler1)
+        materialAlertController.addAction(action1)
+        let action2 = MDCAlertAction(title: action2Title, handler: handler2)
+        materialAlertController.addAction(action2)
+         controller.present(materialAlertController, animated: true, completion: nil)
+    }
 }
+
+

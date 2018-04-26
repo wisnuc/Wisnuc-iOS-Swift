@@ -176,6 +176,7 @@ class LoginViewController: UIViewController {
     
     func actionForStationType() {
         view.addSubview(self.stationView)
+        ViewTools.automaticallyAdjustsScrollView(scrollView: self.stationView.stationScrollView, viewController: self)
         UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
             self.stationView.frame.origin.y = StationViewScale
             self.wisnucImageView.center.y = StationViewScale/2
@@ -341,6 +342,11 @@ extension LoginViewController:StationViewDelegate{
         case .local?:
             let localNetVC = LocalNetworkLoginViewController.init()
             self.navigationController?.pushViewController(localNetVC, animated: true)
+        case .diskError?:
+            let diskErrorVC = DiskErrorViewController.init()
+            self.present(diskErrorVC, animated: true, completion: {
+                
+            })
         default:
             break
         }

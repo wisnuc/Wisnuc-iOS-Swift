@@ -16,10 +16,14 @@ public let __kHeight = UIScreen.main.bounds.size.height
 public let MarginsWidth:CGFloat = 16
 public let MarginsCloseWidth:CGFloat = 8
 public let MarginsFarWidth:CGFloat = 20
+public let MarginsSoFarWidth:CGFloat = 24
 
 public let SafeAreaBottomHeight:CGFloat = 34.0
 public let CommonButtonHeight:CGFloat = 36
 public let MarginsBottomHeight:CGFloat = UIDevice.current.isX() ? 20 + SafeAreaBottomHeight:20
+
+public let NormalLabelWidth:CGFloat = __kWidth - MarginsWidth*2
+
 
 public let MDCAppNavigationBarHeight:CGFloat =  UIDevice.current.isX() ? 76.0 + SafeAreaBottomHeight-10:76.0
 

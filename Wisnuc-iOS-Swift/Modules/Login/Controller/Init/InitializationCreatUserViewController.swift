@@ -22,10 +22,12 @@ class InitializationCreatUserViewController: BaseViewController {
     @IBOutlet weak var userImageView: UIImageView!
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
     var textFieldControllerConfirmPassword:MDCTextInputControllerUnderline?
+    var lastInitView:InitLastView?
     override func viewDidLoad() {
         super.viewDidLoad()
         setData()
         baseSetting()
+        self.automaticallyAdjustsScrollViewInsets = false
     }
     
     func baseSetting(){
@@ -107,20 +109,20 @@ class InitializationCreatUserViewController: BaseViewController {
     
     @IBAction func nextButtonClick(_ sender: MDCButton) {
         let finishView = InitLastView.init(state: .succeed , frame: CGRect(x: 0, y: __kHeight, width: self.view.width, height: __kHeight - MDCAppNavigationBarHeight))
+        finishView.delegate = self
+        self.lastInitView = finishView
         self.view.addSubview(finishView)
         UIView.animate(withDuration: 0.5) {
         finishView.frame = CGRect(x: 0, y:MDCAppNavigationBarHeight , width: self.view.width, height: __kHeight - MDCAppNavigationBarHeight)
         }
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
+
+extension InitializationCreatUserViewController:InitLastViewDoneDelegate{
+    func done(){
+        if self.lastInitView != nil {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+}
+

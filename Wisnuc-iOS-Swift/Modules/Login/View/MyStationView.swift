@@ -22,7 +22,7 @@ private let Width_Space:CGFloat  = MarginsCloseWidth
 private let Height_Space:CGFloat  = MarginsCloseWidth
 private let ViewWidth:CGFloat  = (__kWidth - MarginsWidth * 2 - MarginsCloseWidth)/2
 private let ViewHeight:CGFloat  = (__kWidth - MarginsWidth * 2 - MarginsCloseWidth)/2
-private let Start_X:CGFloat  = 0
+private let Start_X:CGFloat  = MarginsWidth
 private var Start_Y:CGFloat = 0
 private let ButtonWidth:CGFloat  = 64
 private let ButtonHeight:CGFloat  = 64
@@ -87,11 +87,16 @@ class MyStationView: UIView {
         let stationModel4 = StationModel.init()
         stationModel4.type = "checking"
         stationModel4.name = "设备666"
+        
+        let stationModel5 = StationModel.init()
+        stationModel5.type = "disk_error"
+        stationModel5.name = "设备7"
         stationArray = []
         stationArray?.append(stationModel1)
         stationArray?.append(stationModel2)
         stationArray?.append(stationModel3)
         stationArray?.append(stationModel4)
+        stationArray?.append(stationModel5)
     }
     
     func setStationsView() {
@@ -108,7 +113,7 @@ class MyStationView: UIView {
         for (idx,value) in (stationArray?.enumerated())! {
             index = idx % 2
             page = idx/2
-            Start_Y = myStationLabel.frame.maxY + MarginsWidth
+            Start_Y =  MarginsCloseWidth
             let view = UIView.init(frame: CGRect(x: CGFloat(index) * (ViewWidth + Width_Space) + Start_X, y: CGFloat(page) * (ViewHeight + Height_Space) + Start_Y, width: ViewWidth, height: ViewHeight))
             view.backgroundColor = UIColor.clear
             view.tag = idx
@@ -230,14 +235,23 @@ class MyStationView: UIView {
         return lable
     }()
     
-//    lazy var myStationLabelView: UIView = {
-//        let view = UIView.init(frame: CGRect(x: 0, y: 0, width: 0, height: __kWidth))
-//        return <#value#>
-//    }()
     
     lazy var stationScrollView: UIScrollView = {
         let scrollView = UIScrollView.init(frame: CGRect(x: 0, y:myStationLabel.bottom + MarginsWidth , width: __kWidth, height: self.height - myStationLabel.bottom - MarginsWidth))
         scrollView.isScrollEnabled = true
+        scrollView.delegate = self
+//        scrollView.backgroundColor = SkyBlueColor
         return scrollView
     }()
+}
+
+extension MyStationView:UIScrollViewDelegate{
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        
+    }
 }

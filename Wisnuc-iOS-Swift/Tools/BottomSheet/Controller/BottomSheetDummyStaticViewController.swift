@@ -33,12 +33,7 @@ class BottomSheetDummyStaticViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
         self.view.addSubview(overflowCollectionView)
-        if #available(iOS 11.0, *) {
-            overflowCollectionView.contentInsetAdjustmentBehavior = .never
-        } else {
-            self.automaticallyAdjustsScrollViewInsets = false
-        }
-  
+        ViewTools.automaticallyAdjustsScrollView(scrollView: overflowCollectionView, viewController: self)
     }
     
     func setItem(buttonArray:Array<String>){

@@ -19,9 +19,9 @@ public func labelWidthFrom(title:String,font:UIFont) -> CGFloat{
 
 public func labelSize(title:String,font:UIFont) -> CGSize{
 //    let size = (title as NSString).size(for: font, size: CGSize(width: CGFloat(MAXFLOAT), height: 40), mode: NSLineBreakMode.byWordWrapping)
-    let size = (title as NSString).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: CGFloat(MAXFLOAT)), options: NSStringDrawingOptions.usesFontLeading, attributes: [NSAttributedStringKey.font:font], context: nil).size
+//    let size = (title as NSString).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: CGFloat(MAXFLOAT)), options: NSStringDrawingOptions.usesFontLeading, attributes: [NSAttributedStringKey.font:font], context: nil).size
     // CGSize titleSize = [str boundingRectWithSize:CGSizeMake(lable.width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:nil].size;
-
+    let size = (title as NSString).size(for: font, size: CGSize(width: CGFloat(MAXFLOAT), height: 40), mode: NSLineBreakMode.byCharWrapping)
     return size
 
 }

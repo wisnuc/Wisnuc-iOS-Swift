@@ -27,4 +27,7 @@ class FoundStationModel: NSObject {
 class DiskModel: NSObject {
     var name:String?
     var type:String?
+    var capacity:Float?
+    var isError:Bool?
+    var serial:String?
 }

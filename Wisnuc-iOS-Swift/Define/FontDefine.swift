@@ -13,6 +13,7 @@ import UIKit
 public let SmallTitleFont:UIFont = UIFont.systemFont(ofSize: 12)
 public let MiddleTitleFont:UIFont = UIFont.systemFont(ofSize: 14)
 public let MiddlePlusTitleFont:UIFont = UIFont.systemFont(ofSize: 16)
+public let TitleFont18:UIFont = UIFont.systemFont(ofSize: 18)
 public let BigTitleFont:UIFont = UIFont.systemFont(ofSize: 21)
 
 public let BoldSmallTitleFont:UIFont = UIFont.boldSystemFont(ofSize: 12)
