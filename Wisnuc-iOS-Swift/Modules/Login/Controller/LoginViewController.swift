@@ -9,7 +9,6 @@
 import UIKit
 import SnapKit
 import MaterialComponents
-//import 
 
 enum LoginState:Int{
     case wechat = 0
@@ -209,10 +208,13 @@ class LoginViewController: UIViewController {
             self.commonLoginButon = self.loginButton
             self.view.addSubview(self.commonLoginButon!)
             self.setUpFrame()
-            self.wisnucLabel.text = self.userName ?? "登录名" 
+            self.wisnucLabel.text = self.userName ?? "登录名"
+            let image = UIImage.init(named: "touxiang.jpg")
             self.wisnucImageView.layer.borderColor = ImageViewBorderColor
-            self.wisnucImageView.image = UIImage.init(named: "touxiang.jpg")
-            
+            self.wisnucImageView.layer.masksToBounds = true
+            self.wisnucImageView.layer.borderWidth = 8
+            self.wisnucImageView.layer.cornerRadius = UserImageViewWidth/2
+            self.wisnucImageView.was_setCircleImage(withUrlString: "xx", placeholder: image!)
         }
     }
     
@@ -300,9 +302,6 @@ class LoginViewController: UIViewController {
 
 	lazy var wisnucImageView:UIImageView = {
         let imageView = UIImageView.init()
-        imageView.layer.masksToBounds = true
-        imageView.layer.borderWidth = 8
-        imageView.layer.cornerRadius = UserImageViewWidth/2
         imageView.isUserInteractionEnabled = true
         let imageViewTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(imageViewTap(_ :)))
         imageView .addGestureRecognizer(imageViewTapGesture)

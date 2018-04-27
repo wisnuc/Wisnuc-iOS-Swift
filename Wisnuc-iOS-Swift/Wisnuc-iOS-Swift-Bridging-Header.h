@@ -6,3 +6,5 @@
 #import "WechatOpenSDK/WXApi.h"
 #import <YYKit/YYKit.h>
 #import "RadioButton.h"
+#import "UIImage+extension.h"
+#import "CNPPopupController.h"

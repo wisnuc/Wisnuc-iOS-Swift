@@ -18,7 +18,6 @@ private let Start_X:CGFloat  = (__kWidth - ViewWidth)/2
 private let Start_Y:CGFloat  = stateLabelTopMargins
 private let Width_Space:CGFloat  = Start_X * 2
 
-
 enum StationSearchState:Int {
     case searching = 0
     case end
@@ -50,10 +49,11 @@ class AddStationViewController: BaseViewController {
         }
     }
     
-    var deviceArray:Array<FoundStationModel>?
+    var deviceArray:Array<StationModel>?
     var currentIndex:Int = 0
     var rightButtonArray:Array<String> = []
     var bottomSheet:BottomSheetDummyStaticViewController?
+    var popupController:CNPPopupController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,20 +64,22 @@ class AddStationViewController: BaseViewController {
     
     func setData(){
         deviceArray = Array.init()
-        let model1 = FoundStationModel()
+        let model1 = StationModel()
         model1.type = DeviceForSearchState.applyToUse.rawValue
         model1.name = "My Station"
+        model1.adress = "111.222.222.111"
         
-        let model2 = FoundStationModel()
+        let model2 = StationModel()
         model2.type = DeviceForSearchState.initialization.rawValue
         model2.name = "袅袅炊烟"
         
-        let model3 = FoundStationModel()
+        let model3 = StationModel()
         model3.type = DeviceForSearchState.importTo.rawValue
         model3.name = "闻上盒子"
         deviceArray?.append(model1)
         deviceArray?.append(model2)
         deviceArray?.append(model3)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -126,10 +128,48 @@ class AddStationViewController: BaseViewController {
         case DeviceForSearchState.initialization.rawValue:
             let initDiskVC = InitializationDiskViewController.init()
             self.navigationController?.pushViewController(initDiskVC, animated: true)
+            
+         case DeviceForSearchState.applyToUse.rawValue:
+            Message.message(text: LocalizedString(forKey: "添加成功，请联系XXX"))
+            DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2.3) {
+                dispatch_async_on_main_queue {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+           
         default:
             break
         }
     }
+    
+    @objc func circleViewTap(_ sender:UIGestureRecognizer){
+        let diskModel1 = DiskModel.init()
+        diskModel1.name = "666"
+        diskModel1.admin = "Mark"
+        diskModel1.capacity = 10.0
+        diskModel1.effectiveCapacity = 5.23
+        
+        let diskModel2 = DiskModel.init()
+        diskModel2.name = "777"
+        diskModel2.admin = "An"
+        diskModel2.capacity = 5.0
+        diskModel2.effectiveCapacity = 2.20
+        
+        let diskArray = [diskModel1,diskModel2]
+        let view = sender.view
+        let model = deviceArray![(view?.tag)!]
+//        switch model.type {
+//        case DeviceForSearchState.applyToUse.rawValue:
+            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
+//        case DeviceForSearchState.initialization.rawValue:
+//            break
+//        case DeviceForSearchState.importTo.rawValue:
+//            break
+//        default:
+//            break
+//        }
+    }
+    
     
     func setBeginSearchState() {
         state = .searching
@@ -145,7 +185,7 @@ class AddStationViewController: BaseViewController {
         } else {
             // Fallback on earlier versions
         }
-        //        self.automaticallyAdjustsScrollViewInsets = true
+     
     }
     
 
@@ -219,6 +259,11 @@ class AddStationViewController: BaseViewController {
             circleView.layer.borderColor = WhiteGrayColor.cgColor
             circleView.layer.cornerRadius = circleView.width/2
             circleView.layer.contents = UIImage.init(named: "station_w215i.png")?.cgImage;
+            circleView.isUserInteractionEnabled = true
+            let tapGestrue = UITapGestureRecognizer.init()
+            tapGestrue.addTarget(self, action: #selector(circleViewTap(_:)))
+            circleView.addGestureRecognizer(tapGestrue)
+            circleView.tag = idx
             self.deviceBrowserScrollView.addSubview(circleView)
             
 //            let stationImage = UIImage.init(named: "station_w215i.png")
@@ -344,6 +389,7 @@ class AddStationViewController: BaseViewController {
     
         return button
     }()
+    
 }
 
 extension AddStationViewController:UIScrollViewDelegate{
@@ -395,3 +441,5 @@ extension AddStationViewController:BottomSheetDelegate{
         
     }
 }
+
+

@@ -13,7 +13,8 @@ class Message: NSObject {
     
     class func message(text:String) -> Void{
         let message  = MDCSnackbarMessage.init()
-        message.text = "请先安装微信"
+        message.text = text
+        message.duration = 2.0
         MDCSnackbarManager.show(message)
     }
 }

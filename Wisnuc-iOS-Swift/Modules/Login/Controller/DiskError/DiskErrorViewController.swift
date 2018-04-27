@@ -191,7 +191,7 @@ class DiskErrorViewController: BaseViewController {
     }
     
     @objc func continueButtonClick(_ sender:UIButton){
-        Alert.alert(title: LocalizedString(forKey: "继续使用？"), message: LocalizedString(forKey: "丢失磁盘的数据将无法找回"), action1Title: LocalizedString(forKey: "cancel"), action2Title: "sure", handler1: { (alertAction) in
+        Alert.alert(title: LocalizedString(forKey: "继续使用？"), message: LocalizedString(forKey: "丢失磁盘的数据将无法找回"), action1Title: LocalizedString(forKey: "cancel"), action2Title: "confirm", handler1: { (alertAction) in
             
         }) { (alertAction) in
             

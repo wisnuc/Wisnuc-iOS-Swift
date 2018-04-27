@@ -13,4 +13,5 @@ pod 'RealReachability'
 pod 'WechatOpenSDK'
 pod 'YYKit'
 pod 'BEMCheckBox'
+pod 'SDWebImage'
 end

@@ -12,3 +12,8 @@ class MyStationTapGestureRecognizer: UITapGestureRecognizer {
     var stationButtonType : StationButtonType?
     var stationName : String?
 }
+
+//class MyStationTapGestureRecognizer: UITapGestureRecognizer {
+//    var stationButtonType : StationButtonType?
+//
+//}
