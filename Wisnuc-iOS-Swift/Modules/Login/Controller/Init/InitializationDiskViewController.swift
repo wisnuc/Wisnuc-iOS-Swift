@@ -11,7 +11,6 @@ import MaterialComponents
 import BEMCheckBox
 
 private let InitMarginsTop:CGFloat = 24
-private let LineColor:UIColor = UIColor.init(white: 0.3, alpha: 1)
 private let checkBoxWidth:CGFloat = 18
 
 class InitializationDiskViewController: BaseViewController {

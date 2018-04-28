@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MaterialComponents
 
 enum StationButtonType :String {
     case diskError = "disk_error"
@@ -32,6 +33,8 @@ private let IconHeight:CGFloat  = 18
 private let StationViewInnerImageViewTop_Width_Space:CGFloat = 20
 private let StationViewInnerLabelTop_Width_Space:CGFloat = 12
 
+private let CollectionCellHeight:CGFloat = ViewHeight
+
 @objc protocol StationViewDelegate{
     func addStationButtonTap(_ sender:UIButton)
     func stationViewTapAction(_ sender:MyStationTapGestureRecognizer)
@@ -43,8 +46,8 @@ class MyStationView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.white
         self.addSubview(myStationLabel)
+        self.backgroundColor = UIColor.white
         getDataSource()
         setStationsView()
     }
@@ -71,25 +74,24 @@ class MyStationView: UIView {
     }
     
     func getDataSource() {
-        
         let stationModel1 = StationModel.init()
-        stationModel1.type = "normal"
+        stationModel1.state = "normal"
         stationModel1.name = "WISNUC Station1"
         
         let stationModel2 = StationModel.init()
-        stationModel2.type = "local"
+        stationModel2.state = "local"
         stationModel2.name = "WISNUC Station2"
         
         let stationModel3 = StationModel.init()
-        stationModel3.type = "offline"
+        stationModel3.state = "offline"
         stationModel3.name = "自定义设备"
         
         let stationModel4 = StationModel.init()
-        stationModel4.type = "checking"
+        stationModel4.state = "checking"
         stationModel4.name = "设备666"
         
         let stationModel5 = StationModel.init()
-        stationModel5.type = "disk_error"
+        stationModel5.state = "disk_error"
         stationModel5.name = "设备7"
         stationArray = []
         stationArray?.append(stationModel1)
@@ -100,6 +102,7 @@ class MyStationView: UIView {
     }
     
     func setStationsView() {
+
         let page = (stationArray?.count)!/2 + 1
         stationScrollView.contentSize = CGSize(width: self.width, height: CGFloat(page*Int(ViewHeight + Width_Space)))
         self.addSubview(stationScrollView)
@@ -107,6 +110,12 @@ class MyStationView: UIView {
         setAddButtonView()
     }
     
+    func addStation(model:StationModel){
+       stationArray?.append(model)
+       stationScrollView.removeAllSubviews()
+       setStationsView()
+    }
+
     func setDetailStationsView(){
         var index:Int = 0
         var page:Int = 0
@@ -121,17 +130,17 @@ class MyStationView: UIView {
             
             let model:StationModel = value
             let tapGesture = MyStationTapGestureRecognizer.init(target: self, action: #selector(stationViewTap(_ :)))
-            tapGesture.stationButtonType = model.type.map { StationButtonType(rawValue: $0) }!
+            tapGesture.stationButtonType = model.state.map { StationButtonType(rawValue: $0) }!
             tapGesture.stationName = model.name
             view.addGestureRecognizer(tapGesture)
             
-            let button = detailButton(buttonType:StationButtonType(rawValue: model.type!)!)
-            view.addSubview(detailIconView(type: StationButtonType(rawValue: model.type!)!, center: CGPoint(x:button.right , y: button.top)))
+            let button = detailButton(buttonType:StationButtonType(rawValue: model.state!)!)
+            view.addSubview(detailIconView(type: StationButtonType(rawValue: model.state!)!, center: CGPoint(x:button.right , y: button.top)))
             view.addSubview(button)
             let functionLabel = functionOrStationNameLabel(text: model.name!, top: button.frame.maxY + StationViewInnerLabelTop_Width_Space)
             view.addSubview(functionLabel)
             
-            let describeLabel = functionOrStationNameLabel(text: describeString(type: StationButtonType(rawValue: model.type!)!), top: functionLabel.bottom + MarginsCloseWidth)
+            let describeLabel = functionOrStationNameLabel(text: describeString(type: StationButtonType(rawValue: model.state!)!), top: functionLabel.bottom + MarginsCloseWidth)
             describeLabel.font = SmallTitleFont
             describeLabel.textColor = LightGrayColor
             view.addSubview(describeLabel)
@@ -142,8 +151,9 @@ class MyStationView: UIView {
     func setAddButtonView() {
         let addButtonIndex = (stationArray?.count)! % 2
         let addButtonPage = (stationArray?.count)! / 2
+        
         let view = UIView.init(frame: CGRect(x: CGFloat(addButtonIndex) * (ViewWidth + Width_Space) + Start_X, y: CGFloat(addButtonPage) * (ViewHeight + Height_Space) + Start_Y, width: ViewWidth, height: ViewHeight))
-        let addButton = detailButton(buttonType: .addNew)
+        let addButton = detailButton(buttonType:.addNew)
         view.addSubview(addButton)
         view.addSubview(functionOrStationNameLabel(text: LocalizedString(forKey: "add_Device"), top: addButton.frame.maxY + StationViewInnerLabelTop_Width_Space))
         stationScrollView.addSubview(view)
@@ -179,6 +189,7 @@ class MyStationView: UIView {
 //            button.addTarget(self, action: #selector(detailButtonClick(_ :)), for: UIControlEvents.touchUpInside)
            break
         }
+  
         
         let buttonImage = UIImage.init(named: buttonImageName!)
         button.frame = CGRect(x: (view.width - (buttonImage?.size.width)!)/2  , y: StationViewInnerImageViewTop_Width_Space, width: ButtonWidth, height: ButtonHeight)
@@ -243,7 +254,21 @@ class MyStationView: UIView {
 //        scrollView.backgroundColor = SkyBlueColor
         return scrollView
     }()
+
+    lazy var stationCollectionViewController: MyStationCollectionViewController = {
+        let layout = MDCCollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets.zero
+        layout.itemSize = CGSize(width: size.width, height:CollectionCellHeight)
+        let collectionViewController = MyStationCollectionViewController.init(collectionViewLayout: layout)
+        return collectionViewController
+    }()
 }
+//- (void) displayContentController: (UIViewController*) content {
+//    [self addChildViewController:content];
+//    content.view.frame = [self frameForContentController];
+//    [self.view addSubview:self.currentClientView];
+//    [content didMoveToParentViewController:self];
+//}
 
 extension MyStationView:UIScrollViewDelegate{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -255,3 +280,6 @@ extension MyStationView:UIScrollViewDelegate{
         
     }
 }
+
+
+

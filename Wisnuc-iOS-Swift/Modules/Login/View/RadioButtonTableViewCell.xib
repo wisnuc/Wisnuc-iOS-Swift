@@ -19,12 +19,12 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="55.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evZ-Ua-Yms" customClass="MDCButton">
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evZ-Ua-Yms" customClass="RadioButton">
                         <rect key="frame" x="24" y="8" width="24" height="24"/>
                         <state key="normal" image="radio_button_unchecked.png"/>
                         <state key="selected" image="radio_button.png"/>
                         <connections>
-                            <action selector="radioButtonClick:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="0BZ-Cz-D4q"/>
+                            <action selector="radioButtonClick:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="8aO-Mu-IUl"/>
                         </connections>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UUr-aL-mph">
@@ -52,7 +52,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="detailLabel" destination="zoz-V2-NjE" id="a5C-vm-Qbg"/>
-                <outlet property="radioButton" destination="evZ-Ua-Yms" id="aMI-kR-GH5"/>
+                <outlet property="radioButton" destination="evZ-Ua-Yms" id="fO4-gL-3s3"/>
                 <outlet property="titleLabel" destination="UUr-aL-mph" id="anz-QP-5Pe"/>
             </connections>
             <point key="canvasLocation" x="35" y="60"/>

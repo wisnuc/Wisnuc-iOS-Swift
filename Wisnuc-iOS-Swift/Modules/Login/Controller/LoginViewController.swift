@@ -304,7 +304,7 @@ class LoginViewController: UIViewController {
         let imageView = UIImageView.init()
         imageView.isUserInteractionEnabled = true
         let imageViewTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(imageViewTap(_ :)))
-        imageView .addGestureRecognizer(imageViewTapGesture)
+        imageView.addGestureRecognizer(imageViewTapGesture)
         return imageView
     }()
     
@@ -353,7 +353,14 @@ extension LoginViewController:StationViewDelegate{
     
     func addStationButtonTap(_ sender: UIButton) {
         let addStationVC = AddStationViewController.init()
+        addStationVC.delegate = self
         self.navigationController?.pushViewController(addStationVC, animated: true)
+    }
+}
+
+extension LoginViewController:AddStationDelegate{
+    func addStationFinish(model: StationModel) {
+           self.stationView.addStation(model: model)
     }
 }
 

@@ -25,7 +25,12 @@ enum StationSearchState:Int {
     case abort
 }
 
+@objc protocol AddStationDelegate {
+    func addStationFinish(model:StationModel)
+}
+
 class AddStationViewController: BaseViewController {
+    var delegate:AddStationDelegate?
     var state:StationSearchState?{
         didSet{
             switch state {
@@ -68,14 +73,18 @@ class AddStationViewController: BaseViewController {
         model1.type = DeviceForSearchState.applyToUse.rawValue
         model1.name = "My Station"
         model1.adress = "111.222.222.111"
+        model1.state = StationButtonType.normal.rawValue
         
         let model2 = StationModel()
         model2.type = DeviceForSearchState.initialization.rawValue
         model2.name = "袅袅炊烟"
+        model2.state = StationButtonType.normal.rawValue
         
         let model3 = StationModel()
         model3.type = DeviceForSearchState.importTo.rawValue
         model3.name = "闻上盒子"
+        model3.adress = "133.222.222.111"
+        model3.state = StationButtonType.normal.rawValue
         deviceArray?.append(model1)
         deviceArray?.append(model2)
         deviceArray?.append(model3)
@@ -134,6 +143,20 @@ class AddStationViewController: BaseViewController {
             DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2.3) {
                 dispatch_async_on_main_queue {
                     self.navigationController?.popViewController(animated: true)
+                    if let delegateOK = self.delegate{
+                        delegateOK.addStationFinish(model: model)
+                    }
+                }
+            }
+            
+        case DeviceForSearchState.importTo.rawValue:
+            Message.message(text: LocalizedString(forKey: "添加成功，请联系XXX"))
+            DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2.3) {
+                dispatch_async_on_main_queue {
+                    self.navigationController?.popViewController(animated: true)
+                    if let delegateOK = self.delegate{
+                        delegateOK.addStationFinish(model: model)
+                    }
                 }
             }
            
@@ -143,31 +166,41 @@ class AddStationViewController: BaseViewController {
     }
     
     @objc func circleViewTap(_ sender:UIGestureRecognizer){
-        let diskModel1 = DiskModel.init()
-        diskModel1.name = "666"
-        diskModel1.admin = "Mark"
-        diskModel1.capacity = 10.0
-        diskModel1.effectiveCapacity = 5.23
-        
-        let diskModel2 = DiskModel.init()
-        diskModel2.name = "777"
-        diskModel2.admin = "An"
-        diskModel2.capacity = 5.0
-        diskModel2.effectiveCapacity = 2.20
-        
-        let diskArray = [diskModel1,diskModel2]
+
         let view = sender.view
         let model = deviceArray![(view?.tag)!]
-//        switch model.type {
-//        case DeviceForSearchState.applyToUse.rawValue:
+        switch model.type {
+        case DeviceForSearchState.applyToUse.rawValue:
+            let diskModel1 = DiskModel.init()
+            diskModel1.name = "666"
+            diskModel1.admin = "Mark"
+            diskModel1.capacity = 10.0
+            diskModel1.effectiveCapacity = 5.23
+            
+            let diskArray = [diskModel1]
             DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
-//        case DeviceForSearchState.initialization.rawValue:
-//            break
-//        case DeviceForSearchState.importTo.rawValue:
-//            break
-//        default:
-//            break
-//        }
+        case DeviceForSearchState.initialization.rawValue:
+            break
+        case DeviceForSearchState.importTo.rawValue:
+            let diskModel1 = DiskModel.init()
+            diskModel1.name = "666"
+            diskModel1.admin = "Mark"
+            diskModel1.capacity = 10.0
+            diskModel1.effectiveCapacity = 5.23
+            diskModel1.type = "Single"
+            
+            let diskModel2 = DiskModel.init()
+            diskModel2.name = "777"
+            diskModel2.admin = "An"
+            diskModel2.capacity = 5.0
+            diskModel2.effectiveCapacity = 2.20
+            diskModel2.type = "RAID1"
+            
+            let diskArray = [diskModel1,diskModel2]
+            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
+        default:
+            break
+        }
     }
     
     

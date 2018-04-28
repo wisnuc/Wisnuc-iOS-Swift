@@ -17,6 +17,7 @@ enum DeviceForSearchState:String {
 class StationModel: NSObject {
     var name:String?
     var type:String?
+    var state:String?
     var adress:String?
 }
 
@@ -28,8 +29,8 @@ class FoundStationModel: NSObject {
 class DiskModel: NSObject {
     var name:String?
     var type:String?
-    var capacity:Float?
-    var effectiveCapacity:Float?
+    var capacity:NSNumber?
+    var effectiveCapacity:NSNumber?
     var isError:Bool?
     var serial:String?
     var admin:String?
