@@ -142,6 +142,12 @@
 		1F83AE8220887936007CCCFD /* more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F83AE7F20887936007CCCFD /* more@2x.png */; };
 		1F83AE8320887936007CCCFD /* more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F83AE8020887936007CCCFD /* more@3x.png */; };
 		1F83AE8420887936007CCCFD /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F83AE8120887936007CCCFD /* more.png */; };
+		1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EBB2F209AB6AA00E8AB83 /* BaseTools.swift */; };
+		1F8EBB33209ABF4700E8AB83 /* FilesRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EBB32209ABF4700E8AB83 /* FilesRootViewController.swift */; };
+		1F8EBB35209AD91200E8AB83 /* WSTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EBB34209AD91200E8AB83 /* WSTabBarController.swift */; };
+		1F8EBB38209ADC6700E8AB83 /* tab_files.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB37209ADC6700E8AB83 /* tab_files.png */; };
+		1F8EBB3A209ADC7100E8AB83 /* tab_files@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB39209ADC7000E8AB83 /* tab_files@2x.png */; };
+		1F8EBB3C209ADC7A00E8AB83 /* tab_files@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB3B209ADC7A00E8AB83 /* tab_files@3x.png */; };
 		1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */; };
 		1FA669DB208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */; };
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
@@ -328,6 +334,12 @@
 		1F83AE7F20887936007CCCFD /* more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2x.png"; sourceTree = "<group>"; };
 		1F83AE8020887936007CCCFD /* more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@3x.png"; sourceTree = "<group>"; };
 		1F83AE8120887936007CCCFD /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
+		1F8EBB2F209AB6AA00E8AB83 /* BaseTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTools.swift; sourceTree = "<group>"; };
+		1F8EBB32209ABF4700E8AB83 /* FilesRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesRootViewController.swift; sourceTree = "<group>"; };
+		1F8EBB34209AD91200E8AB83 /* WSTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSTabBarController.swift; sourceTree = "<group>"; };
+		1F8EBB37209ADC6700E8AB83 /* tab_files.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_files.png; sourceTree = "<group>"; };
+		1F8EBB39209ADC7000E8AB83 /* tab_files@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_files@2x.png"; sourceTree = "<group>"; };
+		1F8EBB3B209ADC7A00E8AB83 /* tab_files@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_files@3x.png"; sourceTree = "<group>"; };
 		1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetDummyStaticViewController.swift; sourceTree = "<group>"; };
 		1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomSheetDummyStaticViewController.xib; sourceTree = "<group>"; };
 		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -520,6 +532,7 @@
 			children = (
 				1F4E93832089BD3300DD1EA7 /* OSTools.swift */,
 				1F2B4598208F236F00C8971F /* ViewTools.swift */,
+				1F8EBB2F209AB6AA00E8AB83 /* BaseTools.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -644,6 +657,24 @@
 			path = Tool;
 			sourceTree = "<group>";
 		};
+		1F8EBB31209ABF1800E8AB83 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				1F8EBB32209ABF4700E8AB83 /* FilesRootViewController.swift */,
+			);
+			path = Files;
+			sourceTree = "<group>";
+		};
+		1F8EBB36209ADC5A00E8AB83 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				1F8EBB3B209ADC7A00E8AB83 /* tab_files@3x.png */,
+				1F8EBB39209ADC7000E8AB83 /* tab_files@2x.png */,
+				1F8EBB37209ADC6700E8AB83 /* tab_files.png */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
 		1FD9B743207CBE8700906D80 = {
 			isa = PBXGroup;
 			children = (
@@ -701,6 +732,7 @@
 		1FD9B780207CBEAD00906D80 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				1F8EBB31209ABF1800E8AB83 /* Files */,
 				1FD9B782207CC6F400906D80 /* Login */,
 			);
 			path = Modules;
@@ -864,6 +896,7 @@
 				1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */,
 				1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */,
 				1F83AE7320885FD5007CCCFD /* MDBaseButton.swift */,
+				1F8EBB34209AD91200E8AB83 /* WSTabBarController.swift */,
 			);
 			path = Foundations;
 			sourceTree = "<group>";
@@ -888,6 +921,7 @@
 		1FD9B7AC207E19F900906D80 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				1F8EBB36209ADC5A00E8AB83 /* Base */,
 				1F5882282085918B00394BD6 /* Login */,
 			);
 			path = Image;
@@ -1082,6 +1116,7 @@
 				1F58821520848F9400394BD6 /* touxiang.jpg in Resources */,
 				1F58823B2085DCAF00394BD6 /* device@3x.png in Resources */,
 				1F83AE7E20886BDA007CCCFD /* change2x.png in Resources */,
+				1F8EBB3A209ADC7100E8AB83 /* tab_files@2x.png in Resources */,
 				1F83AE7820886A13007CCCFD /* LogOutViewController.xib in Resources */,
 				1F5882562085F0F800394BD6 /* station_review@2x.png in Resources */,
 				1F359FE42091B2A900E2FF36 /* warning.png in Resources */,
@@ -1098,6 +1133,7 @@
 				1F83AE5F208830B8007CCCFD /* local_area_white@2x.png in Resources */,
 				1F359FC32091764000E2FF36 /* diskinit.png in Resources */,
 				1F58823E2085DCAF00394BD6 /* device_circle@2x.png in Resources */,
+				1F8EBB3C209ADC7A00E8AB83 /* tab_files@3x.png in Resources */,
 				1F5882442085F07000394BD6 /* offline@2x.png in Resources */,
 				1F58825C2085F4C900394BD6 /* local_area@3x.png in Resources */,
 				1F4E939A208DBB7600DD1EA7 /* radio_button_unchecked.png in Resources */,
@@ -1135,6 +1171,7 @@
 				1F83AE7020883AA2007CCCFD /* help@3x.png in Resources */,
 				1F58826B208719BB00394BD6 /* refresh@3x.png in Resources */,
 				1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */,
+				1F8EBB38209ADC6700E8AB83 /* tab_files.png in Resources */,
 				1F169DD5207F677500860F31 /* GuideImage1.png in Resources */,
 				1F4E9398208DBB7600DD1EA7 /* radio_button@3x.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
@@ -1263,12 +1300,14 @@
 				1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
+				1F8EBB33209ABF4700E8AB83 /* FilesRootViewController.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
 				1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */,
 				1F4E938E208DB8B600DD1EA7 /* RadioButton.m in Sources */,
 				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
+				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
 				1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
 				1F359FC6209182BB00E2FF36 /* DiskErrorViewController.swift in Sources */,
@@ -1288,6 +1327,7 @@
 				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
+				1F8EBB35209AD91200E8AB83 /* WSTabBarController.swift in Sources */,
 				1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */,
 				1F83AE7720886A13007CCCFD /* LogOutViewController.swift in Sources */,
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,

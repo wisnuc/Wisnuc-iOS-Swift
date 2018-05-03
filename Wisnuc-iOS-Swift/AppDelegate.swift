@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     var networkStatus:WSNetworkStatus?
     var window: UIWindow?
     var _loginController:LoginViewController?
-    var colorScheme: (MDCColorScheme & NSObjectProtocol)!
+    var colorScheme: (MDCColorScheme & NSObjectProtocol)! 
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         registerWeChat()   // Wechat

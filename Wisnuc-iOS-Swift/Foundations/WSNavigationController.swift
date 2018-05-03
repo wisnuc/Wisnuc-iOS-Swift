@@ -15,11 +15,11 @@ class WSNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
       appBar.addSubviewsToParent()
-       
     }
     
     override init(rootViewController: UIViewController) {
         super.init(nibName: nil, bundle: nil)
+        self.setNavigationBarHidden(true, animated: false)
         self.appBar.navigationBar.backgroundColor = COR1
         appBar.headerViewController.headerView.backgroundColor = COR1
         appBar.navigationBar.titleView?.backgroundColor = .white
@@ -75,14 +75,14 @@ class WSNavigationController: UINavigationController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
-        guard let navigationController = navigationController else {
+        guard navigationController != nil else {
             return
         }
         
         // 仅处理导航栏隐藏后重新显示，可在此做更多导航栏的统一效果处理
-        if navigationController.isNavigationBarHidden {
-            navigationController.setNavigationBarHidden(false, animated: animated)
-        }
+//        if navigationController.isNavigationBarHidden {
+//            navigationController.setNavigationBarHidden(false, animated: animated)
+//        }
 
     }
     

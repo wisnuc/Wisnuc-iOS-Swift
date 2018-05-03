@@ -346,6 +346,8 @@ extension LoginViewController:StationViewDelegate{
             self.present(diskErrorVC, animated: true, completion: {
                 
             })
+        case .normal?:
+            setRootViewController()
         default:
             break
         }
