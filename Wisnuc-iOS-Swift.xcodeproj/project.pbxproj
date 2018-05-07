@@ -148,6 +148,16 @@
 		1F8EBB38209ADC6700E8AB83 /* tab_files.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB37209ADC6700E8AB83 /* tab_files.png */; };
 		1F8EBB3A209ADC7100E8AB83 /* tab_files@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB39209ADC7000E8AB83 /* tab_files@2x.png */; };
 		1F8EBB3C209ADC7A00E8AB83 /* tab_files@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB3B209ADC7A00E8AB83 /* tab_files@3x.png */; };
+		1F8EBB48209C512300E8AB83 /* FilesFileCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EBB46209C512300E8AB83 /* FilesFileCollectionViewCell.swift */; };
+		1F8EBB49209C512300E8AB83 /* FilesFileCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB47209C512300E8AB83 /* FilesFileCollectionViewCell.xib */; };
+		1F8EBB4C209FF07400E8AB83 /* more_gray_horizontal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB4B209FF07400E8AB83 /* more_gray_horizontal.png */; };
+		1F8EBB4E209FF07C00E8AB83 /* more_gray_horizontal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB4D209FF07C00E8AB83 /* more_gray_horizontal@2x.png */; };
+		1F8EBB50209FF08500E8AB83 /* more_gray_horizontal@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB4F209FF08500E8AB83 /* more_gray_horizontal@3x.png */; };
+		1F8EBB52209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EBB51209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift */; };
+		1F8EBB5420A01EF100E8AB83 /* FilesRootCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5320A01EF100E8AB83 /* FilesRootCollectionViewController.swift */; };
+		1F8EBB5620A0239000E8AB83 /* files_files.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5520A0238F00E8AB83 /* files_files.png */; };
+		1F8EBB5820A0239700E8AB83 /* files_files@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5720A0239700E8AB83 /* files_files@2x.png */; };
+		1F8EBB5A20A0239F00E8AB83 /* files_files@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5920A0239F00E8AB83 /* files_files@3x.png */; };
 		1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */; };
 		1FA669DB208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */; };
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
@@ -340,6 +350,16 @@
 		1F8EBB37209ADC6700E8AB83 /* tab_files.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_files.png; sourceTree = "<group>"; };
 		1F8EBB39209ADC7000E8AB83 /* tab_files@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_files@2x.png"; sourceTree = "<group>"; };
 		1F8EBB3B209ADC7A00E8AB83 /* tab_files@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_files@3x.png"; sourceTree = "<group>"; };
+		1F8EBB46209C512300E8AB83 /* FilesFileCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesFileCollectionViewCell.swift; sourceTree = "<group>"; };
+		1F8EBB47209C512300E8AB83 /* FilesFileCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilesFileCollectionViewCell.xib; sourceTree = "<group>"; };
+		1F8EBB4B209FF07400E8AB83 /* more_gray_horizontal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_gray_horizontal.png; sourceTree = "<group>"; };
+		1F8EBB4D209FF07C00E8AB83 /* more_gray_horizontal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more_gray_horizontal@2x.png"; sourceTree = "<group>"; };
+		1F8EBB4F209FF08500E8AB83 /* more_gray_horizontal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more_gray_horizontal@3x.png"; sourceTree = "<group>"; };
+		1F8EBB51209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesFolderCollectionViewCell.swift; sourceTree = "<group>"; };
+		1F8EBB5320A01EF100E8AB83 /* FilesRootCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesRootCollectionViewController.swift; sourceTree = "<group>"; };
+		1F8EBB5520A0238F00E8AB83 /* files_files.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_files.png; sourceTree = "<group>"; };
+		1F8EBB5720A0239700E8AB83 /* files_files@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_files@2x.png"; sourceTree = "<group>"; };
+		1F8EBB5920A0239F00E8AB83 /* files_files@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_files@3x.png"; sourceTree = "<group>"; };
 		1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetDummyStaticViewController.swift; sourceTree = "<group>"; };
 		1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomSheetDummyStaticViewController.xib; sourceTree = "<group>"; };
 		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -660,7 +680,8 @@
 		1F8EBB31209ABF1800E8AB83 /* Files */ = {
 			isa = PBXGroup;
 			children = (
-				1F8EBB32209ABF4700E8AB83 /* FilesRootViewController.swift */,
+				1F8EBB3F209C4F5800E8AB83 /* ViewController */,
+				1F8EBB3E209C4F5000E8AB83 /* View */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -673,6 +694,38 @@
 				1F8EBB37209ADC6700E8AB83 /* tab_files.png */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		1F8EBB3E209C4F5000E8AB83 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1F8EBB46209C512300E8AB83 /* FilesFileCollectionViewCell.swift */,
+				1F8EBB47209C512300E8AB83 /* FilesFileCollectionViewCell.xib */,
+				1F8EBB51209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1F8EBB3F209C4F5800E8AB83 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				1F8EBB32209ABF4700E8AB83 /* FilesRootViewController.swift */,
+				1F8EBB5320A01EF100E8AB83 /* FilesRootCollectionViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		1F8EBB4A209FF05A00E8AB83 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				1F8EBB5520A0238F00E8AB83 /* files_files.png */,
+				1F8EBB5720A0239700E8AB83 /* files_files@2x.png */,
+				1F8EBB5920A0239F00E8AB83 /* files_files@3x.png */,
+				1F8EBB4B209FF07400E8AB83 /* more_gray_horizontal.png */,
+				1F8EBB4D209FF07C00E8AB83 /* more_gray_horizontal@2x.png */,
+				1F8EBB4F209FF08500E8AB83 /* more_gray_horizontal@3x.png */,
+			);
+			path = Files;
 			sourceTree = "<group>";
 		};
 		1FD9B743207CBE8700906D80 = {
@@ -921,6 +974,7 @@
 		1FD9B7AC207E19F900906D80 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				1F8EBB4A209FF05A00E8AB83 /* Files */,
 				1F8EBB36209ADC5A00E8AB83 /* Base */,
 				1F5882282085918B00394BD6 /* Login */,
 			);
@@ -1082,6 +1136,7 @@
 				1F359FE32091B2A900E2FF36 /* warning@3x.png in Resources */,
 				1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */,
 				1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */,
+				1F8EBB50209FF08500E8AB83 /* more_gray_horizontal@3x.png in Resources */,
 				1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */,
 				1F359FC12091764000E2FF36 /* diskinit@2x.png in Resources */,
 				1F359FCD2091A95D00E2FF36 /* disk_new_add.png in Resources */,
@@ -1131,6 +1186,7 @@
 				1F359FBD2091761500E2FF36 /* account@3x.png in Resources */,
 				1F5882542085F0F800394BD6 /* station_review@3x.png in Resources */,
 				1F83AE5F208830B8007CCCFD /* local_area_white@2x.png in Resources */,
+				1F8EBB5820A0239700E8AB83 /* files_files@2x.png in Resources */,
 				1F359FC32091764000E2FF36 /* diskinit.png in Resources */,
 				1F58823E2085DCAF00394BD6 /* device_circle@2x.png in Resources */,
 				1F8EBB3C209ADC7A00E8AB83 /* tab_files@3x.png in Resources */,
@@ -1148,6 +1204,7 @@
 				1F5882242085885C00394BD6 /* logo@2x.png in Resources */,
 				1F83AE6B208838DD007CCCFD /* eye_open@3x.png in Resources */,
 				1F83AE6C208838DD007CCCFD /* eye_off@2x.png in Resources */,
+				1F8EBB4C209FF07400E8AB83 /* more_gray_horizontal.png in Resources */,
 				1F58822E208591A100394BD6 /* add_station@3x.png in Resources */,
 				1F359FBC2091761500E2FF36 /* account.png in Resources */,
 				1F58824A2085F07E00394BD6 /* disk_warning.png in Resources */,
@@ -1155,8 +1212,10 @@
 				1F359FCF2091A95D00E2FF36 /* disk_main_color.png in Resources */,
 				1F5882552085F0F800394BD6 /* station_review.png in Resources */,
 				1F588269208719BB00394BD6 /* refresh@2x.png in Resources */,
+				1F8EBB5620A0239000E8AB83 /* files_files.png in Resources */,
 				1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */,
 				1F2B45A5208F290200C8971F /* close.png in Resources */,
+				1F8EBB49209C512300E8AB83 /* FilesFileCollectionViewCell.xib in Resources */,
 				1F2B459E208F255800C8971F /* IPAddDeviceViewController.xib in Resources */,
 				1F83AE68208838DD007CCCFD /* eye_open@2x.png in Resources */,
 				1F58823D2085DCAF00394BD6 /* device.png in Resources */,
@@ -1168,11 +1227,13 @@
 				1F359FB32090819000E2FF36 /* ok@3x.png in Resources */,
 				1F5882502085F09F00394BD6 /* station_normal@2x.png in Resources */,
 				1F83AE7220883AA2007CCCFD /* help@2x.png in Resources */,
+				1F8EBB5A20A0239F00E8AB83 /* files_files@3x.png in Resources */,
 				1F83AE7020883AA2007CCCFD /* help@3x.png in Resources */,
 				1F58826B208719BB00394BD6 /* refresh@3x.png in Resources */,
 				1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */,
 				1F8EBB38209ADC6700E8AB83 /* tab_files.png in Resources */,
 				1F169DD5207F677500860F31 /* GuideImage1.png in Resources */,
+				1F8EBB4E209FF07C00E8AB83 /* more_gray_horizontal@2x.png in Resources */,
 				1F4E9398208DBB7600DD1EA7 /* radio_button@3x.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
 				1F359FCE2091A95D00E2FF36 /* disk_new_add@3x.png in Resources */,
@@ -1302,6 +1363,7 @@
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
 				1F8EBB33209ABF4700E8AB83 /* FilesRootViewController.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
+				1F8EBB5420A01EF100E8AB83 /* FilesRootCollectionViewController.swift in Sources */,
 				1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */,
 				1F4E938E208DB8B600DD1EA7 /* RadioButton.m in Sources */,
 				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
@@ -1313,6 +1375,7 @@
 				1F359FC6209182BB00E2FF36 /* DiskErrorViewController.swift in Sources */,
 				1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */,
 				1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */,
+				1F8EBB48209C512300E8AB83 /* FilesFileCollectionViewCell.swift in Sources */,
 				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
 				1F5882302085D39D00394BD6 /* UIViewExtension.swift in Sources */,
 				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
@@ -1326,6 +1389,7 @@
 				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,
 				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
+				1F8EBB52209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
 				1F8EBB35209AD91200E8AB83 /* WSTabBarController.swift in Sources */,
 				1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */,

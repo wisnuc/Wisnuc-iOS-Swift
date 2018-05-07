@@ -37,4 +37,78 @@ extension UIViewController{
             }
         }
     }
+    
+    func xx_navigationBarTopLayoutGuide() ->  UILayoutSupport{
+        if (self.parent != nil) && !(self.parent?.isKind(of: UINavigationController.self))! {
+            return (self.parent?.xx_navigationBarTopLayoutGuide())!
+        }else{
+            return self.topLayoutGuide
+        }
+    }
+    
+    func xx_navigationBarBottomLayoutGuide() ->  UILayoutSupport{
+        if (self.parent != nil) && !(self.parent?.isKind(of: UINavigationController.self))! {
+            return (self.parent?.xx_navigationBarBottomLayoutGuide())!
+        }else{
+            return self.bottomLayoutGuide
+        }
+    }
+    
+    func xx_fixNavBarPenetrable (){
+        if self.childViewControllers.count == 0 {
+            return
+        }
+        
+        var statusBarHeight = UIApplication.shared.statusBarFrame.size.height
+        if self.navigationController != nil {
+            statusBarHeight = 0.0
+        }
+        for (_,value) in self.childViewControllers.enumerated() {
+            for (_,obj) in value.view.subviews.enumerated() {
+                if obj.isKind(of: UIScrollView.self) {
+                    let tv:UIScrollView = obj as! UIScrollView
+                    let insets = (value.automaticallyAdjustsScrollViewInsets) ?  UIEdgeInsetsMake(value.xx_navigationBarTopLayoutGuide().length - statusBarHeight, 0.0, value.xx_navigationBarBottomLayoutGuide().length, 0.0) : UIEdgeInsets.zero
+                    tv.scrollIndicatorInsets = insets
+                    tv.contentInset = tv.scrollIndicatorInsets
+                    tv.contentOffset  = CGPoint(x: insets.left, y: -insets.top)
+                    break
+                }
+            }
+        }
+        
+//    - (void)xx_fixNavBarPenetrable {
+//
+//    if(!self.childViewControllers.count) return;
+//    CGFloat statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+//    if (self.navigationController) {statusBarHeight = 0.0f;}
+//    [self.childViewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//    [obj.view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull v_obj, NSUInteger v_idx, BOOL * _Nonnull v_stop) {
+//    if ([v_obj isKindOfClass:[UIScrollView class]]) {
+//    UIScrollView *tv = (UIScrollView *)v_obj;
+//    const UIEdgeInsets insets = (obj.automaticallyAdjustsScrollViewInsets) ? UIEdgeInsetsMake(obj.xx_navigationBarTopLayoutGuide.length - statusBarHeight, 0.0f, obj.xx_navigationBarBottomLayoutGuide.length, 0.0f) : UIEdgeInsetsZero;
+//    tv.contentInset = tv.scrollIndicatorInsets = insets;
+//    tv.contentOffset = CGPointMake(insets.left, -insets.top);
+//    *v_stop = YES;
+//    }
+//    }];
+//    }];
+//
+//    }
+    
+//    - (id<UILayoutSupport>)xx_navigationBarTopLayoutGuide {
+//    if (self.parentViewController &&
+//    ![self.parentViewController isKindOfClass:UINavigationController.class]) {
+//    return self.parentViewController.xx_navigationBarTopLayoutGuide;
+//    } else {
+//    return self.topLayoutGuide;
+//    }
+//    }
+//    - (id<UILayoutSupport>)xx_navigationBarBottomLayoutGuide {
+//    if (self.parentViewController &&
+//    ![self.parentViewController isKindOfClass:UINavigationController.class]) {
+//    return self.parentViewController.xx_navigationBarBottomLayoutGuide;
+//    } else {
+//    return self.bottomLayoutGuide;
+//    }
+   }
 }

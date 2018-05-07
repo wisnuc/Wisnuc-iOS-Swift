@@ -9,31 +9,90 @@
 
 import Foundation
 import UIKit
+import MaterialComponents
 
 let appDlegate = UIApplication.shared.delegate as! AppDelegate
 
 func setRootViewController(){
-    let tabBarController = WSTabBarController()
+    let tabBarController = WSTabBarController ()
     
-    let favoritesVC = ViewController()
+    let filesVC = FilesRootViewController()
     
-    favoritesVC.title = "Favorites"
-    favoritesVC.view.backgroundColor = UIColor.orange
-    let downloadsVC = ViewController()
-    downloadsVC.title = "Downloads"
-    downloadsVC.view.backgroundColor = UIColor.blue
-    let historyVC = ViewController()
-    historyVC.title = "History"
-    historyVC.view.backgroundColor = UIColor.cyan
+    filesVC.title = LocalizedString(forKey: "Files")
+    let photosVC = BaseViewController()
+    photosVC.title = "Downloads"
+    photosVC.view.backgroundColor = UIColor.blue
+    let shareVC = BaseViewController()
+    shareVC.title = "History"
+    shareVC.view.backgroundColor = UIColor.cyan
     
-    favoritesVC.tabBarItem = UITabBarItem(title: "one", image: UIImage.init(named: "Home"), tag: 0)
-    downloadsVC.tabBarItem = UITabBarItem(title: "two", image: UIImage.init(named: "Home"), tag: 1)
-    historyVC.tabBarItem = UITabBarItem(title: "three", image: UIImage.init(named: "Home"), tag: 2)
     
-    let controllers = [favoritesVC, downloadsVC, historyVC]
+    let filesNavi = UINavigationController.init(rootViewController: filesVC)
+    let photosNavi = UINavigationController.init(rootViewController: photosVC)
+    let shareNavi = UINavigationController.init(rootViewController: shareVC)
+    filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "warning.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), selectedImage: UIImage.init(named: "tab_files.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal))
+    photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "Home"), selectedImage: UIImage.init(named: "tab_files.png"))
+    shareNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "Home"), selectedImage: UIImage.init(named: "tab_files.png"))
+  
+    let controllers = [filesNavi, photosNavi, shareNavi]
     tabBarController.viewControllers = controllers
+    tabBarController.tabBar?.items = [filesNavi.tabBarItem,
+                     photosNavi.tabBarItem ,
+                     shareNavi.tabBarItem]
+    tabBarController.tabBar?.setImageTintColor(COR1, for: MDCTabBarItemState.normal)
+    tabBarController.tabBar?.setImageTintColor(LightGrayColor, for: MDCTabBarItemState.selected)
+    tabBarController.tabBar?.selectedItem = tabBarController.tabBar?.items[0]
     tabBarController.selectedViewController = controllers[0]
+    tabBarController.tabBar?.itemAppearance = MDCTabBarItemAppearance.titledImages
+    MDCTabBarColorThemer.apply(appDlegate.colorScheme, to: tabBarController.tabBar!)
+
+    tabBarController.tabBar?.backgroundColor = UIColor.white
+    tabBarController.tabBar?.selectedItemTintColor = COR1
+    tabBarController.tabBar?.unselectedItemTintColor = LightGrayColor
 
     let window = UIApplication.shared.keyWindow
     window?.rootViewController = tabBarController
 }
+
+
+func changeControllerFromOldController(self:UIViewController, oldController:UIViewController,newController:UIViewController) {
+    self.addChildViewController(newController)
+    self.transition(from: oldController, to: newController, duration: 0.3, options: UIViewAnimationOptions.curveEaseIn, animations: {
+        
+    }) { (finish) in
+        if(finish){
+            newController.didMove(toParentViewController: self)
+            oldController.willMove(toParentViewController: nil)
+            oldController.removeFromParentViewController()
+        }
+    }
+}
+
+//- (void)changeControllerFromOldController:(UIViewController *)oldController toNewController:(UIViewController *)newController
+//{
+//    [self addChildViewController:newController];
+//    /**
+//     *  切换ViewController
+//     */
+//    [self transitionFromViewController:oldController toViewController:newController duration:0.3 options:UIViewAnimationOptionCurveEaseIn animations:^{
+//
+//        //做一些动画
+//
+//        } completion:^(BOOL finished) {
+//
+//        if (finished) {
+//
+//        //移除oldController，但在removeFromParentViewController：方法前不会调用willMoveToParentViewController:nil 方法，所以需要显示调用
+//        [newController didMoveToParentViewController:self];
+//        [oldController willMoveToParentViewController:nil];
+//        [oldController removeFromParentViewController];
+//        currentVC = newController;
+//
+//        }else
+//        {
+//        currentVC = oldController;
+//        }
+//
+//        }];
+//}
+

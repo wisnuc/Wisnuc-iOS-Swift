@@ -9,10 +9,11 @@
 import UIKit
 import MaterialComponents
 
-class WSTabBarController: MDCTabBarViewController {
+class WSTabBarController: MDCTabBarViewController  {
     let bottomNavBar = MDCBottomNavigationBar()
     init() {
         super.init(nibName: nil, bundle: nil)
+        self.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -20,11 +21,7 @@ class WSTabBarController: MDCTabBarViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
-
-
-
     
     #if swift(>=3.2)
     @available(iOS 11, *)
@@ -36,30 +33,6 @@ class WSTabBarController: MDCTabBarViewController {
     
     func loadTabbar(){
 
-  
-
-        //    UIViewController *child1 = viewControllers[1];
-        //    // Put the button under the header.
-        //    MDCRaisedButton *button = [[MDCRaisedButton alloc] initWithFrame:CGRectMake(10, 120, 300, 40)];
-        //    [button setTitle:@"Push and Hide Tab" forState:UIControlStateNormal];
-        //    [button sizeToFit];
-        //    [child1.view addSubview:button];
-        //    [button addTarget:self
-        //        action:@selector(pushHidesNavigation)
-        //        forControlEvents:UIControlEventTouchUpInside];
-        //
-        //    UIViewController *child2 = viewControllers[2];
-        //    // Put the button under the header.
-        //    button = [[MDCRaisedButton alloc] initWithFrame:CGRectMake(10, 120, 300, 40)];
-        //    [button setTitle:@"Toggle Tab Bar" forState:UIControlStateNormal];
-        //    [button sizeToFit];
-        //    [child2.view addSubview:button];
-        //    [button addTarget:self
-        //        action:@selector(toggleTabBar)
-        //        forControlEvents:UIControlEventTouchUpInside];
-        //
-        //    MDCSemanticColorScheme *scheme = [[MDCSemanticColorScheme alloc] init];
-        //    [MDCTabBarColorThemer applySemanticColorScheme:scheme toTabs:self.tabBar];
     }
 
     override func viewWillLayoutSubviews() {
@@ -76,6 +49,12 @@ class WSTabBarController: MDCTabBarViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+}
+
+extension WSTabBarController:MDCTabBarControllerDelegate{
+    func tabBarController(_ tabBarController: MDCTabBarViewController, didSelect viewController: UIViewController) {
+//        print(viewController.tabBarItem.selectedImage!)
     }
 }
 

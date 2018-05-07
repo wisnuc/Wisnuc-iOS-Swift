@@ -288,11 +288,13 @@ class LoginViewController: UIViewController {
         let buttonTitleFont = MiddleTitleFont
         let button = MDBaseButton.init(frame: CGRect(x: 0, y: 0, width: Int(labelWidthFrom(title: buttonTitleString, font: buttonTitleFont)) + 40, height: Int(ButtonHeight)))
         button.setBackgroundColor(UIColor.clear)
+        button.setBorderColor(UIColor.colorFromRGB(rgbValue: 0x0017f6f), for: UIControlState.normal)
+        button.setBorderWidth(1.0, for: UIControlState.normal)
         button.setTitleFont(buttonTitleFont, for: UIControlState.normal)
         button.center = CGPoint(x: view.center.x, y: view.center.y + 50 + ButtonHeight/2)
         button.layer.cornerRadius = 2.0
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.colorFromRGB(rgbValue: 0x0017f6f).cgColor
+//        button.layer.borderWidth = 1
+//        button.layer.borderColor = UIColor.colorFromRGB(rgbValue: 0x0017f6f).cgColor
         button.setTitle(buttonTitleString, for: UIControlState.normal)
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
         button.titleLabel?.font = buttonTitleFont

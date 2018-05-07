@@ -36,6 +36,7 @@ class WSNavigationController: UINavigationController {
         fatalError("init(coder:) has not been implemented")
     }
 
+
     override var childViewControllerForStatusBarHidden: UIViewController? {
         return appBar.headerViewController
     }
@@ -75,14 +76,14 @@ class WSNavigationController: UINavigationController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.isNavigationBarHidden = true
-        guard navigationController != nil else {
+        guard let navigationController = navigationController else {
             return
         }
         
         // 仅处理导航栏隐藏后重新显示，可在此做更多导航栏的统一效果处理
-//        if navigationController.isNavigationBarHidden {
-//            navigationController.setNavigationBarHidden(false, animated: animated)
-//        }
+        if navigationController.isNavigationBarHidden {
+            navigationController.setNavigationBarHidden(false, animated: animated)
+        }
 
     }
     
