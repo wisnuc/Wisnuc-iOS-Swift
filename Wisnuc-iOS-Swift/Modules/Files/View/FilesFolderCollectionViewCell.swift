@@ -35,6 +35,8 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
             make.centerY.equalTo(leftImageView.snp.centerY)
             make.size.equalTo(CGSize(width: self.contentView.width - MarginsCloseWidth - moreButton.width, height: 20))
         }
+        
+
     }
     
     @objc func buttonClick(_ sender:UIButton){
@@ -61,6 +63,7 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
         return button
     }()
     
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

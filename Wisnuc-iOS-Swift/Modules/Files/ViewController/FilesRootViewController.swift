@@ -40,36 +40,11 @@ class FilesRootViewController: BaseViewController {
 //       self.xx_fixNavBarPenetrable()
          self.appBar.headerViewController.headerView.isHidden = true
         
-        self.collcectionViewController.collectionView?.addObserver(self, forKeyPath: "contentOffset", options: NSKeyValueObservingOptions(rawValue: NSKeyValueObservingOptions.RawValue(UInt8(NSKeyValueObservingOptions.old.rawValue) | UInt8(NSKeyValueObservingOptions.new.rawValue))), context: nil)
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if object as AnyObject? === self.collcectionViewController.collectionView && keyPath == "contentOffset" {
-            let newY:CGFloat = change![NSKeyValueChange.init(rawValue: <#T##UInt#>)].y
-//            CGFloat newY = [change[@"new"] CGPointValue].y;
-//            CGFloat oldY = [change[@"old"] CGPointValue].y;
-//            float i = newY - oldY;       //i>0上滑， i<0下滑
-//            if (self.tableView.contentOffset.y>-64&&self.tableView.contentOffset.y<=24) {//边界条件，此处不精确
-//                if (i<=0&&_isHidding == NO&&self.navigationController.navigationBar.frame.origin.y==20) {    //下拉＋bar 已经显示的状态，不再移动
-//                    return;
-//                }
-//                _isHidding = NO;
-//                self.navigationController.navigationBar.frame = CGRectMake(0, -44-self.tableView.contentOffset.y, 320, 44);
-//            }else if (self.tableView.contentOffset.y > 24) {
-//
-//                if (i>10) {//更改数值大小可以控制触发 navigation bar 的滑动速度
-//                    _isHidding = YES;
-//                }else if(i<-10) {
-//                    _isHidding = NO;
-//                }else {
-//
-//                }
-//            }
-//            [self.navigationController setNavigationBarHidden:_isHidding animated:YES];
-        }
-    }
+   
     
-    lazy var collcectionViewController : MDCCollectionViewController = {
+    lazy var collcectionViewController : FilesRootCollectionViewController = {
         let layout = MDCCollectionViewFlowLayout()
 //        layout.sectionInset = UIEdgeInsets.zero
 //        layout.itemSize = CGSize(width: size.width, height:CellHeight)

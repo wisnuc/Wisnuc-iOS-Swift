@@ -12,3 +12,6 @@
 "station_checking" = "等待审核";
 "confirm" = "确定";
 "power_off" = "关机";
+
+"files_folders" = "文件夹";
+"files_name" = "名称";
