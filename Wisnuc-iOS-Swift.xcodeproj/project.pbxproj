@@ -59,6 +59,14 @@
 		1F359FEF2092EF1300E2FF36 /* CNPPopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F359FEE2092EF1300E2FF36 /* CNPPopupController.m */; };
 		1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F359FF0209310A200E2FF36 /* RadioButtonTableViewCell.swift */; };
 		1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FF1209310A200E2FF36 /* RadioButtonTableViewCell.xib */; };
+		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
+		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
+		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
+		1F3C23F920A2D6C300E6B953 /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F820A2D6C300E6B953 /* menu@2x.png */; };
+		1F3C23FB20A2D6D100E6B953 /* menu@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23FA20A2D6D100E6B953 /* menu@3x.png */; };
+		1F3C23FD20A2DA5400E6B953 /* cardstyle.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23FC20A2DA5400E6B953 /* cardstyle.png */; };
+		1F3C23FF20A2DACD00E6B953 /* cardstyle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23FE20A2DACD00E6B953 /* cardstyle@3x.png */; };
+		1F3C240120A2DAD500E6B953 /* cardstyle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C240020A2DAD500E6B953 /* cardstyle@2x.png */; };
 		1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */; };
 		1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */; };
 		1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */; };
@@ -275,6 +283,14 @@
 		1F359FEE2092EF1300E2FF36 /* CNPPopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNPPopupController.m; sourceTree = "<group>"; };
 		1F359FF0209310A200E2FF36 /* RadioButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonTableViewCell.swift; sourceTree = "<group>"; };
 		1F359FF1209310A200E2FF36 /* RadioButtonTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RadioButtonTableViewCell.xib; sourceTree = "<group>"; };
+		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
+		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
+		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
+		1F3C23F820A2D6C300E6B953 /* menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@2x.png"; sourceTree = "<group>"; };
+		1F3C23FA20A2D6D100E6B953 /* menu@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@3x.png"; sourceTree = "<group>"; };
+		1F3C23FC20A2DA5400E6B953 /* cardstyle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cardstyle.png; sourceTree = "<group>"; };
+		1F3C23FE20A2DACD00E6B953 /* cardstyle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cardstyle@3x.png"; sourceTree = "<group>"; };
+		1F3C240020A2DAD500E6B953 /* cardstyle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cardstyle@2x.png"; sourceTree = "<group>"; };
 		1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationDiskViewController.swift; sourceTree = "<group>"; };
 		1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationDiskViewController.xib; sourceTree = "<group>"; };
@@ -720,6 +736,12 @@
 		1F8EBB36209ADC5A00E8AB83 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				1F3C23FE20A2DACD00E6B953 /* cardstyle@3x.png */,
+				1F3C240020A2DAD500E6B953 /* cardstyle@2x.png */,
+				1F3C23FC20A2DA5400E6B953 /* cardstyle.png */,
+				1F3C23FA20A2D6D100E6B953 /* menu@3x.png */,
+				1F3C23F820A2D6C300E6B953 /* menu@2x.png */,
+				1F3C23F620A2D6AE00E6B953 /* menu.png */,
 				1F8EBB3B209ADC7A00E8AB83 /* tab_files@3x.png */,
 				1F8EBB39209ADC7000E8AB83 /* tab_files@2x.png */,
 				1F8EBB37209ADC6700E8AB83 /* tab_files.png */,
@@ -991,10 +1013,12 @@
 		1FD9B7A3207DB3F700906D80 /* Foundations */ = {
 			isa = PBXGroup;
 			children = (
+				1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */,
 				1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */,
 				1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */,
 				1F83AE7320885FD5007CCCFD /* MDBaseButton.swift */,
 				1F8EBB34209AD91200E8AB83 /* WSTabBarController.swift */,
+				1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */,
 			);
 			path = Foundations;
 			sourceTree = "<group>";
@@ -1183,6 +1207,7 @@
 				1F4E93812089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib in Resources */,
 				1F83AE7D20886BDA007CCCFD /* change@3x.png in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
+				1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */,
 				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
 				1F2B45A6208F290200C8971F /* close@2x.png in Resources */,
 				1F4E9399208DBB7600DD1EA7 /* radio_button_unchecked@3x.png in Resources */,
@@ -1192,6 +1217,7 @@
 				1F8EBB50209FF08500E8AB83 /* more_gray_horizontal@3x.png in Resources */,
 				1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */,
 				1F359FC12091764000E2FF36 /* diskinit@2x.png in Resources */,
+				1F3C240120A2DAD500E6B953 /* cardstyle@2x.png in Resources */,
 				1F359FCD2091A95D00E2FF36 /* disk_new_add.png in Resources */,
 				1F83AE5E208830B8007CCCFD /* local_area_white.png in Resources */,
 				1F83AE8420887936007CCCFD /* more.png in Resources */,
@@ -1223,6 +1249,7 @@
 				1F5882482085F07E00394BD6 /* disk_warning@2x.png in Resources */,
 				1F359FB22090819000E2FF36 /* no.png in Resources */,
 				1F359FAF2090819000E2FF36 /* ok@2x.png in Resources */,
+				1F3C23FF20A2DACD00E6B953 /* cardstyle@3x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
 				1F359FD22091A95D00E2FF36 /* disk_new_add@2x.png in Resources */,
 				1F4E9396208DBB7600DD1EA7 /* radio_button.png in Resources */,
@@ -1253,6 +1280,7 @@
 				1F8EBB3C209ADC7A00E8AB83 /* tab_files@3x.png in Resources */,
 				1F5882442085F07000394BD6 /* offline@2x.png in Resources */,
 				1F58825C2085F4C900394BD6 /* local_area@3x.png in Resources */,
+				1F3C23FD20A2DA5400E6B953 /* cardstyle.png in Resources */,
 				1F4E939A208DBB7600DD1EA7 /* radio_button_unchecked.png in Resources */,
 				1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */,
 				1F5882252085885C00394BD6 /* logo.png in Resources */,
@@ -1266,6 +1294,7 @@
 				1F359FB720916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.xib in Resources */,
 				1F5882242085885C00394BD6 /* logo@2x.png in Resources */,
 				1F83AE6B208838DD007CCCFD /* eye_open@3x.png in Resources */,
+				1F3C23FB20A2D6D100E6B953 /* menu@3x.png in Resources */,
 				1F83AE6C208838DD007CCCFD /* eye_off@2x.png in Resources */,
 				1F8EBB4C209FF07400E8AB83 /* more_gray_horizontal.png in Resources */,
 				1F58822E208591A100394BD6 /* add_station@3x.png in Resources */,
@@ -1273,6 +1302,7 @@
 				1FEABB6120A14C1100824448 /* files_ppt_normal@2x.png in Resources */,
 				1F58824A2085F07E00394BD6 /* disk_warning.png in Resources */,
 				1F359FDE2091A99600E2FF36 /* disk_add@3x.png in Resources */,
+				1F3C23F920A2D6C300E6B953 /* menu@2x.png in Resources */,
 				1FEABB6720A14C6700824448 /* files_ppt_small@2x.png in Resources */,
 				1F359FCF2091A95D00E2FF36 /* disk_main_color.png in Resources */,
 				1F5882552085F0F800394BD6 /* station_review.png in Resources */,
@@ -1353,7 +1383,9 @@
 				"${BUILT_PRODUCTS_DIR}/CatalogByConvention/CatalogByConvention.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFInternationalization/MDFInternationalization.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFTextAccessibility/MDFTextAccessibility.framework",
+				"${BUILT_PRODUCTS_DIR}/Material/Material.framework",
 				"${BUILT_PRODUCTS_DIR}/MaterialComponents/MaterialComponents.framework",
+				"${BUILT_PRODUCTS_DIR}/Motion/Motion.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionAnimator/MotionAnimator.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionInterchange/MotionInterchange.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
@@ -1369,7 +1401,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CatalogByConvention.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFInternationalization.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFTextAccessibility.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Material.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MaterialComponents.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Motion.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionAnimator.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionInterchange.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
@@ -1427,7 +1461,9 @@
 				1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */,
 				1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */,
 				1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */,
+				1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
+				1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
 				1F8EBB33209ABF4700E8AB83 /* FilesRootViewController.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,

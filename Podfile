@@ -14,4 +14,5 @@ pod 'WechatOpenSDK'
 pod 'YYKit'
 pod 'BEMCheckBox'
 pod 'SDWebImage'
+pod 'Material'
 end

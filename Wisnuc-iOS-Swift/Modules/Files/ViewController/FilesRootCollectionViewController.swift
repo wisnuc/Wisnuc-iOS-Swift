@@ -27,7 +27,7 @@ private let CellSmallHeight:CGFloat = 48.0
 }
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
-    let colors = [ "red", "blue", "green", "black", "yellow", "purple" ]
+    let colors = [[ "red", "blue", "green", "black", "yellow", "purple" ],[ "red", "blue", "green", "black", "yellow", "purple" ]]
     var delegate:FilesRootCollectionViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +38,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         // Register cell classes
       
 //        self.styler.cellStyle = .card
-        self.styler.cellLayoutType = MDCCollectionViewCellLayoutType.grid
+
+
         self.styler.gridPadding = 4
         self.styler.gridColumnCount = 2
         self.view.backgroundColor = lightGrayBackgroudColor
@@ -69,13 +70,13 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 2
+        return colors.count
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return colors.count
+        return colors[section].count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -83,14 +84,14 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             collectionView.register(FilesFolderCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
             if let cell = cell as? FilesFolderCollectionViewCell {
-                cell.titleLabel.text = colors[indexPath.item]
+                cell.titleLabel.text = colors[indexPath.section][indexPath.item]
             }
             return cell
         }else{
             collectionView.register(FilesFileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifierSection2)
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierSection2, for: indexPath)
             if let cell = cell as? FilesFileCollectionViewCell {
-                cell.titleLabel.text = colors[indexPath.item]
+                cell.titleLabel.text = colors[indexPath.section][indexPath.item]
                 cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
                 cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
             }
@@ -116,7 +117,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 reusableHeaderView.rightButton.titleTextLabel.text = LocalizedString(forKey: "files_name")
                 reusableHeaderView.rightButton.titleTextLabel.sizeToFit()
                 let labelWidth = reusableHeaderView.rightButton.titleTextLabel.width
-                let size =  CGSize(width: labelWidth + (image?.size.width)! + MarginsWidth - 4 + MarginsCloseWidth, height: reusableHeaderView.rightButton.titleTextLabel.height)
+                let size =  CGSize(width: labelWidth + (image?.size.width)! + MarginsWidth - 4 + MarginsCloseWidth, height: reusableHeaderView.rightButton.height)
                 let frame = CGRect(origin: CGPoint(x: reusableHeaderView.width - MarginsWidth - size.width, y: reusableHeaderView.rightButton.origin.y), size: size)
                 reusableHeaderView.rightButton.frame = frame
                 
@@ -224,7 +225,7 @@ class CommonCollectionReusableView: UICollectionReusableView {
         let labelwidth = labelWidthFrom(title: text, font: SmallTitleFont)
         let image = UIImage.init(named: "files_up.png")
         let buttonWidth = labelwidth + (image?.size.width)! + MarginsWidth - 4 + MarginsCloseWidth
-        let button = SequenceButton.init(frame: CGRect(x: self.width - MarginsWidth - buttonWidth, y: self.height/2 - MarginsWidth/2, width: buttonWidth, height: MarginsWidth))
+        let button = SequenceButton.init(frame: CGRect(x: self.width - MarginsWidth - buttonWidth, y: self.height/2 - MarginsWidth/2, width: buttonWidth, height: MarginsWidth + 4))
         return button
     }()
     required init?(coder aDecoder: NSCoder) {
@@ -249,7 +250,9 @@ class SequenceButton: MDBaseButton{
             make.centerY.equalTo(self.snp.centerY)
             make.right.equalTo(self.snp.right).offset(MarginsCloseWidth/2)
         }
-        self.backgroundColor = UIColor.clear
+        let mdcColorScheme = MDCButtonScheme.init()
+        MDCTextButtonThemer.applyScheme(mdcColorScheme, to: self)
+        self.inkColor = COR1.withAlphaComponent(0.3)
     }
     
     lazy var leftImageView: UIImageView = {

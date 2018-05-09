@@ -8,41 +8,100 @@
 
 import UIKit
 import MaterialComponents
-let colors = [ "red", "blue", "green", "black", "yellow", "purple" ]
+import Material
+
+enum CellStyle:Int {
+    case list = 0
+    case card
+}
+
+let colors = [[ "red", "blue", "green", "black", "yellow", "purple" ],[ "red", "blue", "green", "black", "yellow", "purple" ]]
 private let reusableIdentifierItem = "itemCellIdentifier"
 private let cellFolderHeight:CGFloat = 48
 private let cellWidth:CGFloat = (__kWidth - 4)/2
 private let cellHeight:CGFloat = 137
+private let SearchBarBottom:CGFloat = 77.0
 
 class FilesRootViewController: BaseViewController {
-    var fhvc:MDCFlexibleHeaderViewController?
-    
+    private var menuButton: IconButton!
+    private var moreButton: IconButton!
+    private var listStyleButton: IconButton!
+    var cellStyle:CellStyle?{
+        didSet{
+            switch cellStyle {
+            case .card?:
+                self.collcectionViewController.styler.cellLayoutType = MDCCollectionViewCellLayoutType.grid
+                self.collcectionViewController.styler.cellStyle = MDCCollectionViewCellStyle.default
+            case .list?:
+                self.collcectionViewController.styler.cellLayoutType = MDCCollectionViewCellLayoutType.list
+                self.collcectionViewController.styler.cellStyle = MDCCollectionViewCellStyle.grouped
+            default:
+                break
+            }
+            
+            self.collcectionViewController.collectionView?.performBatchUpdates({
+            
+            }, completion: { (finished) in
+                
+           })
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.fhvc = MDCFlexibleHeaderViewController.init(nibName: nil, bundle: nil)
-//        self.addChildViewController(self.fhvc)
-//        self.minimumHeaderHeight = 0;
         
+        self.appBar.headerViewController.headerView.isHidden = true
+        self.view.backgroundColor = lightGrayBackgroudColor
+        prepareCollectionView()
+        prepareSearchBar()
+        setCellStyle()
+        
+        //        self.view.sendSubview(toBack: collcectionViewController.view)
+        //       self.appBar.headerViewController.headerView.addSubview(searchBar)
+        
+        //       self.appBar.headerViewController.headerView.trackingScrollView = self.collcectionViewController.collectionView
+        //       self.xx_fixNavBarPenetrable()
+        //        self.appBar.headerViewController.headerView.delegate = self
+        //         self.appBar.headerViewController.headerView.minMaxHeightIncludesSafeArea = false
+        //        self.appBar.headerViewController.headerView.tintColor = UIColor.clear
+        //        self.appBar.headerViewController.headerView.shiftBehavior = MDCFlexibleHeaderShiftBehavior.enabled
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Application.statusBarStyle = .default
+    }
+    
+    func setCellStyle(){
+        cellStyle = .card
+    }
+    
+    func prepareCollectionView(){
         self.addChildViewController(collcectionViewController)
         collcectionViewController.didMove(toParentViewController: self)
-        collcectionViewController.view.frame =  CGRect.init(x: self.view.left, y: self.view.top + searchBar.bottom + MarginsCloseWidth/2, width: self.view.width, height: self.view.height - MDCAppNavigationBarHeight)
+        collcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height)
         self.view.addSubview(collcectionViewController.view)
-//        self.appBar.headerViewController.headerView.delegate = self
-//         self.appBar.headerViewController.headerView.minMaxHeightIncludesSafeArea = false
-//        self.appBar.headerViewController.headerView.tintColor = UIColor.clear
-//        self.appBar.headerViewController.headerView.shiftBehavior = MDCFlexibleHeaderShiftBehavior.enabled
-        self.view.addSubview(searchBar)
-        self.view.backgroundColor = lightGrayBackgroudColor
-//        self.view.sendSubview(toBack: collcectionViewController.view)
-//       self.appBar.headerViewController.headerView.addSubview(searchBar)
-        
-//       self.appBar.headerViewController.headerView.trackingScrollView = self.collcectionViewController.collectionView
-//       self.xx_fixNavBarPenetrable()
-         self.appBar.headerViewController.headerView.isHidden = true
+        // self.view.top + searchBar.bottom + MarginsCloseWidth/2
+        collcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(searchBar.bottom + MarginsCloseWidth/2-20, 0, 0 , 0)
         
     }
     
-   
+    @objc func listStyleButtonTap(_ sender:IconButton){
+//        collcectionViewController.styler.cellLayoutType = MDCCollectionViewCellLayoutType.list
+//        collcectionViewController.styler.cellStyle = MDCCollectionViewCellStyle.grouped
+//        collcectionViewController.collectionView?.performBatchUpdates({
+//
+//        }, completion: { (finished) in
+//
+//        })
+        sender.isSelected = !sender.isSelected
+        if sender.isSelected {
+            cellStyle = .list
+        }else{
+            cellStyle = .card
+        }
+    }
+    
+
     
     lazy var collcectionViewController : FilesRootCollectionViewController = {
         let layout = MDCCollectionViewFlowLayout()
@@ -50,28 +109,44 @@ class FilesRootViewController: BaseViewController {
 //        layout.itemSize = CGSize(width: size.width, height:CellHeight)
         let collectVC = FilesRootCollectionViewController.init(collectionViewLayout: layout)
         collectVC.collectionView?.isScrollEnabled = true
+      
         collectVC.delegate = self
         return collectVC
     }()
     
-    lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar.init(frame: CGRect(x: MarginsCloseWidth, y: 20, width: __kWidth - MarginsCloseWidth * 2, height: cellFolderHeight))
+    lazy var searchBar: BaseSearchBar = {
+        let searchBar = BaseSearchBar.init(frame: CGRect(x: MarginsCloseWidth, y: 20 + MarginsCloseWidth, width: __kWidth - MarginsWidth, height: cellHeight))
+        searchBar.delegate = self
         return searchBar
     }()
+    
+    private func prepareSearchBar() {
+        self.view.addSubview(searchBar)
+        let menuImage = #imageLiteral(resourceName: "menu.png")
+        menuButton = IconButton(image: menuImage)
+        moreButton = IconButton(image: Icon.cm.moreHorizontal?.byTintColor(LightGrayColor))
+        listStyleButton = IconButton(image: #imageLiteral(resourceName: "cardstyle.png"))
+        listStyleButton.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+        searchBar.leftViews = [menuButton]
+        searchBar.rightViews = [listStyleButton,moreButton]
+    }
 }
+
+
 
 
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView == self.appBar.headerViewController.headerView.trackingScrollView {
-            self.appBar.headerViewController.headerView.trackingScrollDidScroll()
+//        print(scrollView.contentOffset.y)
+        if scrollView.contentOffset.y > -(SearchBarBottom + MarginsCloseWidth/2) {
+            self.searchBar.origin.y = -(scrollView.contentOffset.y)-(SearchBarBottom + MarginsCloseWidth/2)+20
+        }else{
+            self.searchBar.origin.y = 20 + MarginsCloseWidth
         }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if scrollView == self.appBar.headerViewController.headerView.trackingScrollView {
-            self.appBar.headerViewController.headerView.trackingScrollDidEndDecelerating()
-        }
+        
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -88,76 +163,13 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         }
     }
 }
-
-
-extension FilesRootViewController:MDCFlexibleHeaderViewDelegate{
-    func flexibleHeaderViewNeedsStatusBarAppearanceUpdate(_ headerView: MDCFlexibleHeaderView) {
+extension FilesRootViewController:SearchBarDelegate{
+    func searchBar(searchBar: SearchBar, didClear textField: UITextField, with text: String?) {
         
     }
     
-    func flexibleHeaderViewFrameDidChange(_ headerView: MDCFlexibleHeaderView) {
-//        var headerContentAlpha:CGFloat = 0
-//        switch (headerView.scrollPhase) {
-//        case MDCFlexibleHeaderScrollPhase.collapsing: break
-//        case MDCFlexibleHeaderScrollPhase.overExtending:
-//            headerContentAlpha = 1
-//        case MDCFlexibleHeaderScrollPhase.shifting:
-//            headerContentAlpha = 1 - headerView.scrollPhasePercentage;
-//        }
-//
-//        for subview  in self.appBar.headerViewController.headerView.subviews {
-//            subview.alpha = headerContentAlpha
-//        }
+    func searchBar(searchBar: SearchBar, willClear textField: UITextField, with text: String?) {
+        
     }
+    
 }
-
-
-//extension FilesRootViewController:UICollectionViewDelegate{
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return 2
-//    }
-//
-//}
-//
-//extension FilesRootViewController:UICollectionViewDataSource{
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return 5
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        switch indexPath.section {
-//        case 0:
-//            let cell:MDCCollectionViewTextCell = collectionView.dequeueReusableCell(withReuseIdentifier: reusableIdentifierItem,
-//                                                                                    for: indexPath) as! MDCCollectionViewTextCell
-//            if let cell = cell as? MDCCollectionViewTextCell {
-//                cell.textLabel?.text = colors[indexPath.item]
-//            }
-//            return cell
-//        case 1:
-//            let cell:MDCCollectionViewTextCell = collectionView.dequeueReusableCell(withReuseIdentifier: reusableIdentifierItem, for: indexPath) as! MDCCollectionViewTextCell
-//            return cell
-//        default:
-//             let cell:MDCCollectionViewTextCell = collectionView.dequeueReusableCell(withReuseIdentifier: reusableIdentifierItem, for: indexPath) as! MDCCollectionViewTextCell
-//            return cell
-//        }
-//    }
-//}
-//
-//extension FilesRootViewController:UICollectionViewDelegateFlowLayout{
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        if indexPath.section == 0{
-//            return CGSize(width: cellWidth, height: cellFolderHeight)
-//        }else{
-//            return CGSize(width: cellWidth, height: cellHeight)
-//        }
-//    }
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return 4
-//    }
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return 4
-//    }
-//}
-
-
-

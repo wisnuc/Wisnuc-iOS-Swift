@@ -13,6 +13,7 @@ class MDBaseButton: MDCButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         MDCButtonColorThemer.apply(appDlegate.colorScheme, to: self)
+//        self.sty
     }
     
     required init?(coder aDecoder: NSCoder) {
