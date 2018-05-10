@@ -8,12 +8,12 @@
 
 import UIKit
 import MaterialComponents
+import Material
 
 class FilesFileCollectionViewCell: MDCCollectionViewCell {
-
+    var cellLongPressCallBack: ((_ cell:MDCCollectionViewCell) -> ())?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        //        self.
         self.backgroundColor = UIColor.white
         self.contentView.addSubview(leftImageView)
         leftImageView.snp.makeConstraints { (make) in
@@ -21,7 +21,7 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
             make.bottom.equalTo(self.contentView.snp.bottom).offset(-MarginsCloseWidth)
             make.size.equalTo(CGSize(width: 24, height: 24))
         }
-        
+    
         self.contentView.addSubview(moreButton)
         let image = UIImage.init(named: "more_gray_horizontal.png")
         moreButton.snp.makeConstraints { (make) in
@@ -50,14 +50,28 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
             make.centerY.equalTo(self.contentView.snp.centerY).offset(-20)
             make.size.equalTo(CGSize(width: 64, height: 64))
         }
+        
+        setGestrue()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setGestrue(){
+        let longPressGestrue = UILongPressGestureRecognizer.init(target: self, action: #selector(longPress(_ :)))
+//        longPressGestrue.delegate = self
+        self.addGestureRecognizer(longPressGestrue)
+    }
+    
     @objc func buttonClick(_ sender:UIButton){
         
+    }
+    
+    @objc func longPress(_ sender:UIGestureRecognizer){
+        if sender.state == UIGestureRecognizerState.began{
+            cellLongPressCallBack!(self)
+        }
     }
     
     lazy var leftImageView: UIImageView = {
@@ -73,9 +87,8 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
         return label
     }()
     
-    lazy var moreButton: UIButton = {
-        let button = UIButton.init()
-        button.setImage(UIImage.init(named: "more_gray_horizontal.png"), for: UIControlState.normal)
+    lazy var moreButton: IconButton = {
+       let button = IconButton.init(image: Icon.moreHorizontal, tintColor: LightGrayColor)
         button.addTarget(self, action: #selector(buttonClick(_ :)), for: UIControlEvents.touchUpInside)
         return button
     }()
@@ -91,3 +104,4 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
         return imageViewx
     }()
 }
+

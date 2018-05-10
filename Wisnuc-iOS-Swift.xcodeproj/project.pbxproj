@@ -67,6 +67,16 @@
 		1F3C23FD20A2DA5400E6B953 /* cardstyle.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23FC20A2DA5400E6B953 /* cardstyle.png */; };
 		1F3C23FF20A2DACD00E6B953 /* cardstyle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23FE20A2DACD00E6B953 /* cardstyle@3x.png */; };
 		1F3C240120A2DAD500E6B953 /* cardstyle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C240020A2DAD500E6B953 /* cardstyle@2x.png */; };
+		1F3C240720A3E55500E6B953 /* FilesListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C240620A3E55500E6B953 /* FilesListCollectionViewCell.swift */; };
+		1F3C240920A4214600E6B953 /* AppNavigationDrawerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C240820A4214500E6B953 /* AppNavigationDrawerController.swift */; };
+		1F3C240B20A4225300E6B953 /* DrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C240A20A4225300E6B953 /* DrawerViewController.swift */; };
+		1F3C240D20A42CB400E6B953 /* files_unselect.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C240C20A42CB400E6B953 /* files_unselect.png */; };
+		1F3C240F20A42CC400E6B953 /* files_unselect@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C240E20A42CC400E6B953 /* files_unselect@2x.png */; };
+		1F3C241120A42CD300E6B953 /* files_unselect@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C241020A42CD300E6B953 /* files_unselect@3x.png */; };
+		1F3C241320A42CFF00E6B953 /* files_select.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C241220A42CFF00E6B953 /* files_select.png */; };
+		1F3C241520A42D1200E6B953 /* files_select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C241420A42D1200E6B953 /* files_select@2x.png */; };
+		1F3C241720A42D1D00E6B953 /* files_select@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C241620A42D1D00E6B953 /* files_select@3x.png */; };
+		1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C241920A449B400E6B953 /* FilesHelper.swift */; };
 		1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */; };
 		1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */; };
 		1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */; };
@@ -291,6 +301,16 @@
 		1F3C23FC20A2DA5400E6B953 /* cardstyle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cardstyle.png; sourceTree = "<group>"; };
 		1F3C23FE20A2DACD00E6B953 /* cardstyle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cardstyle@3x.png"; sourceTree = "<group>"; };
 		1F3C240020A2DAD500E6B953 /* cardstyle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cardstyle@2x.png"; sourceTree = "<group>"; };
+		1F3C240620A3E55500E6B953 /* FilesListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesListCollectionViewCell.swift; sourceTree = "<group>"; };
+		1F3C240820A4214500E6B953 /* AppNavigationDrawerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNavigationDrawerController.swift; sourceTree = "<group>"; };
+		1F3C240A20A4225300E6B953 /* DrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerViewController.swift; sourceTree = "<group>"; };
+		1F3C240C20A42CB400E6B953 /* files_unselect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_unselect.png; sourceTree = "<group>"; };
+		1F3C240E20A42CC400E6B953 /* files_unselect@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_unselect@2x.png"; sourceTree = "<group>"; };
+		1F3C241020A42CD300E6B953 /* files_unselect@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_unselect@3x.png"; sourceTree = "<group>"; };
+		1F3C241220A42CFF00E6B953 /* files_select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_select.png; sourceTree = "<group>"; };
+		1F3C241420A42D1200E6B953 /* files_select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_select@2x.png"; sourceTree = "<group>"; };
+		1F3C241620A42D1D00E6B953 /* files_select@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_select@3x.png"; sourceTree = "<group>"; };
+		1F3C241920A449B400E6B953 /* FilesHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesHelper.swift; sourceTree = "<group>"; };
 		1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationDiskViewController.swift; sourceTree = "<group>"; };
 		1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationDiskViewController.xib; sourceTree = "<group>"; };
@@ -593,6 +613,14 @@
 			path = CNPPopupController;
 			sourceTree = "<group>";
 		};
+		1F3C241820A4499900E6B953 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				1F3C241920A449B400E6B953 /* FilesHelper.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		1F4E93822089BD2100DD1EA7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
@@ -726,6 +754,7 @@
 		1F8EBB31209ABF1800E8AB83 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				1F3C241820A4499900E6B953 /* Helper */,
 				1FEABB6A20A14C9F00824448 /* Model */,
 				1F8EBB3F209C4F5800E8AB83 /* ViewController */,
 				1F8EBB3E209C4F5000E8AB83 /* View */,
@@ -754,6 +783,7 @@
 			children = (
 				1F8EBB46209C512300E8AB83 /* FilesFileCollectionViewCell.swift */,
 				1F8EBB51209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift */,
+				1F3C240620A3E55500E6B953 /* FilesListCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -770,6 +800,12 @@
 		1F8EBB4A209FF05A00E8AB83 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				1F3C241220A42CFF00E6B953 /* files_select.png */,
+				1F3C241620A42D1D00E6B953 /* files_select@3x.png */,
+				1F3C241420A42D1200E6B953 /* files_select@2x.png */,
+				1F3C241020A42CD300E6B953 /* files_unselect@3x.png */,
+				1F3C240E20A42CC400E6B953 /* files_unselect@2x.png */,
+				1F3C240C20A42CB400E6B953 /* files_unselect.png */,
 				1FEABB7120A1AA1400824448 /* files_up@3x.png */,
 				1FEABB6F20A1AA0300824448 /* files_up@2x.png */,
 				1FEABB6D20A1A9F000824448 /* files_up.png */,
@@ -1013,12 +1049,14 @@
 		1FD9B7A3207DB3F700906D80 /* Foundations */ = {
 			isa = PBXGroup;
 			children = (
+				1F3C240820A4214500E6B953 /* AppNavigationDrawerController.swift */,
 				1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */,
 				1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */,
 				1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */,
 				1F83AE7320885FD5007CCCFD /* MDBaseButton.swift */,
 				1F8EBB34209AD91200E8AB83 /* WSTabBarController.swift */,
 				1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */,
+				1F3C240A20A4225300E6B953 /* DrawerViewController.swift */,
 			);
 			path = Foundations;
 			sourceTree = "<group>";
@@ -1216,6 +1254,7 @@
 				1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */,
 				1F8EBB50209FF08500E8AB83 /* more_gray_horizontal@3x.png in Resources */,
 				1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */,
+				1F3C240F20A42CC400E6B953 /* files_unselect@2x.png in Resources */,
 				1F359FC12091764000E2FF36 /* diskinit@2x.png in Resources */,
 				1F3C240120A2DAD500E6B953 /* cardstyle@2x.png in Resources */,
 				1F359FCD2091A95D00E2FF36 /* disk_new_add.png in Resources */,
@@ -1242,6 +1281,7 @@
 				1F58823C2085DCAF00394BD6 /* device_circle.png in Resources */,
 				1FEABB5D20A14BC900824448 /* files_word_normal@3x.png in Resources */,
 				1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */,
+				1F3C241120A42CD300E6B953 /* files_unselect@3x.png in Resources */,
 				1FEABB5320A14B6300824448 /* files_word_small.png in Resources */,
 				1F2B45A4208F290200C8971F /* close@3x.png in Resources */,
 				1FEABB6320A14C1900824448 /* files_ppt_normal@3x.png in Resources */,
@@ -1263,6 +1303,7 @@
 				1F5882562085F0F800394BD6 /* station_review@2x.png in Resources */,
 				1F359FE42091B2A900E2FF36 /* warning.png in Resources */,
 				1F359FE22091B2A900E2FF36 /* warning@2x.png in Resources */,
+				1F3C241520A42D1200E6B953 /* files_select@2x.png in Resources */,
 				1F4E93892089D64D00DD1EA7 /* disk@3x.png in Resources */,
 				1F5882232085885C00394BD6 /* logo@3x.png in Resources */,
 				1F359FD72091A97C00E2FF36 /* disk_error@2x.png in Resources */,
@@ -1289,6 +1330,7 @@
 				1F359FB12090819000E2FF36 /* no@3x.png in Resources */,
 				1FEABB5B20A14BC100824448 /* files_word_normal@2x.png in Resources */,
 				1F359FD12091A95D00E2FF36 /* disk_main_color@2x.png in Resources */,
+				1F3C241720A42D1D00E6B953 /* files_select@3x.png in Resources */,
 				1FEABB6E20A1A9F000824448 /* files_up.png in Resources */,
 				1F359FD02091A95D00E2FF36 /* disk_main_color@3x.png in Resources */,
 				1F359FB720916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.xib in Resources */,
@@ -1313,6 +1355,7 @@
 				1F2B459E208F255800C8971F /* IPAddDeviceViewController.xib in Resources */,
 				1FEABB5F20A14C0900824448 /* files_ppt_normal.png in Resources */,
 				1F83AE68208838DD007CCCFD /* eye_open@2x.png in Resources */,
+				1F3C240D20A42CB400E6B953 /* files_unselect.png in Resources */,
 				1F58823D2085DCAF00394BD6 /* device.png in Resources */,
 				1F359FD82091A97C00E2FF36 /* disk_error@3x.png in Resources */,
 				1F5882422085F07000394BD6 /* offline.png in Resources */,
@@ -1330,6 +1373,7 @@
 				1F8EBB38209ADC6700E8AB83 /* tab_files.png in Resources */,
 				1F169DD5207F677500860F31 /* GuideImage1.png in Resources */,
 				1F8EBB4E209FF07C00E8AB83 /* more_gray_horizontal@2x.png in Resources */,
+				1F3C241320A42CFF00E6B953 /* files_select.png in Resources */,
 				1F4E9398208DBB7600DD1EA7 /* radio_button@3x.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
 				1FEABB6520A14C6000824448 /* files_ppt_small.png in Resources */,
@@ -1463,14 +1507,17 @@
 				1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */,
 				1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
+				1F3C240720A3E55500E6B953 /* FilesListCollectionViewCell.swift in Sources */,
 				1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
 				1F8EBB33209ABF4700E8AB83 /* FilesRootViewController.swift in Sources */,
+				1F3C240B20A4225300E6B953 /* DrawerViewController.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
 				1F8EBB5420A01EF100E8AB83 /* FilesRootCollectionViewController.swift in Sources */,
 				1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */,
 				1F4E938E208DB8B600DD1EA7 /* RadioButton.m in Sources */,
 				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
+				1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
@@ -1486,6 +1533,7 @@
 				1F5882632085FDB400394BD6 /* UIViewControllerExtension.swift in Sources */,
 				1FDBC50E20932171004DE6B8 /* DiskPopUpViewManager.swift in Sources */,
 				1F5882612085FBDF00394BD6 /* Alert.swift in Sources */,
+				1F3C240920A4214600E6B953 /* AppNavigationDrawerController.swift in Sources */,
 				1F58825F2085FA7600394BD6 /* MyStationTapGestureRecognizer.swift in Sources */,
 				1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */,
 				1F359FEF2092EF1300E2FF36 /* CNPPopupController.m in Sources */,
@@ -1693,6 +1741,7 @@
 			baseConfigurationReference = A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
@@ -1722,6 +1771,7 @@
 			baseConfigurationReference = 72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;

@@ -15,6 +15,12 @@ enum CellStyle:Int {
     case card
 }
 
+enum CollectState:Int {
+    case normal = 0
+    case select
+    case unselect
+}
+
 let colors = [[ "red", "blue", "green", "black", "yellow", "purple" ],[ "red", "blue", "green", "black", "yellow", "purple" ]]
 private let reusableIdentifierItem = "itemCellIdentifier"
 private let cellFolderHeight:CGFloat = 48
@@ -26,35 +32,23 @@ class FilesRootViewController: BaseViewController {
     private var menuButton: IconButton!
     private var moreButton: IconButton!
     private var listStyleButton: IconButton!
-    var cellStyle:CellStyle?{
+    var  dataSource:Array<Any>?
+    var cellStyle:CellStyle?
+    var isSelectModel:Bool?{
         didSet{
-            switch cellStyle {
-            case .card?:
-                self.collcectionViewController.styler.cellLayoutType = MDCCollectionViewCellLayoutType.grid
-                self.collcectionViewController.styler.cellStyle = MDCCollectionViewCellStyle.default
-            case .list?:
-                self.collcectionViewController.styler.cellLayoutType = MDCCollectionViewCellLayoutType.list
-                self.collcectionViewController.styler.cellStyle = MDCCollectionViewCellStyle.grouped
-            default:
-                break
+            if isSelectModel!{
+              selectAction()
             }
-            
-            self.collcectionViewController.collectionView?.performBatchUpdates({
-            
-            }, completion: { (finished) in
-                
-           })
         }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.appBar.headerViewController.headerView.isHidden = true
         self.view.backgroundColor = lightGrayBackgroudColor
+        prepareData()
         prepareCollectionView()
         prepareSearchBar()
         setCellStyle()
-        
+      
         //        self.view.sendSubview(toBack: collcectionViewController.view)
         //       self.appBar.headerViewController.headerView.addSubview(searchBar)
         
@@ -64,6 +58,8 @@ class FilesRootViewController: BaseViewController {
         //         self.appBar.headerViewController.headerView.minMaxHeightIncludesSafeArea = false
         //        self.appBar.headerViewController.headerView.tintColor = UIColor.clear
         //        self.appBar.headerViewController.headerView.shiftBehavior = MDCFlexibleHeaderShiftBehavior.enabled
+        self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+        self.appBar.headerViewController.headerView.hide(whenShifted: appBar.headerStackView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,6 +69,11 @@ class FilesRootViewController: BaseViewController {
     
     func setCellStyle(){
         cellStyle = .card
+        self.collcectionViewController.cellStyle = cellStyle
+    }
+    
+    func prepareData() {
+        dataSource = colors
     }
     
     func prepareCollectionView(){
@@ -85,31 +86,43 @@ class FilesRootViewController: BaseViewController {
         
     }
     
+    func selectAction(){
+        print(searchBar.bottom)
+        if searchBar.bottom >= 0{
+            UIView.animate(withDuration: 0.3, animations: {
+                self.searchBar.bottom = 0
+            }) { (finish) in
+                if finish{
+                    DispatchQueue.main.async {
+                       
+                    }
+
+                }
+            }
+        }else{
+            
+        }
+    }
+    
     @objc func listStyleButtonTap(_ sender:IconButton){
-//        collcectionViewController.styler.cellLayoutType = MDCCollectionViewCellLayoutType.list
-//        collcectionViewController.styler.cellStyle = MDCCollectionViewCellStyle.grouped
-//        collcectionViewController.collectionView?.performBatchUpdates({
-//
-//        }, completion: { (finished) in
-//
-//        })
         sender.isSelected = !sender.isSelected
         if sender.isSelected {
             cellStyle = .list
         }else{
             cellStyle = .card
         }
+         self.collcectionViewController.cellStyle = cellStyle
     }
-    
 
+    @objc func menuButtonTap(_ sender:IconButton){
+         navigationDrawerController?.toggleLeftView()
+    }
     
     lazy var collcectionViewController : FilesRootCollectionViewController = {
         let layout = MDCCollectionViewFlowLayout()
-//        layout.sectionInset = UIEdgeInsets.zero
 //        layout.itemSize = CGSize(width: size.width, height:CellHeight)
         let collectVC = FilesRootCollectionViewController.init(collectionViewLayout: layout)
         collectVC.collectionView?.isScrollEnabled = true
-      
         collectVC.delegate = self
         return collectVC
     }()
@@ -122,8 +135,9 @@ class FilesRootViewController: BaseViewController {
     
     private func prepareSearchBar() {
         self.view.addSubview(searchBar)
-        let menuImage = #imageLiteral(resourceName: "menu.png")
+        let menuImage = UIImage.init(named:"menu.png")
         menuButton = IconButton(image: menuImage)
+        menuButton.addTarget(self, action: #selector(menuButtonTap(_:)), for: UIControlEvents.touchUpInside)
         moreButton = IconButton(image: Icon.cm.moreHorizontal?.byTintColor(LightGrayColor))
         listStyleButton = IconButton(image: #imageLiteral(resourceName: "cardstyle.png"))
         listStyleButton.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
@@ -132,10 +146,15 @@ class FilesRootViewController: BaseViewController {
     }
 }
 
-
-
-
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
+    func collectionView(_ collectionViewController: MDCCollectionViewController, isSelectModel: Bool) {
+        self.isSelectModel = isSelectModel
+    }
+    
+    func collectionViewData(_ collectionViewController: MDCCollectionViewController) -> Array<Any> {
+        return dataSource!
+    }
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //        print(scrollView.contentOffset.y)
         if scrollView.contentOffset.y > -(SearchBarBottom + MarginsCloseWidth/2) {

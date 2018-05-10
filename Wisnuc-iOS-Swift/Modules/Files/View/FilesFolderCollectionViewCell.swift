@@ -9,18 +9,50 @@
 
 import UIKit
 import MaterialComponents
+import Material
+
+let filesSelectImage = UIImage.init(named: "files_select.png")
+let filesUnSelectImage = UIImage.init(named: "files_unselect.png")
 
 class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
+    var isSelectModel: Bool?{
+        didSet{
+            if isSelectModel!{
+                
+            }else{
+               normalAction()
+            }
+        }
+    }
+    var isSelect: Bool?{
+        didSet{
+            if isSelect!{
+               selectAction()
+            }else{
+               unselectAction()
+            }
+        }
+    }
+    var cellLongPressCallBack: ((_ cell:MDCCollectionViewCell) -> ())?
     override init(frame: CGRect) {
         super.init(frame: frame)
-        //        self.
+//        setGestrue()
         self.backgroundColor = UIColor.white
+        
+        self.contentView.addSubview(selectImageView)
+        selectImageView.snp.makeConstraints { (make) in
+            make.left.equalTo(self.contentView.snp.left).offset(MarginsCloseWidth/2)
+            make.centerY.equalTo(self.contentView.snp.centerY)
+            make.size.equalTo(CGSize(width: 40, height: 40))
+        }
+        
         self.contentView.addSubview(leftImageView)
         leftImageView.snp.makeConstraints { (make) in
-            make.left.equalTo(self.contentView.snp.left).offset(MarginsCloseWidth)
+            make.centerX.equalTo(selectImageView)
             make.centerY.equalTo(self.contentView.snp.centerY)
             make.size.equalTo(CGSize(width: 24, height: 24))
         }
+      
         
         self.contentView.addSubview(moreButton)
         let image = UIImage.init(named: "more_gray_horizontal.png")
@@ -31,12 +63,48 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
         }
         self.contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(leftImageView.snp.right).offset(MarginsCloseWidth)
+            make.left.equalTo(selectImageView.snp.right).offset(MarginsCloseWidth/2)
             make.centerY.equalTo(leftImageView.snp.centerY)
             make.size.equalTo(CGSize(width: self.contentView.width - MarginsCloseWidth - moreButton.width, height: 20))
         }
         
-
+        setSelectState()
+    }
+    
+//    func setGestrue(){
+//        let longPressGestrue = UILongPressGestureRecognizer.init(target: self, action: #selector(longPress(_ :)))
+//        //        longPressGestrue.delegate = self
+//        self.addGestureRecognizer(longPressGestrue)
+//        
+//    }
+    
+    
+    
+    func setSelectState(){
+        self.isSelectModel = false
+    }
+    
+    func selectAction(){
+        selectImageView.image = filesSelectImage
+        leftImageView.isHidden = true
+        selectImageView.isHidden = false
+    }
+    
+    func unselectAction(){
+        selectImageView.image = filesUnSelectImage
+        leftImageView.isHidden = false
+        selectImageView.isHidden = false
+    }
+    
+    func normalAction(){
+        leftImageView.isHidden = false
+        selectImageView.isHidden = true
+    }
+    
+    @objc func longPress(_ sender:UIGestureRecognizer){
+        if sender.state == UIGestureRecognizerState.began{
+//            self.selectState = .select
+        }
     }
     
     @objc func buttonClick(_ sender:UIButton){
@@ -49,6 +117,11 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
         return imageView
     }()
     
+    lazy var selectImageView: UIImageView = {
+        let imageView = UIImageView.init()
+        return imageView
+    }()
+    
     lazy var titleLabel: UILabel = {
         let label = UILabel.init()
         label.textColor = DarkGrayColor
@@ -56,9 +129,8 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
         return label
     }()
     
-    lazy var moreButton: UIButton = {
-        let button = UIButton.init()
-        button.setImage(UIImage.init(named: "more_gray_horizontal.png"), for: UIControlState.normal)
+    lazy var moreButton: IconButton = {
+        let button = IconButton.init(image: Icon.moreHorizontal, tintColor: LightGrayColor)
         button.addTarget(self, action: #selector(buttonClick(_ :)), for: UIControlEvents.touchUpInside)
         return button
     }()

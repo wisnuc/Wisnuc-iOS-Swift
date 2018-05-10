@@ -51,7 +51,8 @@ func setRootViewController(){
     tabBarController.tabBar?.unselectedItemTintColor = LightGrayColor
 
     let window = UIApplication.shared.keyWindow
-    window?.rootViewController = tabBarController
+    let drawerVC = DrawerViewController.init()
+    window?.rootViewController = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
 }
 
 

@@ -13,22 +13,64 @@ import MaterialComponents.MDCCollectionViewController
 import MaterialComponents.MDCCollectionViewCell
 
 private let reuseIdentifier = "Cell"
+private let reuseListIdentifier = "CellLsit"
 private let reuseIdentifierSection2 = "Celled"
+private let reuseListIdentifierSection2 = "CelledList"
 private let reuseIdentifierHeader = "HeaderView"
 private let reuseIdentifierFooter = "FooterView"
 private let CellWidth:CGFloat = CGFloat((__kWidth - 4)/2)
 private let CellSmallHeight:CGFloat = 48.0
 
 @objc protocol FilesRootCollectionViewControllerDelegate{
+    func collectionViewData(_ collectionViewController: MDCCollectionViewController) -> Array<Any>
     func scrollViewDidScroll(_ scrollView: UIScrollView)
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView)
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool)
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>)
+    
+    func collectionView(_ collectionViewController: MDCCollectionViewController , isSelectModel:Bool)
 }
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
-    let colors = [[ "red", "blue", "green", "black", "yellow", "purple" ],[ "red", "blue", "green", "black", "yellow", "purple" ]]
     var delegate:FilesRootCollectionViewControllerDelegate?
+    var isSelectModel:Bool?{
+        didSet{
+            if isSelectModel!{
+            
+            }else{
+                
+            }
+        }
+    }
+    var cellStyle:CellStyle?{
+        didSet{
+            switch cellStyle {
+            case .card?:
+                self.styler.cellLayoutType = MDCCollectionViewCellLayoutType.grid
+                self.styler.cellStyle = MDCCollectionViewCellStyle.default
+                self.styler.gridPadding = 4
+                self.styler.gridColumnCount = 2
+        
+            case .list?:
+                self.styler.cellLayoutType = MDCCollectionViewCellLayoutType.list
+                self.styler.cellStyle = MDCCollectionViewCellStyle.default
+                self.styler.separatorColor = Gray12Color
+                self.styler.separatorInset = UIEdgeInsets.init(top: 0, left: MarginsWidth + 24 + MarginsWidth*2, bottom: 0, right: 0)
+                self.styler.gridColumnCount = 0
+            default:
+                break
+            }
+            
+            self.collectionView?.performBatchUpdates({
+                
+            }, completion: { (finished) in
+                if finished {
+                    self.collectionView?.reloadData()
+                    
+                }
+            })
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -36,12 +78,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         // self.clearsSelectionOnViewWillAppear = false
 
         // Register cell classes
-      
-//        self.styler.cellStyle = .card
 
-
-        self.styler.gridPadding = 4
-        self.styler.gridColumnCount = 2
         self.view.backgroundColor = lightGrayBackgroudColor
         self.collectionView?.backgroundColor = lightGrayBackgroudColor
         self.collectionView?.register(CommonCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: reuseIdentifierHeader)
@@ -49,22 +86,55 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         self.collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: reuseIdentifierFooter)
 
         // Do any additional setup after loading the view.
+        
+        if let delegateOK = delegate {
+            dataSource = delegateOK.collectionViewData(self)
+            self.collectionView?.reloadData()
+        }
+        self.styler.beginCellAppearanceAnimation()
+        
+        let longPressGesture = UILongPressGestureRecognizer.init(target: self, action: #selector(longPressAction(_ :)))
+        
+//        longPressGesture.minimumPressDuration = 0.3
+//        longPressGesture.delaysTouchesBegan = true
+        collectionView?.addGestureRecognizer(longPressGesture)
+        isSelectModel = false
+//        ViewTools.automaticallyAdjustsScrollView(scrollView: self.collectionView!, viewController: self)
     }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+    
+    @objc func longPressAction(_ sender:UIGestureRecognizer){
+        if sender.state != UIGestureRecognizerState.ended{
+            return
+        }
+        if isSelectModel! {
+            return
+        }
+        let point = sender.location(in:self.collectionView)
+        let indexPath = self.collectionView?.indexPathForItem(at: point)
+        if indexPath != nil {
+            let cell = self.collectionView?.cellForItem(at: indexPath!)
+            if let cell = cell as? FilesFolderCollectionViewCell {
+                if let delegateOK = delegate{
+                    isSelectModel = true
+                    delegateOK.collectionView(self, isSelectModel: isSelectModel!)
+                }
+                cell.isSelectModel = true
+                cell.isSelect = true
+            }
+        }
     }
-    */
+    
+    lazy var dataSource: Array<Any> = {
+        let array = Array<Any>.init()
+        return array
+    }()
+
 
     // MARK: UICollectionViewDataSource
 
@@ -80,28 +150,54 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 {
-            collectionView.register(FilesFolderCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-            if let cell = cell as? FilesFolderCollectionViewCell {
-                cell.titleLabel.text = colors[indexPath.section][indexPath.item]
+        if cellStyle == .card{
+            if indexPath.section == 0 {
+                collectionView.register(FilesFolderCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+                if let cell = cell as? FilesFolderCollectionViewCell {
+                    cell.titleLabel.text = colors[indexPath.section][indexPath.item]
+                }
+                return cell
+            }else{
+                collectionView.register(FilesFileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifierSection2)
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierSection2, for: indexPath)
+                if let cell = cell as? FilesFileCollectionViewCell {
+                    cell.titleLabel.text = colors[indexPath.section][indexPath.item]
+                    cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+                    cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
+        
+                }
+       
+                return cell
             }
-            return cell
         }else{
-            collectionView.register(FilesFileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifierSection2)
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierSection2, for: indexPath)
-            if let cell = cell as? FilesFileCollectionViewCell {
-                cell.titleLabel.text = colors[indexPath.section][indexPath.item]
-                cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
+            collectionView.register(FilesListCollectionViewCell.self, forCellWithReuseIdentifier: reuseListIdentifier)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseListIdentifier, for: indexPath)
+            if let cell = cell as? FilesListCollectionViewCell {
+                if indexPath.section == 0 {
+                    cell.leftImageView.image = UIImage.init(named: "files_files.png")
+                    cell.titleLabel.text = colors[indexPath.section][indexPath.item]
+                    cell.detailLabel.text = "2017.06.15 40.4MB"
+                }else{
+                    cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+                    cell.titleLabel.text = colors[indexPath.section][indexPath.item]
+                    cell.detailLabel.text = "2017.06.15 40.4MB"
+                }
             }
             return cell
         }
-       
     }
     
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: __kWidth, height: CellSmallHeight)
+            return CGSize(width: __kWidth, height: CellSmallHeight)
+    }
+  
+    override func collectionView(_ collectionView: UICollectionView, shouldHideFooterSeparatorForSection section: Int) -> Bool {
+        return true
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: __kWidth, height: 0)
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -120,19 +216,21 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 let size =  CGSize(width: labelWidth + (image?.size.width)! + MarginsWidth - 4 + MarginsCloseWidth, height: reusableHeaderView.rightButton.height)
                 let frame = CGRect(origin: CGPoint(x: reusableHeaderView.width - MarginsWidth - size.width, y: reusableHeaderView.rightButton.origin.y), size: size)
                 reusableHeaderView.rightButton.frame = frame
-                
+                reusableHeaderView.rightButton.isHidden = false
             }else{
                 reusableHeaderView.titleLabel.text = LocalizedString(forKey: "files_files")
                 reusableHeaderView.rightButton.isHidden = true
             }
-        }
-        reusableView.backgroundColor = UIColor.clear
+        }else
+   
         if (kind == UICollectionElementKindSectionFooter)
         {
             let footerview = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifierFooter, for: indexPath)
             footerview.backgroundColor = UIColor.purple
             reusableView = footerview
         }
+        
+        reusableView.backgroundColor = UIColor.clear
         return reusableView
         
     }
@@ -161,48 +259,26 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             delegateOK.scrollViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
         }
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.section == 1 {
-            return CGSize(width: CellWidth, height: CellWidth)
+        if cellStyle == .card{
+            if indexPath.section == 1 {
+                return CGSize(width: CellWidth, height: CellWidth)
+            }else{
+                return CGSize(width: CellWidth, height: CellSmallHeight)
+            }
         }else{
-            return CGSize(width: CellWidth, height: 48.0)
+            return CGSize(width: __kWidth, height: 64.0)
         }
-    }                                                                                                       
-
-   
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
     }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
+    // MARK: UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return true
     }
-    */
 
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
     }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
-
 }
 
 class CommonCollectionReusableView: UICollectionReusableView {
