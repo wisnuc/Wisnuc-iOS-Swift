@@ -18,7 +18,7 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
     var isSelectModel: Bool?{
         didSet{
             if isSelectModel!{
-                
+               unselectAction()
             }else{
                normalAction()
             }
@@ -134,7 +134,6 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
         button.addTarget(self, action: #selector(buttonClick(_ :)), for: UIControlEvents.touchUpInside)
         return button
     }()
-    
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

@@ -35,6 +35,7 @@ class DiskPopUpViewManager: NSObject {
     
     static let sharedInstance = DiskPopUpViewManager()
     private override init(){
+        super.init()
         diskArray = []
     }
     

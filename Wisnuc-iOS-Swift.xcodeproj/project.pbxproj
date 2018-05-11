@@ -77,6 +77,26 @@
 		1F3C241520A42D1200E6B953 /* files_select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C241420A42D1200E6B953 /* files_select@2x.png */; };
 		1F3C241720A42D1D00E6B953 /* files_select@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C241620A42D1D00E6B953 /* files_select@3x.png */; };
 		1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C241920A449B400E6B953 /* FilesHelper.swift */; };
+		1F3C241C20A5426C00E6B953 /* files_move.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C241B20A5426C00E6B953 /* files_move.png */; };
+		1F3C241E20A5428300E6B953 /* files_move@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C241D20A5428300E6B953 /* files_move@2x.png */; };
+		1F3C242020A5429100E6B953 /* files_move@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C241F20A5429000E6B953 /* files_move@3x.png */; };
+		1F3C242220A547A800E6B953 /* files_download.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C242120A547A800E6B953 /* files_download.png */; };
+		1F3C242420A547D000E6B953 /* files_download@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C242320A547D000E6B953 /* files_download@2x.png */; };
+		1F3C242620A547DB00E6B953 /* files_download@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C242520A547DB00E6B953 /* files_download@3x.png */; };
+		1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C242720A58E0600E6B953 /* FilesDrawerTableViewController.swift */; };
+		1F3C242C20A59BBF00E6B953 /* transfer.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C242B20A59BBF00E6B953 /* transfer.png */; };
+		1F3C242E20A59BCE00E6B953 /* transfer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C242D20A59BCD00E6B953 /* transfer@2x.png */; };
+		1F3C243820A5AC1F00E6B953 /* transfer@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C243720A5AC1E00E6B953 /* transfer@3x.png */; };
+		1F3C243A20A5ACE800E6B953 /* files_offline_file.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C243920A5ACE800E6B953 /* files_offline_file.png */; };
+		1F3C243C20A5ACF800E6B953 /* files_offline_file@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C243B20A5ACF800E6B953 /* files_offline_file@2x.png */; };
+		1F3C243E20A5AD0700E6B953 /* files_offline_file@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C243D20A5AD0600E6B953 /* files_offline_file@3x.png */; };
+		1F3C244020A5AD2000E6B953 /* files_tag.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C243F20A5AD2000E6B953 /* files_tag.png */; };
+		1F3C244220A5AD3D00E6B953 /* files_tag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C244120A5AD3C00E6B953 /* files_tag@2x.png */; };
+		1F3C244420A5AD4C00E6B953 /* files_tag@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C244320A5AD4C00E6B953 /* files_tag@3x.png */; };
+		1F3C244620A5AE4800E6B953 /* files_share_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C244520A5AE4700E6B953 /* files_share_folder.png */; };
+		1F3C244820A5AE5500E6B953 /* files_share_folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C244720A5AE5500E6B953 /* files_share_folder@2x.png */; };
+		1F3C244A20A5AE6300E6B953 /* files_share_folder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C244920A5AE6200E6B953 /* files_share_folder@3x.png */; };
+		1F3C244E20A5AF9E00E6B953 /* TransferTaskTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C244D20A5AF9E00E6B953 /* TransferTaskTableViewController.swift */; };
 		1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */; };
 		1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */; };
 		1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */; };
@@ -311,6 +331,26 @@
 		1F3C241420A42D1200E6B953 /* files_select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_select@2x.png"; sourceTree = "<group>"; };
 		1F3C241620A42D1D00E6B953 /* files_select@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_select@3x.png"; sourceTree = "<group>"; };
 		1F3C241920A449B400E6B953 /* FilesHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesHelper.swift; sourceTree = "<group>"; };
+		1F3C241B20A5426C00E6B953 /* files_move.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_move.png; sourceTree = "<group>"; };
+		1F3C241D20A5428300E6B953 /* files_move@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_move@2x.png"; sourceTree = "<group>"; };
+		1F3C241F20A5429000E6B953 /* files_move@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_move@3x.png"; sourceTree = "<group>"; };
+		1F3C242120A547A800E6B953 /* files_download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_download.png; sourceTree = "<group>"; };
+		1F3C242320A547D000E6B953 /* files_download@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_download@2x.png"; sourceTree = "<group>"; };
+		1F3C242520A547DB00E6B953 /* files_download@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_download@3x.png"; sourceTree = "<group>"; };
+		1F3C242720A58E0600E6B953 /* FilesDrawerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesDrawerTableViewController.swift; sourceTree = "<group>"; };
+		1F3C242B20A59BBF00E6B953 /* transfer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transfer.png; sourceTree = "<group>"; };
+		1F3C242D20A59BCD00E6B953 /* transfer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "transfer@2x.png"; sourceTree = "<group>"; };
+		1F3C243720A5AC1E00E6B953 /* transfer@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "transfer@3x.png"; sourceTree = "<group>"; };
+		1F3C243920A5ACE800E6B953 /* files_offline_file.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_offline_file.png; sourceTree = "<group>"; };
+		1F3C243B20A5ACF800E6B953 /* files_offline_file@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_offline_file@2x.png"; sourceTree = "<group>"; };
+		1F3C243D20A5AD0600E6B953 /* files_offline_file@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_offline_file@3x.png"; sourceTree = "<group>"; };
+		1F3C243F20A5AD2000E6B953 /* files_tag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_tag.png; sourceTree = "<group>"; };
+		1F3C244120A5AD3C00E6B953 /* files_tag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_tag@2x.png"; sourceTree = "<group>"; };
+		1F3C244320A5AD4C00E6B953 /* files_tag@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_tag@3x.png"; sourceTree = "<group>"; };
+		1F3C244520A5AE4700E6B953 /* files_share_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_share_folder.png; sourceTree = "<group>"; };
+		1F3C244720A5AE5500E6B953 /* files_share_folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_share_folder@2x.png"; sourceTree = "<group>"; };
+		1F3C244920A5AE6200E6B953 /* files_share_folder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_share_folder@3x.png"; sourceTree = "<group>"; };
+		1F3C244D20A5AF9E00E6B953 /* TransferTaskTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTaskTableViewController.swift; sourceTree = "<group>"; };
 		1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationDiskViewController.swift; sourceTree = "<group>"; };
 		1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationDiskViewController.xib; sourceTree = "<group>"; };
@@ -621,6 +661,22 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
+		1F3C244B20A5AF6600E6B953 /* TransferTask */ = {
+			isa = PBXGroup;
+			children = (
+				1F3C244C20A5AF8200E6B953 /* ViewController */,
+			);
+			path = TransferTask;
+			sourceTree = "<group>";
+		};
+		1F3C244C20A5AF8200E6B953 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				1F3C244D20A5AF9E00E6B953 /* TransferTaskTableViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
 		1F4E93822089BD2100DD1EA7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
@@ -793,6 +849,7 @@
 			children = (
 				1F8EBB32209ABF4700E8AB83 /* FilesRootViewController.swift */,
 				1F8EBB5320A01EF100E8AB83 /* FilesRootCollectionViewController.swift */,
+				1F3C242720A58E0600E6B953 /* FilesDrawerTableViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -800,6 +857,24 @@
 		1F8EBB4A209FF05A00E8AB83 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				1F3C244320A5AD4C00E6B953 /* files_tag@3x.png */,
+				1F3C244120A5AD3C00E6B953 /* files_tag@2x.png */,
+				1F3C243F20A5AD2000E6B953 /* files_tag.png */,
+				1F3C244920A5AE6200E6B953 /* files_share_folder@3x.png */,
+				1F3C243D20A5AD0600E6B953 /* files_offline_file@3x.png */,
+				1F3C243B20A5ACF800E6B953 /* files_offline_file@2x.png */,
+				1F3C243920A5ACE800E6B953 /* files_offline_file.png */,
+				1F3C244720A5AE5500E6B953 /* files_share_folder@2x.png */,
+				1F3C244520A5AE4700E6B953 /* files_share_folder.png */,
+				1F3C243720A5AC1E00E6B953 /* transfer@3x.png */,
+				1F3C242D20A59BCD00E6B953 /* transfer@2x.png */,
+				1F3C242B20A59BBF00E6B953 /* transfer.png */,
+				1F3C242520A547DB00E6B953 /* files_download@3x.png */,
+				1F3C242320A547D000E6B953 /* files_download@2x.png */,
+				1F3C242120A547A800E6B953 /* files_download.png */,
+				1F3C241F20A5429000E6B953 /* files_move@3x.png */,
+				1F3C241D20A5428300E6B953 /* files_move@2x.png */,
+				1F3C241B20A5426C00E6B953 /* files_move.png */,
 				1F3C241220A42CFF00E6B953 /* files_select.png */,
 				1F3C241620A42D1D00E6B953 /* files_select@3x.png */,
 				1F3C241420A42D1200E6B953 /* files_select@2x.png */,
@@ -888,6 +963,7 @@
 		1FD9B780207CBEAD00906D80 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				1F3C244B20A5AF6600E6B953 /* TransferTask */,
 				1F8EBB31209ABF1800E8AB83 /* Files */,
 				1FD9B782207CC6F400906D80 /* Login */,
 			);
@@ -1240,6 +1316,7 @@
 				1F58825B2085F4C900394BD6 /* local_area@2x.png in Resources */,
 				1F83AE582087463F007CCCFD /* LocalNetworkLoginViewController.xib in Resources */,
 				1F58826A208719BB00394BD6 /* refresh.png in Resources */,
+				1F3C244620A5AE4800E6B953 /* files_share_folder.png in Resources */,
 				1FD9B7B0207E1A0500906D80 /* wechat_icon@3x.png in Resources */,
 				1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */,
 				1F4E93812089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib in Resources */,
@@ -1248,6 +1325,7 @@
 				1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */,
 				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
 				1F2B45A6208F290200C8971F /* close@2x.png in Resources */,
+				1F3C244020A5AD2000E6B953 /* files_tag.png in Resources */,
 				1F4E9399208DBB7600DD1EA7 /* radio_button_unchecked@3x.png in Resources */,
 				1F359FE32091B2A900E2FF36 /* warning@3x.png in Resources */,
 				1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */,
@@ -1274,6 +1352,7 @@
 				1F83AE7C20886BDA007CCCFD /* change.png in Resources */,
 				1F83AE67208838DD007CCCFD /* eye_off.png in Resources */,
 				1FA669DB208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib in Resources */,
+				1F3C244420A5AD4C00E6B953 /* files_tag@3x.png in Resources */,
 				1F4E9395208DBB7600DD1EA7 /* radio_button@2x.png in Resources */,
 				1F4E938A2089D64D00DD1EA7 /* disk.png in Resources */,
 				1F58822D208591A100394BD6 /* add_station@2x.png in Resources */,
@@ -1284,22 +1363,28 @@
 				1F3C241120A42CD300E6B953 /* files_unselect@3x.png in Resources */,
 				1FEABB5320A14B6300824448 /* files_word_small.png in Resources */,
 				1F2B45A4208F290200C8971F /* close@3x.png in Resources */,
+				1F3C243820A5AC1F00E6B953 /* transfer@3x.png in Resources */,
 				1FEABB6320A14C1900824448 /* files_ppt_normal@3x.png in Resources */,
 				1F58822C208591A100394BD6 /* add_station.png in Resources */,
 				1F5882482085F07E00394BD6 /* disk_warning@2x.png in Resources */,
 				1F359FB22090819000E2FF36 /* no.png in Resources */,
 				1F359FAF2090819000E2FF36 /* ok@2x.png in Resources */,
+				1F3C241E20A5428300E6B953 /* files_move@2x.png in Resources */,
 				1F3C23FF20A2DACD00E6B953 /* cardstyle@3x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
 				1F359FD22091A95D00E2FF36 /* disk_new_add@2x.png in Resources */,
+				1F3C242420A547D000E6B953 /* files_download@2x.png in Resources */,
 				1F4E9396208DBB7600DD1EA7 /* radio_button.png in Resources */,
+				1F3C242C20A59BBF00E6B953 /* transfer.png in Resources */,
 				1FEABB6920A14C7000824448 /* files_ppt_small@3x.png in Resources */,
 				1F359FDC2091A99600E2FF36 /* disk_add.png in Resources */,
 				1F58821520848F9400394BD6 /* touxiang.jpg in Resources */,
 				1F58823B2085DCAF00394BD6 /* device@3x.png in Resources */,
+				1F3C243C20A5ACF800E6B953 /* files_offline_file@2x.png in Resources */,
 				1F83AE7E20886BDA007CCCFD /* change2x.png in Resources */,
 				1F8EBB3A209ADC7100E8AB83 /* tab_files@2x.png in Resources */,
 				1F83AE7820886A13007CCCFD /* LogOutViewController.xib in Resources */,
+				1F3C244A20A5AE6300E6B953 /* files_share_folder@3x.png in Resources */,
 				1F5882562085F0F800394BD6 /* station_review@2x.png in Resources */,
 				1F359FE42091B2A900E2FF36 /* warning.png in Resources */,
 				1F359FE22091B2A900E2FF36 /* warning@2x.png in Resources */,
@@ -1317,6 +1402,7 @@
 				1F83AE5F208830B8007CCCFD /* local_area_white@2x.png in Resources */,
 				1F8EBB5820A0239700E8AB83 /* files_files@2x.png in Resources */,
 				1F359FC32091764000E2FF36 /* diskinit.png in Resources */,
+				1F3C243A20A5ACE800E6B953 /* files_offline_file.png in Resources */,
 				1F58823E2085DCAF00394BD6 /* device_circle@2x.png in Resources */,
 				1F8EBB3C209ADC7A00E8AB83 /* tab_files@3x.png in Resources */,
 				1F5882442085F07000394BD6 /* offline@2x.png in Resources */,
@@ -1327,26 +1413,31 @@
 				1F5882252085885C00394BD6 /* logo.png in Resources */,
 				1F359FD62091A97C00E2FF36 /* disk_error.png in Resources */,
 				1F4E9397208DBB7600DD1EA7 /* radio_button_unchecked@2x.png in Resources */,
+				1F3C241C20A5426C00E6B953 /* files_move.png in Resources */,
 				1F359FB12090819000E2FF36 /* no@3x.png in Resources */,
 				1FEABB5B20A14BC100824448 /* files_word_normal@2x.png in Resources */,
 				1F359FD12091A95D00E2FF36 /* disk_main_color@2x.png in Resources */,
 				1F3C241720A42D1D00E6B953 /* files_select@3x.png in Resources */,
 				1FEABB6E20A1A9F000824448 /* files_up.png in Resources */,
 				1F359FD02091A95D00E2FF36 /* disk_main_color@3x.png in Resources */,
+				1F3C242E20A59BCE00E6B953 /* transfer@2x.png in Resources */,
 				1F359FB720916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.xib in Resources */,
 				1F5882242085885C00394BD6 /* logo@2x.png in Resources */,
 				1F83AE6B208838DD007CCCFD /* eye_open@3x.png in Resources */,
 				1F3C23FB20A2D6D100E6B953 /* menu@3x.png in Resources */,
 				1F83AE6C208838DD007CCCFD /* eye_off@2x.png in Resources */,
 				1F8EBB4C209FF07400E8AB83 /* more_gray_horizontal.png in Resources */,
+				1F3C242020A5429100E6B953 /* files_move@3x.png in Resources */,
 				1F58822E208591A100394BD6 /* add_station@3x.png in Resources */,
 				1F359FBC2091761500E2FF36 /* account.png in Resources */,
 				1FEABB6120A14C1100824448 /* files_ppt_normal@2x.png in Resources */,
 				1F58824A2085F07E00394BD6 /* disk_warning.png in Resources */,
+				1F3C244820A5AE5500E6B953 /* files_share_folder@2x.png in Resources */,
 				1F359FDE2091A99600E2FF36 /* disk_add@3x.png in Resources */,
 				1F3C23F920A2D6C300E6B953 /* menu@2x.png in Resources */,
 				1FEABB6720A14C6700824448 /* files_ppt_small@2x.png in Resources */,
 				1F359FCF2091A95D00E2FF36 /* disk_main_color.png in Resources */,
+				1F3C244220A5AD3D00E6B953 /* files_tag@2x.png in Resources */,
 				1F5882552085F0F800394BD6 /* station_review.png in Resources */,
 				1F588269208719BB00394BD6 /* refresh@2x.png in Resources */,
 				1F8EBB5620A0239000E8AB83 /* files_files.png in Resources */,
@@ -1358,9 +1449,11 @@
 				1F3C240D20A42CB400E6B953 /* files_unselect.png in Resources */,
 				1F58823D2085DCAF00394BD6 /* device.png in Resources */,
 				1F359FD82091A97C00E2FF36 /* disk_error@3x.png in Resources */,
+				1F3C242620A547DB00E6B953 /* files_download@3x.png in Resources */,
 				1F5882422085F07000394BD6 /* offline.png in Resources */,
 				1F4E93882089D64D00DD1EA7 /* disk@2x.png in Resources */,
 				1FEABB5720A14B7700824448 /* files_word_small@3x.png in Resources */,
+				1F3C243E20A5AD0700E6B953 /* files_offline_file@3x.png in Resources */,
 				1F58823A2085DCAF00394BD6 /* device_circle@3x.png in Resources */,
 				1F359FAE2090819000E2FF36 /* ok.png in Resources */,
 				1F359FB32090819000E2FF36 /* ok@3x.png in Resources */,
@@ -1368,6 +1461,7 @@
 				1F83AE7220883AA2007CCCFD /* help@2x.png in Resources */,
 				1F8EBB5A20A0239F00E8AB83 /* files_files@3x.png in Resources */,
 				1F83AE7020883AA2007CCCFD /* help@3x.png in Resources */,
+				1F3C242220A547A800E6B953 /* files_download.png in Resources */,
 				1F58826B208719BB00394BD6 /* refresh@3x.png in Resources */,
 				1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */,
 				1F8EBB38209ADC6700E8AB83 /* tab_files.png in Resources */,
@@ -1518,6 +1612,7 @@
 				1F4E938E208DB8B600DD1EA7 /* RadioButton.m in Sources */,
 				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
 				1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */,
+				1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
@@ -1531,6 +1626,7 @@
 				1F5882302085D39D00394BD6 /* UIViewExtension.swift in Sources */,
 				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
 				1F5882632085FDB400394BD6 /* UIViewControllerExtension.swift in Sources */,
+				1F3C244E20A5AF9E00E6B953 /* TransferTaskTableViewController.swift in Sources */,
 				1FDBC50E20932171004DE6B8 /* DiskPopUpViewManager.swift in Sources */,
 				1F5882612085FBDF00394BD6 /* Alert.swift in Sources */,
 				1F3C240920A4214600E6B953 /* AppNavigationDrawerController.swift in Sources */,

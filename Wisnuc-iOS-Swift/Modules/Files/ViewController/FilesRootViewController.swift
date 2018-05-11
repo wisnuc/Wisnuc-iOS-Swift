@@ -21,7 +21,6 @@ enum CollectState:Int {
     case unselect
 }
 
-let colors = [[ "red", "blue", "green", "black", "yellow", "purple" ],[ "red", "blue", "green", "black", "yellow", "purple" ]]
 private let reusableIdentifierItem = "itemCellIdentifier"
 private let cellFolderHeight:CGFloat = 48
 private let cellWidth:CGFloat = (__kWidth - 4)/2
@@ -38,6 +37,8 @@ class FilesRootViewController: BaseViewController {
         didSet{
             if isSelectModel!{
               selectAction()
+            }else{
+              selectModelCloseAction()
             }
         }
     }
@@ -45,21 +46,11 @@ class FilesRootViewController: BaseViewController {
         super.viewDidLoad()
         self.view.backgroundColor = lightGrayBackgroudColor
         prepareData()
+        setSelectModel()
         prepareCollectionView()
+        prepareAppNavigtionBar()
         prepareSearchBar()
         setCellStyle()
-      
-        //        self.view.sendSubview(toBack: collcectionViewController.view)
-        //       self.appBar.headerViewController.headerView.addSubview(searchBar)
-        
-        //       self.appBar.headerViewController.headerView.trackingScrollView = self.collcectionViewController.collectionView
-        //       self.xx_fixNavBarPenetrable()
-        //        self.appBar.headerViewController.headerView.delegate = self
-        //         self.appBar.headerViewController.headerView.minMaxHeightIncludesSafeArea = false
-        //        self.appBar.headerViewController.headerView.tintColor = UIColor.clear
-        //        self.appBar.headerViewController.headerView.shiftBehavior = MDCFlexibleHeaderShiftBehavior.enabled
-        self.view.bringSubview(toFront: appBar.headerViewController.headerView)
-        self.appBar.headerViewController.headerView.hide(whenShifted: appBar.headerStackView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,8 +63,26 @@ class FilesRootViewController: BaseViewController {
         self.collcectionViewController.cellStyle = cellStyle
     }
     
+    func setSelectModel(){
+        isSelectModel = false
+    }
+    
     func prepareData() {
-        dataSource = colors
+        let kSectionCount = 2
+        let kSectionItemCount = 6
+        var finishArray = Array<Any>.init()
+        for idx in 0..<kSectionCount {
+            var array = Array<FilesModel>.init()
+            for index in 0..<kSectionItemCount{
+                let fileModel = FilesModel.init()
+                let string = "Section-\(idx) Item\(index)"
+                fileModel.name = string
+                array.append(fileModel)
+            }
+            finishArray.append(array)
+        }
+        dataSource = finishArray
+        collcectionViewController.dataSource = dataSource
     }
     
     func prepareCollectionView(){
@@ -83,25 +92,65 @@ class FilesRootViewController: BaseViewController {
         self.view.addSubview(collcectionViewController.view)
         // self.view.top + searchBar.bottom + MarginsCloseWidth/2
         collcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(searchBar.bottom + MarginsCloseWidth/2-20, 0, 0 , 0)
-        
     }
     
     func selectAction(){
-        print(searchBar.bottom)
+        //        print(searchBar.bottom)
         if searchBar.bottom >= 0{
+            DispatchQueue.main.async {
+                self.selectSearchBarAction()
+            }
             UIView.animate(withDuration: 0.3, animations: {
                 self.searchBar.bottom = 0
-            }) { (finish) in
-                if finish{
-                    DispatchQueue.main.async {
-                       
-                    }
-
-                }
-            }
+            })
         }else{
             
         }
+    }
+    
+    func selectSearchBarAction(){
+        self.appBar.headerViewController.headerView.isHidden = false
+    }
+    
+    func unselectSearchBarAction(){
+        self.appBar.headerViewController.headerView.isHidden = true
+    }
+    
+    func selectModelCloseAction(){
+        self.appBar.headerViewController.headerView.isHidden = false
+        if searchBar.bottom <= 0{
+            DispatchQueue.main.async {
+                self.unselectSearchBarAction()
+            }
+            UIView.animate(withDuration: 0.3, animations: {
+                self.searchBar.top = 20 + MarginsCloseWidth
+            })
+        }else{
+            
+        }
+    }
+    
+    func prepareAppNavigtionBar(){
+        self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+        self.appBar.headerViewController.headerView.isHidden = true
+        self.title = ""
+        let leftItem = UIBarButtonItem.init(image: Icon.close?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(closeSelectModelButtonTap(_ :)))
+        let paceItem = UIBarButtonItem.init(customView: UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 20)))
+        let labelBarButtonItem = UIBarButtonItem.init(customView: selectNumberAppNaviLabel)
+        self.navigationItem.leftBarButtonItems = [leftItem,paceItem,labelBarButtonItem]
+        self.navigationItem.rightBarButtonItems = [moreBarButtonItem,downloadBarButtonItem,moveBarButtonItem]
+    }
+    
+    @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
+        
+    }
+    
+    @objc func downloadBarButtonItemTap(_ sender:UIBarButtonItem){
+        
+    }
+    
+    @objc func moreBarButtonItemTap(_ sender:UIBarButtonItem){
+        
     }
     
     @objc func listStyleButtonTap(_ sender:IconButton){
@@ -118,6 +167,10 @@ class FilesRootViewController: BaseViewController {
          navigationDrawerController?.toggleLeftView()
     }
     
+    @objc func closeSelectModelButtonTap(_ sender:IconButton){
+        isSelectModel = false
+    }
+    
     lazy var collcectionViewController : FilesRootCollectionViewController = {
         let layout = MDCCollectionViewFlowLayout()
 //        layout.itemSize = CGSize(width: size.width, height:CellHeight)
@@ -131,6 +184,30 @@ class FilesRootViewController: BaseViewController {
         let searchBar = BaseSearchBar.init(frame: CGRect(x: MarginsCloseWidth, y: 20 + MarginsCloseWidth, width: __kWidth - MarginsWidth, height: cellHeight))
         searchBar.delegate = self
         return searchBar
+    }()
+    
+    lazy var selectNumberAppNaviLabel: UILabel = {
+        let label = UILabel.init()
+        label.frame = CGRect(x: 0, y: 0, width: 50, height: 20)
+        label.textColor = UIColor.white
+        label.font = TitleFont18.withBold()
+        label.text = "1"
+        return label
+    }()
+
+    lazy var moveBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "files_move.png")?.withRenderingMode(.alwaysTemplate), style: UIBarButtonItemStyle.done, target: self, action: #selector(moveBarButtonItemTap(_ :)))
+        return barButtonItem
+    }()
+    
+    lazy var downloadBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "files_download.png")?.withRenderingMode(.alwaysTemplate), style: UIBarButtonItemStyle.done, target: self, action: #selector(downloadBarButtonItemTap(_ :)))
+        return barButtonItem
+    }()
+    
+    lazy var moreBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem.init(image: Icon.moreHorizontal?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(moreBarButtonItemTap(_ :)))
+        return barButtonItem
     }()
     
     private func prepareSearchBar() {
@@ -156,11 +233,14 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        print(scrollView.contentOffset.y)
-        if scrollView.contentOffset.y > -(SearchBarBottom + MarginsCloseWidth/2) {
-            self.searchBar.origin.y = -(scrollView.contentOffset.y)-(SearchBarBottom + MarginsCloseWidth/2)+20
-        }else{
-            self.searchBar.origin.y = 20 + MarginsCloseWidth
+        print(scrollView.contentOffset.y)
+        if !isSelectModel!{
+//            let OffsetY = scrollView.contentOffset.y
+            if scrollView.contentOffset.y > -(SearchBarBottom + MarginsCloseWidth/2) {
+                self.searchBar.origin.y = -(scrollView.contentOffset.y)-(SearchBarBottom + MarginsCloseWidth/2)+20
+            }else{
+                self.searchBar.origin.y = 20 + MarginsCloseWidth
+            }
         }
     }
     

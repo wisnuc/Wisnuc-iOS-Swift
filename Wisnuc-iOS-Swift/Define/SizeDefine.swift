@@ -27,6 +27,7 @@ public let NormalLabelWidth:CGFloat = __kWidth - MarginsWidth*2
 
 public let MDCAppNavigationBarHeight:CGFloat =  UIDevice.current.isX() ? 76.0 + SafeAreaBottomHeight-10:76.0
 public let TabBarHeight:CGFloat =  56.0
+public let StatusBarHeight = UIApplication.shared.statusBarFrame.height
 
 public let UserNameMax:NSInteger = 16
 public let PasswordMax:NSInteger = 30

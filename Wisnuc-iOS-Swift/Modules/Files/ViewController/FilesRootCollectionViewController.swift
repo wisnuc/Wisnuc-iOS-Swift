@@ -33,6 +33,11 @@ private let CellSmallHeight:CGFloat = 48.0
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
     var delegate:FilesRootCollectionViewControllerDelegate?
+    var dataSource:Array<Any>?{
+        didSet{
+           self.collectionView?.reloadData()
+        }
+    }
     var isSelectModel:Bool?{
         didSet{
             if isSelectModel!{
@@ -62,15 +67,24 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             }
             
             self.collectionView?.performBatchUpdates({
-                
+
             }, completion: { (finished) in
                 if finished {
-                    self.collectionView?.reloadData()
-                    
+                  self.collectionView?.reloadData()
                 }
             })
         }
     }
+    
+    override init(collectionViewLayout layout: UICollectionViewLayout) {
+        super.init(collectionViewLayout: layout)
+        dataSource = Array.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -86,11 +100,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         self.collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: reuseIdentifierFooter)
 
         // Do any additional setup after loading the view.
-        
-        if let delegateOK = delegate {
-            dataSource = delegateOK.collectionViewData(self)
-            self.collectionView?.reloadData()
-        }
+    
         self.styler.beginCellAppearanceAnimation()
         
         let longPressGesture = UILongPressGestureRecognizer.init(target: self, action: #selector(longPressAction(_ :)))
@@ -99,6 +109,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
 //        longPressGesture.delaysTouchesBegan = true
         collectionView?.addGestureRecognizer(longPressGesture)
         isSelectModel = false
+        self.collectionView?.allowsMultipleSelection = true
+        self.collectionView?.allowsSelection = true
 //        ViewTools.automaticallyAdjustsScrollView(scrollView: self.collectionView!, viewController: self)
     }
 
@@ -115,8 +127,16 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         if isSelectModel! {
             return
         }
+        
+      
+        
+    
         let point = sender.location(in:self.collectionView)
         let indexPath = self.collectionView?.indexPathForItem(at: point)
+        if (self.collectionView(self.collectionView!, shouldSelectItemAt: indexPath!)) {
+            
+    
+        }
         if indexPath != nil {
             let cell = self.collectionView?.cellForItem(at: indexPath!)
             if let cell = cell as? FilesFolderCollectionViewCell {
@@ -124,29 +144,28 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     isSelectModel = true
                     delegateOK.collectionView(self, isSelectModel: isSelectModel!)
                 }
-                cell.isSelectModel = true
+          
+                let sectionArray:Array<FilesModel> = dataSource![indexPath!.section] as! Array
+                let model  = sectionArray[(indexPath?.item)!]
+                FilesHelper.sharedInstance.addChooseFiles(model: model)
+                cell.isSelectModel = isSelectModel
                 cell.isSelect = true
             }
         }
     }
-    
-    lazy var dataSource: Array<Any> = {
-        let array = Array<Any>.init()
-        return array
-    }()
-
 
     // MARK: UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return colors.count
+        return dataSource!.count
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return colors[section].count
+        let sectionArray:Array<FilesModel> = dataSource![section] as! Array
+        return sectionArray.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -155,14 +174,18 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 collectionView.register(FilesFolderCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
                 if let cell = cell as? FilesFolderCollectionViewCell {
-                    cell.titleLabel.text = colors[indexPath.section][indexPath.item]
+                    let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
+                    let model  = sectionArray[indexPath.item]
+                    cell.titleLabel.text = model.name
                 }
                 return cell
             }else{
                 collectionView.register(FilesFileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifierSection2)
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierSection2, for: indexPath)
                 if let cell = cell as? FilesFileCollectionViewCell {
-                    cell.titleLabel.text = colors[indexPath.section][indexPath.item]
+                    let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
+                    let model  = sectionArray[indexPath.item]
+                    cell.titleLabel.text = model.name
                     cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
                     cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
         
@@ -174,13 +197,15 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             collectionView.register(FilesListCollectionViewCell.self, forCellWithReuseIdentifier: reuseListIdentifier)
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseListIdentifier, for: indexPath)
             if let cell = cell as? FilesListCollectionViewCell {
+                let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
+                let model  = sectionArray[indexPath.item]
                 if indexPath.section == 0 {
                     cell.leftImageView.image = UIImage.init(named: "files_files.png")
-                    cell.titleLabel.text = colors[indexPath.section][indexPath.item]
+                    cell.titleLabel.text = model.name
                     cell.detailLabel.text = "2017.06.15 40.4MB"
                 }else{
                     cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                    cell.titleLabel.text = colors[indexPath.section][indexPath.item]
+                    cell.titleLabel.text = model.name
                     cell.detailLabel.text = "2017.06.15 40.4MB"
                 }
             }
