@@ -49,10 +49,12 @@ func setRootViewController(){
     tabBarController.tabBar?.backgroundColor = UIColor.white
     tabBarController.tabBar?.selectedItemTintColor = COR1
     tabBarController.tabBar?.unselectedItemTintColor = LightGrayColor
-
+    tabBarController.hidesBottomBarWhenPushed = true
     let window = UIApplication.shared.keyWindow
     let drawerVC = DrawerViewController.init()
-    window?.rootViewController = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
+    let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
+//    naviNavigationDrawer.lef
+    window?.rootViewController = naviNavigationDrawer
 }
 
 

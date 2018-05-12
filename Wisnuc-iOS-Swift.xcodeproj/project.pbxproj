@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06EE1ED320A70D52000E739D /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06EE1ED220A70D52000E739D /* BaseTableViewController.swift */; };
 		1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DCC207F365B00860F31 /* NetworkStatus.swift */; };
 		1F169DD1207F528800860F31 /* MyStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD0207F528800860F31 /* MyStationView.swift */; };
 		1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */; };
@@ -258,6 +259,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		06EE1ED220A70D52000E739D /* BaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
 		1F169DCA207F06CC00860F31 /* Wisnuc-iOS-Swift-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Wisnuc-iOS-Swift-Bridging-Header.h"; sourceTree = "<group>"; };
 		1F169DCC207F365B00860F31 /* NetworkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkStatus.swift; sourceTree = "<group>"; };
 		1F169DD0207F528800860F31 /* MyStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationView.swift; sourceTree = "<group>"; };
@@ -1133,6 +1135,7 @@
 				1F8EBB34209AD91200E8AB83 /* WSTabBarController.swift */,
 				1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */,
 				1F3C240A20A4225300E6B953 /* DrawerViewController.swift */,
+				06EE1ED220A70D52000E739D /* BaseTableViewController.swift */,
 			);
 			path = Foundations;
 			sourceTree = "<group>";
@@ -1217,7 +1220,6 @@
 				1FD9B749207CBE8700906D80 /* Frameworks */,
 				1FD9B74A207CBE8700906D80 /* Resources */,
 				86DDF45F5CCB6C594636B31F /* [CP] Embed Pods Frameworks */,
-				01AE116048A68D7A7E698839 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1494,21 +1496,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		01AE116048A68D7A7E698839 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		86DDF45F5CCB6C594636B31F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1618,6 +1605,7 @@
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
 				1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
+				06EE1ED320A70D52000E739D /* BaseTableViewController.swift in Sources */,
 				1F359FC6209182BB00E2FF36 /* DiskErrorViewController.swift in Sources */,
 				1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */,
 				1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */,
@@ -1851,7 +1839,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1881,7 +1869,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/wisnuc-imac/Documents/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = (

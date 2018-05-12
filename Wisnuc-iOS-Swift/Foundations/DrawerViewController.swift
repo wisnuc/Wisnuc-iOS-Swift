@@ -7,9 +7,11 @@
 //
 
 import UIKit
-
+protocol DrawerViewControllerDelegat {
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+}
 class DrawerViewController: UIViewController {
-
+    var delegate:DrawerViewControllerDelegat?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addChildViewController(filsDrawerVC)
@@ -25,6 +27,16 @@ class DrawerViewController: UIViewController {
 
     lazy var filsDrawerVC: FilesDrawerTableViewController = {
         let vc =  FilesDrawerTableViewController.init(style: UITableViewStyle.grouped)
+        vc.delegate = self
         return vc
     }()
+    
+}
+
+extension DrawerViewController:FilesDrawerViewControllerDelegate{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let delegateOK = delegate {
+            delegateOK.tableView(tableView, didSelectRowAt: indexPath)
+        }
+    }
 }

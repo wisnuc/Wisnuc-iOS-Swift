@@ -8,12 +8,15 @@
 
 import UIKit
 import Material
-
+protocol FilesDrawerViewControllerDelegate {
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) 
+}
 private let cellReuseIdentifier = "reuseIdentifier"
 private let tableViewHeaderHeight:CGFloat =  StatusBarHeight + 64 + MarginsCloseWidth
 private let cellHeight:CGFloat =  48
 class FilesDrawerTableViewController: UITableViewController {
     var cellCount = 4
+    var delegate:FilesDrawerViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
 //        self.view.backgroundColor = COR1
@@ -96,18 +99,9 @@ class FilesDrawerTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch indexPath.row {
-        case 0:
-            let transferTaskTableViewController = TransferTaskTableViewController.init(style: UITableViewStyle.grouped)
-            self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
-        case 1:
-            break
-        case 2:
-            break
-        case 3:
-            break
-        default:
-            break
+        
+        if let delegateOK = self.delegate {
+            delegateOK.tableView(tableView, didSelectRowAt: indexPath)
         }
     }
 

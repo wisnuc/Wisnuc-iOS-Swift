@@ -36,9 +36,9 @@ class FilesRootViewController: BaseViewController {
     var isSelectModel:Bool?{
         didSet{
             if isSelectModel!{
-              selectAction()
+                selectAction()
             }else{
-              selectModelCloseAction()
+                selectModelCloseAction()
             }
         }
     }
@@ -160,11 +160,13 @@ class FilesRootViewController: BaseViewController {
         }else{
             cellStyle = .card
         }
-         self.collcectionViewController.cellStyle = cellStyle
+        self.collcectionViewController.cellStyle = cellStyle
     }
-
+    
     @objc func menuButtonTap(_ sender:IconButton){
-         navigationDrawerController?.toggleLeftView()
+        navigationDrawerController?.toggleLeftView()
+        let drawerController:DrawerViewController = navigationDrawerController?.leftViewController as! DrawerViewController
+        drawerController.filsDrawerVC.delegate = self
     }
     
     @objc func closeSelectModelButtonTap(_ sender:IconButton){
@@ -173,7 +175,7 @@ class FilesRootViewController: BaseViewController {
     
     lazy var collcectionViewController : FilesRootCollectionViewController = {
         let layout = MDCCollectionViewFlowLayout()
-//        layout.itemSize = CGSize(width: size.width, height:CellHeight)
+        //        layout.itemSize = CGSize(width: size.width, height:CellHeight)
         let collectVC = FilesRootCollectionViewController.init(collectionViewLayout: layout)
         collectVC.collectionView?.isScrollEnabled = true
         collectVC.delegate = self
@@ -194,7 +196,7 @@ class FilesRootViewController: BaseViewController {
         label.text = "1"
         return label
     }()
-
+    
     lazy var moveBarButtonItem: UIBarButtonItem = {
         let barButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "files_move.png")?.withRenderingMode(.alwaysTemplate), style: UIBarButtonItemStyle.done, target: self, action: #selector(moveBarButtonItemTap(_ :)))
         return barButtonItem
@@ -231,11 +233,11 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     func collectionViewData(_ collectionViewController: MDCCollectionViewController) -> Array<Any> {
         return dataSource!
     }
-
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentOffset.y)
         if !isSelectModel!{
-//            let OffsetY = scrollView.contentOffset.y
+            //            let OffsetY = scrollView.contentOffset.y
             if scrollView.contentOffset.y > -(SearchBarBottom + MarginsCloseWidth/2) {
                 self.searchBar.origin.y = -(scrollView.contentOffset.y)-(SearchBarBottom + MarginsCloseWidth/2)+20
             }else{
@@ -272,3 +274,24 @@ extension FilesRootViewController:SearchBarDelegate{
     }
     
 }
+
+extension FilesRootViewController:FilesDrawerViewControllerDelegate{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.row {
+        case 0:
+            navigationDrawerController?.closeLeftView()
+            let transferTaskTableViewController = TransferTaskTableViewController.init(style: UITableViewStyle.grouped)
+            self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
+            self.appBar.headerViewController.headerView.isHidden = false
+        case 1:
+            break
+        case 2:
+            break
+        case 3:
+            break
+        default:
+            break
+        }
+    }
+}
+
