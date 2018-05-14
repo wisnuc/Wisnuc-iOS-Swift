@@ -56,6 +56,22 @@ class FilesRootViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Application.statusBarStyle = .default
+        self.appBar.headerViewController.headerView.isHidden = true
+        self.navigationDrawerController?.isLeftPanGestureEnabled = true
+        if (self.navigationDrawerController?.rootViewController) != nil {
+            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+            tab.setTabBarHidden(false, animated: true)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationDrawerController?.isLeftPanGestureEnabled = false
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+   
     }
     
     func setCellStyle(){
@@ -132,7 +148,6 @@ class FilesRootViewController: BaseViewController {
     
     func prepareAppNavigtionBar(){
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
-        self.appBar.headerViewController.headerView.isHidden = true
         self.title = ""
         let leftItem = UIBarButtonItem.init(image: Icon.close?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(closeSelectModelButtonTap(_ :)))
         let paceItem = UIBarButtonItem.init(customView: UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 20)))
@@ -277,16 +292,22 @@ extension FilesRootViewController:SearchBarDelegate{
 
 extension FilesRootViewController:FilesDrawerViewControllerDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        navigationDrawerController?.closeLeftView()
         switch indexPath.row {
         case 0:
-            navigationDrawerController?.closeLeftView()
-            let transferTaskTableViewController = TransferTaskTableViewController.init(style: UITableViewStyle.grouped)
+            let transferTaskTableViewController = TransferTaskTableViewController.init()
+            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+            tab.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
             self.appBar.headerViewController.headerView.isHidden = false
         case 1:
             break
         case 2:
-            break
+            let offlineVC = FilesOfflineViewController.init()
+            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+            tab.setTabBarHidden(true, animated: true)
+            self.navigationController?.pushViewController(offlineVC, animated: true)
+            self.appBar.headerViewController.headerView.isHidden = false
         case 3:
             break
         default:

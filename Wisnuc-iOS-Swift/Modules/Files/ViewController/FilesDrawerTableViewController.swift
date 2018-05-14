@@ -99,7 +99,6 @@ class FilesDrawerTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
         if let delegateOK = self.delegate {
             delegateOK.tableView(tableView, didSelectRowAt: indexPath)
         }

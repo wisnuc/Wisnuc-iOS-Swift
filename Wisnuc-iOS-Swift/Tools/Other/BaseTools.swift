@@ -27,9 +27,9 @@ func setRootViewController(){
     shareVC.view.backgroundColor = UIColor.cyan
     
     
-    let filesNavi = UINavigationController.init(rootViewController: filesVC)
-    let photosNavi = UINavigationController.init(rootViewController: photosVC)
-    let shareNavi = UINavigationController.init(rootViewController: shareVC)
+    let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
+    let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
+    let shareNavi = BaseNavigationController.init(rootViewController: shareVC)
     filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "warning.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), selectedImage: UIImage.init(named: "tab_files.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal))
     photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "Home"), selectedImage: UIImage.init(named: "tab_files.png"))
     shareNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "Home"), selectedImage: UIImage.init(named: "tab_files.png"))
@@ -49,11 +49,9 @@ func setRootViewController(){
     tabBarController.tabBar?.backgroundColor = UIColor.white
     tabBarController.tabBar?.selectedItemTintColor = COR1
     tabBarController.tabBar?.unselectedItemTintColor = LightGrayColor
-    tabBarController.hidesBottomBarWhenPushed = true
     let window = UIApplication.shared.keyWindow
     let drawerVC = DrawerViewController.init()
     let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
-//    naviNavigationDrawer.lef
     window?.rootViewController = naviNavigationDrawer
 }
 

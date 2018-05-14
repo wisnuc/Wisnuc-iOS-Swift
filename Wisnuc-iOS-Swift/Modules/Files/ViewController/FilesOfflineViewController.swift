@@ -1,21 +1,22 @@
 //
-//  TransferTaskTableViewController.swift
+//  FilesOfflineViewController.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/5/11.
+//  Created by wisnuc-imac on 2018/5/14.
 //  Copyright © 2018年 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
+
 import MaterialComponents.MaterialShadowLayer
 
 private let reuseIdentifier = "cellreuseIdentifier"
 
-class TransferTaskTableViewController: BaseViewController {
-
+class FilesOfflineViewController: BaseViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.appBar.navigationBar.title = LocalizedString(forKey: "transfer")
+        self.appBar.navigationBar.title = LocalizedString(forKey: "files_offline")
         self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
         self.view.addSubview(self.tableView)
     }
@@ -41,10 +42,6 @@ class TransferTaskTableViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        if (self.navigationDrawerController?.rootViewController) != nil {
-//            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-//            tab.setTabBarHidden(false, animated: true)
-//        }
     }
     
     override func viewWillLayoutSubviews() {
@@ -54,36 +51,27 @@ class TransferTaskTableViewController: BaseViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     lazy var tableView: UITableView = {
         let tbView = UITableView.init(frame: CGRect(x: 0, y: MDCAppNavigationBarHeight, width: __kWidth, height: __kHeight - MDCAppNavigationBarHeight))
         tbView.delegate = self
         tbView.dataSource = self
         tbView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
         tbView.tableFooterView = UIView.init(frame: CGRect.zero)
-        tbView.register(UINib.init(nibName: "TransferTaskTableViewCell", bundle: nil), forCellReuseIdentifier: reuseIdentifier)
+        tbView.register(UINib.init(nibName: "FilesOfflineTableViewCell", bundle: nil), forCellReuseIdentifier: reuseIdentifier)
         return tbView
     }()
     
-//    lazy var finishImageView: UIImageView = {
-//
-//        return imageView
-//    }()
 }
 
- // MARK: - Table view data source
-extension TransferTaskTableViewController:UITableViewDataSource{
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell:TransferTaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! TransferTaskTableViewCell
-    cell.selectionStyle = .none
-    cell.leftImageView.image = UIImage.init(named: "files_pdf.png")
-    cell.detailImageView.image = UIImage.init(named: "files_cloud.png")
-    cell.titleLabel.text = "这是一个文件名"
-    cell.detailLabel.text = "20.5GB"
-    let imageViewWidth:CGFloat = 24
-    let imageView = UIImageView.init(frame: CGRect(x:cell.width - 16 - imageViewWidth, y: cell.height/2 - imageViewWidth/2, width: imageViewWidth, height: imageViewWidth))
-    imageView.image = UIImage.init(named: "files_error.png")
-    cell.contentView.addSubview(imageView)
+// MARK: - Table view data source
+extension FilesOfflineViewController:UITableViewDataSource{
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:FilesOfflineTableViewCell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! FilesOfflineTableViewCell
+        cell.selectionStyle = .none
+        cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+        cell.titleLabel.text = "这是一个文件名"
+        cell.detailLabel.text = "2016.02.02 20.5GB"
         return cell
     }
     
@@ -98,24 +86,25 @@ extension TransferTaskTableViewController:UITableViewDataSource{
     }
 }
 
-extension TransferTaskTableViewController:UITableViewDelegate{
+extension FilesOfflineViewController:UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72
     }
     
+    //    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    //        return .delete
+    //    }
+    //
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "delete")) { (tableViewForAction, indexForAction) in
-        
-        }
-        deleteRowAction.backgroundColor = UIColor.red
-        let priorityRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "priority_transfer")) { (tableViewForAction, indexForAction) in
             
         }
-        priorityRowAction.backgroundColor = UIColor.purple
-        return [deleteRowAction,priorityRowAction]
+        deleteRowAction.backgroundColor = UIColor.red
+        return [deleteRowAction]
     }
 }
+

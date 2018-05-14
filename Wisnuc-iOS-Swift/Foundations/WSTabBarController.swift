@@ -14,6 +14,7 @@ class WSTabBarController: MDCTabBarViewController  {
     init() {
         super.init(nibName: nil, bundle: nil)
         self.delegate = self
+        self.view.backgroundColor = UIColor.white
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -42,7 +43,7 @@ class WSTabBarController: MDCTabBarViewController  {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.hidesBottomBarWhenPushed = true
+//        self.hidesBottomBarWhenPushed = true
 //        self.tabBar?.isHidden = true
     }
 
@@ -56,5 +57,7 @@ extension WSTabBarController:MDCTabBarControllerDelegate{
     func tabBarController(_ tabBarController: MDCTabBarViewController, didSelect viewController: UIViewController) {
 //        print(viewController.tabBarItem.selectedImage!)
     }
+    
+    
 }
 

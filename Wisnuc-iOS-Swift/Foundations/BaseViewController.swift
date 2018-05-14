@@ -14,9 +14,10 @@ class BaseViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.appBar.navigationBar.backgroundColor = COR1
+        appBar.navigationBar.backgroundColor = COR1
         appBar.headerViewController.headerView.backgroundColor = COR1
         appBar.navigationBar.titleView?.backgroundColor = .white
+        appBar.navigationBar.titleAlignment = .leading
         // Step 2: Add the headerViewController as a child.
         self.addChildViewController(appBar.headerViewController)
 //        print(appBar.headerViewController.headerView.height)
