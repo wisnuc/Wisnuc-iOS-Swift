@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import MaterialComponents.MaterialShadowLayer
+import Material
 
 private let reuseIdentifier = "cellreuseIdentifier"
 
@@ -16,27 +16,12 @@ class FileShareFolderViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.appBar.navigationBar.title = LocalizedString(forKey: "files_offline")
-        self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
         self.view.addSubview(self.tableView)
     }
+    
     override func viewWillAppear(_ animated: Bool) {
-        appBar.headerViewController.headerView.backgroundColor = .white
-        appBar.navigationBar.backgroundColor = .white
-        appBar.headerStackView.backgroundColor = .white
-        let shadowLayer = CALayer.init()
-        shadowLayer.shadowColor = UIColor.black.cgColor
-        shadowLayer.shadowOffset = CGSize(width: 2, height: 4)
-        shadowLayer.shadowRadius = 2
-        appBar.headerViewController.headerView.setShadowLayer(MDCShadowLayer.init(layer: shadowLayer)) { (layer, intensity) in
-            let shadowLayer = layer as? MDCShadowLayer
-            CATransaction.begin()
-            CATransaction.setDisableActions(true)
-            shadowLayer!.elevation = ShadowElevation(intensity * ShadowElevation.appBar.rawValue)
-            CATransaction.commit()
-        }
-        appBar.headerViewController.headerView.clipsToBounds  = false
-        self.appBar.navigationBar.tintColor = LightGrayColor
-        self.appBar.headerViewController.headerView.tintColor = LightGrayColor
+        self.appBar.headerViewController.headerView.isHidden = false
+        self.navigationItem.rightBarButtonItem = searchBarButtonItem
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -46,6 +31,11 @@ class FileShareFolderViewController: BaseViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
     }
+    
+    @objc func searchBarButtonItemTap(_ sender:UIBarButtonItem){
+        
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -57,8 +47,14 @@ class FileShareFolderViewController: BaseViewController {
         tbView.dataSource = self
         tbView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
         tbView.tableFooterView = UIView.init(frame: CGRect.zero)
-        tbView.register(UINib.init(nibName: "FilesOfflineTableViewCell", bundle: nil), forCellReuseIdentifier: reuseIdentifier)
+        tbView.register(UINib.init(nibName: "FilesShareFolderTableViewCell", bundle: nil), forCellReuseIdentifier: reuseIdentifier)
+        tbView.separatorStyle = .none
         return tbView
+    }()
+    
+    lazy var searchBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem.init(image: Icon.search?.byTintColor(LightGrayColor), style: UIBarButtonItemStyle.done, target: self, action: #selector(searchBarButtonItemTap(_ :)))
+        return barButtonItem
     }()
     
 }
@@ -66,11 +62,10 @@ class FileShareFolderViewController: BaseViewController {
 // MARK: - Table view data source
 extension FileShareFolderViewController:UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:FilesOfflineTableViewCell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! FilesOfflineTableViewCell
+        let cell:FilesShareFolderTableViewCell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! FilesShareFolderTableViewCell
         cell.selectionStyle = .none
-        cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-        cell.titleLabel.text = "这是一个文件名"
-        cell.detailLabel.text = "2016.02.02 20.5GB"
+        cell.leftImageView.image = UIImage.init(named: "files_share_all.png")
+        cell.titleLabel.text = "共享文件夹"
         return cell
     }
     
@@ -87,9 +82,7 @@ extension FileShareFolderViewController:UITableViewDataSource{
 
 extension FileShareFolderViewController:UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 72
+        return 56
     }
-    
-
 }
 

@@ -8,27 +8,78 @@
 
 import UIKit
 import MaterialComponents
-
+enum NavigationStyle:Int{
+    case defaultStyle = 0
+    case whiteStyle
+    
+}
 class BaseViewController: UIViewController {
     let appBar = MDCAppBar()
+    var style:NavigationStyle?{
+        didSet{
+            switch style {
+            case .defaultStyle?:
+                defaultStyleAction()
+            case .whiteStyle?:
+                whiteStyleAction()
+            default:
+                break
+            }
+        }
+    }
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        appBar.navigationBar.backgroundColor = COR1
-        appBar.headerViewController.headerView.backgroundColor = COR1
-        appBar.navigationBar.titleView?.backgroundColor = .white
-        appBar.navigationBar.titleAlignment = .leading
-        // Step 2: Add the headerViewController as a child.
+        setNaviStyle()
         self.addChildViewController(appBar.headerViewController)
-//        print(appBar.headerViewController.headerView.height)
-//        let color = UIColor(white: 0.2, alpha:1)
-//        appBar.headerViewController.headerView.backgroundColor = color
-        appBar.navigationBar.tintColor = UIColor.white
-        appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white] as [NSAttributedStringKey : Any]
+    }
+    
+    init(style:NavigationStyle) {
+        super.init(nibName: nil, bundle: nil)
+        setNaviStyle(style: style)
+        self.addChildViewController(appBar.headerViewController)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setNaviStyle(style:NavigationStyle){
+        self.style = style
+    }
+    
+    func setNaviStyle(){
+        style = .defaultStyle
+    }
+    
+    func defaultStyleAction(){
+        appBar.navigationBar.backgroundColor = COR1
+        appBar.headerViewController.headerView.backgroundColor = COR1
+        appBar.navigationBar.titleView?.backgroundColor = .white
+        appBar.navigationBar.titleAlignment = .leading
+        appBar.navigationBar.tintColor = UIColor.white
+        appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white] as [NSAttributedStringKey : Any]
+    }
+    
+    func whiteStyleAction(){
+        appBar.headerViewController.headerView.backgroundColor = .white
+        appBar.navigationBar.backgroundColor = .white
+        appBar.headerStackView.backgroundColor = .white
+        let shadowLayer = CALayer.init()
+        shadowLayer.shadowColor = UIColor.black.cgColor
+        shadowLayer.shadowOffset = CGSize(width: 2, height: 4)
+        shadowLayer.shadowRadius = 2
+        appBar.headerViewController.headerView.setShadowLayer(MDCShadowLayer.init(layer: shadowLayer)) { (layer, intensity) in
+            let shadowLayer = layer as? MDCShadowLayer
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            shadowLayer!.elevation = ShadowElevation(intensity * ShadowElevation.appBar.rawValue)
+            CATransaction.commit()
+        }
+        appBar.headerViewController.headerView.clipsToBounds  = false
+        self.appBar.navigationBar.tintColor = LightGrayColor
+        self.appBar.headerViewController.headerView.tintColor = LightGrayColor
+        self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
     }
     
     override func viewDidLoad() {

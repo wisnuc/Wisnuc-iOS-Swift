@@ -10,8 +10,11 @@ import UIKit
 import MaterialComponents
 import Material
 
+typealias CellCallBack = (_ cell: FilesFileCollectionViewCell,_ button:UIButton) -> Void
+
 class FilesFileCollectionViewCell: MDCCollectionViewCell {
     var cellLongPressCallBack: ((_ cell:MDCCollectionViewCell) -> ())?
+    var cellCallBack:CellCallBack?
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -66,7 +69,9 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
     }
     
     @objc func buttonClick(_ sender:UIButton){
-        
+        if self.cellCallBack != nil {
+            self.cellCallBack!(self,sender)
+        }
     }
     
     @objc func longPress(_ sender:UIGestureRecognizer){

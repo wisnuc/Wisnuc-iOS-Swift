@@ -29,6 +29,8 @@ private let CellSmallHeight:CGFloat = 48.0
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>)
     
     func collectionView(_ collectionViewController: MDCCollectionViewController , isSelectModel:Bool)
+    func sequenceButtonTap(_ sender:UIButton)
+    func cellButtonCallBack(_ cell:MDCCollectionViewCell, _ button:UIButton)
 }
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
@@ -38,6 +40,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
            self.collectionView?.reloadData()
         }
     }
+  
     var isSelectModel:Bool?{
         didSet{
             if isSelectModel!{
@@ -120,6 +123,12 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @objc func sequenceButtonTap(_ sender: UIButton){
+        if let delegateOK = self.delegate {
+            delegateOK.sequenceButtonTap(sender)
+        }
+    }
+    
     @objc func longPressAction(_ sender:UIGestureRecognizer){
         if sender.state != UIGestureRecognizerState.ended{
             return
@@ -127,10 +136,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         if isSelectModel! {
             return
         }
-        
-      
-        
-    
         let point = sender.location(in:self.collectionView)
         let indexPath = self.collectionView?.indexPathForItem(at: point)
         if (self.collectionView(self.collectionView!, shouldSelectItemAt: indexPath!)) {
@@ -153,6 +158,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             }
         }
     }
+
 
     // MARK: UICollectionViewDataSource
 
@@ -188,9 +194,12 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     cell.titleLabel.text = model.name
                     cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
                     cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
-        
+                    cell.cellCallBack = { (callbackCell,callbackButton) in
+                        if let delegateOK = self.delegate{
+                            delegateOK.cellButtonCallBack(callbackCell, callbackButton)
+                        }
+                    }
                 }
-       
                 return cell
             }
         }else{
@@ -246,6 +255,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 reusableHeaderView.titleLabel.text = LocalizedString(forKey: "files_files")
                 reusableHeaderView.rightButton.isHidden = true
             }
+                reusableHeaderView.rightButton.addTarget(self, action: #selector(sequenceButtonTap(_ :)), for: UIControlEvents.touchUpInside)
         }else
    
         if (kind == UICollectionElementKindSectionFooter)

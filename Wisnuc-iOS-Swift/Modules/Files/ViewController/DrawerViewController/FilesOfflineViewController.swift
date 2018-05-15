@@ -17,27 +17,10 @@ class FilesOfflineViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.appBar.navigationBar.title = LocalizedString(forKey: "files_offline")
-        self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
         self.view.addSubview(self.tableView)
     }
     override func viewWillAppear(_ animated: Bool) {
-        appBar.headerViewController.headerView.backgroundColor = .white
-        appBar.navigationBar.backgroundColor = .white
-        appBar.headerStackView.backgroundColor = .white
-        let shadowLayer = CALayer.init()
-        shadowLayer.shadowColor = UIColor.black.cgColor
-        shadowLayer.shadowOffset = CGSize(width: 2, height: 4)
-        shadowLayer.shadowRadius = 2
-        appBar.headerViewController.headerView.setShadowLayer(MDCShadowLayer.init(layer: shadowLayer)) { (layer, intensity) in
-            let shadowLayer = layer as? MDCShadowLayer
-            CATransaction.begin()
-            CATransaction.setDisableActions(true)
-            shadowLayer!.elevation = ShadowElevation(intensity * ShadowElevation.appBar.rawValue)
-            CATransaction.commit()
-        }
-        appBar.headerViewController.headerView.clipsToBounds  = false
-        self.appBar.navigationBar.tintColor = LightGrayColor
-        self.appBar.headerViewController.headerView.tintColor = LightGrayColor
+        self.appBar.headerViewController.headerView.isHidden = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -88,7 +71,7 @@ extension FilesOfflineViewController:UITableViewDataSource{
 
 extension FilesOfflineViewController:UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 72
+        return 64
     }
     
     //    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {

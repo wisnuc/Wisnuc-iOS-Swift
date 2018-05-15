@@ -51,6 +51,7 @@ class FilesRootViewController: BaseViewController {
         prepareAppNavigtionBar()
         prepareSearchBar()
         setCellStyle()
+        self.view.addSubview(fabButton)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -156,6 +157,18 @@ class FilesRootViewController: BaseViewController {
         self.navigationItem.rightBarButtonItems = [moreBarButtonItem,downloadBarButtonItem,moveBarButtonItem]
     }
     
+    private func prepareSearchBar() {
+        self.view.addSubview(searchBar)
+        let menuImage = UIImage.init(named:"menu.png")
+        menuButton = IconButton(image: menuImage)
+        menuButton.addTarget(self, action: #selector(menuButtonTap(_:)), for: UIControlEvents.touchUpInside)
+        moreButton = IconButton(image: Icon.cm.moreHorizontal?.byTintColor(LightGrayColor))
+        listStyleButton = IconButton(image: #imageLiteral(resourceName: "cardstyle.png"))
+        listStyleButton.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+        searchBar.leftViews = [menuButton]
+        searchBar.rightViews = [listStyleButton,moreButton]
+    }
+    
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
         
     }
@@ -166,6 +179,15 @@ class FilesRootViewController: BaseViewController {
     
     @objc func moreBarButtonItemTap(_ sender:UIBarButtonItem){
         
+    }
+    
+    @objc func fabButtonDidTap(_ sender:MDCFloatingButton){
+        self.fabButton.collapse(true) {
+            let bottomSheet = AppBottomSheetController.init(contentViewController: self.fabBottomVC)
+            bottomSheet.delegate = self
+            self.present(bottomSheet, animated: true, completion: {
+            })
+        }
     }
     
     @objc func listStyleButtonTap(_ sender:IconButton){
@@ -226,21 +248,60 @@ class FilesRootViewController: BaseViewController {
         let barButtonItem = UIBarButtonItem.init(image: Icon.moreHorizontal?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(moreBarButtonItemTap(_ :)))
         return barButtonItem
     }()
+
+    lazy var fabButton: MDCFloatingButton = {
+        let plusImage = #imageLiteral(resourceName: "Plus")
+        let buttonWidth:CGFloat = 56
+        let defaultFloatingButton = MDCFloatingButton.init(frame: CGRect.init(x: __kWidth - 30 - buttonWidth, y: __kHeight - TabBarHeight - 16 - buttonWidth, width: buttonWidth, height: buttonWidth))
+        
+        let plusImage36 = UIImage(named: "plus_white_36", in: Bundle(for: type(of: self)),
+                                  compatibleWith: traitCollection)
+        
+//        defaultFloatingButton.sizeToFit()
+//        defaultFloatingButton.translatesAutoresizingMaskIntoConstraints = false
+        defaultFloatingButton.setImage(plusImage, for: .normal)
+        let mdcColorScheme = MDCButtonScheme.init()
+        MDCButtonColorThemer.apply(appDlegate.colorScheme, to: defaultFloatingButton)
+        defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
+        return defaultFloatingButton
+    }()
     
-    private func prepareSearchBar() {
-        self.view.addSubview(searchBar)
-        let menuImage = UIImage.init(named:"menu.png")
-        menuButton = IconButton(image: menuImage)
-        menuButton.addTarget(self, action: #selector(menuButtonTap(_:)), for: UIControlEvents.touchUpInside)
-        moreButton = IconButton(image: Icon.cm.moreHorizontal?.byTintColor(LightGrayColor))
-        listStyleButton = IconButton(image: #imageLiteral(resourceName: "cardstyle.png"))
-        listStyleButton.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
-        searchBar.leftViews = [menuButton]
-        searchBar.rightViews = [listStyleButton,moreButton]
-    }
+    lazy var fabBottomVC: FilesFABBottomSheetDisplayViewController = {
+        let fabBottom = FilesFABBottomSheetDisplayViewController()
+        fabBottom.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
+        fabBottom.delegate = self
+        return fabBottom
+    }()
+    
+    lazy var sequenceBottomVC: FilesSequenceBottomSheetContentTableViewController = {
+        let bottomVC = FilesSequenceBottomSheetContentTableViewController()
+        bottomVC.delegate = self
+        return bottomVC
+    }()
+    
+    
+    lazy var filesBottomVC: FilesFilesBottomSheetContentTableViewController = {
+        let bottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        
+//        bottomVC.delegate = self
+        return bottomVC
+    }()
 }
 
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
+    func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton) {
+        let bottomSheet = AppBottomSheetController.init(contentViewController: self.filesBottomVC)
+        bottomSheet.trackingScrollView = filesBottomVC.tableView
+        self.present(bottomSheet, animated: true, completion: {
+        })
+    }
+    
+    func sequenceButtonTap(_ sender: UIButton) {
+        let bottomSheet = AppBottomSheetController.init(contentViewController: self.sequenceBottomVC)
+        self.present(bottomSheet, animated: true, completion: {
+        })
+    }
+    
     func collectionView(_ collectionViewController: MDCCollectionViewController, isSelectModel: Bool) {
         self.isSelectModel = isSelectModel
     }
@@ -295,24 +356,61 @@ extension FilesRootViewController:FilesDrawerViewControllerDelegate{
         navigationDrawerController?.closeLeftView()
         switch indexPath.row {
         case 0:
-            let transferTaskTableViewController = TransferTaskTableViewController.init()
+            let transferTaskTableViewController = TransferTaskTableViewController.init(style:.whiteStyle)
             let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
             tab.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
-            self.appBar.headerViewController.headerView.isHidden = false
         case 1:
-            break
+            let shareVC = FileShareFolderViewController.init(style:.whiteStyle)
+            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+            tab.setTabBarHidden(true, animated: true)
+            self.navigationController?.pushViewController(shareVC, animated: true)
         case 2:
-            let offlineVC = FilesOfflineViewController.init()
+            let offlineVC = FilesOfflineViewController.init(style:.whiteStyle)
             let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
             tab.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(offlineVC, animated: true)
-            self.appBar.headerViewController.headerView.isHidden = false
         case 3:
             break
         default:
             break
         }
     }
+}
+
+extension FilesRootViewController:MDCBottomSheetControllerDelegate{
+    func bottomSheetControllerDidDismissBottomSheet(_ controller: MDCBottomSheetController) {
+        self.fabButton.expand(true, completion: {
+        })
+    }
+}
+
+extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
+    func cllButtonTap(_ sender: UIButton) {
+        self.fabBottomVC.dismiss(animated: true) {
+            self.fabButton.expand(true, completion: {
+            })
+        }
+    }
+    
+    func folderButtonTap(_ sender: UIButton) {
+        self.fabBottomVC.dismiss(animated: true) {
+            self.fabButton.expand(true, completion: {
+            })
+        }
+    }
+    
+    func uploadButtonTap(_ sender: UIButton) {
+        self.fabBottomVC.dismiss(animated: true) {
+            self.fabButton.expand(true, completion: {
+            })
+        }
+    }
+}
+
+extension FilesRootViewController:SequenceBottomSheetContentVCDelegate{
+    func sequenceBottomtableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        sequenceBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
+    }    
 }
 
