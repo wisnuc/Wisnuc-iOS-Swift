@@ -163,6 +163,7 @@ class FilesRootViewController: BaseViewController {
         menuButton = IconButton(image: menuImage)
         menuButton.addTarget(self, action: #selector(menuButtonTap(_:)), for: UIControlEvents.touchUpInside)
         moreButton = IconButton(image: Icon.cm.moreHorizontal?.byTintColor(LightGrayColor))
+        moreButton.addTarget(self, action: #selector(moreButtonTap(_:)), for: UIControlEvents.touchUpInside)
         listStyleButton = IconButton(image: #imageLiteral(resourceName: "cardstyle.png"))
         listStyleButton.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
         searchBar.leftViews = [menuButton]
@@ -205,6 +206,14 @@ class FilesRootViewController: BaseViewController {
         let drawerController:DrawerViewController = navigationDrawerController?.leftViewController as! DrawerViewController
         drawerController.filsDrawerVC.delegate = self
     }
+    
+    @objc func moreButtonTap(_ sender:IconButton){
+        let bottomSheet = AppBottomSheetController.init(contentViewController: self.filesSearchMoreBottomVC)
+        bottomSheet.trackingScrollView = filesSearchMoreBottomVC.tableView
+        self.present(bottomSheet, animated: true, completion: {
+        })
+    }
+    
     
     @objc func closeSelectModelButtonTap(_ sender:IconButton){
         isSelectModel = false
@@ -279,17 +288,21 @@ class FilesRootViewController: BaseViewController {
         return bottomVC
     }()
     
-    
     lazy var filesBottomVC: FilesFilesBottomSheetContentTableViewController = {
         let bottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
-        
-//        bottomVC.delegate = self
+        bottomVC.delegate = self
+        return bottomVC
+    }()
+    
+    lazy var filesSearchMoreBottomVC: FilesSearchMoreBottomSheetContentTableViewController = {
+        let bottomVC = FilesSearchMoreBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        bottomVC.delegate = self
         return bottomVC
     }()
 }
 
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
-    func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton) {
+    func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton, _ indexPath: IndexPath) {
         let bottomSheet = AppBottomSheetController.init(contentViewController: self.filesBottomVC)
         bottomSheet.trackingScrollView = filesBottomVC.tableView
         self.present(bottomSheet, animated: true, completion: {
@@ -340,6 +353,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         }
     }
 }
+
 extension FilesRootViewController:SearchBarDelegate{
     func searchBar(searchBar: SearchBar, didClear textField: UITextField, with text: String?) {
         
@@ -348,7 +362,6 @@ extension FilesRootViewController:SearchBarDelegate{
     func searchBar(searchBar: SearchBar, willClear textField: UITextField, with text: String?) {
         
     }
-    
 }
 
 extension FilesRootViewController:FilesDrawerViewControllerDelegate{
@@ -414,3 +427,24 @@ extension FilesRootViewController:SequenceBottomSheetContentVCDelegate{
     }    
 }
 
+
+extension FilesRootViewController:SearchMoreBottomSheetVCDelegate{
+    func searchMoreBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+         filesSearchMoreBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
+    func filesBottomSheetContentInfoButtonTap(_ sender: UIButton) {
+        filesBottomVC.presentingViewController?.dismiss(animated: true, completion:{
+            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+            tab.setTabBarHidden(true, animated: true)
+            let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
+            self.navigationController?.pushViewController(filesInfoVC, animated: true)
+        })
+    }
+    
+    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        filesBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+}

@@ -10,7 +10,7 @@ import UIKit
 import MaterialComponents
 import Material
 
-typealias CellCallBack = (_ cell: FilesFileCollectionViewCell,_ button:UIButton) -> Void
+typealias CellCallBack = (_ cell: MDCCollectionViewCell,_ button:UIButton) -> Void
 
 class FilesFileCollectionViewCell: MDCCollectionViewCell {
     var cellLongPressCallBack: ((_ cell:MDCCollectionViewCell) -> ())?

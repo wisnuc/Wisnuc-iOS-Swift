@@ -11,6 +11,7 @@ import MaterialComponents.MaterialCollections
 import Material
 
 class FilesListCollectionViewCell: MDCCollectionViewCell {
+    var cellCallBack:CellCallBack?
     override init(frame: CGRect) {
         super.init(frame: frame)
         //        self.
@@ -50,7 +51,9 @@ class FilesListCollectionViewCell: MDCCollectionViewCell {
     }
     
     @objc func buttonClick(_ sender:UIButton){
-        
+        if self.cellCallBack != nil {
+            self.cellCallBack!(self,sender)
+        }
     }
     
     lazy var leftImageView: UIImageView = {

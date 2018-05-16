@@ -15,6 +15,7 @@ let filesSelectImage = UIImage.init(named: "files_select.png")
 let filesUnSelectImage = UIImage.init(named: "files_unselect.png")
 
 class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
+    var cellCallBack:CellCallBack?
     var isSelectModel: Bool?{
         didSet{
             if isSelectModel!{
@@ -108,7 +109,9 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
     }
     
     @objc func buttonClick(_ sender:UIButton){
-        
+        if self.cellCallBack != nil {
+            self.cellCallBack!(self,sender)
+        }
     }
     
     lazy var leftImageView: UIImageView = {

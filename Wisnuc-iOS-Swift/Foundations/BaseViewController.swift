@@ -11,10 +11,9 @@ import MaterialComponents
 enum NavigationStyle:Int{
     case defaultStyle = 0
     case whiteStyle
-    
+    case imageryStyle
 }
 class BaseViewController: UIViewController {
-    let appBar = MDCAppBar()
     var style:NavigationStyle?{
         didSet{
             switch style {
@@ -22,6 +21,8 @@ class BaseViewController: UIViewController {
                 defaultStyleAction()
             case .whiteStyle?:
                 whiteStyleAction()
+            case .imageryStyle?:
+                imageryStyleAction()
             default:
                 break
             }
@@ -30,14 +31,14 @@ class BaseViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        setNaviStyle()
         self.addChildViewController(appBar.headerViewController)
+        setNaviStyle()
     }
     
     init(style:NavigationStyle) {
         super.init(nibName: nil, bundle: nil)
-        setNaviStyle(style: style)
         self.addChildViewController(appBar.headerViewController)
+        setNaviStyle(style: style)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -56,7 +57,6 @@ class BaseViewController: UIViewController {
         appBar.navigationBar.backgroundColor = COR1
         appBar.headerViewController.headerView.backgroundColor = COR1
         appBar.navigationBar.titleView?.backgroundColor = .white
-        appBar.navigationBar.titleAlignment = .leading
         appBar.navigationBar.tintColor = UIColor.white
         appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white] as [NSAttributedStringKey : Any]
     }
@@ -82,11 +82,47 @@ class BaseViewController: UIViewController {
         self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
     }
     
+    func imageryStyleAction(){
+        let headerView = appBar.headerViewController.headerView
+        appBar.navigationBar.tintColor = UIColor.white
+        // Create our custom image view and add it to the header view.
+        let imageView = UIImageView(image: self.headerBackgroundImage())
+        imageView.frame = headerView.bounds
+        
+        // Ensure that the image view resizes in reaction to the header view bounds changing.
+        imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        // Ensure that the image view is below other App Bar views (headerStackView).
+        headerView.insertSubview(imageView, at: 0)
+        
+        // Scales up the image while the header is over-extending.
+        imageView.contentMode = .scaleAspectFill
+        
+        // The header view does not clip to bounds by default so we ensure that the image is clipped.
+        imageView.clipsToBounds = true
+        
+        MDCAppBarColorThemer.apply(appDlegate.colorScheme, to: appBar)
+
+        // Make sure navigation bar background color is clear so the image view is visible.
+        appBar.navigationBar.backgroundColor = UIColor.clear
+        
+        // Allow the header to show more of the image.
+        headerView.maximumHeight = 160
+        UIApplication.shared.statusBarStyle = .lightContent
+        appBar.navigationBar.titleTextColor = UIColor.white
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         appBar.addSubviewsToParent()
+        appBar.navigationBar.titleAlignment = .leading
         self.view.backgroundColor = UIColor.white
         // Do any additional setup after loading the view.
+    }
+    
+    func headerBackgroundImage() -> UIImage {
+        let image = UIImage.init(named: "mdc_theme.png")
+        return image!
     }
     
     
@@ -109,6 +145,11 @@ class BaseViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    lazy var appBar:MDCAppBar = {
+        let mdcAppBar = MDCAppBar()
+        return mdcAppBar
+    }()
 
     /*
     // MARK: - Navigation

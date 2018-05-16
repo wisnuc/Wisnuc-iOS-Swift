@@ -30,7 +30,7 @@ private let CellSmallHeight:CGFloat = 48.0
     
     func collectionView(_ collectionViewController: MDCCollectionViewController , isSelectModel:Bool)
     func sequenceButtonTap(_ sender:UIButton)
-    func cellButtonCallBack(_ cell:MDCCollectionViewCell, _ button:UIButton)
+    func cellButtonCallBack(_ cell:MDCCollectionViewCell, _ button:UIButton, _ indexPath:IndexPath)
 }
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
@@ -183,6 +183,11 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
                     let model  = sectionArray[indexPath.item]
                     cell.titleLabel.text = model.name
+                    cell.cellCallBack = { (callbackCell,callbackButton) in
+                        if let delegateOK = self.delegate{
+                            delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
+                        }
+                    }
                 }
                 return cell
             }else{
@@ -196,7 +201,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
                     cell.cellCallBack = { (callbackCell,callbackButton) in
                         if let delegateOK = self.delegate{
-                            delegateOK.cellButtonCallBack(callbackCell, callbackButton)
+                            delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
                         }
                     }
                 }
@@ -216,6 +221,11 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
                     cell.titleLabel.text = model.name
                     cell.detailLabel.text = "2017.06.15 40.4MB"
+                }
+                cell.cellCallBack = { (callbackCell,callbackButton) in
+                    if let delegateOK = self.delegate{
+                        delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
+                    }
                 }
             }
             return cell
