@@ -27,7 +27,7 @@ private let cellWidth:CGFloat = (__kWidth - 4)/2
 private let cellHeight:CGFloat = 137
 private let SearchBarBottom:CGFloat = 77.0
 
-class FilesRootViewController: BaseViewController {
+class FilesRootViewController: BaseViewController{
     private var menuButton: IconButton!
     private var moreButton: IconButton!
     private var listStyleButton: IconButton!
@@ -59,6 +59,7 @@ class FilesRootViewController: BaseViewController {
         Application.statusBarStyle = .default
         self.appBar.headerViewController.headerView.isHidden = true
         self.navigationDrawerController?.isLeftPanGestureEnabled = true
+        navigationController?.delegate = self
         if (self.navigationDrawerController?.rootViewController) != nil {
             let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
             tab.setTabBarHidden(false, animated: true)
@@ -68,6 +69,7 @@ class FilesRootViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationDrawerController?.isLeftPanGestureEnabled = false
+        self.view.endEditing(true)
     }
     
     override func viewWillLayoutSubviews() {
@@ -168,6 +170,7 @@ class FilesRootViewController: BaseViewController {
         listStyleButton.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
         searchBar.leftViews = [menuButton]
         searchBar.rightViews = [listStyleButton,moreButton]
+        searchBar.textField.delegate = self
     }
     
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
@@ -299,6 +302,13 @@ class FilesRootViewController: BaseViewController {
         bottomVC.delegate = self
         return bottomVC
     }()
+    
+    lazy var searchViewController:SearchFilesViewController  = {
+        let searchVC = SearchFilesViewController.init(style: NavigationStyle.whiteStyle)
+        searchVC.modalPresentationStyle = .custom
+        searchVC.modalTransitionStyle = .crossDissolve
+        return searchVC
+    }()
 }
 
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
@@ -362,6 +372,11 @@ extension FilesRootViewController:SearchBarDelegate{
     func searchBar(searchBar: SearchBar, willClear textField: UITextField, with text: String?) {
         
     }
+    
+    func searchBar(searchBar: SearchBar, didChange textField: UITextField, with text: String?) {
+        
+    }
+    
 }
 
 extension FilesRootViewController:FilesDrawerViewControllerDelegate{
@@ -446,5 +461,32 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         filesBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension FilesRootViewController:UINavigationControllerDelegate{
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        let transition = SearchTransition()
+        if operation == .push {
+            if toVC == searchViewController{
+                return transition
+            }else{
+                return nil
+            }
+        }else{
+            if fromVC == searchViewController{
+                return transition
+            }else{
+                return nil
+            }
+        }
+    }
+}
+
+extension FilesRootViewController:TextFieldDelegate{
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+        tab.setTabBarHidden(true, animated: true)
+        self.navigationController?.pushViewController(self.searchViewController, animated: true)
     }
 }

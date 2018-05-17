@@ -14,6 +14,8 @@ class FilesShareFolderTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
 
     @IBOutlet weak var moreButton: IconButton!
+    
+    var cellCallback:((_ cell:UITableViewCell , _ button:IconButton)->())?
     override func awakeFromNib() {
         super.awakeFromNib()
         titleLabel.textColor = DarkGrayColor
@@ -22,6 +24,12 @@ class FilesShareFolderTableViewCell: UITableViewCell {
         moreButton.tintColor = LightGrayColor
     }
 
+    @IBAction func moreButtonTap(_ sender: IconButton) {
+        if cellCallback != nil {
+            cellCallback!(self,sender)
+        }
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

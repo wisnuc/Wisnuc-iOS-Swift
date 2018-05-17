@@ -57,6 +57,11 @@ class FileShareFolderViewController: BaseViewController {
         return barButtonItem
     }()
     
+    lazy var moreButtonBottomSheetContentVC:FilesShareBottomSheetContentTableViewController = {
+        let vc = FilesShareBottomSheetContentTableViewController(style: UITableViewStyle.plain)
+        vc.delegate = self
+        return vc
+    }()
 }
 
 // MARK: - Table view data source
@@ -66,6 +71,10 @@ extension FileShareFolderViewController:UITableViewDataSource{
         cell.selectionStyle = .none
         cell.leftImageView.image = UIImage.init(named: "files_share_all.png")
         cell.titleLabel.text = "共享文件夹"
+        cell.cellCallback = { (callbackCell,moreButton) in
+            let bottomSheet = AppBottomSheetController.init(contentViewController: self.moreButtonBottomSheetContentVC)
+           self.present(bottomSheet, animated: true, completion: nil)
+        }
         return cell
     }
     
@@ -84,5 +93,15 @@ extension FileShareFolderViewController:UITableViewDelegate{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 56
     }
+}
+
+extension FileShareFolderViewController:ShareBottomSheetContentVCDelegte{
+    func shareBottomSheetContenttableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.moreButtonBottomSheetContentVC.presentingViewController?.dismiss(animated: true, completion: {
+            
+        })
+    }
+    
+ 
 }
 

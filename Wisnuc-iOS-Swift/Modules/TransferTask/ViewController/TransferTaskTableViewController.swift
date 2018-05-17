@@ -8,7 +8,7 @@
 
 import UIKit
 import MaterialComponents.MaterialShadowLayer
-
+import Material
 private let reuseIdentifier = "cellreuseIdentifier"
 
 class TransferTaskTableViewController: BaseViewController {
@@ -20,6 +20,7 @@ class TransferTaskTableViewController: BaseViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         self.appBar.headerViewController.headerView.isHidden = false
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -33,9 +34,15 @@ class TransferTaskTableViewController: BaseViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @objc func rightBarButtonItem(_ sender:UIBarButtonItem){
+       let bottomSheet = AppBottomSheetController.init(contentViewController: transferTaskBottomSheetContentVC)
+        self.present(bottomSheet, animated: true, completion: nil)
     }
 
     lazy var tableView: UITableView = {
@@ -46,6 +53,17 @@ class TransferTaskTableViewController: BaseViewController {
         tbView.tableFooterView = UIView.init(frame: CGRect.zero)
         tbView.register(UINib.init(nibName: "TransferTaskTableViewCell", bundle: nil), forCellReuseIdentifier: reuseIdentifier)
         return tbView
+    }()
+    
+    lazy var rightBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem.init(image:Icon.moreHorizontal?.byTintColor(LightGrayColor) , style: UIBarButtonItemStyle.done, target: self, action: #selector(rightBarButtonItem(_ :)))
+        return barButtonItem
+    }()
+    
+    lazy var transferTaskBottomSheetContentVC: TransferTaskBottomSheetContentTableViewController = {
+        let vc = TransferTaskBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        vc.delegate = self
+        return vc
     }()
     
 //    lazy var finishImageView: UIImageView = {
@@ -100,5 +118,13 @@ extension TransferTaskTableViewController:UITableViewDelegate{
         }
         priorityRowAction.backgroundColor = UIColor.purple
         return [deleteRowAction,priorityRowAction]
+    }
+}
+
+extension TransferTaskTableViewController:TransferTaskBottomSheetContentVCDelegate{
+    func transferTaskBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.transferTaskBottomSheetContentVC.presentingViewController?.dismiss(animated: true, completion: {
+            
+        })
     }
 }

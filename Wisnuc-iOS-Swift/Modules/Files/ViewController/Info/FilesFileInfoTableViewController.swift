@@ -7,19 +7,13 @@
 //
 
 import UIKit
-
+import MaterialComponents.MDCAppBar
 private let cellReuseIdentifier = "reuseIdentifier"
 class FilesFileInfoTableViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        appBar.headerViewController.headerView.trackingScrollView = self.tableView
-        self.tableView.delegate = appBar.headerViewController
-        self.view.addSubview(tableView)
-        ViewTools.automaticallyAdjustsScrollView(scrollView: tableView, viewController: self)
-        view.bringSubview(toFront: appBar.headerViewController.headerView)
-        appBar.navigationBar.title = "fom.pdf"
-//        appBar.navigationBar.titleView?.alpha = 0
+        prepareNavigationBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -32,12 +26,21 @@ class FilesFileInfoTableViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func prepareNavigationBar(){
+        appBar.headerViewController.headerView.trackingScrollView = self.tableView
+        self.tableView.delegate = appBar.headerViewController
+        self.view.addSubview(tableView)
+        ViewTools.automaticallyAdjustsScrollView(scrollView: tableView, viewController: self)
+        view.bringSubview(toFront: appBar.headerViewController.headerView)
+        appBar.navigationBar.title = "fom.pdf"
+        appBar.navigationBar.titleTextColor = .clear
+        appBar.headerViewController.headerView.addSubview(navigationBarBottomImageView)
+        appBar.headerViewController.headerView.addSubview(navigationBarBottomLabel)
+        appBar.headerViewController.headerView.delegate = self
+        navigationBarBottomImageView.image = UIImage.init(named: "files_files.png")
+        navigationBarBottomLabel.text = appBar.navigationBar.title
     }
-
 
     lazy var tableView: UITableView = {
         let contentTableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style:.plain)
@@ -47,6 +50,19 @@ class FilesFileInfoTableViewController: BaseViewController {
         contentTableView.separatorStyle = .none
         contentTableView.contentInset = UIEdgeInsets.init(top:MarginsCloseWidth, left: 0, bottom: 0, right: 0)
         return contentTableView
+    }()
+    
+    lazy var navigationBarBottomImageView: UIImageView = {
+        let imageView = UIImageView.init(frame: CGRect.init(x: MarginsWidth, y: appBar.headerViewController.headerView.maximumHeight - MarginsWidth - 24, width: 24, height: 24))
+        return imageView
+    }()
+    
+    lazy var navigationBarBottomLabel: UILabel = {
+        let label = UILabel.init(frame: CGRect.init(x:navigationBarBottomImageView.right + MarginsWidth, y: appBar.headerViewController.headerView.maximumHeight - MarginsWidth -  24, width: __kWidth - navigationBarBottomImageView.right - MarginsWidth*2, height: 24))
+        label.textColor = DarkGrayColor
+        label.font = MiddlePlusTitleFont.withBold()
+        label.text = appBar.navigationBar.title!
+        return label
     }()
 }
 
@@ -108,5 +124,22 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
             break
         }
         return cell
+    }
+
+}
+
+extension FilesFileInfoTableViewController:MDCFlexibleHeaderViewDelegate{
+    func flexibleHeaderViewNeedsStatusBarAppearanceUpdate(_ headerView: MDCFlexibleHeaderView) {
+        
+    }
+    
+    func flexibleHeaderViewFrameDidChange(_ headerView: MDCFlexibleHeaderView) {
+//       print(headerView.bottom)
+        let viewOriginY:CGFloat = 120.0
+        if headerView.maximumHeight != headerView.bottom{
+             navigationBarBottomImageView.origin.y = viewOriginY + headerView.bottom - headerView.maximumHeight
+            navigationBarBottomImageView.alpha = (navigationBarBottomImageView.origin.y-64)/(120-64)
+            navigationBarBottomLabel.origin.y = viewOriginY + headerView.bottom - headerView.maximumHeight
+        }
     }
 }

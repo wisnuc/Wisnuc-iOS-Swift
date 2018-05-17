@@ -14,6 +14,7 @@ enum NavigationStyle:Int{
     case imageryStyle
 }
 class BaseViewController: UIViewController {
+    
     var style:NavigationStyle?{
         didSet{
             switch style {

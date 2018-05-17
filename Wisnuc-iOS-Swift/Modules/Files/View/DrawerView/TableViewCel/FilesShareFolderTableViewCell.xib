@@ -35,6 +35,9 @@
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pUp-fz-Fzg" customClass="IconButton" customModule="Material">
                         <rect key="frame" x="274" y="13" width="30" height="30"/>
+                        <connections>
+                            <action selector="moreButtonTap:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="McZ-hQ-4cQ"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>
