@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import Material
 
 class FilesOfflineTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var moreButton: IconButton!
     @IBOutlet weak var detailImageView: UIImageView!
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
@@ -18,6 +20,18 @@ class FilesOfflineTableViewCell: UITableViewCell {
         super.awakeFromNib()
         titleLabel.textColor = DarkGrayColor
         detailLabel.textColor = LightGrayColor
+        moreButton.image = Icon.moreHorizontal?.byTintColor(LightGrayColor)
+        moreButton.tintColor = LightGrayColor
+        moreButton.isHidden = true
+        detailImageView.isHidden = true
+    }
+    
+    func reloadLayout(){
+        if detailImageView.isHidden{
+            DispatchQueue.main.async {
+                self.detailLabel.left = self.titleLabel.left
+            }
+        }
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -45,8 +45,13 @@
                             <constraint firstAttribute="width" constant="12" id="war-nN-vhI"/>
                         </constraints>
                     </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAK-Pv-cAI" customClass="IconButton" customModule="Material">
+                        <rect key="frame" x="274" y="17" width="30" height="30"/>
+                    </button>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="kAK-Pv-cAI" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="419-by-eQy"/>
+                    <constraint firstAttribute="trailing" secondItem="kAK-Pv-cAI" secondAttribute="trailing" constant="16" id="4ku-Ca-Qid"/>
                     <constraint firstItem="JOi-I8-nF4" firstAttribute="centerY" secondItem="TpI-zX-wZu" secondAttribute="centerY" id="E2l-tE-IRm"/>
                     <constraint firstItem="UZX-Ik-QzR" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="EYh-ct-XiI"/>
                     <constraint firstItem="Ptu-fa-g62" firstAttribute="leading" secondItem="UZX-Ik-QzR" secondAttribute="trailing" constant="32" id="HFc-7K-aXc"/>
@@ -63,6 +68,7 @@
                 <outlet property="detailImageView" destination="TpI-zX-wZu" id="poL-or-E5g"/>
                 <outlet property="detailLabel" destination="JOi-I8-nF4" id="ifc-dX-Qyf"/>
                 <outlet property="leftImageView" destination="UZX-Ik-QzR" id="lNi-5t-GP8"/>
+                <outlet property="moreButton" destination="kAK-Pv-cAI" id="3SK-aY-p9r"/>
                 <outlet property="titleLabel" destination="Ptu-fa-g62" id="wHO-ef-qEv"/>
             </connections>
             <point key="canvasLocation" x="34" y="64"/>

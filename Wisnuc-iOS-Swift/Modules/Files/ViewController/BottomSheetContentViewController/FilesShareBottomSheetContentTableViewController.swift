@@ -47,7 +47,7 @@ class FilesShareBottomSheetContentTableViewController: UITableViewController {
         cell.textLabel?.font = MiddleTitleFont
         switch indexPath.row {
         case 0:
-           cell.textLabel?.text = LocalizedString(forKey: "Jurisdiction setting")
+           cell.textLabel?.text = LocalizedString(forKey: "Authority setting")
         case 1:
            cell.textLabel?.text = LocalizedString(forKey: "Remove")
         default:

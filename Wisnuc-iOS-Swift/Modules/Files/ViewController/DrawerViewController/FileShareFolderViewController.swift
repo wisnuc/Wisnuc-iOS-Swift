@@ -22,6 +22,7 @@ class FileShareFolderViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.appBar.headerViewController.headerView.isHidden = false
         self.navigationItem.rightBarButtonItem = searchBarButtonItem
+        Application.statusBarStyle = .default
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -98,7 +99,8 @@ extension FileShareFolderViewController:UITableViewDelegate{
 extension FileShareFolderViewController:ShareBottomSheetContentVCDelegte{
     func shareBottomSheetContenttableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.moreButtonBottomSheetContentVC.presentingViewController?.dismiss(animated: true, completion: {
-            
+            let authorityVC = FilesShareAuthorityChangeViewController.init(style: NavigationStyle.defaultStyle)
+            self.present(authorityVC, animated: true, completion: nil)
         })
     }
     

@@ -22,6 +22,6 @@ class StringExtension: NSObject {
     
     class func classNameAsString(targetClass: AnyClass) -> String {
         //prints more readable results for dictionaries, arrays, Int, etc
-        return String(describing: type(of:targetClass))
+        return String(describing: targetClass)
     }
 }
