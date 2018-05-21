@@ -11,14 +11,32 @@ import MaterialComponents
 import Material
 
 typealias CellCallBack = (_ cell: MDCCollectionViewCell,_ button:UIButton) -> Void
-
+typealias CellLongPressCallBack = ((_ cell:MDCCollectionViewCell) -> ())
 class FilesFileCollectionViewCell: MDCCollectionViewCell {
-    var cellLongPressCallBack: ((_ cell:MDCCollectionViewCell) -> ())?
+    var longPressCallBack: CellLongPressCallBack?
     var cellCallBack:CellCallBack?
+    var isSelectModel: Bool?{
+        didSet{
+            if isSelectModel!{
+                unselectAction()
+            }else{
+                normalAction()
+            }
+        }
+    }
+    var isSelect: Bool?{
+        didSet{
+            if isSelect!{
+                selectAction()
+            }else{
+                unselectAction()
+            }
+        }
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
-        
+        setGestrue()
         self.contentView.addSubview(leftImageView)
         leftImageView.snp.makeConstraints { (make) in
             make.left.equalTo(self.contentView.snp.left).offset(MarginsCloseWidth)
@@ -55,11 +73,40 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
             make.size.equalTo(CGSize(width: 64, height: 64))
         }
         
-        setGestrue()
+        self.contentView.addSubview(selectBackgroudImageView)
+        selectBackgroudImageView.snp.makeConstraints { (make) in
+            make.centerX.equalTo(self.contentView.snp.centerX)
+            make.centerY.equalTo(self.contentView.snp.centerY)
+            make.size.equalTo(CGSize(width:self.contentView.width , height: self.contentView.height))
+        }
+        
+        self.contentView.addSubview(selectImageView)
+        selectImageView.snp.makeConstraints { (make) in
+            make.centerX.equalTo(self.contentView.snp.centerX)
+            make.centerY.equalTo(self.contentView.snp.centerY)
+            make.size.equalTo(CGSize(width: 40, height: 40))
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func selectAction(){
+        selectImageView.image = filesSelectImage
+        selectBackgroudImageView.isHidden = false
+        selectImageView.isHidden = false
+    }
+    
+    func unselectAction(){
+        selectImageView.image = filesUnSelectImage
+        selectBackgroudImageView.isHidden = false
+        selectImageView.isHidden = false
+    }
+    
+    func normalAction(){
+        selectImageView.isHidden = true
+        selectBackgroudImageView.isHidden = true
     }
     
     func setGestrue(){
@@ -76,13 +123,28 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
     
     @objc func longPress(_ sender:UIGestureRecognizer){
         if sender.state == UIGestureRecognizerState.began{
-            cellLongPressCallBack!(self)
+         if longPressCallBack != nil{
+                longPressCallBack!(self)
+            }
         }
     }
     
     lazy var leftImageView: UIImageView = {
         let image = UIImage.init(named: "files_files.png")
         let imageView = UIImageView.init(image: image)
+        return imageView
+    }()
+    
+    
+    lazy var selectImageView: UIImageView = {
+        let imageView = UIImageView.init()
+        return imageView
+    }()
+    
+    lazy var selectBackgroudImageView: UIImageView = {
+        let image = UIImage.init(color: UIColor.black)
+        let imageView = UIImageView.init(image: image)
+        imageView.alpha = 0.12
         return imageView
     }()
     

@@ -303,6 +303,7 @@
 		1FBD1DFA20AEE0410067BE3E /* close_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1DF920AEE0410067BE3E /* close_white@3x.png */; };
 		1FBD1DFD20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBD1DFB20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.swift */; };
 		1FBD1DFE20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1DFC20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.xib */; };
+		1FBD1E0020B2A0170067BE3E /* NotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBD1DFF20B2A0170067BE3E /* NotificationExtension.swift */; };
 		1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7A20AE65B000F65194 /* ChlipsView.swift */; };
 		1FC8FF7E20AE6F3800F65194 /* chips_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7D20AE6F3800F65194 /* chips_close.png */; };
 		1FC8FF8020AE6F4300F65194 /* chips_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7F20AE6F4300F65194 /* chips_close@2x.png */; };
@@ -670,6 +671,7 @@
 		1FBD1DF920AEE0410067BE3E /* close_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close_white@3x.png"; sourceTree = "<group>"; };
 		1FBD1DFB20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesAShareAuthorityTableViewCell.swift; sourceTree = "<group>"; };
 		1FBD1DFC20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilesAShareAuthorityTableViewCell.xib; sourceTree = "<group>"; };
+		1FBD1DFF20B2A0170067BE3E /* NotificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationExtension.swift; sourceTree = "<group>"; };
 		1FC8FF7A20AE65B000F65194 /* ChlipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChlipsView.swift; sourceTree = "<group>"; };
 		1FC8FF7D20AE6F3800F65194 /* chips_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chips_close.png; sourceTree = "<group>"; };
 		1FC8FF7F20AE6F4300F65194 /* chips_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chips_close@2x.png"; sourceTree = "<group>"; };
@@ -1545,6 +1547,7 @@
 				1F58822F2085D39D00394BD6 /* UIViewExtension.swift */,
 				1F5882312085D72600394BD6 /* UIButttonExtension.swift */,
 				1F5882622085FDB400394BD6 /* UIViewControllerExtension.swift */,
+				1FBD1DFF20B2A0170067BE3E /* NotificationExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2146,6 +2149,7 @@
 				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,
 				1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */,
 				1FC8FF8720AE887800F65194 /* searchTableViewCell.swift in Sources */,
+				1FBD1E0020B2A0170067BE3E /* NotificationExtension.swift in Sources */,
 				1F050E7020ABC9210037F00A /* FilsBottomSheetTableViewCell.swift in Sources */,
 				1F58821920849FA200394BD6 /* SizeDefine.swift in Sources */,
 				1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */,

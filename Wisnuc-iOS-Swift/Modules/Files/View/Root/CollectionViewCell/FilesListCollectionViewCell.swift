@@ -12,16 +12,45 @@ import Material
 
 class FilesListCollectionViewCell: MDCCollectionViewCell {
     var cellCallBack:CellCallBack?
+    var longPressCallBack:CellLongPressCallBack?
+    var isSelectModel: Bool?{
+        didSet{
+            if isSelectModel!{
+                unselectAction()
+            }else{
+                normalAction()
+            }
+        }
+    }
+    var isSelect: Bool?{
+        didSet{
+            if isSelect!{
+                selectAction()
+            }else{
+                unselectAction()
+            }
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        //        self.
+        setGestrue()
         self.backgroundColor = UIColor.white
+        
+        self.contentView.addSubview(selectImageView)
+        selectImageView.snp.makeConstraints { (make) in
+            make.left.equalTo(self.contentView.snp.left).offset(MarginsWidth)
+            make.centerY.equalTo(self.contentView.snp.centerY)
+            make.size.equalTo(CGSize(width: 40, height: 40))
+        }
+        
         self.contentView.addSubview(leftImageView)
         leftImageView.snp.makeConstraints { (make) in
-            make.left.equalTo(self.contentView.snp.left).offset(MarginsWidth)
+            make.centerX.equalTo(selectImageView)
             make.centerY.equalTo(self.contentView.snp.centerY)
             make.size.equalTo(CGSize(width: 24, height: 24))
         }
+        
         
         self.contentView.addSubview(moreButton)
         let image = UIImage.init(named: "more_gray_horizontal.png")
@@ -48,6 +77,37 @@ class FilesListCollectionViewCell: MDCCollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func selectAction(){
+        selectImageView.image = filesSelectImage
+        leftImageView.isHidden = true
+        selectImageView.isHidden = false
+    }
+    
+    func unselectAction(){
+        selectImageView.image = filesUnSelectImage
+        leftImageView.isHidden = false
+        selectImageView.isHidden = false
+    }
+    
+    func normalAction(){
+        leftImageView.isHidden = false
+        selectImageView.isHidden = true
+    }
+    
+    func setGestrue(){
+        let longPressGestrue = UILongPressGestureRecognizer.init(target: self, action: #selector(longPress(_ :)))
+        //        longPressGestrue.delegate = self
+        self.addGestureRecognizer(longPressGestrue)
+    }
+    
+    @objc func longPress(_ sender:UIGestureRecognizer){
+        if sender.state == UIGestureRecognizerState.began{
+            if self.longPressCallBack != nil {
+                self.longPressCallBack!(self)
+            }
+        }
     }
     
     @objc func buttonClick(_ sender:UIButton){
@@ -79,5 +139,10 @@ class FilesListCollectionViewCell: MDCCollectionViewCell {
         label.textColor = LightGrayColor
         label.font = SmallTitleFont
         return label
-    }() 
+    }()
+    
+    lazy var selectImageView: UIImageView = {
+        let imageView = UIImageView.init()
+        return imageView
+    }()
 }

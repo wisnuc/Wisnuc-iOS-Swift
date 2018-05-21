@@ -21,6 +21,11 @@ private let reuseIdentifierFooter = "FooterView"
 private let CellWidth:CGFloat = CGFloat((__kWidth - 4)/2)
 private let CellSmallHeight:CGFloat = 48.0
 
+enum FilesStatus:Int{
+    case normal = 0
+    case select = 1
+}
+
 @objc protocol FilesRootCollectionViewControllerDelegate{
     func collectionViewData(_ collectionViewController: MDCCollectionViewController) -> Array<Any>
     func scrollViewDidScroll(_ scrollView: UIScrollView)
@@ -29,6 +34,7 @@ private let CellSmallHeight:CGFloat = 48.0
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>)
     
     func collectionView(_ collectionViewController: MDCCollectionViewController , isSelectModel:Bool)
+    func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     func sequenceButtonTap(_ sender:UIButton)
     func cellButtonCallBack(_ cell:MDCCollectionViewCell, _ button:UIButton, _ indexPath:IndexPath)
 }
@@ -44,9 +50,9 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     var isSelectModel:Bool?{
         didSet{
             if isSelectModel!{
-            
+                isSelectModelAction()
             }else{
-                
+                normalModelAction()
             }
         }
     }
@@ -106,14 +112,15 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
         self.styler.beginCellAppearanceAnimation()
         
-        let longPressGesture = UILongPressGestureRecognizer.init(target: self, action: #selector(longPressAction(_ :)))
+//        let longPressGesture = UILongPressGestureRecognizer.init(target: self, action: #selector(longPressAction(_ :)))
         
 //        longPressGesture.minimumPressDuration = 0.3
 //        longPressGesture.delaysTouchesBegan = true
-        collectionView?.addGestureRecognizer(longPressGesture)
-        isSelectModel = false
+//        collectionView?.addGestureRecognizer(longPressGesture)
+        isSelectModel = Bool(truncating: (FilesStatus.normal).rawValue as NSNumber)
         self.collectionView?.allowsMultipleSelection = true
         self.collectionView?.allowsSelection = true
+        defaultNotificationCenter().addObserver(self, selector: #selector(cellNotification(_ :)), name: NSNotification.Name.Cell.SelectNotiKey, object: nil)
 //        ViewTools.automaticallyAdjustsScrollView(scrollView: self.collectionView!, viewController: self)
     }
 
@@ -129,36 +136,59 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         }
     }
     
-    @objc func longPressAction(_ sender:UIGestureRecognizer){
-        if sender.state != UIGestureRecognizerState.ended{
-            return
-        }
-        if isSelectModel! {
-            return
-        }
-        let point = sender.location(in:self.collectionView)
-        let indexPath = self.collectionView?.indexPathForItem(at: point)
-        if (self.collectionView(self.collectionView!, shouldSelectItemAt: indexPath!)) {
-            
-    
-        }
-        if indexPath != nil {
-            let cell = self.collectionView?.cellForItem(at: indexPath!)
-            if let cell = cell as? FilesFolderCollectionViewCell {
-                if let delegateOK = delegate{
-                    isSelectModel = true
-                    delegateOK.collectionView(self, isSelectModel: isSelectModel!)
-                }
-          
-                let sectionArray:Array<FilesModel> = dataSource![indexPath!.section] as! Array
-                let model  = sectionArray[(indexPath?.item)!]
-                FilesHelper.sharedInstance.addChooseFiles(model: model)
-                cell.isSelectModel = isSelectModel
-                cell.isSelect = true
-            }
+    @objc func cellNotification(_ sender:Notification){
+        let number:NSNumber = sender.object as! NSNumber
+        isSelectModel = number.boolValue
+        if let delegateOK = delegate{
+            delegateOK.collectionView(self, isSelectModel: isSelectModel!)
         }
     }
-
+    
+//    @objc func longPressAction(_ sender:UIGestureRecognizer){
+//        if sender.state != UIGestureRecognizerState.ended{
+//            return
+//        }
+//        if isSelectModel! {
+//            return
+//        }
+//        let point = sender.location(in:self.collectionView)
+//        let indexPath = self.collectionView?.indexPathForItem(at: point)
+//        if (self.collectionView(self.collectionView!, shouldSelectItemAt: indexPath!)) {
+//
+//
+//        }
+//        if indexPath != nil {
+////            let cell = self.collectionView?.cellForItem(at: indexPath!)
+////            if let cell = cell as? FilesFolderCollectionViewCell {
+//                if let delegateOK = delegate{
+//                    isSelectModel = true
+//                    delegateOK.collectionView(self, isSelectModel: isSelectModel!)
+//                }
+//
+//                let sectionArray:Array<FilesModel> = dataSource![indexPath!.section] as! Array
+//                let model  = sectionArray[(indexPath?.item)!]
+//                FilesHelper.sharedInstance.addSelectFiles(model: model)
+////                cell.isSelectModel = isSelectModel
+//
+//                let allCellArray = self.collectionView?.visibleCells
+//                if allCellArray != nil {
+//                    for allcell in allCellArray!{
+//                        if let cell = allcell as! FilesFolderCollectionViewCell{
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+    func isSelectModelAction(){
+        self.collectionView?.reloadData()
+    }
+    
+    func normalModelAction(){
+        FilesHelper.sharedInstance.removeAllSelectFiles()
+        self.collectionView?.reloadData()
+    }
 
     // MARK: UICollectionViewDataSource
 
@@ -175,17 +205,34 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
+        let model  = sectionArray[indexPath.item]
         if cellStyle == .card{
             if indexPath.section == 0 {
                 collectionView.register(FilesFolderCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
                 if let cell = cell as? FilesFolderCollectionViewCell {
-                    let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
-                    let model  = sectionArray[indexPath.item]
+
                     cell.titleLabel.text = model.name
                     cell.cellCallBack = { (callbackCell,callbackButton) in
                         if let delegateOK = self.delegate{
                             delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
+                        }
+                    }
+                   
+                    weak var weakSelf = self
+                    cell.longPressCallBack = { (callbackCell) in
+                        if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
+                             FilesHelper.sharedInstance.addSelectFiles(model: model)
+                        }
+                    }
+                  
+                    cell.isSelectModel = isSelectModel
+                    if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
+                        if (FilesHelper.sharedInstance.selectFilesArray?.contains(model))!{
+                            cell.isSelect = true
+                        }else{
+                            cell.isSelect = false
                         }
                     }
                 }
@@ -194,14 +241,28 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 collectionView.register(FilesFileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifierSection2)
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierSection2, for: indexPath)
                 if let cell = cell as? FilesFileCollectionViewCell {
-                    let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
-                    let model  = sectionArray[indexPath.item]
                     cell.titleLabel.text = model.name
                     cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
                     cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
                     cell.cellCallBack = { (callbackCell,callbackButton) in
                         if let delegateOK = self.delegate{
                             delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
+                        }
+                    }
+                    
+                    weak var weakSelf = self
+                    cell.longPressCallBack = { (callbackCell) in
+                        if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
+                            FilesHelper.sharedInstance.addSelectFiles(model: model)
+                        }
+                    }
+                    
+                    cell.isSelectModel = isSelectModel
+                    if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
+                        if (FilesHelper.sharedInstance.selectFilesArray?.contains(model))!{
+                            cell.isSelect = true
+                        }else{
+                            cell.isSelect = false
                         }
                     }
                 }
@@ -211,8 +272,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             collectionView.register(FilesListCollectionViewCell.self, forCellWithReuseIdentifier: reuseListIdentifier)
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseListIdentifier, for: indexPath)
             if let cell = cell as? FilesListCollectionViewCell {
-                let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
-                let model  = sectionArray[indexPath.item]
                 if indexPath.section == 0 {
                     cell.leftImageView.image = UIImage.init(named: "files_files.png")
                     cell.titleLabel.text = model.name
@@ -225,6 +284,21 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 cell.cellCallBack = { (callbackCell,callbackButton) in
                     if let delegateOK = self.delegate{
                         delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
+                    }
+                }
+                weak var weakSelf = self
+                cell.longPressCallBack = { (callbackCell) in
+                    if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
+                        FilesHelper.sharedInstance.addSelectFiles(model: model)
+                    }
+                }
+                
+                cell.isSelectModel = self.isSelectModel
+                if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
+                    if (FilesHelper.sharedInstance.selectFilesArray?.contains(model))!{
+                        cell.isSelect = true
+                    }else{
+                        cell.isSelect = false
                     }
                 }
             }
@@ -322,7 +396,20 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
+        let model  = sectionArray[indexPath.item]
+          if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
+             if (FilesHelper.sharedInstance.selectFilesArray?.contains(model))!{
+                FilesHelper.sharedInstance.removeSelectFiles(model: model)
+             }else{
+                FilesHelper.sharedInstance.addSelectFiles(model: model)
+            }
+        }
         
+        self.collectionView?.reloadData()
+      if let delegateOK = self.delegate{
+            delegateOK.rootCollectionView(collectionView, didSelectItemAt: indexPath)
+        }
     }
 }
 

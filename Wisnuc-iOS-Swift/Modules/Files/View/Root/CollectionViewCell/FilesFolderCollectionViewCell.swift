@@ -15,6 +15,7 @@ let filesSelectImage = UIImage.init(named: "files_select.png")
 let filesUnSelectImage = UIImage.init(named: "files_unselect.png")
 
 class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
+    var longPressCallBack:CellLongPressCallBack?
     var cellCallBack:CellCallBack?
     var isSelectModel: Bool?{
         didSet{
@@ -34,10 +35,10 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
             }
         }
     }
-    var cellLongPressCallBack: ((_ cell:MDCCollectionViewCell) -> ())?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        setGestrue()
+        setGestrue()
         self.backgroundColor = UIColor.white
         
         self.contentView.addSubview(selectImageView)
@@ -69,21 +70,19 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
             make.size.equalTo(CGSize(width: self.contentView.width - MarginsCloseWidth - moreButton.width, height: 20))
         }
         
-        setSelectState()
+//        setSelectState()
     }
     
-//    func setGestrue(){
-//        let longPressGestrue = UILongPressGestureRecognizer.init(target: self, action: #selector(longPress(_ :)))
-//        //        longPressGestrue.delegate = self
-//        self.addGestureRecognizer(longPressGestrue)
-//        
+    func setGestrue(){
+        let longPressGestrue = UILongPressGestureRecognizer.init(target: self, action: #selector(longPress(_ :)))
+        //        longPressGestrue.delegate = self
+        self.addGestureRecognizer(longPressGestrue)
+        
+    }
+    
+//    func setSelectState(){
+//        self.isSelectModel = false
 //    }
-    
-    
-    
-    func setSelectState(){
-        self.isSelectModel = false
-    }
     
     func selectAction(){
         selectImageView.image = filesSelectImage
@@ -104,13 +103,15 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
     
     @objc func longPress(_ sender:UIGestureRecognizer){
         if sender.state == UIGestureRecognizerState.began{
-//            self.selectState = .select
+            if self.longPressCallBack != nil {
+                self.longPressCallBack!(self)
+            }
         }
     }
     
     @objc func buttonClick(_ sender:UIButton){
         if self.cellCallBack != nil {
-            self.cellCallBack!(self,sender)
+            self.cellCallBack!(self, sender)
         }
     }
     
@@ -137,6 +138,9 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
         button.addTarget(self, action: #selector(buttonClick(_ :)), for: UIControlEvents.touchUpInside)
         return button
     }()
+    
+    
+
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

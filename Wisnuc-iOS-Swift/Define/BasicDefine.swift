@@ -13,4 +13,8 @@ public func LocalizedString(forKey key:String) -> String {
   return Bundle.main.localizedString(forKey: key, value:"", table: nil)
 }
 
+public func defaultNotificationCenter() -> NotificationCenter{
+    return NotificationCenter.default
+}
+
 

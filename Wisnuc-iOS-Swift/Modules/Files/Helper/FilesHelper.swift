@@ -9,17 +9,45 @@
 import UIKit
 
 class FilesHelper: NSObject {
-    var chooseFilesArray:Array<FilesModel>?
+    var selectFilesArray:Array<FilesModel>?
     static let sharedInstance = FilesHelper()
     private override init(){
-       super.init()
-       chooseFilesArray = []
+        super.init()
+        selectFilesArray = []
     }
     
-    func addChooseFiles(model:FilesModel){
-    //互斥锁
-    objc_sync_enter(self)
-    chooseFilesArray?.append(model)
-    objc_sync_exit(self)
+    func addSelectFiles(model:FilesModel){
+        //互斥锁
+        if !(selectFilesArray?.contains(model))! {
+            objc_sync_enter(self)
+            selectFilesArray?.append(model)
+            if (selectFilesArray?.count == 1) {
+                defaultNotificationCenter().post(name: Notification.Name.Cell.SelectNotiKey, object: NSNumber.init(value: true))
+            }
+            objc_sync_exit(self)
+        }
+    }
+    
+    func removeSelectFiles(model:FilesModel){
+        //互斥锁
+        if (selectFilesArray?.contains(model))! {
+            objc_sync_enter(self)
+            let index = selectFilesArray?.index(of: model)
+            if index != nil{
+                selectFilesArray?.remove(at: index!)
+            }
+            if (selectFilesArray?.count == 0) {
+                defaultNotificationCenter().post(name: Notification.Name.Cell.SelectNotiKey, object: NSNumber.init(value: false))
+            }
+            objc_sync_exit(self)
+        }
+    }
+    
+    func removeAllSelectFiles(){
+        //互斥锁
+            objc_sync_enter(self)
+            selectFilesArray?.removeAll()
+        
+            objc_sync_exit(self)
     }
 }

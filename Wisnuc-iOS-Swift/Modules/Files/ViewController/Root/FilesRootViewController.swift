@@ -46,7 +46,6 @@ class FilesRootViewController: BaseViewController{
         super.viewDidLoad()
         self.view.backgroundColor = lightGrayBackgroudColor
         prepareData()
-        setSelectModel()
         prepareCollectionView()
         prepareAppNavigtionBar()
         prepareSearchBar()
@@ -64,6 +63,7 @@ class FilesRootViewController: BaseViewController{
             let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
             tab.setTabBarHidden(false, animated: true)
         }
+        self.view.endEditing(true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -125,7 +125,35 @@ class FilesRootViewController: BaseViewController{
         }else{
             
         }
+        
+        selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance.selectFilesArray?.count)!))"
+        Application.statusBarStyle = .lightContent
+        fabButton.collapse(true) {
+
+        }
+        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+        tab.setTabBarHidden(true, animated: true)
     }
+    
+    func selectModelCloseAction(){
+        self.appBar.headerViewController.headerView.isHidden = false
+//        if searchBar.bottom <= 0{
+            DispatchQueue.main.async {
+                self.unselectSearchBarAction()
+            }
+            UIView.animate(withDuration: 0.3, animations: {
+                self.searchBar.top = 20 + MarginsCloseWidth
+            })
+    
+        collcectionViewController.isSelectModel = isSelectModel
+        Application.statusBarStyle = .default
+        fabButton.expand(true) {
+            
+        }
+        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+        tab.setTabBarHidden(false, animated: true)
+    }
+    
     
     func selectSearchBarAction(){
         self.appBar.headerViewController.headerView.isHidden = false
@@ -133,20 +161,6 @@ class FilesRootViewController: BaseViewController{
     
     func unselectSearchBarAction(){
         self.appBar.headerViewController.headerView.isHidden = true
-    }
-    
-    func selectModelCloseAction(){
-        self.appBar.headerViewController.headerView.isHidden = false
-        if searchBar.bottom <= 0{
-            DispatchQueue.main.async {
-                self.unselectSearchBarAction()
-            }
-            UIView.animate(withDuration: 0.3, animations: {
-                self.searchBar.top = 20 + MarginsCloseWidth
-            })
-        }else{
-            
-        }
     }
     
     func prepareAppNavigtionBar(){
@@ -242,7 +256,7 @@ class FilesRootViewController: BaseViewController{
         label.frame = CGRect(x: 0, y: 0, width: 50, height: 20)
         label.textColor = UIColor.white
         label.font = TitleFont18.withBold()
-        label.text = "1"
+        label.text =  "\(String(describing: (FilesHelper.sharedInstance.selectFilesArray?.count)!))"
         return label
     }()
     
@@ -312,6 +326,11 @@ class FilesRootViewController: BaseViewController{
 }
 
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
+    func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance.selectFilesArray?.count)!))"
+    }
+
+    
     func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton, _ indexPath: IndexPath) {
         let bottomSheet = AppBottomSheetController.init(contentViewController: self.filesBottomVC)
         bottomSheet.trackingScrollView = filesBottomVC.tableView
@@ -335,7 +354,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentOffset.y)
-        if !isSelectModel!{
+        if isSelectModel != nil && !isSelectModel!{
             //            let OffsetY = scrollView.contentOffset.y
             if scrollView.contentOffset.y > -(SearchBarBottom + MarginsCloseWidth/2) {
                 self.searchBar.origin.y = -(scrollView.contentOffset.y)-(SearchBarBottom + MarginsCloseWidth/2)+20
@@ -362,6 +381,8 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
             headerView.trackingScrollWillEndDragging(withVelocity: velocity, targetContentOffset: targetContentOffset)
         }
     }
+    
+    
 }
 
 extension FilesRootViewController:SearchBarDelegate{
