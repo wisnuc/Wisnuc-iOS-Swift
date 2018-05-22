@@ -73,6 +73,7 @@
 		1F2B45A4208F290200C8971F /* close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2B45A1208F290200C8971F /* close@3x.png */; };
 		1F2B45A5208F290200C8971F /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2B45A2208F290200C8971F /* close.png */; };
 		1F2B45A6208F290200C8971F /* close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2B45A3208F290200C8971F /* close@2x.png */; };
+		1F2CE2F120B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE2EF20B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -304,6 +305,9 @@
 		1FBD1DFD20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBD1DFB20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.swift */; };
 		1FBD1DFE20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1DFC20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.xib */; };
 		1FBD1E0020B2A0170067BE3E /* NotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBD1DFF20B2A0170067BE3E /* NotificationExtension.swift */; };
+		1FBD1E0220B3EF720067BE3E /* files_new_folder_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1E0120B3EF710067BE3E /* files_new_folder_gray.png */; };
+		1FBD1E0420B3EF8C0067BE3E /* files_new_folder_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1E0320B3EF8C0067BE3E /* files_new_folder_gray@2x.png */; };
+		1FBD1E0620B3EF9F0067BE3E /* files_new_folder_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1E0520B3EF9F0067BE3E /* files_new_folder_gray@3x.png */; };
 		1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7A20AE65B000F65194 /* ChlipsView.swift */; };
 		1FC8FF7E20AE6F3800F65194 /* chips_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7D20AE6F3800F65194 /* chips_close.png */; };
 		1FC8FF8020AE6F4300F65194 /* chips_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7F20AE6F4300F65194 /* chips_close@2x.png */; };
@@ -313,7 +317,6 @@
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
 		1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B751207CBE8700906D80 /* ViewController.swift */; };
 		1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B753207CBE8700906D80 /* Main.storyboard */; };
-		1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B756207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld */; };
 		1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B759207CBE8900906D80 /* Assets.xcassets */; };
 		1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B75B207CBE8900906D80 /* LaunchScreen.storyboard */; };
 		1FD9B768207CBE8900906D80 /* Wisnuc_iOS_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B767207CBE8900906D80 /* Wisnuc_iOS_SwiftTests.swift */; };
@@ -438,6 +441,7 @@
 		1F2B45A1208F290200C8971F /* close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@3x.png"; sourceTree = "<group>"; };
 		1F2B45A2208F290200C8971F /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		1F2B45A3208F290200C8971F /* close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@2x.png"; sourceTree = "<group>"; };
+		1F2CE2F020B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Wisnuc-iOS-Swift.xcdatamodel"; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -672,6 +676,9 @@
 		1FBD1DFB20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesAShareAuthorityTableViewCell.swift; sourceTree = "<group>"; };
 		1FBD1DFC20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilesAShareAuthorityTableViewCell.xib; sourceTree = "<group>"; };
 		1FBD1DFF20B2A0170067BE3E /* NotificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationExtension.swift; sourceTree = "<group>"; };
+		1FBD1E0120B3EF710067BE3E /* files_new_folder_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_new_folder_gray.png; sourceTree = "<group>"; };
+		1FBD1E0320B3EF8C0067BE3E /* files_new_folder_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_new_folder_gray@2x.png"; sourceTree = "<group>"; };
+		1FBD1E0520B3EF9F0067BE3E /* files_new_folder_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_new_folder_gray@3x.png"; sourceTree = "<group>"; };
 		1FC8FF7A20AE65B000F65194 /* ChlipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChlipsView.swift; sourceTree = "<group>"; };
 		1FC8FF7D20AE6F3800F65194 /* chips_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chips_close.png; sourceTree = "<group>"; };
 		1FC8FF7F20AE6F4300F65194 /* chips_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chips_close@2x.png"; sourceTree = "<group>"; };
@@ -682,7 +689,6 @@
 		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1FD9B751207CBE8700906D80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1FD9B754207CBE8700906D80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		1FD9B757207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Wisnuc_iOS_Swift.xcdatamodel; sourceTree = "<group>"; };
 		1FD9B759207CBE8900906D80 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1FD9B75C207CBE8900906D80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1FD9B75E207CBE8900906D80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1217,6 +1223,9 @@
 		1F8EBB4A209FF05A00E8AB83 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				1FBD1E0120B3EF710067BE3E /* files_new_folder_gray.png */,
+				1FBD1E0520B3EF9F0067BE3E /* files_new_folder_gray@3x.png */,
+				1FBD1E0320B3EF8C0067BE3E /* files_new_folder_gray@2x.png */,
 				1F5AD94620AD80F00065DAD3 /* files_photo_imges@3x.png */,
 				1F5AD94420AD80E40065DAD3 /* files_photo_imges@2x.png */,
 				1F5AD94220AD80D70065DAD3 /* files_photo_imges.png */,
@@ -1362,6 +1371,14 @@
 			path = Test;
 			sourceTree = "<group>";
 		};
+		1FBD1E0A20B421A20067BE3E /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				1F2CE2EF20B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		1FC8FF7920AE659B00F65194 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1407,6 +1424,7 @@
 		1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXGroup;
 			children = (
+				1FBD1E0A20B421A20067BE3E /* CoreData */,
 				1FD9B7AB207E19EE00906D80 /* Source */,
 				1FD9B7A3207DB3F700906D80 /* Foundations */,
 				1FD9B795207CC78B00906D80 /* Network */,
@@ -1514,7 +1532,6 @@
 				1FD9B759207CBE8900906D80 /* Assets.xcassets */,
 				1FD9B75B207CBE8900906D80 /* LaunchScreen.storyboard */,
 				1FD9B75E207CBE8900906D80 /* Info.plist */,
-				1FD9B756207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -1881,6 +1898,7 @@
 				1F5AD94720AD80F00065DAD3 /* files_photo_imges@3x.png in Resources */,
 				1F5882482085F07E00394BD6 /* disk_warning@2x.png in Resources */,
 				1F359FB22090819000E2FF36 /* no.png in Resources */,
+				1FBD1E0420B3EF8C0067BE3E /* files_new_folder_gray@2x.png in Resources */,
 				1F5AD92C20AD524E0065DAD3 /* back_gray@3x.png in Resources */,
 				1F359FAF2090819000E2FF36 /* ok@2x.png in Resources */,
 				1F3C241E20A5428300E6B953 /* files_move@2x.png in Resources */,
@@ -1920,6 +1938,7 @@
 				1F050E5120AAB7110037F00A /* files_file_big@2x.png in Resources */,
 				1F5882232085885C00394BD6 /* logo@3x.png in Resources */,
 				1F359FD72091A97C00E2FF36 /* disk_error@2x.png in Resources */,
+				1FBD1E0220B3EF720067BE3E /* files_new_folder_gray.png in Resources */,
 				1F83AE8320887936007CCCFD /* more@3x.png in Resources */,
 				1F83AE60208830B8007CCCFD /* local_area_white@3x.png in Resources */,
 				1F58825A2085F4C900394BD6 /* local_area.png in Resources */,
@@ -2016,6 +2035,7 @@
 				1FEABB5720A14B7700824448 /* files_word_small@3x.png in Resources */,
 				1F3C243E20A5AD0700E6B953 /* files_offline_file@3x.png in Resources */,
 				1F050E5320AAB71D0037F00A /* files_file_big@3x.png in Resources */,
+				1FBD1E0620B3EF9F0067BE3E /* files_new_folder_gray@3x.png in Resources */,
 				1F5AD93320AD7FAB0065DAD3 /* files_excel@2x.png in Resources */,
 				1F58823A2085DCAF00394BD6 /* device_circle@3x.png in Resources */,
 				1F359FAE2090819000E2FF36 /* ok.png in Resources */,
@@ -2183,7 +2203,6 @@
 				1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */,
 				1F4E938E208DB8B600DD1EA7 /* RadioButton.m in Sources */,
 				1F5AD92F20AD60700065DAD3 /* SearchTransition.swift in Sources */,
-				1FD9B758207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld in Sources */,
 				1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */,
 				1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
@@ -2208,6 +2227,7 @@
 				1FBD1DF420AEDE640067BE3E /* FilesShareAuthorityChangeViewController.swift in Sources */,
 				1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */,
 				1F359FEF2092EF1300E2FF36 /* CNPPopupController.m in Sources */,
+				1F2CE2F120B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld in Sources */,
 				1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */,
 				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,
 				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
@@ -2595,13 +2615,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		1FD9B756207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodeld */ = {
+		1F2CE2EF20B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				1FD9B757207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodel */,
+				1F2CE2F020B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodel */,
 			);
-			currentVersion = 1FD9B757207CBE8700906D80 /* Wisnuc_iOS_Swift.xcdatamodel */;
-			path = Wisnuc_iOS_Swift.xcdatamodeld;
+			currentVersion = 1F2CE2F020B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodel */;
+			path = "Wisnuc-iOS-Swift.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

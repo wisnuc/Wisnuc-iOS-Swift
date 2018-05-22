@@ -21,11 +21,19 @@ enum CollectState:Int {
     case unselect
 }
 
+enum RootControllerState:Int {
+    case root = 0
+    case movecopy
+    case next
+}
+
 private let reusableIdentifierItem = "itemCellIdentifier"
 private let cellFolderHeight:CGFloat = 48
 private let cellWidth:CGFloat = (__kWidth - 4)/2
 private let cellHeight:CGFloat = 137
 private let SearchBarBottom:CGFloat = 77.0
+private let moveButtonWidth:CGFloat = 64.0
+private let moveButtonHeight:CGFloat = 36.0
 
 class FilesRootViewController: BaseViewController{
     private var menuButton: IconButton!
@@ -42,28 +50,54 @@ class FilesRootViewController: BaseViewController{
             }
         }
     }
+    
+    var selfState:RootControllerState?{
+        didSet{
+//            switch selfState {
+//            case .root?:
+//            case .movecopy?:
+//            case .next?:
+//            default:
+//                break
+//            }
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = lightGrayBackgroudColor
         prepareData()
         prepareCollectionView()
-        prepareAppNavigtionBar()
-        prepareSearchBar()
-        setCellStyle()
-        self.view.addSubview(fabButton)
+        switch selfState {
+        case .root?:
+            prepareRootAppNavigtionBar()
+            setRootCellStyle()
+            prepareSearchBar()
+            self.view.addSubview(fabButton)
+        case .movecopy?:
+            prepareMoveCopyAppNavigtionBar()
+            setOtherCellStyle()
+            self.view.addSubview(moveFilesBottomBar)
+            moveFilesBottomBar.addSubview(movetoButton)
+            moveFilesBottomBar.addSubview(cancelMovetoButton)
+        case .next?:
+//            prepareOtherAppNavigtionBar()
+            setOtherCellStyle()
+        default:
+            break
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        Application.statusBarStyle = .default
-        self.appBar.headerViewController.headerView.isHidden = true
-        self.navigationDrawerController?.isLeftPanGestureEnabled = true
-        navigationController?.delegate = self
-        if (self.navigationDrawerController?.rootViewController) != nil {
-            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-            tab.setTabBarHidden(false, animated: true)
+        switch selfState {
+        case .root?:
+            selfStateRootWillAppearAction()
+        default:
+             selfStateOtherWillAppearAction()
         }
-        self.view.endEditing(true)
+        if isSelectModel != nil && isSelectModel!{
+            isSelectModel = false
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -77,8 +111,14 @@ class FilesRootViewController: BaseViewController{
    
     }
     
-    func setCellStyle(){
+    func setRootCellStyle(){
         cellStyle = .card
+        self.collcectionViewController.cellStyle = cellStyle
+    }
+    
+    func setOtherCellStyle(){
+        collcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height - moveFilesBottomBar.height)
+        cellStyle = .list
         self.collcectionViewController.cellStyle = cellStyle
     }
     
@@ -115,10 +155,11 @@ class FilesRootViewController: BaseViewController{
     
     func selectAction(){
         //        print(searchBar.bottom)
+        
+        DispatchQueue.main.async {
+            self.selectSearchBarAction()
+        }
         if searchBar.bottom >= 0{
-            DispatchQueue.main.async {
-                self.selectSearchBarAction()
-            }
             UIView.animate(withDuration: 0.3, animations: {
                 self.searchBar.bottom = 0
             })
@@ -148,7 +189,7 @@ class FilesRootViewController: BaseViewController{
         collcectionViewController.isSelectModel = isSelectModel
         Application.statusBarStyle = .default
         fabButton.expand(true) {
-            
+
         }
         let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
         tab.setTabBarHidden(false, animated: true)
@@ -163,7 +204,25 @@ class FilesRootViewController: BaseViewController{
         self.appBar.headerViewController.headerView.isHidden = true
     }
     
-    func prepareAppNavigtionBar(){
+    func selfStateRootWillAppearAction(){
+        Application.statusBarStyle = .default
+        self.appBar.headerViewController.headerView.isHidden = true
+        self.navigationDrawerController?.isLeftPanGestureEnabled = true
+        navigationController?.delegate = self
+        if (self.navigationDrawerController?.rootViewController) != nil {
+            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+            tab.setTabBarHidden(false, animated: true)
+        }
+        self.view.endEditing(true)
+    }
+    
+    func selfStateOtherWillAppearAction(){
+        self.appBar.headerViewController.headerView.isHidden = false
+        self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
+        Application.statusBarStyle = .default
+    }
+    
+    func prepareRootAppNavigtionBar(){
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
         self.title = ""
         let leftItem = UIBarButtonItem.init(image: Icon.close?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(closeSelectModelButtonTap(_ :)))
@@ -171,6 +230,13 @@ class FilesRootViewController: BaseViewController{
         let labelBarButtonItem = UIBarButtonItem.init(customView: selectNumberAppNaviLabel)
         self.navigationItem.leftBarButtonItems = [leftItem,paceItem,labelBarButtonItem]
         self.navigationItem.rightBarButtonItems = [moreBarButtonItem,downloadBarButtonItem,moveBarButtonItem]
+    }
+    
+    func prepareMoveCopyAppNavigtionBar(){
+        self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+        let rightItem = UIBarButtonItem.init(image: UIImage.init(named: "files_new_folder_gray.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(newFolderButtonTap(_ :)))
+        self.navigationItem.rightBarButtonItem = rightItem
+        appBar.navigationBar.title = LocalizedString(forKey: "Move to...")
     }
     
     private func prepareSearchBar() {
@@ -187,8 +253,11 @@ class FilesRootViewController: BaseViewController{
         searchBar.textField.delegate = self
     }
     
+    // ojbc function (Selector)
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
-        
+        let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.whiteStyle)
+        filesRootViewController.selfState = .movecopy
+        self.navigationController?.pushViewController(filesRootViewController, animated: true)
     }
     
     @objc func downloadBarButtonItemTap(_ sender:UIBarButtonItem){
@@ -235,6 +304,20 @@ class FilesRootViewController: BaseViewController{
     @objc func closeSelectModelButtonTap(_ sender:IconButton){
         isSelectModel = false
     }
+    
+    @objc func newFolderButtonTap(_ sender:UIBarButtonItem){
+        
+    }
+    
+    @objc func movetoButtonTap(_ sender:UIButton){
+        
+    }
+    
+    @objc func cancelMovetoButtonTap(_ sender:UIButton){
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    //MARK : Lazy Property
     
     lazy var collcectionViewController : FilesRootCollectionViewController = {
         let layout = MDCCollectionViewFlowLayout()
@@ -290,6 +373,41 @@ class FilesRootViewController: BaseViewController{
         MDCButtonColorThemer.apply(appDlegate.colorScheme, to: defaultFloatingButton)
         defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
         return defaultFloatingButton
+    }()
+    
+    lazy var moveFilesBottomBar: UIView = {
+        let height:CGFloat = 56.0
+        let view = UIView.init(frame: CGRect(x: 0, y: __kHeight - height, width: __kWidth, height: height))
+        view.backgroundColor = UIColor.white
+        view.layer.shadowOffset = CGSize(width: 0.5, height: 0.5)
+        view.layer.shadowRadius = 1
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowColor = DarkGrayColor.cgColor
+        view.layer.masksToBounds = true
+        view.layer.cornerRadius = 2
+        view.clipsToBounds = false
+        return view
+    }()
+    
+    lazy var movetoButton: MDCFlatButton = {
+        let button = MDCFlatButton.init(frame: CGRect(x: self.moveFilesBottomBar.width - moveButtonWidth - MarginsWidth, y: self.moveFilesBottomBar.height/2 - moveButtonHeight/2, width: moveButtonWidth, height: moveButtonHeight))
+        button.setTitle(LocalizedString(forKey: "Move"), for: UIControlState.normal)
+        button.setTitleColor(COR1, for: UIControlState.normal)
+        button.setTitleColor(LightGrayColor, for: UIControlState.disabled)
+        button.addTarget(self, action: #selector(movetoButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+        button.sizeToFit()
+        button.frame = CGRect(x: self.moveFilesBottomBar.width - button.width - MarginsWidth, y: self.moveFilesBottomBar.height/2 - button.height/2, width: button.width, height: button.height)
+        return button
+    }()
+    
+    lazy var cancelMovetoButton: MDCFlatButton = {
+        let button = MDCFlatButton.init(frame: CGRect(x: self.moveFilesBottomBar.width - movetoButton.left - MarginsCloseWidth, y: movetoButton.top, width: moveButtonWidth, height: moveButtonHeight))
+        button.setTitle(LocalizedString(forKey: "Cancel"), for: UIControlState.normal)
+        button.setTitleColor(COR1, for: UIControlState.normal)
+        button.addTarget(self, action: #selector(cancelMovetoButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+        button.sizeToFit()
+        button.frame = CGRect(x: self.moveFilesBottomBar.width - ( MarginsCloseWidth + button.width*2 + MarginsWidth), y: self.moveFilesBottomBar.height/2 - button.height/2, width: button.width, height: button.height)
+        return button
     }()
     
     lazy var fabBottomVC: FilesFABBottomSheetDisplayViewController = {
@@ -353,13 +471,25 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
-        if isSelectModel != nil && !isSelectModel!{
-            //            let OffsetY = scrollView.contentOffset.y
-            if scrollView.contentOffset.y > -(SearchBarBottom + MarginsCloseWidth/2) {
+//        print(scrollView.contentOffset.y)
+        if isSelectModel == nil || !isSelectModel!{
+//            if scrollView.contentOffset.y > -(SearchBarBottom + MarginsCloseWidth/2) {
+//            }else{
+//            }
+            let translatedPoint = scrollView.panGestureRecognizer.translation(in: scrollView)
+            if translatedPoint.y < 0 {
+//                if searchBar.bottom > 0{
                 self.searchBar.origin.y = -(scrollView.contentOffset.y)-(SearchBarBottom + MarginsCloseWidth/2)+20
-            }else{
-                self.searchBar.origin.y = 20 + MarginsCloseWidth
+//            }else{
+//                self.searchBar.origin.y = -(scrollView.contentOffset.y)
+//            }
+        }
+            
+            if(translatedPoint.y > 0){
+//                print("mimimi")
+                UIView.animate(withDuration: 0.3) {
+                    self.searchBar.origin.y = 20 + MarginsCloseWidth
+                }
             }
         }
     }

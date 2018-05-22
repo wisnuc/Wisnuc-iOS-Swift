@@ -17,7 +17,7 @@ func setRootViewController(){
     let tabBarController = WSTabBarController ()
     
     let filesVC = FilesRootViewController()
-    
+    filesVC.selfState = .root
     filesVC.title = LocalizedString(forKey: "Files")
     let photosVC = BaseViewController()
     photosVC.title = "Downloads"

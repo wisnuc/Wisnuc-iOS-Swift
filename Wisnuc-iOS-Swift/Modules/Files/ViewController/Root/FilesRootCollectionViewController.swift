@@ -404,9 +404,10 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
              }else{
                 FilesHelper.sharedInstance.addSelectFiles(model: model)
             }
+             self.collectionView?.reloadData()
         }
         
-        self.collectionView?.reloadData()
+    
       if let delegateOK = self.delegate{
             delegateOK.rootCollectionView(collectionView, didSelectItemAt: indexPath)
         }
