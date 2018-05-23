@@ -13,3 +13,5 @@ public let kFirstLaunchKey =  "kFirstLaunchKey"
 public let kappVersionKey =  "kappVersionKey"
 
 public let KWxAppID = "wx99b54eb728323fe8"
+
+public let kCurrentUserUUID = "kCurrentUserUUID"

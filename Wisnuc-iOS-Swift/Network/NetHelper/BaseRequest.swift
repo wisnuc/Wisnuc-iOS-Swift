@@ -24,13 +24,6 @@ class BaseRequest: NSObject {
     }
     
     func start(){
-        Alamofire.request("", method: .get, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
-            if response.result.isSuccess{
-                print(response.result.value ?? [String :AnyObject]())
-//                finished(response.result.valueas? [String : AnyObject],nil)
-            }else{
-//                finished(nil,response.result.erroras NSError?)
-            }
-        }
+
     }
 }

@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+
+let appDlegate = UIApplication.shared.delegate as! AppDelegate
+public let userDefaults = UserDefaults.standard
+
 public func LocalizedString(forKey key:String) -> String {
   return Bundle.main.localizedString(forKey: key, value:"", table: nil)
 }
@@ -16,5 +20,11 @@ public func LocalizedString(forKey key:String) -> String {
 public func defaultNotificationCenter() -> NotificationCenter{
     return NotificationCenter.default
 }
+
+public func userDefaultsSynchronize() {
+    UserDefaults.standard.synchronize()
+}
+
+
 
 

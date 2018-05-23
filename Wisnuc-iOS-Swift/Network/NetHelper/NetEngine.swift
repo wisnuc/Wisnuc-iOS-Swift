@@ -7,7 +7,10 @@
 //
 
 import UIKit
+import Alamofire
 
 class NetEngine: NSObject {
-
+    func starRequet(){
+//        Alamofire.request("", method: HTTPMethod.get, parameters: <#T##Parameters?#>, encoding: <#T##ParameterEncoding#>, headers: <#T##HTTPHeaders?#>)
+    }
 }

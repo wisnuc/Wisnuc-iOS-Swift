@@ -11,7 +11,13 @@ import Foundation
 import UIKit
 import MaterialComponents
 
-let appDlegate = UIApplication.shared.delegate as! AppDelegate
+func  IsNilString(_ string:String?) -> Bool{
+    if (string == nil || string?.count == 0 || (string?.isEmpty)! || string == "null") {
+        return true
+    }else{
+       return false
+    }
+}
 
 func setRootViewController(){
     let tabBarController = WSTabBarController ()

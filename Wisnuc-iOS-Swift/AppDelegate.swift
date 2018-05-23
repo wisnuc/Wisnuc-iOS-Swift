@@ -17,9 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     var networkStatus:WSNetworkStatus?
     var window: UIWindow?
     var _loginController:LoginViewController?
-    var colorScheme: (MDCColorScheme & NSObjectProtocol)! 
+    var colorScheme: (MDCColorScheme & NSObjectProtocol)!
+    var coreDataContext: NSManagedObjectContext?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        registerCoreDataContext()
         registerWeChat()   // Wechat
         initRootVC()
         startNotifierNetworkStutas() // networkObserveNotification
@@ -60,6 +62,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         WXApi.registerApp(KWxAppID)
     }
 
+    func registerCoreDataContext(){
+        if #available(iOS 10.0, *) {
+            coreDataContext = self.persistentContainer.viewContext
+        } else {
+            // iOS 9.0 and below - however you were previously handling it
+            guard let modelURL = Bundle.main.url(forResource: "Wisnuc_iOS_Swift", withExtension:"momd") else {
+                fatalError("Error loading model from bundle")
+            }
+            guard let mom = NSManagedObjectModel(contentsOf: modelURL) else {
+                fatalError("Error initializing mom from: \(modelURL)")
+            }
+            let psc = NSPersistentStoreCoordinator(managedObjectModel: mom)
+            coreDataContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+            let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+            let docURL = urls[urls.endIndex-1]
+            let storeURL = docURL.appendingPathComponent("Model.sqlite")
+            do {
+                try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
+            } catch {
+                fatalError("Error migrating store: \(error)")
+            }
+        }
+    }
     
     func startNotifierNetworkStutas() {
         let realReachability = RealReachability.sharedInstance()
@@ -151,6 +176,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     }
     
     // MARK: - Core Data stack
+    
 
     @available(iOS 10.0, *)
     lazy var persistentContainer: NSPersistentContainer = {
@@ -195,6 +221,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             }
         }
     }
-
 }
 

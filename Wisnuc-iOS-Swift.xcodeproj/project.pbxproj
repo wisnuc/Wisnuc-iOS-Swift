@@ -74,6 +74,13 @@
 		1F2B45A5208F290200C8971F /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2B45A2208F290200C8971F /* close.png */; };
 		1F2B45A6208F290200C8971F /* close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2B45A3208F290200C8971F /* close@2x.png */; };
 		1F2CE2F120B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE2EF20B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld */; };
+		1F2CE30220B4311000D9E5BD /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30020B4310F00D9E5BD /* User+CoreDataProperties.swift */; };
+		1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30120B4311000D9E5BD /* User+CoreDataClass.swift */; };
+		1F2CE30720B50FFE00D9E5BD /* ServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30620B50FFE00D9E5BD /* ServiceProtocol.swift */; };
+		1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30820B5156C00D9E5BD /* UserService.swift */; };
+		1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30B20B5376200D9E5BD /* AppService.swift */; };
+		1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30D20B54A7A00D9E5BD /* CoreDataExtension.swift */; };
+		1F2CE31020B559CC00D9E5BD /* CoreDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30F20B559CC00D9E5BD /* CoreDataOperation.swift */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -442,6 +449,13 @@
 		1F2B45A2208F290200C8971F /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		1F2B45A3208F290200C8971F /* close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@2x.png"; sourceTree = "<group>"; };
 		1F2CE2F020B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Wisnuc-iOS-Swift.xcdatamodel"; sourceTree = "<group>"; };
+		1F2CE30020B4310F00D9E5BD /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1F2CE30120B4311000D9E5BD /* User+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
+		1F2CE30620B50FFE00D9E5BD /* ServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProtocol.swift; sourceTree = "<group>"; };
+		1F2CE30820B5156C00D9E5BD /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		1F2CE30B20B5376200D9E5BD /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
+		1F2CE30D20B54A7A00D9E5BD /* CoreDataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataExtension.swift; sourceTree = "<group>"; };
+		1F2CE30F20B559CC00D9E5BD /* CoreDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataOperation.swift; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -979,6 +993,40 @@
 			path = LogOut;
 			sourceTree = "<group>";
 		};
+		1F2CE30420B50EC700D9E5BD /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1F2CE39520B5700B00D9E5BD /* UserService */,
+				1F2CE30A20B5374800D9E5BD /* AppService */,
+				1F2CE30520B50FA800D9E5BD /* Protocol */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		1F2CE30520B50FA800D9E5BD /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				1F2CE30620B50FFE00D9E5BD /* ServiceProtocol.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		1F2CE30A20B5374800D9E5BD /* AppService */ = {
+			isa = PBXGroup;
+			children = (
+				1F2CE30B20B5376200D9E5BD /* AppService.swift */,
+			);
+			path = AppService;
+			sourceTree = "<group>";
+		};
+		1F2CE39520B5700B00D9E5BD /* UserService */ = {
+			isa = PBXGroup;
+			children = (
+				1F2CE30820B5156C00D9E5BD /* UserService.swift */,
+			);
+			path = UserService;
+			sourceTree = "<group>";
+		};
 		1F359FC42091828B00E2FF36 /* DiskError */ = {
 			isa = PBXGroup;
 			children = (
@@ -1374,6 +1422,10 @@
 		1FBD1E0A20B421A20067BE3E /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				1F2CE30120B4311000D9E5BD /* User+CoreDataClass.swift */,
+				1F2CE30020B4310F00D9E5BD /* User+CoreDataProperties.swift */,
+				1F2CE30D20B54A7A00D9E5BD /* CoreDataExtension.swift */,
+				1F2CE30F20B559CC00D9E5BD /* CoreDataOperation.swift */,
 				1F2CE2EF20B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld */,
 			);
 			path = CoreData;
@@ -1424,6 +1476,7 @@
 		1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXGroup;
 			children = (
+				1F2CE30420B50EC700D9E5BD /* Services */,
 				1FBD1E0A20B421A20067BE3E /* CoreData */,
 				1FD9B7AB207E19EE00906D80 /* Source */,
 				1FD9B7A3207DB3F700906D80 /* Foundations */,
@@ -1717,6 +1770,7 @@
 				1FD9B749207CBE8700906D80 /* Frameworks */,
 				1FD9B74A207CBE8700906D80 /* Resources */,
 				86DDF45F5CCB6C594636B31F /* [CP] Embed Pods Frameworks */,
+				B859D02CD8822540FF13F31D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2096,6 +2150,7 @@
 				"${BUILT_PRODUCTS_DIR}/CatalogByConvention/CatalogByConvention.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFInternationalization/MDFInternationalization.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFTextAccessibility/MDFTextAccessibility.framework",
+				"${BUILT_PRODUCTS_DIR}/MagicalRecord/MagicalRecord.framework",
 				"${BUILT_PRODUCTS_DIR}/Material/Material.framework",
 				"${BUILT_PRODUCTS_DIR}/MaterialComponents/MaterialComponents.framework",
 				"${BUILT_PRODUCTS_DIR}/Motion/Motion.framework",
@@ -2103,8 +2158,10 @@
 				"${BUILT_PRODUCTS_DIR}/MotionInterchange/MotionInterchange.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
 				"${BUILT_PRODUCTS_DIR}/RealReachability/RealReachability.framework",
+				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/SugarRecord/SugarRecord.framework",
 				"${BUILT_PRODUCTS_DIR}/YYKit/YYKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -2114,6 +2171,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CatalogByConvention.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFInternationalization.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFTextAccessibility.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MagicalRecord.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Material.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MaterialComponents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Motion.framework",
@@ -2121,13 +2179,30 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionInterchange.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealReachability.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SugarRecord.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B859D02CD8822540FF13F31D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C538C2D765CA23AA36581B6A /* [CP] Check Pods Manifest.lock */ = {
@@ -2156,6 +2231,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
+				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
+				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
 				1F83AE7420885FD5007CCCFD /* MDBaseButton.swift in Sources */,
@@ -2207,12 +2284,15 @@
 				1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
+				1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */,
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
 				1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
 				06EE1ED320A70D52000E739D /* BaseTableViewController.swift in Sources */,
 				1F359FC6209182BB00E2FF36 /* DiskErrorViewController.swift in Sources */,
 				1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */,
+				1F2CE30720B50FFE00D9E5BD /* ServiceProtocol.swift in Sources */,
+				1F2CE31020B559CC00D9E5BD /* CoreDataOperation.swift in Sources */,
 				1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */,
 				1F8EBB48209C512300E8AB83 /* FilesFileCollectionViewCell.swift in Sources */,
 				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
@@ -2232,6 +2312,7 @@
 				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,
 				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
+				1F2CE30220B4311000D9E5BD /* User+CoreDataProperties.swift in Sources */,
 				1F8EBB52209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift in Sources */,
 				1FAADEF820AC149500739220 /* FilesFileInfoTableViewCell.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
@@ -2244,6 +2325,7 @@
 				1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */,
 				1FAADEF120AC031100739220 /* FilesSearchMoreBottomSheetContentTableViewController.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
+				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
 				1F5882272085890400394BD6 /* LoginViewController.swift in Sources */,
 				1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */,
