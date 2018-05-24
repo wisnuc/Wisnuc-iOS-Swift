@@ -20,7 +20,7 @@ class UserService: NSObject,ServiceProtocol{
      }
     
     func setCurrentUser(_ currentUser:User?){
-        if(currentUser == nil || currentUser?.uuid == nil || IsNilString((currentUser?.uuid)!)) {
+        if(currentUser == nil || currentUser?.uuid == nil || isNilString((currentUser?.uuid)!)) {
             return logoutUser()
         }
         defaultToken = currentUser?.localToken
@@ -39,7 +39,7 @@ class UserService: NSObject,ServiceProtocol{
             return nil
         }
         
-        if user?.uuid == nil || IsNilString(user?.uuid) {
+        if user?.uuid == nil || isNilString(user?.uuid) {
             user?.mr_deleteEntity()
             return nil
         }

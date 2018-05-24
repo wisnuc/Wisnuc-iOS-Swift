@@ -81,6 +81,10 @@
 		1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30B20B5376200D9E5BD /* AppService.swift */; };
 		1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30D20B54A7A00D9E5BD /* CoreDataExtension.swift */; };
 		1F2CE31020B559CC00D9E5BD /* CoreDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30F20B559CC00D9E5BD /* CoreDataOperation.swift */; };
+		1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE39620B6A68E00D9E5BD /* RequestConfig.swift */; };
+		1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE39820B6B30C00D9E5BD /* TestAPI.swift */; };
+		1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE39B20B6D1B600D9E5BD /* UserModel.swift */; };
+		1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE39E20B6D22500D9E5BD /* CloudLoginAPI.swift */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -332,8 +336,6 @@
 		1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B78F207CC75500906D80 /* NetServerBrower.swift */; };
 		1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B793207CC77900906D80 /* BasicDefine.swift */; };
 		1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B798207CC78B00906D80 /* BaseRequest.swift */; };
-		1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B799207CC78B00906D80 /* Networker.swift */; };
-		1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B79A207CC78B00906D80 /* RequestConfig.swift */; };
 		1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B79B207CC78B00906D80 /* NetEngine.swift */; };
 		1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B7A0207DA43C00906D80 /* ColorDefine.swift */; };
 		1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */; };
@@ -456,6 +458,10 @@
 		1F2CE30B20B5376200D9E5BD /* AppService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppService.swift; sourceTree = "<group>"; };
 		1F2CE30D20B54A7A00D9E5BD /* CoreDataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataExtension.swift; sourceTree = "<group>"; };
 		1F2CE30F20B559CC00D9E5BD /* CoreDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataOperation.swift; sourceTree = "<group>"; };
+		1F2CE39620B6A68E00D9E5BD /* RequestConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestConfig.swift; sourceTree = "<group>"; };
+		1F2CE39820B6B30C00D9E5BD /* TestAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAPI.swift; sourceTree = "<group>"; };
+		1F2CE39B20B6D1B600D9E5BD /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		1F2CE39E20B6D22500D9E5BD /* CloudLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudLoginAPI.swift; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -716,9 +722,7 @@
 		1FD9B78F207CC75500906D80 /* NetServerBrower.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetServerBrower.swift; sourceTree = "<group>"; };
 		1FD9B793207CC77900906D80 /* BasicDefine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicDefine.swift; sourceTree = "<group>"; };
 		1FD9B798207CC78B00906D80 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
-		1FD9B799207CC78B00906D80 /* Networker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networker.swift; sourceTree = "<group>"; };
-		1FD9B79A207CC78B00906D80 /* RequestConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestConfig.swift; sourceTree = "<group>"; };
-		1FD9B79B207CC78B00906D80 /* NetEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetEngine.swift; sourceTree = "<group>"; };
+		1FD9B79B207CC78B00906D80 /* NetEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetEngine.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1FD9B7A0207DA43C00906D80 /* ColorDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDefine.swift; sourceTree = "<group>"; };
 		1FD9B7A4207DB49200906D80 /* WSNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNavigationController.swift; sourceTree = "<group>"; };
 		1FD9B7A8207E152B00906D80 /* SizeTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeTools.swift; sourceTree = "<group>"; };
@@ -1025,6 +1029,23 @@
 				1F2CE30820B5156C00D9E5BD /* UserService.swift */,
 			);
 			path = UserService;
+			sourceTree = "<group>";
+		};
+		1F2CE39A20B6CBDB00D9E5BD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1F2CE39B20B6D1B600D9E5BD /* UserModel.swift */,
+			);
+			name = Model;
+			path = Controller/Model;
+			sourceTree = "<group>";
+		};
+		1F2CE39D20B6D20400D9E5BD /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				1F2CE39E20B6D22500D9E5BD /* CloudLoginAPI.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 		1F359FC42091828B00E2FF36 /* DiskError */ = {
@@ -1521,6 +1542,7 @@
 		1FD9B782207CC6F400906D80 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F2CE39A20B6CBDB00D9E5BD /* Model */,
 				1F58825D2085FA4000394BD6 /* Tool */,
 				1FD9B783207CC6F400906D80 /* ViewModel */,
 				1FD9B784207CC6F400906D80 /* Controller */,
@@ -1655,6 +1677,8 @@
 		1FD9B796207CC78B00906D80 /* APIs */ = {
 			isa = PBXGroup;
 			children = (
+				1F2CE39D20B6D20400D9E5BD /* Login */,
+				1F2CE39820B6B30C00D9E5BD /* TestAPI.swift */,
 			);
 			path = APIs;
 			sourceTree = "<group>";
@@ -1663,9 +1687,8 @@
 			isa = PBXGroup;
 			children = (
 				1FD9B798207CC78B00906D80 /* BaseRequest.swift */,
-				1FD9B799207CC78B00906D80 /* Networker.swift */,
-				1FD9B79A207CC78B00906D80 /* RequestConfig.swift */,
 				1FD9B79B207CC78B00906D80 /* NetEngine.swift */,
+				1F2CE39620B6A68E00D9E5BD /* RequestConfig.swift */,
 			);
 			path = NetHelper;
 			sourceTree = "<group>";
@@ -2162,6 +2185,7 @@
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SugarRecord/SugarRecord.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/YYKit/YYKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -2183,6 +2207,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SugarRecord.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2261,6 +2286,7 @@
 				1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1F050E6020AAC8400037F00A /* FilesSequenceTableViewCell.swift in Sources */,
+				1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */,
 				1F050E2D20A99F280037F00A /* FileShareFolderViewController.swift in Sources */,
 				1F3C240720A3E55500E6B953 /* FilesListCollectionViewCell.swift in Sources */,
 				1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */,
@@ -2283,11 +2309,11 @@
 				1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */,
 				1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
-				1FD9B79E207CC78B00906D80 /* RequestConfig.swift in Sources */,
 				1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */,
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
 				1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
+				1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */,
 				06EE1ED320A70D52000E739D /* BaseTableViewController.swift in Sources */,
 				1F359FC6209182BB00E2FF36 /* DiskErrorViewController.swift in Sources */,
 				1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */,
@@ -2310,7 +2336,6 @@
 				1F2CE2F120B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld in Sources */,
 				1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */,
 				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,
-				1FD9B79D207CC78B00906D80 /* Networker.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
 				1F2CE30220B4311000D9E5BD /* User+CoreDataProperties.swift in Sources */,
 				1F8EBB52209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift in Sources */,
@@ -2322,8 +2347,10 @@
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
 				1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */,
+				1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */,
 				1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */,
 				1FAADEF120AC031100739220 /* FilesSearchMoreBottomSheetContentTableViewController.swift in Sources */,
+				1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
 				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,

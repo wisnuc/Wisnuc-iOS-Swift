@@ -11,7 +11,13 @@ import Foundation
 import UIKit
 import MaterialComponents
 
-func  IsNilString(_ string:String?) -> Bool{
+func synced(_ lock: Any, closure: () -> ()) {
+    objc_sync_enter(lock)
+    closure()
+    objc_sync_exit(lock)
+}
+
+func  isNilString(_ string:String?) -> Bool{
     if (string == nil || string?.count == 0 || (string?.isEmpty)! || string == "null") {
         return true
     }else{

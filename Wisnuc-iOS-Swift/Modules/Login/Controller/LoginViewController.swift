@@ -25,6 +25,8 @@ private let StationViewScale:CGFloat = __kHeight * 0.36
 class LoginViewController: UIViewController {
     var commonLoginButon:UIButton!
     var userName:String?
+    var cloudLoginArray:Array<UserModel>?
+    
     var logintype:LoginState?{
         didSet{
             print("did set ")
@@ -124,9 +126,56 @@ class LoginViewController: UIViewController {
         self.present(materialAlertController, animated: true, completion: nil)
     }
     
+    func weChatCallBackRespCode(code:String){
+        //    @weaky(self)
+        ActivityIndicator.startActivityIndicatorAnimation()
+        cloudLoginArray = Array.init()
+        CloudLoginAPI.init(code: code).start { [weak self] (respose) in
+            if respose.error != nil{
+             let model = UserModel.model(withJSON: respose.value)
+                
+            }
+        }
+    }
+
+//    [SXLoadingView updateProgressHUD:WBLocalizedString(@"loading...", nil)];
+//    CloudLoginModel * model = [CloudLoginModel modelWithJSON:request.responseJsonObject];
+//    weak_self.token = model.data.token;
+//    weak_self.avatarUrl = model.data.user.avatarUrl;
+//    [weak_self getStationWithModel:model completeBlock:^(NSError *error, NSArray<NSDictionary *> *stations) {
+//    if(error) {
+//    [SXLoadingView hideProgressHUD];
+//    NSLog(@"%@", error);
+//    if(error.wbCode == 50001)
+//    [SXLoadingView showAlertHUD:WBLocalizedString(@"no_binding_user_in_nas", nil) duration:1];
+//    if(error.wbCode == 50002)
+//    [SXLoadingView showAlertHUD:WBLocalizedString(@"no_online_device", nil) duration:1];
+//    else
+//    [SXLoadingView showAlertHUD:WBLocalizedString(@"error", nil) duration:1];
+//    }else {
+//    _alertView.hidden = NO;
+//    [stations enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//    [weak_self getUsersWithStationDic:obj Model:model completeBlock:^(NSError *err, CloudModelForUser *user) {
+//    [SXLoadingView hideProgressHUD];
+//    if(err) {
+//    return [SXLoadingView showAlertHUD:WBLocalizedString(@"no_user_info", nil) duration:1];
+//    }
+//    [weak_self.cloudLoginStationArray addObject:user];
+//    [weak_self.alertView.tableView reloadData];
+//    }];
+//    }];
+//    }
+//    }];
+//    } failure:^(__kindof JYBaseRequest *request) {
+//    [SXLoadingView hideProgressHUD];
+//    NSLog(@"%@",request.error);
+//    NSHTTPURLResponse * res = (NSHTTPURLResponse *)request.dataTask.response;
+//    [SXLoadingView showAlertHUD:[NSString stringWithFormat:@"%@:%ld",WBLocalizedString(@"login_failed", nil),(long)res.statusCode] duration:1];
+//    }];
+//    }
+    
     @objc func weChatViewButtonClick(){
           checkNetwork()
-
     }
     
     @objc func  loginButtonClick(){
@@ -154,14 +203,14 @@ class LoginViewController: UIViewController {
     }
     
     func checkWechat() {
-//        if (WXApi.isWXAppInstalled()) {
-//            let req = SendAuthReq.init()
-//            req.scope = "snsapi_userinfo"
-//            req.state = "App"
-//            WXApi.send(req)
-//        }else{
-//            Message.message(text: "请先安装微信")
-//        }
+        if (WXApi.isWXAppInstalled()) {
+            let req = SendAuthReq.init()
+            req.scope = "snsapi_userinfo"
+            req.state = "App"
+            WXApi.send(req)
+        }else{
+            Message.message(text: "请先安装微信")
+        }
         
        ActivityIndicator.startActivityIndicatorAnimation()
         DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 4.0) {

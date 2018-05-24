@@ -9,9 +9,14 @@
 
 import Foundation
 
+public let KWxAppID = "wx99b54eb728323fe8"
+public let kCloudAddr = "http://www.siyouqun.com/"
+public let kCloudBaseURL = "http://www.siyouqun.com/c/v1/"
+//#define kCloudAddr    @"http://10.10.9.87:4000/"
+//#define WX_BASE_URL   @"http://10.10.9.87:4000/c/v1/"
+
 public let kFirstLaunchKey =  "kFirstLaunchKey"
 public let kappVersionKey =  "kappVersionKey"
-
-public let KWxAppID = "wx99b54eb728323fe8"
-
 public let kCurrentUserUUID = "kCurrentUserUUID"
+
+
