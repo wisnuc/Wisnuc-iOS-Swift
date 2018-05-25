@@ -11,7 +11,7 @@ import CoreData
 import MaterialComponents
 import RealReachability
 import CatalogByConvention
-
+import MagicalRecord
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
@@ -33,23 +33,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     
     func initRootVC(){
         self.window?.rootViewController = nil
-        // 得到当前应用的版本号
-        let infoDictionary = Bundle.main.infoDictionary
-        let currentAppVersion = infoDictionary!["CFBundleShortVersionString"] as! String
-        
         // 取出之前保存的版本号
         let userDefaults = UserDefaults.standard
         let appVersion = userDefaults.string(forKey:kappVersionKey)
         
         // 如果 appVersion 为 nil 说明是第一次启动；如果 appVersion 不等于 currentAppVersion 说明是更新了
-        if appVersion == nil || appVersion != currentAppVersion {
+        if appVersion == nil || appVersion != kCurrentAppVersion {
             let indexVC = FirstLaunchViewController();
             window?.rootViewController = indexVC;
-            userDefaults.set(currentAppVersion, forKey:kappVersionKey)
+            userDefaults.set(kCurrentAppVersion, forKey:kappVersionKey)
             userDefaults.synchronize()
         } else{
             let type:LoginState?
-            type = TokenManager.wechatLoginToken().count>0 ? .token:.wechat
+            type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
             let loginController = LoginViewController.init(type!)
             _loginController = loginController;
             UIApplication.shared.statusBarStyle = .lightContent
@@ -64,27 +60,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     }
 
     func registerCoreDataContext(){
-        if #available(iOS 10.0, *) {
-            coreDataContext = self.persistentContainer.viewContext
-        } else {
-            // iOS 9.0 and below - however you were previously handling it
-            guard let modelURL = Bundle.main.url(forResource: "Wisnuc_iOS_Swift", withExtension:"momd") else {
-                fatalError("Error loading model from bundle")
-            }
-            guard let mom = NSManagedObjectModel(contentsOf: modelURL) else {
-                fatalError("Error initializing mom from: \(modelURL)")
-            }
-            let psc = NSPersistentStoreCoordinator(managedObjectModel: mom)
-            coreDataContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-            let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-            let docURL = urls[urls.endIndex-1]
-            let storeURL = docURL.appendingPathComponent("Model.sqlite")
-            do {
-                try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
-            } catch {
-                fatalError("Error migrating store: \(error)")
-            }
-        }
+        MagicalRecord.setupCoreDataStack()
+        MagicalRecord.setLoggingLevel(MagicalRecordLoggingLevel.warn)
+//        if #available(iOS 10.0, *) {
+//            coreDataContext = self.persistentContainer.viewContext
+//        } else {
+//            // iOS 9.0 and below - however you were previously handling it
+//            guard let modelURL = Bundle.main.url(forResource: "Wisnuc_iOS_Swift", withExtension:"momd") else {
+//                fatalError("Error loading model from bundle")
+//            }
+//            guard let mom = NSManagedObjectModel(contentsOf: modelURL) else {
+//                fatalError("Error initializing mom from: \(modelURL)")
+//            }
+//            let psc = NSPersistentStoreCoordinator(managedObjectModel: mom)
+//            coreDataContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+//            let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+//            let docURL = urls[urls.endIndex-1]
+//            let storeURL = docURL.appendingPathComponent("Model.sqlite")
+//            do {
+//                try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
+//            } catch {
+//                fatalError("Error migrating store: \(error)")
+//            }
+//        }
     }
     
     func startNotifierNetworkStutas() {
@@ -161,6 +159,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         switch  errorCodeInt {
         case Int((WXSuccess).rawValue): //用户同意
             Message.message(text: "授权成功")
+            let aresp = resp as! SendAuthResp
+            if  UIViewController.currentViewController().isKind(of: LoginViewController.self){
+                let loginVC = UIViewController.currentViewController() as! LoginViewController
+                loginVC.weChatCallBackRespCode(code: aresp.code)
+            }
+//            SendAuthResp *aresp = (SendAuthResp *)resp;
+//            NSLog(@"%@",NSStringFromClass([[UIViewController getCurrentVC] class]));
+//            if ([[UIViewController getCurrentVC] isKindOfClass:[FMLoginViewController class]]) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [(FMLoginViewController *)[UIViewController getCurrentVC] weChatCallBackRespCode:aresp.code];
+//                    });
+//            }else  if([[UIViewController getCurrentVC] isKindOfClass:[FMUserEditVC class]]){
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [(FMUserEditVC *)[UIViewController getCurrentVC] weChatCallBackRespCode:aresp.code];
+//                    });
+//            }else  if([[UIViewController getCurrentVC] isKindOfClass:[WBInitializationViewController class]]){
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [(WBInitializationViewController *)[UIViewController getCurrentVC] weChatCallBackRespCode:aresp.code];
+//                    });
+//            }else{
+//                [SXLoadingView hideProgressHUD];
+//            }
         case Int(WXErrCodeAuthDeny.rawValue)://用户拒绝授权
             Message.message(text: "用户拒绝授权")
         case Int(WXErrCodeSentFail.rawValue)://发送失败

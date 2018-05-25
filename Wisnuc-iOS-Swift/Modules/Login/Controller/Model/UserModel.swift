@@ -7,7 +7,12 @@
 //
 
 import UIKit
+import HandyJSON
+
 
 class UserModel: NSObject {
-
+ 
 }
+
+
+

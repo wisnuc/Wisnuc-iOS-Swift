@@ -43,9 +43,9 @@ extension BaseNavigationController: UIGestureRecognizerDelegate {
     // 让边缘侧滑手势在合适的情况下生效
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if (self.viewControllers.count > 1) {
-            return true;
+            return true
         }
-        return false;
+        return false
     }
     
     // 允许同时响应多个手势

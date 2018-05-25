@@ -1,4 +1,4 @@
-//
+ //
 //  LoginViewController.swift
 //  FruitMix-Swift
 //
@@ -9,6 +9,7 @@
 import UIKit
 import SnapKit
 import MaterialComponents
+
 
 enum LoginState:Int{
     case wechat = 0
@@ -127,13 +128,56 @@ class LoginViewController: UIViewController {
     }
     
     func weChatCallBackRespCode(code:String){
-        //    @weaky(self)
         ActivityIndicator.startActivityIndicatorAnimation()
         cloudLoginArray = Array.init()
-        CloudLoginAPI.init(code: code).start { [weak self] (respose) in
-            if respose.error != nil{
-             let model = UserModel.model(withJSON: respose.value)
-                
+        CloudLoginAPI.init(code: code).startRequestDataCompletionHandler { [weak self] (responseData) in
+            if responseData.error == nil{
+                do {
+                    let cloudLoginModel = try JSONDecoder().decode(CloudLoginModel.self, from:    responseData.data!)
+                    print(String(data: responseData.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
+                    if (cloudLoginModel.data?.token != nil) && (cloudLoginModel.data?.token?.count)!>0 {
+                        self?.logintype = .token
+                        let image = UIImage.init(named: "logo")
+                        self?.wisnucImageView.was_setCircleImage(withUrlString:cloudLoginModel.data?.user?.avatarUrl ?? "" , placeholder: image!)
+                        DispatchQueue.main.async {
+                            self?.wisnucLabel.text = cloudLoginModel.data?.user?.nickName ?? "WISNUC"
+                        }
+                        let user = AppUserService.createUser(uuid: (cloudLoginModel.data?.user?.id)!)
+                        user.cloudToken = cloudLoginModel.data?.token!
+                        if cloudLoginModel.data?.user?.avatarUrl != nil{
+                            user.avaterURL = cloudLoginModel.data?.user?.avatarUrl!
+                        }
+                        
+                        if cloudLoginModel.data?.user?.nickName != nil{
+                            user.userName = cloudLoginModel.data?.user?.nickName!
+                        }
+
+                        AppUserService.setCurrentUser(user)
+                        AppUserService.synchronizedCurrentUser()
+                        
+//                        WBUser *user = [WB_UserService createUserWithUserUUID:cloudUserModel.uuid];
+//                        user.userName = cloudUserModel.username;
+//                        user.bonjour_name = cloudUserModel.name;
+//                        user.stationId = cloudUserModel.stationId;
+//                        user.cloudToken = cloudToken;
+//                        user.isFirstUser = [cloudUserModel.isFirstUser boolValue];
+//                        user.isAdmin = [cloudUserModel.isAdmin boolValue];
+//                        user.isCloudLogin = YES;
+//                        user.avaterURL = avatarUrl;
+//                        if (!IsNilString(cloudUserModel.LANIP)) {
+//                            NSString* urlString = [NSString stringWithFormat:@"http://%@:3000/", cloudUserModel.LANIP];
+//                            user.localAddr = urlString;
+//                        }
+//                        [WB_UserService setCurrentUser:user];
+//                        [WB_UserService synchronizedCurrentUser];
+                        
+                        ActivityIndicator.stopActivityIndicatorAnimation()
+                    }
+                } catch {
+                    // 异常处理
+                }
+            }else{
+                ActivityIndicator.stopActivityIndicatorAnimation()
             }
         }
     }
@@ -212,14 +256,14 @@ class LoginViewController: UIViewController {
             Message.message(text: "请先安装微信")
         }
         
-       ActivityIndicator.startActivityIndicatorAnimation()
-        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 4.0) {
-            print("after!")
-            ActivityIndicator.stopActivityIndicatorAnimation()
-            DispatchQueue.main.async {
-                self.logintype = .token
-            }
-        }
+//       ActivityIndicator.startActivityIndicatorAnimation()
+//        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 4.0) {
+//            print("after!")
+//            ActivityIndicator.stopActivityIndicatorAnimation()
+//            DispatchQueue.main.async {
+//                self.logintype = .token
+//            }
+//        }
     }
     
     func actionForStationType() {
@@ -258,12 +302,10 @@ class LoginViewController: UIViewController {
             self.view.addSubview(self.commonLoginButon!)
             self.setUpFrame()
             self.wisnucLabel.text = self.userName ?? "登录名"
-            let image = UIImage.init(named: "touxiang.jpg")
             self.wisnucImageView.layer.borderColor = ImageViewBorderColor
             self.wisnucImageView.layer.masksToBounds = true
             self.wisnucImageView.layer.borderWidth = 8
             self.wisnucImageView.layer.cornerRadius = UserImageViewWidth/2
-            self.wisnucImageView.was_setCircleImage(withUrlString: "xx", placeholder: image!)
         }
     }
     

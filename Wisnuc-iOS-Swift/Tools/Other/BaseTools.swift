@@ -10,6 +10,11 @@
 import Foundation
 import UIKit
 import MaterialComponents
+import SDWebImage
+
+func mainThreadSave(){
+  
+}
 
 func synced(_ lock: Any, closure: () -> ()) {
     objc_sync_enter(lock)

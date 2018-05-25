@@ -34,6 +34,10 @@ class UserService: NSObject,ServiceProtocol{
         
     }
     
+    func synchronizedCurrentUser(){
+      let _ = saveUser(self.currentUser)
+    }
+    
     func saveUser(_ user:User?) -> User?{
         if(user == nil) {
             return nil
@@ -58,5 +62,9 @@ class UserService: NSObject,ServiceProtocol{
             user.mr_deleteEntity()
         }
         NSManagedObjectContext.mr_default().mr_saveToPersistentStoreAndWait()
+    }
+    
+    func createUser(uuid:String) ->User {
+     return  User.mr_findFirstOrCreate(byAttribute: "uuid", withValue: uuid, in: NSManagedObjectContext.mr_default())
     }
 }

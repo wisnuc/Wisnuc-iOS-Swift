@@ -51,6 +51,8 @@ class SearchFilesViewController: BaseViewController {
         super.viewWillAppear(animated)
         appBar.navigationBar.addSubview(searchTextField)
         appBar.headerViewController.headerView.trackingScrollView = self.mainTableView
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -59,6 +61,8 @@ class SearchFilesViewController: BaseViewController {
         setCellType()
         searchTextField.text = nil
         mainTableView.reloadData()
+        // 开启返回手势
+           self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     func setCellType(){

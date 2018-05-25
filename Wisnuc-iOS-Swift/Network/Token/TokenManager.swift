@@ -9,9 +9,9 @@
 import UIKit
 
 class TokenManager: NSObject {
-    class func wechatLoginToken()->String{
-        let tokenString:String?
-        tokenString = ""
-        return tokenString!
+    class func wechatLoginToken()->String?{
+        var tokenString:String?
+        tokenString = userDefaults.object(forKey: kCurrentUserUUID) as? String
+        return tokenString
     }
 }

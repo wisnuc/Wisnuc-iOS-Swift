@@ -8,7 +8,11 @@
 
 import UIKit
 
+let MainServices = AppService.sharedInstance
+let AppUserService =  MainServices.userService
+
 class AppService: NSObject {
+
     static let sharedInstance = AppService()
     private override init(){
         super.init()

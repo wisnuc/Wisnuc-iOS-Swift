@@ -12,6 +12,9 @@ import UIKit
 
 let appDlegate = UIApplication.shared.delegate as! AppDelegate
 public let userDefaults = UserDefaults.standard
+let infoDictionary = Bundle.main.infoDictionary
+let kCurrentAppVersion = infoDictionary!["CFBundleShortVersionString"] as! String
+let kCurrentSystemVersion = (UIDevice.current.systemVersion as NSString).doubleValue
 
 public func LocalizedString(forKey key:String) -> String {
   return Bundle.main.localizedString(forKey: key, value:"", table: nil)

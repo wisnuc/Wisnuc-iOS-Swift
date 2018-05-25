@@ -19,4 +19,7 @@ extension User {
 
     @NSManaged public var localToken: String?
     @NSManaged public var uuid: String?
+    @NSManaged public var cloudToken: String?
+    @NSManaged public var avaterURL: String?
+    @NSManaged public var userName: String?
 }

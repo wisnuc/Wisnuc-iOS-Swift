@@ -14,7 +14,7 @@ class Message: NSObject {
     class func message(text:String) -> Void{
         let message  = MDCSnackbarMessage.init()
         message.text = text
-        message.duration = 2.0
+        message.duration = 1.2
         MDCSnackbarManager.show(message)
     }
 }

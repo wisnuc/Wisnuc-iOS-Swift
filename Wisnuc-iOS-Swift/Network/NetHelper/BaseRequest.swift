@@ -24,7 +24,6 @@ enum RequestMethodType:Int{
 typealias RequestParameters = Parameters
 class BaseRequest: NSObject{
     var task:URLSessionTask?
-    var completionHandler:NetworkRequestCompletionHandler?
     func requestURL() -> String {
         return ""
     }
@@ -61,13 +60,16 @@ class BaseRequest: NSObject{
         return ""
     }
     
-    func start(_ requestCompletionHandler:@escaping NetworkRequestCompletionHandler) {
-        completionHandler = requestCompletionHandler
-        start()
+    func startRequestJSONCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler) {
+        NetEngine.sharedInstance.addNormalRequetJOSN(requestObj: self, requestCompletionHandler)
     }
- 
-    private func start(){
-        NetEngine.sharedInstance.addNormalRequet(requestObj: self)
+    
+    func startRequestDataCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseDataCompletionHandler) {
+        NetEngine.sharedInstance.addNormalRequetData(requestObj: self, requestCompletionHandler)
+    }
+    
+    func startRequestStringCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseStringCompletionHandler) {
+        NetEngine.sharedInstance.addNormalRequetString(requestObj: self, requestCompletionHandler)
     }
     
     func stop(){

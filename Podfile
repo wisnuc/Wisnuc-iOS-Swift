@@ -17,5 +17,7 @@ pod 'SDWebImage'
 pod 'Material'
 pod 'SugarRecord/CoreData'
 pod 'MagicalRecord'
-pod 'SwiftyJSON'
+
+pod 'HandyJSON'
+
 end

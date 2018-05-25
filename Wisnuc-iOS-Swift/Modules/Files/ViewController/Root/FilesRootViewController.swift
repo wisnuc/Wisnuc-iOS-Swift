@@ -150,7 +150,8 @@ class FilesRootViewController: BaseViewController{
         collcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height)
         self.view.addSubview(collcectionViewController.view)
         // self.view.top + searchBar.bottom + MarginsCloseWidth/2
-        collcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(searchBar.bottom + MarginsCloseWidth/2-20, 0, 0 , 0)
+        let topEdgeInsets:CGFloat = kCurrentSystemVersion >= 11.0 ? searchBar.bottom + MarginsCloseWidth/2-20 : searchBar.bottom + MarginsCloseWidth/2
+        collcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(topEdgeInsets, 0, 0 , 0)
     }
     
     func selectAction(){
@@ -194,7 +195,6 @@ class FilesRootViewController: BaseViewController{
         let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
         tab.setTabBarHidden(false, animated: true)
     }
-    
     
     func selectSearchBarAction(){
         self.appBar.headerViewController.headerView.isHidden = false
