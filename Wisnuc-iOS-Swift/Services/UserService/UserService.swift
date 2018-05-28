@@ -34,6 +34,12 @@ class UserService: NSObject,ServiceProtocol{
         
     }
     
+    func user(uuid:String) ->User?{
+        let predicate = NSPredicate(format: "uuid = %@", uuid)
+        let user = User.mr_findFirst(with: predicate)
+        return user
+    }
+    
     func synchronizedCurrentUser(){
       let _ = saveUser(self.currentUser)
     }
@@ -56,7 +62,7 @@ class UserService: NSObject,ServiceProtocol{
     }
     
     func deleteUser(uuid :String){
-        let predicate = NSPredicate.init(format: "uuid = \(uuid)", argumentArray: nil)
+        let predicate = NSPredicate.init(format: "uuid = %@",uuid)
         let users:Array<User> = User.mr_findAll(with: predicate) as! Array<User>
         for user in users {
             user.mr_deleteEntity()

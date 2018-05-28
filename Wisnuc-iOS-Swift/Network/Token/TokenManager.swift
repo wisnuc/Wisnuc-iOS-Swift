@@ -11,7 +11,14 @@ import UIKit
 class TokenManager: NSObject {
     class func wechatLoginToken()->String?{
         var tokenString:String?
-        tokenString = userDefaults.object(forKey: kCurrentUserUUID) as? String
-        return tokenString
+        let uuid = userDefaults.object(forKey: kCurrentUserUUID) as? String
+        if uuid == nil || uuid?.count==0 {
+            tokenString = nil
+            return tokenString
+        }else{
+             let user = AppUserService.user(uuid: uuid!)
+            tokenString = user?.cloudToken
+             return tokenString
+        }
     }
 }

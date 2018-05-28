@@ -22,6 +22,7 @@ enum RequestMethodType:Int{
 //    func requestURL() -> String
 //}
 typealias RequestParameters = Parameters
+typealias RequestHTTPHeaders = HTTPHeaders
 class BaseRequest: NSObject{
     var task:URLSessionTask?
     func requestURL() -> String {
@@ -40,7 +41,7 @@ class BaseRequest: NSObject{
         return URLEncoding.default
     }
     
-    func requestHTTPHeaders() -> HTTPHeaders? {
+    func requestHTTPHeaders() -> RequestHTTPHeaders? {
         return nil
     }
     

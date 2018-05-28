@@ -17,7 +17,7 @@ private let TableViewHeaderHeight:CGFloat = 80/2
 class DiskPopUpViewManager: NSObject {
     var popupController:CNPPopupController?
     var diskArray:Array<DiskModel>?
-    var stationModel:StationModel?
+    var stationModel:CloadLoginUserRemotModel?
     var state:DeviceForSearchState?{
         didSet{
             switch state {
@@ -40,7 +40,7 @@ class DiskPopUpViewManager: NSObject {
     }
     
     
-    func showPopupWithStyle(_ state:DeviceForSearchState, _ popupStyle: CNPPopupStyle, diskArray:Array<DiskModel>, stationModel:StationModel) {
+    func showPopupWithStyle(_ state:DeviceForSearchState, _ popupStyle: CNPPopupStyle, diskArray:Array<DiskModel>, stationModel:CloadLoginUserRemotModel) {
    
         self.diskArray = diskArray
         self.stationModel = stationModel
@@ -253,7 +253,7 @@ extension DiskPopUpViewManager : CNPPopupControllerDelegate {
     }
     
     func addressString() -> String! {
-        return stationModel?.adress
+        return stationModel?.LANIP
     }
     
     

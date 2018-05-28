@@ -87,6 +87,9 @@
 		1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE39E20B6D22500D9E5BD /* CloudLoginAPI.swift */; };
 		1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE3A020B7B76F00D9E5BD /* BaseModel.swift */; };
 		1F2CE3A420B7F3F200D9E5BD /* CloudLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE3A320B7F3F200D9E5BD /* CloudLoginModel.swift */; };
+		1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */; };
+		1F307C6320BBDC0C00AE105C /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6220BBDC0C00AE105C /* Error.swift */; };
+		1F307C6520BC001E00AE105C /* GetUsersAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6420BC001E00AE105C /* GetUsersAPI.swift */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -466,6 +469,9 @@
 		1F2CE39E20B6D22500D9E5BD /* CloudLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudLoginAPI.swift; sourceTree = "<group>"; };
 		1F2CE3A020B7B76F00D9E5BD /* BaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
 		1F2CE3A320B7F3F200D9E5BD /* CloudLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudLoginModel.swift; sourceTree = "<group>"; };
+		1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudGetStationsAPI.swift; sourceTree = "<group>"; };
+		1F307C6220BBDC0C00AE105C /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		1F307C6420BC001E00AE105C /* GetUsersAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUsersAPI.swift; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -1049,8 +1055,35 @@
 			isa = PBXGroup;
 			children = (
 				1F2CE39E20B6D22500D9E5BD /* CloudLoginAPI.swift */,
+				1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */,
+				1F307C6420BC001E00AE105C /* GetUsersAPI.swift */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		1F307C5E20BBDBC600AE105C /* LocalNetworkLogin */ = {
+			isa = PBXGroup;
+			children = (
+				1F83AE552087463F007CCCFD /* LocalNetworkLoginViewController.swift */,
+				1F83AE562087463F007CCCFD /* LocalNetworkLoginViewController.xib */,
+			);
+			path = LocalNetworkLogin;
+			sourceTree = "<group>";
+		};
+		1F307C5F20BBDBD600AE105C /* FirstLaunch */ = {
+			isa = PBXGroup;
+			children = (
+				1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */,
+			);
+			path = FirstLaunch;
+			sourceTree = "<group>";
+		};
+		1F307C6120BBDC0000AE105C /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				1F307C6220BBDC0C00AE105C /* Error.swift */,
+			);
+			path = Error;
 			sourceTree = "<group>";
 		};
 		1F359FC42091828B00E2FF36 /* DiskError */ = {
@@ -1547,6 +1580,7 @@
 		1FD9B782207CC6F400906D80 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F307C6120BBDC0000AE105C /* Error */,
 				1F2CE39A20B6CBDB00D9E5BD /* Model */,
 				1F58825D2085FA4000394BD6 /* Tool */,
 				1FD9B783207CC6F400906D80 /* ViewModel */,
@@ -1567,6 +1601,8 @@
 		1FD9B784207CC6F400906D80 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				1F307C5F20BBDBD600AE105C /* FirstLaunch */,
+				1F307C5E20BBDBC600AE105C /* LocalNetworkLogin */,
 				1FFF3EA02094643300828623 /* CollectionViewController */,
 				1F359FE72092BEDB00E2FF36 /* AlertController */,
 				1F359FC42091828B00E2FF36 /* DiskError */,
@@ -1574,9 +1610,6 @@
 				1F2B45A0208F280200C8971F /* LogOut */,
 				1F2B459A208F24EB00C8971F /* Init */,
 				1F5882262085890300394BD6 /* LoginViewController.swift */,
-				1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */,
-				1F83AE552087463F007CCCFD /* LocalNetworkLoginViewController.swift */,
-				1F83AE562087463F007CCCFD /* LocalNetworkLoginViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2263,6 +2296,7 @@
 			files = (
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
+				1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */,
 				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
@@ -2298,6 +2332,7 @@
 				1F3C240720A3E55500E6B953 /* FilesListCollectionViewCell.swift in Sources */,
 				1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */,
 				1F17698220AD379B003D955F /* SearchFilesViewController.swift in Sources */,
+				1F307C6520BC001E00AE105C /* GetUsersAPI.swift in Sources */,
 				1F050E5C20AAC7850037F00A /* FilesSequenceBottomSheetContentTableViewController.swift in Sources */,
 				1F050E3B20AAAF050037F00A /* AppBottomSheetController.swift in Sources */,
 				1F050E0520A933CA0037F00A /* BaseNavigationController.swift in Sources */,
@@ -2360,6 +2395,7 @@
 				1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */,
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
+				1F307C6320BBDC0C00AE105C /* Error.swift in Sources */,
 				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
 				1F5882272085890400394BD6 /* LoginViewController.swift in Sources */,
@@ -2561,7 +2597,10 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
@@ -2569,7 +2608,10 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/**",
+					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
+				);
 			};
 			name = Debug;
 		};
@@ -2585,14 +2627,20 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/**",
+					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
+				);
 			};
 			name = Release;
 		};
@@ -2604,7 +2652,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -2621,7 +2673,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -2637,7 +2693,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -2653,7 +2713,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

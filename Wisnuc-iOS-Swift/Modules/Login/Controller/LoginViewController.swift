@@ -9,13 +9,27 @@
 import UIKit
 import SnapKit
 import MaterialComponents
+import HandyJSON
 
-
-enum LoginState:Int{
+ enum LoginState:Int{
     case wechat = 0
     case token
     case chooseStation
-}
+ }
+ 
+ struct LoginError: Error,Equatable{
+    enum ErrorKind {
+        case LoginSucess
+        case LoginPasswordWrong
+        case LoginNoBindDevice
+        case LoginNoOnlineDevice
+        case LoginNoBindUser
+    }
+    
+    let code: Int
+    let kind: ErrorKind
+    let localizedDescription: String
+ }
 
 private let ButtonHeight:CGFloat = 36
 private let UserImageViewWidth:CGFloat = 114
@@ -26,8 +40,8 @@ private let StationViewScale:CGFloat = __kHeight * 0.36
 class LoginViewController: UIViewController {
     var commonLoginButon:UIButton!
     var userName:String?
-    var cloudLoginArray:Array<UserModel>?
-    
+    var cloudLoginArray:Array<CloadLoginUserRemotModel>?
+    var loginModel:CloudLoginModel?
     var logintype:LoginState?{
         didSet{
             print("did set ")
@@ -150,27 +164,10 @@ class LoginViewController: UIViewController {
                         
                         if cloudLoginModel.data?.user?.nickName != nil{
                             user.userName = cloudLoginModel.data?.user?.nickName!
-                        }
+                        }   
 
                         AppUserService.setCurrentUser(user)
                         AppUserService.synchronizedCurrentUser()
-                        
-//                        WBUser *user = [WB_UserService createUserWithUserUUID:cloudUserModel.uuid];
-//                        user.userName = cloudUserModel.username;
-//                        user.bonjour_name = cloudUserModel.name;
-//                        user.stationId = cloudUserModel.stationId;
-//                        user.cloudToken = cloudToken;
-//                        user.isFirstUser = [cloudUserModel.isFirstUser boolValue];
-//                        user.isAdmin = [cloudUserModel.isAdmin boolValue];
-//                        user.isCloudLogin = YES;
-//                        user.avaterURL = avatarUrl;
-//                        if (!IsNilString(cloudUserModel.LANIP)) {
-//                            NSString* urlString = [NSString stringWithFormat:@"http://%@:3000/", cloudUserModel.LANIP];
-//                            user.localAddr = urlString;
-//                        }
-//                        [WB_UserService setCurrentUser:user];
-//                        [WB_UserService synchronizedCurrentUser];
-                        
                         ActivityIndicator.stopActivityIndicatorAnimation()
                     }
                 } catch {
@@ -181,42 +178,121 @@ class LoginViewController: UIViewController {
             }
         }
     }
+    
+    func findStation(uuid:String?,token:String?, closure: @escaping (Error?,NSArray?) -> Void){
+        if uuid == nil || token == nil{
+            return
+        }
+        
+        CloudGetStationsAPI.init(guid: (uuid)!, token: (token)!).startRequestJSONCompletionHandler { (response) in
+            if response.error == nil{
+                if response.result.value != nil {
+                    let rootDic = response.result.value as! NSDictionary
+                    let dataArray = rootDic["data"] as! NSArray
+                    let onlineArray = NSArray.init()
+                    
+                    if dataArray.count == 0{
+                      return  closure(LoginError.init(code: 50001, kind: LoginError.ErrorKind.LoginNoBindDevice, localizedDescription: "no station had bind"), nil)
+                        
+                    }else{
+                        dataArray.enumerateObjects({ (obj, idx, stop) in
+                            let dic = obj as! NSDictionary
+//                            let isOnlineNumber:NSNumber = dic.value(forKey: "isOnline") as! NSNumber
+//                            if isOnlineNumber.boolValue{
+                                onlineArray.adding(dic)
+//                            }
+                        })
+                        if onlineArray.count == 0{
+                            return closure(LoginError.init(code: 50002, kind: LoginError.ErrorKind.LoginNoOnlineDevice, localizedDescription: "no device online"),nil)
+                        }else{
+                            return closure(nil,onlineArray)
+                        }
+                    }
+                }
+            }else{
+                print(response.error ?? "error")
+                return closure(response.error,nil)
+            }
+        }
+    }
+    
+    func findUser(stationDictionary:NSDictionary,uuid:String?,token:String? ,closure: @escaping (Error?,CloadLoginUserRemotModel?) -> Void){
+        
+        let stationId = stationDictionary.value(forKey: "id") as! String
+        GetUsersAPI.init(stationId: stationId, token: token!).startRequestJSONCompletionHandler { (response) in
+            if response.error == nil{
+                let rootDic = response.value as! NSDictionary
+                let dataArray = rootDic.value(forKey: "data") as! NSMutableArray
+                if dataArray.count == 0{
+                    return closure(LoginError.init(code: 50003, kind: LoginError.ErrorKind.LoginNoBindUser, localizedDescription: LocalizedString(forKey: "No this User")), nil)
+                }
+                var mutableDic:NSMutableDictionary?
+                dataArray.enumerateObjects({ (obj, idx, stop) in
+                    let dic:NSDictionary = obj as! NSDictionary
+                    if dic.value(forKey: "global") != nil{
+                        let globalDic:NSDictionary = dic.value(forKey: "global") as! NSDictionary
+                        let idString = globalDic.value(forKey: "id") as! String
+                        if uuid == idString{
+                            mutableDic = NSMutableDictionary.init(dictionary: dic)
+                            mutableDic?.addEntries(from: stationDictionary as! [AnyHashable : Any])
+                            if let userModel = CloadLoginUserRemotModel.deserialize(from: mutableDic){
+                                let lanArray = stationDictionary.value(forKey: "LANIP") as! NSArray
+                                if lanArray.count>0{
+                                    userModel.LANIP = lanArray.firstObject as? String
+                                }
+                                return closure(nil,userModel)
+                            }
+                        }
+                    }
+                })
 
-//    [SXLoadingView updateProgressHUD:WBLocalizedString(@"loading...", nil)];
-//    CloudLoginModel * model = [CloudLoginModel modelWithJSON:request.responseJsonObject];
-//    weak_self.token = model.data.token;
-//    weak_self.avatarUrl = model.data.user.avatarUrl;
-//    [weak_self getStationWithModel:model completeBlock:^(NSError *error, NSArray<NSDictionary *> *stations) {
-//    if(error) {
-//    [SXLoadingView hideProgressHUD];
-//    NSLog(@"%@", error);
-//    if(error.wbCode == 50001)
-//    [SXLoadingView showAlertHUD:WBLocalizedString(@"no_binding_user_in_nas", nil) duration:1];
-//    if(error.wbCode == 50002)
-//    [SXLoadingView showAlertHUD:WBLocalizedString(@"no_online_device", nil) duration:1];
-//    else
-//    [SXLoadingView showAlertHUD:WBLocalizedString(@"error", nil) duration:1];
-//    }else {
-//    _alertView.hidden = NO;
-//    [stations enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//    [weak_self getUsersWithStationDic:obj Model:model completeBlock:^(NSError *err, CloudModelForUser *user) {
-//    [SXLoadingView hideProgressHUD];
-//    if(err) {
-//    return [SXLoadingView showAlertHUD:WBLocalizedString(@"no_user_info", nil) duration:1];
-//    }
-//    [weak_self.cloudLoginStationArray addObject:user];
-//    [weak_self.alertView.tableView reloadData];
-//    }];
-//    }];
-//    }
-//    }];
-//    } failure:^(__kindof JYBaseRequest *request) {
-//    [SXLoadingView hideProgressHUD];
-//    NSLog(@"%@",request.error);
-//    NSHTTPURLResponse * res = (NSHTTPURLResponse *)request.dataTask.response;
-//    [SXLoadingView showAlertHUD:[NSString stringWithFormat:@"%@:%ld",WBLocalizedString(@"login_failed", nil),(long)res.statusCode] duration:1];
-//    }];
-//    }
+            }else{
+               return closure(response.error,nil)
+            }
+        }
+    }
+    
+    func loginAction(){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let uuid = userDefaults.object(forKey: kCurrentUserUUID) as? String
+        if uuid == nil {
+            Message.message(text: LocalizedString(forKey: "no uuid"))
+            return
+        }
+        let user = AppUserService.user(uuid:uuid!)
+        if user != nil {
+            self.findStation(uuid: user?.uuid, token: user?.cloudToken) { [weak self] (error, devieceArray) in  ActivityIndicator.stopActivityIndicatorAnimation()
+                if(error != nil) {
+                     ActivityIndicator.stopActivityIndicatorAnimation()
+                    let loginError = error as! LoginError
+                    if loginError.kind == LoginError.ErrorKind.LoginNoBindDevice || loginError.kind == LoginError.ErrorKind.LoginNoOnlineDevice{
+                        Message.message(text: LocalizedString(forKey: loginError.localizedDescription))
+                    }else  {
+                        Message.message(text: LocalizedString(forKey:"\(String(describing: error?.localizedDescription))"))
+                    }
+                }else {
+                     ActivityIndicator.stopActivityIndicatorAnimation()
+                    devieceArray?.enumerateObjects({ (obj, idx, stop) in
+                        let dic = obj as! NSDictionary
+                        self?.findUser(stationDictionary: dic, uuid: uuid, token: user?.cloudToken, closure: { (userError, userModel) in
+                            if error == nil{
+                                if (dic.object(forKey: "isOnline") != nil) && (dic.object(forKey: "isOnline") as! Bool){
+                                   userModel?.state = "normal"
+                                }
+                                self?.cloudLoginArray?.append(userModel!)
+                            }else{
+                                let loginError = error as! LoginError
+                                if  loginError.kind == LoginError.ErrorKind.LoginNoBindUser{
+                                    Message.message(text: LocalizedString(forKey: loginError.localizedDescription))
+                                }
+                            }
+                        })
+                    })
+                }
+            }
+        }
+    }
+    
     
     @objc func weChatViewButtonClick(){
           checkNetwork()
@@ -301,6 +377,13 @@ class LoginViewController: UIViewController {
             self.commonLoginButon = self.loginButton
             self.view.addSubview(self.commonLoginButon!)
             self.setUpFrame()
+            let image = UIImage.init(named: "logo")
+            let uuid = userDefaults.object(forKey: kCurrentUserUUID) as? String
+            if uuid != nil && uuid?.count != 0 {
+                let user = AppUserService.user(uuid: uuid!)
+                self.wisnucImageView.was_setCircleImage(withUrlString:user?.avaterURL ?? "" , placeholder: image!)
+                self.userName = user?.userName
+            }
             self.wisnucLabel.text = self.userName ?? "登录名"
             self.wisnucImageView.layer.borderColor = ImageViewBorderColor
             self.wisnucImageView.layer.masksToBounds = true
@@ -454,7 +537,7 @@ extension LoginViewController:StationViewDelegate{
 }
 
 extension LoginViewController:AddStationDelegate{
-    func addStationFinish(model: StationModel) {
+    func addStationFinish(model: CloadLoginUserRemotModel) {
            self.stationView.addStation(model: model)
     }
 }

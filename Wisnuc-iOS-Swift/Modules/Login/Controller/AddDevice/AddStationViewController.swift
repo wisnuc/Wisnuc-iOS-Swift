@@ -25,8 +25,8 @@ enum StationSearchState:Int {
     case abort
 }
 
-@objc protocol AddStationDelegate {
-    func addStationFinish(model:StationModel)
+protocol AddStationDelegate {
+    func addStationFinish(model:CloadLoginUserRemotModel)
 }
 
 class AddStationViewController: BaseViewController {
@@ -144,7 +144,7 @@ class AddStationViewController: BaseViewController {
                 dispatch_async_on_main_queue {
                     self.navigationController?.popViewController(animated: true)
                     if let delegateOK = self.delegate{
-                        delegateOK.addStationFinish(model: model)
+//                        delegateOK.addStationFinish(model: model)
                     }
                 }
             }
@@ -155,7 +155,7 @@ class AddStationViewController: BaseViewController {
                 dispatch_async_on_main_queue {
                     self.navigationController?.popViewController(animated: true)
                     if let delegateOK = self.delegate{
-                        delegateOK.addStationFinish(model: model)
+//                        delegateOK.addStationFinish(model: model)
                     }
                 }
             }
@@ -178,7 +178,7 @@ class AddStationViewController: BaseViewController {
             diskModel1.effectiveCapacity = 5.23
             
             let diskArray = [diskModel1]
-            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
+//            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
         case DeviceForSearchState.initialization.rawValue:
             break
         case DeviceForSearchState.importTo.rawValue:
@@ -197,7 +197,7 @@ class AddStationViewController: BaseViewController {
             diskModel2.type = "RAID1"
             
             let diskArray = [diskModel1,diskModel2]
-            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
+//            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
         default:
             break
         }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import HandyJSON
 
 struct CloudLoginModel: Decodable {
     var  url:String?
@@ -22,4 +23,26 @@ struct CloadLoginUserModel: Decodable {
     var avatarUrl:String?
     var nickName:String?
     var id:String?
+}
+
+class CloadLoginUserRemotModel: HandyJSON {
+    var isAdmin:Int?
+    var name:String?
+    var username:String?
+    var uuid:String?
+    var isFirstUser:Int?
+    var id:String?
+    var LANIP:String?
+    var isOnline:Bool?
+    var state:String?
+    var global:CloadLoginGlobalModel?
+    var type:String?
+    required init() {
+        
+    }
+}
+
+class CloadLoginGlobalModel: HandyJSON {
+    var id:String?
+    required init() {}
 }

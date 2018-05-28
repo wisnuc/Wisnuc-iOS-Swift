@@ -25,5 +25,4 @@ class CloudLoginAPI: BaseRequest {
         dic["platform"] = "mobile"
         return dic
     }
-
 }

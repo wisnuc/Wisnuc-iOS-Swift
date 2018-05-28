@@ -10,9 +10,9 @@ import UIKit
 import MaterialComponents
 
 enum StationButtonType :String {
-    case diskError = "disk_error"
     case normal = "normal"
     case offline = "offline"
+    case diskError = "disk_error"
     case local = "local"
     case poweroff = "power_off"
     case addNew = "add_new"
@@ -41,7 +41,11 @@ private let CollectionCellHeight:CGFloat = ViewHeight
 }
 
 class MyStationView: UIView {
-    var stationArray:Array<StationModel>?
+    var stationArray:Array<CloadLoginUserRemotModel>?{
+        didSet{
+           self.reloadData()
+        }
+    }
     weak var delegate: StationViewDelegate?
     
     override init(frame: CGRect) {
@@ -74,31 +78,31 @@ class MyStationView: UIView {
     }
     
     func getDataSource() {
-        let stationModel1 = StationModel.init()
-        stationModel1.state = "normal"
-        stationModel1.name = "WISNUC Station1"
-        
-        let stationModel2 = StationModel.init()
-        stationModel2.state = "local"
-        stationModel2.name = "WISNUC Station2"
-        
-        let stationModel3 = StationModel.init()
-        stationModel3.state = "offline"
-        stationModel3.name = "自定义设备"
-        
-        let stationModel4 = StationModel.init()
-        stationModel4.state = "checking"
-        stationModel4.name = "设备666"
-        
-        let stationModel5 = StationModel.init()
-        stationModel5.state = "disk_error"
-        stationModel5.name = "设备7"
-        stationArray = []
-        stationArray?.append(stationModel1)
-        stationArray?.append(stationModel2)
-        stationArray?.append(stationModel3)
-        stationArray?.append(stationModel4)
-        stationArray?.append(stationModel5)
+//        let stationModel1 = StationModel.init()
+//        stationModel1.state = "normal"
+//        stationModel1.name = "WISNUC Station1"
+//
+//        let stationModel2 = StationModel.init()
+//        stationModel2.state = "local"
+//        stationModel2.name = "WISNUC Station2"
+//
+//        let stationModel3 = StationModel.init()
+//        stationModel3.state = "offline"
+//        stationModel3.name = "自定义设备"
+//
+//        let stationModel4 = StationModel.init()
+//        stationModel4.state = "checking"
+//        stationModel4.name = "设备666"
+//
+//        let stationModel5 = StationModel.init()
+//        stationModel5.state = "disk_error"
+//        stationModel5.name = "设备7"
+//        stationArray = []
+//        stationArray?.append(stationModel1)
+//        stationArray?.append(stationModel2)
+//        stationArray?.append(stationModel3)
+//        stationArray?.append(stationModel4)
+//        stationArray?.append(stationModel5)
     }
     
     func setStationsView() {
@@ -110,10 +114,15 @@ class MyStationView: UIView {
         setAddButtonView()
     }
     
-    func addStation(model:StationModel){
+    func addStation(model:CloadLoginUserRemotModel){
        stationArray?.append(model)
        stationScrollView.removeAllSubviews()
        setStationsView()
+    }
+    
+    func reloadData() {
+        stationScrollView.removeAllSubviews()
+        setStationsView()
     }
 
     func setDetailStationsView(){
@@ -128,7 +137,7 @@ class MyStationView: UIView {
             view.tag = idx
             view.isUserInteractionEnabled = true
             
-            let model:StationModel = value
+            let model:CloadLoginUserRemotModel = value
             let tapGesture = MyStationTapGestureRecognizer.init(target: self, action: #selector(stationViewTap(_ :)))
             tapGesture.stationButtonType = model.state.map { StationButtonType(rawValue: $0) }!
             tapGesture.stationName = model.name
