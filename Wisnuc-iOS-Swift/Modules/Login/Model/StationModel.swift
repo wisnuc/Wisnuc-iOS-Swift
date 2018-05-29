@@ -17,7 +17,7 @@ enum DeviceForSearchState:String {
 class StationModel: NSObject {
     var name:String?
     var type:String?
-    var state:String?
+    var state:Int?
     var adress:String?
 }
 

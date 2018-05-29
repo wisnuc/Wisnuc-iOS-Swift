@@ -9,14 +9,14 @@
 import UIKit
 import MaterialComponents
 
-enum StationButtonType :String {
-    case normal = "normal"
-    case offline = "offline"
-    case diskError = "disk_error"
-    case local = "local"
-    case poweroff = "power_off"
-    case addNew = "add_new"
-    case checking = "checking"
+enum StationButtonType :Int {
+    case normal = 0
+    case offline
+    case diskError
+    case local
+    case poweroff
+    case addNew
+    case checking
 }
 
 private let Width_Space:CGFloat  = MarginsCloseWidth
@@ -38,6 +38,7 @@ private let CollectionCellHeight:CGFloat = ViewHeight
 @objc protocol StationViewDelegate{
     func addStationButtonTap(_ sender:UIButton)
     func stationViewTapAction(_ sender:MyStationTapGestureRecognizer)
+    func stationViewSwipeAction()
 }
 
 class MyStationView: UIView {
@@ -77,6 +78,15 @@ class MyStationView: UIView {
        
     }
     
+    @objc func swipeGestureAction(_ sender:UISwipeGestureRecognizer){
+        if sender.direction == UISwipeGestureRecognizerDirection.down {
+            print("Swipe Down")
+            if let delegateOK = self.delegate{
+                delegateOK.stationViewSwipeAction()
+            }
+        }
+    }
+    
     func getDataSource() {
 //        let stationModel1 = StationModel.init()
 //        stationModel1.state = "normal"
@@ -97,7 +107,7 @@ class MyStationView: UIView {
 //        let stationModel5 = StationModel.init()
 //        stationModel5.state = "disk_error"
 //        stationModel5.name = "设备7"
-//        stationArray = []
+        stationArray = []
 //        stationArray?.append(stationModel1)
 //        stationArray?.append(stationModel2)
 //        stationArray?.append(stationModel3)
@@ -112,6 +122,9 @@ class MyStationView: UIView {
         self.addSubview(stationScrollView)
         setDetailStationsView()
         setAddButtonView()
+        let swipeGesture = UISwipeGestureRecognizer.init(target: self, action: #selector(swipeGestureAction(_ :)))
+        swipeGesture.direction = .down
+        self.addGestureRecognizer(swipeGesture)
     }
     
     func addStation(model:CloadLoginUserRemotModel){

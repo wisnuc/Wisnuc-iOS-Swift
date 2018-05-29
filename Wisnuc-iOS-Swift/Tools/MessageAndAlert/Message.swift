@@ -11,6 +11,13 @@ import MaterialComponents
 
 class Message: NSObject {
     
+    class func message(text:String ,duration:TimeInterval) -> Void{
+        let message  = MDCSnackbarMessage.init()
+        message.text = text
+        message.duration = 1.2
+        MDCSnackbarManager.show(message)
+    }
+    
     class func message(text:String) -> Void{
         let message  = MDCSnackbarMessage.init()
         message.text = text

@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import MaterialComponents
 import HandyJSON
+import Alamofire
 
  enum LoginState:Int{
     case wechat = 0
@@ -24,6 +25,7 @@ import HandyJSON
         case LoginNoBindDevice
         case LoginNoOnlineDevice
         case LoginNoBindUser
+        case LoginRequestError
     }
     
     let code: Int
@@ -35,7 +37,7 @@ private let ButtonHeight:CGFloat = 36
 private let UserImageViewWidth:CGFloat = 114
 private let ImageViewBorderColor:CGColor = UIColor.init(red: 41/255.0, green: 165/255.0, blue: 151/255.0, alpha: 1).cgColor
 private let StationViewScale:CGFloat = __kHeight * 0.36
-
+private let imageViewSize = CGSize(width: UserImageViewWidth, height: UserImageViewWidth)
 
 class LoginViewController: UIViewController {
     var commonLoginButon:UIButton!
@@ -65,6 +67,7 @@ class LoginViewController: UIViewController {
     
     init(_ type:LoginState) {
         super.init(nibName: nil, bundle: nil)
+        cloudLoginArray = Array.init()
         setSelfType(type)
     }
     
@@ -110,7 +113,6 @@ class LoginViewController: UIViewController {
     func setUpFrame() {
         let size = CGSize(width: Int(labelWidthFrom(title: self.wisnucLabel.text!, font: self.wisnucLabel.font!) + 20), height: Int(labelHeightFrom(title: self.wisnucLabel.text!, font: self.wisnucLabel.font!)))
         self.wisnucLabel.frame = CGRect(origin: CGPoint(x: (__kWidth - size.width)/2, y: commonLoginButon.frame.minY - 50), size:size)
-        let imageViewSize = CGSize(width: UserImageViewWidth, height: UserImageViewWidth)
         self.wisnucImageView.frame = CGRect(origin: CGPoint(x: (__kWidth - imageViewSize.width)/2, y: wisnucLabel.frame.minY - MarginsWidth - imageViewSize.width), size:imageViewSize)
     }
     
@@ -143,7 +145,6 @@ class LoginViewController: UIViewController {
     
     func weChatCallBackRespCode(code:String){
         ActivityIndicator.startActivityIndicatorAnimation()
-        cloudLoginArray = Array.init()
         CloudLoginAPI.init(code: code).startRequestDataCompletionHandler { [weak self] (responseData) in
             if responseData.error == nil{
                 do {
@@ -188,25 +189,17 @@ class LoginViewController: UIViewController {
             if response.error == nil{
                 if response.result.value != nil {
                     let rootDic = response.result.value as! NSDictionary
+//                    print(rootDic)
+                    let code = rootDic["code"] as! NSNumber
+                    let message = rootDic["message"] as! NSString
+                    if code.intValue < 1 && code.intValue > 200 {
+                        return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil)
+                    }
                     let dataArray = rootDic["data"] as! NSArray
-                    let onlineArray = NSArray.init()
-                    
                     if dataArray.count == 0{
-                      return  closure(LoginError.init(code: 50001, kind: LoginError.ErrorKind.LoginNoBindDevice, localizedDescription: "no station had bind"), nil)
-                        
+                      return  closure(LoginError.init(code: 50001, kind: LoginError.ErrorKind.LoginNoBindDevice, localizedDescription: LocalizedString(forKey: "no station had bind")), nil)
                     }else{
-                        dataArray.enumerateObjects({ (obj, idx, stop) in
-                            let dic = obj as! NSDictionary
-//                            let isOnlineNumber:NSNumber = dic.value(forKey: "isOnline") as! NSNumber
-//                            if isOnlineNumber.boolValue{
-                                onlineArray.adding(dic)
-//                            }
-                        })
-                        if onlineArray.count == 0{
-                            return closure(LoginError.init(code: 50002, kind: LoginError.ErrorKind.LoginNoOnlineDevice, localizedDescription: "no device online"),nil)
-                        }else{
-                            return closure(nil,onlineArray)
-                        }
+                            return closure(nil,dataArray)
                     }
                 }
             }else{
@@ -217,37 +210,51 @@ class LoginViewController: UIViewController {
     }
     
     func findUser(stationDictionary:NSDictionary,uuid:String?,token:String? ,closure: @escaping (Error?,CloadLoginUserRemotModel?) -> Void){
-        
         let stationId = stationDictionary.value(forKey: "id") as! String
-        GetUsersAPI.init(stationId: stationId, token: token!).startRequestJSONCompletionHandler { (response) in
-            if response.error == nil{
-                let rootDic = response.value as! NSDictionary
-                let dataArray = rootDic.value(forKey: "data") as! NSMutableArray
-                if dataArray.count == 0{
-                    return closure(LoginError.init(code: 50003, kind: LoginError.ErrorKind.LoginNoBindUser, localizedDescription: LocalizedString(forKey: "No this User")), nil)
-                }
-                var mutableDic:NSMutableDictionary?
-                dataArray.enumerateObjects({ (obj, idx, stop) in
-                    let dic:NSDictionary = obj as! NSDictionary
-                    if dic.value(forKey: "global") != nil{
-                        let globalDic:NSDictionary = dic.value(forKey: "global") as! NSDictionary
-                        let idString = globalDic.value(forKey: "id") as! String
-                        if uuid == idString{
-                            mutableDic = NSMutableDictionary.init(dictionary: dic)
-                            mutableDic?.addEntries(from: stationDictionary as! [AnyHashable : Any])
-                            if let userModel = CloadLoginUserRemotModel.deserialize(from: mutableDic){
-                                let lanArray = stationDictionary.value(forKey: "LANIP") as! NSArray
-                                if lanArray.count>0{
-                                    userModel.LANIP = lanArray.firstObject as? String
+        let isOnline = stationDictionary.value(forKey: "isOnline") as! Bool
+        
+        if isOnline {
+            GetUsersAPI.init(stationId: stationId, token: token!).startRequestJSONCompletionHandler { (response) in
+                if response.error == nil{
+                    let rootDic = response.value as! NSDictionary
+                    let dataArray = rootDic.value(forKey: "data") as! NSArray
+                    if dataArray.count == 0{
+                        return closure(LoginError.init(code: 50003, kind: LoginError.ErrorKind.LoginNoBindUser, localizedDescription: LocalizedString(forKey: "No this User")), nil)
+                    }
+                    var mutableDic:NSMutableDictionary?
+                    dataArray.enumerateObjects({ (obj, idx, stop) in
+                        let dic:NSDictionary = obj as! NSDictionary
+                        
+                        if !(dic.value(forKey: "global") as AnyObject).isKind(of: NSNull.self){
+                            let globalDic:NSDictionary = dic.value(forKey: "global") as! NSDictionary
+                            let idString = globalDic.value(forKey: "id") as! String
+                            if uuid == idString{
+                                mutableDic = NSMutableDictionary.init(dictionary: dic)
+                                mutableDic?.addEntries(from: stationDictionary as! [AnyHashable : Any])
+                                if let userModel = CloadLoginUserRemotModel.deserialize(from: mutableDic){
+                                    let lanArray = stationDictionary.value(forKey: "LANIP") as! NSArray
+                                    if lanArray.count>0{
+                                        userModel.LANIP = lanArray.firstObject as? String
+                                    }
+                                    return closure(nil,userModel)
                                 }
-                                return closure(nil,userModel)
                             }
                         }
-                    }
-                })
-
-            }else{
-               return closure(response.error,nil)
+                    })
+                    
+                }else{
+                    return closure(response.error,nil)
+                }
+            }
+        }else{
+             var mutableDic:NSMutableDictionary?
+             mutableDic = NSMutableDictionary.init(dictionary: stationDictionary)
+            if let userModel = CloadLoginUserRemotModel.deserialize(from: mutableDic){
+                let lanArray = stationDictionary.value(forKey: "LANIP") as! NSArray
+                if lanArray.count>0{
+                    userModel.LANIP = lanArray.firstObject as? String
+                }
+                return closure(nil,userModel)
             }
         }
     }
@@ -261,31 +268,47 @@ class LoginViewController: UIViewController {
         }
         let user = AppUserService.user(uuid:uuid!)
         if user != nil {
-            self.findStation(uuid: user?.uuid, token: user?.cloudToken) { [weak self] (error, devieceArray) in  ActivityIndicator.stopActivityIndicatorAnimation()
+            self.findStation(uuid: user?.uuid, token: user?.cloudToken) { [weak self] (error, devieceArray) in
                 if(error != nil) {
-                     ActivityIndicator.stopActivityIndicatorAnimation()
-                    let loginError = error as! LoginError
-                    if loginError.kind == LoginError.ErrorKind.LoginNoBindDevice || loginError.kind == LoginError.ErrorKind.LoginNoOnlineDevice{
-                        Message.message(text: LocalizedString(forKey: loginError.localizedDescription))
-                    }else  {
-                        Message.message(text: LocalizedString(forKey:"\(String(describing: error?.localizedDescription))"))
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    switch error{
+                    case is LoginError :
+                        let loginError = error as! LoginError
+                        if loginError.kind == LoginError.ErrorKind.LoginNoBindDevice || loginError.kind == LoginError.ErrorKind.LoginNoOnlineDevice || loginError.kind == LoginError.ErrorKind.LoginRequestError {
+                            Message.message(text: LocalizedString(forKey: loginError.localizedDescription), duration:2.0)
+                        }else  {
+                            Message.message(text: LocalizedString(forKey:"\(String(describing: (error?.localizedDescription)!))"),duration:2.0)
+                        }
+                    default:
+                        Message.message(text: LocalizedString(forKey:"\(String(describing: (error?.localizedDescription)!))"),duration:2.0)
                     }
                 }else {
-                     ActivityIndicator.stopActivityIndicatorAnimation()
                     devieceArray?.enumerateObjects({ (obj, idx, stop) in
                         let dic = obj as! NSDictionary
                         self?.findUser(stationDictionary: dic, uuid: uuid, token: user?.cloudToken, closure: { (userError, userModel) in
-                            if error == nil{
-                                if (dic.object(forKey: "isOnline") != nil) && (dic.object(forKey: "isOnline") as! Bool){
-                                   userModel?.state = "normal"
+                            if userError == nil{
+                                if (dic.value(forKey: "isOnline") != nil){
+                                    if (dic.value(forKey: "isOnline") as! Bool){
+                                        userModel?.state = StationButtonType.normal.rawValue
+                                    }else{
+                                        userModel?.state = StationButtonType.offline.rawValue
+                                    }
                                 }
                                 self?.cloudLoginArray?.append(userModel!)
+                                self?.cloudLoginArray?.sort(by: {$0.isOnline! && !$1.isOnline!})
+                                self?.stationView.stationArray = self?.cloudLoginArray
                             }else{
-                                let loginError = error as! LoginError
-                                if  loginError.kind == LoginError.ErrorKind.LoginNoBindUser{
-                                    Message.message(text: LocalizedString(forKey: loginError.localizedDescription))
+                                switch userError{
+                                case is LoginError :
+                                    let loginError = userError as! LoginError
+                                    if  loginError.kind == LoginError.ErrorKind.LoginNoBindUser{
+                                        Message.message(text: LocalizedString(forKey: loginError.localizedDescription),duration:2.0)
+                                    }
+                                default:
+                                    Message.message(text: LocalizedString(forKey:"\(String(describing: (userError?.localizedDescription)!))"),duration:2.0)
                                 }
                             }
+                            ActivityIndicator.stopActivityIndicatorAnimation()
                         })
                     })
                 }
@@ -300,7 +323,7 @@ class LoginViewController: UIViewController {
     
     @objc func  loginButtonClick(){
         self.setSelfType(.chooseStation)
-        
+        self.loginAction()
     }
     
     @objc func imageViewTap(_ sender:UIGestureRecognizer){
@@ -343,15 +366,20 @@ class LoginViewController: UIViewController {
     }
     
     func actionForStationType() {
+        if cloudLoginArray != nil{
+            cloudLoginArray?.removeAll()
+        }
         view.addSubview(self.stationView)
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.stationView.stationScrollView, viewController: self)
         UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+            self.loginButton.alpha = 0
+            self.agreementButton.alpha = 0
             self.stationView.frame.origin.y = StationViewScale
             self.wisnucImageView.center.y = StationViewScale/2
             self.wisnucLabel.frame.origin.y = self.wisnucImageView.frame.maxY + MarginsWidth
         }) { (completion) in
-            self.loginButton.removeFromSuperview()
-            self.agreementButton.removeFromSuperview()
+            self.loginButton.isHidden = true
+            self.agreementButton.isHidden = true
         }
     }
     
@@ -366,17 +394,39 @@ class LoginViewController: UIViewController {
             self.wisnucImageView.layer.borderColor = UIColor.clear.cgColor
             self.wisnucImageView.image = UIImage.init(named: "logo")
         }
+        
+        if cloudLoginArray != nil{
+            cloudLoginArray?.removeAll()
+        }
     }
     
     
     func actionForTokenLoginType() {
+        if cloudLoginArray != nil{
+            cloudLoginArray?.removeAll()
+        }
         DispatchQueue.main.async {
             if self.commonLoginButon != nil{
                 self.weChatButton.removeFromSuperview()
             }
             self.commonLoginButon = self.loginButton
             self.view.addSubview(self.commonLoginButon!)
-            self.setUpFrame()
+            if self.stationView.origin.y == __kHeight{
+                self.setUpFrame()
+            }else{
+                UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+//                    if self.stationView.origin.y != __kHeight{
+                        self.setUpFrame()
+                        self.stationView.origin.y = __kHeight
+                        self.loginButton.alpha = 1
+                        self.agreementButton.alpha = 1
+//                    }
+                }) { (completion) in
+                    self.loginButton.isHidden = false
+                    self.agreementButton.isHidden = false
+                }
+            }
+           
             let image = UIImage.init(named: "logo")
             let uuid = userDefaults.object(forKey: kCurrentUserUUID) as? String
             if uuid != nil && uuid?.count != 0 {
@@ -503,7 +553,12 @@ class LoginViewController: UIViewController {
 }
 
 // MARK: - Delegate
-extension LoginViewController:StationViewDelegate{
+ extension LoginViewController:StationViewDelegate{
+    func stationViewSwipeAction() {
+        NetEngine.sharedInstance.cancleAllRequest()
+        self.logintype = .token
+    }
+    
     func stationViewTapAction(_ sender: MyStationTapGestureRecognizer) {
         switch sender.stationButtonType {
         case .checking?:

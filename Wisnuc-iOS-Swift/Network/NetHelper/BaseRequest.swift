@@ -23,6 +23,7 @@ enum RequestMethodType:Int{
 //}
 typealias RequestParameters = Parameters
 typealias RequestHTTPHeaders = HTTPHeaders
+typealias RequestParameterEncoding = ParameterEncoding
 class BaseRequest: NSObject{
     var task:URLSessionTask?
     func requestURL() -> String {
@@ -37,7 +38,7 @@ class BaseRequest: NSObject{
         return nil
     }
     
-    func requestEncoding() -> ParameterEncoding{
+    func requestEncoding() -> RequestParameterEncoding{
         return URLEncoding.default
     }
     
@@ -46,7 +47,7 @@ class BaseRequest: NSObject{
     }
     
     func timeoutIntervalForRequest() -> TimeInterval {
-        return 20.0
+        return 15.0
     }
     
     func useCDN() -> Bool {

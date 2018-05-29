@@ -24,10 +24,19 @@ class NetEngine: NSObject {
     func addNormalRequetJOSN(requestObj:BaseRequest ,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler){
         let manager = Alamofire.SessionManager.default
         let baseRequsetObject = requestObj
+        
         manager.session.configuration.timeoutIntervalForRequest =  baseRequsetObject.timeoutIntervalForRequest()
         let requestURL = bulidRequestURL(request: requestObj)
-        
-        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: baseRequsetObject.requestParameters(), encoding: baseRequsetObject.requestEncoding(), headers: baseRequsetObject.requestHTTPHeaders()).responseJSON(completionHandler: requestCompletionHandler)
+        var requestParameters:RequestParameters = [:]
+        var requestHTTPHeaders:RequestHTTPHeaders = [:]
+        if baseRequsetObject.requestParameters() != nil {
+            requestParameters = baseRequsetObject.requestParameters()!
+        }
+        if baseRequsetObject.requestHTTPHeaders() != nil {
+            requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
+        }
+        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseJSON(queue: <#T##DispatchQueue?#>, options: <#T##JSONSerialization.ReadingOptions#>, completionHandler: <#T##(DataResponse<Any>) -> Void#>)
+        request.validate()
         baseRequsetObject.task = request.task
         addRecord(request: request)
     }
@@ -38,7 +47,16 @@ class NetEngine: NSObject {
         manager.session.configuration.timeoutIntervalForRequest =  baseRequsetObject.timeoutIntervalForRequest()
         let requestURL = bulidRequestURL(request: requestObj)
         
-        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: baseRequsetObject.requestParameters(), encoding: baseRequsetObject.requestEncoding(), headers: baseRequsetObject.requestHTTPHeaders()).responseData(completionHandler: requestCompletionHandler)
+        var requestParameters:RequestParameters = [:]
+        var requestHTTPHeaders:RequestHTTPHeaders = [:]
+        if baseRequsetObject.requestParameters() != nil {
+            requestParameters = baseRequsetObject.requestParameters()!
+        }
+        if baseRequsetObject.requestHTTPHeaders() != nil {
+            requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
+        }
+        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseData(completionHandler: requestCompletionHandler)
+        request.validate()
         baseRequsetObject.task = request.task
         addRecord(request: request)
     }
@@ -48,8 +66,18 @@ class NetEngine: NSObject {
         let baseRequsetObject = requestObj
         manager.session.configuration.timeoutIntervalForRequest =  baseRequsetObject.timeoutIntervalForRequest()
         let requestURL = bulidRequestURL(request: requestObj)
+
+        var requestParameters:RequestParameters = [:]
+        var requestHTTPHeaders:RequestHTTPHeaders = [:]
+        if baseRequsetObject.requestParameters() != nil {
+            requestParameters = baseRequsetObject.requestParameters()!
+        }
+        if baseRequsetObject.requestHTTPHeaders() != nil {
+            requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
+        }
         
-        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: baseRequsetObject.requestParameters(), encoding: baseRequsetObject.requestEncoding(), headers: baseRequsetObject.requestHTTPHeaders()).responseString(completionHandler: requestCompletionHandler)
+        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseString(completionHandler: requestCompletionHandler)
+        request.validate()
         baseRequsetObject.task = request.task
         addRecord(request: request)
     }

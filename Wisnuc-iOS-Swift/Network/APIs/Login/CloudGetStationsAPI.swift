@@ -21,7 +21,7 @@ class CloudGetStationsAPI: BaseRequest {
         return "\(kCloudBaseURL)users/\(guid!)/stations"
     }
     
-    override func requestParameters() -> RequestParameters? {
+    override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         let dic = ["Authorization":cloudToken!]
         return dic
     }

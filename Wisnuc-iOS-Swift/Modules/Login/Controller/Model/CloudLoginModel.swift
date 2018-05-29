@@ -34,7 +34,7 @@ class CloadLoginUserRemotModel: HandyJSON {
     var id:String?
     var LANIP:String?
     var isOnline:Bool?
-    var state:String?
+    var state:Int?
     var global:CloadLoginGlobalModel?
     var type:String?
     required init() {
