@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-let appDlegate = UIApplication.shared.delegate as! AppDelegate
+let appDelegate = UIApplication.shared.delegate as! AppDelegate
 public let userDefaults = UserDefaults.standard
 let infoDictionary = Bundle.main.infoDictionary
 let kCurrentAppVersion = infoDictionary!["CFBundleShortVersionString"] as! String

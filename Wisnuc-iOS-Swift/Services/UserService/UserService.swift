@@ -59,7 +59,11 @@ class UserService: NSObject,ServiceProtocol{
     }
     
     func logoutUser(){
-        
+//        _defaultToken = nil;
+        isUserLogin = false
+        currentUser = nil
+        userDefaults.removeObject(forKey: kCurrentUserUUID)
+        userDefaults.synchronize();
     }
     
     func user(uuid:String) ->User?{

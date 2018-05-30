@@ -9,24 +9,31 @@
 import UIKit
 
 let MainServices = AppService.sharedInstance
-let AppUserService =  MainServices.userService
+let AppUserService =  MainServices().userService
 
 class AppService: NSObject,ServiceProtocol{
-    
-    func abort() {
-//        AppService.sharedInstance = nil
-        print("Disposed Singleton instance")
+    private static var privateShared : AppService?
+    class func sharedInstance() -> AppService { // change class to final to prevent override
+        guard let uwShared = privateShared else {
+            privateShared = AppService()
+            return privateShared!
+        }
+        return uwShared
     }
     
-    static var sharedInstance = AppService()
-    private override init(){
-        super.init()
+    override init() {
+        
+    }
+    
+    func abort() {
+        NetEngine.sharedInstance.cancleAllRequest()
+        userService.abort()
+        print("Disposed Singleton instance")
     }
     
     deinit {
        
     }
-    
     
     func loginAction(model:CloadLoginUserRemotModel,orginTokenUser:User,complete:((_ error:Error?,_ user:User?)->())){
         if model.uuid == nil || isNilString(model.uuid){

@@ -370,7 +370,7 @@ class FilesRootViewController: BaseViewController{
 //        defaultFloatingButton.translatesAutoresizingMaskIntoConstraints = false
         defaultFloatingButton.setImage(plusImage, for: .normal)
         let mdcColorScheme = MDCButtonScheme.init()
-        MDCButtonColorThemer.apply(appDlegate.colorScheme, to: defaultFloatingButton)
+        MDCButtonColorThemer.apply(appDelegate.colorScheme, to: defaultFloatingButton)
         defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
         return defaultFloatingButton
     }()

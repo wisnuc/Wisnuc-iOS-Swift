@@ -337,12 +337,12 @@
     
     func normalLoginAction(model:CloadLoginUserRemotModel){
         let originUser = AppUserService.user(uuid: userDefaults.object(forKey: kCurrentUserUUID) as! String)
-        AppService.sharedInstance.loginAction(model: model, orginTokenUser:originUser!) { (error, user) in
+        AppService.sharedInstance().loginAction(model: model, orginTokenUser:originUser!) { (error, user) in
             if error == nil && user != nil{
                 AppUserService.deleteUser(uuid: (AppUserService.currentUser?.uuid)!)
                 AppUserService.setCurrentUser(user)
                 AppUserService.synchronizedCurrentUser()
-                appDlegate.setRootViewController()
+                appDelegate.setRootViewController()
                 
             }else{
                 if error != nil{

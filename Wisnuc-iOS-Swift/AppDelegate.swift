@@ -126,7 +126,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         tabBarController.tabBar?.selectedItem = tabBarController.tabBar?.items[0]
         tabBarController.selectedViewController = controllers[0]
         tabBarController.tabBar?.itemAppearance = MDCTabBarItemAppearance.titledImages
-        MDCTabBarColorThemer.apply(appDlegate.colorScheme, to: tabBarController.tabBar!)
+        MDCTabBarColorThemer.apply(appDelegate.colorScheme, to: tabBarController.tabBar!)
         
         tabBarController.tabBar?.backgroundColor = UIColor.white
         tabBarController.tabBar?.selectedItemTintColor = COR1

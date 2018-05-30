@@ -12,7 +12,7 @@ import MaterialComponents.MDCButton
 class MDBaseButton: MDCButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        MDCButtonColorThemer.apply(appDlegate.colorScheme, to: self)
+        MDCButtonColorThemer.apply(appDelegate.colorScheme, to: self)
 //        self.sty
     }
     

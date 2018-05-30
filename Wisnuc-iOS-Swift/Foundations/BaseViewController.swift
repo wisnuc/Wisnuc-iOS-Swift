@@ -102,7 +102,7 @@ class BaseViewController: UIViewController {
         // The header view does not clip to bounds by default so we ensure that the image is clipped.
         imageView.clipsToBounds = true
         
-        MDCAppBarColorThemer.apply(appDlegate.colorScheme, to: appBar)
+        MDCAppBarColorThemer.apply(appDelegate.colorScheme, to: appBar)
 
         // Make sure navigation bar background color is clear so the image view is visible.
         appBar.navigationBar.backgroundColor = UIColor.clear

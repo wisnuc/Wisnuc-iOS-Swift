@@ -25,8 +25,15 @@ class SettingViewController: BaseViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func logoutAction(){
+    deinit {
         
+    }
+    
+    func logoutAction(){
+        AppUserService.logoutUser()
+        AppService.sharedInstance().abort()
+        appDelegate.initRootVC()
+//        appDelegate.setR
     }
     
     lazy var settingTabelView: UITableView = {
