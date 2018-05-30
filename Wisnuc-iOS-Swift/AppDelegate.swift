@@ -24,10 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         registerCoreDataContext()
         registerWeChat()   // Wechat
-        initRootVC()
-        startNotifierNetworkStutas() // networkObserveNotification
         colorScheme = MDCBasicColorScheme(primaryColor: COR1)
+        startNotifierNetworkStutas() // networkObserveNotification
         MDCAlertColorThemer.apply(colorScheme)
+        initRootVC()
         return true
     }
     
@@ -44,15 +44,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             userDefaults.set(kCurrentAppVersion, forKey:kappVersionKey)
             userDefaults.synchronize()
         } else{
-            let type:LoginState?
-            type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
-            let loginController = LoginViewController.init(type!)
-            _loginController = loginController;
-            UIApplication.shared.statusBarStyle = .lightContent
-            let navigationController = UINavigationController.init(rootViewController:loginController)
-            self.window?.rootViewController = navigationController
-            self.window?.makeKeyAndVisible()
+            if AppUserService.isUserLogin{
+                setRootViewController()
+            }else{
+                let type:LoginState?
+                type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
+                let loginController = LoginViewController.init(type!)
+                _loginController = loginController;
+                UIApplication.shared.statusBarStyle = .lightContent
+                let navigationController = UINavigationController.init(rootViewController:loginController)
+                self.window?.rootViewController = navigationController
+            }
         }
+        
+         self.window?.makeKeyAndVisible()
     }
     
     func registerWeChat(){
@@ -89,6 +94,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let realReachability = RealReachability.sharedInstance()
         realReachability?.startNotifier()
         NotificationCenter.default.addObserver(self, selector: #selector(networkChanged(_:)), name:NSNotification.Name.realReachabilityChanged , object: nil)
+    }
+    
+    func setRootViewController(){
+        let tabBarController = WSTabBarController ()
+        
+        let filesVC = FilesRootViewController()
+        filesVC.selfState = .root
+        filesVC.title = LocalizedString(forKey: "Files")
+        let photosVC = BaseViewController()
+        photosVC.title = "Downloads"
+        photosVC.view.backgroundColor = UIColor.blue
+        let shareVC = BaseViewController()
+        shareVC.title = "History"
+        shareVC.view.backgroundColor = UIColor.cyan
+        
+        let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
+        let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
+        let shareNavi = BaseNavigationController.init(rootViewController: shareVC)
+        filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "warning.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), selectedImage: UIImage.init(named: "tab_files.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal))
+        photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "Home"), selectedImage: UIImage.init(named: "tab_files.png"))
+        shareNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "Home"), selectedImage: UIImage.init(named: "tab_files.png"))
+        
+        let controllers = [filesNavi, photosNavi, shareNavi]
+        tabBarController.viewControllers = controllers
+        tabBarController.tabBar?.items = [filesNavi.tabBarItem,
+                                          photosNavi.tabBarItem ,
+                                          shareNavi.tabBarItem]
+        tabBarController.tabBar?.setImageTintColor(COR1, for: MDCTabBarItemState.normal)
+        tabBarController.tabBar?.setImageTintColor(LightGrayColor, for: MDCTabBarItemState.selected)
+        tabBarController.tabBar?.selectedItem = tabBarController.tabBar?.items[0]
+        tabBarController.selectedViewController = controllers[0]
+        tabBarController.tabBar?.itemAppearance = MDCTabBarItemAppearance.titledImages
+        MDCTabBarColorThemer.apply(appDlegate.colorScheme, to: tabBarController.tabBar!)
+        
+        tabBarController.tabBar?.backgroundColor = UIColor.white
+        tabBarController.tabBar?.selectedItemTintColor = COR1
+        tabBarController.tabBar?.unselectedItemTintColor = LightGrayColor
+        let drawerVC = DrawerViewController.init()
+        let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
+        window?.rootViewController = naviNavigationDrawer
     }
     
     @objc func networkChanged(_ noti:NSNotification){

@@ -22,8 +22,10 @@ class ActivityIndicator: NSObject{
     
     
     class func startActivityIndicatorAnimation(){
-    
         DispatchQueue.main.async {
+            if shareSingleOneActivityIndicator.isAnimating{
+                stopActivityIndicatorAnimation()
+            }
             let width: CGFloat = __kWidth / 2
             let height: CGFloat = __kHeight / 2
         
@@ -40,6 +42,7 @@ class ActivityIndicator: NSObject{
             shareSingleOneActivityIndicator.sizeToFit()
             shareSingleOneActivityIndicator.startAnimating()
             let window = UIApplication.shared.keyWindow
+            window?.windowLevel = UIWindowLevelNormal
             window?.isUserInteractionEnabled = false
             window?.addSubview(shareSingleOneActivityIndicator)
         }

@@ -159,6 +159,7 @@ class MyStationView: UIView {
             let button = detailButton(buttonType:StationButtonType(rawValue: model.state!)!)
             view.addSubview(detailIconView(type: StationButtonType(rawValue: model.state!)!, center: CGPoint(x:button.right , y: button.top)))
             view.addSubview(button)
+            button.tag = idx
             let functionLabel = functionOrStationNameLabel(text: model.name!, top: button.frame.maxY + StationViewInnerLabelTop_Width_Space)
             view.addSubview(functionLabel)
             
@@ -212,7 +213,6 @@ class MyStationView: UIView {
            break
         }
   
-        
         let buttonImage = UIImage.init(named: buttonImageName!)
         button.frame = CGRect(x: (view.width - (buttonImage?.size.width)!)/2  , y: StationViewInnerImageViewTop_Width_Space, width: ButtonWidth, height: ButtonHeight)
         button.setImage(buttonImage, for: UIControlState.normal)

@@ -30,48 +30,6 @@ func  isNilString(_ string:String?) -> Bool{
     }
 }
 
-func setRootViewController(){
-    let tabBarController = WSTabBarController ()
-    
-    let filesVC = FilesRootViewController()
-    filesVC.selfState = .root
-    filesVC.title = LocalizedString(forKey: "Files")
-    let photosVC = BaseViewController()
-    photosVC.title = "Downloads"
-    photosVC.view.backgroundColor = UIColor.blue
-    let shareVC = BaseViewController()
-    shareVC.title = "History"
-    shareVC.view.backgroundColor = UIColor.cyan
-    
-    
-    let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
-    let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
-    let shareNavi = BaseNavigationController.init(rootViewController: shareVC)
-    filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "warning.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), selectedImage: UIImage.init(named: "tab_files.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal))
-    photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "Home"), selectedImage: UIImage.init(named: "tab_files.png"))
-    shareNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "files"), image: UIImage.init(named: "Home"), selectedImage: UIImage.init(named: "tab_files.png"))
-  
-    let controllers = [filesNavi, photosNavi, shareNavi]
-    tabBarController.viewControllers = controllers
-    tabBarController.tabBar?.items = [filesNavi.tabBarItem,
-                     photosNavi.tabBarItem ,
-                     shareNavi.tabBarItem]
-    tabBarController.tabBar?.setImageTintColor(COR1, for: MDCTabBarItemState.normal)
-    tabBarController.tabBar?.setImageTintColor(LightGrayColor, for: MDCTabBarItemState.selected)
-    tabBarController.tabBar?.selectedItem = tabBarController.tabBar?.items[0]
-    tabBarController.selectedViewController = controllers[0]
-    tabBarController.tabBar?.itemAppearance = MDCTabBarItemAppearance.titledImages
-    MDCTabBarColorThemer.apply(appDlegate.colorScheme, to: tabBarController.tabBar!)
-
-    tabBarController.tabBar?.backgroundColor = UIColor.white
-    tabBarController.tabBar?.selectedItemTintColor = COR1
-    tabBarController.tabBar?.unselectedItemTintColor = LightGrayColor
-    let window = UIApplication.shared.keyWindow
-    let drawerVC = DrawerViewController.init()
-    let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
-    window?.rootViewController = naviNavigationDrawer
-}
-
 
 func changeControllerFromOldController(self:UIViewController, oldController:UIViewController,newController:UIViewController) {
     self.addChildViewController(newController)

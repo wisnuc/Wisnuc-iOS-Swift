@@ -90,6 +90,12 @@
 		1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */; };
 		1F307C6320BBDC0C00AE105C /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6220BBDC0C00AE105C /* Error.swift */; };
 		1F307C6520BC001E00AE105C /* GetUsersAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6420BC001E00AE105C /* GetUsersAPI.swift */; };
+		1F307C6720BE91B200AE105C /* ErrorDfine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6620BE91B200AE105C /* ErrorDfine.swift */; };
+		1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6B20BEA61D00AE105C /* NetworkService.swift */; };
+		1F307C6E20BEAB6100AE105C /* setting_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F307C6D20BEAB6100AE105C /* setting_gray.png */; };
+		1F307C7020BEAB6D00AE105C /* setting_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F307C6F20BEAB6D00AE105C /* setting_gray@2x.png */; };
+		1F307C7220BEAB7800AE105C /* setting_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F307C7120BEAB7800AE105C /* setting_gray@3x.png */; };
+		1F307C7520BEB18700AE105C /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C7420BEB18700AE105C /* SettingViewController.swift */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -472,6 +478,12 @@
 		1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudGetStationsAPI.swift; sourceTree = "<group>"; };
 		1F307C6220BBDC0C00AE105C /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		1F307C6420BC001E00AE105C /* GetUsersAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUsersAPI.swift; sourceTree = "<group>"; };
+		1F307C6620BE91B200AE105C /* ErrorDfine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDfine.swift; sourceTree = "<group>"; };
+		1F307C6B20BEA61D00AE105C /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		1F307C6D20BEAB6100AE105C /* setting_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setting_gray.png; sourceTree = "<group>"; };
+		1F307C6F20BEAB6D00AE105C /* setting_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting_gray@2x.png"; sourceTree = "<group>"; };
+		1F307C7120BEAB7800AE105C /* setting_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting_gray@3x.png"; sourceTree = "<group>"; };
+		1F307C7420BEB18700AE105C /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -1010,6 +1022,7 @@
 		1F2CE30420B50EC700D9E5BD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				1F307C6820BEA20E00AE105C /* NetworkService */,
 				1F2CE39520B5700B00D9E5BD /* UserService */,
 				1F2CE30A20B5374800D9E5BD /* AppService */,
 				1F2CE30520B50FA800D9E5BD /* Protocol */,
@@ -1084,6 +1097,22 @@
 				1F307C6220BBDC0C00AE105C /* Error.swift */,
 			);
 			path = Error;
+			sourceTree = "<group>";
+		};
+		1F307C6820BEA20E00AE105C /* NetworkService */ = {
+			isa = PBXGroup;
+			children = (
+				1F307C6B20BEA61D00AE105C /* NetworkService.swift */,
+			);
+			path = NetworkService;
+			sourceTree = "<group>";
+		};
+		1F307C7320BEB16200AE105C /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				1F307C7420BEB18700AE105C /* SettingViewController.swift */,
+			);
+			path = Setting;
 			sourceTree = "<group>";
 		};
 		1F359FC42091828B00E2FF36 /* DiskError */ = {
@@ -1286,6 +1315,9 @@
 		1F8EBB36209ADC5A00E8AB83 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				1F307C7120BEAB7800AE105C /* setting_gray@3x.png */,
+				1F307C6D20BEAB6100AE105C /* setting_gray.png */,
+				1F307C6F20BEAB6D00AE105C /* setting_gray@2x.png */,
 				1FBD1DF920AEE0410067BE3E /* close_white@3x.png */,
 				1FBD1DF720AEE0350067BE3E /* close_white@2x.png */,
 				1FBD1DF520AEE02B0067BE3E /* close_white.png */,
@@ -1569,6 +1601,7 @@
 		1FD9B780207CBEAD00906D80 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				1F307C7320BEB16200AE105C /* Setting */,
 				1F17697F20AD3712003D955F /* Search */,
 				1F3C244B20A5AF6600E6B953 /* TransferTask */,
 				1F8EBB31209ABF1800E8AB83 /* Files */,
@@ -1698,6 +1731,7 @@
 				1F58821620849F8000394BD6 /* FontDefine.swift */,
 				1F58821820849FA200394BD6 /* SizeDefine.swift */,
 				1F58821A20849FCA00394BD6 /* KeyStringDefine.swift */,
+				1F307C6620BE91B200AE105C /* ErrorDfine.swift */,
 			);
 			path = Define;
 			sourceTree = "<group>";
@@ -1937,6 +1971,7 @@
 				1F3C244620A5AE4800E6B953 /* files_share_folder.png in Resources */,
 				1FD9B7B0207E1A0500906D80 /* wechat_icon@3x.png in Resources */,
 				1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */,
+				1F307C7220BEAB7800AE105C /* setting_gray@3x.png in Resources */,
 				1FAADECB20ABFE1100739220 /* files_offline_normal@3x.png in Resources */,
 				1F4E93812089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib in Resources */,
 				1F83AE7D20886BDA007CCCFD /* change@3x.png in Resources */,
@@ -2125,6 +2160,7 @@
 				1F359FDE2091A99600E2FF36 /* disk_add@3x.png in Resources */,
 				1F3C23F920A2D6C300E6B953 /* menu@2x.png in Resources */,
 				1FEABB6720A14C6700824448 /* files_ppt_small@2x.png in Resources */,
+				1F307C6E20BEAB6100AE105C /* setting_gray.png in Resources */,
 				1F359FCF2091A95D00E2FF36 /* disk_main_color.png in Resources */,
 				1F3C244220A5AD3D00E6B953 /* files_tag@2x.png in Resources */,
 				1F050E0C20A9640D0037F00A /* TransferTaskTableViewCell.xib in Resources */,
@@ -2155,6 +2191,7 @@
 				1F5AD93320AD7FAB0065DAD3 /* files_excel@2x.png in Resources */,
 				1F58823A2085DCAF00394BD6 /* device_circle@3x.png in Resources */,
 				1F359FAE2090819000E2FF36 /* ok.png in Resources */,
+				1F307C7020BEAB6D00AE105C /* setting_gray@2x.png in Resources */,
 				1FAADEEB20ABFFE800739220 /* files_remove.png in Resources */,
 				1FAADEDB20ABFF0E00739220 /* files_edit_tag@2x.png in Resources */,
 				1F359FB32090819000E2FF36 /* ok@3x.png in Resources */,
@@ -2220,6 +2257,8 @@
 				"${BUILT_PRODUCTS_DIR}/MotionAnimator/MotionAnimator.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionInterchange/MotionInterchange.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
+				"${BUILT_PRODUCTS_DIR}/ReactiveCocoa/ReactiveCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/ReactiveSwift/ReactiveSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RealReachability/RealReachability.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -2242,6 +2281,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionAnimator.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionInterchange.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealReachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
@@ -2304,6 +2345,7 @@
 				1FEABB6C20A14CBA00824448 /* FilesModel.swift in Sources */,
 				1F83AE572087463F007CCCFD /* LocalNetworkLoginViewController.swift in Sources */,
 				1F359FA720907CD700E2FF36 /* InitLastView.swift in Sources */,
+				1F307C7520BEB18700AE105C /* SettingViewController.swift in Sources */,
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
 				1F050E4020AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.swift in Sources */,
 				1F359FEA2092C87900E2FF36 /* UIImage+extension.m in Sources */,
@@ -2381,12 +2423,14 @@
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
 				1F2CE30220B4311000D9E5BD /* User+CoreDataProperties.swift in Sources */,
 				1F8EBB52209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift in Sources */,
+				1F307C6720BE91B200AE105C /* ErrorDfine.swift in Sources */,
 				1FAADEF820AC149500739220 /* FilesFileInfoTableViewCell.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
 				1F8EBB35209AD91200E8AB83 /* WSTabBarController.swift in Sources */,
 				1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */,
 				1F83AE7720886A13007CCCFD /* LogOutViewController.swift in Sources */,
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
+				1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */,
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
 				1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */,
 				1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */,

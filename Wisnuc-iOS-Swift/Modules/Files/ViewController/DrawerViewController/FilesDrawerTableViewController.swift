@@ -8,8 +8,10 @@
 
 import UIKit
 import Material
+import MaterialComponents.MaterialButtons
 protocol FilesDrawerViewControllerDelegate {
-   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) 
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+   func settingButtonTap(_ sender:UIButton)
 }
 private let cellReuseIdentifier = "reuseIdentifier"
 private let tableViewHeaderHeight:CGFloat =  StatusBarHeight + 64 + MarginsCloseWidth
@@ -24,6 +26,8 @@ class FilesDrawerTableViewController: UITableViewController {
         self.tableView.separatorStyle = .none
         self.tableView.isScrollEnabled = false
         self.tableView.backgroundColor = UIColor.white
+        self.view.addSubview(settingView)
+        settingView.addSubview(settingButton)
 //        self.tableView.contentInset = UIEdgeInsets(top: MarginsCloseWidth, left: 0, bottom: 0, right: 0)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -37,6 +41,12 @@ class FilesDrawerTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    @objc func settingButtonTap(_ sender:UIButton){
+        if let delegateOK = self.delegate{
+            delegateOK.settingButtonTap(sender)
+        }
+    }
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -72,7 +82,6 @@ class FilesDrawerTableViewController: UITableViewController {
         default:
             break
         }
-
         return cell
     }
   
@@ -110,10 +119,26 @@ class FilesDrawerTableViewController: UITableViewController {
         return true
     }
     
-//    lazy var leftImageView: UIImageView = {
-//        let imageView = UIImageView.init(frame: CGRect(x: MarginsWidth, y: <#T##CGFloat#>, width: <#T##CGFloat#>, height: <#T##CGFloat#>))
-//        return <#value#>
-//    }()
+    lazy var settingView: UIView = {
+        let height:CGFloat = 56.0
+        let view = UIView.init(frame: CGRect(x: 0, y: __kHeight - height, width: self.view.width, height: height))
+        view.backgroundColor = UIColor.white
+        view.layer.shadowOffset = CGSize(width: 0.5, height: 0.5)
+        view.layer.shadowRadius = 1
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowColor = DarkGrayColor.cgColor
+        view.layer.masksToBounds = true
+        view.clipsToBounds = false
+        return view
+    }()
+    
+    lazy var settingButton: UIButton = {
+        let height:CGFloat = 24.0
+        let button = UIButton.init(frame: CGRect(x: (self.navigationDrawerController?.leftViewWidth)! - MarginsWidth - height, y: settingView.height/2 - height/2, width: height, height: height))
+        button.setImage(UIImage.init(named: "setting_gray"), for: UIControlState.normal)
+        button.addTarget(self, action: #selector(settingButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+        return button
+    }()
     
 
     /*

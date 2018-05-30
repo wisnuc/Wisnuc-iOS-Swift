@@ -19,5 +19,5 @@ pod 'SugarRecord/CoreData'
 pod 'MagicalRecord'
 
 pod 'HandyJSON'
-
+pod 'ReactiveCocoa'
 end

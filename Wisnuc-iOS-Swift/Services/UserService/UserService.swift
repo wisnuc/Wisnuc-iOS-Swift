@@ -12,22 +12,50 @@ import MagicalRecord
 class UserService: NSObject,ServiceProtocol{
     var defaultToken:String?
     var currentUser:User?
-    var isUserLogin:Bool?
+    var isUserLogin:Bool = false
     let moc = (UIApplication.shared.delegate
         as! AppDelegate)
     
-    func abort() {
-     }
+    override init() {
+        super.init()
+        load()
+    }
     
+    func load(){
+        if userDefaults.object(forKey: kCurrentUserUUID) != nil || !isNilString(userDefaults.object(forKey: kCurrentUserUUID) as? String)  {
+            let uuid = userDefaults.object(forKey: kCurrentUserUUID) as! String
+            self.currentUser = user(uuid: uuid)
+            if self.currentUser == nil {
+                self.isUserLogin = false
+                userDefaults.removeObject(forKey: kCurrentUserUUID)
+                userDefaults.synchronize()
+                return
+            }
+            self.isUserLogin = true
+        }else{
+            self.currentUser = nil
+            self.isUserLogin = false
+            self.defaultToken = nil
+        }
+    }
+    
+    func abort() {
+     
+    }
+    
+    deinit {
+        
+    }
+
     func setCurrentUser(_ currentUser:User?){
         if(currentUser == nil || currentUser?.uuid == nil || isNilString((currentUser?.uuid)!)) {
             return logoutUser()
         }
         defaultToken = currentUser?.localToken
-        self.isUserLogin = true
         self.currentUser = currentUser;
         userDefaults.set(currentUser?.uuid, forKey: kCurrentUserUUID)
         userDefaultsSynchronize()
+        self.isUserLogin = true
     }
     
     func logoutUser(){
@@ -68,6 +96,11 @@ class UserService: NSObject,ServiceProtocol{
             user.mr_deleteEntity()
         }
         NSManagedObjectContext.mr_default().mr_saveToPersistentStoreAndWait()
+    }
+    
+    func updateUserDefaultCurrentUUID(uuid:String) {
+        userDefaults.set(uuid, forKey: kCurrentUserUUID)
+        userDefaults.synchronize()
     }
     
     func createUser(uuid:String) ->User {

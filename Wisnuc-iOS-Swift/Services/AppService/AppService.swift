@@ -11,11 +11,43 @@ import UIKit
 let MainServices = AppService.sharedInstance
 let AppUserService =  MainServices.userService
 
-class AppService: NSObject {
-
-    static let sharedInstance = AppService()
+class AppService: NSObject,ServiceProtocol{
+    
+    func abort() {
+//        AppService.sharedInstance = nil
+        print("Disposed Singleton instance")
+    }
+    
+    static var sharedInstance = AppService()
     private override init(){
         super.init()
+    }
+    
+    deinit {
+       
+    }
+    
+    
+    func loginAction(model:CloadLoginUserRemotModel,orginTokenUser:User,complete:((_ error:Error?,_ user:User?)->())){
+        if model.uuid == nil || isNilString(model.uuid){
+            complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
+        }
+        let user = AppUserService.createUser(uuid: model.uuid!)
+        user.userName = model.username
+        user.bonjour_name = model.name
+        user.stationId = model.id
+        user.cloudToken = orginTokenUser.cloudToken
+        user.isFirstUser = NSNumber.init(value: model.isFirstUser!)
+        user.isAdmin = NSNumber.init(value: model.isAdmin!)
+        user.avaterURL = orginTokenUser.avaterURL
+        user.isCloudLogin = NSNumber.init(value: true)
+
+        if !isNilString(model.LANIP) {
+            let urlString  = "http://\(String(describing: model.LANIP)):3000/"
+            user.localAddr = urlString
+        }
+        
+        complete(nil,user)
     }
     
     lazy var userService: UserService = {

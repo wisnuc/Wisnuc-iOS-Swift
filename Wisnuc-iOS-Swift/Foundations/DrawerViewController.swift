@@ -7,11 +7,11 @@
 //
 
 import UIKit
-protocol DrawerViewControllerDelegat {
+protocol DrawerViewControllerDelegate {
    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 }
 class DrawerViewController: UIViewController {
-    var delegate:DrawerViewControllerDelegat?
+    var delegate:DrawerViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addChildViewController(filsDrawerVC)
@@ -34,6 +34,10 @@ class DrawerViewController: UIViewController {
 }
 
 extension DrawerViewController:FilesDrawerViewControllerDelegate{
+    func settingButtonTap(_ sender: UIButton) {
+        
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let delegateOK = delegate {
             delegateOK.tableView(tableView, didSelectRowAt: indexPath)

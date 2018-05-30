@@ -531,6 +531,14 @@ extension FilesRootViewController:SearchBarDelegate{
 }
 
 extension FilesRootViewController:FilesDrawerViewControllerDelegate{
+    func settingButtonTap(_ sender: UIButton) {
+        navigationDrawerController?.closeLeftView()
+        let settingVC = SettingViewController.init(style: NavigationStyle.whiteStyle)
+        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+        tab.setTabBarHidden(true, animated: true)
+        self.navigationController?.pushViewController(settingVC, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         navigationDrawerController?.closeLeftView()
         switch indexPath.row {

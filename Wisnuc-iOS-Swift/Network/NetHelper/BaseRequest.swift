@@ -66,6 +66,10 @@ class BaseRequest: NSObject{
         NetEngine.sharedInstance.addNormalRequetJOSN(requestObj: self, requestCompletionHandler)
     }
     
+    func startRequestJSONCompletionHandler(_ queue: DispatchQueue?,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler) {
+        NetEngine.sharedInstance.addNormalRequetJOSN(requestObj: self, queue: queue, requestCompletionHandler)
+    }
+    
     func startRequestDataCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseDataCompletionHandler) {
         NetEngine.sharedInstance.addNormalRequetData(requestObj: self, requestCompletionHandler)
     }
