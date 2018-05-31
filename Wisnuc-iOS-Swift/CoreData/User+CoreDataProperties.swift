@@ -27,5 +27,5 @@ extension User {
     @NSManaged public var isFirstUser: NSNumber?
     @NSManaged public var isAdmin: NSNumber?
     @NSManaged public var bonjour_name: String?
-    @NSManaged public var isCloudLogin:NSNumber?
+    @NSManaged public var isLocalLogin:NSNumber?
 }

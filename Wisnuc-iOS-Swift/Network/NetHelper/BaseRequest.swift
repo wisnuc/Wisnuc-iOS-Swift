@@ -17,6 +17,10 @@ enum RequestMethodType:Int{
    case patch
 }
 
+struct BaseError:Error {
+    var localizedDescription: String
+}
+
 //protocol RequestDelegate{
 //    func requestMethod() -> HTTPMethod
 //    func requestURL() -> String
@@ -63,19 +67,54 @@ class BaseRequest: NSObject{
     }
     
     func startRequestJSONCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler) {
-        NetEngine.sharedInstance.addNormalRequetJOSN(requestObj: self, requestCompletionHandler)
+        networkState { (isConnect) in
+            if isConnect{
+                NetEngine.sharedInstance.addNormalRequetJOSN(requestObj: self, requestCompletionHandler)
+            }else{
+                requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络")))))
+            }
+        }
     }
     
     func startRequestJSONCompletionHandler(_ queue: DispatchQueue?,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler) {
-        NetEngine.sharedInstance.addNormalRequetJOSN(requestObj: self, queue: queue, requestCompletionHandler)
+        networkState { (isConnect) in
+            if isConnect{
+              NetEngine.sharedInstance.addNormalRequetJOSN(requestObj: self, queue: queue, requestCompletionHandler)
+            }else{
+                requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络")))))
+            }
+        }
     }
     
     func startRequestDataCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseDataCompletionHandler) {
-        NetEngine.sharedInstance.addNormalRequetData(requestObj: self, requestCompletionHandler)
+        networkState { (isConnect) in
+            if isConnect{
+               NetEngine.sharedInstance.addNormalRequetData(requestObj: self, requestCompletionHandler)
+            }else{
+                requestCompletionHandler(DataResponse<Data>.init(request: nil, response: nil, data: nil, result: Result<Data>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络")))))
+            }
+        }
     }
     
     func startRequestStringCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseStringCompletionHandler) {
-        NetEngine.sharedInstance.addNormalRequetString(requestObj: self, requestCompletionHandler)
+        networkState { (isConnect) in
+            if isConnect{
+                NetEngine.sharedInstance.addNormalRequetString(requestObj: self, requestCompletionHandler)
+            }else{
+              requestCompletionHandler(DataResponse<String>.init(request: nil, response: nil, data: nil, result: Result<String>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络")))))
+            }
+        }
+    }
+    
+    func networkState(_ closure:@escaping (_ isConnected:Bool)->()){
+        NetworkStatus.getNetworkStatus { (status) in
+            if status == .Disconnected{
+                Message.message(text: LocalizedString(forKey: "无法连接服务器，请检查网络"))
+               closure(false)
+            }else{
+               closure(true)
+            }
+        }
     }
     
     func stop(){

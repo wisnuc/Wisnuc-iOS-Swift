@@ -11,7 +11,6 @@ import MaterialComponents.MDCTextField
 
 class IPAddDeviceViewController: BaseViewController {
     var ipTextField:MDCTextField?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = LocalizedString(forKey: "通过IP地址添加")
@@ -81,6 +80,7 @@ class IPAddDeviceViewController: BaseViewController {
         appBar.navigationBar.rightBarButtonItem = rightBarButtonItem
     }
     
+  
     @objc func leftBarButtonItemClick(_ sender:UIBarButtonItem){
         self.dismiss(animated: true) {
             
@@ -118,4 +118,5 @@ extension IPAddDeviceViewController:UITextFieldDelegate{
     func textFieldDidEndEditing(_ textField: UITextField) {
         
     }
+
 }

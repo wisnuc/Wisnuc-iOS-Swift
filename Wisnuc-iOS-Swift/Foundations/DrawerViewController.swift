@@ -27,20 +27,20 @@ class DrawerViewController: UIViewController {
 
     lazy var filsDrawerVC: FilesDrawerTableViewController = {
         let vc =  FilesDrawerTableViewController.init(style: UITableViewStyle.grouped)
-        vc.delegate = self
+//        vc.delegate = self
         return vc
     }()
     
 }
 
-extension DrawerViewController:FilesDrawerViewControllerDelegate{
-    func settingButtonTap(_ sender: UIButton) {
-        
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let delegateOK = delegate {
-            delegateOK.tableView(tableView, didSelectRowAt: indexPath)
-        }
-    }
-}
+//extension DrawerViewController:FilesDrawerViewControllerDelegate{
+//    func settingButtonTap(_ sender: UIButton) {
+//
+//    }
+//
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        if let delegateOK = delegate {
+//            delegateOK.tableView(tableView, didSelectRowAt: indexPath)
+//        }
+//    }
+//}

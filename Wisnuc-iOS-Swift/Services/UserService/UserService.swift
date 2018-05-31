@@ -20,15 +20,15 @@ class UserService: NSObject,ServiceProtocol{
         super.init()
         load()
     }
-    
+     
     func load(){
         if userDefaults.object(forKey: kCurrentUserUUID) != nil || !isNilString(userDefaults.object(forKey: kCurrentUserUUID) as? String)  {
             let uuid = userDefaults.object(forKey: kCurrentUserUUID) as! String
             self.currentUser = user(uuid: uuid)
-            if self.currentUser == nil {
+            if self.currentUser == nil || ((self.currentUser?.isLocalLogin) == nil){
                 self.isUserLogin = false
-                userDefaults.removeObject(forKey: kCurrentUserUUID)
-                userDefaults.synchronize()
+//                userDefaults.removeObject(forKey: kCurrentUserUUID)
+//                userDefaults.synchronize()
                 return
             }
             self.isUserLogin = true
@@ -59,7 +59,6 @@ class UserService: NSObject,ServiceProtocol{
     }
     
     func logoutUser(){
-//        _defaultToken = nil;
         isUserLogin = false
         currentUser = nil
         userDefaults.removeObject(forKey: kCurrentUserUUID)

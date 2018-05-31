@@ -23,7 +23,7 @@ class GetUsersAPI: BaseRequest {
     }
 
     override func requestParameters() -> RequestParameters? {
-        let requestUrl = "/user"
+        let requestUrl = "/users"
         let resource = requestUrl.toBase64()
         let dic = ["method":"GET","resource":resource]
         print(resource)

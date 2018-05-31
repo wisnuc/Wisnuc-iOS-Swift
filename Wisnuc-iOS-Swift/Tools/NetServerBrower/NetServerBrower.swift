@@ -12,74 +12,87 @@ import Foundation
 protocol NetServerBrowerForLogDelegate {
     func serverBrowserFoundService(service:NetService)
     func serverBrowserLostService(service:NetService,index:Int)
+    func serviceDidStop(service:NetService)
 }
 
-class NetServerBrower: NSObject,NetServiceBrowserDelegate,NetServiceDelegate{
+class NetServerBrower: NSObject,NetServiceDelegate{
     var _serverType:String?
     var _port:__int64_t?
-    var _netServerBrower:NetServiceBrowser!
-    var _discoveredServers:[NetService]?
-    var _resolvedServers:[NetService]?
+    var netServerBrower:NetServiceBrowser!
+    var discoveredServers:[NetService]?
+    var resolvedServers:[NetService]?
     var delegate:NetServerBrowerForLogDelegate?
     
     init( type: String, port: __int64_t) {
         super.init()
         _serverType = type
         _port = port
-        _netServerBrower = NetServiceBrowser.init()
-        _netServerBrower.delegate = self
-        _netServerBrower.searchForServices(ofType: type, inDomain: "local.")
-        _discoveredServers = Array.init()
-        _resolvedServers = Array.init()
+        netServerBrower = NetServiceBrowser.init()
+        netServerBrower.delegate = self
+        netServerBrower.searchForServices(ofType: type, inDomain: "local.")
+        discoveredServers = Array.init()
+        resolvedServers = Array.init()
     }
     
     deinit {
         stopServerBrowser()
-        _netServerBrower?.delegate = nil
-        for num in (_discoveredServers?.enumerated())!{
+        netServerBrower?.delegate = nil
+        for num in (discoveredServers?.enumerated())!{
             num.element.delegate = nil
         }
-        _netServerBrower = nil
+        netServerBrower = nil
     }
     
     func stopServerBrowser(){
-        _netServerBrower.stop()
+        netServerBrower.stop()
     }
     
+    
+    func netServiceDidResolveAddress(_ sender: NetService) {
+        resolvedServers?.append(sender)
+        if let delegateOK = self.delegate {
+            delegateOK.serverBrowserFoundService(service: sender)
+        }
+    }
+}
+
+extension NetServerBrower:NetServiceBrowserDelegate{
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
         service.delegate = self
-        _discoveredServers?.append(service)
+        discoveredServers?.append(service)
         service.resolve(withTimeout: 6)
     }
     
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        let index = _discoveredServers?.index(of: service)
+        let index = discoveredServers?.index(of: service)
         service.delegate = nil
         if index != nil {
-            _discoveredServers?.remove(at:index!)
+            discoveredServers?.remove(at:index!)
         }
-        let indexResolved = _resolvedServers?.index(of: service)
+        let indexResolved = resolvedServers?.index(of: service)
         if indexResolved != nil {
-            _resolvedServers?.remove(at:indexResolved!)
+            resolvedServers?.remove(at:indexResolved!)
         }
-        delegate?.serverBrowserLostService(service: service, index: index!)
+        if let delegateOK = self.delegate {
+            delegateOK.serverBrowserLostService(service: service, index: index!)
+        }
     }
     
     func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
-        let index:Int? = _discoveredServers?.index(of: sender)
-        let indexResolved = _resolvedServers?.index(of: sender)
+        let index:Int? = discoveredServers?.index(of: sender)
+        let indexResolved = resolvedServers?.index(of: sender)
         if index != nil {
-            _discoveredServers?.remove(at: index!)
+            discoveredServers?.remove(at: index!)
         }
         
         if indexResolved != nil {
-            _resolvedServers?.remove(at: indexResolved!)
+            resolvedServers?.remove(at: indexResolved!)
         }
     }
     
-    func netServiceDidResolveAddress(_ sender: NetService) {
-        _resolvedServers?.append(sender)
-        delegate?.serverBrowserFoundService(service: sender)
+    func netServiceDidStop(_ sender: NetService) {
+        if let delegateOK = self.delegate {
+            delegateOK.serviceDidStop(service: sender)
+        }
     }
 }
-

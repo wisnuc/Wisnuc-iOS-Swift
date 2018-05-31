@@ -33,7 +33,6 @@ class SettingViewController: BaseViewController {
         AppUserService.logoutUser()
         AppService.sharedInstance().abort()
         appDelegate.initRootVC()
-//        appDelegate.setR
     }
     
     lazy var settingTabelView: UITableView = {

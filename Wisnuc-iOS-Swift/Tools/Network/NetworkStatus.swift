@@ -13,13 +13,19 @@ enum WSNetworkStatus:Int{
     case Disconnected = 0
     case WIFI
     case ViaWWAN
+    case Unknow
+}
+
+enum NetworkServiceState:Int {
+    case normal = 0
+    case local
 }
 
 class NetworkStatus: NSObject {
     typealias NetworkHandler = (_ status: WSNetworkStatus) -> Void
     var networkStatus:WSNetworkStatus?
     
-    public func getNetworkStatus(_ closure: @escaping NetworkHandler){
+    class func getNetworkStatus(_ closure: @escaping NetworkHandler){
         RealReachability.sharedInstance().reachability { (status) in
             switch status {
             case .RealStatusNotReachable:
@@ -28,8 +34,8 @@ class NetworkStatus: NSObject {
                 closure(WSNetworkStatus.WIFI)
             case .RealStatusViaWWAN:
                 closure(WSNetworkStatus.ViaWWAN)
-            default:
-                break
+            case .RealStatusUnknown:
+                closure(WSNetworkStatus.Unknow)
             }
         }
     }

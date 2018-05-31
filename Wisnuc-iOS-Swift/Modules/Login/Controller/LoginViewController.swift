@@ -192,7 +192,7 @@
                     //                    print(rootDic)
                     let code = rootDic["code"] as! NSNumber
                     let message = rootDic["message"] as! NSString
-                    if code.intValue < 1 && code.intValue > 200 {
+                    if code.intValue != 1 && code.intValue > 200 {
                         return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil)
                     }
                     let dataArray = rootDic["data"] as! NSArray
@@ -219,14 +219,16 @@
                 if response.error == nil{
                     let rootDic = response.value as! NSDictionary
                     if rootDic.value(forKey: "data") is NSDictionary{
-                       let dic = rootDic.value(forKey: "data") as! NSDictionary
+                        let dic = rootDic.value(forKey: "data") as! NSDictionary
+                        let code = dic["code"] as! NSNumber
+                        let message = dic["message"] as! NSString
+                        if code.intValue != 1 && code.intValue > 200 {
+                            return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil)
+                        }
                     }
                     let dataArray = rootDic.value(forKey: "data") as! NSArray
                     if dataArray.count == 0{
-                        DispatchQueue.main.async {
-                            return closure(LoginError.init(code: ErrorCode.Login.NoUserExist, kind: LoginError.ErrorKind.LoginNoBindUser, localizedDescription: LocalizedString(forKey: "No this User")), nil)
-                        }
-                        
+                        return closure(LoginError.init(code: ErrorCode.Login.NoUserExist, kind: LoginError.ErrorKind.LoginNoBindUser, localizedDescription: LocalizedString(forKey: "No this User")), nil)
                     }
                     var mutableDic:NSMutableDictionary?
                     dataArray.enumerateObjects({ (obj, idx, stop) in
@@ -243,19 +245,14 @@
                                     if lanArray.count>0{
                                         userModel.LANIP = lanArray.firstObject as? String
                                     }
-                                    DispatchQueue.main.async {
-                                        return closure(nil,userModel)
-                                    }
-                                    
+                                    return closure(nil,userModel)
                                 }
                             }
                         }
                     })
                     
                 }else{
-                    DispatchQueue.main.async {
-                        return closure(response.error,nil)
-                    }
+                    return closure(response.error,nil)
                 }
             }
         }else{
@@ -280,7 +277,6 @@
         }
         let user = AppUserService.user(uuid:uuid!)
         if user != nil {
-            //            ActivityIndicator.stopActivityIndicatorAnimation()
             self.findStation(uuid: user?.uuid, token: user?.cloudToken) { [weak self] (error, devieceArray) in
                 if(error != nil) {
                     switch error{
@@ -289,11 +285,15 @@
                         if loginError.kind == LoginError.ErrorKind.LoginNoBindDevice || loginError.kind == LoginError.ErrorKind.LoginNoOnlineDevice || loginError.kind == LoginError.ErrorKind.LoginRequestError {
                             Message.message(text: LocalizedString(forKey: loginError.localizedDescription), duration:2.0)
                         }else  {
-                            Message.message(text: LocalizedString(forKey:"\(String(describing: (error?.localizedDescription)!))"),duration:2.0)
+                            Message.message(text: LocalizedString(forKey:"\(String(describing: loginError.localizedDescription))"),duration:2.0)
                         }
+                    case is BaseError :
+                        let baseError = error as! BaseError
+                        Message.message(text: LocalizedString(forKey:"\(String(describing: baseError.localizedDescription))"),duration:2.0)
                     default:
                         Message.message(text: LocalizedString(forKey:"\(String(describing: (error?.localizedDescription)!))"),duration:2.0)
                     }
+                    ActivityIndicator.startActivityIndicatorAnimation()
                 }else {
                     let dispatchGroup = DispatchGroup.init()
                     devieceArray?.enumerateObjects({ (obj, idx, stop) in
@@ -316,6 +316,8 @@
                                     let loginError = userError as! LoginError
                                     if  loginError.kind == LoginError.ErrorKind.LoginNoBindUser{
                                         Message.message(text: LocalizedString(forKey: loginError.localizedDescription),duration:2.0)
+                                    }else{
+                                        Message.message(text: LocalizedString(forKey:"\(String(describing: loginError.localizedDescription))"),duration:2.0)
                                     }
                                 default:
                                     Message.message(text: LocalizedString(forKey:"\(String(describing: (userError?.localizedDescription)!))"),duration:2.0)
@@ -373,8 +375,7 @@
     }
     
     func checkNetwork(){
-        let networkStatus = NetworkStatus()
-        networkStatus.getNetworkStatus { (status) in
+        NetworkStatus.getNetworkStatus { (status) in
             switch status {
             case .Disconnected:
                 Message.message(text: "无法连接服务器，请检查网络")
@@ -643,6 +644,3 @@
         self.stationView.addStation(model: model)
     }
  }
- 
- 
-

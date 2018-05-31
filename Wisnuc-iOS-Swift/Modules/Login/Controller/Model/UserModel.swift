@@ -7,12 +7,17 @@
 //
 
 import UIKit
-import HandyJSON
 
-
-class UserModel: NSObject {
- 
+struct UserModel: Decodable {
+    var username:String?
+    var uuid:String?
+    var avatar:String?
+    var disabled:Bool?
+    var isAdmin:Bool?
+    var isFirstUser:Bool?
+    var global:GlobalModel?
 }
 
-
-
+struct GlobalModel: Decodable {
+    var id:String?
+}

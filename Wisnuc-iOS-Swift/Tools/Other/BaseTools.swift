@@ -12,8 +12,14 @@ import UIKit
 import MaterialComponents
 import SDWebImage
 
-func mainThreadSave(){
-  
+func mainThreadSafe(_ closure: @escaping ()->()){
+    if Thread.current != Thread.main{
+        DispatchQueue.main.async {
+             closure()
+        }
+    }else{
+         closure()
+    }
 }
 
 func synced(_ lock: Any, closure: () -> ()) {

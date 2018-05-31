@@ -12,6 +12,19 @@ let MainServices = AppService.sharedInstance
 let AppUserService =  MainServices().userService
 
 class AppService: NSObject,ServiceProtocol{
+    var networkState:NetworkServiceState?{
+        didSet{
+            switch networkState {
+            case .normal?:
+                break
+            case .local?:
+                break
+            default:
+                break
+            }
+        }
+    }
+    
     private static var privateShared : AppService?
     class func sharedInstance() -> AppService { // change class to final to prevent override
         guard let uwShared = privateShared else {
@@ -47,12 +60,13 @@ class AppService: NSObject,ServiceProtocol{
         user.isFirstUser = NSNumber.init(value: model.isFirstUser!)
         user.isAdmin = NSNumber.init(value: model.isAdmin!)
         user.avaterURL = orginTokenUser.avaterURL
-        user.isCloudLogin = NSNumber.init(value: true)
+        user.isLocalLogin = NSNumber.init(value: false)
 
         if !isNilString(model.LANIP) {
             let urlString  = "http://\(String(describing: model.LANIP)):3000/"
             user.localAddr = urlString
         }
+        
         
         complete(nil,user)
     }

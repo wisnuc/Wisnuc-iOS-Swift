@@ -9,7 +9,7 @@
 import UIKit
 import MaterialComponents
 
-private let stateLabelTopMargins:CGFloat = 112/2+20+96/2
+private let stateLabelTopMargins:CGFloat = MDCAppNavigationBarHeight+96/2
 private let searchAnimationTopMargins:CGFloat = 240/2
 
 private let ViewWidth:CGFloat  = 234
@@ -31,6 +31,7 @@ protocol AddStationDelegate {
 
 class AddStationViewController: BaseViewController {
     var delegate:AddStationDelegate?
+//    var userDataSouce:Arra?
     var state:StationSearchState?{
         didSet{
             switch state {
@@ -54,12 +55,16 @@ class AddStationViewController: BaseViewController {
         }
     }
     
-    var deviceArray:Array<StationModel>?
+    var deviceArray:Array<StationModel>?{
+        didSet{
+            
+        }
+    }
     var currentIndex:Int = 0
     var rightButtonArray:Array<String> = []
     var bottomSheet:BottomSheetDummyStaticViewController?
     var popupController:CNPPopupController?
-    
+    var serverBrower:NetServerBrower?
     override func viewDidLoad() {
         super.viewDidLoad()
         setData()
@@ -69,25 +74,25 @@ class AddStationViewController: BaseViewController {
     
     func setData(){
         deviceArray = Array.init()
-        let model1 = StationModel()
-        model1.type = DeviceForSearchState.applyToUse.rawValue
-        model1.name = "My Station"
-        model1.adress = "111.222.222.111"
-        model1.state = StationButtonType.normal.rawValue
-        
-        let model2 = StationModel()
-        model2.type = DeviceForSearchState.initialization.rawValue
-        model2.name = "袅袅炊烟"
-        model2.state = StationButtonType.normal.rawValue
-        
-        let model3 = StationModel()
-        model3.type = DeviceForSearchState.importTo.rawValue
-        model3.name = "闻上盒子"
-        model3.adress = "133.222.222.111"
-        model3.state = StationButtonType.normal.rawValue
-        deviceArray?.append(model1)
-        deviceArray?.append(model2)
-        deviceArray?.append(model3)
+//        let model1 = StationModel()
+//        model1.type = DeviceForSearchState.applyToUse.rawValue
+//        model1.name = "My Station"
+//        model1.adress = "111.222.222.111"
+//        model1.state = StationButtonType.normal.rawValue
+//
+//        let model2 = StationModel()
+//        model2.type = DeviceForSearchState.initialization.rawValue
+//        model2.name = "袅袅炊烟"
+//        model2.state = StationButtonType.normal.rawValue
+//
+//        let model3 = StationModel()
+//        model3.type = DeviceForSearchState.importTo.rawValue
+//        model3.name = "闻上盒子"
+//        model3.adress = "133.222.222.111"
+//        model3.state = StationButtonType.normal.rawValue
+//        deviceArray?.append(model1)
+//        deviceArray?.append(model2)
+//        deviceArray?.append(model3)
         
     }
     
@@ -98,6 +103,7 @@ class AddStationViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         state = .end
+        serverBrower = nil
     }
     
     override func viewDidLayoutSubviews() {
@@ -203,7 +209,6 @@ class AddStationViewController: BaseViewController {
         }
     }
     
-    
     func setBeginSearchState() {
         state = .searching
     }
@@ -230,15 +235,8 @@ class AddStationViewController: BaseViewController {
         searchingAnimationView.stopAnimating()
     }
     
-    func analogueTerminal() {
-        DispatchQueue.global(qos:.default).asyncAfter(deadline: DispatchTime.now() + 4) {
-            DispatchQueue.main.async {
-                self.setEndSearchState()
-            }
-        }
-    }
-    
     func removeAllSuperView(){
+       ViewTools.removeAllSuperView(view: self.deviceBrowserScrollView)
        ViewTools.removeAllSuperViewExceptNavigationBar(view: self.view)
     }
     
@@ -259,7 +257,12 @@ class AddStationViewController: BaseViewController {
         self.view.addSubview(searchingAnimationView)
         bottomSheetStateExchange()
         startSearchingAnimation()
-        analogueTerminal()
+        if serverBrower != nil{
+            serverBrower = nil
+        }
+        serverBrower = NetServerBrower.init(type: "_http._tcp", port: -1)
+        serverBrower?.delegate = self
+        deviceArray?.removeAll()
     }
     
     func searchNotFoundAction(){
@@ -306,9 +309,9 @@ class AddStationViewController: BaseViewController {
 //            circleView.addSubview(imageView)
             let model = value
             let font = stateLabel.font
-            let height = labelWidthFrom(title: model.name!, font: font!)
+            let height = labelHeightFrom(title: model.name!, font: font!)
             let width = self.view.width
-            let label = UILabel.init(frame: CGRect(x: CGFloat(idx) * (width + 0) + 0, y: 0, width: width, height: height))
+            let label = UILabel.init(frame: CGRect(x: CGFloat(idx) * (width + 0) + 0, y: circleView.top - MarginsSoFarWidth - height-20, width: width, height: height))
             label.font = font
             label.text = value.name!
             label.textColor = stateLabel.textColor!
@@ -327,10 +330,12 @@ class AddStationViewController: BaseViewController {
     }
     
     func setEndSearchState() {
-        if deviceArray?.count==0{
-            state = .notFound
-        }else{
-            state = .end
+        if state == .searching{
+            if deviceArray?.count==0{
+                state = .notFound
+            }else{
+                state = .end
+            }
         }
     }
     
@@ -354,7 +359,34 @@ class AddStationViewController: BaseViewController {
 //           break
         }
     }
-
+    
+    func searchStation(_ server:NetService, _ baseURL:String){
+        if Validate.IP(baseURL).isRight {
+            let model = StationModel.init()
+            model.name = server.name
+            model.type = DeviceForSearchState.applyToUse.rawValue
+            model.adress = baseURL
+            model.state = StationButtonType.normal.rawValue
+            self.deviceArray?.append(model)
+        }
+    }
+    
+    func searchUser(_ server:NetService, _ baseURL:String){
+        let urlString = "http://\(baseURL)):3000"
+        LocalUserAPI.init(url: urlString).startRequestDataCompletionHandler { (responseData) in
+            if responseData.error == nil{
+                do {
+                    let userModel = try JSONDecoder().decode(UserModel.self, from: responseData.data!)
+                    
+                } catch {
+                    // 异常处理
+//                    Message.message(text: LocalizedString(forKey: "error:"))
+                }
+            }else{
+                
+            }
+        }
+    }
     
     lazy var reSearchButton: UIButton = {
         let button = UIButton.init(frame: searchingAnimationView.frame)
@@ -391,6 +423,7 @@ class AddStationViewController: BaseViewController {
         let width = self.view.width
         label.frame = CGRect(x: 0, y: stateLabelTopMargins, width: width, height: height )
         label.textAlignment = NSTextAlignment.center
+//        label.backgroundColor = UIColor.red
         return label
     }()
     
@@ -472,6 +505,32 @@ extension AddStationViewController:BottomSheetDelegate{
             }
         }
         
+    }
+}
+
+extension AddStationViewController:NetServerBrowerForLogDelegate{
+    func serviceDidStop(service: NetService) {
+        self.setEndSearchState()
+    }
+    
+    func serverBrowserFoundService(service: NetService) {
+        if (service.hostName?.contains(find: "wisnuc-"))! {
+            var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+            for address in service.addresses!{
+                address.withUnsafeBytes { (pointer:UnsafePointer<sockaddr>) -> Void in
+                    guard getnameinfo(pointer, socklen_t(address.count), &hostname, socklen_t(hostname.count), nil, 0, NI_NUMERICHOST) == 0 else {
+                        return
+                    }
+                }
+                let ipAddress = String(cString:hostname)
+                print(ipAddress)
+                searchStation(service, ipAddress)
+            }
+        }
+    }
+
+    func serverBrowserLostService(service: NetService, index: Int) {
+      
     }
 }
 

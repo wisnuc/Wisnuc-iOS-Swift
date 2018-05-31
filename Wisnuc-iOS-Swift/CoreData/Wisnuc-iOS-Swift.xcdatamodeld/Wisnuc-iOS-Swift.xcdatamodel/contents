@@ -5,8 +5,8 @@
         <attribute name="bonjour_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cloudToken" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAdmin" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="isCloudLogin" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isFirstUser" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isLocalLogin" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="localAddr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localToken" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="stationId" optional="YES" attributeType="String" syncable="YES"/>

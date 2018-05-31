@@ -10,6 +10,7 @@ import Foundation
 
 struct ErrorCode {
     struct Login {
+        public static let NotConnect:Int = 50000
         public static let NoBindDevice:Int = 50001
         public static let NoUserExist:Int = 50002
         public static let NoUUID:Int = 50003
