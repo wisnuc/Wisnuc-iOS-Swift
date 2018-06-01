@@ -19,19 +19,19 @@ class GetUsersAPI: BaseRequest {
     }
 
     override func requestURL() -> String {
-        return "\(kCloudBaseURL)stations/\(String(describing: stationId!))/json"
+        return "\(kCloudBaseURL)/stations/\(String(describing: stationId!))/json"
     }
 
     override func requestParameters() -> RequestParameters? {
         let requestUrl = "/users"
         let resource = requestUrl.toBase64()
-        let dic = ["method":"GET","resource":resource]
+        let dic = [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource]
         print(resource)
         return dic
     }
 
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
-        let dic = ["Authorization":token!]
+        let dic = [kRequestAuthorizationKey:token!]
         return dic
     }
     

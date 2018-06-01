@@ -88,7 +88,7 @@
 		1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE3A020B7B76F00D9E5BD /* BaseModel.swift */; };
 		1F2CE3A420B7F3F200D9E5BD /* CloudLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE3A320B7F3F200D9E5BD /* CloudLoginModel.swift */; };
 		1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */; };
-		1F307C6320BBDC0C00AE105C /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6220BBDC0C00AE105C /* Error.swift */; };
+		1F307C6320BBDC0C00AE105C /* ErrorOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6220BBDC0C00AE105C /* ErrorOptions.swift */; };
 		1F307C6520BC001E00AE105C /* GetUsersAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6420BC001E00AE105C /* GetUsersAPI.swift */; };
 		1F307C6720BE91B200AE105C /* ErrorDfine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6620BE91B200AE105C /* ErrorDfine.swift */; };
 		1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6B20BEA61D00AE105C /* NetworkService.swift */; };
@@ -332,6 +332,8 @@
 		1FBD1E0220B3EF720067BE3E /* files_new_folder_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1E0120B3EF710067BE3E /* files_new_folder_gray.png */; };
 		1FBD1E0420B3EF8C0067BE3E /* files_new_folder_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1E0320B3EF8C0067BE3E /* files_new_folder_gray@2x.png */; };
 		1FBD1E0620B3EF9F0067BE3E /* files_new_folder_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1E0520B3EF9F0067BE3E /* files_new_folder_gray@3x.png */; };
+		1FC5702B20C1150B00D4499D /* LocalTokenInCloudAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC5702A20C1150B00D4499D /* LocalTokenInCloudAPI.swift */; };
+		1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC5702C20C144B500D4499D /* DriveModel.swift */; };
 		1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7A20AE65B000F65194 /* ChlipsView.swift */; };
 		1FC8FF7E20AE6F3800F65194 /* chips_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7D20AE6F3800F65194 /* chips_close.png */; };
 		1FC8FF8020AE6F4300F65194 /* chips_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7F20AE6F4300F65194 /* chips_close@2x.png */; };
@@ -478,7 +480,7 @@
 		1F2CE3A020B7B76F00D9E5BD /* BaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
 		1F2CE3A320B7F3F200D9E5BD /* CloudLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudLoginModel.swift; sourceTree = "<group>"; };
 		1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudGetStationsAPI.swift; sourceTree = "<group>"; };
-		1F307C6220BBDC0C00AE105C /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		1F307C6220BBDC0C00AE105C /* ErrorOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorOptions.swift; sourceTree = "<group>"; };
 		1F307C6420BC001E00AE105C /* GetUsersAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUsersAPI.swift; sourceTree = "<group>"; };
 		1F307C6620BE91B200AE105C /* ErrorDfine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDfine.swift; sourceTree = "<group>"; };
 		1F307C6B20BEA61D00AE105C /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -725,6 +727,8 @@
 		1FBD1E0120B3EF710067BE3E /* files_new_folder_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_new_folder_gray.png; sourceTree = "<group>"; };
 		1FBD1E0320B3EF8C0067BE3E /* files_new_folder_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_new_folder_gray@2x.png"; sourceTree = "<group>"; };
 		1FBD1E0520B3EF9F0067BE3E /* files_new_folder_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_new_folder_gray@3x.png"; sourceTree = "<group>"; };
+		1FC5702A20C1150B00D4499D /* LocalTokenInCloudAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTokenInCloudAPI.swift; sourceTree = "<group>"; };
+		1FC5702C20C144B500D4499D /* DriveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveModel.swift; sourceTree = "<group>"; };
 		1FC8FF7A20AE65B000F65194 /* ChlipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChlipsView.swift; sourceTree = "<group>"; };
 		1FC8FF7D20AE6F3800F65194 /* chips_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chips_close.png; sourceTree = "<group>"; };
 		1FC8FF7F20AE6F4300F65194 /* chips_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chips_close@2x.png"; sourceTree = "<group>"; };
@@ -1075,6 +1079,7 @@
 				1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */,
 				1F307C6420BC001E00AE105C /* GetUsersAPI.swift */,
 				1F307C7920BFEBC900AE105C /* LocalUserAPI.swift */,
+				1FC5702A20C1150B00D4499D /* LocalTokenInCloudAPI.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -1099,7 +1104,7 @@
 		1F307C6120BBDC0000AE105C /* Error */ = {
 			isa = PBXGroup;
 			children = (
-				1F307C6220BBDC0C00AE105C /* Error.swift */,
+				1F307C6220BBDC0C00AE105C /* ErrorOptions.swift */,
 			);
 			path = Error;
 			sourceTree = "<group>";
@@ -1626,7 +1631,6 @@
 		1FD9B782207CC6F400906D80 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				1F307C6120BBDC0000AE105C /* Error */,
 				1F2CE39A20B6CBDB00D9E5BD /* Model */,
 				1F58825D2085FA4000394BD6 /* Tool */,
 				1FD9B783207CC6F400906D80 /* ViewModel */,
@@ -1782,6 +1786,7 @@
 		1FD9B7A3207DB3F700906D80 /* Foundations */ = {
 			isa = PBXGroup;
 			children = (
+				1F307C6120BBDC0000AE105C /* Error */,
 				1F3C240820A4214500E6B953 /* AppNavigationDrawerController.swift */,
 				1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */,
 				1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */,
@@ -1839,6 +1844,7 @@
 			isa = PBXGroup;
 			children = (
 				1FEABB6B20A14CBA00824448 /* FilesModel.swift */,
+				1FC5702C20C144B500D4499D /* DriveModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1870,6 +1876,16 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		1FC5702520C0E77200D4499D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXNativeTarget;
@@ -1881,6 +1897,7 @@
 				1FD9B74A207CBE8700906D80 /* Resources */,
 				86DDF45F5CCB6C594636B31F /* [CP] Embed Pods Frameworks */,
 				B859D02CD8822540FF13F31D /* [CP] Copy Pods Resources */,
+				1FC5702520C0E77200D4499D /* Headers */,
 			);
 			buildRules = (
 			);
@@ -2363,6 +2380,7 @@
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
 				1F050E4020AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.swift in Sources */,
 				1F359FEA2092C87900E2FF36 /* UIImage+extension.m in Sources */,
+				1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */,
 				1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,
 				1F2CE3A420B7F3F200D9E5BD /* CloudLoginModel.swift in Sources */,
@@ -2406,6 +2424,7 @@
 				1F307C7820BFC7D700AE105C /* DriveAPI.swift in Sources */,
 				1F4E938E208DB8B600DD1EA7 /* RadioButton.m in Sources */,
 				1F5AD92F20AD60700065DAD3 /* SearchTransition.swift in Sources */,
+				1FC5702B20C1150B00D4499D /* LocalTokenInCloudAPI.swift in Sources */,
 				1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */,
 				1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
@@ -2455,7 +2474,7 @@
 				1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */,
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
-				1F307C6320BBDC0C00AE105C /* Error.swift in Sources */,
+				1F307C6320BBDC0C00AE105C /* ErrorOptions.swift in Sources */,
 				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
 				1F5882272085890400394BD6 /* LoginViewController.swift in Sources */,
@@ -2653,6 +2672,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
@@ -2683,6 +2703,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";

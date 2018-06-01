@@ -46,6 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         } else{
             if AppUserService.isUserLogin{
                 setRootViewController()
+                setAppNetworkState()
             }else{
                 let type:LoginState?
                 type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
@@ -134,6 +135,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let drawerVC = DrawerViewController.init()
         let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
         window?.rootViewController = naviNavigationDrawer
+    }
+    
+    func setAppNetworkState(){
+        AppUserService.isLocalLogin =  AppUserService.currentUser?.isLocalLogin?.boolValue
     }
     
     @objc func networkChanged(_ noti:NSNotification){

@@ -13,8 +13,15 @@ class UserService: NSObject,ServiceProtocol{
     var defaultToken:String?
     var currentUser:User?
     var isUserLogin:Bool = false
-    let moc = (UIApplication.shared.delegate
-        as! AppDelegate)
+    var isLocalLogin:Bool?{
+        didSet{
+            if isLocalLogin == true {
+                AppNetworkService.networkState = .local
+            }else{
+                AppNetworkService.networkState = .normal
+            }
+        }
+    }
     
     override init() {
         super.init()
@@ -55,12 +62,14 @@ class UserService: NSObject,ServiceProtocol{
         self.currentUser = currentUser;
         userDefaults.set(currentUser?.uuid, forKey: kCurrentUserUUID)
         userDefaultsSynchronize()
+        isLocalLogin = self.currentUser?.isLocalLogin?.boolValue
         self.isUserLogin = true
     }
     
     func logoutUser(){
         isUserLogin = false
         currentUser = nil
+        isLocalLogin = nil
         userDefaults.removeObject(forKey: kCurrentUserUUID)
         userDefaults.synchronize();
     }

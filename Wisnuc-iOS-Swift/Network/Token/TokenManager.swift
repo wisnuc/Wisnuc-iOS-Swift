@@ -9,6 +9,17 @@
 import UIKit
 
 class TokenManager: NSObject {
+    var token:String?{
+        didSet{
+            
+        }
+    }
+    
+    override init() {
+        super.init()
+
+    }
+    
     class func wechatLoginToken()->String?{
         var tokenString:String?
         if AppUserService.currentUser != nil {

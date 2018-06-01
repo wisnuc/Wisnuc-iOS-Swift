@@ -18,21 +18,6 @@
     case chooseStation
  }
  
- struct LoginError: Error,Equatable{
-    enum ErrorKind {
-        case LoginPasswordWrong
-        case LoginNoUUID
-        case LoginNoBindDevice
-        case LoginNoOnlineDevice
-        case LoginNoBindUser
-        case LoginRequestError
-    }
-    
-    let code: Int
-    let kind: ErrorKind
-    let localizedDescription: String
- }
- 
  private let ButtonHeight:CGFloat = 36
  private let UserImageViewWidth:CGFloat = 114
  private let ImageViewBorderColor:CGColor = UIColor.init(red: 41/255.0, green: 165/255.0, blue: 151/255.0, alpha: 1).cgColor

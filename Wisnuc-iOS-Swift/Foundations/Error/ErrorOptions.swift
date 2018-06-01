@@ -1,5 +1,5 @@
 //
-//  Error.swift
+//  ErrorOptions.swift
 //  Wisnuc-iOS-Swift
 //
 //  Created by wisnuc-imac on 2018/5/28.
@@ -7,4 +7,6 @@
 //
 
 import Foundation
+
+
 

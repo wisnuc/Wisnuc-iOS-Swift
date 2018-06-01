@@ -28,4 +28,5 @@ extension User {
     @NSManaged public var isAdmin: NSNumber?
     @NSManaged public var bonjour_name: String?
     @NSManaged public var isLocalLogin:NSNumber?
+    @NSManaged public var userHome:String?
 }

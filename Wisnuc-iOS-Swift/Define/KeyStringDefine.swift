@@ -9,14 +9,29 @@
 
 import Foundation
 
+
+struct RequestMethodValue {
+    public static let GET:String = "GET"
+    public static let POST:String = "POST"
+    public static let DELETE:String = "DELETE"
+    public static let PUT:String = "PUT"
+}
+
 public let KWxAppID = "wx99b54eb728323fe8"
-public let kCloudAddr = "http://www.siyouqun.com/"
-public let kCloudBaseURL = "http://www.siyouqun.com/c/v1/"
+public let kCloudAddr = "http://www.siyouqun.com"
+public let kCloudBaseURL = "http://www.siyouqun.com/c/v1"
 //#define kCloudAddr    @"http://10.10.9.87:4000/"
 //#define WX_BASE_URL   @"http://10.10.9.87:4000/c/v1/"
 
+public let kCloudCommonJsonUrl = "/stations/\(String(describing: AppUserService.currentUser?.stationId!))/json"
 public let kFirstLaunchKey =  "kFirstLaunchKey"
 public let kappVersionKey =  "kappVersionKey"
 public let kCurrentUserUUID = "kCurrentUserUUID"
+
+public let kRequestAuthorizationKey = "Authorization"
+public let kRequestMethodKey = "method"
+public let kRequestResourceKey = "resource"
+
+public let kHTTPTCPSearchBrowerType = "_http._tcp"
 
 

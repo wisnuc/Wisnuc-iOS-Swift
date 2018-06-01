@@ -16,7 +16,7 @@ class CloudLoginAPI: BaseRequest {
     }
     
     override func requestURL() -> String {
-        return String(describing: "\(kCloudBaseURL)token")
+        return String(describing: "\(kCloudBaseURL)/token")
     }
     
     override func requestParameters() -> RequestParameters? {

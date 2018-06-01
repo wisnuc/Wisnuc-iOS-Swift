@@ -260,7 +260,7 @@ class AddStationViewController: BaseViewController {
         if serverBrower != nil{
             serverBrower = nil
         }
-        serverBrower = NetServerBrower.init(type: "_http._tcp", port: -1)
+        serverBrower = NetServerBrower.init(type: kHTTPTCPSearchBrowerType, port: -1)
         serverBrower?.delegate = self
         deviceArray?.removeAll()
     }

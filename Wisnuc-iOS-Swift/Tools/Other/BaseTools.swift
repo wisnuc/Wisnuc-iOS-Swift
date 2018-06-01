@@ -12,6 +12,13 @@ import UIKit
 import MaterialComponents
 import SDWebImage
 
+class Weak<T: AnyObject> {
+    weak var value : T?
+    init (value: T) {
+        self.value = value
+    }
+}
+
 func mainThreadSafe(_ closure: @escaping ()->()){
     if Thread.current != Thread.main{
         DispatchQueue.main.async {

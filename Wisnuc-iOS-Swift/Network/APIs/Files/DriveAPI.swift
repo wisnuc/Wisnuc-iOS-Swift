@@ -9,21 +9,37 @@
 import UIKit
 
 class DriveAPI: BaseRequest {
-//    override func requestURL() -> String {
-//        <#code#>
-//    }
-//    
-//    override func requestHTTPHeaders() -> RequestHTTPHeaders? {
-//        
-//    }
-//    - (NSString *)requestUrl{
-//    return WB_UserService.currentUser.isCloudLogin ? [NSString stringWithFormat:@"%@%@?resource=L2RyaXZlcw==&method=GET",kCloudAddr, kCloudCommonJsonUrl] : @"drives";
-//    }
-//
-//    -(NSDictionary *)requestHeaderFieldValueDictionary{
-//    NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithObject:(WB_UserService.currentUser.isCloudLogin ? WB_UserService.currentUser.cloudToken : [NSString stringWithFormat:@"JWT %@", WB_UserService.defaultToken]) forKey:@"Authorization"];
-//    return dic;
-//    }
-//
+    override func requestURL() -> String {
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return kCloudCommonJsonUrl
+        case .local?:
+            return "drives"
+        default:
+            return ""
+        }
+    }
     
+    override func requestParameters() -> RequestParameters? {
+        switch AppNetworkService.networkState {
+        case .normal?:
+            let resource = "drives".toBase64()
+            return [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource]
+        case .local?:
+            return nil
+        default:
+            return nil
+        }
+    }
+    
+    override func requestHTTPHeaders() -> RequestHTTPHeaders? {
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return [kRequestAuthorizationKey:AppTokenManager.token!]
+        case .local?:
+            return [kRequestAuthorizationKey:"JWT \(AppTokenManager.token!)"]
+        default:
+            return nil
+        }
+    }
 }

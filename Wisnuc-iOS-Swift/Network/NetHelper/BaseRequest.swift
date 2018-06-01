@@ -17,10 +17,6 @@ enum RequestMethodType:Int{
    case patch
 }
 
-struct BaseError:Error {
-    var localizedDescription: String
-}
-
 //protocol RequestDelegate{
 //    func requestMethod() -> HTTPMethod
 //    func requestURL() -> String
@@ -71,7 +67,7 @@ class BaseRequest: NSObject{
             if isConnect{
                 NetEngine.sharedInstance.addNormalRequetJOSN(requestObj: self, requestCompletionHandler)
             }else{
-                requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络")))))
+                requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络"), code: ErrorCode.Network.NotConnect))))
             }
         }
     }
@@ -81,7 +77,7 @@ class BaseRequest: NSObject{
             if isConnect{
               NetEngine.sharedInstance.addNormalRequetJOSN(requestObj: self, queue: queue, requestCompletionHandler)
             }else{
-                requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络")))))
+                requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络"), code: ErrorCode.Network.NotConnect))))
             }
         }
     }
@@ -91,7 +87,7 @@ class BaseRequest: NSObject{
             if isConnect{
                NetEngine.sharedInstance.addNormalRequetData(requestObj: self, requestCompletionHandler)
             }else{
-                requestCompletionHandler(DataResponse<Data>.init(request: nil, response: nil, data: nil, result: Result<Data>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络")))))
+                requestCompletionHandler(DataResponse<Data>.init(request: nil, response: nil, data: nil, result: Result<Data>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络"), code: ErrorCode.Network.NotConnect))))
             }
         }
     }
@@ -101,7 +97,7 @@ class BaseRequest: NSObject{
             if isConnect{
                 NetEngine.sharedInstance.addNormalRequetString(requestObj: self, requestCompletionHandler)
             }else{
-              requestCompletionHandler(DataResponse<String>.init(request: nil, response: nil, data: nil, result: Result<String>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络")))))
+                requestCompletionHandler(DataResponse<String>.init(request: nil, response: nil, data: nil, result: Result<String>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络"), code: ErrorCode.Network.NotConnect))))
             }
         }
     }
