@@ -59,13 +59,16 @@
 		1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DCC207F365B00860F31 /* NetworkStatus.swift */; };
 		1F169DD1207F528800860F31 /* MyStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD0207F528800860F31 /* MyStationView.swift */; };
 		1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */; };
-		1F169DD5207F677500860F31 /* GuideImage1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F169DD4207F677500860F31 /* GuideImage1.png */; };
 		1F169DD820805B2000860F31 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD720805B2000860F31 /* Message.swift */; };
 		1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DDA208080DC00860F31 /* ActivityIndicator.swift */; };
 		1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DDD2080AB7800860F31 /* TokenManager.swift */; };
 		1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */; };
 		1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */; };
 		1F17698220AD379B003D955F /* SearchFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17698120AD379B003D955F /* SearchFilesViewController.swift */; };
+		1F1BABA420C50C7100D32C5A /* DriveDirAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA320C50C7100D32C5A /* DriveDirAPI.swift */; };
+		1F1BABA620C5195900D32C5A /* EntriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA520C5195900D32C5A /* EntriesModel.swift */; };
+		1F1BABA820C51F5100D32C5A /* DirectoriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA720C51F5100D32C5A /* DirectoriesModel.swift */; };
+		1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA920C5290700D32C5A /* MkdirAPI.swift */; };
 		1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */; };
 		1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4598208F236F00C8971F /* ViewTools.swift */; };
 		1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */; };
@@ -451,13 +454,16 @@
 		1F169DCC207F365B00860F31 /* NetworkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkStatus.swift; sourceTree = "<group>"; };
 		1F169DD0207F528800860F31 /* MyStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationView.swift; sourceTree = "<group>"; };
 		1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
-		1F169DD4207F677500860F31 /* GuideImage1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GuideImage1.png; sourceTree = "<group>"; };
 		1F169DD720805B2000860F31 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		1F169DDA208080DC00860F31 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1F169DDD2080AB7800860F31 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesShareBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTaskBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17698120AD379B003D955F /* SearchFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilesViewController.swift; sourceTree = "<group>"; };
+		1F1BABA320C50C7100D32C5A /* DriveDirAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveDirAPI.swift; sourceTree = "<group>"; };
+		1F1BABA520C5195900D32C5A /* EntriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntriesModel.swift; sourceTree = "<group>"; };
+		1F1BABA720C51F5100D32C5A /* DirectoriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoriesModel.swift; sourceTree = "<group>"; };
+		1F1BABA920C5290700D32C5A /* MkdirAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MkdirAPI.swift; sourceTree = "<group>"; };
 		1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F2B4598208F236F00C8971F /* ViewTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTools.swift; sourceTree = "<group>"; };
 		1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddDeviceViewController.swift; sourceTree = "<group>"; };
@@ -1129,6 +1135,8 @@
 			isa = PBXGroup;
 			children = (
 				1F307C7720BFC7D700AE105C /* DriveAPI.swift */,
+				1F1BABA320C50C7100D32C5A /* DriveDirAPI.swift */,
+				1F1BABA920C5290700D32C5A /* MkdirAPI.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -1523,7 +1531,6 @@
 			children = (
 				1FAADEFB20AC24B900739220 /* mdc_theme.png */,
 				1F58821420848F9400394BD6 /* touxiang.jpg */,
-				1F169DD4207F677500860F31 /* GuideImage1.png */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -1845,6 +1852,8 @@
 			children = (
 				1FEABB6B20A14CBA00824448 /* FilesModel.swift */,
 				1FC5702C20C144B500D4499D /* DriveModel.swift */,
+				1F1BABA520C5195900D32C5A /* EntriesModel.swift */,
+				1F1BABA720C51F5100D32C5A /* DirectoriesModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2235,7 +2244,6 @@
 				1F58826B208719BB00394BD6 /* refresh@3x.png in Resources */,
 				1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */,
 				1F8EBB38209ADC6700E8AB83 /* tab_files.png in Resources */,
-				1F169DD5207F677500860F31 /* GuideImage1.png in Resources */,
 				1F8EBB4E209FF07C00E8AB83 /* more_gray_horizontal@2x.png in Resources */,
 				1F050E1A20A985A80037F00A /* files_error.png in Resources */,
 				1F3C241320A42CFF00E6B953 /* files_select.png in Resources */,
@@ -2385,6 +2393,8 @@
 				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,
 				1F2CE3A420B7F3F200D9E5BD /* CloudLoginModel.swift in Sources */,
 				1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */,
+				1F1BABA820C51F5100D32C5A /* DirectoriesModel.swift in Sources */,
+				1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */,
 				1FC8FF8720AE887800F65194 /* searchTableViewCell.swift in Sources */,
 				1FBD1E0020B2A0170067BE3E /* NotificationExtension.swift in Sources */,
 				1F050E7020ABC9210037F00A /* FilsBottomSheetTableViewCell.swift in Sources */,
@@ -2395,6 +2405,7 @@
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,
 				1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */,
 				1FAADEF320AC144A00739220 /* FilesFileInfoTableViewController.swift in Sources */,
+				1F1BABA620C5195900D32C5A /* EntriesModel.swift in Sources */,
 				1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */,
 				1F050E6920AAEA2C0037F00A /* FilesFilesBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */,
@@ -2429,6 +2440,7 @@
 				1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */,
+				1F1BABA420C50C7100D32C5A /* DriveDirAPI.swift in Sources */,
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
 				1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,

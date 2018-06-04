@@ -24,13 +24,14 @@ enum RequestMethodType:Int{
 typealias RequestParameters = Parameters
 typealias RequestHTTPHeaders = HTTPHeaders
 typealias RequestParameterEncoding = ParameterEncoding
+typealias RequestHTTPMethod = HTTPMethod
 class BaseRequest: NSObject{
     var task:URLSessionTask?
     func requestURL() -> String {
         return ""
     }
     
-    func requestMethod() -> HTTPMethod {
+    func requestMethod() -> RequestHTTPMethod {
         return .get
     }
     

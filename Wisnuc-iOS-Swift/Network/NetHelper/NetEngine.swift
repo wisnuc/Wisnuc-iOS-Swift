@@ -101,7 +101,6 @@ class NetEngine: NSObject {
         baseRequsetObject.task = request.task
         addRecord(request: request)
     }
-    
 
     //增加一条记录
     func addRecord(request:DataRequest){

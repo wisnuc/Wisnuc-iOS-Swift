@@ -1,20 +1,35 @@
 //
-//  DriveAPI.swift
+//  MkdirAPI.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/5/31.
+//  Created by wisnuc-imac on 2018/6/4.
 //  Copyright © 2018年 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
 
-class DriveAPI: BaseRequest {
+class MkdirAPI: BaseRequest {
+    var driveUUID:String?
+    var directoryUUID:String?
+    var name:String?
+    var detailUrl:String!
+    init(driveUUID:String,directoryUUID:String,name:String) {
+        self.driveUUID = driveUUID
+        self.directoryUUID = directoryUUID
+        self.name = name
+        self.detailUrl = "\(kRquestDrivesURL)/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries"
+    }
+    
+    override func requestMethod() -> RequestHTTPMethod {
+        return RequestHTTPMethod.post
+    }
+    
     override func requestURL() -> String {
         switch AppNetworkService.networkState {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return kRquestDrivesURL
+            return "/\(self.detailUrl)"
         default:
             return ""
         }
@@ -23,10 +38,10 @@ class DriveAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            let resource = kRquestDrivesURL.toBase64()
-            return [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource]
+            return [kRequestResourceKey:detailUrl.toBase64(),kRequestMethodKey:RequestMethodValue.POST,kRequestOpKey:kRequestMkdirValue,kRequestToNameKey:name!]
         case .local?:
-            return nil
+            let dic = [kRequestOpKey: kRequestMkdirValue]
+            return [name!:dic]
         default:
             return nil
         }

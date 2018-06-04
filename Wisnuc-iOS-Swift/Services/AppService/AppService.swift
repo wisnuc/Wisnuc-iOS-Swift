@@ -47,10 +47,7 @@ class AppService: NSObject,ServiceProtocol{
         let callBackClosure = { (callBackError:Error? , callBackUser:User?)->() in
             complete(callBackError,callBackUser)
         }
-//        void(^_callback)(NSError *error, WBUser *user) = ^(NSError *error, WBUser *user) {
-//            _isLogining = NO;
-//            callback(error, user);
-//        };
+
         let user = AppUserService.createUser(uuid: model.uuid!)
         user.userName = model.username
         user.bonjour_name = model.name
@@ -99,6 +96,12 @@ class AppService: NSObject,ServiceProtocol{
             
             currentUser?.userHome = userHome;
             self?.userService.synchronizedCurrentUser()
+            AppNetworkService.getUserBackupDir(name: kBackUpAssetDirName, { (userBackupDirError, entryUUID) in
+                if userBackupDirError != nil{
+                    self?.userService.logoutUser()
+                    return callback(userBackupDirError, currentUser);
+                }
+            })
         }
 //        WBUser * user = WB_UserService.currentUser;
 //        @weaky(self);

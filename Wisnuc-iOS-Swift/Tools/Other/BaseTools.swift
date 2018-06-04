@@ -12,6 +12,15 @@ import UIKit
 import MaterialComponents
 import SDWebImage
 
+func saveToUserDefault(value:Any,key:String){
+    userDefaults.set(value, forKey: key)
+    userDefaults.synchronize()
+}
+
+func JWTTokenString(token:String) -> String {
+    return "JWT \(token)"
+}
+
 class Weak<T: AnyObject> {
     weak var value : T?
     init (value: T) {

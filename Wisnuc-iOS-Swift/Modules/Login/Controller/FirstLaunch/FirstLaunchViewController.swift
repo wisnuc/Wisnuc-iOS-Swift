@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import MaterialComponents.MaterialButtons
 
-let numOfPages = 3
+let numOfPages = 4
 
 class FirstLaunchViewController: UIViewController {
     override func viewDidLoad() {
@@ -50,7 +51,7 @@ class FirstLaunchViewController: UIViewController {
         scrollView.delegate = self
         
         for index  in 0..<numOfPages {
-            let imageView = UIImageView(image: UIImage(named: "GuideImage\(index + 1)"))
+            let imageView = UIImageView(image: UIImage(named: "FirstScreen-\(index + 1)"))
             imageView.frame = CGRect(x: frame.size.width * CGFloat(index), y: 0, width: frame.size.width, height: frame.size.height)
             scrollView.addSubview(imageView)
         }
@@ -62,16 +63,20 @@ class FirstLaunchViewController: UIViewController {
    
     lazy var pageControl: UIPageControl = {
         let page = UIPageControl.init(frame: CGRect(x: 0, y: __kHeight - 48, width: __kWidth, height: 20))
-        page.numberOfPages = 3//指定页面个数
+        page.numberOfPages = numOfPages//指定页面个数
         page.currentPage = 0
         return page
     }()
     
-    lazy var startButton: UIButton = {
-        let button = UIButton.init(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
+    lazy var startButton:MDCRaisedButton  = {
+        let button = MDCRaisedButton.init(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
         button.center = CGPoint.init(x: self.view.center.x, y: self.pageControl.frame.minY - 50)
-        button.backgroundColor = UIColor.init(red: 16/255.0, green: 124/255.0, blue: 108/255.0, alpha: 1)
+        button.setBackgroundColor(COR1, for: .normal)
+        button.setElevation(.raisedButtonResting, for: UIControlState.normal)
+        button.tintColor = UIColor.white
         button.addTarget(self, action: #selector(startButtonClick), for: UIControlEvents.touchUpInside)
+        button.layer.cornerRadius = 2
+        button.setTitle(LocalizedString(forKey: "Start"), for: UIControlState.normal)
         button.alpha = 0
         return button
     }()

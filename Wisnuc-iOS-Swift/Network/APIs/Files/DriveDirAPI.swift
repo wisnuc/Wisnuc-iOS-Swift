@@ -1,20 +1,28 @@
 //
-//  DriveAPI.swift
+//  DriveDirAPI.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/5/31.
+//  Created by wisnuc-imac on 2018/6/4.
 //  Copyright © 2018年 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
 
-class DriveAPI: BaseRequest {
+
+class DriveDirAPI: BaseRequest {
+    var driveUUID:String?
+    var directoryUUID:String?
+    init(driveUUID:String,directoryUUID:String) {
+        self.driveUUID = driveUUID
+        self.directoryUUID = directoryUUID
+    }
+    
     override func requestURL() -> String {
         switch AppNetworkService.networkState {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return kRquestDrivesURL
+            return  "/\(kRquestDrivesURL)/\(String(describing: self.driveUUID))/\(String(describing: self.directoryUUID))"
         default:
             return ""
         }
@@ -23,8 +31,9 @@ class DriveAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            let resource = kRquestDrivesURL.toBase64()
-            return [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource]
+            let resource = "\(kRquestDrivesURL)/\(String(describing: self.driveUUID))/\(String(describing: self.directoryUUID))"
+            let dic = [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource]
+            return dic
         case .local?:
             return nil
         default:

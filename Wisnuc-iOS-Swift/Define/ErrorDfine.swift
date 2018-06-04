@@ -22,6 +22,10 @@ struct ErrorCode {
         public static let NotConnect:Int = 40004
     
     }
+    
+    struct JsonModel {
+        public static let SwitchTOModelFail:Int = 60001
+    }
 }
 
 
@@ -54,6 +58,10 @@ struct ErrorLocalizedDescription{
         public static let NoToken = "No Token"
         public static let NotLogin = "User Not Login"
         public static let NoUserHome = "User Home Not Found"
+    }
+    
+    struct JsonModel {
+        public static let SwitchTOModelFail = "Json to Model error"
     }
 }
 
