@@ -55,6 +55,7 @@ struct BaseError:Error {
 
 struct ErrorLocalizedDescription{
     struct Login {
+        public static let NoCurrentUser = "User Not Found"
         public static let NoToken = "No Token"
         public static let NotLogin = "User Not Login"
         public static let NoUserHome = "User Home Not Found"

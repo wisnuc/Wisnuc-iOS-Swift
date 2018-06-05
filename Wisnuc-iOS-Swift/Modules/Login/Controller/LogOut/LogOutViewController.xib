@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -26,25 +26,25 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZqV-kT-KNR">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="240"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Brh-uL-QL1">
-                            <rect key="frame" x="147" y="96" width="80" height="80"/>
-                            <color key="backgroundColor" red="0.39762336749999999" green="1" blue="0.68407454040000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <rect key="frame" x="130.5" y="63" width="114" height="114"/>
+                            <color key="backgroundColor" red="0.95066483285487258" green="1" blue="0.96511980131892261" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="80" id="cR1-wH-Qqy"/>
-                                <constraint firstAttribute="height" constant="80" id="q0a-2C-6b6"/>
+                                <constraint firstAttribute="height" constant="114" id="oJ2-HW-FQI"/>
+                                <constraint firstAttribute="width" constant="114" id="ywA-OP-rAy"/>
                             </constraints>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l0Y-Gx-Rwd">
-                            <rect key="frame" x="209.5" y="189.5" width="18" height="22"/>
+                            <rect key="frame" x="209.5" y="190.5" width="18" height="22"/>
                             <state key="normal" image="change.png"/>
                             <connections>
                                 <action selector="modifyNameButtonClick:" destination="-1" eventType="touchUpInside" id="dXx-9O-iEC"/>
                             </connections>
                         </button>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Lqd-MF-Mai">
-                            <rect key="frame" x="183.5" y="192" width="8" height="17"/>
+                            <rect key="frame" x="183.5" y="193" width="8" height="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
@@ -55,11 +55,11 @@
                         <constraint firstItem="Brh-uL-QL1" firstAttribute="centerX" secondItem="ZqV-kT-KNR" secondAttribute="centerX" id="2fQ-l5-MOo"/>
                         <constraint firstItem="Lqd-MF-Mai" firstAttribute="top" secondItem="Brh-uL-QL1" secondAttribute="bottom" constant="16" id="6sQ-AK-SQJ"/>
                         <constraint firstItem="l0Y-Gx-Rwd" firstAttribute="leading" secondItem="Lqd-MF-Mai" secondAttribute="trailing" constant="18" id="M8n-CM-Mvd"/>
+                        <constraint firstItem="Brh-uL-QL1" firstAttribute="centerY" secondItem="ZqV-kT-KNR" secondAttribute="centerY" id="Mb9-Rz-uVo"/>
                         <constraint firstItem="Brh-uL-QL1" firstAttribute="centerX" secondItem="ZqV-kT-KNR" secondAttribute="centerX" id="SoF-yx-G14"/>
                         <constraint firstItem="l0Y-Gx-Rwd" firstAttribute="centerY" secondItem="Lqd-MF-Mai" secondAttribute="centerY" id="Sro-de-xXH"/>
                         <constraint firstItem="Lqd-MF-Mai" firstAttribute="centerX" secondItem="ZqV-kT-KNR" secondAttribute="centerX" id="fJt-G6-nNn"/>
-                        <constraint firstItem="Brh-uL-QL1" firstAttribute="top" secondItem="ZqV-kT-KNR" secondAttribute="top" constant="96" id="fso-9v-Ika"/>
-                        <constraint firstAttribute="height" constant="250" id="vvm-UO-RFv"/>
+                        <constraint firstAttribute="height" constant="240" id="vvm-UO-RFv"/>
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pv5-Ge-prO" customClass="MDCButton">

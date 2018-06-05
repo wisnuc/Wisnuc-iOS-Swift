@@ -1,4 +1,4 @@
-//
+ //
 //  AppService.swift
 //  Wisnuc-iOS-Swift
 //
@@ -91,7 +91,7 @@ class AppService: NSObject,ServiceProtocol{
         self.networkService.getUserHome { [weak self] (userHomeError, userHome) in
             if userHomeError != nil{
                 self?.userService.logoutUser()
-                 return callback(userHomeError, currentUser);
+                return callback(userHomeError, currentUser);
             }
             
             currentUser?.userHome = userHome;
@@ -100,47 +100,43 @@ class AppService: NSObject,ServiceProtocol{
                 if userBackupDirError != nil{
                     self?.userService.logoutUser()
                     return callback(userBackupDirError, currentUser);
+                }else{
+                    currentUser?.backUpDirectoryUUID = entryUUID;
+                    AppUserService.synchronizedCurrentUser()
                 }
+                
+                // MARK:Upload Opration
+                //===================
+                self?.updateCurrentUserInfo()
+                return callback(nil, currentUser);
             })
         }
-//        WBUser * user = WB_UserService.currentUser;
-//        @weaky(self);
-//        [WB_NetService getUserHome:^(NSError *error, NSString *userHome) {
-//        if(error) {
-//        [WB_UserService logoutUser];
-//        return callback(({error.wbCode = 10002; error;}), user);
-//        }
-//        user.userHome = userHome;
-//        [WB_UserService synchronizedCurrentUser];
-//        NSLog(@"GET USER HOME SUCCESS");
-//        [WB_NetService getUserBackupDirName:BackUpAssetDirName BackupDir:^(NSError *error, NSString *entryUUID) {
-//        if(error) {
-//        [WB_UserService logoutUser];
-//        return callback(({error.wbCode = 10003; error;}), user);
-//        }
-//        user.backUpDir = entryUUID;
-//        [WB_UserService synchronizedCurrentUser];
-//        NSLog(@"GET BACKUP DIR SUCCESS");
-//        NSLog(@"%d",user.askForBackup);
-//        if(!user.askForBackup)
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [weak_self requestForBackupPhotos:^(BOOL shouldUpload) {
-//        user.askForBackup = YES;
-//        user.autoBackUp = shouldUpload;
-//        [WB_UserService synchronizedCurrentUser];
-//        if(shouldUpload) {
-//        [weak_self startUploadAssets:nil];
-//        }
-//        }];
-//        });
-//        else if(user.autoBackUp && WB_NetService.status == AFNetworkReachabilityStatusReachableViaWiFi)
-//        [weak_self startUploadAssets:nil];
-//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//        [weak_self updateCurrentUserInfoWithCompleteBlock:nil];
-//        });
-//        return callback(nil, user);
-//        }];
-//        }];
+    }
+    
+    
+    func updateCurrentUserInfo(){
+        UsersInfoAPI.init().startRequestDataCompletionHandler { (response) in
+            if  response.error == nil{
+                do {
+                    let userModel = try JSONDecoder().decode(UserModel.self, from: response.data!)
+                    if userModel.uuid == AppUserService.currentUser?.uuid{
+                        AppUserService.currentUser?.isAdmin = NSNumber.init(value: userModel.isAdmin!)
+                        AppUserService.currentUser?.isFirstUser = NSNumber.init(value: userModel.isFirstUser!)
+                        if (userModel.global) != nil {
+                            AppUserService.currentUser?.guid = userModel.global?.id;
+//                            AppUserService.currentUser?.isBindWechat = YES;
+                        }else{
+//                            AppUserService.currentUser?.isBindWechat = NO;
+                        }
+                        AppUserService.synchronizedCurrentUser()
+                    }
+                } catch {
+                    Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
+                }
+            }else{
+                Message.message(text: (response.error?.localizedDescription)!)
+            }
+        }
     }
     
     lazy var userService: UserService = {

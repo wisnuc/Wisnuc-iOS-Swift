@@ -69,6 +69,7 @@
 		1F1BABA620C5195900D32C5A /* EntriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA520C5195900D32C5A /* EntriesModel.swift */; };
 		1F1BABA820C51F5100D32C5A /* DirectoriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA720C51F5100D32C5A /* DirectoriesModel.swift */; };
 		1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA920C5290700D32C5A /* MkdirAPI.swift */; };
+		1F1BABAC20C62EC300D32C5A /* UsersInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABAB20C62EC300D32C5A /* UsersInfoAPI.swift */; };
 		1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */; };
 		1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4598208F236F00C8971F /* ViewTools.swift */; };
 		1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */; };
@@ -91,7 +92,6 @@
 		1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE3A020B7B76F00D9E5BD /* BaseModel.swift */; };
 		1F2CE3A420B7F3F200D9E5BD /* CloudLoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE3A320B7F3F200D9E5BD /* CloudLoginModel.swift */; };
 		1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */; };
-		1F307C6320BBDC0C00AE105C /* ErrorOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6220BBDC0C00AE105C /* ErrorOptions.swift */; };
 		1F307C6520BC001E00AE105C /* GetUsersAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6420BC001E00AE105C /* GetUsersAPI.swift */; };
 		1F307C6720BE91B200AE105C /* ErrorDfine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6620BE91B200AE105C /* ErrorDfine.swift */; };
 		1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C6B20BEA61D00AE105C /* NetworkService.swift */; };
@@ -464,6 +464,7 @@
 		1F1BABA520C5195900D32C5A /* EntriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntriesModel.swift; sourceTree = "<group>"; };
 		1F1BABA720C51F5100D32C5A /* DirectoriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoriesModel.swift; sourceTree = "<group>"; };
 		1F1BABA920C5290700D32C5A /* MkdirAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MkdirAPI.swift; sourceTree = "<group>"; };
+		1F1BABAB20C62EC300D32C5A /* UsersInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersInfoAPI.swift; sourceTree = "<group>"; };
 		1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F2B4598208F236F00C8971F /* ViewTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTools.swift; sourceTree = "<group>"; };
 		1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddDeviceViewController.swift; sourceTree = "<group>"; };
@@ -486,7 +487,6 @@
 		1F2CE3A020B7B76F00D9E5BD /* BaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
 		1F2CE3A320B7F3F200D9E5BD /* CloudLoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudLoginModel.swift; sourceTree = "<group>"; };
 		1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudGetStationsAPI.swift; sourceTree = "<group>"; };
-		1F307C6220BBDC0C00AE105C /* ErrorOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorOptions.swift; sourceTree = "<group>"; };
 		1F307C6420BC001E00AE105C /* GetUsersAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUsersAPI.swift; sourceTree = "<group>"; };
 		1F307C6620BE91B200AE105C /* ErrorDfine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDfine.swift; sourceTree = "<group>"; };
 		1F307C6B20BEA61D00AE105C /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -1086,6 +1086,7 @@
 				1F307C6420BC001E00AE105C /* GetUsersAPI.swift */,
 				1F307C7920BFEBC900AE105C /* LocalUserAPI.swift */,
 				1FC5702A20C1150B00D4499D /* LocalTokenInCloudAPI.swift */,
+				1F1BABAB20C62EC300D32C5A /* UsersInfoAPI.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -1110,7 +1111,6 @@
 		1F307C6120BBDC0000AE105C /* Error */ = {
 			isa = PBXGroup;
 			children = (
-				1F307C6220BBDC0C00AE105C /* ErrorOptions.swift */,
 			);
 			path = Error;
 			sourceTree = "<group>";
@@ -2377,6 +2377,7 @@
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
 				1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */,
+				1F1BABAC20C62EC300D32C5A /* UsersInfoAPI.swift in Sources */,
 				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
@@ -2486,7 +2487,6 @@
 				1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */,
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
-				1F307C6320BBDC0C00AE105C /* ErrorOptions.swift in Sources */,
 				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
 				1F5882272085890400394BD6 /* LoginViewController.swift in Sources */,

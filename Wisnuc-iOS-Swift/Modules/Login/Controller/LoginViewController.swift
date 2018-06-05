@@ -20,7 +20,7 @@
  
  private let ButtonHeight:CGFloat = 36
  private let UserImageViewWidth:CGFloat = 114
- private let ImageViewBorderColor:CGColor = UIColor.init(red: 41/255.0, green: 165/255.0, blue: 151/255.0, alpha: 1).cgColor
+ public let ImageViewBorderColor:CGColor = UIColor.init(red: 41/255.0, green: 165/255.0, blue: 151/255.0, alpha: 1).cgColor
  private let StationViewScale:CGFloat = __kHeight * 0.36
  private let imageViewSize = CGSize(width: UserImageViewWidth, height: UserImageViewWidth)
  
@@ -157,6 +157,7 @@
                     }
                 } catch {
                     // 异常处理
+                    Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
                 }
                 ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
@@ -323,25 +324,41 @@
     }
     
     func normalLoginAction(model:CloadLoginUserRemotModel){
-        let originUser = AppUserService.user(uuid: userDefaults.object(forKey: kCurrentUserUUID) as! String)
-        AppService.sharedInstance().loginAction(model: model, orginTokenUser:originUser!) { (error, user) in
-            if error == nil && user != nil{
-                AppUserService.deleteUser(uuid: (AppUserService.currentUser?.uuid)!)
-                AppUserService.setCurrentUser(user)
-                AppUserService.synchronizedCurrentUser()
-                appDelegate.setRootViewController()
-                
-            }else{
-                if error != nil{
-                    switch error {
-                    case is LoginError:
-                        let loginError = error as! LoginError
-                        Message.message(text: loginError.localizedDescription, duration: 2.0)
-                    default:
-                        Message.message(text: (error?.localizedDescription)!, duration: 2.0)
+        ActivityIndicator.startActivityIndicatorAnimation()
+        if userDefaults.object(forKey: kCurrentUserUUID) == nil {
+            Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
+            self.logintype = .wechat
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            return
+        }
+
+        if let originUser = AppUserService.user(uuid: userDefaults.object(forKey: kCurrentUserUUID) as! String){
+            AppService.sharedInstance().loginAction(model: model, orginTokenUser:originUser) { (error, user) in
+                if error == nil && user != nil{
+                    AppUserService.setCurrentUser(user)
+                    AppUserService.synchronizedCurrentUser()
+                    appDelegate.setRootViewController()
+                }else{
+                    if error != nil{
+                        switch error {
+                        case is LoginError:
+                            let loginError = error as! LoginError
+                            Message.message(text: loginError.localizedDescription, duration: 2.0)
+                        case is BaseError:
+                            let baseError = error as! BaseError
+                            Message.message(text: baseError.localizedDescription, duration: 2.0)
+                        default:
+                            Message.message(text: (error?.localizedDescription)!, duration: 2.0)
+                        }
+                        AppUserService.logoutUser()
                     }
                 }
             }
+             ActivityIndicator.stopActivityIndicatorAnimation()
+        }else{
+           Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
+           self.logintype = .wechat
+            ActivityIndicator.stopActivityIndicatorAnimation()
         }
     }
     
@@ -355,7 +372,20 @@
     }
     
     @objc func imageViewTap(_ sender:UIGestureRecognizer){
-        let logoutVC = LogOutViewController.init()
+        if logintype == .wechat {
+           return
+        }
+        var name:String?
+        var avatarUrl:String?
+        let uuid = userDefaults.object(forKey: kCurrentUserUUID) as? String
+        if uuid != nil && uuid?.count != 0 {
+            let user = AppUserService.user(uuid: uuid!)
+            name = user?.userName
+            avatarUrl = user?.avaterURL
+        }
+        
+        let logoutVC = LogOutViewController.init(avatarUrl: avatarUrl, name:name)
+        logoutVC.delegate = self
         self.navigationController?.pushViewController(logoutVC, animated: true)
     }
     
@@ -405,13 +435,20 @@
             self.wisnucImageView.center.y = StationViewScale/2
             self.wisnucLabel.frame.origin.y = self.wisnucImageView.frame.maxY + MarginsWidth
         }) { (completion) in
-            self.loginButton.isHidden = true
-            self.agreementButton.isHidden = true
+
         }
     }
     
     func actionForWechatLoginType() {
         DispatchQueue.main.async {
+            if self.stationView.origin.y != __kHeight{
+                UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: {
+                    self.stationView.origin.y = __kHeight
+                }) { (completion) in
+                    self.agreementButton.alpha = 1
+                    self.loginButton.alpha = 1
+                }
+            }
             if self.commonLoginButon != nil{
                 self.loginButton.removeFromSuperview()
             }
@@ -421,9 +458,8 @@
             self.wisnucImageView.layer.borderColor = UIColor.clear.cgColor
             self.wisnucImageView.image = UIImage.init(named: "logo")
         }
-        
-        if cloudLoginArray != nil{
-            cloudLoginArray?.removeAll()
+        if self.cloudLoginArray != nil{
+            self.cloudLoginArray?.removeAll()
         }
     }
     
@@ -449,8 +485,6 @@
                     self.agreementButton.alpha = 1
                     //                    }
                 }) { (completion) in
-                    self.loginButton.isHidden = false
-                    self.agreementButton.isHidden = false
                 }
             }
             
@@ -627,5 +661,11 @@
  extension LoginViewController:AddStationDelegate{
     func addStationFinish(model: CloadLoginUserRemotModel) {
         self.stationView.addStation(model: model)
+    }
+ }
+ 
+ extension LoginViewController:LogOutViewControllerDelegate{
+    func logOutButtonTap(sender: UIButton) {
+        self.logintype = .wechat
     }
  }

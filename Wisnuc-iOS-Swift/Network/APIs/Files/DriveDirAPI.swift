@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import Alamofire
 
 class DriveDirAPI: BaseRequest {
     var driveUUID:String?
@@ -22,7 +22,7 @@ class DriveDirAPI: BaseRequest {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return  "/\(kRquestDrivesURL)/\(String(describing: self.driveUUID))/\(String(describing: self.directoryUUID))"
+            return  "/\(kRquestDrivesURL)/\(String(describing: self.driveUUID!))/dirs/\(String(describing: self.directoryUUID!))"
         default:
             return ""
         }
@@ -31,8 +31,8 @@ class DriveDirAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            let resource = "\(kRquestDrivesURL)/\(String(describing: self.driveUUID))/\(String(describing: self.directoryUUID))"
-            let dic = [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource]
+            let resource = "\(kRquestDrivesURL)/\(String(describing: self.driveUUID!))/dirs/\(String(describing: self.directoryUUID!))"
+            let dic = [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource.toBase64()]
             return dic
         case .local?:
             return nil

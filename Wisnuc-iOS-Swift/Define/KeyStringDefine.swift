@@ -23,7 +23,7 @@ public let kCloudBaseURL = "http://www.siyouqun.com/c/v1"
 //#define kCloudAddr    @"http://10.10.9.87:4000/"
 //#define WX_BASE_URL   @"http://10.10.9.87:4000/c/v1/"
 
-public let kCloudCommonJsonUrl = "/stations/\(String(describing: AppUserService.currentUser?.stationId!))/json"
+public let kCloudCommonJsonUrl = "/stations/\(String(describing: (AppUserService.currentUser?.stationId!)!))/json"
 public let kRquestDrivesURL = "drives"
 public let kRequestMkdirValue = "mkdir"
 public let kBackUpAssetDirName  = "上传的照片"

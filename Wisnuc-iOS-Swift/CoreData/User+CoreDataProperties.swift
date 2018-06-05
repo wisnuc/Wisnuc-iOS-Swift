@@ -29,4 +29,6 @@ extension User {
     @NSManaged public var bonjour_name: String?
     @NSManaged public var isLocalLogin:NSNumber?
     @NSManaged public var userHome:String?
+    @NSManaged public var backUpDirectoryUUID:String?
+    @NSManaged public var guid:String?
 }

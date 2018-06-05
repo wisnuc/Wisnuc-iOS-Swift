@@ -8,14 +8,32 @@
 
 import UIKit
 import MaterialComponents.MDCButton
-
+protocol  LogOutViewControllerDelegate{
+    func logOutButtonTap(sender:UIButton)
+}
 class LogOutViewController: BaseViewController {
-
+    var delegate:LogOutViewControllerDelegate?
+    
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var modifyNameLabel: UIButton!
     @IBOutlet weak var logOutButton: MDCButton!
     @IBOutlet weak var mainBackgroudView: UIView!
+    var avatarURL:String?
+    var name:String?
+    init(avatarUrl:String?,name:String?) {
+        super.init()
+        appBar.headerViewController.headerView.backgroundColor = UIColor.clear
+        appBar.navigationBar.backgroundColor = UIColor.clear
+        appBar.headerStackView.backgroundColor = UIColor.clear
+        self.avatarURL = avatarUrl
+        self.name = name
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = LocalizedString(forKey: "me")
@@ -26,11 +44,14 @@ class LogOutViewController: BaseViewController {
         mainBackgroudView.backgroundColor = COR1
         nameTextField.font = BoldBigTitleFont
         nameTextField.textColor = UIColor.white
-        nameTextField.text = "Mark"
+        nameTextField.text = name ?? "unknow"
         nameTextField.isEnabled = false
         nameTextField.backgroundColor = UIColor.clear
         userImageView.layer.masksToBounds = true
         userImageView.layer.cornerRadius = userImageView.width/2
+        userImageView.layer.borderColor = ImageViewBorderColor
+        userImageView.layer.borderWidth = 8
+        userImageView.was_setCircleImage(withUrlString: avatarURL ?? "", placeholder: UIImage.init())
         logOutButton.backgroundColor = UIColor.red
         logOutButton.setTitle(LocalizedString(forKey: "logout"), for: UIControlState.normal)
         logOutButton.setTitleColor(UIColor.white, for: UIControlState.normal)
@@ -42,7 +63,10 @@ class LogOutViewController: BaseViewController {
     }
     
     @IBAction func logOutButtonClick(_ sender: MDCButton) {
-        
+        if let delegateOK = self.delegate{
+            self.navigationController?.popViewController(animated: true)
+            delegateOK.logOutButtonTap(sender: sender)
+        }
         
     }
     override func didReceiveMemoryWarning() {

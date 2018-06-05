@@ -23,7 +23,7 @@ class DriveAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            let resource = kRquestDrivesURL.toBase64()
+            let resource = "/\(kRquestDrivesURL)".toBase64()
             return [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource]
         case .local?:
             return nil

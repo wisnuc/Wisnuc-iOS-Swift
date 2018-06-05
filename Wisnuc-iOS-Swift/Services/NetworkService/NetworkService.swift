@@ -111,7 +111,7 @@ class NetworkService: NSObject {
             if getDirUUIDError != nil{
                 return callback(getDirUUIDError, nil)
             }else{
-                saveToUserDefault(value: directoryUUID!, key: kBackupBaseEntryKey)
+//                saveToUserDefault(value: directoryUUID!, key: kBackupBaseEntryKey)
                 // 获取backup 目录 ，如果没有就创建
                 // backupBaseDir 就是 “上传的图片” 文件夹 , backupDir 就是 “来自xxx” 文件夹
                 let fromName:String = UIDevice.current.modelName
@@ -119,7 +119,7 @@ class NetworkService: NSObject {
                     if deviceFromError == nil{
                         return callback(deviceFromError,nil)
                     }else{
-                        saveToUserDefault(value: directoryUUID!, key: kBackupDirectory)
+//                        saveToUserDefault(value: directoryUUID!, key: kBackupDirectory)
                         return callback(nil, deviceFromDirUUID);
                     }
                 })
@@ -134,6 +134,13 @@ class NetworkService: NSObject {
         request.startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
                 let dic = isLocalRequest! ? response.value as! NSDictionary : (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
+                if dic["code"] != nil{
+                    let code = dic["code"] as! NSNumber
+                    let message = dic["message"] as! NSString
+                    if code.intValue != 1 && code.intValue > 200 {
+                        return  callBack(BaseError.init(localizedDescription: message as String, code: Int(code.int64Value)), nil)
+                    }
+                }
                 let arr = NSArray.init(array: dic.object(forKey: "entries") as! NSArray)
                 var find:Bool = false
                 arr.enumerateObjects({ (obj, idx, stop) in
