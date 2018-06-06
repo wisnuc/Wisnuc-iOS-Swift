@@ -15,11 +15,11 @@ enum CellStyle:Int {
     case card
 }
 
-enum CollectState:Int {
-    case normal = 0
-    case select
-    case unselect
-}
+//enum CollectState:Int {
+//    case normal = 0
+//    case select
+//    case unselect
+//}
 
 enum RootControllerState:Int {
     case root = 0
@@ -40,6 +40,8 @@ class FilesRootViewController: BaseViewController{
     private var moreButton: IconButton!
     private var listStyleButton: IconButton!
     var  dataSource:Array<Any>?
+    var  driveUUID:String?
+    var  directoryUUID:String?
     var cellStyle:CellStyle?
     var isSelectModel:Bool?{
         didSet{
@@ -53,14 +55,41 @@ class FilesRootViewController: BaseViewController{
     
     var selfState:RootControllerState?{
         didSet{
-//            switch selfState {
-//            case .root?:
-//            case .movecopy?:
-//            case .next?:
-//            default:
-//                break
-//            }
+            switch selfState {
+            case .root?:
+                self.directoryUUID = AppUserService.currentUser?.userHome
+                self.driveUUID = AppUserService.currentUser?.userHome
+            case .movecopy?:break
+            case .next?: break
+            default:
+                break
+            }
         }
+    }
+    
+    
+    deinit {
+    
+    }
+    
+    override init(style: NavigationStyle) {
+        super.init(style: style)
+    }
+    
+    override init() {
+        super.init()
+        selfState = .root
+    }
+    
+    init(driveUUID:String,directoryUUID:String) {
+        super.init()
+        selfState = .next
+        self.directoryUUID = directoryUUID
+        self.driveUUID = driveUUID
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,21 +156,41 @@ class FilesRootViewController: BaseViewController{
     }
     
     func prepareData() {
-        let kSectionCount = 2
-        let kSectionItemCount = 6
-        var finishArray = Array<Any>.init()
-        for idx in 0..<kSectionCount {
-            var array = Array<FilesModel>.init()
-            for index in 0..<kSectionItemCount{
-                let fileModel = FilesModel.init()
-                let string = "Section-\(idx) Item\(index)"
-                fileModel.name = string
-                array.append(fileModel)
+        let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
+        DriveDirAPI.init(driveUUID: driveUUID!, directoryUUID: directoryUUID!).startRequestJSONCompletionHandler(queue) { (response) in
+            let isLocalRequest = AppNetworkService.networkState == .local
+            let responseDic = isLocalRequest ? response.value as! NSDictionary: (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
+            if let model = FilesModel.deserialize(from: responseDic){
+                var filesArray = Array<EntriesModel>.init()
+                var directoryArray = Array<EntriesModel>.init()
+                var finishArray = Array<Any>.init()
+                for (_,value) in (model.entries?.enumerated())!{
+                    if value.type == FilesType.directory.rawValue{
+                        filesArray.append(value)
+                    }else if value.type == FilesType.file.rawValue{
+                        directoryArray.append(value)
+                    }
+                }
+                filesArray.sort(by: { (model1, model2) -> Bool in
+                    model1.name! < model2.name!
+                })
+                directoryArray.sort(by: { (model1, model2) -> Bool in
+                    model1.name! < model2.name!
+                })
+                
+                if filesArray.count != 0{
+                  finishArray.append(filesArray)
+                }
+                
+                if directoryArray.count != 0{
+                    finishArray.append(directoryArray)
+                }
+                DispatchQueue.main.async {
+                    self.dataSource = finishArray
+                    self.collcectionViewController.dataSource = self.dataSource
+                }
             }
-            finishArray.append(array)
         }
-        dataSource = finishArray
-        collcectionViewController.dataSource = dataSource
     }
     
     func prepareCollectionView(){
@@ -444,10 +493,20 @@ class FilesRootViewController: BaseViewController{
 }
 
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
-    func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance.selectFilesArray?.count)!))"
+    func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath, isSelectModel: Bool) {
+        if isSelectModel == NSNumber.init(value: FilesStatus.select.rawValue).boolValue{
+            selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance.selectFilesArray?.count)!))"
+        }else{
+            let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
+            let model  = sectionArray[indexPath.item]
+            if model.type == FilesType.directory.rawValue{
+                let nextViewController = FilesRootViewController.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: model.uuid!)
+                let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+                tab.setTabBarHidden(true, animated: true)
+                self.navigationController?.pushViewController(nextViewController, animated: true)
+            }
+        }
     }
-
     
     func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton, _ indexPath: IndexPath) {
         let bottomSheet = AppBottomSheetController.init(contentViewController: self.filesBottomVC)

@@ -200,7 +200,7 @@
         let isOnline = stationDictionary.value(forKey: "isOnline") as! Bool
         
         if isOnline {
-            let queue = DispatchQueue.init(label: "com.test.api", qos: .background, attributes: .concurrent)
+            let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
             GetUsersAPI.init(stationId: stationId, token: token!).startRequestJSONCompletionHandler(queue) { (response) in
                 if response.error == nil{
                     let rootDic = response.value as! NSDictionary

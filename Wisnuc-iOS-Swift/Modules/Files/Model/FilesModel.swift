@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import HandyJSON
 
-class FilesModel: NSObject {
-    var name:String?
-    var type:String?
+class FilesModel:HandyJSON {
+    var entries:Array<EntriesModel>?
+    required init() {
+        
+    }
+    
 }

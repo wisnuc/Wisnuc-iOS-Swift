@@ -9,14 +9,14 @@
 import UIKit
 
 class FilesHelper: NSObject {
-    var selectFilesArray:Array<FilesModel>?
+    var selectFilesArray:NSMutableArray?
     static let sharedInstance = FilesHelper()
     private override init(){
         super.init()
         selectFilesArray = []
     }
     
-    func addSelectFiles(model:FilesModel){
+    func addSelectFiles(model:EntriesModel){
         if !(selectFilesArray?.contains(model))! {
             synced(self) {
                 selectFilesArray?.append(model)
@@ -27,12 +27,12 @@ class FilesHelper: NSObject {
         }
     }
     
-    func removeSelectFiles(model:FilesModel){
+    func removeSelectFiles(model:EntriesModel){
         if (selectFilesArray?.contains(model))! {
             synced(self) {
                 let index = selectFilesArray?.index(of: model)
                 if index != nil{
-                    selectFilesArray?.remove(at: index!)
+                    selectFilesArray?.removeObject(at: index!)
                 }
                 if (selectFilesArray?.count == 0) {
                     defaultNotificationCenter().post(name: Notification.Name.Cell.SelectNotiKey, object: NSNumber.init(value: false))
@@ -43,7 +43,7 @@ class FilesHelper: NSObject {
     
     func removeAllSelectFiles(){
         synced(self) {
-            selectFilesArray?.removeAll()
+            selectFilesArray?.removeAllObjects()
         }
     }
 }

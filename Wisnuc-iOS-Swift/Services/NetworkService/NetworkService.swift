@@ -77,11 +77,11 @@ class NetworkService: NSObject {
         if !AppUserService.isUserLogin {
             return callBack(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)
         }
-        let isLocalRequest = AppUserService.currentUser?.isLocalLogin?.boolValue
+        let isLocalRequest = AppNetworkService.networkState == .local
         var find:Bool = false
         DriveAPI.init().startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
-                let responseArr = isLocalRequest! ? response.value as! NSArray : (response.value as! NSDictionary).object(forKey: "data") as! NSArray
+                let responseArr = isLocalRequest ? response.value as! NSArray : (response.value as! NSDictionary).object(forKey: "data") as! NSArray
                 responseArr.enumerateObjects({ (obj, idx, stop) in
                     let dic = obj as! NSDictionary
                     if let driveModel = DriveModel.deserialize(from: dic) {
@@ -130,10 +130,10 @@ class NetworkService: NSObject {
     // 获取 名为 “上传的照片”（任何name都可以） 的文件夹， 没有就创建
     func getDirUUID(name:String,dirUUID:String,callBack:@escaping ((_ error:Error?,_ directoryUUID:String?)->())) {
         let request = DriveDirAPI.init(driveUUID: (AppUserService.currentUser?.userHome)!, directoryUUID: dirUUID)
-        let isLocalRequest = AppUserService.currentUser?.isLocalLogin?.boolValue
+        let isLocalRequest = AppNetworkService.networkState == .local
         request.startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
-                let dic = isLocalRequest! ? response.value as! NSDictionary : (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
+                let dic = isLocalRequest ? response.value as! NSDictionary : (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
                 if dic["code"] != nil{
                     let code = dic["code"] as! NSNumber
                     let message = dic["message"] as! NSString

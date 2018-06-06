@@ -24,7 +24,7 @@ class SearchFilesViewController: BaseViewController {
     private var cellIdentifier = "Identifier"
     var cellCount = 0
     var cellHeight = 0
-    var dataSouce:Array<FilesModel>?
+    var dataSouce:Array<EntriesModel>?
     var cellType:SearhCellType?{
         didSet{
             switch cellType{
@@ -71,11 +71,11 @@ class SearchFilesViewController: BaseViewController {
     }
     
     func setData(){
-        let model1 = FilesModel.init()
+        let model1 = EntriesModel.init()
         model1.name = "mj.pdf"
-        let model2 = FilesModel.init()
+        let model2 = EntriesModel.init()
         model2.name = "mj.pptx"
-        let model3 = FilesModel.init()
+        let model3 = EntriesModel.init()
         model3.name = "文档1.doc"
         dataSouce = [model1,model2,model3]
     }

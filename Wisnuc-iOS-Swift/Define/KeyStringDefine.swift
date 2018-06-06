@@ -8,7 +8,10 @@
 //
 
 import Foundation
-
+enum FilesType:String{
+    case file = "file"
+    case directory = "directory"
+}
 
 struct RequestMethodValue {
     public static let GET:String = "GET"

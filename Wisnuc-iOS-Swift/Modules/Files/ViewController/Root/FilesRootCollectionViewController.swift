@@ -34,7 +34,7 @@ enum FilesStatus:Int{
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>)
     
     func collectionView(_ collectionViewController: MDCCollectionViewController , isSelectModel:Bool)
-    func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
+    func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath ,isSelectModel:Bool)
     func sequenceButtonTap(_ sender:UIButton)
     func cellButtonCallBack(_ cell:MDCCollectionViewCell, _ button:UIButton, _ indexPath:IndexPath)
 }
@@ -75,19 +75,20 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 break
             }
             
-            self.collectionView?.performBatchUpdates({
-
-            }, completion: { (finished) in
-                if finished {
+//            self.collectionView?.performBatchUpdates({
+////               self.collectionView?.alpha = 0
+//            }, completion: { (finished) in
+//                if finished {
+//                 self.collectionView?.alpha = 1
                   self.collectionView?.reloadData()
-                }
-            })
+//                }
+//            })
         }
     }
     
     override init(collectionViewLayout layout: UICollectionViewLayout) {
         super.init(collectionViewLayout: layout)
-        dataSource = Array.init()
+     
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -96,7 +97,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+         dataSource = Array.init()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -200,12 +201,12 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        let sectionArray:Array<FilesModel> = dataSource![section] as! Array
+        let sectionArray:Array<Any> = dataSource![section] as! Array
         return sectionArray.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
+        let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
         let model  = sectionArray[indexPath.item]
         if cellStyle == .card{
             if indexPath.section == 0 {
@@ -352,7 +353,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         reusableView.backgroundColor = UIColor.clear
         return reusableView
         
-    }
+       }
+    
     
     //    extension FilesRootCollectionViewController:UIScrollViewDelegate{
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -394,9 +396,13 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return true
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        
+    }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let sectionArray:Array<FilesModel> = dataSource![indexPath.section] as! Array
+        let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
         let model  = sectionArray[indexPath.item]
           if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
              if (FilesHelper.sharedInstance.selectFilesArray?.contains(model))!{
@@ -405,11 +411,10 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 FilesHelper.sharedInstance.addSelectFiles(model: model)
             }
              self.collectionView?.reloadData()
-        }
-        
-    
-      if let delegateOK = self.delegate{
-            delegateOK.rootCollectionView(collectionView, didSelectItemAt: indexPath)
+          }else{
+            if let delegateOK = self.delegate{
+                delegateOK.rootCollectionView(collectionView, didSelectItemAt: indexPath, isSelectModel: self.isSelectModel!)
+            }
         }
     }
 }
