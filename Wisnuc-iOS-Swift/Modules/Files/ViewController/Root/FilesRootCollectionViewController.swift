@@ -40,7 +40,7 @@ enum FilesStatus:Int{
 }
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
-    var delegate:FilesRootCollectionViewControllerDelegate?
+    weak var delegate:FilesRootCollectionViewControllerDelegate?
     var dataSource:Array<Any>?{
         didSet{
            self.collectionView?.reloadData()
@@ -91,6 +91,10 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
      
     }
     
+    deinit {
+        print("deinit called")
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -121,8 +125,21 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         isSelectModel = Bool(truncating: (FilesStatus.normal).rawValue as NSNumber)
         self.collectionView?.allowsMultipleSelection = true
         self.collectionView?.allowsSelection = true
-        defaultNotificationCenter().addObserver(self, selector: #selector(cellNotification(_ :)), name: NSNotification.Name.Cell.SelectNotiKey, object: nil)
+       
 //        ViewTools.automaticallyAdjustsScrollView(scrollView: self.collectionView!, viewController: self)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Cell.SelectNotiKey, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        defaultNotificationCenter().addObserver(forName: NSNotification.Name.Cell.SelectNotiKey, object: self, queue: OperationQueue.main) { [weak self] (sender) in
+//
+//        }
+        defaultNotificationCenter().addObserver(self, selector: #selector(cellNotification(_ :)), name: NSNotification.Name.Cell.SelectNotiKey, object: nil)
     }
 
 
@@ -144,6 +161,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             delegateOK.collectionView(self, isSelectModel: isSelectModel!)
         }
     }
+
     
 //    @objc func longPressAction(_ sender:UIGestureRecognizer){
 //        if sender.state != UIGestureRecognizerState.ended{
@@ -182,12 +200,13 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
 //            }
 //        }
 //    }
+    
     func isSelectModelAction(){
         self.collectionView?.reloadData()
     }
     
     func normalModelAction(){
-        FilesHelper.sharedInstance.removeAllSelectFiles()
+        FilesHelper.sharedInstance().removeAllSelectFiles()
         self.collectionView?.reloadData()
     }
 
@@ -215,22 +234,21 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 if let cell = cell as? FilesFolderCollectionViewCell {
 
                     cell.titleLabel.text = model.name
-                    cell.cellCallBack = { (callbackCell,callbackButton) in
-                        if let delegateOK = self.delegate{
+                    cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
+                        if let delegateOK = self?.delegate{
                             delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
                         }
                     }
                    
-                    weak var weakSelf = self
-                    cell.longPressCallBack = { (callbackCell) in
-                        if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
-                             FilesHelper.sharedInstance.addSelectFiles(model: model)
+                    cell.longPressCallBack = { [weak self](callbackCell) in
+                        if (self?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
+                            FilesHelper.sharedInstance().addSelectFiles(model: model)
                         }
                     }
                   
                     cell.isSelectModel = isSelectModel
-                    if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                        if (FilesHelper.sharedInstance.selectFilesArray?.contains(model))!{
+                    if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
+                        if (FilesHelper.sharedInstance().selectFilesArray?.contains(model))!{
                             cell.isSelect = true
                         }else{
                             cell.isSelect = false
@@ -245,22 +263,21 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     cell.titleLabel.text = model.name
                     cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
                     cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
-                    cell.cellCallBack = { (callbackCell,callbackButton) in
-                        if let delegateOK = self.delegate{
+                    cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
+                        if let delegateOK = self?.delegate{
                             delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
                         }
                     }
                     
-                    weak var weakSelf = self
-                    cell.longPressCallBack = { (callbackCell) in
-                        if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
-                            FilesHelper.sharedInstance.addSelectFiles(model: model)
+                    cell.longPressCallBack = { [weak self] (callbackCell) in
+                        if (self?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
+                            FilesHelper.sharedInstance().addSelectFiles(model: model)
                         }
                     }
                     
                     cell.isSelectModel = isSelectModel
-                    if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                        if (FilesHelper.sharedInstance.selectFilesArray?.contains(model))!{
+                    if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
+                        if (FilesHelper.sharedInstance().selectFilesArray?.contains(model))!{
                             cell.isSelect = true
                         }else{
                             cell.isSelect = false
@@ -282,21 +299,21 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     cell.titleLabel.text = model.name
                     cell.detailLabel.text = "2017.06.15 40.4MB"
                 }
-                cell.cellCallBack = { (callbackCell,callbackButton) in
-                    if let delegateOK = self.delegate{
+                cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
+                    if let delegateOK = self?.delegate{
                         delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
                     }
                 }
-                weak var weakSelf = self
-                cell.longPressCallBack = { (callbackCell) in
-                    if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
-                        FilesHelper.sharedInstance.addSelectFiles(model: model)
+                
+                cell.longPressCallBack = { [weak self](callbackCell) in
+                    if (self?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
+                        FilesHelper.sharedInstance().addSelectFiles(model: model)
                     }
                 }
                 
                 cell.isSelectModel = self.isSelectModel
-                if (weakSelf?.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                    if (FilesHelper.sharedInstance.selectFilesArray?.contains(model))!{
+                if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
+                    if (FilesHelper.sharedInstance().selectFilesArray?.contains(model))!{
                         cell.isSelect = true
                     }else{
                         cell.isSelect = false
@@ -402,13 +419,14 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: false)
         let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
         let model  = sectionArray[indexPath.item]
           if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-             if (FilesHelper.sharedInstance.selectFilesArray?.contains(model))!{
-                FilesHelper.sharedInstance.removeSelectFiles(model: model)
+            if (FilesHelper.sharedInstance().selectFilesArray?.contains(model))!{
+                FilesHelper.sharedInstance().removeSelectFiles(model: model)
              }else{
-                FilesHelper.sharedInstance.addSelectFiles(model: model)
+                FilesHelper.sharedInstance().addSelectFiles(model: model)
             }
              self.collectionView?.reloadData()
           }else{

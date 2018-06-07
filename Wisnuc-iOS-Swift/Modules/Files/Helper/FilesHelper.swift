@@ -10,11 +10,27 @@ import UIKit
 
 class FilesHelper: NSObject {
     var selectFilesArray:NSMutableArray?
-    static let sharedInstance = FilesHelper()
-    private override init(){
-        super.init()
+    private static var privateShared : FilesHelper?
+    class func sharedInstance() -> FilesHelper { // change class to final to prevent override
+        guard let uwShared = privateShared else {
+            privateShared = FilesHelper()
+            return privateShared!
+        }
+        return uwShared
+    }
+    
+    class func destroy() {
+        privateShared = nil
+    }
+
+    override init() {
         selectFilesArray = []
     }
+
+    deinit {
+        
+    }
+    
     
     func addSelectFiles(model:EntriesModel){
         if !(selectFilesArray?.contains(model))! {

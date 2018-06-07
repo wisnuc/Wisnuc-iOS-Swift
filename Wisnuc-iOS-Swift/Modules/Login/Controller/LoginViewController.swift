@@ -659,8 +659,9 @@
  }
  
  extension LoginViewController:AddStationDelegate{
-    func addStationFinish(model: CloadLoginUserRemotModel) {
-        self.stationView.addStation(model: model)
+    func addStationFinish(model: Any) {
+        let transerModel = model as! CloadLoginUserRemotModel
+        self.stationView.addStation(model: transerModel)
     }
  }
  

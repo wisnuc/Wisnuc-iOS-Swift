@@ -11,12 +11,12 @@ import UIKit
 private let reuseIdentifier = "reuseIdentifier"
 private let cellHeight:CGFloat = 48.0
 
-protocol SequenceBottomSheetContentVCDelegate {
+@objc protocol SequenceBottomSheetContentVCDelegate {
     func sequenceBottomtableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 }
 
 class FilesSequenceBottomSheetContentTableViewController: UITableViewController {
-    var delegate:SequenceBottomSheetContentVCDelegate?
+    weak var delegate:SequenceBottomSheetContentVCDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(UINib.init(nibName: "FilesSequenceTableViewCell", bundle: nil), forCellReuseIdentifier: reuseIdentifier)

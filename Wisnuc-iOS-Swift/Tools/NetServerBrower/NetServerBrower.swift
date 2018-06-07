@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-protocol NetServerBrowerForLogDelegate {
+@objc protocol NetServerBrowerForLogDelegate {
     func serverBrowserFoundService(service:NetService)
     func serverBrowserLostService(service:NetService,index:Int)
     func serviceDidStop(service:NetService)
@@ -21,7 +21,7 @@ class NetServerBrower: NSObject,NetServiceDelegate{
     var netServerBrower:NetServiceBrowser!
     var discoveredServers:[NetService]?
     var resolvedServers:[NetService]?
-    var delegate:NetServerBrowerForLogDelegate?
+    weak var delegate:NetServerBrowerForLogDelegate?
     
     init( type: String, port: __int64_t) {
         super.init()

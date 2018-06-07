@@ -8,12 +8,12 @@
 
 import UIKit
 
-protocol TransferTaskBottomSheetContentVCDelegate{
+@objc protocol TransferTaskBottomSheetContentVCDelegate{
    func transferTaskBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 }
 
 class TransferTaskBottomSheetContentTableViewController: UITableViewController {
-    var delegate:TransferTaskBottomSheetContentVCDelegate?
+   weak var delegate:TransferTaskBottomSheetContentVCDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()

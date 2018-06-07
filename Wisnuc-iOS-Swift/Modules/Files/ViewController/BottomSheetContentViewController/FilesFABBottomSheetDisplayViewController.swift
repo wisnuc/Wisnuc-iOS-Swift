@@ -8,13 +8,13 @@
 
 import UIKit
 
-protocol  FABBottomSheetDisplayVCDelegte{
+@objc protocol  FABBottomSheetDisplayVCDelegte{
     func cllButtonTap(_ sender: UIButton)
     func folderButtonTap(_ sender: UIButton)
     func uploadButtonTap(_ sender: UIButton)
 }
 class FilesFABBottomSheetDisplayViewController: UIViewController {
-    var delegate:FABBottomSheetDisplayVCDelegte?
+    weak var delegate:FABBottomSheetDisplayVCDelegte?
     @IBOutlet weak var folderButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var cllButton: UIButton!

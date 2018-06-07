@@ -36,7 +36,6 @@ class AppService: NSObject,ServiceProtocol{
     }
     
     deinit {
-       
     }
     
     func loginAction(model:CloadLoginUserRemotModel,orginTokenUser:User,complete:@escaping ((_ error:Error?,_ user:User?)->())){

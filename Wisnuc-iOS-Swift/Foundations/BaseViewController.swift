@@ -67,17 +67,15 @@ class BaseViewController: UIViewController {
         appBar.navigationBar.backgroundColor = .white
         appBar.headerStackView.backgroundColor = .white
         let shadowLayer = CALayer.init()
-        shadowLayer.shadowColor = UIColor.black.cgColor
-        shadowLayer.shadowOffset = CGSize(width: 2, height: 4)
-        shadowLayer.shadowRadius = 2
-        appBar.headerViewController.headerView.setShadowLayer(MDCShadowLayer.init(layer: shadowLayer)) { (layer, intensity) in
-            let shadowLayer = layer as? MDCShadowLayer
-            CATransaction.begin()
-            CATransaction.setDisableActions(true)
-            shadowLayer!.elevation = ShadowElevation(intensity * ShadowElevation.appBar.rawValue)
-            CATransaction.commit()
-        }
-        appBar.headerViewController.headerView.clipsToBounds  = false
+        shadowLayer.shadowOffset = CGSize(width: 0.5, height: 1)
+        shadowLayer.shadowRadius = 1
+        shadowLayer.shadowOpacity = 0.3
+        shadowLayer.shadowColor = DarkGrayColor.cgColor
+        shadowLayer.masksToBounds = true
+        shadowLayer.cornerRadius = 2
+//        appBar.navigationBar.layer.setLayerShadow(DarkGrayColor, offset: shadowLayer.shadowOffset, radius: shadowLayer.shadowRadius)
+        appBar.headerViewController.headerView.setLayerShadow(DarkGrayColor, offset: shadowLayer.shadowOffset, radius: shadowLayer.shadowRadius)
+        appBar.headerViewController.headerView.layer.shadowOpacity = shadowLayer.shadowOpacity
         self.appBar.navigationBar.tintColor = LightGrayColor
         self.appBar.headerViewController.headerView.tintColor = LightGrayColor
         self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]

@@ -8,11 +8,11 @@
 
 import UIKit
 
-protocol SearchMoreBottomSheetVCDelegate {
+@objc protocol SearchMoreBottomSheetVCDelegate {
     func searchMoreBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 }
 class FilesSearchMoreBottomSheetContentTableViewController: UITableViewController {
-    var delegate:SearchMoreBottomSheetVCDelegate?
+    weak var delegate:SearchMoreBottomSheetVCDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.separatorStyle = .none

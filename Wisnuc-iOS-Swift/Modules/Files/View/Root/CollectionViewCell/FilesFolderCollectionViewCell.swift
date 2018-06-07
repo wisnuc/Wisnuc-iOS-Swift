@@ -67,7 +67,8 @@ class FilesFolderCollectionViewCell: MDCCollectionViewTextCell{
         titleLabel.snp.makeConstraints { (make) in
             make.left.equalTo(selectImageView.snp.right).offset(MarginsCloseWidth/2)
             make.centerY.equalTo(leftImageView.snp.centerY)
-            make.size.equalTo(CGSize(width: self.contentView.width - MarginsCloseWidth - moreButton.width, height: 20))
+            make.right.equalTo(moreButton.snp.left).offset(-MarginsWidth)
+            make.height.equalTo(20)
         }
         
 //        setSelectState()

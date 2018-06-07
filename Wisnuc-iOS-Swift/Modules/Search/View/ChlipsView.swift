@@ -7,12 +7,12 @@
 //
 
 import UIKit
-protocol  ChipsViewDelegate{
+@objc protocol  ChipsViewDelegate{
     func closeButtonTap(_ sender:UIButton)
 }
 
 class ChipsView: UIView {
-    var delegate:ChipsViewDelegate?
+    weak var delegate:ChipsViewDelegate?
     override init(frame: CGRect) {
      super.init(frame: frame)
         self.backgroundColor = .white

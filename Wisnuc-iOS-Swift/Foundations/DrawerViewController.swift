@@ -7,11 +7,11 @@
 //
 
 import UIKit
-protocol DrawerViewControllerDelegate {
+@objc protocol DrawerViewControllerDelegate {
    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 }
 class DrawerViewController: UIViewController {
-    var delegate:DrawerViewControllerDelegate?
+    weak var delegate:DrawerViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.addChildViewController(filsDrawerVC)

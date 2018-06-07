@@ -23,12 +23,12 @@ enum InitFinishState:Int{
     case failed
 }
 
-protocol InitLastViewDoneDelegate {
+@objc protocol InitLastViewDoneDelegate {
     func done()
 }
 
 class InitLastView: UIView {
-    var delegate:InitLastViewDoneDelegate?
+    weak var delegate:InitLastViewDoneDelegate?
     var state:InitFinishState?{
         didSet{
             switch state {

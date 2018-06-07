@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol FilesBottomSheetContentVCDelegate{
+@objc protocol FilesBottomSheetContentVCDelegate{
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     func filesBottomSheetContentInfoButtonTap(_ sender:UIButton)
 }
 private let cellReuseIdentifier = "reuseIdentifier"
 private let headerHeight:CGFloat = 56 + 8
 class FilesFilesBottomSheetContentTableViewController: UITableViewController {
-    var delegate:FilesBottomSheetContentVCDelegate?
+    weak var delegate:FilesBottomSheetContentVCDelegate?
     override init(style: UITableViewStyle) {
         super.init(style: style)
     }

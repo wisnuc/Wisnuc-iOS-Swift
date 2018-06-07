@@ -67,9 +67,9 @@ class FilesRootViewController: BaseViewController{
         }
     }
     
-    
     deinit {
-    
+       print("deinit called")
+       removeCollectionView()
     }
     
     override init(style: NavigationStyle) {
@@ -81,8 +81,8 @@ class FilesRootViewController: BaseViewController{
         selfState = .root
     }
     
-    init(driveUUID:String,directoryUUID:String) {
-        super.init()
+    init(driveUUID:String,directoryUUID:String,style: NavigationStyle) {
+        super.init(style: style)
         selfState = .next
         self.directoryUUID = directoryUUID
         self.driveUUID = driveUUID
@@ -91,6 +91,7 @@ class FilesRootViewController: BaseViewController{
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = lightGrayBackgroudColor
@@ -109,8 +110,8 @@ class FilesRootViewController: BaseViewController{
             moveFilesBottomBar.addSubview(movetoButton)
             moveFilesBottomBar.addSubview(cancelMovetoButton)
         case .next?:
-//            prepareOtherAppNavigtionBar()
-            setOtherCellStyle()
+            break
+//            setOtherCellStyle()
         default:
             break
         }
@@ -133,6 +134,7 @@ class FilesRootViewController: BaseViewController{
         super.viewWillDisappear(animated)
         self.navigationDrawerController?.isLeftPanGestureEnabled = false
         self.view.endEditing(true)
+        
     }
     
     override func viewWillLayoutSubviews() {
@@ -156,51 +158,69 @@ class FilesRootViewController: BaseViewController{
     }
     
     func prepareData() {
+        ActivityIndicator.startActivityIndicatorAnimation()
         let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
         DriveDirAPI.init(driveUUID: driveUUID!, directoryUUID: directoryUUID!).startRequestJSONCompletionHandler(queue) { (response) in
-            let isLocalRequest = AppNetworkService.networkState == .local
-            let responseDic = isLocalRequest ? response.value as! NSDictionary: (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
-            if let model = FilesModel.deserialize(from: responseDic){
-                var filesArray = Array<EntriesModel>.init()
-                var directoryArray = Array<EntriesModel>.init()
-                var finishArray = Array<Any>.init()
-                for (_,value) in (model.entries?.enumerated())!{
-                    if value.type == FilesType.directory.rawValue{
-                        filesArray.append(value)
-                    }else if value.type == FilesType.file.rawValue{
-                        directoryArray.append(value)
+            if response.error == nil{
+                let isLocalRequest = AppNetworkService.networkState == .local
+                let responseDic = isLocalRequest ? response.value as! NSDictionary: (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
+                if let model = FilesModel.deserialize(from: responseDic){
+                    var filesArray = Array<EntriesModel>.init()
+                    var directoryArray = Array<EntriesModel>.init()
+                    var finishArray = Array<Any>.init()
+                    for (_,value) in (model.entries?.enumerated())!{
+                        if value.type == FilesType.directory.rawValue{
+                            filesArray.append(value)
+                        }else if value.type == FilesType.file.rawValue{
+                            directoryArray.append(value)
+                        }
+                    }
+                    filesArray.sort(by: { (model1, model2) -> Bool in
+                        model1.name! < model2.name!
+                    })
+                    directoryArray.sort(by: { (model1, model2) -> Bool in
+                        model1.name! < model2.name!
+                    })
+                    
+                    if filesArray.count != 0{
+                        finishArray.append(filesArray)
+                    }
+                    
+                    if directoryArray.count != 0{
+                        finishArray.append(directoryArray)
+                    }
+                    DispatchQueue.main.async {
+                        self.dataSource = finishArray
+                        self.collcectionViewController.dataSource = self.dataSource
                     }
                 }
-                filesArray.sort(by: { (model1, model2) -> Bool in
-                    model1.name! < model2.name!
-                })
-                directoryArray.sort(by: { (model1, model2) -> Bool in
-                    model1.name! < model2.name!
-                })
-                
-                if filesArray.count != 0{
-                  finishArray.append(filesArray)
-                }
-                
-                if directoryArray.count != 0{
-                    finishArray.append(directoryArray)
-                }
-                DispatchQueue.main.async {
-                    self.dataSource = finishArray
-                    self.collcectionViewController.dataSource = self.dataSource
-                }
+                ActivityIndicator.stopActivityIndicatorAnimation()
+            }else{
+                Message.message(text: (response.error?.localizedDescription)!)
+                ActivityIndicator.stopActivityIndicatorAnimation()
             }
         }
     }
     
     func prepareCollectionView(){
         self.addChildViewController(collcectionViewController)
-        collcectionViewController.didMove(toParentViewController: self)
         collcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height)
         self.view.addSubview(collcectionViewController.view)
+        collcectionViewController.didMove(toParentViewController: self)
         // self.view.top + searchBar.bottom + MarginsCloseWidth/2
         let topEdgeInsets:CGFloat = kCurrentSystemVersion >= 11.0 ? searchBar.bottom + MarginsCloseWidth/2-20 : searchBar.bottom + MarginsCloseWidth/2
         collcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(topEdgeInsets, 0, 0 , 0)
+    }
+    
+    func removeCollectionView(){
+        if self.childViewControllers.count > 0{
+            let viewControllers:[UIViewController] = self.childViewControllers
+            for viewContoller in viewControllers{
+                viewContoller.willMove(toParentViewController: nil)
+                viewContoller.view.removeFromSuperview()
+                viewContoller.removeFromParentViewController()
+            }
+        }
     }
     
     func selectAction(){
@@ -217,7 +237,7 @@ class FilesRootViewController: BaseViewController{
             
         }
         
-        selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance.selectFilesArray?.count)!))"
+        selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
         Application.statusBarStyle = .lightContent
         fabButton.collapse(true) {
 
@@ -269,6 +289,10 @@ class FilesRootViewController: BaseViewController{
         self.appBar.headerViewController.headerView.isHidden = false
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
         Application.statusBarStyle = .default
+        if (self.navigationDrawerController?.rootViewController) != nil {
+            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+            tab.setTabBarHidden(true, animated: true)
+        }
     }
     
     func prepareRootAppNavigtionBar(){
@@ -388,7 +412,7 @@ class FilesRootViewController: BaseViewController{
         label.frame = CGRect(x: 0, y: 0, width: 50, height: 20)
         label.textColor = UIColor.white
         label.font = TitleFont18.withBold()
-        label.text =  "\(String(describing: (FilesHelper.sharedInstance.selectFilesArray?.count)!))"
+        label.text =  "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
         return label
     }()
     
@@ -483,24 +507,18 @@ class FilesRootViewController: BaseViewController{
         bottomVC.delegate = self
         return bottomVC
     }()
-    
-    lazy var searchViewController:SearchFilesViewController  = {
-        let searchVC = SearchFilesViewController.init(style: NavigationStyle.whiteStyle)
-        searchVC.modalPresentationStyle = .custom
-        searchVC.modalTransitionStyle = .crossDissolve
-        return searchVC
-    }()
+
 }
 
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath, isSelectModel: Bool) {
         if isSelectModel == NSNumber.init(value: FilesStatus.select.rawValue).boolValue{
-            selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance.selectFilesArray?.count)!))"
+            selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
         }else{
             let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
             let model  = sectionArray[indexPath.item]
             if model.type == FilesType.directory.rawValue{
-                let nextViewController = FilesRootViewController.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: model.uuid!)
+                let nextViewController = FilesRootViewController.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: model.uuid!,style:.whiteStyle)
                 let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
                 tab.setTabBarHidden(true, animated: true)
                 self.navigationController?.pushViewController(nextViewController, animated: true)
@@ -686,13 +704,13 @@ extension FilesRootViewController:UINavigationControllerDelegate{
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = SearchTransition()
         if operation == .push {
-            if toVC == searchViewController{
+            if toVC.isKind(of: SearchFilesViewController.self){
                 return transition
             }else{
                 return nil
             }
         }else{
-            if fromVC == searchViewController{
+            if fromVC.isKind(of: SearchFilesViewController.self){
                 return transition
             }else{
                 return nil
@@ -703,8 +721,11 @@ extension FilesRootViewController:UINavigationControllerDelegate{
 
 extension FilesRootViewController:TextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        let searchVC = SearchFilesViewController.init(style: NavigationStyle.whiteStyle)
+        searchVC.modalPresentationStyle = .custom
+        searchVC.modalTransitionStyle = .crossDissolve
         let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
         tab.setTabBarHidden(true, animated: true)
-        self.navigationController?.pushViewController(self.searchViewController, animated: true)
+        self.navigationController?.pushViewController(searchVC, animated: true)
     }
 }

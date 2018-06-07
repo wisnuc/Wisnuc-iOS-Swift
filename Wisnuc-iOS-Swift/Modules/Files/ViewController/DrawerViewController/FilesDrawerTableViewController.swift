@@ -9,7 +9,7 @@
 import UIKit
 import Material
 import MaterialComponents.MaterialButtons
-protocol FilesDrawerViewControllerDelegate {
+@objc protocol FilesDrawerViewControllerDelegate {
    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
    func settingButtonTap(_ sender:UIButton)
 }
@@ -18,7 +18,7 @@ private let tableViewHeaderHeight:CGFloat =  StatusBarHeight + 64 + MarginsClose
 private let cellHeight:CGFloat =  48
 class FilesDrawerTableViewController: UITableViewController {
     var cellCount = 4
-    var delegate:FilesDrawerViewControllerDelegate?
+    weak var delegate:FilesDrawerViewControllerDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
 //        self.view.backgroundColor = COR1

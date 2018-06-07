@@ -39,6 +39,11 @@ class SearchFilesViewController: BaseViewController {
             }
         }
     }
+    
+    deinit {
+        print("deinit call search")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(mainTableView)

@@ -25,12 +25,12 @@ enum StationSearchState:Int {
     case abort
 }
 
-protocol AddStationDelegate {
-    func addStationFinish(model:CloadLoginUserRemotModel)
+@objc protocol AddStationDelegate {
+    func addStationFinish(model:Any)
 }
 
 class AddStationViewController: BaseViewController {
-    var delegate:AddStationDelegate?
+    weak var delegate:AddStationDelegate?
 //    var userDataSouce:Arra?
     var state:StationSearchState?{
         didSet{
@@ -150,7 +150,7 @@ class AddStationViewController: BaseViewController {
                 dispatch_async_on_main_queue {
                     self.navigationController?.popViewController(animated: true)
                     if let delegateOK = self.delegate{
-//                        delegateOK.addStationFinish(model: model)
+                        delegateOK.addStationFinish(model: model)
                     }
                 }
             }
@@ -161,7 +161,7 @@ class AddStationViewController: BaseViewController {
                 dispatch_async_on_main_queue {
                     self.navigationController?.popViewController(animated: true)
                     if let delegateOK = self.delegate{
-//                        delegateOK.addStationFinish(model: model)
+                        delegateOK.addStationFinish(model: model)
                     }
                 }
             }

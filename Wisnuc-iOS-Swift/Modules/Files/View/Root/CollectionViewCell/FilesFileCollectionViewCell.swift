@@ -55,7 +55,8 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
         titleLabel.snp.makeConstraints { (make) in
             make.left.equalTo(leftImageView.snp.right).offset(MarginsCloseWidth)
             make.centerY.equalTo(leftImageView.snp.centerY)
-            make.size.equalTo(CGSize(width: self.contentView.width - MarginsCloseWidth - moreButton.width, height: 20))
+            make.right.equalTo(moreButton.snp.left).offset(-MarginsWidth)
+            make.height.equalTo(20)
         }
         
         self.contentView.addSubview(lineView)

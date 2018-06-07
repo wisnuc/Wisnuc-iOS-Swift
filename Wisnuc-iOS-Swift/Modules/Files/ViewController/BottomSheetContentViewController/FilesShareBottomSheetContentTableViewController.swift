@@ -7,12 +7,12 @@
 //
 
 import UIKit
-protocol  ShareBottomSheetContentVCDelegte {
+@objc protocol  ShareBottomSheetContentVCDelegte {
    func shareBottomSheetContenttableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 }
 
 class FilesShareBottomSheetContentTableViewController: UITableViewController {
-    var delegate:ShareBottomSheetContentVCDelegte?
+    weak var delegate:ShareBottomSheetContentVCDelegte?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")

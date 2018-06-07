@@ -63,7 +63,8 @@ class FilesListCollectionViewCell: MDCCollectionViewCell {
         titleLabel.snp.makeConstraints { (make) in
             make.left.equalTo(leftImageView.snp.right).offset(MarginsWidth*2)
             make.centerY.equalTo(leftImageView.snp.centerY).offset(-20/2-2)
-            make.size.equalTo(CGSize(width: self.contentView.width - leftImageView.right - MarginsWidth*2 - moreButton.left-4, height: 20))
+            make.right.equalTo(moreButton.snp.left).offset(-MarginsWidth)
+            make.height.equalTo(20)
         }
         
         self.contentView.addSubview(detailLabel)

@@ -70,6 +70,7 @@
 		1F1BABA820C51F5100D32C5A /* DirectoriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA720C51F5100D32C5A /* DirectoriesModel.swift */; };
 		1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA920C5290700D32C5A /* MkdirAPI.swift */; };
 		1F1BABAC20C62EC300D32C5A /* UsersInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABAB20C62EC300D32C5A /* UsersInfoAPI.swift */; };
+		1F1BAC2D20C92A1A00D32C5A /* UIScrollExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BAC2C20C92A1900D32C5A /* UIScrollExtension.swift */; };
 		1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */; };
 		1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4598208F236F00C8971F /* ViewTools.swift */; };
 		1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */; };
@@ -465,6 +466,7 @@
 		1F1BABA720C51F5100D32C5A /* DirectoriesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoriesModel.swift; sourceTree = "<group>"; };
 		1F1BABA920C5290700D32C5A /* MkdirAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MkdirAPI.swift; sourceTree = "<group>"; };
 		1F1BABAB20C62EC300D32C5A /* UsersInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersInfoAPI.swift; sourceTree = "<group>"; };
+		1F1BAC2C20C92A1900D32C5A /* UIScrollExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollExtension.swift; sourceTree = "<group>"; };
 		1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F2B4598208F236F00C8971F /* ViewTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTools.swift; sourceTree = "<group>"; };
 		1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddDeviceViewController.swift; sourceTree = "<group>"; };
@@ -1592,6 +1594,7 @@
 		1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXGroup;
 			children = (
+				1FD9B78B207CC75500906D80 /* Extension */,
 				1F2CE30420B50EC700D9E5BD /* Services */,
 				1FBD1E0A20B421A20067BE3E /* CoreData */,
 				1FD9B7AB207E19EE00906D80 /* Source */,
@@ -1717,7 +1720,6 @@
 				1F169DD620805B0500860F31 /* MessageAndAlert */,
 				1F169DCB207F361D00860F31 /* Network */,
 				1FD9B7AA207E153300906D80 /* Size */,
-				1FD9B78B207CC75500906D80 /* Extension */,
 				1FD9B78E207CC75500906D80 /* NetServerBrower */,
 			);
 			path = Tools;
@@ -1735,6 +1737,7 @@
 				1F5882312085D72600394BD6 /* UIButttonExtension.swift */,
 				1F5882622085FDB400394BD6 /* UIViewControllerExtension.swift */,
 				1FBD1DFF20B2A0170067BE3E /* NotificationExtension.swift */,
+				1F1BAC2C20C92A1900D32C5A /* UIScrollExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2464,6 +2467,7 @@
 				1F58825F2085FA7600394BD6 /* MyStationTapGestureRecognizer.swift in Sources */,
 				1FBD1DF420AEDE640067BE3E /* FilesShareAuthorityChangeViewController.swift in Sources */,
 				1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */,
+				1F1BAC2D20C92A1A00D32C5A /* UIScrollExtension.swift in Sources */,
 				1F359FEF2092EF1300E2FF36 /* CNPPopupController.m in Sources */,
 				1F2CE2F120B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld in Sources */,
 				1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */,
