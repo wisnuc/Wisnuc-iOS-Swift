@@ -26,6 +26,13 @@ enum FilesStatus:Int{
     case select = 1
 }
 
+enum SortType:Int64{
+    case name = 0
+    case modifiedTime
+    case createdTime
+    case size
+}
+
 @objc protocol FilesRootCollectionViewControllerDelegate{
     func collectionViewData(_ collectionViewController: MDCCollectionViewController) -> Array<Any>
     func scrollViewDidScroll(_ scrollView: UIScrollView)
@@ -41,12 +48,15 @@ enum FilesStatus:Int{
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
     weak var delegate:FilesRootCollectionViewControllerDelegate?
+    var reusableView:UICollectionReusableView!
+    var sortIndexPath:IndexPath?
+    var sortIsDown:Bool?
     var dataSource:Array<Any>?{
         didSet{
            self.collectionView?.reloadData()
         }
     }
-  
+    
     var isSelectModel:Bool?{
         didSet{
             if isSelectModel!{
@@ -142,7 +152,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         defaultNotificationCenter().addObserver(self, selector: #selector(cellNotification(_ :)), name: NSNotification.Name.Cell.SelectNotiKey, object: nil)
     }
 
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -208,6 +217,65 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     func normalModelAction(){
         FilesHelper.sharedInstance().removeAllSelectFiles()
         self.collectionView?.reloadData()
+    }
+    
+    func setSortParameters(sortIndexPath:IndexPath,sortIsDown:Bool){
+        self.sortIndexPath = sortIndexPath
+        self.sortIsDown = sortIsDown
+        sortData(sortIndexPath: sortIndexPath, sortIsDown: sortIsDown)
+        self.collectionView?.reloadData()
+    }
+    
+    func sortData(sortIndexPath:IndexPath,sortIsDown:Bool) {
+        AppUserService.currentUser?.sortType =  NSNumber.init(value: sortIndexPath.row)
+        AppUserService.currentUser?.sortIsDown = NSNumber.init(value: sortIsDown)
+        AppUserService.synchronizedCurrentUser()
+        var folderArray:Array<EntriesModel>? = dataSource?[safe: 0] as? Array
+        var filesArray:Array<EntriesModel>? = dataSource?[safe: 1] as? Array<EntriesModel>
+        switch sortIndexPath.row {
+        case 0:
+            if sortIsDown{
+                folderArray?.sort { $0.name! < $1.name! }
+                filesArray?.sort { $0.name! < $1.name! }
+            }else{
+                folderArray?.sort { $0.name! > $1.name! }
+                filesArray?.sort { $0.name! > $1.name! }
+            }
+        case 1:
+            if sortIsDown{
+                folderArray?.sort { $0.mtime! < $1.mtime! }
+                filesArray?.sort { $0.mtime! < $1.mtime! }
+            }else{
+                folderArray?.sort { $0.mtime! > $1.mtime! }
+                filesArray?.sort { $0.mtime! > $1.mtime! }
+            }
+        case 2:
+            if sortIsDown{
+                folderArray?.sort { $0.mtime! < $1.mtime! }
+                filesArray?.sort { $0.mtime! < $1.mtime! }
+            }else{
+                folderArray?.sort { $0.mtime! > $1.mtime! }
+                filesArray?.sort { $0.mtime! > $1.mtime! }
+            }
+        case 3:
+            if sortIsDown{
+                folderArray?.sort { $0.size! < $1.size! }
+                filesArray?.sort { $0.size! < $1.size! }
+            }else{
+                folderArray?.sort { $0.size! > $1.size! }
+                filesArray?.sort { $0.size! > $1.size! }
+            }
+        default:
+            break
+        }
+        var finishArray:Array<Any> = Array.init()
+        if  folderArray != nil {
+            finishArray.append(folderArray!)
+        }
+        if  filesArray != nil {
+            finishArray.append(filesArray!)
+        }
+        dataSource = finishArray
     }
 
     // MARK: UICollectionViewDataSource
@@ -337,16 +405,28 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        var reusableView:UICollectionReusableView!
         if (kind == UICollectionElementKindSectionHeader) {
             let header:CommonCollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifierHeader, for: indexPath) as! CommonCollectionReusableView
             reusableView = header
             let reusableHeaderView:CommonCollectionReusableView = (reusableView as? CommonCollectionReusableView)!
             if indexPath.section == 0 {
                 reusableHeaderView.titleLabel.text = LocalizedString(forKey: "files_folders")
-                let image = UIImage.init(named: "files_up.png")
+                var imageName = "files_down.png"
+                var titleText = "NAME"
+                switch sortIndexPath?.row {
+                case 0: titleText = "NAME"
+                case 1: titleText = "Modified time"
+                case 2: titleText = "Created time"
+                case 3: titleText = "Capacity time"
+                default:
+                    break
+                }
+                if sortIsDown != nil && !sortIsDown!{
+                    imageName = "files_up.png"
+                }
+                let image = UIImage.init(named: imageName)
                 reusableHeaderView.rightButton.leftImageView.image = image
-                reusableHeaderView.rightButton.titleTextLabel.text = LocalizedString(forKey: "files_name")
+                reusableHeaderView.rightButton.titleTextLabel.text = LocalizedString(forKey: titleText)
                 reusableHeaderView.rightButton.titleTextLabel.sizeToFit()
                 let labelWidth = reusableHeaderView.rightButton.titleTextLabel.width
                 let size =  CGSize(width: labelWidth + (image?.size.width)! + MarginsWidth - 4 + MarginsCloseWidth, height: reusableHeaderView.rightButton.height)
@@ -452,12 +532,12 @@ class CommonCollectionReusableView: UICollectionReusableView {
     }()
     
 
-    lazy var rightButton: SequenceButton = {
-        let text = LocalizedString(forKey: "files_name")
+    lazy var rightButton: SortButton = {
+        let text = LocalizedString(forKey: "NAME")
         let labelwidth = labelWidthFrom(title: text, font: SmallTitleFont)
         let image = UIImage.init(named: "files_up.png")
         let buttonWidth = labelwidth + (image?.size.width)! + MarginsWidth - 4 + MarginsCloseWidth
-        let button = SequenceButton.init(frame: CGRect(x: self.width - MarginsWidth - buttonWidth, y: self.height/2 - MarginsWidth/2, width: buttonWidth, height: MarginsWidth + 4))
+        let button = SortButton.init(frame: CGRect(x: self.width - MarginsWidth - buttonWidth, y: self.height/2 - MarginsWidth/2, width: buttonWidth, height: MarginsWidth + 4))
         return button
     }()
     required init?(coder aDecoder: NSCoder) {
@@ -465,7 +545,7 @@ class CommonCollectionReusableView: UICollectionReusableView {
     }
 }
 
-class SequenceButton: MDBaseButton{
+class SortButton: MDBaseButton{
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addSubview(leftImageView)

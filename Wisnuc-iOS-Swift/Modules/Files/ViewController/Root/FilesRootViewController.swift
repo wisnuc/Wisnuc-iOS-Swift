@@ -160,7 +160,7 @@ class FilesRootViewController: BaseViewController{
     func prepareData() {
         ActivityIndicator.startActivityIndicatorAnimation()
         let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
-        DriveDirAPI.init(driveUUID: driveUUID!, directoryUUID: directoryUUID!).startRequestJSONCompletionHandler(queue) { (response) in
+        DriveDirAPI.init(driveUUID: driveUUID!, directoryUUID: directoryUUID!).startRequestJSONCompletionHandler(queue) {[weak self] (response) in
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let responseDic = isLocalRequest ? response.value as! NSDictionary: (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
@@ -175,12 +175,12 @@ class FilesRootViewController: BaseViewController{
                             directoryArray.append(value)
                         }
                     }
-                    filesArray.sort(by: { (model1, model2) -> Bool in
-                        model1.name! < model2.name!
-                    })
-                    directoryArray.sort(by: { (model1, model2) -> Bool in
-                        model1.name! < model2.name!
-                    })
+//                    filesArray.sort(by: { (model1, model2) -> Bool in
+//                        model1.name! < model2.name!
+//                    })
+//                    directoryArray.sort(by: { (model1, model2) -> Bool in
+//                        model1.name! < model2.name!
+//                    })
                     
                     if filesArray.count != 0{
                         finishArray.append(filesArray)
@@ -190,8 +190,13 @@ class FilesRootViewController: BaseViewController{
                         finishArray.append(directoryArray)
                     }
                     DispatchQueue.main.async {
-                        self.dataSource = finishArray
-                        self.collcectionViewController.dataSource = self.dataSource
+                        if finishArray.count > 0{
+                            self?.dataSource = finishArray
+                            self?.collcectionViewController.dataSource = self?.dataSource
+                            let sortIndexPath = AppUserService.currentUser?.sortType == nil ? IndexPath.init(row: 0, section: 0) : IndexPath.init(row: (AppUserService.currentUser?.sortType?.intValue)!, section: 0)
+                            let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
+                            self?.collcectionViewController.setSortParameters(sortIndexPath: sortIndexPath, sortIsDown: sortIsDown!)
+                        }
                     }
                 }
                 ActivityIndicator.stopActivityIndicatorAnimation()
@@ -521,6 +526,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                 let nextViewController = FilesRootViewController.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: model.uuid!,style:.whiteStyle)
                 let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
                 tab.setTabBarHidden(true, animated: true)
+                nextViewController.title = model.name ?? ""
                 self.navigationController?.pushViewController(nextViewController, animated: true)
             }
         }
@@ -673,9 +679,9 @@ extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
 }
 
 extension FilesRootViewController:SequenceBottomSheetContentVCDelegate{
-    func sequenceBottomtableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        sequenceBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
-    }    
+    func sequenceBottomtableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, isDown: Bool) {
+        collcectionViewController.setSortParameters(sortIndexPath: indexPath, sortIsDown: isDown)
+    }
 }
 
 

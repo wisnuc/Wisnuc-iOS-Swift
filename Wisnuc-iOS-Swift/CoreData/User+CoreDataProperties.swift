@@ -31,4 +31,6 @@ extension User {
     @NSManaged public var userHome:String?
     @NSManaged public var backUpDirectoryUUID:String?
     @NSManaged public var guid:String?
+    @NSManaged public var sortType:NSNumber?
+    @NSManaged public var sortIsDown:NSNumber?
 }

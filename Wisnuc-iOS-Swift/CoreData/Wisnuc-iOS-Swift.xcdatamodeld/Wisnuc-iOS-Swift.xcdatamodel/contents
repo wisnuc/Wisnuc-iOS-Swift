@@ -11,12 +11,14 @@
         <attribute name="isLocalLogin" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="localAddr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localToken" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortIsDown" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="sortType" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="stationId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userHome" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="User" positionX="-54" positionY="-9" width="128" height="255"/>
+        <element name="User" positionX="-54" positionY="-9" width="128" height="285"/>
     </elements>
 </model>

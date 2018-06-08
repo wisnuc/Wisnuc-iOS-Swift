@@ -71,6 +71,13 @@
 		1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA920C5290700D32C5A /* MkdirAPI.swift */; };
 		1F1BABAC20C62EC300D32C5A /* UsersInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABAB20C62EC300D32C5A /* UsersInfoAPI.swift */; };
 		1F1BAC2D20C92A1A00D32C5A /* UIScrollExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BAC2C20C92A1900D32C5A /* UIScrollExtension.swift */; };
+		1F1BAC2F20CA61D800D32C5A /* files_arrow_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC2E20CA61D700D32C5A /* files_arrow_down.png */; };
+		1F1BAC3120CA61E800D32C5A /* files_arrow_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC3020CA61E700D32C5A /* files_arrow_down@2x.png */; };
+		1F1BAC3320CA621000D32C5A /* files_arrow_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC3220CA620F00D32C5A /* files_arrow_down@3x.png */; };
+		1F1BAC4720CA72B200D32C5A /* files_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC4620CA72B200D32C5A /* files_down.png */; };
+		1F1BAC4920CA72CB00D32C5A /* files_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC4820CA72CA00D32C5A /* files_down@2x.png */; };
+		1F1BAC4B20CA72D600D32C5A /* files_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC4A20CA72D600D32C5A /* files_down@3x.png */; };
+		1F1BAC4D20CA80F000D32C5A /* CollectionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BAC4C20CA80F000D32C5A /* CollectionExtension.swift */; };
 		1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */; };
 		1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4598208F236F00C8971F /* ViewTools.swift */; };
 		1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */; };
@@ -467,6 +474,13 @@
 		1F1BABA920C5290700D32C5A /* MkdirAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MkdirAPI.swift; sourceTree = "<group>"; };
 		1F1BABAB20C62EC300D32C5A /* UsersInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersInfoAPI.swift; sourceTree = "<group>"; };
 		1F1BAC2C20C92A1900D32C5A /* UIScrollExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollExtension.swift; sourceTree = "<group>"; };
+		1F1BAC2E20CA61D700D32C5A /* files_arrow_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_arrow_down.png; sourceTree = "<group>"; };
+		1F1BAC3020CA61E700D32C5A /* files_arrow_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_arrow_down@2x.png"; sourceTree = "<group>"; };
+		1F1BAC3220CA620F00D32C5A /* files_arrow_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_arrow_down@3x.png"; sourceTree = "<group>"; };
+		1F1BAC4620CA72B200D32C5A /* files_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_down.png; sourceTree = "<group>"; };
+		1F1BAC4820CA72CA00D32C5A /* files_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_down@2x.png"; sourceTree = "<group>"; };
+		1F1BAC4A20CA72D600D32C5A /* files_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_down@3x.png"; sourceTree = "<group>"; };
+		1F1BAC4C20CA80F000D32C5A /* CollectionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtension.swift; sourceTree = "<group>"; };
 		1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F2B4598208F236F00C8971F /* ViewTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTools.swift; sourceTree = "<group>"; };
 		1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddDeviceViewController.swift; sourceTree = "<group>"; };
@@ -1390,6 +1404,12 @@
 		1F8EBB4A209FF05A00E8AB83 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				1F1BAC4A20CA72D600D32C5A /* files_down@3x.png */,
+				1F1BAC4820CA72CA00D32C5A /* files_down@2x.png */,
+				1F1BAC4620CA72B200D32C5A /* files_down.png */,
+				1F1BAC3220CA620F00D32C5A /* files_arrow_down@3x.png */,
+				1F1BAC3020CA61E700D32C5A /* files_arrow_down@2x.png */,
+				1F1BAC2E20CA61D700D32C5A /* files_arrow_down.png */,
 				1FBD1E0120B3EF710067BE3E /* files_new_folder_gray.png */,
 				1FBD1E0520B3EF9F0067BE3E /* files_new_folder_gray@3x.png */,
 				1FBD1E0320B3EF8C0067BE3E /* files_new_folder_gray@2x.png */,
@@ -1738,6 +1758,7 @@
 				1F5882622085FDB400394BD6 /* UIViewControllerExtension.swift */,
 				1FBD1DFF20B2A0170067BE3E /* NotificationExtension.swift */,
 				1F1BAC2C20C92A1900D32C5A /* UIScrollExtension.swift */,
+				1F1BAC4C20CA80F000D32C5A /* CollectionExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2015,8 +2036,10 @@
 				1FD9B7B0207E1A0500906D80 /* wechat_icon@3x.png in Resources */,
 				1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */,
 				1F307C7220BEAB7800AE105C /* setting_gray@3x.png in Resources */,
+				1F1BAC2F20CA61D800D32C5A /* files_arrow_down.png in Resources */,
 				1FAADECB20ABFE1100739220 /* files_offline_normal@3x.png in Resources */,
 				1F4E93812089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib in Resources */,
+				1F1BAC4B20CA72D600D32C5A /* files_down@3x.png in Resources */,
 				1F83AE7D20886BDA007CCCFD /* change@3x.png in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
 				1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */,
@@ -2045,6 +2068,7 @@
 				1FAADECF20ABFE5C00739220 /* files_share_other_app@2x.png in Resources */,
 				1FC8FF8820AE887800F65194 /* searchTableViewCell.xib in Resources */,
 				1F3C240120A2DAD500E6B953 /* cardstyle@2x.png in Resources */,
+				1F1BAC3120CA61E800D32C5A /* files_arrow_down@2x.png in Resources */,
 				1F359FCD2091A95D00E2FF36 /* disk_new_add.png in Resources */,
 				1F83AE5E208830B8007CCCFD /* local_area_white.png in Resources */,
 				1F5AD93B20AD80590065DAD3 /* files_video@3x.png in Resources */,
@@ -2163,6 +2187,7 @@
 				1F58825C2085F4C900394BD6 /* local_area@3x.png in Resources */,
 				1F050E1E20A985C90037F00A /* files_error@3x.png in Resources */,
 				1F3C23FD20A2DA5400E6B953 /* cardstyle.png in Resources */,
+				1F1BAC4920CA72CB00D32C5A /* files_down@2x.png in Resources */,
 				1F050E6720AAC9300037F00A /* files_arrow_up@3x.png in Resources */,
 				1F4E939A208DBB7600DD1EA7 /* radio_button_unchecked.png in Resources */,
 				1FC8FF8420AE756000F65194 /* chips_close@3x.png in Resources */,
@@ -2202,6 +2227,7 @@
 				1F3C244820A5AE5500E6B953 /* files_share_folder@2x.png in Resources */,
 				1F359FDE2091A99600E2FF36 /* disk_add@3x.png in Resources */,
 				1F3C23F920A2D6C300E6B953 /* menu@2x.png in Resources */,
+				1F1BAC4720CA72B200D32C5A /* files_down.png in Resources */,
 				1FEABB6720A14C6700824448 /* files_ppt_small@2x.png in Resources */,
 				1F307C6E20BEAB6100AE105C /* setting_gray.png in Resources */,
 				1F359FCF2091A95D00E2FF36 /* disk_main_color.png in Resources */,
@@ -2256,6 +2282,7 @@
 				1FAADEC120ABFD6A00739220 /* files_move_gray.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
 				1FEABB6520A14C6000824448 /* files_ppt_small.png in Resources */,
+				1F1BAC3320CA621000D32C5A /* files_arrow_down@3x.png in Resources */,
 				1F359FCE2091A95D00E2FF36 /* disk_new_add@3x.png in Resources */,
 				1F5882492085F07E00394BD6 /* disk_warning@3x.png in Resources */,
 				1F83AE69208838DD007CCCFD /* eye_off@3x.png in Resources */,
@@ -2399,6 +2426,7 @@
 				1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */,
 				1F1BABA820C51F5100D32C5A /* DirectoriesModel.swift in Sources */,
 				1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */,
+				1F1BAC4D20CA80F000D32C5A /* CollectionExtension.swift in Sources */,
 				1FC8FF8720AE887800F65194 /* searchTableViewCell.swift in Sources */,
 				1FBD1E0020B2A0170067BE3E /* NotificationExtension.swift in Sources */,
 				1F050E7020ABC9210037F00A /* FilsBottomSheetTableViewCell.swift in Sources */,

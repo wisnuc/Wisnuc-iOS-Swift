@@ -26,4 +26,11 @@ class EntriesModel:HandyJSON {
         mapper >>> self.driveUUID
         mapper >>> self.parentUUID
     }
+    
+    func didFinishMapping() {
+        print("you can fill some observing logic here")
+        if self.size == nil {
+            self.size = 0
+        }
+    }
 }
