@@ -38,7 +38,7 @@ class FilesFileInfoTableViewController: BaseViewController {
         appBar.headerViewController.headerView.addSubview(navigationBarBottomImageView)
         appBar.headerViewController.headerView.addSubview(navigationBarBottomLabel)
         appBar.headerViewController.headerView.delegate = self
-        navigationBarBottomImageView.image = UIImage.init(named: "files_files.png")
+        navigationBarBottomImageView.image = UIImage.init(named: "files_folder.png")
         navigationBarBottomLabel.text = appBar.navigationBar.title
     }
 

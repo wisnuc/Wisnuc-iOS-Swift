@@ -238,7 +238,7 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
             cell.indentationWidth = 16
             switch indexPath.row {
             case 0:
-                cell.imageView?.image = UIImage.init(named: "files_pdf.png")
+                cell.imageView?.image = UIImage.init(named: "files_pdf_small.png")
                 cell.textLabel?.text = LocalizedString(forKey: "PDFs")
             case 1:
                 cell.imageView?.image = UIImage.init(named: "files_word_small.png")
@@ -250,13 +250,13 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
                 cell.imageView?.image = UIImage.init(named: "files_ppt_small.png")
                 cell.textLabel?.text = LocalizedString(forKey: "PPT")
             case 4:
-                cell.imageView?.image = UIImage.init(named: "files_photo_imges.png")
+                cell.imageView?.image = UIImage.init(named: "files_photo_small.png")
                 cell.textLabel?.text = LocalizedString(forKey: "Photos & Images")
             case 5:
-                cell.imageView?.image = UIImage.init(named: "files_video.png")
-                cell.textLabel?.text = LocalizedString(forKey: "video")
+                cell.imageView?.image = UIImage.init(named: "files_video_small.png")
+                cell.textLabel?.text = LocalizedString(forKey: "Video")
             case 6:
-                cell.imageView?.image = UIImage.init(named: "files_audio.png")
+                cell.imageView?.image = UIImage.init(named: "files_audio_small.png")
                 cell.textLabel?.text = LocalizedString(forKey: "Audio")
             default:
                 break

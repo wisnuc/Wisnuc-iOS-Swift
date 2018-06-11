@@ -11,8 +11,8 @@ import MaterialComponents
 import Material
 
 enum CellStyle:Int {
-    case list = 0
-    case card
+    case card = 0
+    case list
 }
 
 //enum CollectState:Int {
@@ -37,12 +37,24 @@ private let moveButtonHeight:CGFloat = 36.0
 
 class FilesRootViewController: BaseViewController{
     private var menuButton: IconButton!
-    private var moreButton: IconButton!
-    private var listStyleButton: IconButton!
     var  dataSource:Array<Any>?
     var  driveUUID:String?
     var  directoryUUID:String?
-    var cellStyle:CellStyle?
+    var sortType:SortType?
+    var isListStyle:Bool?
+    var sortIsDown:Bool?
+    var cellStyle:CellStyle?{
+        didSet{
+            switch cellStyle {
+            case .list?:
+                listCellStyleAction()
+            case .card?:
+                gridCellStyleAction()
+            default:
+                gridCellStyleAction()
+            }
+        }
+    }
     var isSelectModel:Bool?{
         didSet{
             if isSelectModel!{
@@ -97,21 +109,20 @@ class FilesRootViewController: BaseViewController{
         self.view.backgroundColor = lightGrayBackgroudColor
         prepareData()
         prepareCollectionView()
+        setCellStyle()
         switch selfState {
         case .root?:
             prepareRootAppNavigtionBar()
-            setRootCellStyle()
             prepareSearchBar()
             self.view.addSubview(fabButton)
         case .movecopy?:
             prepareMoveCopyAppNavigtionBar()
-            setOtherCellStyle()
+            setMoveToCollectionViewFrame()
             self.view.addSubview(moveFilesBottomBar)
             moveFilesBottomBar.addSubview(movetoButton)
             moveFilesBottomBar.addSubview(cancelMovetoButton)
         case .next?:
-            break
-//            setOtherCellStyle()
+            preparenNextAppNavigtionBar()
         default:
             break
         }
@@ -128,6 +139,15 @@ class FilesRootViewController: BaseViewController{
         if isSelectModel != nil && isSelectModel!{
             isSelectModel = false
         }
+        let sortType = AppUserService.currentUser?.sortType == nil ? SortType(rawValue: 0) : SortType(rawValue: (AppUserService.currentUser?.sortType?.int64Value)!)
+        let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
+        if dataSource != nil {
+            self.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
+            self.collcectionViewController.collectionView?.reloadData()
+        }
+        
+            let isListStyle = AppUserService.currentUser?.isListStyle == nil ? CellStyle(rawValue: 0) : CellStyle(rawValue: (AppUserService.currentUser?.isListStyle?.intValue)!)
+            self.cellStyle = isListStyle
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -142,19 +162,37 @@ class FilesRootViewController: BaseViewController{
    
     }
     
-    func setRootCellStyle(){
-        cellStyle = .card
+    func setCellStyle(){
+        if AppUserService.currentUser?.isListStyle != nil {
+            self.cellStyle = (AppUserService.currentUser?.isListStyle?.boolValue)! ? CellStyle.list : CellStyle.card
+        }else{
+                cellStyle = .card
+        }
         self.collcectionViewController.cellStyle = cellStyle
+        AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
+        AppUserService.synchronizedCurrentUser()
     }
     
-    func setOtherCellStyle(){
+    func setMoveToCollectionViewFrame(){
         collcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height - moveFilesBottomBar.height)
-        cellStyle = .list
-        self.collcectionViewController.cellStyle = cellStyle
     }
     
     func setSelectModel(){
         isSelectModel = false
+    }
+    
+    func listCellStyleAction(){
+        self.listStyleButton.isSelected = true
+        self.collcectionViewController.cellStyle = cellStyle
+        AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
+        AppUserService.synchronizedCurrentUser()
+    }
+    
+    func gridCellStyleAction(){
+        self.listStyleButton.isSelected = false
+        self.collcectionViewController.cellStyle = cellStyle
+        AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
+        AppUserService.synchronizedCurrentUser()
     }
     
     func prepareData() {
@@ -193,9 +231,9 @@ class FilesRootViewController: BaseViewController{
                         if finishArray.count > 0{
                             self?.dataSource = finishArray
                             self?.collcectionViewController.dataSource = self?.dataSource
-                            let sortIndexPath = AppUserService.currentUser?.sortType == nil ? IndexPath.init(row: 0, section: 0) : IndexPath.init(row: (AppUserService.currentUser?.sortType?.intValue)!, section: 0)
+                            let sortType = AppUserService.currentUser?.sortType == nil ? SortType(rawValue: 0) : SortType(rawValue: (AppUserService.currentUser?.sortType?.int64Value)!)
                             let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
-                            self?.collcectionViewController.setSortParameters(sortIndexPath: sortIndexPath, sortIsDown: sortIsDown!)
+                            self?.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
                         }
                     }
                 }
@@ -205,6 +243,67 @@ class FilesRootViewController: BaseViewController{
                 ActivityIndicator.stopActivityIndicatorAnimation()
             }
         }
+    }
+    
+    func setSortParameters(sortType:SortType,sortIsDown:Bool){
+        self.sortType = sortType
+        self.sortIsDown = sortIsDown
+        sortData(sortType: sortType, sortIsDown: sortIsDown)
+        self.collcectionViewController.sortType = sortType
+        self.collcectionViewController.sortIsDown = sortIsDown
+        self.collcectionViewController.dataSource = dataSource
+    }
+    
+    func sortData(sortType:SortType,sortIsDown:Bool) {
+        AppUserService.currentUser?.sortType =  NSNumber.init(value: Int8(sortType.rawValue))
+        AppUserService.currentUser?.sortIsDown = NSNumber.init(value: sortIsDown)
+        AppUserService.synchronizedCurrentUser()
+        var folderArray:Array<EntriesModel>? = dataSource?[safe: 0] as? Array
+        var filesArray:Array<EntriesModel>? = dataSource?[safe: 1] as? Array<EntriesModel>
+        switch sortType.rawValue {
+        case 0:
+            if sortIsDown{
+                folderArray?.sort { $0.name! < $1.name! }
+                filesArray?.sort { $0.name! < $1.name! }
+            }else{
+                folderArray?.sort { $0.name! > $1.name! }
+                filesArray?.sort { $0.name! > $1.name! }
+            }
+        case 1:
+            if sortIsDown{
+                folderArray?.sort { $0.mtime! < $1.mtime! }
+                filesArray?.sort { $0.mtime! < $1.mtime! }
+            }else{
+                folderArray?.sort { $0.mtime! > $1.mtime! }
+                filesArray?.sort { $0.mtime! > $1.mtime! }
+            }
+        case 2:
+            if sortIsDown{
+                folderArray?.sort { $0.mtime! < $1.mtime! }
+                filesArray?.sort { $0.mtime! < $1.mtime! }
+            }else{
+                folderArray?.sort { $0.mtime! > $1.mtime! }
+                filesArray?.sort { $0.mtime! > $1.mtime! }
+            }
+        case 3:
+            if sortIsDown{
+                folderArray?.sort { $0.size! < $1.size! }
+                filesArray?.sort { $0.size! < $1.size! }
+            }else{
+                folderArray?.sort { $0.size! > $1.size! }
+                filesArray?.sort { $0.size! > $1.size! }
+            }
+        default:
+            break
+        }
+        var finishArray:Array<Any> = Array.init()
+        if  folderArray != nil {
+            finishArray.append(folderArray!)
+        }
+        if  filesArray != nil {
+            finishArray.append(filesArray!)
+        }
+        dataSource = finishArray
     }
     
     func prepareCollectionView(){
@@ -230,7 +329,6 @@ class FilesRootViewController: BaseViewController{
     
     func selectAction(){
         //        print(searchBar.bottom)
-        
         DispatchQueue.main.async {
             self.selectSearchBarAction()
         }
@@ -317,15 +415,29 @@ class FilesRootViewController: BaseViewController{
         appBar.navigationBar.title = LocalizedString(forKey: "Move to...")
     }
     
+    func preparenNextAppNavigtionBar(){
+        self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+        let moreItem = UIBarButtonItem.init(image: UIImage.init(named: "more_gray_horizontal.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(moreButtonTap(_ :)))
+//        let button = IconButton(image:UIImage.init(named:"liststyle.png"))
+//        button.setImage(UIImage.init(named:"liststyle.png"), for: UIControlState.normal)
+//        button.setImage(UIImage.init(named:"gridstyle.png"), for: UIControlState.selected)
+//        button.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+        let styleItem = UIBarButtonItem.init(image: UIImage.init(named: "liststyle.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(moreButtonTap(_ :)))
+        self.navigationItem.rightBarButtonItems = [moreItem,styleItem]
+    }
+    
+    
     private func prepareSearchBar() {
         self.view.addSubview(searchBar)
         let menuImage = UIImage.init(named:"menu.png")
         menuButton = IconButton(image: menuImage)
         menuButton.addTarget(self, action: #selector(menuButtonTap(_:)), for: UIControlEvents.touchUpInside)
-        moreButton = IconButton(image: Icon.cm.moreHorizontal?.byTintColor(LightGrayColor))
-        moreButton.addTarget(self, action: #selector(moreButtonTap(_:)), for: UIControlEvents.touchUpInside)
-        listStyleButton = IconButton(image: #imageLiteral(resourceName: "cardstyle.png"))
-        listStyleButton.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+      
+        if self.cellStyle == .list{
+             listStyleButton.isSelected = true
+        }else{
+             listStyleButton.isSelected = false
+        }
         searchBar.leftViews = [menuButton]
         searchBar.rightViews = [listStyleButton,moreButton]
         searchBar.textField.delegate = self
@@ -363,6 +475,8 @@ class FilesRootViewController: BaseViewController{
             cellStyle = .card
         }
         self.collcectionViewController.cellStyle = cellStyle
+        AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
+        AppUserService.synchronizedCurrentUser()
     }
     
     @objc func menuButtonTap(_ sender:IconButton){
@@ -465,6 +579,20 @@ class FilesRootViewController: BaseViewController{
         view.layer.cornerRadius = 2
         view.clipsToBounds = false
         return view
+    }()
+    
+    lazy var listStyleButton: IconButton = {
+        let button = IconButton(image:UIImage.init(named:"liststyle.png"))
+        button.setImage(UIImage.init(named:"liststyle.png"), for: UIControlState.normal)
+        button.setImage(UIImage.init(named:"gridstyle.png"), for: UIControlState.selected)
+        button.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+        return button
+    }()
+    
+    lazy var moreButton: IconButton = {
+        let button = IconButton(image: Icon.cm.moreHorizontal?.byTintColor(LightGrayColor))
+        button.addTarget(self, action: #selector(moreButtonTap(_:)), for: UIControlEvents.touchUpInside)
+        return button
     }()
     
     lazy var movetoButton: MDCFlatButton = {
@@ -680,7 +808,7 @@ extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
 
 extension FilesRootViewController:SequenceBottomSheetContentVCDelegate{
     func sequenceBottomtableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, isDown: Bool) {
-        collcectionViewController.setSortParameters(sortIndexPath: indexPath, sortIsDown: isDown)
+        self.setSortParameters(sortType:SortType(rawValue: Int64(indexPath.row))!, sortIsDown: isDown)
     }
 }
 

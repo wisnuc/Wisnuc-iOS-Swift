@@ -49,7 +49,7 @@ enum SortType:Int64{
 class FilesRootCollectionViewController: MDCCollectionViewController {
     weak var delegate:FilesRootCollectionViewControllerDelegate?
     var reusableView:UICollectionReusableView!
-    var sortIndexPath:IndexPath?
+    var sortType:SortType?
     var sortIsDown:Bool?
     var dataSource:Array<Any>?{
         didSet{
@@ -219,64 +219,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         self.collectionView?.reloadData()
     }
     
-    func setSortParameters(sortIndexPath:IndexPath,sortIsDown:Bool){
-        self.sortIndexPath = sortIndexPath
-        self.sortIsDown = sortIsDown
-        sortData(sortIndexPath: sortIndexPath, sortIsDown: sortIsDown)
-        self.collectionView?.reloadData()
-    }
-    
-    func sortData(sortIndexPath:IndexPath,sortIsDown:Bool) {
-        AppUserService.currentUser?.sortType =  NSNumber.init(value: sortIndexPath.row)
-        AppUserService.currentUser?.sortIsDown = NSNumber.init(value: sortIsDown)
-        AppUserService.synchronizedCurrentUser()
-        var folderArray:Array<EntriesModel>? = dataSource?[safe: 0] as? Array
-        var filesArray:Array<EntriesModel>? = dataSource?[safe: 1] as? Array<EntriesModel>
-        switch sortIndexPath.row {
-        case 0:
-            if sortIsDown{
-                folderArray?.sort { $0.name! < $1.name! }
-                filesArray?.sort { $0.name! < $1.name! }
-            }else{
-                folderArray?.sort { $0.name! > $1.name! }
-                filesArray?.sort { $0.name! > $1.name! }
-            }
-        case 1:
-            if sortIsDown{
-                folderArray?.sort { $0.mtime! < $1.mtime! }
-                filesArray?.sort { $0.mtime! < $1.mtime! }
-            }else{
-                folderArray?.sort { $0.mtime! > $1.mtime! }
-                filesArray?.sort { $0.mtime! > $1.mtime! }
-            }
-        case 2:
-            if sortIsDown{
-                folderArray?.sort { $0.mtime! < $1.mtime! }
-                filesArray?.sort { $0.mtime! < $1.mtime! }
-            }else{
-                folderArray?.sort { $0.mtime! > $1.mtime! }
-                filesArray?.sort { $0.mtime! > $1.mtime! }
-            }
-        case 3:
-            if sortIsDown{
-                folderArray?.sort { $0.size! < $1.size! }
-                filesArray?.sort { $0.size! < $1.size! }
-            }else{
-                folderArray?.sort { $0.size! > $1.size! }
-                filesArray?.sort { $0.size! > $1.size! }
-            }
-        default:
-            break
-        }
-        var finishArray:Array<Any> = Array.init()
-        if  folderArray != nil {
-            finishArray.append(folderArray!)
-        }
-        if  filesArray != nil {
-            finishArray.append(filesArray!)
-        }
-        dataSource = finishArray
-    }
 
     // MARK: UICollectionViewDataSource
 
@@ -329,8 +271,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierSection2, for: indexPath)
                 if let cell = cell as? FilesFileCollectionViewCell {
                     cell.titleLabel.text = model.name
-                    cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                    cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
                     cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
                         if let delegateOK = self?.delegate{
                             delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
@@ -351,6 +291,34 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                             cell.isSelect = false
                         }
                     }
+                    if !isNilString(model.name){
+                        let exestr = (model.name! as NSString).pathExtension
+                        switch FilesFormatType(rawValue: exestr.lowercased()) {
+                        case .PDF?:
+                            cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_pdf_normal.png")
+                        case .JPG?:
+                            cell.leftImageView.image = UIImage.init(named: "files_jpg_small.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_jpg_normal.png")
+                        case .PNG?:
+                            cell.leftImageView.image = UIImage.init(named: "files_png_small.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_png_normal.png")
+                        case .DOC?:
+                            cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_wrod_normal.png")
+                        case .DOCX?:
+                            cell.leftImageView.image = UIImage.init(named: "files_wrod_small.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_wrod_normal.png")
+                        case .PPT?:
+                            cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
+                        case .PPTX?: break
+                        case .XLS?: break
+                        case .XLSX?: break
+                        default:
+                            break
+                        }
+                    }
                 }
                 return cell
             }
@@ -359,7 +327,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseListIdentifier, for: indexPath)
             if let cell = cell as? FilesListCollectionViewCell {
                 if indexPath.section == 0 {
-                    cell.leftImageView.image = UIImage.init(named: "files_files.png")
+                    cell.leftImageView.image = UIImage.init(named: "files_folder.png")
                     cell.titleLabel.text = model.name
                     cell.detailLabel.text = "2017.06.15 40.4MB"
                 }else{
@@ -387,6 +355,28 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         cell.isSelect = false
                     }
                 }
+                if !isNilString(model.name){
+                    let exestr = (model.name! as NSString).pathExtension
+                    switch FilesFormatType(rawValue: exestr.lowercased()) {
+                    case .PDF?:
+                        cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
+                    case .JPG?:
+                        cell.leftImageView.image = UIImage.init(named: "files_jpg_small.png")
+                    case .PNG?:
+                        cell.leftImageView.image = UIImage.init(named: "files_png_small.png")
+                    case .DOC?:
+                        cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
+                    case .DOCX?:
+                        cell.leftImageView.image = UIImage.init(named: "files_wrod_small.png")
+                    case .PPT?:
+                        cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+                    case .PPTX?: break
+                    case .XLS?: break
+                    case .XLSX?: break
+                    default:
+                        break
+                    }
+                }
             }
             return cell
         }
@@ -409,15 +399,21 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             let header:CommonCollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifierHeader, for: indexPath) as! CommonCollectionReusableView
             reusableView = header
             let reusableHeaderView:CommonCollectionReusableView = (reusableView as? CommonCollectionReusableView)!
+            let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
+            let model  = sectionArray[indexPath.row]
             if indexPath.section == 0 {
-                reusableHeaderView.titleLabel.text = LocalizedString(forKey: "files_folders")
+                var titleText = LocalizedString(forKey: "Folders")
+                if model.type == FilesType.file.rawValue {
+                    titleText = LocalizedString(forKey: "Files")
+                }
+                reusableHeaderView.titleLabel.text = titleText
                 var imageName = "files_down.png"
-                var titleText = "NAME"
-                switch sortIndexPath?.row {
-                case 0: titleText = "NAME"
-                case 1: titleText = "Modified time"
-                case 2: titleText = "Created time"
-                case 3: titleText = "Capacity time"
+                var buttonTitleText = "NAME"
+                switch sortType?.rawValue {
+                case 0: buttonTitleText = "NAME"
+                case 1: buttonTitleText = "Modified time"
+                case 2: buttonTitleText = "Created time"
+                case 3: buttonTitleText = "Capacity time"
                 default:
                     break
                 }
@@ -426,7 +422,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 }
                 let image = UIImage.init(named: imageName)
                 reusableHeaderView.rightButton.leftImageView.image = image
-                reusableHeaderView.rightButton.titleTextLabel.text = LocalizedString(forKey: titleText)
+                reusableHeaderView.rightButton.titleTextLabel.text = LocalizedString(forKey: buttonTitleText)
                 reusableHeaderView.rightButton.titleTextLabel.sizeToFit()
                 let labelWidth = reusableHeaderView.rightButton.titleTextLabel.width
                 let size =  CGSize(width: labelWidth + (image?.size.width)! + MarginsWidth - 4 + MarginsCloseWidth, height: reusableHeaderView.rightButton.height)
@@ -434,7 +430,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 reusableHeaderView.rightButton.frame = frame
                 reusableHeaderView.rightButton.isHidden = false
             }else{
-                reusableHeaderView.titleLabel.text = LocalizedString(forKey: "files_files")
+                reusableHeaderView.titleLabel.text = LocalizedString(forKey: "Files")
                 reusableHeaderView.rightButton.isHidden = true
             }
                 reusableHeaderView.rightButton.addTarget(self, action: #selector(sequenceButtonTap(_ :)), for: UIControlEvents.touchUpInside)
@@ -495,7 +491,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

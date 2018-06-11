@@ -117,13 +117,17 @@ class BaseViewController: UIViewController {
         appBar.navigationBar.titleAlignment = .leading
         self.view.backgroundColor = UIColor.white
         // Do any additional setup after loading the view.
+        
+    }
+    
+    func didBackAction(sel:Selector){
+        appBar.navigationBar.backItem?.action = sel
     }
     
     func headerBackgroundImage() -> UIImage {
         let image = UIImage.init(named: "mdc_theme.png")
         return image!
     }
-    
     
     override var childViewControllerForStatusBarHidden: UIViewController? {
         return appBar.headerViewController
@@ -145,6 +149,7 @@ class BaseViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    
     lazy var appBar:MDCAppBar = {
         let mdcAppBar = MDCAppBar()
         return mdcAppBar
@@ -159,5 +164,4 @@ class BaseViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
 }

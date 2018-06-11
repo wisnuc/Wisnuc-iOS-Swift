@@ -131,7 +131,7 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
     }
     
     lazy var leftImageView: UIImageView = {
-        let image = UIImage.init(named: "files_files.png")
+        let image = UIImage.init(named: "files_folder.png")
         let imageView = UIImageView.init(image: image)
         return imageView
     }()

@@ -8,6 +8,7 @@
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAdmin" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isFirstUser" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isListStyle" optional="YES" attributeType="Boolean" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isLocalLogin" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="localAddr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localToken" optional="YES" attributeType="String" syncable="YES"/>
@@ -19,6 +20,6 @@
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="User" positionX="-54" positionY="-9" width="128" height="285"/>
+        <element name="User" positionX="-54" positionY="-9" width="128" height="300"/>
     </elements>
 </model>

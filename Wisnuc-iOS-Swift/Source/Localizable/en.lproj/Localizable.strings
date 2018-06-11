@@ -11,8 +11,9 @@
 "my_station" = "My Device";
 "add_Device" = "Add Device";
 "station_checking" = "checking";
-"confirm" = "confirm";
+"confirm" = "Confirm";
 "power_off" = "Power Off";
-"files_folders" = "folders";
+"Folders" = "Folders";
 "NAME" = "NAME";
 "Rename" = "Rename";
+"Files" = "Files";

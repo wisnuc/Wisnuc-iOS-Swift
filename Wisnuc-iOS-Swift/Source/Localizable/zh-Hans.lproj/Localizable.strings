@@ -13,7 +13,8 @@
 "confirm" = "确定";
 "power_off" = "关机";
 
-"files_folders" = "文件夹";
+"Folders" = "文件夹";
 "NAME" = "名称";
 
 "Rename" = "重命名";
+"Files" = "文件";

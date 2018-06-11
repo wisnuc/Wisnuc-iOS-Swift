@@ -10,7 +10,11 @@ import Foundation
 import UIKit
 import MaterialComponents
 
-extension UIViewController{
+@objc protocol BackButtonHandlerProtocol:NSObjectProtocol{
+    @objc optional func navigationShouldPopOnBackButton() -> Bool
+}
+
+extension UIViewController: BackButtonHandlerProtocol{
     class func currentViewController() -> UIViewController {
         let window = UIApplication.shared.keyWindow
         var controller = window?.rootViewController
@@ -36,6 +40,10 @@ extension UIViewController{
                 }
             }
         }
+    }
+    
+    func navigationShouldPopOnBackButton() -> Bool {
+        return true
     }
     
     func xx_navigationBarTopLayoutGuide() ->  UILayoutSupport{
@@ -75,6 +83,7 @@ extension UIViewController{
                 }
             }
         }
+
         
 //    - (void)xx_fixNavBarPenetrable {
 //
@@ -112,3 +121,5 @@ extension UIViewController{
 //    }
    }
 }
+
+
