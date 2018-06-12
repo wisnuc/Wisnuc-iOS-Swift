@@ -37,12 +37,13 @@ private let moveButtonHeight:CGFloat = 36.0
 
 class FilesRootViewController: BaseViewController{
     private var menuButton: IconButton!
-    var  dataSource:Array<Any>?
-    var  driveUUID:String?
-    var  directoryUUID:String?
+    var dataSource:Array<Any>?
+    var driveUUID:String?
+    var directoryUUID:String?
     var sortType:SortType?
     var isListStyle:Bool?
     var sortIsDown:Bool?
+    var navigationTitle:String?
     var cellStyle:CellStyle?{
         didSet{
             switch cellStyle {
@@ -123,9 +124,15 @@ class FilesRootViewController: BaseViewController{
             moveFilesBottomBar.addSubview(cancelMovetoButton)
         case .next?:
             preparenNextAppNavigtionBar()
+
+//            selectedNavigationBarView.headerViewController.headerView.top = 0
+ 
+//            appBar.headerViewController.headerView.addSubview(selectedNavigationBarView)
         default:
             break
         }
+        
+        self.navigationTitle = title
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -186,6 +193,7 @@ class FilesRootViewController: BaseViewController{
         self.collcectionViewController.cellStyle = cellStyle
         AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
         AppUserService.synchronizedCurrentUser()
+        styleItem.image  = UIImage.init(named: "gridstyle.png")
     }
     
     func gridCellStyleAction(){
@@ -193,6 +201,7 @@ class FilesRootViewController: BaseViewController{
         self.collcectionViewController.cellStyle = cellStyle
         AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
         AppUserService.synchronizedCurrentUser()
+        styleItem.image = UIImage.init(named: "liststyle.png")
     }
     
     func prepareData() {
@@ -213,13 +222,6 @@ class FilesRootViewController: BaseViewController{
                             directoryArray.append(value)
                         }
                     }
-//                    filesArray.sort(by: { (model1, model2) -> Bool in
-//                        model1.name! < model2.name!
-//                    })
-//                    directoryArray.sort(by: { (model1, model2) -> Bool in
-//                        model1.name! < model2.name!
-//                    })
-                    
                     if filesArray.count != 0{
                         finishArray.append(filesArray)
                     }
@@ -347,25 +349,52 @@ class FilesRootViewController: BaseViewController{
         }
         let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
         tab.setTabBarHidden(true, animated: true)
+        
+        if selfState != .root{
+            selectedNavigationBarView.addSubviewsToParent()
+            selectedNavigationBarView.headerViewController.didMove(toParentViewController: self)
+            self.selectedNavigationBarView.headerViewController.headerView.top = -MDCAppNavigationBarHeight
+            self.prepareSelectModelNextAppNavigtionBar()
+            self.view.addSubview(selectedNavigationBarView.headerViewController.headerView)
+            self.view.bringSubview(toFront: selectedNavigationBarView.headerViewController.headerView)
+            self.transition(from: appBar.headerViewController, to: selectedNavigationBarView.headerViewController, duration: 0.3, options: UIViewAnimationOptions.beginFromCurrentState, animations: { [weak self] in
+                self?.selectedNavigationBarView.headerViewController.headerView.top = 0
+                self?.appBar.headerViewController.headerView.removeFromSuperview()
+                self?.appBar.headerViewController.removeFromParentViewController()
+            }) { [weak self] (finish) in
+              self?.title =  ""
+            }
+        }
     }
     
     func selectModelCloseAction(){
         self.appBar.headerViewController.headerView.isHidden = false
 //        if searchBar.bottom <= 0{
+        
+        Application.statusBarStyle = .default
+        collcectionViewController.isSelectModel = isSelectModel
+        fabButton.expand(true) {
+        }
+        
+        if selfState == .root{
+            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+            tab.setTabBarHidden(false, animated: true)
             DispatchQueue.main.async {
                 self.unselectSearchBarAction()
             }
             UIView.animate(withDuration: 0.3, animations: {
                 self.searchBar.top = 20 + MarginsCloseWidth
             })
-    
-        collcectionViewController.isSelectModel = isSelectModel
-        Application.statusBarStyle = .default
-        fabButton.expand(true) {
-
+        }else{
+            self.addChildViewController(appBar.headerViewController)
+            appBar.headerViewController.didMove(toParentViewController: self)
+            self.transition(from: selectedNavigationBarView.headerViewController,  to: appBar.headerViewController, duration: 0.3, options: UIViewAnimationOptions.beginFromCurrentState, animations: { [weak self] in
+                self?.selectedNavigationBarView.headerViewController.headerView.top = -MDCAppNavigationBarHeight
+                self?.title =  self?.navigationTitle
+            }) {  (finish) in
+                
+            }
         }
-        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-        tab.setTabBarHidden(false, animated: true)
     }
     
     func selectSearchBarAction(){
@@ -408,6 +437,14 @@ class FilesRootViewController: BaseViewController{
         self.navigationItem.rightBarButtonItems = [moreBarButtonItem,downloadBarButtonItem,moveBarButtonItem]
     }
     
+    func prepareSelectModelNextAppNavigtionBar(){
+        let leftItem = UIBarButtonItem.init(image: Icon.close?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(closeSelectModelButtonTap(_ :)))
+        let paceItem = UIBarButtonItem.init(customView: UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 20)))
+        let labelBarButtonItem = UIBarButtonItem.init(customView: selectNumberAppNaviLabel)
+        self.selectedNavigationBarView.navigationBar.leftBarButtonItems = [leftItem,paceItem,labelBarButtonItem]
+        self.selectedNavigationBarView.navigationBar.rightBarButtonItems = [moreBarButtonItem,downloadBarButtonItem,moveBarButtonItem]
+    }
+    
     func prepareMoveCopyAppNavigtionBar(){
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
         let rightItem = UIBarButtonItem.init(image: UIImage.init(named: "files_new_folder_gray.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(newFolderButtonTap(_ :)))
@@ -418,12 +455,20 @@ class FilesRootViewController: BaseViewController{
     func preparenNextAppNavigtionBar(){
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
         let moreItem = UIBarButtonItem.init(image: UIImage.init(named: "more_gray_horizontal.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(moreButtonTap(_ :)))
-//        let button = IconButton(image:UIImage.init(named:"liststyle.png"))
-//        button.setImage(UIImage.init(named:"liststyle.png"), for: UIControlState.normal)
-//        button.setImage(UIImage.init(named:"gridstyle.png"), for: UIControlState.selected)
-//        button.addTarget(self, action: #selector(listStyleButtonTap(_ :)), for: UIControlEvents.touchUpInside)
-        let styleItem = UIBarButtonItem.init(image: UIImage.init(named: "liststyle.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(moreButtonTap(_ :)))
-        self.navigationItem.rightBarButtonItems = [moreItem,styleItem]
+        let searchItem = UIBarButtonItem.init(image: UIImage.init(named: "search.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(enterSearch))
+        if self.cellStyle == .list {
+            styleItem.image = UIImage.init(named: "gridstyle.png")
+        }
+        self.navigationItem.rightBarButtonItems = [moreItem,styleItem,searchItem]
+    }
+    
+    @objc func enterSearch(){
+        let searchVC = SearchFilesViewController.init(style: NavigationStyle.whiteStyle)
+        searchVC.modalPresentationStyle = .custom
+        searchVC.modalTransitionStyle = .crossDissolve
+        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+        tab.setTabBarHidden(true, animated: true)
+        self.navigationController?.pushViewController(searchVC, animated: true)
     }
     
     
@@ -477,6 +522,14 @@ class FilesRootViewController: BaseViewController{
         self.collcectionViewController.cellStyle = cellStyle
         AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
         AppUserService.synchronizedCurrentUser()
+    }
+    
+    @objc func listStyleBarButtonItemTap(_ sender:UIBarButtonItem){
+        if cellStyle == .list {
+            cellStyle = .card
+        }else{
+            cellStyle = .list
+        }
     }
     
     @objc func menuButtonTap(_ sender:IconButton){
@@ -639,6 +692,25 @@ class FilesRootViewController: BaseViewController{
         let bottomVC = FilesSearchMoreBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
         bottomVC.delegate = self
         return bottomVC
+    }()
+    
+    lazy var moveButton: MDCFlatButton = {
+        let button = MDCFlatButton.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        return button
+    }()
+
+    lazy var selectedNavigationBarView: MDCAppBar = {
+        let appBar = MDCAppBar()
+        self.addChildViewController(appBar.headerViewController)
+        appBar.headerViewController.headerView.backgroundColor = COR1
+        appBar.navigationBar.tintColor = UIColor.white
+        appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : COR1]
+        return appBar
+    }()
+    
+    lazy var styleItem: UIBarButtonItem = {
+          let barItem = UIBarButtonItem.init(image: UIImage.init(named: "liststyle.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(listStyleBarButtonItemTap(_ :)))
+        return barItem
     }()
 
 }
@@ -855,11 +927,6 @@ extension FilesRootViewController:UINavigationControllerDelegate{
 
 extension FilesRootViewController:TextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        let searchVC = SearchFilesViewController.init(style: NavigationStyle.whiteStyle)
-        searchVC.modalPresentationStyle = .custom
-        searchVC.modalTransitionStyle = .crossDissolve
-        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-        tab.setTabBarHidden(true, animated: true)
-        self.navigationController?.pushViewController(searchVC, animated: true)
+        self.enterSearch()
     }
 }

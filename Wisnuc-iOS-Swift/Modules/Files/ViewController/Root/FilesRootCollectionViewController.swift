@@ -238,7 +238,10 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
         let model  = sectionArray[indexPath.item]
         if cellStyle == .card{
-            if indexPath.section == 0 {
+//            if indexPath.section == 0 {
+                if  model.type == FilesType.directory.rawValue{
+                    
+//                }
                 collectionView.register(FilesFolderCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
                 if let cell = cell as? FilesFolderCollectionViewCell {
@@ -298,11 +301,11 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                             cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
                             cell.mainImageView.image = UIImage.init(named: "files_pdf_normal.png")
                         case .JPG?:
-                            cell.leftImageView.image = UIImage.init(named: "files_jpg_small.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_jpg_normal.png")
+                            cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_photo_normal.png")
                         case .PNG?:
-                            cell.leftImageView.image = UIImage.init(named: "files_png_small.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_png_normal.png")
+                            cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_photo_normal.png")
                         case .DOC?:
                             cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
                             cell.mainImageView.image = UIImage.init(named: "files_wrod_normal.png")
@@ -316,7 +319,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         case .XLS?: break
                         case .XLSX?: break
                         default:
-                            break
+                            cell.leftImageView.image = UIImage.init(color: UIColor.orange)
+                            cell.mainImageView.image = UIImage.init(color: UIColor.orange)
                         }
                     }
                 }
@@ -355,15 +359,16 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         cell.isSelect = false
                     }
                 }
+                
                 if !isNilString(model.name){
                     let exestr = (model.name! as NSString).pathExtension
                     switch FilesFormatType(rawValue: exestr.lowercased()) {
                     case .PDF?:
                         cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
                     case .JPG?:
-                        cell.leftImageView.image = UIImage.init(named: "files_jpg_small.png")
+                        cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
                     case .PNG?:
-                        cell.leftImageView.image = UIImage.init(named: "files_png_small.png")
+                        cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
                     case .DOC?:
                         cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
                     case .DOCX?:
@@ -476,7 +481,9 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if cellStyle == .card{
-            if indexPath.section == 1 {
+            let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
+            let model  = sectionArray[indexPath.item]
+            if model.type == FilesType.file.rawValue {
                 return CGSize(width: CellWidth, height: CellWidth)
             }else{
                 return CGSize(width: CellWidth, height: CellSmallHeight)
@@ -497,16 +504,21 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         collectionView.deselectItem(at: indexPath, animated: false)
         let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
         let model  = sectionArray[indexPath.item]
+        var exitSelectModel = false
           if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
             if (FilesHelper.sharedInstance().selectFilesArray?.contains(model))!{
                 FilesHelper.sharedInstance().removeSelectFiles(model: model)
+                if FilesHelper.sharedInstance().selectFilesArray?.count == 0{
+                    exitSelectModel = true
+                }
              }else{
                 FilesHelper.sharedInstance().addSelectFiles(model: model)
             }
              self.collectionView?.reloadData()
-          }else{
-            if let delegateOK = self.delegate{
-                delegateOK.rootCollectionView(collectionView, didSelectItemAt: indexPath, isSelectModel: self.isSelectModel!)
+          }
+        if let delegateOK = self.delegate{
+            if !exitSelectModel{
+             delegateOK.rootCollectionView(collectionView, didSelectItemAt: indexPath, isSelectModel: self.isSelectModel!)
             }
         }
     }

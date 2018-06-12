@@ -28,7 +28,7 @@ class EntriesModel:HandyJSON {
     }
     
     func didFinishMapping() {
-        print("you can fill some observing logic here")
+//        print("you can fill some observing logic here")
         if self.size == nil {
             self.size = 0
         }
