@@ -244,7 +244,7 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
                 cell.imageView?.image = UIImage.init(named: "files_word_small.png")
                 cell.textLabel?.text = LocalizedString(forKey: "Word")
             case 2:
-                cell.imageView?.image = UIImage.init(named: "files_excel.png")
+                cell.imageView?.image = UIImage.init(named: "files_excel_small.png")
                 cell.textLabel?.text = LocalizedString(forKey: "Excel")
             case 3:
                 cell.imageView?.image = UIImage.init(named: "files_ppt_small.png")
@@ -269,25 +269,25 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
         tableView.deselectRow(at: indexPath, animated: true)
         switch  indexPath.row{
         case 0:
-            chipsView.imageView.image = UIImage.init(named: "files_pdf.png")
+            chipsView.imageView.image = UIImage.init(named: "files_pdf_small.png")
             chipsView.titleTextLabel.text = LocalizedString(forKey: "PDFs")
         case 1:
             chipsView.imageView.image = UIImage.init(named: "files_word_small.png")
             chipsView.titleTextLabel.text = LocalizedString(forKey: "Word")
         case 2:
-            chipsView.imageView.image = UIImage.init(named: "files_excel.png")
+            chipsView.imageView.image = UIImage.init(named: "files_excel_small.png")
             chipsView.titleTextLabel.text = LocalizedString(forKey: "Excel")
         case 3:
-            chipsView.imageView.image = UIImage.init(named: "files_pdf.png")
+            chipsView.imageView.image = UIImage.init(named: "files_pdf_small.png")
             chipsView.titleTextLabel.text = LocalizedString(forKey: "PPT")
         case 4:
-            chipsView.imageView.image = UIImage.init(named: "files_photo_imges.png")
+            chipsView.imageView.image = UIImage.init(named: "files_photo_small.png")
             chipsView.titleTextLabel.text = LocalizedString(forKey: "Photos & Images")
         case 5:
-            chipsView.imageView.image = UIImage.init(named: "files_video.png")
+            chipsView.imageView.image = UIImage.init(named: "files_video_small.png")
             chipsView.titleTextLabel.text = LocalizedString(forKey: "video")
         case 6:
-            chipsView.imageView.image = UIImage.init(named: "files_audio.png")
+            chipsView.imageView.image = UIImage.init(named: "files_audio_small.png")
             chipsView.titleTextLabel.text = LocalizedString(forKey: "Audio")
         default:
             break

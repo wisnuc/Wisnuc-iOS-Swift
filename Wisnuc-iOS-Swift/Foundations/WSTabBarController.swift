@@ -8,6 +8,12 @@
 
 import UIKit
 import MaterialComponents
+private let FilesNormalImage = UIImage.init(named: "Home")
+private let PhotoNormalImage = UIImage.init(named: "photos.png")
+private let ShareNormalImage = UIImage.init(named: "share.png")
+private let FilesSelectImage = UIImage.init(named: "tab_files_selected.png")
+private let PhotoSelectImage = UIImage.init(named: "Email")
+private let ShareSelectImage = UIImage.init(named: "Favorite")
 
 class WSTabBarController: MDCTabBarViewController  {
     let bottomNavBar = MDCBottomNavigationBar()
@@ -55,9 +61,37 @@ class WSTabBarController: MDCTabBarViewController  {
 
 extension WSTabBarController:MDCTabBarControllerDelegate{
     func tabBarController(_ tabBarController: MDCTabBarViewController, didSelect viewController: UIViewController) {
-//        print(viewController.tabBarItem.selectedImage!)
+        let item =  viewController.tabBarItem!
+        guard let index = tabBarController.tabBar?.items.index(of:item) else {
+            fatalError("MDCTabBarDelegate given selected item not found in tabBar.items")
+        }
+        
+        print(index)
+        switch index {
+        case 0:
+            item.image = FilesSelectImage
+        case 1:
+            item.image = PhotoSelectImage
+        case 2:
+            item.image = ShareSelectImage
+        default:
+            break
+        }
+        
+        for (idx,value) in (tabBarController.tabBar?.items.enumerated())!{
+            if idx != index{
+                switch value.tag {
+                case 0:
+                    value.image = FilesNormalImage
+                case 1:
+                    value.image = PhotoNormalImage
+                case 2:
+                    value.image = ShareNormalImage
+                default:
+                    break
+                }
+            }
+        }
     }
-    
-    
 }
 

@@ -22,5 +22,6 @@ pod 'MagicalRecord'
 
 pod 'HandyJSON'
 pod 'ReactiveCocoa'
+pod 'DZNEmptyDataSet'
 end
 

@@ -12,6 +12,33 @@ import UIKit
 import MaterialComponents
 import SDWebImage
 
+func sizeString(_ size :Int64) ->String{
+    var sizeText:String?
+    if size == 0{
+        return ""
+    }
+    let doubleSize = Double(size)
+    if doubleSize >= pow(Double(10) , Double(9)) { // size >= 1GB
+        sizeText = "\(String(format: "%.2f", doubleSize/pow(Double(10) , Double(9))))G"
+    } else if doubleSize >= pow(Double(10), Double(6)) { // 1GB > size >= 1MB
+        sizeText = "\(String(format: "%.2f", doubleSize/pow(Double(10), Double(6))))M"
+    } else if doubleSize >= pow(Double(10), Double(3)) { // 1MB > size >= 1KB
+        sizeText = "\(String(format: "%.2f", doubleSize/pow(Double(10), Double(3))))K"
+    } else { // 1KB > size
+        sizeText = "\(String(format: "%lld", size))B"
+    }
+    return sizeText ?? ""
+}
+
+func timeString(_ timeSecond:TimeInterval) ->String{
+    let date = Date.init(timeIntervalSince1970: timeSecond)
+    let formater = DateFormatter.init()
+    formater.dateFormat = "yyyy年MM月dd日"
+//    "yyyy年MM月dd日 hh:mm:ss"
+    let dateString = formater.string(from: date)
+    return dateString
+}
+
 func saveToUserDefault(value:Any,key:String){
     userDefaults.set(value, forKey: key)
     userDefaults.synchronize()

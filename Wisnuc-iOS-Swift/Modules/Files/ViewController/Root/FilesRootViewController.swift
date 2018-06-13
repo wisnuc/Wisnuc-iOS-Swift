@@ -236,6 +236,9 @@ class FilesRootViewController: BaseViewController{
                             let sortType = AppUserService.currentUser?.sortType == nil ? SortType(rawValue: 0) : SortType(rawValue: (AppUserService.currentUser?.sortType?.int64Value)!)
                             let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
                             self?.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
+                        }else{
+                           self?.dataSource = Array.init()
+                           self?.collcectionViewController.collectionView?.reloadData()
                         }
                     }
                 }
@@ -243,6 +246,8 @@ class FilesRootViewController: BaseViewController{
             }else{
                 Message.message(text: (response.error?.localizedDescription)!)
                 ActivityIndicator.stopActivityIndicatorAnimation()
+                self?.dataSource = Array.init()
+                self?.collcectionViewController.collectionView?.reloadData()
             }
         }
     }
@@ -342,7 +347,7 @@ class FilesRootViewController: BaseViewController{
             
         }
         
-        selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
+        self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
         Application.statusBarStyle = .lightContent
         fabButton.collapse(true) {
 
@@ -361,8 +366,8 @@ class FilesRootViewController: BaseViewController{
                 self?.selectedNavigationBarView.headerViewController.headerView.top = 0
                 self?.appBar.headerViewController.headerView.removeFromSuperview()
                 self?.appBar.headerViewController.removeFromParentViewController()
+//                self?.title =  self?.navigationTitle
             }) { [weak self] (finish) in
-              self?.title =  ""
             }
         }
     }
@@ -390,11 +395,12 @@ class FilesRootViewController: BaseViewController{
             appBar.headerViewController.didMove(toParentViewController: self)
             self.transition(from: selectedNavigationBarView.headerViewController,  to: appBar.headerViewController, duration: 0.3, options: UIViewAnimationOptions.beginFromCurrentState, animations: { [weak self] in
                 self?.selectedNavigationBarView.headerViewController.headerView.top = -MDCAppNavigationBarHeight
-                self?.title =  self?.navigationTitle
             }) {  (finish) in
                 
             }
+            
         }
+        self.title =  self.navigationTitle
     }
     
     func selectSearchBarAction(){
@@ -429,19 +435,18 @@ class FilesRootViewController: BaseViewController{
     
     func prepareRootAppNavigtionBar(){
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
-        self.title = ""
         let leftItem = UIBarButtonItem.init(image: Icon.close?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(closeSelectModelButtonTap(_ :)))
-        let paceItem = UIBarButtonItem.init(customView: UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 20)))
-        let labelBarButtonItem = UIBarButtonItem.init(customView: selectNumberAppNaviLabel)
-        self.navigationItem.leftBarButtonItems = [leftItem,paceItem,labelBarButtonItem]
+//        let paceItem = UIBarButtonItem.init(customView: UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 20)))
+//        let labelBarButtonItem = UIBarButtonItem.init(customView: selectNumberAppNaviLabel)
+        self.navigationItem.leftBarButtonItems = [leftItem]
         self.navigationItem.rightBarButtonItems = [moreBarButtonItem,downloadBarButtonItem,moveBarButtonItem]
     }
     
     func prepareSelectModelNextAppNavigtionBar(){
         let leftItem = UIBarButtonItem.init(image: Icon.close?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(closeSelectModelButtonTap(_ :)))
-        let paceItem = UIBarButtonItem.init(customView: UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 20)))
-        let labelBarButtonItem = UIBarButtonItem.init(customView: selectNumberAppNaviLabel)
-        self.selectedNavigationBarView.navigationBar.leftBarButtonItems = [leftItem,paceItem,labelBarButtonItem]
+//        let paceItem = UIBarButtonItem.init(customView: UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 20)))
+//        let labelBarButtonItem = UIBarButtonItem.init(customView: selectNumberAppNaviLabel)
+        self.selectedNavigationBarView.navigationBar.leftBarButtonItems = [leftItem]
         self.selectedNavigationBarView.navigationBar.rightBarButtonItems = [moreBarButtonItem,downloadBarButtonItem,moveBarButtonItem]
     }
     
@@ -569,6 +574,8 @@ class FilesRootViewController: BaseViewController{
         //        layout.itemSize = CGSize(width: size.width, height:CellHeight)
         let collectVC = FilesRootCollectionViewController.init(collectionViewLayout: layout)
         collectVC.collectionView?.isScrollEnabled = true
+        collectVC.collectionView?.emptyDataSetSource = self
+        collectVC.collectionView?.emptyDataSetDelegate = self
         collectVC.delegate = self
         return collectVC
     }()
@@ -581,7 +588,7 @@ class FilesRootViewController: BaseViewController{
     
     lazy var selectNumberAppNaviLabel: UILabel = {
         let label = UILabel.init()
-        label.frame = CGRect(x: 0, y: 0, width: 50, height: 20)
+        label.frame = CGRect(x: 0, y: 0, width: 80, height: 20)
         label.textColor = UIColor.white
         label.font = TitleFont18.withBold()
         label.text =  "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
@@ -704,7 +711,8 @@ class FilesRootViewController: BaseViewController{
         self.addChildViewController(appBar.headerViewController)
         appBar.headerViewController.headerView.backgroundColor = COR1
         appBar.navigationBar.tintColor = UIColor.white
-        appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : COR1]
+        appBar.navigationBar.titleAlignment = MDCNavigationBarTitleAlignment.leading
+        appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         return appBar
     }()
     
@@ -718,7 +726,7 @@ class FilesRootViewController: BaseViewController{
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath, isSelectModel: Bool) {
         if isSelectModel == NSNumber.init(value: FilesStatus.select.rawValue).boolValue{
-            selectNumberAppNaviLabel.text = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
+            self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
         }else{
             let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
             let model  = sectionArray[indexPath.item]
@@ -794,8 +802,6 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
             headerView.trackingScrollWillEndDragging(withVelocity: velocity, targetContentOffset: targetContentOffset)
         }
     }
-    
-    
 }
 
 extension FilesRootViewController:SearchBarDelegate{
@@ -810,7 +816,6 @@ extension FilesRootViewController:SearchBarDelegate{
     func searchBar(searchBar: SearchBar, didChange textField: UITextField, with text: String?) {
         
     }
-    
 }
 
 extension FilesRootViewController:FilesDrawerViewControllerDelegate{
@@ -925,8 +930,41 @@ extension FilesRootViewController:UINavigationControllerDelegate{
     }
 }
 
+
 extension FilesRootViewController:TextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
         self.enterSearch()
+    }
+}
+
+extension FilesRootViewController:DZNEmptyDataSetSource{
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        return UIImage.init(named: "logo_gray")
+    }
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        let text = LocalizedString(forKey: "No Data")
+        let attributes = [NSAttributedStringKey.font : MiddleTitleFont,NSAttributedStringKey.foregroundColor : LightGrayColor]
+        return NSAttributedString.init(string: text, attributes: attributes)
+    }
+    
+    func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
+        let text = LocalizedString(forKey: "Reload data")
+        let attributes = [NSAttributedStringKey.font :MiddleTitleFont,NSAttributedStringKey.foregroundColor : COR1]
+        return NSAttributedString.init(string: text, attributes: attributes)
+    }
+}
+
+extension FilesRootViewController:DZNEmptyDataSetDelegate{
+    func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
+        self.prepareData()
+    }
+    
+    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
+        if self.dataSource?.count == 0 {
+            return true
+        }else{
+            return false
+        }
     }
 }

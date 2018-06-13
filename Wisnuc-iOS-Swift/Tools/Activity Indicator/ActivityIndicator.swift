@@ -56,6 +56,10 @@ class ActivityIndicator: NSObject{
         window?.isUserInteractionEnabled = true
         }
     }
+    
+    class func isAnimating() -> Bool{
+        return shareSingleOneActivityIndicator.isAnimating
+    }
 }
 
  // MARK: - MDCActivityIndicatorDelegate

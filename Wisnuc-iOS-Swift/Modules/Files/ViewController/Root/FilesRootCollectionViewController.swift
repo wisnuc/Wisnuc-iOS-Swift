@@ -118,6 +118,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         // Register cell classes
 
         self.view.backgroundColor = lightGrayBackgroudColor
+
         self.collectionView?.backgroundColor = lightGrayBackgroudColor
         self.collectionView?.register(CommonCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: reuseIdentifierHeader)
     
@@ -240,12 +241,10 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         if cellStyle == .card{
 //            if indexPath.section == 0 {
                 if  model.type == FilesType.directory.rawValue{
-                    
-//                }
                 collectionView.register(FilesFolderCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
                 if let cell = cell as? FilesFolderCollectionViewCell {
-
+                    cell.moreButton.isEnabled = isSelectModel! ? false : true
                     cell.titleLabel.text = model.name
                     cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
                         if let delegateOK = self?.delegate{
@@ -273,6 +272,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 collectionView.register(FilesFileCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifierSection2)
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierSection2, for: indexPath)
                 if let cell = cell as? FilesFileCollectionViewCell {
+                    cell.moreButton.isEnabled = isSelectModel! ? false : true
                     cell.titleLabel.text = model.name
                     cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
                         if let delegateOK = self?.delegate{
@@ -330,15 +330,13 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             collectionView.register(FilesListCollectionViewCell.self, forCellWithReuseIdentifier: reuseListIdentifier)
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseListIdentifier, for: indexPath)
             if let cell = cell as? FilesListCollectionViewCell {
-                if indexPath.section == 0 {
-                    cell.leftImageView.image = UIImage.init(named: "files_folder.png")
-                    cell.titleLabel.text = model.name
-                    cell.detailLabel.text = "2017.06.15 40.4MB"
-                }else{
-                    cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                    cell.titleLabel.text = model.name
-                    cell.detailLabel.text = "2017.06.15 40.4MB"
-                }
+                cell.moreButton.isEnabled = isSelectModel! ? false : true
+                let imageName = indexPath.section == 0 ? "files_folder.png" : "files_ppt_small.png"
+                cell.leftImageView.image = UIImage.init(named: imageName)
+                cell.titleLabel.text = model.name
+                let time = model.mtime != nil ? timeString(TimeInterval(model.mtime!/1000)) : LocalizedString(forKey: "No time")
+                let size = model.size != nil ? sizeString(Int64(model.size!)) : ""
+                cell.detailLabel.text = "\(time) \(size)"
                 cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
                     if let delegateOK = self?.delegate{
                         delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
@@ -353,11 +351,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 
                 cell.isSelectModel = self.isSelectModel
                 if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                    if (FilesHelper.sharedInstance().selectFilesArray?.contains(model))!{
-                        cell.isSelect = true
-                    }else{
-                        cell.isSelect = false
-                    }
+                    cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(model))! ? true : false
                 }
                 
                 if !isNilString(model.name){
@@ -483,11 +477,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         if cellStyle == .card{
             let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
             let model  = sectionArray[indexPath.item]
-            if model.type == FilesType.file.rawValue {
-                return CGSize(width: CellWidth, height: CellWidth)
-            }else{
-                return CGSize(width: CellWidth, height: CellSmallHeight)
-            }
+            return model.type == FilesType.file.rawValue ? CGSize(width: CellWidth, height: CellWidth) : CGSize(width: CellWidth, height: CellSmallHeight)
         }else{
             return CGSize(width: __kWidth, height: 64.0)
         }
