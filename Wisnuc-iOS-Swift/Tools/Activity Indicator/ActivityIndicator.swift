@@ -48,6 +48,31 @@ class ActivityIndicator: NSObject{
         }
     }
     
+    class func startActivityIndicatorAnimation(in view:UIView){
+        DispatchQueue.main.async {
+            if shareSingleOneActivityIndicator.isAnimating{
+                stopActivityIndicatorAnimation()
+            }
+            let width: CGFloat = __kWidth / 2
+            let height: CGFloat = __kHeight / 2
+            
+            //Initialize single color progress indicator
+            let frame: CGRect = CGRect(x: width - 48/2, y: height, width: 48, height: 48)
+            
+            shareSingleOneActivityIndicator.frame = frame
+            // Pass colors you want to indicator to cycle through
+            shareSingleOneActivityIndicator.cycleColors = [MDCPalette.blue, MDCPalette.red, MDCPalette.green, MDCPalette.yellow]
+            shareSingleOneActivityIndicator.radius = 18.0
+            shareSingleOneActivityIndicator.strokeWidth = 3.0
+            shareSingleOneActivityIndicator.delegate = self.init()
+            shareSingleOneActivityIndicator.indicatorMode = .indeterminate
+            shareSingleOneActivityIndicator.sizeToFit()
+            shareSingleOneActivityIndicator.startAnimating()
+            view.addSubview(shareSingleOneActivityIndicator)
+            view.isUserInteractionEnabled = false
+        }
+    }
+    
     class func stopActivityIndicatorAnimation(){
         DispatchQueue.main.async {
         shareSingleOneActivityIndicator.stopAnimating()

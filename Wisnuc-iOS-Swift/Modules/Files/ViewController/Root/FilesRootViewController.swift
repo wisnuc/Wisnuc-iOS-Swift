@@ -36,6 +36,7 @@ private let moveButtonWidth:CGFloat = 64.0
 private let moveButtonHeight:CGFloat = 36.0
 
 class FilesRootViewController: BaseViewController{
+    static let downloadManager =  TRManager.init("Downloads", MaximumRunning: LONG_MAX, isStoreInfo: true)
     private var menuButton: IconButton!
     var dataSource:Array<Any>?
     var driveUUID:String?
@@ -83,6 +84,7 @@ class FilesRootViewController: BaseViewController{
     deinit {
        print("deinit called")
        removeCollectionView()
+       FilesRootViewController.downloadManager.invalidate()
     }
     
     override init(style: NavigationStyle) {
@@ -124,14 +126,10 @@ class FilesRootViewController: BaseViewController{
             moveFilesBottomBar.addSubview(cancelMovetoButton)
         case .next?:
             preparenNextAppNavigtionBar()
-
-//            selectedNavigationBarView.headerViewController.headerView.top = 0
- 
-//            appBar.headerViewController.headerView.addSubview(selectedNavigationBarView)
         default:
             break
         }
-        
+        FilesRootViewController.downloadManager.isStartDownloadImmediately = false
         self.navigationTitle = title
     }
     
@@ -493,6 +491,7 @@ class FilesRootViewController: BaseViewController{
         searchBar.textField.delegate = self
     }
     
+    
     // ojbc function (Selector)
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
         let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.whiteStyle)
@@ -501,7 +500,23 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func downloadBarButtonItemTap(_ sender:UIBarButtonItem){
-        
+        FilesRootViewController.downloadManager.isStartDownloadImmediately = true
+        let driveUUID = self.driveUUID != nil ? self.driveUUID! : AppUserService.currentUser?.userHome
+        let directoryUUID = self.directoryUUID != nil ? self.directoryUUID! : AppUserService.currentUser?.userHome
+        var urlStrings:Array<String> = Array.init()
+        TRManager.logLevel = .high
+        for value in  FilesHelper.sharedInstance().selectFilesArray!{
+            let model = value as! EntriesModel
+            let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
+            let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
+            let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
+            urlStrings.append(requestURL)
+        }
+        if urlStrings.count > 0 {
+            FilesRootViewController.downloadManager.multiDownload(urlStrings)
+        }
+        self.isSelectModel = false
+        Message.message(text: LocalizedString(forKey: "\(urlStrings.count)个文件已加入下载队列"), duration: 1.6)
     }
     
     @objc func moreBarButtonItemTap(_ sender:UIBarButtonItem){
@@ -743,6 +758,11 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton, _ indexPath: IndexPath) {
         let bottomSheet = AppBottomSheetController.init(contentViewController: self.filesBottomVC)
         bottomSheet.trackingScrollView = filesBottomVC.tableView
+        let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
+        let model  = sectionArray[indexPath.item]
+        let exestr = (model.name! as NSString).pathExtension
+        filesBottomVC.headerTitleLabel.text = model.name ?? ""
+        filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type!), format: FilesFormatType(rawValue: exestr)))
         self.present(bottomSheet, animated: true, completion: {
         })
     }

@@ -21,7 +21,7 @@ pod 'SugarRecord/CoreData'
 pod 'MagicalRecord'
 
 pod 'HandyJSON'
-pod 'ReactiveCocoa'
+pod 'RxSwift'
 pod 'DZNEmptyDataSet'
 end
 

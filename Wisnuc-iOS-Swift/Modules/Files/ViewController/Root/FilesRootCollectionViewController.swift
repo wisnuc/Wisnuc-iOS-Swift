@@ -315,12 +315,18 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         case .PPT?:
                             cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
                             cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
-                        case .PPTX?: break
-                        case .XLS?: break
-                        case .XLSX?: break
+                        case .PPTX?:
+                            cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
+                        case .XLS?:
+                            cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_excel_small.png")
+                        case .XLSX?:
+                            cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
+                            cell.mainImageView.image = UIImage.init(named: "files_excel_small.png")
                         default:
-                            cell.leftImageView.image = UIImage.init(color: UIColor.orange)
-                            cell.mainImageView.image = UIImage.init(color: UIColor.orange)
+                            cell.leftImageView.image = UIImage.init(named: "file_icon.png")
+                            cell.mainImageView.image = UIImage.init(named: "file_icon.png")
                         }
                     }
                 }
@@ -369,11 +375,14 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         cell.leftImageView.image = UIImage.init(named: "files_wrod_small.png")
                     case .PPT?:
                         cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                    case .PPTX?: break
-                    case .XLS?: break
-                    case .XLSX?: break
+                    case .PPTX?:
+                         cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+                    case .XLS?:
+                         cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
+                    case .XLSX?:
+                        cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
                     default:
-                        break
+                        cell.leftImageView.image = UIImage.init(named: "file_icon.png")
                     }
                 }
             }

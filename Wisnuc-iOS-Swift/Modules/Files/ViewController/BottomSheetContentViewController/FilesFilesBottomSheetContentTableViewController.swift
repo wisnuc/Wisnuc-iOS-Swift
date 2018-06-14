@@ -36,7 +36,7 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
     }
     
     func setData(){
-        self.headerTitleLabel.text = "未命名文件.pdf"
+        self.headerTitleLabel.text = "未命名文件"
         self.headerImageView.image = UIImage.init(named: "files_ppt_small.png")
     }
 
@@ -147,7 +147,8 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
     }()
 
     lazy var headerTitleLabel: UILabel = {
-        let label = UILabel.init(frame:CGRect(x: headerImageView.right + MarginsWidth*2, y: (headerHeight - 8)/2 - 20/2, width: self.tableView.width - 24 - MarginsWidth*2 , height: 20))
+        let width = self.tableView.width - 24 - MarginsWidth*2 - self.headerRightButton.width
+        let label = UILabel.init(frame:CGRect(x: headerImageView.right + MarginsWidth*2, y: (headerHeight - 8)/2 - 20/2, width: width - self.headerImageView.frame.size.width - 8, height: 20))
         label.textColor = DarkGrayColor
         label.font = MiddleTitleFont
         return label

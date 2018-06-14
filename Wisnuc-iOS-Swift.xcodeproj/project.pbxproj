@@ -383,6 +383,7 @@
 		1FBD1E0620B3EF9F0067BE3E /* files_new_folder_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FBD1E0520B3EF9F0067BE3E /* files_new_folder_gray@3x.png */; };
 		1FC5702B20C1150B00D4499D /* LocalTokenInCloudAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC5702A20C1150B00D4499D /* LocalTokenInCloudAPI.swift */; };
 		1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC5702C20C144B500D4499D /* DriveModel.swift */; };
+		1FC695F520D26F2400C62E76 /* FileTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC695F420D26F2400C62E76 /* FileTools.swift */; };
 		1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7A20AE65B000F65194 /* ChlipsView.swift */; };
 		1FC8FF7E20AE6F3800F65194 /* chips_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7D20AE6F3800F65194 /* chips_close.png */; };
 		1FC8FF8020AE6F4300F65194 /* chips_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF7F20AE6F4300F65194 /* chips_close@2x.png */; };
@@ -409,6 +410,16 @@
 		1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7AF207E1A0400906D80 /* wechat_icon@2x.png */; };
 		1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7BA207E1B6600906D80 /* Localizable.strings */; };
 		1FDBC50E20932171004DE6B8 /* DiskPopUpViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDBC50D20932171004DE6B8 /* DiskPopUpViewManager.swift */; };
+		1FE674D020D20CED006F97DB /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CD20D20CEB006F97DB /* file_icon.png */; };
+		1FE674D120D20CED006F97DB /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CE20D20CEB006F97DB /* file_icon@2x.png */; };
+		1FE674D220D20CED006F97DB /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CF20D20CEC006F97DB /* file_icon@3x.png */; };
+		1FE674DC20D21B11006F97DB /* TRCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE674D420D21B11006F97DB /* TRCommon.swift */; };
+		1FE674DD20D21B11006F97DB /* Tiercel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE674D520D21B11006F97DB /* Tiercel.h */; };
+		1FE674DE20D21B11006F97DB /* TRTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE674D620D21B11006F97DB /* TRTask.swift */; };
+		1FE674DF20D21B11006F97DB /* TRDownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE674D720D21B11006F97DB /* TRDownloadTask.swift */; };
+		1FE674E020D21B11006F97DB /* TRSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE674D820D21B11006F97DB /* TRSessionDelegate.swift */; };
+		1FE674E120D21B11006F97DB /* TRManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE674D920D21B11006F97DB /* TRManager.swift */; };
+		1FE674E320D21B11006F97DB /* TRCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE674DB20D21B11006F97DB /* TRCache.swift */; };
 		1FEABB5320A14B6300824448 /* files_word_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5220A14B6300824448 /* files_word_small.png */; };
 		1FEABB5520A14B6C00824448 /* files_word_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5420A14B6C00824448 /* files_word_small@2x.png */; };
 		1FEABB5720A14B7700824448 /* files_word_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5620A14B7700824448 /* files_word_small@3x.png */; };
@@ -827,6 +838,7 @@
 		1FBD1E0520B3EF9F0067BE3E /* files_new_folder_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_new_folder_gray@3x.png"; sourceTree = "<group>"; };
 		1FC5702A20C1150B00D4499D /* LocalTokenInCloudAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTokenInCloudAPI.swift; sourceTree = "<group>"; };
 		1FC5702C20C144B500D4499D /* DriveModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveModel.swift; sourceTree = "<group>"; };
+		1FC695F420D26F2400C62E76 /* FileTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTools.swift; sourceTree = "<group>"; };
 		1FC8FF7A20AE65B000F65194 /* ChlipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChlipsView.swift; sourceTree = "<group>"; };
 		1FC8FF7D20AE6F3800F65194 /* chips_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chips_close.png; sourceTree = "<group>"; };
 		1FC8FF7F20AE6F4300F65194 /* chips_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chips_close@2x.png"; sourceTree = "<group>"; };
@@ -862,6 +874,16 @@
 		1FD9B7B9207E1B6600906D80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1FD9B7BB207E1B6B00906D80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1FDBC50D20932171004DE6B8 /* DiskPopUpViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskPopUpViewManager.swift; sourceTree = "<group>"; };
+		1FE674CD20D20CEB006F97DB /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
+		1FE674CE20D20CEB006F97DB /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
+		1FE674CF20D20CEC006F97DB /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
+		1FE674D420D21B11006F97DB /* TRCommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TRCommon.swift; sourceTree = "<group>"; };
+		1FE674D520D21B11006F97DB /* Tiercel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tiercel.h; sourceTree = "<group>"; };
+		1FE674D620D21B11006F97DB /* TRTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TRTask.swift; sourceTree = "<group>"; };
+		1FE674D720D21B11006F97DB /* TRDownloadTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TRDownloadTask.swift; sourceTree = "<group>"; };
+		1FE674D820D21B11006F97DB /* TRSessionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TRSessionDelegate.swift; sourceTree = "<group>"; };
+		1FE674D920D21B11006F97DB /* TRManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TRManager.swift; sourceTree = "<group>"; };
+		1FE674DB20D21B11006F97DB /* TRCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TRCache.swift; sourceTree = "<group>"; };
 		1FEABB5220A14B6300824448 /* files_word_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_word_small.png; sourceTree = "<group>"; };
 		1FEABB5420A14B6C00824448 /* files_word_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_word_small@2x.png"; sourceTree = "<group>"; };
 		1FEABB5620A14B7700824448 /* files_word_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_word_small@3x.png"; sourceTree = "<group>"; };
@@ -1289,6 +1311,7 @@
 				1F4E93832089BD3300DD1EA7 /* OSTools.swift */,
 				1F2B4598208F236F00C8971F /* ViewTools.swift */,
 				1F8EBB2F209AB6AA00E8AB83 /* BaseTools.swift */,
+				1FC695F420D26F2400C62E76 /* FileTools.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -1492,6 +1515,9 @@
 		1F8EBB4A209FF05A00E8AB83 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				1FE674CD20D20CEB006F97DB /* file_icon.png */,
+				1FE674CE20D20CEB006F97DB /* file_icon@2x.png */,
+				1FE674CF20D20CEC006F97DB /* file_icon@3x.png */,
 				1FA6A1C420CFA796007A0AB2 /* files_photo_normal@3x.png */,
 				1FA6A1C220CFA78A007A0AB2 /* files_photo_normal@2x.png */,
 				1FA6A1C020CFA780007A0AB2 /* files_photo_normal.png */,
@@ -1726,6 +1752,7 @@
 		1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXGroup;
 			children = (
+				1FE674D320D21B11006F97DB /* Tiercel */,
 				1FD9B78B207CC75500906D80 /* Extension */,
 				1F2CE30420B50EC700D9E5BD /* Services */,
 				1FBD1E0A20B421A20067BE3E /* CoreData */,
@@ -1985,6 +2012,20 @@
 			path = Localizable;
 			sourceTree = "<group>";
 		};
+		1FE674D320D21B11006F97DB /* Tiercel */ = {
+			isa = PBXGroup;
+			children = (
+				1FE674D420D21B11006F97DB /* TRCommon.swift */,
+				1FE674D520D21B11006F97DB /* Tiercel.h */,
+				1FE674D620D21B11006F97DB /* TRTask.swift */,
+				1FE674D720D21B11006F97DB /* TRDownloadTask.swift */,
+				1FE674D820D21B11006F97DB /* TRSessionDelegate.swift */,
+				1FE674D920D21B11006F97DB /* TRManager.swift */,
+				1FE674DB20D21B11006F97DB /* TRCache.swift */,
+			);
+			path = Tiercel;
+			sourceTree = "<group>";
+		};
 		1FEABB6A20A14C9F00824448 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -2028,6 +2069,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FE674DD20D21B11006F97DB /* Tiercel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2209,6 +2251,7 @@
 				1F050E4720AAB6020037F00A /* files_upload_big@3x.png in Resources */,
 				1F83AE7120883AA2007CCCFD /* help.png in Resources */,
 				1F83AE6A208838DD007CCCFD /* eye_open.png in Resources */,
+				1FE674D120D20CED006F97DB /* file_icon@2x.png in Resources */,
 				1FA6A1C320CFA78A007A0AB2 /* files_photo_normal@2x.png in Resources */,
 				1F5659FD20D0E3A200D86FDB /* photos@3x.png in Resources */,
 				1F83AE7C20886BDA007CCCFD /* change.png in Resources */,
@@ -2317,6 +2360,7 @@
 				1F3C243A20A5ACE800E6B953 /* files_offline_file.png in Resources */,
 				1F050E1C20A985C20037F00A /* files_error@2x.png in Resources */,
 				1F58823E2085DCAF00394BD6 /* device_circle@2x.png in Resources */,
+				1FE674D220D20CED006F97DB /* file_icon@3x.png in Resources */,
 				1F8EBB3C209ADC7A00E8AB83 /* tab_files_selected@3x.png in Resources */,
 				1FAADEBB20ABE38400739220 /* files_info.png in Resources */,
 				1F5882442085F07000394BD6 /* offline@2x.png in Resources */,
@@ -2383,6 +2427,7 @@
 				1F8EBB5620A0239000E8AB83 /* files_folder.png in Resources */,
 				1FA6A1AB20CFA074007A0AB2 /* search@2x.png in Resources */,
 				1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */,
+				1FE674D020D20CED006F97DB /* file_icon.png in Resources */,
 				1F2B45A5208F290200C8971F /* close.png in Resources */,
 				1F2B459E208F255800C8971F /* IPAddDeviceViewController.xib in Resources */,
 				1FA6A1C520CFA796007A0AB2 /* files_photo_normal@3x.png in Resources */,
@@ -2571,6 +2616,7 @@
 				1F307C7520BEB18700AE105C /* SettingViewController.swift in Sources */,
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
 				1F050E4020AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.swift in Sources */,
+				1FE674E020D21B11006F97DB /* TRSessionDelegate.swift in Sources */,
 				1F359FEA2092C87900E2FF36 /* UIImage+extension.m in Sources */,
 				1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */,
 				1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */,
@@ -2578,6 +2624,7 @@
 				1F2CE3A420B7F3F200D9E5BD /* CloudLoginModel.swift in Sources */,
 				1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */,
 				1F1BABA820C51F5100D32C5A /* DirectoriesModel.swift in Sources */,
+				1FE674E320D21B11006F97DB /* TRCache.swift in Sources */,
 				1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */,
 				1F1BAC4D20CA80F000D32C5A /* CollectionExtension.swift in Sources */,
 				1FC8FF8720AE887800F65194 /* searchTableViewCell.swift in Sources */,
@@ -2586,6 +2633,7 @@
 				1F58821920849FA200394BD6 /* SizeDefine.swift in Sources */,
 				1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */,
 				1F169DD820805B2000860F31 /* Message.swift in Sources */,
+				1FE674DC20D21B11006F97DB /* TRCommon.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,
 				1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */,
@@ -2595,6 +2643,7 @@
 				1F050E6920AAEA2C0037F00A /* FilesFilesBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */,
 				1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */,
+				1FE674DF20D21B11006F97DB /* TRDownloadTask.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1F050E6020AAC8400037F00A /* FilesSequenceTableViewCell.swift in Sources */,
 				1F307C7A20BFEBC900AE105C /* LocalUserAPI.swift in Sources */,
@@ -2628,6 +2677,7 @@
 				1F1BABA420C50C7100D32C5A /* DriveDirAPI.swift in Sources */,
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
 				1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */,
+				1FE674E120D21B11006F97DB /* TRManager.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
 				1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */,
 				06EE1ED320A70D52000E739D /* BaseTableViewController.swift in Sources */,
@@ -2653,6 +2703,7 @@
 				1F2CE2F120B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld in Sources */,
 				1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */,
 				1F1BAC4F20CE4EC700D32C5A /* UINavigationControllerExtension.swift in Sources */,
+				1FE674DE20D21B11006F97DB /* TRTask.swift in Sources */,
 				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
 				1F2CE30220B4311000D9E5BD /* User+CoreDataProperties.swift in Sources */,
@@ -2673,6 +2724,7 @@
 				1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */,
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
+				1FC695F520D26F2400C62E76 /* FileTools.swift in Sources */,
 				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
 				1F5882272085890400394BD6 /* LoginViewController.swift in Sources */,
