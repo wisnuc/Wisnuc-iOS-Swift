@@ -306,24 +306,16 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         case .PNG?:
                             cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
                             cell.mainImageView.image = UIImage.init(named: "files_photo_normal.png")
-                        case .DOC?:
+                        case .DOC?,.DOCX?:
                             cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
                             cell.mainImageView.image = UIImage.init(named: "files_wrod_normal.png")
-                        case .DOCX?:
-                            cell.leftImageView.image = UIImage.init(named: "files_wrod_small.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_wrod_normal.png")
-                        case .PPT?:
+                        case .PPT?,.PPTX?:
                             cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
                             cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
-                        case .PPTX?:
-                            cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
-                        case .XLS?:
+                        case .XLS?,.XLSX?:
                             cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
                             cell.mainImageView.image = UIImage.init(named: "files_excel_small.png")
-                        case .XLSX?:
-                            cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_excel_small.png")
+        
                         default:
                             cell.leftImageView.image = UIImage.init(named: "file_icon.png")
                             cell.mainImageView.image = UIImage.init(named: "file_icon.png")
@@ -369,18 +361,12 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
                     case .PNG?:
                         cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
-                    case .DOC?:
+                    case .DOC?,.DOCX?:
                         cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
-                    case .DOCX?:
-                        cell.leftImageView.image = UIImage.init(named: "files_wrod_small.png")
-                    case .PPT?:
+                    case .PPT?,.PPTX?:
                         cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                    case .PPTX?:
-                         cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                    case .XLS?:
+                    case .XLS?,.XLSX?:
                          cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
-                    case .XLSX?:
-                        cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
                     default:
                         cell.leftImageView.image = UIImage.init(named: "file_icon.png")
                     }

@@ -204,6 +204,7 @@ class FilesRootViewController: BaseViewController{
     
     func prepareData() {
         ActivityIndicator.startActivityIndicatorAnimation()
+        self.collcectionViewController.collectionView?.reloadData()
         let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
         DriveDirAPI.init(driveUUID: driveUUID!, directoryUUID: directoryUUID!).startRequestJSONCompletionHandler(queue) {[weak self] (response) in
             if response.error == nil{
@@ -242,10 +243,12 @@ class FilesRootViewController: BaseViewController{
                 }
                 ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
-                Message.message(text: (response.error?.localizedDescription)!)
-                ActivityIndicator.stopActivityIndicatorAnimation()
-                self?.dataSource = Array.init()
-                self?.collcectionViewController.collectionView?.reloadData()
+                mainThreadSafe {
+                    Message.message(text: (response.error?.localizedDescription)!)
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    self?.dataSource = Array.init()
+                    self?.collcectionViewController.collectionView?.reloadData()
+                }
             }
         }
     }
@@ -504,6 +507,7 @@ class FilesRootViewController: BaseViewController{
         let driveUUID = self.driveUUID != nil ? self.driveUUID! : AppUserService.currentUser?.userHome
         let directoryUUID = self.directoryUUID != nil ? self.directoryUUID! : AppUserService.currentUser?.userHome
         var urlStrings:Array<String> = Array.init()
+        var nameStrings:Array<String> = Array.init()
         TRManager.logLevel = .high
         for value in  FilesHelper.sharedInstance().selectFilesArray!{
             let model = value as! EntriesModel
@@ -511,9 +515,10 @@ class FilesRootViewController: BaseViewController{
             let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
             let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
             urlStrings.append(requestURL)
+            nameStrings.append(model.name!)
         }
         if urlStrings.count > 0 {
-            FilesRootViewController.downloadManager.multiDownload(urlStrings)
+            FilesRootViewController.downloadManager.multiDownload(urlStrings, fileNames: nameStrings)
         }
         self.isSelectModel = false
         Message.message(text: LocalizedString(forKey: "\(urlStrings.count)个文件已加入下载队列"), duration: 1.6)
@@ -851,7 +856,7 @@ extension FilesRootViewController:FilesDrawerViewControllerDelegate{
         navigationDrawerController?.closeLeftView()
         switch indexPath.row {
         case 0:
-            let transferTaskTableViewController = TransferTaskTableViewController.init(style:.whiteStyle)
+            let transferTaskTableViewController = TransferTaskTableViewController.init(style:NavigationStyle.whiteStyle)
             let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
             tab.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
@@ -981,7 +986,7 @@ extension FilesRootViewController:DZNEmptyDataSetDelegate{
     }
     
     func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
-        if self.dataSource?.count == 0 {
+        if self.dataSource?.count == 0{
             return true
         }else{
             return false

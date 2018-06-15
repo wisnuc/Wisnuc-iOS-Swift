@@ -14,6 +14,7 @@ typealias NetworkResonseDataCompletionHandler = (DataResponse<Data>) -> Void
 typealias NetworkResonseStringCompletionHandler = (DataResponse<String>) -> Void
 
 class NetEngine: NSObject {
+    var manager:SessionManager?
     static let sharedInstance = NetEngine()
     private override init(){
         super.init()
@@ -22,10 +23,12 @@ class NetEngine: NSObject {
     var requestsRecordDic:Dictionary<String,DataRequest> = Dictionary.init()
     let cofig = RequestConfig.sharedInstance
     func addNormalRequetJOSN(requestObj:BaseRequest ,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler){
-        let manager = Alamofire.SessionManager.default
         let baseRequsetObject = requestObj
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = baseRequsetObject.timeoutIntervalForRequest()
+        configuration.timeoutIntervalForResource  = baseRequsetObject.timeoutIntervalForRequest()
         
-        manager.session.configuration.timeoutIntervalForRequest =  baseRequsetObject.timeoutIntervalForRequest()
+        manager = Alamofire.SessionManager(configuration: configuration)
         let requestURL = bulidRequestURL(request: requestObj)
         var requestParameters:RequestParameters = [:]
         var requestHTTPHeaders:RequestHTTPHeaders = [:]
@@ -35,18 +38,20 @@ class NetEngine: NSObject {
         if baseRequsetObject.requestHTTPHeaders() != nil {
             requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
         }
-        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseJSON(completionHandler: requestCompletionHandler)
-        request.validate()
-        baseRequsetObject.task = request.task
-        addRecord(request: request)
+        let request = manager?.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseJSON(completionHandler: requestCompletionHandler)
+        request?.validate()
+        baseRequsetObject.task = request?.task
+        addRecord(request: request!)
     }
     
     func addNormalRequetData(requestObj:BaseRequest ,_ requestCompletionHandler:@escaping NetworkResonseDataCompletionHandler){
-        let manager = Alamofire.SessionManager.default
         let baseRequsetObject = requestObj
-        manager.session.configuration.timeoutIntervalForRequest =  baseRequsetObject.timeoutIntervalForRequest()
-        let requestURL = bulidRequestURL(request: requestObj)
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = baseRequsetObject.timeoutIntervalForRequest()
+        configuration.timeoutIntervalForResource  = baseRequsetObject.timeoutIntervalForRequest()
         
+        manager = Alamofire.SessionManager(configuration: configuration)
+        let requestURL = bulidRequestURL(request: requestObj)
         var requestParameters:RequestParameters = [:]
         var requestHTTPHeaders:RequestHTTPHeaders = [:]
         if baseRequsetObject.requestParameters() != nil {
@@ -55,18 +60,20 @@ class NetEngine: NSObject {
         if baseRequsetObject.requestHTTPHeaders() != nil {
             requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
         }
-        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseData(completionHandler: requestCompletionHandler)
-        request.validate()
-        baseRequsetObject.task = request.task
-        addRecord(request: request)
+        let request = manager?.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseData(completionHandler: requestCompletionHandler)
+        request?.validate()
+        baseRequsetObject.task = request?.task
+        addRecord(request: request!)
     }
     
     func addNormalRequetString(requestObj:BaseRequest ,_ requestCompletionHandler:@escaping NetworkResonseStringCompletionHandler){
-        let manager = Alamofire.SessionManager.default
         let baseRequsetObject = requestObj
-        manager.session.configuration.timeoutIntervalForRequest =  baseRequsetObject.timeoutIntervalForRequest()
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = baseRequsetObject.timeoutIntervalForRequest()
+        configuration.timeoutIntervalForResource  = baseRequsetObject.timeoutIntervalForRequest()
+        
+        manager = Alamofire.SessionManager(configuration: configuration)
         let requestURL = bulidRequestURL(request: requestObj)
-
         var requestParameters:RequestParameters = [:]
         var requestHTTPHeaders:RequestHTTPHeaders = [:]
         if baseRequsetObject.requestParameters() != nil {
@@ -76,17 +83,19 @@ class NetEngine: NSObject {
             requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
         }
         
-        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseString(completionHandler: requestCompletionHandler)
-        request.validate()
-        baseRequsetObject.task = request.task
-        addRecord(request: request)
+        let request = manager?.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseString(completionHandler: requestCompletionHandler)
+        request?.validate()
+        baseRequsetObject.task = request?.task
+        addRecord(request: request!)
     }
     
     func addNormalRequetJOSN(requestObj:BaseRequest ,queue: DispatchQueue?,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler){
-        let manager = Alamofire.SessionManager.default
         let baseRequsetObject = requestObj
-       
-        manager.session.configuration.timeoutIntervalForRequest =  baseRequsetObject.timeoutIntervalForRequest()
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = baseRequsetObject.timeoutIntervalForRequest()
+        configuration.timeoutIntervalForResource  = baseRequsetObject.timeoutIntervalForRequest()
+
+        manager = Alamofire.SessionManager(configuration: configuration)
         let requestURL = bulidRequestURL(request: requestObj)
         var requestParameters:RequestParameters = [:]
         var requestHTTPHeaders:RequestHTTPHeaders = [:]
@@ -96,10 +105,10 @@ class NetEngine: NSObject {
         if baseRequsetObject.requestHTTPHeaders() != nil {
             requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
         }
-        let request = manager.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
-        request.validate()
-        baseRequsetObject.task = request.task
-        addRecord(request: request)
+        let request = manager?.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
+        request?.validate()
+        baseRequsetObject.task = request?.task
+        addRecord(request: request!)
     }
 
     //增加一条记录

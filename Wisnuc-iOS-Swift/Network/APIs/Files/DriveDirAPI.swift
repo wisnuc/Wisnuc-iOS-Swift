@@ -51,4 +51,8 @@ class DriveDirAPI: BaseRequest {
             return nil
         }
     }
+    
+    override func timeoutIntervalForRequest() -> TimeInterval {
+        return 15.0
+    }
 }

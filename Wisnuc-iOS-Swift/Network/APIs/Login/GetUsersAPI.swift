@@ -38,4 +38,8 @@ class GetUsersAPI: BaseRequest {
     override func requestEncoding() -> RequestParameterEncoding {
         return URLEncoding.queryString
     }
+    
+    override func timeoutIntervalForRequest() -> TimeInterval {
+        return 20.0
+    }
 }

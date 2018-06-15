@@ -177,6 +177,7 @@ extension TRDownloadTask {
 
 // MARK: - download callback
 extension TRDownloadTask {
+    
     internal func task(didReceive response: HTTPURLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         if let bytesStr = response.allHeaderFields["Content-Length"] as? String, let totalBytes = Int64(bytesStr) {
             progress.totalUnitCount = totalBytes
@@ -193,7 +194,7 @@ extension TRDownloadTask {
         }
 
 
-        if progress.completedUnitCount == progress.totalUnitCount {
+        if progress.completedUnitCount == progress.totalUnitCount && progress.totalUnitCount != 0  {
             cache.store(self)
             completed()
             manager?.completed()
@@ -223,9 +224,9 @@ extension TRDownloadTask {
     }
 
     internal func task(didReceive data: Data) {
-
+        
         progress.completedUnitCount += Int64((data as NSData).length)
-         _ = data.withUnsafeBytes { outputStream?.write($0, maxLength: data.count) }
+        _ = data.withUnsafeBytes { outputStream?.write($0, maxLength: data.count) }
         manager?.parseSpeed()
         DispatchQueue.main.tr.safeAsync {
             if TRManager.isControlNetworkActivityIndicator {

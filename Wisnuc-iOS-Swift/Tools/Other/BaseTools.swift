@@ -55,13 +55,21 @@ class Weak<T: AnyObject> {
     }
 }
 
+
 func mainThreadSafe(_ closure: @escaping ()->()){
-    if Thread.current != Thread.main{
-        DispatchQueue.main.async {
-             closure()
+    if let currentQueueLabel = OperationQueue.current?.underlyingQueue?.label {
+        print(currentQueueLabel)
+        if currentQueueLabel == DispatchQueue.main.label {
+            closure()
+        }else{
+            DispatchQueue.main.async {
+                closure()
+            }
         }
     }else{
-         closure()
+        DispatchQueue.main.async {
+            closure()
+        }
     }
 }
 

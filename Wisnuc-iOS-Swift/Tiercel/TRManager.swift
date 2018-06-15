@@ -143,6 +143,7 @@ public class TRManager {
     public var progress: Progress {
         internalProgress.completedUnitCount = tasks.reduce(0, { $0 + $1.progress.completedUnitCount })
         internalProgress.totalUnitCount = tasks.reduce(0, { $0 + $1.progress.totalUnitCount })
+
         return internalProgress
     }
     
@@ -312,7 +313,7 @@ extension TRManager {
     ///   - failureHandler: 每个task的failureHandler
     /// - Returns: 返回URLString数组中有效URString对应的task数组
     @discardableResult
-    public func multiDownload(_ URLStrings: [String], fileNames: [String]? = nil, progressHandler: TRTaskHandler? = nil, successHandler: TRTaskHandler? = nil, failureHandler: TRTaskHandler? = nil) -> [TRDownloadTask] {
+    public func multiDownload(_ URLStrings: [String], fileNames: [String], progressHandler: TRTaskHandler? = nil, successHandler: TRTaskHandler? = nil, failureHandler: TRTaskHandler? = nil) -> [TRDownloadTask] {
         status = .waiting
 
         // 去掉重复, 无效的url
@@ -335,20 +336,19 @@ extension TRManager {
 
         var temp = [TRDownloadTask]()
         for url in uniqueUrls {
-
             var task = fetchTask(url.absoluteString) as? TRDownloadTask
             if task != nil {
                 task!.progressHandler = progressHandler
                 task!.successHandler = successHandler
                 task!.failureHandler = failureHandler
                
-                if let index = URLStrings.index(of: url.absoluteString),
-                    let fileName = fileNames?.safeObjectAtIndex(index)  {
+                if let index = uniqueUrls.index(of: url),
+                    let fileName = fileNames.safeObjectAtIndex(index)  {
                     task!.fileName = fileName
                 }
             } else {
                 var fileName: String?
-                if let fileNames = fileNames, let index = URLStrings.index(of: url.absoluteString) {
+                if  let index = uniqueUrls.index(of: url) {
                     fileName = fileNames.safeObjectAtIndex(index)
                 }
 

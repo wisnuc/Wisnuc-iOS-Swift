@@ -2,13 +2,39 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>WISNUC 需要访问您的相册</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>WISNUC 需要访问您的相册用以备份</string>
+	<key>NSCameraUsageDescription</key>
+	<string>WISNUC 需要访问您的摄像头</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>com.doucumet.read</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.microsoft.powerpoint.ppt</string>
+				<string>public.item</string>
+				<string>com.microsoft.word.doc</string>
+				<string>com.adobe.pdf</string>
+				<string>com.microsoft.excel.xls</string>
+				<string>public.image</string>
+				<string>public.content</string>
+				<string>public.composite-content</string>
+				<string>public.archive</string>
+				<string>public.audio</string>
+				<string>public.movie</string>
+				<string>public.text</string>
+				<string>public.data</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -34,29 +60,34 @@
 			</array>
 		</dict>
 	</array>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-        <string>mqqOpensdkSSoLogin</string>
-        <string>mqzone</string>
-        <string>sinaweibo</string>
-        <string>alipayauth</string>
-        <string>alipay</string>
-        <string>safepay</string>
-        <string>mqq</string>
-        <string>mqqapi</string>
-        <string>mqqopensdkapiV3</string>
-        <string>mqqopensdkapiV2</string>
-        <string>mqqapiwallet</string>
-        <string>mqqwpa</string>
-        <string>mqqbrowser</string>
-        <string>wtloginmqq2</string>
-        <string>weixin</string>
-        <string>wechat</string>
-    </array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>mqqOpensdkSSoLogin</string>
+		<string>mqzone</string>
+		<string>sinaweibo</string>
+		<string>alipayauth</string>
+		<string>alipay</string>
+		<string>safepay</string>
+		<string>mqq</string>
+		<string>mqqapi</string>
+		<string>mqqopensdkapiV3</string>
+		<string>mqqopensdkapiV2</string>
+		<string>mqqapiwallet</string>
+		<string>mqqwpa</string>
+		<string>mqqbrowser</string>
+		<string>wtloginmqq2</string>
+		<string>weixin</string>
+		<string>wechat</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

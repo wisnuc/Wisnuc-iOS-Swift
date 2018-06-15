@@ -8,7 +8,7 @@
 
 import UIKit
 import MaterialComponents.MDCActivityIndicator
-
+import SDWebImage
 class ActivityIndicator: NSObject{
     
     static let shareSingleOneActivityIndicator = MDCActivityIndicator(frame: CGRect.zero)
@@ -49,7 +49,7 @@ class ActivityIndicator: NSObject{
     }
     
     class func startActivityIndicatorAnimation(in view:UIView){
-        DispatchQueue.main.async {
+         mainThreadSafe {
             if shareSingleOneActivityIndicator.isAnimating{
                 stopActivityIndicatorAnimation()
             }
@@ -74,7 +74,7 @@ class ActivityIndicator: NSObject{
     }
     
     class func stopActivityIndicatorAnimation(){
-        DispatchQueue.main.async {
+        mainThreadSafe {
         shareSingleOneActivityIndicator.stopAnimating()
         shareSingleOneActivityIndicator.removeFromSuperview()
         let window = UIApplication.shared.keyWindow
