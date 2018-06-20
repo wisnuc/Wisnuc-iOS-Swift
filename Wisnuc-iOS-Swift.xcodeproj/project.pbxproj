@@ -89,6 +89,9 @@
 		1F1BAC6120CE709100D32C5A /* files_jpg_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC5B20CE709000D32C5A /* files_jpg_small@3x.png */; };
 		1F1BAC6220CE709100D32C5A /* files_png_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC5C20CE709100D32C5A /* files_png_small@2x.png */; };
 		1F1BAC6320CE709100D32C5A /* files_png_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC5D20CE709100D32C5A /* files_png_small@3x.png */; };
+		1F2A380120DA57CE0035EED5 /* task_suspend.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2A380020DA57CE0035EED5 /* task_suspend.png */; };
+		1F2A380320DA57DC0035EED5 /* task_suspend@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2A380220DA57DB0035EED5 /* task_suspend@2x.png */; };
+		1F2A380520DA57EA0035EED5 /* task_suspend@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2A380420DA57EA0035EED5 /* task_suspend@3x.png */; };
 		1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */; };
 		1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4598208F236F00C8971F /* ViewTools.swift */; };
 		1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */; };
@@ -547,6 +550,9 @@
 		1F1BAC5B20CE709000D32C5A /* files_jpg_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_jpg_small@3x.png"; sourceTree = "<group>"; };
 		1F1BAC5C20CE709100D32C5A /* files_png_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_png_small@2x.png"; sourceTree = "<group>"; };
 		1F1BAC5D20CE709100D32C5A /* files_png_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_png_small@3x.png"; sourceTree = "<group>"; };
+		1F2A380020DA57CE0035EED5 /* task_suspend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = task_suspend.png; sourceTree = "<group>"; };
+		1F2A380220DA57DB0035EED5 /* task_suspend@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "task_suspend@2x.png"; sourceTree = "<group>"; };
+		1F2A380420DA57EA0035EED5 /* task_suspend@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "task_suspend@3x.png"; sourceTree = "<group>"; };
 		1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F2B4598208F236F00C8971F /* ViewTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTools.swift; sourceTree = "<group>"; };
 		1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddDeviceViewController.swift; sourceTree = "<group>"; };
@@ -1101,6 +1107,16 @@
 				1F17698120AD379B003D955F /* SearchFilesViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		1F2A37FF20DA57B80035EED5 /* Task */ = {
+			isa = PBXGroup;
+			children = (
+				1F2A380020DA57CE0035EED5 /* task_suspend.png */,
+				1F2A380220DA57DB0035EED5 /* task_suspend@2x.png */,
+				1F2A380420DA57EA0035EED5 /* task_suspend@3x.png */,
+			);
+			path = Task;
 			sourceTree = "<group>";
 		};
 		1F2B4593208DED5600C8971F /* BottomSheet */ = {
@@ -2013,6 +2029,7 @@
 		1FD9B7AC207E19F900906D80 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				1F2A37FF20DA57B80035EED5 /* Task */,
 				1FC8FF7C20AE6EEB00F65194 /* Common */,
 				1FAADEFA20AC248F00739220 /* Test */,
 				1F8EBB4A209FF05A00E8AB83 /* Files */,
@@ -2225,6 +2242,7 @@
 				1F4E9399208DBB7600DD1EA7 /* radio_button_unchecked@3x.png in Resources */,
 				1F359FE32091B2A900E2FF36 /* warning@3x.png in Resources */,
 				1F5AD94120AD80AC0065DAD3 /* files_audio_small@3x.png in Resources */,
+				1F2A380520DA57EA0035EED5 /* task_suspend@3x.png in Resources */,
 				1FC5CC1720D3C3D600499E63 /* files_download_transfer@2x.png in Resources */,
 				1F050E1220A967690037F00A /* files_pdf_small@3x.png in Resources */,
 				1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */,
@@ -2252,6 +2270,7 @@
 				1F359FCD2091A95D00E2FF36 /* disk_new_add.png in Resources */,
 				1F83AE5E208830B8007CCCFD /* local_area_white.png in Resources */,
 				1F5AD93B20AD80590065DAD3 /* files_video_small@3x.png in Resources */,
+				1F2A380320DA57DC0035EED5 /* task_suspend@2x.png in Resources */,
 				1F050E2720A995410037F00A /* files_offline_file_small.png in Resources */,
 				1F83AE8420887936007CCCFD /* more.png in Resources */,
 				1F359FBB2091761500E2FF36 /* account@2x.png in Resources */,
@@ -2377,6 +2396,7 @@
 				1FAADED320ABFEB300739220 /* files_creat_copy.png in Resources */,
 				1FAADEE120ABFF5400739220 /* files_share@2x.png in Resources */,
 				1F050E4120AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.xib in Resources */,
+				1F2A380120DA57CE0035EED5 /* task_suspend.png in Resources */,
 				1FAADEDF20ABFF4500739220 /* files_share.png in Resources */,
 				1F050E1020A9675B0037F00A /* files_pdf_small@2x.png in Resources */,
 				1F359FC32091764000E2FF36 /* diskinit.png in Resources */,
@@ -2539,6 +2559,7 @@
 				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFInternationalization/MDFInternationalization.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFTextAccessibility/MDFTextAccessibility.framework",
+				"${BUILT_PRODUCTS_DIR}/MDRadialProgress/MDRadialProgress.framework",
 				"${BUILT_PRODUCTS_DIR}/MagicalRecord/MagicalRecord.framework",
 				"${BUILT_PRODUCTS_DIR}/Material/Material.framework",
 				"${BUILT_PRODUCTS_DIR}/MaterialComponents/MaterialComponents.framework",
@@ -2546,10 +2567,9 @@
 				"${BUILT_PRODUCTS_DIR}/MotionAnimator/MotionAnimator.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionInterchange/MotionInterchange.framework",
 				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
-				"${BUILT_PRODUCTS_DIR}/ReactiveCocoa/ReactiveCocoa.framework",
-				"${BUILT_PRODUCTS_DIR}/ReactiveSwift/ReactiveSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RealReachability/RealReachability.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SugarRecord/SugarRecord.framework",
@@ -2564,6 +2584,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFInternationalization.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFTextAccessibility.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDRadialProgress.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MagicalRecord.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Material.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MaterialComponents.framework",
@@ -2571,10 +2592,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionAnimator.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionInterchange.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveCocoa.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealReachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SugarRecord.framework",

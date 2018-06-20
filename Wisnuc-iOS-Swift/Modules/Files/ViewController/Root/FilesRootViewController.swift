@@ -508,6 +508,7 @@ class FilesRootViewController: BaseViewController{
         let directoryUUID = self.directoryUUID != nil ? self.directoryUUID! : AppUserService.currentUser?.userHome
         var urlStrings:Array<String> = Array.init()
         var nameStrings:Array<String> = Array.init()
+        var fileModels:Array<EntriesModel> = Array.init()
         TRManager.logLevel = .high
         for value in  FilesHelper.sharedInstance().selectFilesArray!{
             let model = value as! EntriesModel
@@ -516,9 +517,10 @@ class FilesRootViewController: BaseViewController{
             let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
             urlStrings.append(requestURL)
             nameStrings.append(model.name!)
+            fileModels.append(model)
         }
         if urlStrings.count > 0 {
-            FilesRootViewController.downloadManager.multiDownload(urlStrings, fileNames: nameStrings)
+            FilesRootViewController.downloadManager.multiDownload(urlStrings, fileNames: nameStrings, filesModels: fileModels)
         }
         self.isSelectModel = false
         Message.message(text: LocalizedString(forKey: "\(urlStrings.count)个文件已加入下载队列"), duration: 1.6)

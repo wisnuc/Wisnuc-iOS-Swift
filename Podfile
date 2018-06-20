@@ -23,5 +23,6 @@ pod 'MagicalRecord'
 pod 'HandyJSON'
 pod 'RxSwift'
 pod 'DZNEmptyDataSet'
+pod 'MDRadialProgress'
 end
 

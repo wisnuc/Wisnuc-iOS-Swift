@@ -42,6 +42,8 @@ public class TRTask: NSObject {
     
     internal var header: [String:String]?
     
+    internal var fileModel: EntriesModel?
+    
     private var internalStatus: TRStatus = .waiting
     public var status: TRStatus {
         get {

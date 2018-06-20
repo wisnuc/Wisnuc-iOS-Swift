@@ -25,6 +25,7 @@
 //
 
 import UIKit
+import HandyJSON
 
 public class TRManager {
 
@@ -313,7 +314,7 @@ extension TRManager {
     ///   - failureHandler: 每个task的failureHandler
     /// - Returns: 返回URLString数组中有效URString对应的task数组
     @discardableResult
-    public func multiDownload(_ URLStrings: [String], fileNames: [String], progressHandler: TRTaskHandler? = nil, successHandler: TRTaskHandler? = nil, failureHandler: TRTaskHandler? = nil) -> [TRDownloadTask] {
+    public func multiDownload(_ URLStrings: [String], fileNames: [String], filesModels:[EntriesModel]? = nil ,progressHandler: TRTaskHandler? = nil, successHandler: TRTaskHandler? = nil, failureHandler: TRTaskHandler? = nil) -> [TRDownloadTask] {
         status = .waiting
 
         // 去掉重复, 无效的url
@@ -341,18 +342,25 @@ extension TRManager {
                 task!.progressHandler = progressHandler
                 task!.successHandler = successHandler
                 task!.failureHandler = failureHandler
-               
+             
                 if let index = uniqueUrls.index(of: url),
-                    let fileName = fileNames.safeObjectAtIndex(index)  {
+                    let fileName = fileNames.safeObjectAtIndex(index),let model = filesModels?.safeObjectAtIndex(index) {
                     task!.fileName = fileName
+                    task!.fileModel = model
+                    task!.size = Int64.init(bitPattern: model.size!)
                 }
             } else {
                 var fileName: String?
-                if  let index = uniqueUrls.index(of: url) {
+                var fileModel: EntriesModel?
+                if  let index = uniqueUrls.index(of: url){
                     fileName = fileNames.safeObjectAtIndex(index)
+                    fileModel = filesModels?.safeObjectAtIndex(index)
                 }
-
-                task = TRDownloadTask(url, fileName: fileName, cache: cache, progressHandler: progressHandler, successHandler: successHandler, failureHandler: failureHandler)
+                
+    
+                task = TRDownloadTask(url, fileName: fileName, cache: cache,fileModel:fileModel, progressHandler: progressHandler, successHandler: successHandler, failureHandler: failureHandler)
+                
+               
                 tasks.append(task!)
             }
             temp.append(task!)

@@ -8,6 +8,7 @@
 
 import UIKit
 import MaterialComponents.MaterialProgressView
+import MDRadialProgress
 
 class TransferTaskTableViewCell: UITableViewCell {
     @IBOutlet weak var leftImageView: UIImageView!
@@ -15,7 +16,8 @@ class TransferTaskTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var controlButton: UIButton!
-    @IBOutlet weak var progress: MDCProgressView!
+    @IBOutlet weak var progress: MDRadialProgressView!
+    @IBOutlet weak var suspendButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,25 +25,48 @@ class TransferTaskTableViewCell: UITableViewCell {
         detailLabel.textColor = LightGrayColor
         controlButton.isUserInteractionEnabled = false
         controlButton.tintColor = LightGrayColor
-        progress.
+        suspendButton.tintColor = DarkGrayColor
+        progress.theme.sliceDividerHidden = true
+        progress.label.textColor = LightGrayColor
+        progress.label.font = UIFont.systemFont(ofSize: 10)
+        progress.theme.thickness = 10
+        progress.theme.completedColor = COR1
+        progress.theme.incompletedColor = COR1.withAlphaComponent(0.12)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
     }
     
     func updateProgress(task: TRTask) {
-        detailLabel.text = "\(task.progress.completedUnitCount.tr.convertBytesToString())"
-//        progressView.progress = Float(task.progress.fractionCompleted)
-//        bytesLabel.text = "\(task.progress.completedUnitCount.tr.convertBytesToString())/\(task.progress.totalUnitCount.tr.convertBytesToString())"
-//        speedLabel.text = task.speed.tr.convertSpeedToString()
-//        timeRemainingLabel.text = "剩余时间：\(task.timeRemaining.tr.convertTimeToString())"
-//        startDateLabel.text = "开始时间：\(task.startDate.tr.convertTimeToDateString())"
-//        endDateLabel.text = "结束时间：\(task.endDate.tr.convertTimeToDateString())"
+        detailLabel.text = "\(task.progress.totalUnitCount.tr.convertBytesToString())"
+  
+        progress.progressTotal = UInt(task.progress.totalUnitCount)
+        progress.progressCounter = UInt(task.progress.completedUnitCount)
+        print("😁\(task.progress.totalUnitCount)")
+        print("😈\(task.progress.completedUnitCount)")
+        progress.label.text = task.speed.tr.convertSpeedToString()
         
+        switch task.status {
+        case .completed:
+             progress.isHidden = true
+        case .failed:
+             break
+        case .suspend,.preSuspend:
+            progress.theme.completedColor = UIColor.black.withAlphaComponent(0.54)
+            progress.theme.incompletedColor = UIColor.black.withAlphaComponent(0.12)
+            progress.label.isHidden = true
+            suspendButton.isHidden = false
+        default:
+             progress.isHidden = false
+             progress.theme.completedColor = COR1
+             progress.theme.incompletedColor = COR1.withAlphaComponent(0.12)
+             progress.label.isHidden = false
+             suspendButton.isHidden = true
+        }
     }
 
-    
+    @IBAction func suspendButtonTap(_ sender: UIButton) {
+    }
     @IBOutlet weak var controlButtonTap: UIButton!
 }

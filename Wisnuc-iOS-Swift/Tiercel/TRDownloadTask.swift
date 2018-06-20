@@ -31,8 +31,8 @@ public class TRDownloadTask: TRTask {
     private var task: URLSessionDataTask?
     private var outputStream: OutputStream?
 //    public var destination: String = ""
-
-    public init(_ url: URL, fileName: String? = nil, cache: TRCache, isCacheInfo: Bool = false, progressHandler: TRTaskHandler? = nil, successHandler: TRTaskHandler? = nil, failureHandler: TRTaskHandler? = nil) {
+    public var size :Int64?
+    public init(_ url: URL, fileName: String? = nil, cache: TRCache, isCacheInfo: Bool = false,fileModel:EntriesModel? = nil, progressHandler: TRTaskHandler? = nil, successHandler: TRTaskHandler? = nil, failureHandler: TRTaskHandler? = nil ) {
 
         super.init(url, cache: cache, isCacheInfo: isCacheInfo, progressHandler: progressHandler, successHandler: successHandler, failureHandler: failureHandler)
         if let fileName = fileName {
@@ -40,6 +40,11 @@ public class TRDownloadTask: TRTask {
                 self.fileName = fileName
             }
         }
+        
+        if let fileModel = fileModel {
+            self.fileModel = fileModel
+        }
+        
 //        self.destination = (self.cache.downloadFilePath as NSString).appendingPathComponent(self.fileName)
         cache.storeTaskInfo(self)
     }
@@ -192,7 +197,10 @@ extension TRDownloadTask {
                 progress.totalUnitCount = Int64(contentRangeStr.components(separatedBy: "/").last!)!
             }
         }
-
+        
+        if progress.totalUnitCount == 0 &&  AppNetworkService.networkState == .normal{
+            progress.totalUnitCount =  Int64(fileModel?.size ?? 0)
+        }
 
         if progress.completedUnitCount == progress.totalUnitCount && progress.totalUnitCount != 0  {
             cache.store(self)

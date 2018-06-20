@@ -9,7 +9,7 @@
 import Foundation
 import HandyJSON
 
-class EntriesModel:HandyJSON {
+public class EntriesModel:HandyJSON {
     var name:String?
     var type:String?
     var uuid:String?
@@ -20,14 +20,14 @@ class EntriesModel:HandyJSON {
     var driveUUID:String?
     var parentUUID:String?
     
-    required init() {}
+    required public init() {}
     
-    func mapping(mapper: HelpingMapper) {
+    public func mapping(mapper: HelpingMapper) {
         mapper >>> self.driveUUID
         mapper >>> self.parentUUID
     }
     
-    func didFinishMapping() {
+    public func didFinishMapping() {
 //        print("you can fill some observing logic here")
         if self.size == nil {
             self.size = 0

@@ -25,7 +25,7 @@
 //
 
 import UIKit
-
+import Alamofire
 public class TRSessionDelegate: NSObject {
     public var manager: TRManager?
 
@@ -39,6 +39,7 @@ extension TRSessionDelegate: URLSessionDataDelegate {
             let response = response as? HTTPURLResponse
             else { return  }
         task.task(didReceive: response, completionHandler: completionHandler)
+        
     }
 
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -48,6 +49,11 @@ extension TRSessionDelegate: URLSessionDataDelegate {
             else { return  }
         task.task(didReceive: data)
     }
+    
+    
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didBecome downloadTask: URLSessionDownloadTask) {
+        
+    }
 }
 
 extension TRSessionDelegate: URLSessionTaskDelegate {
@@ -56,10 +62,18 @@ extension TRSessionDelegate: URLSessionTaskDelegate {
             let URLString = task.originalRequest?.url?.absoluteString,
             let task = manager.fetchTask(URLString) as? TRDownloadTask
             else { return  }
-
-
         task.task(didCompleteWithError: error)
 
+    }
+}
+
+extension TRSessionDelegate:URLSessionDownloadDelegate{
+    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        
+    }
+    
+    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        
     }
 }
 

@@ -28,25 +28,15 @@ class TransferTaskTableViewController: BaseViewController {
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
     }
     
-    func updateUI() {
-        guard let downloadManager = downloadManager else { return  }
-//        totalTasksLabel.text = "总任务：\(downloadManager.completedTasks.count)/\(downloadManager.tasks.count)"
-//        totalSpeedLabel.text = "总速度：\(downloadManager.speed.tr.convertSpeedToString())"
-//        timeRemainingLabel.text = "剩余时间： \(downloadManager.timeRemaining.tr.convertTimeToString())"
-//        let per = String(format: "%.2f", downloadManager.progress.fractionCompleted)
-//        totalProgressLabel.text = "总进度： \(per)"
-    }
-    
     func setupManager() {
         
         // 设置manager的回调
         downloadManager?.progress { [weak self] (manager) in
 //            guard let strongSelf = self else { return }
-            self?.updateUI()
+
             
             }.success{ [weak self] (manager) in
 //                guard let strongSelf = self else { return }
-                self?.updateUI()
                 if manager.status == .suspend {
                     // manager 暂停了
                 }
@@ -61,7 +51,6 @@ class TransferTaskTableViewController: BaseViewController {
                 self?.downloadURLStrings = (self?.downloadManager?.tasks.map({ $0.URLString }))!
                 self?.downloadNameStrings = (self?.downloadManager?.tasks.map({ $0.fileName }))!
                 self?.tableView.reloadData()
-                self?.updateUI()
                 
                 if manager.status == .failed {
                     // manager 失败了
@@ -82,7 +71,6 @@ class TransferTaskTableViewController: BaseViewController {
         guard let downloadManager = downloadManager else { return  }
         downloadURLStrings = downloadManager.tasks.map({ $0.URLString })
         downloadNameStrings = downloadManager.tasks.map({ $0.fileName })
-        updateUI()
         tableView.reloadData()
     }
     
@@ -118,7 +106,7 @@ class TransferTaskTableViewController: BaseViewController {
     }
 
     lazy var tableView: UITableView = {
-        let tbView = UITableView.init(frame: CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight - MDCAppNavigationBarHeight))
+        let tbView = UITableView.init(frame: CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight))
         tbView.delegate = self
         tbView.dataSource = self
         tbView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 0, right: 0)
@@ -154,7 +142,6 @@ class TransferTaskTableViewController: BaseViewController {
 extension TransferTaskTableViewController:UITableViewDataSource{
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell:TransferTaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! TransferTaskTableViewCell
-    cell.selectionStyle = .none
     
     let URLString = downloadURLStrings[indexPath.row]
     guard let downloadManager = downloadManager,
@@ -169,7 +156,7 @@ extension TransferTaskTableViewController:UITableViewDataSource{
     case .running:
         break
     case .suspend:
-        break
+        cell.suspendButton.setImage(#imageLiteral(resourceName: "task_suspend.png"), for: .normal)
     case .completed:
         image = #imageLiteral(resourceName: "file_finish.png")
     case .waiting:
@@ -216,8 +203,7 @@ extension TransferTaskTableViewController:UITableViewDelegate{
             let URLString = self?.downloadURLStrings[index]
             self?.downloadURLStrings.remove(at: index)
             tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-            downloadManager.remove(URLString!, completely: false)
-            self?.updateUI()
+            downloadManager.remove(URLString!, completely: true)
         }
         deleteRowAction.backgroundColor = UIColor.red
         let priorityRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "priority_transfer")) { (tableViewForAction, indexForAction) in
@@ -228,15 +214,27 @@ extension TransferTaskTableViewController:UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let URLString = downloadURLStrings[indexPath.row]
         guard let downloadManager = downloadManager,
             let task = downloadManager.fetchTask(URLString)
             
             else { return  }
-        if task.cache.fileExists(fileName: downloadNameStrings[indexPath.row]){
-            self.readFile(filePath: task.cache.filePtah(fileName: downloadNameStrings[indexPath.row])!)
-        }else{
-            Message.message(text: LocalizedString(forKey: "File not exist"))
+        switch task.status {
+        case .running:
+             downloadManager.suspend(URLString)
+        case .completed:
+            if task.cache.fileExists(fileName: downloadNameStrings[indexPath.row]){
+                self.readFile(filePath: task.cache.filePtah(fileName: downloadNameStrings[indexPath.row])!)
+            }else{
+                Message.message(text: LocalizedString(forKey: "File not exist"))
+            }
+        case .suspend:
+            downloadManager.start(URLString)
+        case .preSuspend:
+            downloadManager.start(URLString)
+        default:
+            break
         }
     }
     
@@ -248,7 +246,23 @@ extension TransferTaskTableViewController:UITableViewDelegate{
         
         task.progress { [weak cell] (task) in
             guard let cell = cell as? TransferTaskTableViewCell else { return }
-//            cell.updateProgress(task: task)
+            cell.detailImageView.image = #imageLiteral(resourceName: "files_download_transfer.png")
+            var image: UIImage?
+            switch task.status {
+            case .running:
+                break
+            case .failed:
+                image = #imageLiteral(resourceName: "files_error.png")
+            case .suspend:
+                cell.suspendButton.setImage(#imageLiteral(resourceName: "task_suspend.png"), for: .normal)
+            case .completed:
+                image = #imageLiteral(resourceName: "file_finish.png")
+            case .waiting:
+                break
+            default: break
+            }
+            cell.controlButton.setImage(image, for: .normal)
+            cell.updateProgress(task: task)
             }
             .success({ [weak cell] (task) in
                 guard let cell = cell as? TransferTaskTableViewCell else { return }
@@ -260,6 +274,7 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                     // 下载任务完成了
                     cell.controlButton.setImage(#imageLiteral(resourceName: "file_finish.png"), for: .normal)
                 }
+                
             })
             .failure({ [weak cell] (task) in
                 guard let cell = cell as? TransferTaskTableViewCell else { return }
@@ -282,7 +297,6 @@ extension TransferTaskTableViewController:UITableViewDelegate{
         guard let URLString = downloadURLStrings.safeObjectAtIndex(indexPath.row),
             let task = downloadManager?.fetchTask(URLString)
             else { return }
-        
         task.progress { _ in }.success({ _ in }).failure({ _ in})
     }
 }
@@ -291,7 +305,31 @@ extension TransferTaskTableViewController:UITableViewDelegate{
 extension TransferTaskTableViewController:TransferTaskBottomSheetContentVCDelegate{
     func transferTaskBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.transferTaskBottomSheetContentVC.presentingViewController?.dismiss(animated: true, completion: {
-            
+            for  URLString  in self.downloadURLStrings{
+                guard let downloadManager = self.downloadManager,
+                    let task = downloadManager.fetchTask(URLString)
+                    else { return  }
+                switch indexPath.row {
+                case 0:
+                    if task.status == .suspend || task.status == .preSuspend{
+                        downloadManager.start(URLString)
+                    }
+                case 1:
+                    if task.status == .running {
+                        downloadManager.suspend(URLString)
+                    }
+                default:
+                    break
+                }
+            }
+             tableView.reloadData()
+            if indexPath.row == 2{
+            guard let downloadManager = self.downloadManager
+                else { return  }
+                self.downloadURLStrings.removeAll()
+                downloadManager.totalRemove(completely: true)
+                tableView.reloadData()
+            }
         })
     }
 }
