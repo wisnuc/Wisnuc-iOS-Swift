@@ -514,7 +514,7 @@ extension AddStationViewController:NetServerBrowerForLogDelegate{
     }
     
     func serverBrowserFoundService(service: NetService) {
-        if (service.hostName?.contains(find: "wisnuc-"))! {
+        if (service.hostName?.contains(find: "wisnuc"))! || (service.hostName?.contains(find: "phi"))! {
             var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
             for address in service.addresses!{
                 address.withUnsafeBytes { (pointer:UnsafePointer<sockaddr>) -> Void in

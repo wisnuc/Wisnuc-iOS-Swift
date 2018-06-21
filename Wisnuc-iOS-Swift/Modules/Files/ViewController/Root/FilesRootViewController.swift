@@ -244,7 +244,12 @@ class FilesRootViewController: BaseViewController{
                 ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 mainThreadSafe {
-                    Message.message(text: (response.error?.localizedDescription)!)
+                    var messageText = response.error?.localizedDescription
+                    if response.error is BaseError{
+                       messageText =  (response.error as! BaseError).localizedDescription
+                    }
+                    
+                    Message.message(text: messageText!)
                     ActivityIndicator.stopActivityIndicatorAnimation()
                     self?.dataSource = Array.init()
                     self?.collcectionViewController.collectionView?.reloadData()
@@ -472,6 +477,7 @@ class FilesRootViewController: BaseViewController{
         let searchVC = SearchFilesViewController.init(style: NavigationStyle.whiteStyle)
         searchVC.modalPresentationStyle = .custom
         searchVC.modalTransitionStyle = .crossDissolve
+        searchVC.uuid = directoryUUID
         let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
         tab.setTabBarHidden(true, animated: true)
         self.navigationController?.pushViewController(searchVC, animated: true)

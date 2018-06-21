@@ -71,7 +71,8 @@ class UserService: NSObject,ServiceProtocol{
         currentUser = nil
         isLocalLogin = nil
         userDefaults.removeObject(forKey: kCurrentUserUUID)
-        userDefaults.synchronize();
+        userDefaults.synchronize()
+        NetEngine.sharedInstance.cancleAllRequest()
     }
     
     func user(uuid:String) ->User?{

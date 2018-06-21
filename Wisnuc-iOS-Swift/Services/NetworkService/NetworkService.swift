@@ -27,26 +27,67 @@ class NetworkService: NSObject {
         super.init()
     }
     
+    func changeNet(_ status:WSNetworkStatus){
+        switch status {
+        case .WIFI:
+        if networkState == .normal{
+            getLocalInCloudLogin { [weak self] (error, localToken) in
+                if error == nil {
+                    self?.checkIP(address: (AppUserService.currentUser?.localAddr)!, { (isLocal) in
+                        if isLocal{
+                            AppUserService.currentUser?.localToken = localToken
+                            AppUserService.synchronizedCurrentUser()
+                            self?.networkState = .local
+                        }
+                    })
+                }else{
+                    Message.message(text: (error?.localizedDescription)!)
+                    self?.networkState = .normal
+                }
+            }
+        }else{
+            if AppUserService.currentUser?.cloudToken != nil {
+                self.networkState = .normal
+            }else{
+                self.networkState = .local
+            }
+        }
+        case .ViaWWAN:
+        if networkState == .local{
+            if AppUserService.currentUser?.cloudToken != nil {
+               self.networkState = .normal
+            }else{
+               self.networkState = .local
+            }
+        }
+        default:
+            break
+        }
+    }
+    
     func networkStateNormalAction() {
         RequestConfig.sharedInstance.baseURL = kCloudBaseURL
         AppTokenManager.token = AppUserService.currentUser?.cloudToken
     }
     
     func networkStateLocalAction() {
-       RequestConfig.sharedInstance.baseURL = AppUserService.currentUser?.localAddr
+        RequestConfig.sharedInstance.baseURL = AppUserService.currentUser?.localAddr!
         AppTokenManager.token = AppUserService.currentUser?.localToken
     }
     
     func checkIP(address:String, _ closure:@escaping (_ success:Bool)->()) {
         let requestURL = "\(address)/station/info"
-        let request = Alamofire.request(requestURL).validate().response { (response) in
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 3.0
+        configuration.timeoutIntervalForResource  = 3.0
+        let manager = Alamofire.SessionManager(configuration: configuration)
+        manager.request(requestURL, method: HTTPMethod.get, parameters: nil, encoding: URLEncoding.default, headers: nil).validate().responseJSON { (response) in
             if response.error == nil{
                 closure(true)
             }else{
                 closure(false)
             }
         }
-        request.session.configuration.timeoutIntervalForRequest = 3.0
     }
     
     func getLocalInCloudLogin(_ closure:@escaping (( _ error:Error?,_ token:String?)->())){
@@ -58,9 +99,10 @@ class NetworkService: NSObject {
             return closure(LoginError(code: ErrorCode.Login.NoToken, kind: LoginError.ErrorKind.LoginNoToken, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NoToken)), nil)
         }
         
-        LocalTokenInCloudAPI.init().startRequestJSONCompletionHandler({ (response) in
-            if response.error != nil{
-                let dic = response.value as! NSDictionary
+        LocalTokenInCloudAPI.init().startRequestJSONCompletionHandler({ [weak self] (response) in
+            if response.error == nil{
+                let isLocalRequest = self?.networkState == .local
+                let dic = isLocalRequest ? response.value as! NSDictionary : (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
                 if dic.value(forKey: "token") != nil{
                     let token =  dic.value(forKey: "token") as! String
                     closure(nil,token)

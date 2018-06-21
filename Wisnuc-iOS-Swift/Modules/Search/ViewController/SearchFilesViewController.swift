@@ -22,6 +22,7 @@ private let chipsWidth:CGFloat = 110.0
 private let chipsHeight:CGFloat = 36.0
 class SearchFilesViewController: BaseViewController {
     private var cellIdentifier = "Identifier"
+    var uuid:String?
     var cellCount = 0
     var cellHeight = 0
     var dataSouce:Array<EntriesModel>?
@@ -76,6 +77,9 @@ class SearchFilesViewController: BaseViewController {
     }
     
     func setData(){
+        SearchAPI.init(places: uuid!).startRequestJSONCompletionHandler { (response) in
+            
+        }
         let model1 = EntriesModel.init()
         model1.name = "mj.pdf"
         let model2 = EntriesModel.init()

@@ -228,6 +228,7 @@
                                 mutableDic?.addEntries(from: stationDictionary as! [AnyHashable : Any])
                                 if let userModel = CloadLoginUserRemotModel.deserialize(from: mutableDic){
                                     let lanArray = stationDictionary.value(forKey: "LANIP") as! NSArray
+
                                     if lanArray.count>0{
                                         userModel.LANIP = lanArray.firstObject as? String
                                     }

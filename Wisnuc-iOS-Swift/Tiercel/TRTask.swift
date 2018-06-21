@@ -177,7 +177,7 @@ public class TRTask: NSObject {
     internal func start() {
         let requestUrl = URL(string: URLString)!
         var request = URLRequest(url: requestUrl, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 0)
-        request.setValue(AppNetworkService.networkState == .local ? JWTTokenString(token: AppTokenManager.token!) : AppTokenManager.token!, forHTTPHeaderField: kRequestAuthorizationKey)
+       
         self.request = request
     }
     

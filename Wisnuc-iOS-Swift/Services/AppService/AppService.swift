@@ -38,6 +38,7 @@ class AppService: NSObject,ServiceProtocol{
     deinit {
     }
     
+    
     func loginAction(model:CloadLoginUserRemotModel,orginTokenUser:User,complete:@escaping ((_ error:Error?,_ user:User?)->())){
         if model.uuid == nil || isNilString(model.uuid){
             complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
@@ -58,7 +59,7 @@ class AppService: NSObject,ServiceProtocol{
         user.isLocalLogin = NSNumber.init(value: false)
 
         if !isNilString(model.LANIP) {
-            let urlString  = "http://\(String(describing: model.LANIP)):3000"
+            let urlString  = "http://\(String(describing: model.LANIP!)):3000"
             user.localAddr = urlString
         }
         self.userService.setCurrentUser(user)

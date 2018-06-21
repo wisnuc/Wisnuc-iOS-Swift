@@ -61,8 +61,10 @@ public class TRDownloadTask: TRTask {
                 progress.completedUnitCount = length
             }
         }
-
-        request?.setValue("bytes=\(progress.completedUnitCount)-", forHTTPHeaderField: "Range")
+        request?.setValue(AppNetworkService.networkState == .local ? JWTTokenString(token: AppTokenManager.token!) : AppTokenManager.token!, forHTTPHeaderField: kRequestAuthorizationKey)
+        
+        // 在云状态下断点续传请求头设置无效
+        request?.addValue("bytes=\(progress.completedUnitCount)-", forHTTPHeaderField: "Range")
         guard let request = request else { return  }
         task = session?.dataTask(with: request)
 

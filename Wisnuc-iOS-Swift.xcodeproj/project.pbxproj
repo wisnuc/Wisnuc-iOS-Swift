@@ -92,6 +92,7 @@
 		1F2A380120DA57CE0035EED5 /* task_suspend.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2A380020DA57CE0035EED5 /* task_suspend.png */; };
 		1F2A380320DA57DC0035EED5 /* task_suspend@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2A380220DA57DB0035EED5 /* task_suspend@2x.png */; };
 		1F2A380520DA57EA0035EED5 /* task_suspend@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2A380420DA57EA0035EED5 /* task_suspend@3x.png */; };
+		1F2A380820DBAD750035EED5 /* SearchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2A380720DBAD750035EED5 /* SearchAPI.swift */; };
 		1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */; };
 		1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B4598208F236F00C8971F /* ViewTools.swift */; };
 		1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */; };
@@ -553,6 +554,7 @@
 		1F2A380020DA57CE0035EED5 /* task_suspend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = task_suspend.png; sourceTree = "<group>"; };
 		1F2A380220DA57DB0035EED5 /* task_suspend@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "task_suspend@2x.png"; sourceTree = "<group>"; };
 		1F2A380420DA57EA0035EED5 /* task_suspend@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "task_suspend@3x.png"; sourceTree = "<group>"; };
+		1F2A380720DBAD750035EED5 /* SearchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAPI.swift; sourceTree = "<group>"; };
 		1F2B4596208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F2B4598208F236F00C8971F /* ViewTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTools.swift; sourceTree = "<group>"; };
 		1F2B459B208F255800C8971F /* IPAddDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddDeviceViewController.swift; sourceTree = "<group>"; };
@@ -1279,6 +1281,7 @@
 				1F307C7720BFC7D700AE105C /* DriveAPI.swift */,
 				1F1BABA320C50C7100D32C5A /* DriveDirAPI.swift */,
 				1F1BABA920C5290700D32C5A /* MkdirAPI.swift */,
+				1F2A380720DBAD750035EED5 /* SearchAPI.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -2704,6 +2707,7 @@
 				1F050E0B20A9640D0037F00A /* TransferTaskTableViewCell.swift in Sources */,
 				1F8EBB33209ABF4700E8AB83 /* FilesRootViewController.swift in Sources */,
 				1F050E2420A990CD0037F00A /* FilesOfflineTableViewCell.swift in Sources */,
+				1F2A380820DBAD750035EED5 /* SearchAPI.swift in Sources */,
 				1F050E3020AA77E90037F00A /* FilesShareFolderTableViewCell.swift in Sources */,
 				1FBD1DFD20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.swift in Sources */,
 				1F3C240B20A4225300E6B953 /* DrawerViewController.swift in Sources */,

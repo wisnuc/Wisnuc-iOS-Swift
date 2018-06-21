@@ -74,7 +74,7 @@ class ActivityIndicator: NSObject{
     }
     
     class func stopActivityIndicatorAnimation(){
-        mainThreadSafe {
+        DispatchQueue.main.async  {
         shareSingleOneActivityIndicator.stopAnimating()
         shareSingleOneActivityIndicator.removeFromSuperview()
         let window = UIApplication.shared.keyWindow

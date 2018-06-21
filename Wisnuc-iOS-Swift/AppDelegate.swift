@@ -13,9 +13,22 @@ import RealReachability
 import CatalogByConvention
 import MagicalRecord
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
-    var networkStatus:WSNetworkStatus?
+    var networkStatus:WSNetworkStatus?{
+        didSet{
+            switch networkStatus {
+            case .WIFI?: break
+            case .ViaWWAN?:break
+                
+            case .Disconnected?: break
+                
+            default:
+                break
+            }
+        }
+    }
     var window: UIWindow?
     var _loginController:LoginViewController?
     var colorScheme: (MDCColorScheme & NSObjectProtocol)!
@@ -57,7 +70,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
                 self.window?.rootViewController = navigationController
             }
         }
-        
          self.window?.makeKeyAndVisible()
     }
     
@@ -139,23 +151,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     }
     
     func setAppNetworkState(){
-        AppUserService.isLocalLogin =  AppUserService.currentUser?.isLocalLogin?.boolValue
+        if networkStatus != nil {
+            AppNetworkService.changeNet(networkStatus!)
+        }else{
+           let status = RealReachability.sharedInstance().currentReachabilityStatus()
+           checkNetworkStatus(status: status)
+        }
     }
     
     @objc func networkChanged(_ noti:NSNotification){
         let realReachability = noti.object as! RealReachability?
         let status = realReachability?.currentReachabilityStatus()
-        switch status! {
+        checkNetworkStatus(status: status!)
+    }
+    
+    func checkNetworkStatus(status:ReachabilityStatus) {
+        switch status {
         case .RealStatusNotReachable:
-            return networkStatus = WSNetworkStatus.Disconnected
+            networkStatus = WSNetworkStatus.Disconnected
         case .RealStatusViaWiFi:
-            return networkStatus = WSNetworkStatus.WIFI
+            networkStatus = WSNetworkStatus.WIFI
         case .RealStatusViaWWAN:
-            return networkStatus = WSNetworkStatus.ViaWWAN
+            networkStatus = WSNetworkStatus.ViaWWAN
         default:
-            
             break
         }
+        AppNetworkService.changeNet(networkStatus!)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
