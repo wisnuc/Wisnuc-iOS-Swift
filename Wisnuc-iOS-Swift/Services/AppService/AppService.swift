@@ -38,6 +38,36 @@ class AppService: NSObject,ServiceProtocol{
     deinit {
     }
     
+    func loginAction(model:CloadLoginUserRemotModel,url:String,basicAuth:String,complete:@escaping ((_ error:Error?,_ user:User?)->())){
+        
+        if model.uuid == nil || isNilString(model.uuid){
+            complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
+        }
+        
+        let callBackClosure = { (callBackError:Error? , callBackUser:User?)->() in
+            complete(callBackError,callBackUser)
+        }
+        LocalLoginTokenAPI.init(url: url, auth: basicAuth).startRequestJSONCompletionHandler { [weak self](response) in
+            if response.error == nil {
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                let token = (response.result.value as! NSDictionary)["token"] as! String
+                let user = AppUserService.createUser(uuid: model.uuid!)
+                user.userName = model.username!
+                user.localAddr = url
+                user.localToken = token
+                user.isFirstUser = NSNumber.init(value: model.isFirstUser ?? Int(truncating: false))
+                user.isAdmin = NSNumber.init(value: model.isAdmin ?? Int(truncating: false))
+                user.isLocalLogin = false
+                user.bonjour_name = model.name
+                self?.userService.setCurrentUser(user)
+                self?.userService.synchronizedCurrentUser()
+                AppNetworkService.networkState = .local
+                self?.nextStepForLogin(callback: callBackClosure)
+            }else{
+                callBackClosure(response.error,nil)
+            }
+        }
+    }
     
     func loginAction(model:CloadLoginUserRemotModel,orginTokenUser:User,complete:@escaping ((_ error:Error?,_ user:User?)->())){
         if model.uuid == nil || isNilString(model.uuid){
@@ -67,15 +97,17 @@ class AppService: NSObject,ServiceProtocol{
         if user.localAddr != nil{
             networkService.checkIP(address: user.localAddr!) { [weak self] (success) in
                 if success{
-                    self?.networkService.getLocalInCloudLogin({ (localTokenError, localToken) in
+                    self?.networkService.getLocalInCloudLogin({ [weak self](localTokenError, localToken) in
                         if localTokenError == nil{
                             user.isLocalLogin = NSNumber.init(value: true)
                             user.localToken = localToken
+                            self?.networkService.networkState = .local
                             self?.userService.setCurrentUser(user)
                             self?.userService.synchronizedCurrentUser()
                             self?.nextStepForLogin(callback: callBackClosure)
-                        }
+                        }else{
                           self?.nextStepForLogin(callback: callBackClosure)
+                        }
                     })
                 }else{
                     self?.nextStepForLogin(callback: callBackClosure)

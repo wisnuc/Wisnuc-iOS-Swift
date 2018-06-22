@@ -16,7 +16,10 @@ class LocalUserAPI: BaseRequest {
     }
     
     override func requestURL() -> String {
-        return "\(String(describing: url))/users"
+        return "\(String(describing: url!))/users"
     }
-
+    
+    override func timeoutIntervalForRequest() -> TimeInterval {
+        return TimeInterval(10)
+    }
 }

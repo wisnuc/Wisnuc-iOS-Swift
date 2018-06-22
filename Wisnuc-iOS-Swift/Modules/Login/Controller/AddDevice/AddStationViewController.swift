@@ -55,7 +55,7 @@ class AddStationViewController: BaseViewController {
         }
     }
     
-    var deviceArray:Array<StationModel>?{
+    var deviceArray:Array<CloadLoginUserRemotModel>?{
         didSet{
             
         }
@@ -145,18 +145,31 @@ class AddStationViewController: BaseViewController {
             self.navigationController?.pushViewController(initDiskVC, animated: true)
             
          case DeviceForSearchState.applyToUse.rawValue:
-            Message.message(text: LocalizedString(forKey: "添加成功，请联系XXX"))
+           ActivityIndicator.startActivityIndicatorAnimation()
             DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2.3) {
-                dispatch_async_on_main_queue {
-                    self.navigationController?.popViewController(animated: true)
-                    if let delegateOK = self.delegate{
-                        delegateOK.addStationFinish(model: model)
+                self.searchUser(model.LANIP!, closure: { [weak self] (error, userModel) in
+                    if error == nil{
+                        if userModel?.username == "13165786562"{
+                            dispatch_async_on_main_queue {
+                                ActivityIndicator.stopActivityIndicatorAnimation()
+                                self?.navigationController?.popViewController(animated: true)
+                                if let delegateOK = self?.delegate{
+                                    model.username = userModel?.username
+                                    model.uuid = userModel?.uuid
+                                    delegateOK.addStationFinish(model: model)
+                                    Message.message(text: LocalizedString(forKey: "添加成功"))
+                                }
+                            }
+                        }
+                    }else{
+                        ActivityIndicator.stopActivityIndicatorAnimation()
+                        Message.message(text: LocalizedString(forKey: "添加失败->\(String(describing: (error?.localizedDescription)!))"))
                     }
-                }
+                })
             }
             
         case DeviceForSearchState.importTo.rawValue:
-            Message.message(text: LocalizedString(forKey: "添加成功，请联系XXX"))
+            Message.message(text: LocalizedString(forKey: "添加成功"))
             DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2.3) {
                 dispatch_async_on_main_queue {
                     self.navigationController?.popViewController(animated: true)
@@ -183,7 +196,7 @@ class AddStationViewController: BaseViewController {
             diskModel1.capacity = 10.0
             diskModel1.effectiveCapacity = 5.23
             
-            let diskArray = [diskModel1]
+//            let diskArray = [diskModel1]
 //            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
         case DeviceForSearchState.initialization.rawValue:
             break
@@ -202,7 +215,7 @@ class AddStationViewController: BaseViewController {
             diskModel2.effectiveCapacity = 2.20
             diskModel2.type = "RAID1"
             
-            let diskArray = [diskModel1,diskModel2]
+//            let diskArray = [diskModel1,diskModel2]
 //            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
         default:
             break
@@ -362,28 +375,34 @@ class AddStationViewController: BaseViewController {
     
     func searchStation(_ server:NetService, _ baseURL:String){
         if Validate.IP(baseURL).isRight {
-            let model = StationModel.init()
+            let model = CloadLoginUserRemotModel.init()
             model.name = server.name
             model.type = DeviceForSearchState.applyToUse.rawValue
-            model.adress = baseURL
-            model.state = StationButtonType.normal.rawValue
+            model.LANIP = baseURL
+            if model.global == nil{
+                 model.state = StationButtonType.local.rawValue
+            }
             self.deviceArray?.append(model)
         }
     }
     
-    func searchUser(_ server:NetService, _ baseURL:String){
-        let urlString = "http://\(baseURL)):3000"
-        LocalUserAPI.init(url: urlString).startRequestDataCompletionHandler { (responseData) in
-            if responseData.error == nil{
-                do {
-                    let userModel = try JSONDecoder().decode(UserModel.self, from: responseData.data!)
-                    
-                } catch {
-                    // 异常处理
-//                    Message.message(text: LocalizedString(forKey: "error:"))
+    func searchUser( _ baseURL:String, closure:@escaping (_ error:Error?,_ usermodel:UserModel?)->()){
+        let urlString = "http://\(baseURL):3000"
+        LocalUserAPI.init(url: urlString).startRequestJSONCompletionHandler { (response) in
+            if response.error == nil{
+               let rootArray = response.result.value as! NSArray
+               for value in rootArray{
+                    do {
+                        let data = try?JSONSerialization.data(withJSONObject: value, options: JSONSerialization.WritingOptions.prettyPrinted)
+                        let userModel = try JSONDecoder().decode(UserModel.self, from: data!)
+                        closure(nil, userModel)
+                    } catch {
+                        closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                    }
                 }
+               
             }else{
-                
+                closure(response.error,nil)
             }
         }
     }

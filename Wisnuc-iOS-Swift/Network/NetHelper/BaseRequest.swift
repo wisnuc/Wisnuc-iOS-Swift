@@ -48,7 +48,7 @@ class BaseRequest: NSObject{
     }
     
     func timeoutIntervalForRequest() -> TimeInterval {
-        return 20.0
+        return TimeInterval.init(40)
     }
     
     func useCDN() -> Bool {

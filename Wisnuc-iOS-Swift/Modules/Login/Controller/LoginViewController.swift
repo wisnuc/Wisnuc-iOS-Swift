@@ -133,7 +133,7 @@
         CloudLoginAPI.init(code: code).startRequestDataCompletionHandler { [weak self] (responseData) in
             if responseData.error == nil{
                 do {
-                    let cloudLoginModel = try JSONDecoder().decode(CloudLoginModel.self, from:    responseData.data!)
+                    let cloudLoginModel = try JSONDecoder().decode(CloudLoginModel.self, from: responseData.data!)
                     print(String(data: responseData.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
                     if (cloudLoginModel.data?.token != nil) && (cloudLoginModel.data?.token?.count)!>0 {
                         self?.logintype = .token
@@ -198,7 +198,6 @@
     func findUser(stationDictionary:NSDictionary,uuid:String?,token:String? ,closure: @escaping (Error?,CloadLoginUserRemotModel?) -> Void){
         let stationId = stationDictionary.value(forKey: "id") as! String
         let isOnline = stationDictionary.value(forKey: "isOnline") as! Bool
-        
         if isOnline {
             let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
             GetUsersAPI.init(stationId: stationId, token: token!).startRequestJSONCompletionHandler(queue) { (response) in
@@ -232,6 +231,7 @@
                                     if lanArray.count>0{
                                         userModel.LANIP = lanArray.firstObject as? String
                                     }
+                                        userModel.state = StationButtonType.normal.rawValue
                                     return closure(nil,userModel)
                                 }
                             }
@@ -250,6 +250,7 @@
                 if lanArray.count>0{
                     userModel.LANIP = lanArray.firstObject as? String
                 }
+                  userModel.state = StationButtonType.offline.rawValue
                 return closure(nil,userModel)
             }
         }
@@ -289,13 +290,6 @@
                         self?.findUser(stationDictionary: dic, uuid: uuid, token: user?.cloudToken, closure: { [weak self] (userError, userModel) in
                             ActivityIndicator.stopActivityIndicatorAnimation()
                             if userError == nil{
-                                if (dic.value(forKey: "isOnline") != nil){
-                                    if (dic.value(forKey: "isOnline") as! Bool){
-                                        userModel?.state = StationButtonType.normal.rawValue
-                                    }else{
-                                        userModel?.state = StationButtonType.offline.rawValue
-                                    }
-                                }
                                 self?.cloudLoginArray?.append(userModel!)
                             }else{
                                 switch userError{
@@ -632,8 +626,14 @@
             let messageString = "\(String(describing: sender.stationName!)) 已离线"
             Alert.alert(title: titleString, message: messageString)
         case .local?:
-            let localNetVC = LocalNetworkLoginViewController.init()
-            self.navigationController?.pushViewController(localNetVC, animated: true)
+            if self.stationView.stationArray != nil && (self.stationView.stationArray?.count)! > 0{
+                let model = self.stationView.stationArray![(sender.view?.tag)!]
+                let localNetVC = LocalNetworkLoginViewController.init(model: model)
+                self.navigationController?.pushViewController(localNetVC, animated: true)
+            }else{
+                Message.message(text: LocalizedString(forKey: "Device is not exist"))
+            }
+           
         case .diskError?:
             let diskErrorVC = DiskErrorViewController.init()
             self.present(diskErrorVC, animated: true, completion: {
@@ -641,7 +641,7 @@
             })
         case .normal?:
             if self.cloudLoginArray != nil && (self.cloudLoginArray?.count)! > 0{
-                let model = self.cloudLoginArray![(sender.view?.tag)!]
+                let model = self.stationView.stationArray![(sender.view?.tag)!]
                 self.normalLoginAction(model: model)
             }else{
                 Message.message(text: LocalizedString(forKey: "Device is not exist"))

@@ -77,16 +77,18 @@ class NetworkService: NSObject {
     
     func checkIP(address:String, _ closure:@escaping (_ success:Bool)->()) {
         let requestURL = "\(address)/station/info"
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 3.0
-        configuration.timeoutIntervalForResource  = 3.0
-        let manager = Alamofire.SessionManager(configuration: configuration)
-        manager.request(requestURL, method: HTTPMethod.get, parameters: nil, encoding: URLEncoding.default, headers: nil).validate().responseJSON { (response) in
-            if response.error == nil{
-                closure(true)
-            }else{
-                closure(false)
+        do {
+            var urlRequest = try URLRequest.init(url: URL.init(string: requestURL)!, method: HTTPMethod.get)
+            urlRequest.timeoutInterval = TimeInterval.init(3)
+            Alamofire.request(urlRequest).validate().response { (response) in
+                if response.error == nil{
+                    closure(true)
+                }else{
+                    closure(false)
+                }
             }
+        } catch {
+            closure(false)
         }
     }
     
@@ -204,13 +206,53 @@ class NetworkService: NSObject {
                             return callBack(nil,directoriesModel!.uuid)
                         }
                     }
-                    
-                    self.mkDirIn(dirveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: (AppUserService.currentUser?.userHome!)!, name: name, closure: closure)
+                    AppNetworkService.networkState == .normal ? self.mkDirIn(dirveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: (AppUserService.currentUser?.userHome!)!, name: name, closure: closure) : self.mkDirLocalIn(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: (AppUserService.currentUser?.userHome!)!, name: name, closure: closure)
                 }
             }else{
                 callBack(response.error,nil)
             }
         }
+    }
+    
+    func mkDirLocalIn(driveUUID:String,directoryUUID:String,name:String,closure:@escaping (_ callBackError:Error?, _ directoriesModel:DirectoriesModel?)->()) {
+        let detailURL = "\(kRquestDrivesURL)/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries"
+        let requestURL = "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)"
+        let requestHTTPHeaders = [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
+        var originalRequest: URLRequest?
+        do {
+            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method:.post, headers: requestHTTPHeaders)
+            originalRequest?.timeoutInterval = TimeInterval(30)
+            let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: nil)
+            Alamofire.upload(multipartFormData: { (formData) in
+                let dic = [kRequestOpKey: kRequestMkdirValue]
+                do {
+                    let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
+                     formData.append(data, withName: name)
+                    
+                }catch{
+                    closure(BaseError.init(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTODataFail, code: ErrorCode.JsonModel.SwitchTODataFail),nil)
+                }
+               
+            }, with: encodedURLRequest) { (response) in
+                switch response {
+                case .success(let upload, _, _):
+                    upload.responseData(completionHandler: { (response) in
+                        do{
+                            let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: response.data!)
+                            closure(nil,directoriesModel)
+                        }catch{
+                            closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                        }
+                    })
+                case .failure(let error):
+                     closure(error,nil)
+                }
+            }
+
+        } catch {
+            closure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest),nil)
+        }
+        
     }
     
     func mkDirIn(dirveUUID:String,directoryUUID:String,name:String,closure:@escaping (_ callBackError:Error?, _ directoriesModel:DirectoriesModel?)->()) {

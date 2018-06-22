@@ -14,7 +14,7 @@ class DriveAPI: BaseRequest {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return kRquestDrivesURL
+            return "/\(kRquestDrivesURL)"
         default:
             return ""
         }

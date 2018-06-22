@@ -20,11 +20,12 @@ struct ErrorCode {
     
     struct Network {
         public static let NotConnect:Int = 40004
-    
+        public static let CannotBuidRequest:Int = 40005
     }
     
     struct JsonModel {
         public static let SwitchTOModelFail:Int = 60001
+        public static let SwitchTODataFail:Int = 60002
     }
 }
 
@@ -63,6 +64,7 @@ struct ErrorLocalizedDescription{
     
     struct JsonModel {
         public static let SwitchTOModelFail = "Json to Model error"
+        public static let SwitchTODataFail = "dic to Model error"
     }
 }
 

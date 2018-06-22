@@ -23,6 +23,17 @@ class LocalNetworkLoginViewController: BaseViewController {
     @IBOutlet weak var help2Label: UILabel!
     @IBOutlet weak var eyeButton: UIButton!
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
+    var name:String?
+    var model:CloadLoginUserRemotModel?
+    init(model:CloadLoginUserRemotModel) {
+        super.init()
+        self.name = model.username ?? "WISNUC"
+        self.model = model
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +44,8 @@ class LocalNetworkLoginViewController: BaseViewController {
     
     func setMainUI(){
         title = LocalizedString(forKey: "局域网设备")
+        stationNameLabel.text = model?.name ?? "WISNUC Station"
+        detailLabel.text = "W215i"
         mainbackgroudView.backgroundColor = SkyBlueColor
         appBar.navigationBar.backgroundColor = SkyBlueColor
         appBar.headerViewController.headerView.backgroundColor = SkyBlueColor
@@ -83,7 +96,7 @@ class LocalNetworkLoginViewController: BaseViewController {
     }
     
     func setData(){
-        userNameLabel.text = "Mark"
+        userNameLabel.text = name ?? "WISNUC"
         loginButton.setTitle(LocalizedString(forKey: "login"), for: UIControlState.normal)
         forgetPasswordButton.setTitle(LocalizedString(forKey: "forget_password"), for: UIControlState.normal)
         help1Label.text = LocalizedString(forKey: "1.请将设备接入Internet并使用微信登录")
@@ -111,7 +124,40 @@ class LocalNetworkLoginViewController: BaseViewController {
     }
     
     @objc func loginButtonClick(_ sender:UIButton){
-        
+        if passwordTextField.text == nil || passwordTextField.text?.count == 0{
+            Message.message(text: "密码不能为空")
+        }
+        self.view.endEditing(true)
+        sender.isUserInteractionEnabled = false
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let authString = "\(String(describing: (model?.uuid!)!)):\(isNilString(passwordTextField.text) ? "" : passwordTextField.text!)"
+        let basicAuth = authString.toBase64()
+        let url = "http://\(String(describing: (model?.LANIP!)!)):3000"
+
+        AppService.sharedInstance().loginAction(model: model!, url: url, basicAuth: basicAuth) { (error, user) in
+            if error == nil && user != nil{
+                AppUserService.setCurrentUser(user)
+                AppUserService.synchronizedCurrentUser()
+                appDelegate.setRootViewController()
+            }else{
+                if error != nil{
+                    switch error {
+                    case is LoginError:
+                        let loginError = error as! LoginError
+                        Message.message(text: loginError.localizedDescription, duration: 2.0)
+                    case is BaseError:
+                        let baseError = error as! BaseError
+                        Message.message(text: baseError.localizedDescription, duration: 2.0)
+                    default:
+                        Message.message(text: (error?.localizedDescription)!, duration: 2.0)
+                    }
+                }
+                 AppNetworkService.networkState = .normal
+            }
+            
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            sender.isUserInteractionEnabled = true
+        }
     }
     
 

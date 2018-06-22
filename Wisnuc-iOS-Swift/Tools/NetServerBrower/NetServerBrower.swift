@@ -74,7 +74,9 @@ extension NetServerBrower:NetServiceBrowserDelegate{
             resolvedServers?.remove(at:indexResolved!)
         }
         if let delegateOK = self.delegate {
+            if index != nil{
             delegateOK.serverBrowserLostService(service: service, index: index!)
+            }
         }
     }
     

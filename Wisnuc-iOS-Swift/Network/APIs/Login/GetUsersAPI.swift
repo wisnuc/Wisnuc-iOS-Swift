@@ -34,12 +34,9 @@ class GetUsersAPI: BaseRequest {
         let dic = [kRequestAuthorizationKey:token!]
         return dic
     }
-    
-    override func requestEncoding() -> RequestParameterEncoding {
-        return URLEncoding.queryString
-    }
+
     
     override func timeoutIntervalForRequest() -> TimeInterval {
-        return 20.0
+        return TimeInterval.init(30)
     }
 }

@@ -294,33 +294,35 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                             cell.isSelect = false
                         }
                     }
-                    if !isNilString(model.name){
-                        let exestr = (model.name! as NSString).pathExtension
-                        switch FilesFormatType(rawValue: exestr.lowercased()) {
-                        case .PDF?:
-                            cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_pdf_normal.png")
-                        case .JPG?:
-                            cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_photo_normal.png")
-                        case .PNG?:
-                            cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_photo_normal.png")
-                        case .DOC?,.DOCX?:
-                            cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_wrod_normal.png")
-                        case .PPT?,.PPTX?:
-                            cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
-                        case .XLS?,.XLSX?:
-                            cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
-                            cell.mainImageView.image = UIImage.init(named: "files_excel_small.png")
-        
-                        default:
-                            cell.leftImageView.image = UIImage.init(named: "file_icon.png")
-                            cell.mainImageView.image = UIImage.init(named: "file_icon.png")
+                     if  model.type == FilesType.file.rawValue{
+                        if !isNilString(model.name){
+                            let exestr = (model.name! as NSString).pathExtension
+                            switch FilesFormatType(rawValue: exestr.lowercased()) {
+                            case .PDF?:
+                                cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
+                                cell.mainImageView.image = UIImage.init(named: "files_pdf_normal.png")
+                            case .JPG?:
+                                cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
+                                cell.mainImageView.image = UIImage.init(named: "files_photo_normal.png")
+                            case .PNG?:
+                                cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
+                                cell.mainImageView.image = UIImage.init(named: "files_photo_normal.png")
+                            case .DOC?,.DOCX?:
+                                cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
+                                cell.mainImageView.image = UIImage.init(named: "files_wrod_normal.png")
+                            case .PPT?,.PPTX?:
+                                cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+                                cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
+                            case .XLS?,.XLSX?:
+                                cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
+                                cell.mainImageView.image = UIImage.init(named: "files_excel_small.png")
+                                
+                            default:
+                                cell.leftImageView.image = UIImage.init(named: "file_icon.png")
+                                cell.mainImageView.image = UIImage.init(named: "file_icon.png")
+                            }
                         }
-                    }
+                     }
                 }
                 return cell
             }
@@ -351,24 +353,25 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
                     cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(model))! ? true : false
                 }
-                
-                if !isNilString(model.name){
-                    let exestr = (model.name! as NSString).pathExtension
-                    switch FilesFormatType(rawValue: exestr.lowercased()) {
-                    case .PDF?:
-                        cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
-                    case .JPG?:
-                        cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
-                    case .PNG?:
-                        cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
-                    case .DOC?,.DOCX?:
-                        cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
-                    case .PPT?,.PPTX?:
-                        cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                    case .XLS?,.XLSX?:
-                         cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
-                    default:
-                        cell.leftImageView.image = UIImage.init(named: "file_icon.png")
+                if  model.type == FilesType.file.rawValue{
+                    if !isNilString(model.name){
+                        let exestr = (model.name! as NSString).pathExtension
+                        switch FilesFormatType(rawValue: exestr.lowercased()) {
+                        case .PDF?:
+                            cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
+                        case .JPG?:
+                            cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
+                        case .PNG?:
+                            cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
+                        case .DOC?,.DOCX?:
+                            cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
+                        case .PPT?,.PPTX?:
+                            cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+                        case .XLS?,.XLSX?:
+                            cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
+                        default:
+                            cell.leftImageView.image = UIImage.init(named: "file_icon.png")
+                        }
                     }
                 }
             }

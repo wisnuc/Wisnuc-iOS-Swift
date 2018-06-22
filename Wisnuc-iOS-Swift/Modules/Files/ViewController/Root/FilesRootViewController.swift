@@ -201,7 +201,7 @@ class FilesRootViewController: BaseViewController{
         AppUserService.synchronizedCurrentUser()
         styleItem.image = UIImage.init(named: "liststyle.png")
     }
-    
+     
     func prepareData() {
         ActivityIndicator.startActivityIndicatorAnimation()
         self.collcectionViewController.collectionView?.reloadData()
@@ -210,6 +210,19 @@ class FilesRootViewController: BaseViewController{
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let responseDic = isLocalRequest ? response.value as! NSDictionary: (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
+                if responseDic.value(forKey: "code") != nil{
+                    let code = responseDic["code"] as! NSNumber
+                    let message = responseDic["message"] as! NSString
+                    if code.intValue != 1 && code.intValue > 200 {
+                        let error = BaseError.init(localizedDescription: message as String, code: Int(code.int64Value))
+                        let messageText = error.localizedDescription
+                        Message.message(text: messageText)
+                        ActivityIndicator.stopActivityIndicatorAnimation()
+                        self?.dataSource = Array.init()
+                        self?.collcectionViewController.collectionView?.reloadData()
+                        return
+                    }
+                }
                 if let model = FilesModel.deserialize(from: responseDic){
                     var filesArray = Array<EntriesModel>.init()
                     var directoryArray = Array<EntriesModel>.init()
@@ -519,7 +532,7 @@ class FilesRootViewController: BaseViewController{
         for value in  FilesHelper.sharedInstance().selectFilesArray!{
             let model = value as! EntriesModel
             let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
-            let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
+            let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
             let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
             urlStrings.append(requestURL)
             nameStrings.append(model.name!)

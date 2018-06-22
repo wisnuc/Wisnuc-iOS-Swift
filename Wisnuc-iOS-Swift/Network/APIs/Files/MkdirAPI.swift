@@ -29,7 +29,7 @@ class MkdirAPI: BaseRequest {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return "/\(self.detailUrl)"
+            return "/\(self.detailUrl!)"
         default:
             return ""
         }
@@ -41,7 +41,12 @@ class MkdirAPI: BaseRequest {
             return [kRequestResourceKey:detailUrl.toBase64(),kRequestMethodKey:RequestMethodValue.POST,kRequestOpKey:kRequestMkdirValue,kRequestToNameKey:name!]
         case .local?:
             let dic = [kRequestOpKey: kRequestMkdirValue]
-            return [name!:dic]
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
+                 return [name!:data]
+            }catch{
+                 return nil
+            }
         default:
             return nil
         }

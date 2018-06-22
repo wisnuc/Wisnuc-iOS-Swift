@@ -24,11 +24,7 @@ class NetEngine: NSObject {
     let cofig = RequestConfig.sharedInstance
     func addNormalRequetJOSN(requestObj:BaseRequest ,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler){
         let baseRequsetObject = requestObj
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = baseRequsetObject.timeoutIntervalForRequest()
-        configuration.timeoutIntervalForResource  = baseRequsetObject.timeoutIntervalForRequest()
         
-        manager = Alamofire.SessionManager(configuration: configuration)
         let requestURL = bulidRequestURL(request: requestObj)
         var requestParameters:RequestParameters = [:]
         var requestHTTPHeaders:RequestHTTPHeaders = [:]
@@ -38,19 +34,22 @@ class NetEngine: NSObject {
         if baseRequsetObject.requestHTTPHeaders() != nil {
             requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
         }
-        let request = manager?.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseJSON(completionHandler: requestCompletionHandler)
-        request?.validate()
-        baseRequsetObject.task = request?.task
-        addRecord(request: request!)
+        var originalRequest: URLRequest?
+        do {
+            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
+            let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
+            let request = Alamofire.request(encodedURLRequest).validate().responseJSON(completionHandler: requestCompletionHandler)
+            baseRequsetObject.task = request.task
+            addRecord(request: request)
+        } catch {
+            requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
+        }
     }
     
     func addNormalRequetData(requestObj:BaseRequest ,_ requestCompletionHandler:@escaping NetworkResonseDataCompletionHandler){
         let baseRequsetObject = requestObj
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = baseRequsetObject.timeoutIntervalForRequest()
-        configuration.timeoutIntervalForResource  = baseRequsetObject.timeoutIntervalForRequest()
         
-        manager = Alamofire.SessionManager(configuration: configuration)
         let requestURL = bulidRequestURL(request: requestObj)
         var requestParameters:RequestParameters = [:]
         var requestHTTPHeaders:RequestHTTPHeaders = [:]
@@ -60,19 +59,22 @@ class NetEngine: NSObject {
         if baseRequsetObject.requestHTTPHeaders() != nil {
             requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
         }
-        let request = manager?.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseData(completionHandler: requestCompletionHandler)
-        request?.validate()
-        baseRequsetObject.task = request?.task
-        addRecord(request: request!)
+        var originalRequest: URLRequest?
+        do {
+            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
+            let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
+            let request = Alamofire.request(encodedURLRequest).validate().responseData(completionHandler: requestCompletionHandler)
+            baseRequsetObject.task = request.task
+            addRecord(request: request)
+        } catch {
+            requestCompletionHandler(DataResponse<Data>.init(request: nil, response: nil, data: nil, result: Result<Data>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
+        }
     }
     
     func addNormalRequetString(requestObj:BaseRequest ,_ requestCompletionHandler:@escaping NetworkResonseStringCompletionHandler){
         let baseRequsetObject = requestObj
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = baseRequsetObject.timeoutIntervalForRequest()
-        configuration.timeoutIntervalForResource  = baseRequsetObject.timeoutIntervalForRequest()
         
-        manager = Alamofire.SessionManager(configuration: configuration)
         let requestURL = bulidRequestURL(request: requestObj)
         var requestParameters:RequestParameters = [:]
         var requestHTTPHeaders:RequestHTTPHeaders = [:]
@@ -82,20 +84,22 @@ class NetEngine: NSObject {
         if baseRequsetObject.requestHTTPHeaders() != nil {
             requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
         }
-        
-        let request = manager?.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseString(completionHandler: requestCompletionHandler)
-        request?.validate()
-        baseRequsetObject.task = request?.task
-        addRecord(request: request!)
+        var originalRequest: URLRequest?
+        do {
+            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
+            let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
+            let request = Alamofire.request(encodedURLRequest).validate().responseString(completionHandler: requestCompletionHandler)
+            baseRequsetObject.task = request.task
+            addRecord(request: request)
+        } catch {
+            requestCompletionHandler(DataResponse<String>.init(request: nil, response: nil, data: nil, result: Result<String>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
+        }
     }
     
     func addNormalRequetJOSN(requestObj:BaseRequest ,queue: DispatchQueue?,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler){
         let baseRequsetObject = requestObj
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = baseRequsetObject.timeoutIntervalForRequest()
-        configuration.timeoutIntervalForResource  = baseRequsetObject.timeoutIntervalForRequest()
 
-        manager = Alamofire.SessionManager(configuration: configuration)
         let requestURL = bulidRequestURL(request: requestObj)
         var requestParameters:RequestParameters = [:]
         var requestHTTPHeaders:RequestHTTPHeaders = [:]
@@ -105,10 +109,17 @@ class NetEngine: NSObject {
         if baseRequsetObject.requestHTTPHeaders() != nil {
             requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
         }
-        let request = manager?.request(requestURL, method:baseRequsetObject.requestMethod() , parameters: requestParameters, encoding: baseRequsetObject.requestEncoding(), headers: requestHTTPHeaders).responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
-        request?.validate()
-        baseRequsetObject.task = request?.task
-        addRecord(request: request!)
+        var originalRequest: URLRequest?
+         do {
+            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
+            let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
+            let request = Alamofire.request(encodedURLRequest).validate().responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
+            baseRequsetObject.task = request.task
+            addRecord(request: request)
+         } catch {
+            requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
+        }
     }
 
     //增加一条记录
