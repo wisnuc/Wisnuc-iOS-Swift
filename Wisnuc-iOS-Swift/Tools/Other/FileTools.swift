@@ -19,21 +19,13 @@ class FileTools: NSObject {
             switch format {
             case .PDF?:
                 name = "files_pdf_small.png"
-            case .JPG?:
+            case .PNG?,.JPG?:
                 name = "files_photo_normal.png"
-            case .PNG?:
-                name = "files_photo_normal.png"
-            case .DOC?:
+            case .DOC?,.DOCX?:
                 name = "files_word_small.png"
-            case .DOCX?:
-                name = "files_word_small.png"
-            case .PPT?:
+            case .PPT?,.PPTX?:
                 name = "files_ppt_small.png"
-            case .PPTX?:
-                name = "files_ppt_small.png"
-            case .XLS?:
-                name = "files_excel_small.png"
-            case .XLSX?:
+            case .XLS?,.XLSX?:
                 name = "files_excel_small.png"
             default:
                 name = "file_icon.png"

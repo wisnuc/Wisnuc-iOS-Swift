@@ -64,6 +64,7 @@ class AppService: NSObject,ServiceProtocol{
                 AppNetworkService.networkState = .local
                 self?.nextStepForLogin(callback: callBackClosure)
             }else{
+                AppNetworkService.networkState = .local
                 callBackClosure(response.error,nil)
             }
         }
@@ -152,8 +153,8 @@ class AppService: NSObject,ServiceProtocol{
                 do {
                     let userModel = try JSONDecoder().decode(UserModel.self, from: response.data!)
                     if userModel.uuid == AppUserService.currentUser?.uuid{
-                        AppUserService.currentUser?.isAdmin = NSNumber.init(value: userModel.isAdmin!)
-                        AppUserService.currentUser?.isFirstUser = NSNumber.init(value: userModel.isFirstUser!)
+                        AppUserService.currentUser?.isAdmin = userModel.isAdmin != nil ? NSNumber.init(value: userModel.isAdmin!) : nil
+                        AppUserService.currentUser?.isFirstUser = userModel.isFirstUser != nil ? NSNumber.init(value: userModel.isFirstUser!) : nil 
                         if (userModel.global) != nil {
                             AppUserService.currentUser?.guid = userModel.global?.id;
 //                            AppUserService.currentUser?.isBindWechat = YES;

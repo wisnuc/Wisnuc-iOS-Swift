@@ -15,10 +15,27 @@ enum FilesType:String{
 }
 
 enum FilesFormatType:String {
+
     case EXE = "exe"
     case PDF = "pdf"
-    case JPG = "jpg"
     case PNG = "png"
+    case JPG = "jpg"
+    case JPEG = "jpeg"
+    case GIF = "gif"
+    case MP4 = "mp4"
+    case RMVB = "rmvb"
+    case RM = "rm"
+    case AVI = "avi"
+    case MKV = "mkv"
+    case WMV = "wmv"
+    case SWF = "swf"
+    case FLV = "flv"
+    case MOV = "mov"
+    case MP3 = "mp3"
+    case AAC = "aac"
+    case WAV = "wav"
+    case FLAC = "flac"
+    case APE = "ape"
     case TXT = "txt"
     case PPT = "ppt"
     case PPTX = "pptx"

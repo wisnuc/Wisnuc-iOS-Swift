@@ -19,6 +19,7 @@ public class EntriesModel:HandyJSON {
     var size:UInt64?
     var driveUUID:String?
     var parentUUID:String?
+    var metadata:Metadata?
     
     required public init() {}
     
@@ -33,4 +34,14 @@ public class EntriesModel:HandyJSON {
             self.size = 0
         }
     }
+}
+
+
+class Metadata: HandyJSON {
+    var w: NSNumber?
+    var h: NSNumber?
+    var type: String?
+    var orient: NSNumber?
+    
+    required init() {}
 }

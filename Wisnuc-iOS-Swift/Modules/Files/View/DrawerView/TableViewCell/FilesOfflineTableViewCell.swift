@@ -9,8 +9,10 @@
 import UIKit
 import Material
 
-class FilesOfflineTableViewCell: UITableViewCell {
 
+class FilesOfflineTableViewCell: UITableViewCell {
+    typealias TableViewCellCallBack = (_ cell: UITableViewCell,_ button:UIButton) -> Void
+    var cellCallBack:TableViewCellCallBack?
     @IBOutlet weak var moreButton: IconButton!
     @IBOutlet weak var detailImageView: UIImageView!
     @IBOutlet weak var detailLabel: UILabel!
@@ -34,6 +36,11 @@ class FilesOfflineTableViewCell: UITableViewCell {
         }
     }
 
+    @IBAction func moreButtonTap(_ sender: IconButton) {
+        if self.cellCallBack != nil {
+            self.cellCallBack!(self,sender)
+        }
+    }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

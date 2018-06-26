@@ -151,16 +151,16 @@ class NetworkService: NSObject {
             return callback(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)
         }
         
-        self.getDirUUID(name: name ,dirUUID: (AppUserService.currentUser?.userHome)!) {[weak self] (getDirUUIDError, directoryUUID) in
+        self.getDirUUID(name: name, driveUUID: (AppUserService.currentUser?.userHome)! ,dirUUID: (AppUserService.currentUser?.userHome)!) {[weak self] (getDirUUIDError, directoryUUID) in
             if getDirUUIDError != nil{
                 return callback(getDirUUIDError, nil)
             }else{
 //                saveToUserDefault(value: directoryUUID!, key: kBackupBaseEntryKey)
                 // 获取backup 目录 ，如果没有就创建
                 // backupBaseDir 就是 “上传的图片” 文件夹 , backupDir 就是 “来自xxx” 文件夹
-                let fromName:String = UIDevice.current.modelName
-                self?.getDirUUID(name: fromName,dirUUID:directoryUUID!,callBack: { (deviceFromError, deviceFromDirUUID) in
-                    if deviceFromError == nil{
+                let fromName:String = "来自\(UIDevice.current.modelName)"
+                self?.getDirUUID(name: fromName, driveUUID: (AppUserService.currentUser?.userHome)!,dirUUID:directoryUUID!,callBack: { (deviceFromError, deviceFromDirUUID) in
+                    if deviceFromError != nil{
                         return callback(deviceFromError,nil)
                     }else{
 //                        saveToUserDefault(value: directoryUUID!, key: kBackupDirectory)
@@ -172,8 +172,8 @@ class NetworkService: NSObject {
     }
     
     // 获取 名为 “上传的照片”（任何name都可以） 的文件夹， 没有就创建
-    func getDirUUID(name:String,dirUUID:String,callBack:@escaping ((_ error:Error?,_ directoryUUID:String?)->())) {
-        let request = DriveDirAPI.init(driveUUID: (AppUserService.currentUser?.userHome)!, directoryUUID: dirUUID)
+    func getDirUUID(name:String,driveUUID:String,dirUUID:String,callBack:@escaping ((_ error:Error?,_ directoryUUID:String?)->())) {
+        let request = DriveDirAPI.init(driveUUID:driveUUID, directoryUUID: dirUUID)
         let isLocalRequest = AppNetworkService.networkState == .local
         request.startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
@@ -191,9 +191,9 @@ class NetworkService: NSObject {
                     let dic = obj as! NSDictionary
                     if let model = EntriesModel.deserialize(from: dic) {
                         if model.name == name && model.type == "directory" {
-                            stop.pointee = true
                             find = true
-                            return callBack(nil, model.uuid);
+                            stop.pointee = true
+                            return callBack(nil, model.uuid)
                         }
                     }
                 })
@@ -206,7 +206,8 @@ class NetworkService: NSObject {
                             return callBack(nil,directoriesModel!.uuid)
                         }
                     }
-                    AppNetworkService.networkState == .normal ? self.mkDirIn(dirveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: (AppUserService.currentUser?.userHome!)!, name: name, closure: closure) : self.mkDirLocalIn(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: (AppUserService.currentUser?.userHome!)!, name: name, closure: closure)
+                    
+                    AppNetworkService.networkState == .normal ? self.mkDirIn(dirveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID:dirUUID , name: name, closure: closure) : self.mkDirLocalIn(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: dirUUID, name: name, closure: closure)
                 }
             }else{
                 callBack(response.error,nil)
@@ -230,27 +231,69 @@ class NetworkService: NSObject {
                      formData.append(data, withName: name)
                     
                 }catch{
-                    closure(BaseError.init(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTODataFail, code: ErrorCode.JsonModel.SwitchTODataFail),nil)
+                  return  closure(BaseError.init(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTODataFail, code: ErrorCode.JsonModel.SwitchTODataFail),nil)
                 }
                
             }, with: encodedURLRequest) { (response) in
                 switch response {
                 case .success(let upload, _, _):
-                    upload.responseData(completionHandler: { (response) in
+                    upload.validate(statusCode: 200..<500)
+                    .validate(contentType: ["application/json"])
+                    .responseData(completionHandler: { (responseData) in
                         do{
-                            let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: response.data!)
-                            closure(nil,directoriesModel)
+                            let json = try JSONSerialization.jsonObject(with: responseData.data!, options: .mutableContainers)
+                            if json is NSArray{
+                                let array = json as! NSArray
+                                for value in array{
+                                    let dic =  value as! NSDictionary
+                                    let dataDic = dic["data"] as! NSDictionary
+                                    if dataDic["name"] as! String == name && dataDic["type"] as! String == FilesType.directory.rawValue {
+                                       let data = jsonToData(jsonDic: dataDic)
+                                      do{
+                                            let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: data!)
+                                            return closure(nil,directoriesModel)
+                                        }catch{
+                                          return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                                        }
+                                    }
+                                }
+                                print(array)
+                            }else if json is NSDictionary{
+                                let dic = json as! NSDictionary
+                                if dic["code"] != nil{
+                                    if dic["message"] is String{
+                                        let code = dic["code"] as! String
+                                        let message = dic["message"] as! NSString
+                                        if code == "EEXIST"{
+                                           return closure(BaseError.init(localizedDescription: message as String, code: 0), nil)
+                                        }
+                                    }else{
+                                        let code = dic["code"] as! NSNumber
+                                        let message = dic["message"] as! NSString
+                                        if code.intValue != 1 && code.intValue > 200 {
+                                          return  closure(BaseError.init(localizedDescription: message as String, code: Int(code.int64Value)), nil)
+                                        }
+                                    }
+                                }
+                            }
                         }catch{
-                            closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                           return closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
                         }
+                        do{
+                            let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: responseData.data!)
+                            return closure(nil,directoriesModel)
+                        }catch{
+                            return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail,  code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                        }
+                       
                     })
                 case .failure(let error):
-                     closure(error,nil)
+                   return  closure(error,nil)
                 }
             }
 
         } catch {
-            closure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest),nil)
+           return closure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest),nil)
         }
         
     }

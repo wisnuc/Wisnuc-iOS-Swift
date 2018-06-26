@@ -104,4 +104,15 @@ class SearchAPI: BaseRequest {
         dic?.setValue(fileOnly, forKey: "fileOnly")
         return dic as? RequestParameters
     }
+    
+    override func requestHTTPHeaders() -> RequestHTTPHeaders? {
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return [kRequestAuthorizationKey:AppTokenManager.token!]
+        case .local?:
+            return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
+        default:
+            return nil
+        }
+    }
 }

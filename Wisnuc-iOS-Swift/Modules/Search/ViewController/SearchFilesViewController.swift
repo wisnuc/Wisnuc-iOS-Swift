@@ -13,9 +13,15 @@ import Foundation
  enum SearhCellType {
     case searchWill
     case searchEnd
+    case searching
     case searchingWithoutType
 }
 
+enum SearhOrder:String {
+    case newest = "newest"
+    case oldest = "oldest"
+    case find = "find"
+}
 
 private var headerHeight:CGFloat = 48.0
 private let chipsWidth:CGFloat = 110.0
@@ -26,6 +32,7 @@ class SearchFilesViewController: BaseViewController {
     var cellCount = 0
     var cellHeight = 0
     var dataSouce:Array<EntriesModel>?
+    var requests:Array<BaseRequest>?
     var cellType:SearhCellType?{
         didSet{
             switch cellType{
@@ -33,6 +40,8 @@ class SearchFilesViewController: BaseViewController {
                 searchWillTypeAction()
             case .searchEnd?:
                 searchEndTypeAction()
+            case .searching?:
+                searchingAction()
             case .searchingWithoutType?:
                 searchingWithoutTypeTypeAction()
             default:
@@ -49,7 +58,8 @@ class SearchFilesViewController: BaseViewController {
         super.viewDidLoad()
         self.view.addSubview(mainTableView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
-        setData()
+        dataSouce = Array.init()
+        requests = Array.init()
         setCellType()
     }
     
@@ -76,17 +86,32 @@ class SearchFilesViewController: BaseViewController {
         mainTableView.reloadData()
     }
     
-    func setData(){
-        SearchAPI.init(places: uuid!).startRequestJSONCompletionHandler { (response) in
-            
+    func searchAny(text:String? = nil,types:String? = nil,sClass:String? = nil,complete:@escaping (_ error:Error?)->()){
+        var array:Array<EntriesModel> =  Array.init()
+        var order:String?
+        mainTableView.reloadEmptyDataSet()
+        order = !isNilString(types) || !isNilString(sClass) ? nil : SearhOrder.find.rawValue
+        let request = SearchAPI.init(order:order, places: uuid!,class:sClass, types:types, name:text)
+            request.startRequestJSONCompletionHandler { [weak self] (response) in
+            if response.error == nil{
+                if response.value is NSArray{
+                    let rootArray = response.value as! NSArray
+                    for (_ , value) in rootArray.enumerated(){
+                        if value is NSDictionary{
+                            let dic = value as! NSDictionary
+                            if let model = EntriesModel.deserialize(from: dic) {
+                                array.append(model)
+                            }
+                        }
+                    }
+                    self?.dataSouce = array
+                    return complete(nil)
+                }
+            }else{
+                return complete(response.error)
+            }
         }
-        let model1 = EntriesModel.init()
-        model1.name = "mj.pdf"
-        let model2 = EntriesModel.init()
-        model2.name = "mj.pptx"
-        let model3 = EntriesModel.init()
-        model3.name = "文档1.doc"
-        dataSouce = [model1,model2,model3]
+        requests?.append(request)
     }
     
     func searchWillTypeAction(){
@@ -99,6 +124,10 @@ class SearchFilesViewController: BaseViewController {
         headerView.backgroundColor = UIColor.white
         chipsView.removeFromSuperview()
         headerHeight = 48.0
+        for value in requests! {
+            value.cancel()
+        }
+       requests?.removeAll()
     }
     
     func searchEndTypeAction(){
@@ -109,6 +138,12 @@ class SearchFilesViewController: BaseViewController {
         mainTableView.separatorInset = UIEdgeInsets(top: 0, left: 72, bottom: 0, right: 0)
         mainTableView.separatorStyle = .singleLine
         headerHeight = 48.0
+        requests?.removeAll()
+    }
+    
+    func searchingAction(){
+        cellCount = 0
+        mainTableView.reloadData()
     }
     
     func searchingWithoutTypeTypeAction(){
@@ -121,6 +156,7 @@ class SearchFilesViewController: BaseViewController {
         mainTableView.separatorStyle = .singleLine
         headerHeight = 0.1
         headerViewTitleLabel.removeFromSuperview()
+        requests?.removeAll()
     }
 
     override func didReceiveMemoryWarning() {
@@ -136,10 +172,15 @@ class SearchFilesViewController: BaseViewController {
     
     @objc func goSearch(_ anyObject: AnyObject){
         if cellType != .searchEnd && (searchTextField.text?.count)!>0{
-            cellType = .searchingWithoutType
+            self.searchAny(text: self.searchTextField.text!) { [weak self] (error) in
+                if error != nil{
+                    Message.message(text: (error?.localizedDescription)!)
+                }
+                self?.cellType = .searchingWithoutType
+                self?.mainTableView.reloadData()
+                self?.mainTableView.reloadEmptyDataSet()
+            }
         }
-        
-        mainTableView.reloadData()
     }
     
     @objc func textFieldTextChange(_ textField:UITextField){
@@ -150,7 +191,7 @@ class SearchFilesViewController: BaseViewController {
         }else{
                 NSObject.cancelPreviousPerformRequests(withTarget: self)
                 let subString:NSString = textField.text! as NSString
-                self.perform(#selector(goSearch(_ :)), with: subString, afterDelay: 0.7)
+                self.perform(#selector(goSearch(_ :)), with: subString, afterDelay: 1.0)
         }
     }
     
@@ -175,6 +216,8 @@ class SearchFilesViewController: BaseViewController {
         let tableView = UITableView.init(frame: CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight))
         tableView.tableFooterView = UIView.init(frame: CGRect.zero)
         tableView.delegate = self
+        tableView.emptyDataSetDelegate = self
+        tableView.emptyDataSetSource = self
         tableView.dataSource = self
         return tableView
     }()
@@ -199,6 +242,12 @@ class SearchFilesViewController: BaseViewController {
         chips.delegate = self
         return chips
     }()
+    
+    lazy var filesBottomVC: FilesFilesBottomSheetContentTableViewController = {
+        let bottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        bottomVC.delegate = self
+        return bottomVC
+    }()
 }
 
 extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
@@ -219,7 +268,6 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
         return headerView
     }
     
@@ -227,14 +275,26 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         if let cell = cell as?  FilesOfflineTableViewCell {
             let model = dataSouce![indexPath.row]
-            cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
+            let exestr = (model.name! as NSString).pathExtension
+            cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr)))
             cell.detailImageView.isHidden = true
             if cell.detailImageView.isHidden {
                 cell.reloadLayout()
             }
             cell.moreButton.isHidden = false
             cell.titleLabel.text = model.name
-            cell.detailLabel.text = "2016.03.04 300KB"
+            let time = model.mtime != nil ? timeString(TimeInterval(model.mtime!/1000)) : LocalizedString(forKey: "No time")
+            let size = model.size != nil ? sizeString(Int64(model.size!)) : ""
+            cell.detailLabel.text = "\(time) \(size)"
+            cell.cellCallBack = { [weak self](callBackCell , button) in
+                let bottomSheet = AppBottomSheetController.init(contentViewController: (self?.filesBottomVC)!)
+                bottomSheet.trackingScrollView = self?.filesBottomVC.tableView
+                let exestr = (model.name! as NSString).pathExtension
+                self?.filesBottomVC.headerTitleLabel.text = model.name ?? ""
+                self?.filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr)))
+                self?.present(bottomSheet, animated: true, completion: {
+                })
+            }
         }else{
             cell.textLabel?.textColor = DarkGrayColor
             cell.textLabel?.font = BoldMiddlePlusTitleFont
@@ -271,38 +331,61 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch  indexPath.row{
-        case 0:
-            chipsView.imageView.image = UIImage.init(named: "files_pdf_small.png")
-            chipsView.titleTextLabel.text = LocalizedString(forKey: "PDFs")
-        case 1:
-            chipsView.imageView.image = UIImage.init(named: "files_word_small.png")
-            chipsView.titleTextLabel.text = LocalizedString(forKey: "Word")
-        case 2:
-            chipsView.imageView.image = UIImage.init(named: "files_excel_small.png")
-            chipsView.titleTextLabel.text = LocalizedString(forKey: "Excel")
-        case 3:
-            chipsView.imageView.image = UIImage.init(named: "files_pdf_small.png")
-            chipsView.titleTextLabel.text = LocalizedString(forKey: "PPT")
-        case 4:
-            chipsView.imageView.image = UIImage.init(named: "files_photo_small.png")
-            chipsView.titleTextLabel.text = LocalizedString(forKey: "Photos & Images")
-        case 5:
-            chipsView.imageView.image = UIImage.init(named: "files_video_small.png")
-            chipsView.titleTextLabel.text = LocalizedString(forKey: "video")
-        case 6:
-            chipsView.imageView.image = UIImage.init(named: "files_audio_small.png")
-            chipsView.titleTextLabel.text = LocalizedString(forKey: "Audio")
-        default:
-            break
+        if cellType == .searchingWithoutType || cellType == .searchEnd{
+            let model = dataSouce![indexPath.row]
+            
+        }else{
+            var types:String?
+            var sclass:String?
+            switch  indexPath.row{
+            case 0:
+                chipsView.imageView.image = UIImage.init(named: "files_pdf_small.png")
+                chipsView.titleTextLabel.text = LocalizedString(forKey: "PDFs")
+                types = "\(FilesFormatType.PDF.rawValue)".uppercased()
+            case 1:
+                chipsView.imageView.image = UIImage.init(named: "files_word_small.png")
+                chipsView.titleTextLabel.text = LocalizedString(forKey: "Word")
+                types = "\(FilesFormatType.DOC.rawValue).\(FilesFormatType.DOCX.rawValue)".uppercased()
+            case 2:
+                chipsView.imageView.image = UIImage.init(named: "files_excel_small.png")
+                chipsView.titleTextLabel.text = LocalizedString(forKey: "Excel")
+                types = "\(FilesFormatType.XLS.rawValue).\(FilesFormatType.XLSX.rawValue)".uppercased()
+            case 3:
+                chipsView.imageView.image = UIImage.init(named: "files_pdf_small.png")
+                chipsView.titleTextLabel.text = LocalizedString(forKey: "PPT")
+                types = "\(FilesFormatType.PPT.rawValue).\(FilesFormatType.PPTX.rawValue)".uppercased()
+            case 4:
+                chipsView.imageView.image = UIImage.init(named: "files_photo_small.png")
+                chipsView.titleTextLabel.text = LocalizedString(forKey: "Photos & Images")
+                sclass = "image"
+            case 5:
+                chipsView.imageView.image = UIImage.init(named: "files_video_small.png")
+                chipsView.titleTextLabel.text = LocalizedString(forKey: "video")
+                sclass = "video"
+//                types = "\(FilesFormatType.MP4.rawValue).\(FilesFormatType.RM.rawValue).\(FilesFormatType.RMVB.rawValue).\(FilesFormatType.MOV.rawValue).\(FilesFormatType.AVI.rawValue).\(FilesFormatType.MKV.rawValue).\(FilesFormatType.WMV.rawValue).\(FilesFormatType.SWF.rawValue).\(FilesFormatType.FLV.rawValue)".uppercased()
+            case 6:
+                chipsView.imageView.image = UIImage.init(named: "files_audio_small.png")
+                chipsView.titleTextLabel.text = LocalizedString(forKey: "Audio")
+//                types = "\(FilesFormatType.MP3.rawValue).\(FilesFormatType.AAC.rawValue).\(FilesFormatType.APE.rawValue).\(FilesFormatType.FLAC.rawValue).\(FilesFormatType.WAV.rawValue)".uppercased()
+                sclass = "audio"
+            default:
+                break
+            }
+            
+            chipsView.width = MarginsCloseWidth*3 + MarginsSoFarWidth + MarginsWidth + labelWidthFrom(title: chipsView.titleTextLabel.text!, font: chipsView.titleTextLabel.font) + 18
+            headerViewTitleLabel.removeFromSuperview()
+            headerView.addSubview(chipsView)
+            headerView.backgroundColor = lightGrayBackgroudColor
+            self.cellType = .searching
+            self.searchAny(types: types,sClass:sclass) { [weak self] (error) in
+                if error != nil{
+                    Message.message(text: (error?.localizedDescription)!)
+                }
+                 self?.cellType = .searchEnd
+                 self?.mainTableView.reloadData()
+                 self?.mainTableView.reloadEmptyDataSet()
+            }
         }
-        
-        chipsView.width = MarginsCloseWidth*3 + MarginsSoFarWidth + MarginsWidth + labelWidthFrom(title: chipsView.titleTextLabel.text!, font: chipsView.titleTextLabel.font) + 18
-        headerViewTitleLabel.removeFromSuperview()
-        headerView.addSubview(chipsView)
-        headerView.backgroundColor = lightGrayBackgroudColor
-        cellType = .searchEnd
-        self.mainTableView.reloadData()
     }
 }
 
@@ -350,5 +433,46 @@ extension SearchFilesViewController:UITextFieldDelegate{
 
         return true
     }
+}
+
+extension SearchFilesViewController:DZNEmptyDataSetSource{
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        return UIImage.init(named: "logo_gray")
+    }
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        let text = LocalizedString(forKey: "Not found")
+        let attributes = [NSAttributedStringKey.font : MiddleTitleFont,NSAttributedStringKey.foregroundColor : LightGrayColor]
+        return NSAttributedString.init(string: text, attributes: attributes)
+    }
+    
+}
+
+extension SearchFilesViewController:DZNEmptyDataSetDelegate{
+    func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
+//        self.prepareData()
+    }
+    
+    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
+        if self.dataSouce?.count == 0 && (cellType == .searchEnd || cellType == .searchingWithoutType){
+            return true
+        }else{
+            return false
+        }
+    }
+}
+
+extension SearchFilesViewController:FilesBottomSheetContentVCDelegate{
+    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+         filesBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+    
+    func filesBottomSheetContentInfoButtonTap(_ sender: UIButton) {
+        filesBottomVC.presentingViewController?.dismiss(animated: true, completion:{
+            let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
+            self.navigationController?.pushViewController(filesInfoVC, animated: true)
+        })
+    }
+    
 }
 

@@ -41,6 +41,7 @@ class NetEngine: NSObject {
             let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseJSON(completionHandler: requestCompletionHandler)
             baseRequsetObject.task = request.task
+            baseRequsetObject.dataRequest = request
             addRecord(request: request)
         } catch {
             requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
@@ -66,6 +67,7 @@ class NetEngine: NSObject {
             let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseData(completionHandler: requestCompletionHandler)
             baseRequsetObject.task = request.task
+            baseRequsetObject.dataRequest = request
             addRecord(request: request)
         } catch {
             requestCompletionHandler(DataResponse<Data>.init(request: nil, response: nil, data: nil, result: Result<Data>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
@@ -91,6 +93,7 @@ class NetEngine: NSObject {
             let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseString(completionHandler: requestCompletionHandler)
             baseRequsetObject.task = request.task
+            baseRequsetObject.dataRequest = request
             addRecord(request: request)
         } catch {
             requestCompletionHandler(DataResponse<String>.init(request: nil, response: nil, data: nil, result: Result<String>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
@@ -116,6 +119,7 @@ class NetEngine: NSObject {
             let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
             baseRequsetObject.task = request.task
+            baseRequsetObject.dataRequest = request
             addRecord(request: request)
          } catch {
             requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
@@ -132,11 +136,14 @@ class NetEngine: NSObject {
         }
     }
     
-    func cancleRequest(request:DataRequest){
-        if request.task != nil{
-            request.task?.cancel()
+    func cancleRequest(request:DataRequest?){
+        if request != nil && request?.task != nil{
+            request?.task?.cancel()
         }
-        removeRecord(request: request)
+        
+        if request != nil{
+            removeRecord(request: request!)
+        }
     }
     
     func cancleAllRequest(){

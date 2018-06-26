@@ -27,6 +27,7 @@ typealias RequestParameterEncoding = ParameterEncoding
 typealias RequestHTTPMethod = HTTPMethod
 class BaseRequest: NSObject{
     var task:URLSessionTask?
+    var dataRequest:DataRequest?
     func requestURL() -> String {
         return ""
     }
@@ -114,8 +115,8 @@ class BaseRequest: NSObject{
         }
     }
     
-    func stop(){
-        
+    func cancel(){
+        NetEngine.sharedInstance.cancleRequest(request: dataRequest)
     }
 
 }

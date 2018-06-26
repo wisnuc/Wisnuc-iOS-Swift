@@ -138,6 +138,7 @@ class LocalNetworkLoginViewController: BaseViewController {
             if error == nil && user != nil{
                 AppUserService.setCurrentUser(user)
                 AppUserService.synchronizedCurrentUser()
+                AppNetworkService.networkState = .local
                 appDelegate.setRootViewController()
             }else{
                 if error != nil{
