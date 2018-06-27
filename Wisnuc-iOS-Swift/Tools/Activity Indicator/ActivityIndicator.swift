@@ -37,7 +37,6 @@ class ActivityIndicator: NSObject{
             shareSingleOneActivityIndicator.cycleColors = [MDCPalette.blue, MDCPalette.red, MDCPalette.green, MDCPalette.yellow]
             shareSingleOneActivityIndicator.radius = 18.0
             shareSingleOneActivityIndicator.strokeWidth = 3.0
-            shareSingleOneActivityIndicator.delegate = self.init()
             shareSingleOneActivityIndicator.indicatorMode = .indeterminate
             shareSingleOneActivityIndicator.sizeToFit()
             shareSingleOneActivityIndicator.startAnimating()

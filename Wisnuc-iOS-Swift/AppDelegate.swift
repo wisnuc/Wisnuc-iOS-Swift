@@ -145,7 +145,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         tabBarController.tabBar?.backgroundColor = UIColor.white
         tabBarController.tabBar?.selectedItemTintColor = COR1
         tabBarController.tabBar?.unselectedItemTintColor = LightGrayColor
-        let drawerVC = DrawerViewController.init()
+        let drawerVC = FilesDrawerTableViewController.init(style: UITableViewStyle.grouped)
         let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
         window?.rootViewController = naviNavigationDrawer
     }

@@ -26,6 +26,7 @@ public let kCloudCommonJsonUrl = "/stations/\(String(describing: (AppUserService
 public let kCloudCommonPipeUrl = "/stations/\(String(describing: (AppUserService.currentUser?.stationId!)!))/pipe"
 public let kRquestDrivesURL = "drives"
 public let kRequestMkdirValue = "mkdir"
+public let kRequestEntriesValueKey = "entries"
 public let kBackUpAssetDirName  = "上传的照片"
 
 public let kFirstLaunchKey =  "kFirstLaunchKey"
@@ -40,6 +41,12 @@ public let kRequestResourceKey = "resource"
 public let kRequestOpKey       = "op"
 public let kRequestToNameKey  =  "toName"
 public let kRequestFromNameKey  = "fromName"
+
+public let kRequestTaskTypeKey = "type"
+public let kRequestTaskDriveKey = "drive"
+public let kRequestTaskDirKey = "dir"
+public let kRequestTaskSrcKey = "src"
+public let kRequestTaskDstKey = "dst"
 
 public let kHTTPTCPSearchBrowerType = "_http._tcp"
 

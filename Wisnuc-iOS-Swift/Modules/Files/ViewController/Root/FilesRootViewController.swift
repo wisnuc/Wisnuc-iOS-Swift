@@ -44,6 +44,7 @@ class FilesRootViewController: BaseViewController{
     var sortType:SortType?
     var isListStyle:Bool?
     var sortIsDown:Bool?
+    var isRequesting:Bool?
     var navigationTitle:String?
     var cellStyle:CellStyle?{
         didSet{
@@ -131,6 +132,9 @@ class FilesRootViewController: BaseViewController{
         }
         FilesRootViewController.downloadManager.isStartDownloadImmediately = false
         self.navigationTitle = title
+        self.collcectionViewController.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
+           self?.prepareData()
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -203,10 +207,14 @@ class FilesRootViewController: BaseViewController{
     }
      
     func prepareData() {
+        self.dataSource = Array.init()
+        isRequesting = true
         ActivityIndicator.startActivityIndicatorAnimation()
-        self.collcectionViewController.collectionView?.reloadData()
+        self.collcectionViewController.collectionView?.reloadEmptyDataSet()
         let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
-        DriveDirAPI.init(driveUUID: driveUUID!, directoryUUID: directoryUUID!).startRequestJSONCompletionHandler(queue) {[weak self] (response) in
+        let requestDriveUUID = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+        let requestDirectoryUUID = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+        DriveDirAPI.init(driveUUID: requestDriveUUID, directoryUUID: requestDirectoryUUID).startRequestJSONCompletionHandler(queue) {[weak self] (response) in
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let responseDic = isLocalRequest ? response.value as! NSDictionary: (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
@@ -218,8 +226,9 @@ class FilesRootViewController: BaseViewController{
                         let messageText = error.localizedDescription
                         Message.message(text: messageText)
                         ActivityIndicator.stopActivityIndicatorAnimation()
-                        self?.dataSource = Array.init()
                         self?.collcectionViewController.collectionView?.reloadData()
+                        self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
+                        self?.isRequesting = false
                         return
                     }
                 }
@@ -248,10 +257,10 @@ class FilesRootViewController: BaseViewController{
                             let sortType = AppUserService.currentUser?.sortType == nil ? SortType(rawValue: 0) : SortType(rawValue: (AppUserService.currentUser?.sortType?.int64Value)!)
                             let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
                             self?.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
-                        }else{
-                           self?.dataSource = Array.init()
-                           self?.collcectionViewController.collectionView?.reloadData()
                         }
+                        self?.isRequesting = false
+                        self?.collcectionViewController.collectionView?.reloadData()
+                        self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
                     }
                 }
                 ActivityIndicator.stopActivityIndicatorAnimation()
@@ -261,13 +270,15 @@ class FilesRootViewController: BaseViewController{
                     if response.error is BaseError{
                        messageText =  (response.error as! BaseError).localizedDescription
                     }
-                    
+                    self?.isRequesting = false
                     Message.message(text: messageText!)
                     ActivityIndicator.stopActivityIndicatorAnimation()
-                    self?.dataSource = Array.init()
                     self?.collcectionViewController.collectionView?.reloadData()
+                    self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
                 }
             }
+            
+            self?.collcectionViewController.collectionView?.mj_header.endRefreshing()
         }
     }
     
@@ -438,6 +449,8 @@ class FilesRootViewController: BaseViewController{
         if (self.navigationDrawerController?.rootViewController) != nil {
             let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
             tab.setTabBarHidden(false, animated: true)
+            let drawerController:FilesDrawerTableViewController = self.navigationDrawerController?.leftViewController as! FilesDrawerTableViewController
+            drawerController.delegate = self
         }
         self.view.endEditing(true)
     }
@@ -516,9 +529,9 @@ class FilesRootViewController: BaseViewController{
     
     // ojbc function (Selector)
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
-        let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.whiteStyle)
-        filesRootViewController.selfState = .movecopy
-        self.navigationController?.pushViewController(filesRootViewController, animated: true)
+        let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.whiteStyle)
+        let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
+        self.present(navi, animated: true, completion: nil)
     }
     
     @objc func downloadBarButtonItemTap(_ sender:UIBarButtonItem){
@@ -579,9 +592,7 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func menuButtonTap(_ sender:IconButton){
-        navigationDrawerController?.toggleLeftView()
-        let drawerController:DrawerViewController = navigationDrawerController?.leftViewController as! DrawerViewController
-        drawerController.filsDrawerVC.delegate = self
+        self.navigationDrawerController?.toggleLeftView()
     }
     
     @objc func moreButtonTap(_ sender:IconButton){
@@ -698,7 +709,7 @@ class FilesRootViewController: BaseViewController{
     
     lazy var movetoButton: MDCFlatButton = {
         let button = MDCFlatButton.init(frame: CGRect(x: self.moveFilesBottomBar.width - moveButtonWidth - MarginsWidth, y: self.moveFilesBottomBar.height/2 - moveButtonHeight/2, width: moveButtonWidth, height: moveButtonHeight))
-        button.setTitle(LocalizedString(forKey: "Move"), for: UIControlState.normal)
+        button.setTitle(LocalizedString(forKey: "Save Here"), for: UIControlState.normal)
         button.setTitleColor(COR1, for: UIControlState.normal)
         button.setTitleColor(LightGrayColor, for: UIControlState.disabled)
         button.addTarget(self, action: #selector(movetoButtonTap(_ :)), for: UIControlEvents.touchUpInside)
@@ -1007,7 +1018,7 @@ extension FilesRootViewController:DZNEmptyDataSetDelegate{
     }
     
     func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
-        if self.dataSource?.count == 0{
+        if self.dataSource?.count == 0 && self.isRequesting == false{
             return true
         }else{
             return false

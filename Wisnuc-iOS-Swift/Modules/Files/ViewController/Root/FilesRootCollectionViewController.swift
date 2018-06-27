@@ -136,7 +136,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         isSelectModel = Bool(truncating: (FilesStatus.normal).rawValue as NSNumber)
         self.collectionView?.allowsMultipleSelection = true
         self.collectionView?.allowsSelection = true
-       
+        
+//       self.collectionView?.mj_header.beginRefreshing()
 //        ViewTools.automaticallyAdjustsScrollView(scrollView: self.collectionView!, viewController: self)
     }
     

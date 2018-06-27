@@ -24,5 +24,6 @@ pod 'HandyJSON'
 pod 'RxSwift'
 pod 'DZNEmptyDataSet'
 pod 'MDRadialProgress'
+pod 'MJRefresh'
 end
 
