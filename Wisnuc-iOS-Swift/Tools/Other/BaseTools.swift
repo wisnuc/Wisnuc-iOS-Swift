@@ -40,6 +40,17 @@ func jsonToData(jsonDic:NSDictionary) ->Data?{
     
 }
 
+func dataToNSDictionary(data:Data) ->NSDictionary?{
+    var dic:NSDictionary?
+    do {
+        let dict = try JSONSerialization.jsonObject(with:data, options: .mutableContainers) as! NSDictionary
+        dic = dict
+    } catch  {
+        dic = nil
+    }
+    return dic
+}
+
 func sizeString(_ size :Int64) ->String{
     var sizeText:String?
     if size == 0{

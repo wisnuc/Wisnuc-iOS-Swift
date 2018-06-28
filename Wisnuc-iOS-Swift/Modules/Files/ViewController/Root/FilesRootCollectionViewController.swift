@@ -51,6 +51,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     var reusableView:UICollectionReusableView!
     var sortType:SortType?
     var sortIsDown:Bool?
+    var state:RootControllerState?
     var dataSource:Array<Any>?{
         didSet{
            self.collectionView?.reloadData()
@@ -246,6 +247,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
                 if let cell = cell as? FilesFolderCollectionViewCell {
                     cell.moreButton.isEnabled = isSelectModel! ? false : true
+                    cell.moreButton.isHidden = self.state == .movecopy ? true : false
                     cell.titleLabel.text = model.name
                     cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
                         if let delegateOK = self?.delegate{
@@ -254,8 +256,10 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     }
                    
                     cell.longPressCallBack = { [weak self](callbackCell) in
-                        if (self?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
-                            FilesHelper.sharedInstance().addSelectFiles(model: model)
+                        if self?.state != .movecopy {
+                            if (self?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
+                                FilesHelper.sharedInstance().addSelectFiles(model: model)
+                            }
                         }
                     }
                   
@@ -274,6 +278,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifierSection2, for: indexPath)
                 if let cell = cell as? FilesFileCollectionViewCell {
                     cell.moreButton.isEnabled = isSelectModel! ? false : true
+                    cell.moreButton.isHidden = self.state == .movecopy ? true : false
                     cell.titleLabel.text = model.name
                     cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
                         if let delegateOK = self?.delegate{
@@ -281,19 +286,28 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         }
                     }
                     
+                    if self.state == .movecopy {
+                        cell.alpha = 0.5
+                        cell.moreButton.isHidden = true
+                        cell.isUserInteractionEnabled = false
+                    }else{
+                        cell.alpha = 1
+                        cell.moreButton.isHidden = false
+                        cell.isUserInteractionEnabled = true
+                    }
+                    
                     cell.longPressCallBack = { [weak self] (callbackCell) in
-                        if (self?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
-                            FilesHelper.sharedInstance().addSelectFiles(model: model)
+                        if self?.state != .movecopy {
+                            if (self?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
+                                FilesHelper.sharedInstance().addSelectFiles(model: model)
+                            }
                         }
                     }
                     
                     cell.isSelectModel = isSelectModel
                     if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                        if (FilesHelper.sharedInstance().selectFilesArray?.contains(model))!{
-                            cell.isSelect = true
-                        }else{
-                            cell.isSelect = false
-                        }
+                       cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(model))! ? true : false
+            
                     }
                      if  model.type == FilesType.file.rawValue{
                         if !isNilString(model.name){
@@ -332,6 +346,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseListIdentifier, for: indexPath)
             if let cell = cell as? FilesListCollectionViewCell {
                 cell.moreButton.isEnabled = isSelectModel! ? false : true
+                cell.moreButton.isHidden = self.state == .movecopy ? true : false
                 let imageName = indexPath.section == 0 ? "files_folder.png" : "files_ppt_small.png"
                 cell.leftImageView.image = UIImage.init(named: imageName)
                 cell.titleLabel.text = model.name
@@ -345,8 +360,10 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 }
                 
                 cell.longPressCallBack = { [weak self](callbackCell) in
-                    if (self?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
-                        FilesHelper.sharedInstance().addSelectFiles(model: model)
+                    if self?.state != .movecopy {
+                        if (self?.isSelectModel)! == NSNumber.init(value: FilesStatus.normal.rawValue).boolValue {
+                            FilesHelper.sharedInstance().addSelectFiles(model: model)
+                        }
                     }
                 }
                 
@@ -355,6 +372,13 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(model))! ? true : false
                 }
                 if  model.type == FilesType.file.rawValue{
+                    if self.state == .movecopy {
+                        cell.alpha = 0.5
+                        cell.isUserInteractionEnabled = false
+                    }else{
+                        cell.alpha = 1.0
+                        cell.isUserInteractionEnabled = true
+                    }
                     if !isNilString(model.name){
                         let exestr = (model.name! as NSString).pathExtension
                         switch FilesFormatType(rawValue: exestr.lowercased()) {
@@ -374,6 +398,9 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                             cell.leftImageView.image = UIImage.init(named: "file_icon.png")
                         }
                     }
+                }else{
+                    cell.alpha = 1.0
+                    cell.isUserInteractionEnabled = true
                 }
             }
             return cell

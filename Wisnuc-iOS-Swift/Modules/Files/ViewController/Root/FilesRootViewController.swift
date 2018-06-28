@@ -9,6 +9,8 @@
 import UIKit
 import MaterialComponents
 import Material
+import RxSwift
+
 
 enum CellStyle:Int {
     case card = 0
@@ -46,6 +48,8 @@ class FilesRootViewController: BaseViewController{
     var sortIsDown:Bool?
     var isRequesting:Bool?
     var navigationTitle:String?
+    var srcDictionary: Dictionary<String, String>?
+    var moveModelArray: Array<EntriesModel>?
     var cellStyle:CellStyle?{
         didSet{
             switch cellStyle {
@@ -74,11 +78,22 @@ class FilesRootViewController: BaseViewController{
             case .root?:
                 self.directoryUUID = AppUserService.currentUser?.userHome
                 self.driveUUID = AppUserService.currentUser?.userHome
-            case .movecopy?:break
+                defaultNotificationCenter().rx.notification(Notification.Name.Refresh.MoveRefreshNotiKey)
+                    .subscribe(onNext: { (notification) in
+                        print("Application Will Enter Foreground")
+                    })
+                    .disposed(by: DisposeBag.init())
+            case .movecopy?:
+                let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+                let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+                if drive ==  self.srcDictionary![kRequestTaskDriveKey]! &&  dir == self.srcDictionary![kRequestTaskDirKey]!{
+                   self.movetoButton.isEnabled = false
+                }
             case .next?: break
             default:
                 break
             }
+            self.collcectionViewController.state = selfState
         }
     }
     
@@ -486,7 +501,6 @@ class FilesRootViewController: BaseViewController{
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
         let rightItem = UIBarButtonItem.init(image: UIImage.init(named: "files_new_folder_gray.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(newFolderButtonTap(_ :)))
         self.navigationItem.rightBarButtonItem = rightItem
-        appBar.navigationBar.title = LocalizedString(forKey: "Move to...")
     }
     
     func preparenNextAppNavigtionBar(){
@@ -530,6 +544,10 @@ class FilesRootViewController: BaseViewController{
     // ojbc function (Selector)
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
         let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.whiteStyle)
+        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+        filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : drive,kRequestTaskDirKey:dir]
+        filesMoveToRootViewController.moveModelArray =  FilesHelper.sharedInstance().selectFilesArray as? Array<EntriesModel>
         let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
         self.present(navi, animated: true, completion: nil)
     }
@@ -612,11 +630,40 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func movetoButtonTap(_ sender:UIButton){
-        
+        if self.moveModelArray?.count == 0 || self.moveModelArray == nil || self.srcDictionary == nil{return}
+        let names:Array<String> = self.moveModelArray!.map{$0.name!}
+        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+        if drive ==  self.srcDictionary![kRequestTaskDriveKey]! &&  dir == self.srcDictionary![kRequestTaskDirKey]!{
+            Message.message(text: LocalizedString(forKey: "无法完成此操作"))
+            return
+        }
+        let task = TasksAPI.init(type: FilesTasksType.move.rawValue, names: names, srcDrive: self.srcDictionary![kRequestTaskDriveKey]!, srcDir: self.srcDictionary![kRequestTaskDirKey]!, dstDrive: drive, dstDir: dir)
+        task.startRequestJSONCompletionHandler { (response) in
+            if response.error == nil{
+                self.dismiss(animated: true, completion: {
+                    let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) moved to \(self.title ?? "files")") : LocalizedString(forKey: "\(names.count)files moved to \(self.title ?? "files")")
+                     Message.message(text: message)
+                })
+            }else{
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                        Message.message(text: (response.error?.localizedDescription)!)
+                    }
+                }else{
+                     Message.message(text: (response.error?.localizedDescription)!)
+                }
+            }
+        }
     }
     
     @objc func cancelMovetoButtonTap(_ sender:UIButton){
-        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true) {
+            
+        }
     }
     
     //MARK : Lazy Property
@@ -784,6 +831,11 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
             let model  = sectionArray[indexPath.item]
             if model.type == FilesType.directory.rawValue{
                 let nextViewController = FilesRootViewController.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: model.uuid!,style:.whiteStyle)
+                if self.selfState == .movecopy{
+                    nextViewController.moveModelArray = moveModelArray
+                    nextViewController.srcDictionary = srcDictionary
+                    nextViewController.selfState = self.selfState
+                }
                 let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
                 tab.setTabBarHidden(true, animated: true)
                 nextViewController.title = model.name ?? ""

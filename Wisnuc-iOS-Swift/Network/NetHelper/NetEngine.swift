@@ -38,7 +38,7 @@ class NetEngine: NSObject {
         do {
             originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
             originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
-            let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
+            let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseJSON(completionHandler: requestCompletionHandler)
             baseRequsetObject.task = request.task
             baseRequsetObject.dataRequest = request
@@ -64,7 +64,7 @@ class NetEngine: NSObject {
         do {
             originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
             originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
-            let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
+            let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseData(completionHandler: requestCompletionHandler)
             baseRequsetObject.task = request.task
             baseRequsetObject.dataRequest = request
@@ -90,7 +90,7 @@ class NetEngine: NSObject {
         do {
             originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
             originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
-            let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
+            let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseString(completionHandler: requestCompletionHandler)
             baseRequsetObject.task = request.task
             baseRequsetObject.dataRequest = request
@@ -116,7 +116,7 @@ class NetEngine: NSObject {
          do {
             originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
             originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
-            let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: requestParameters)
+            let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
             baseRequsetObject.task = request.task
             baseRequsetObject.dataRequest = request

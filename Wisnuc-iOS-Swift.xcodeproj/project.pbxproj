@@ -451,6 +451,7 @@
 		1FFD12B020E3662D0053A3F7 /* MDCFreshHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12AF20E3662D0053A3F7 /* MDCFreshHeader.swift */; };
 		1FFD12B220E3979F0053A3F7 /* TasksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */; };
 		1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFF3EA12094649900828623 /* MyStationCollectionViewController.swift */; };
+		715325B314D083BF76AFF149 /* Pods_Wisnuc_iOS_SwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC624A8B343908C1991C848B /* Pods_Wisnuc_iOS_SwiftTests.framework */; };
 		F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */; };
 /* End PBXBuildFile section */
 
@@ -932,6 +933,9 @@
 		72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.release.xcconfig"; sourceTree = "<group>"; };
 		8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wisnuc_iOS_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.debug.xcconfig"; sourceTree = "<group>"; };
+		AF8641CF97D3F3B834A1395F /* Pods-Wisnuc-iOS-SwiftTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-SwiftTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-SwiftTests/Pods-Wisnuc-iOS-SwiftTests.debug.xcconfig"; sourceTree = "<group>"; };
+		CC624A8B343908C1991C848B /* Pods_Wisnuc_iOS_SwiftTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wisnuc_iOS_SwiftTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0FBA964FF17C52619FECC31 /* Pods-Wisnuc-iOS-SwiftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-SwiftTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-SwiftTests/Pods-Wisnuc-iOS-SwiftTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -947,6 +951,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				715325B314D083BF76AFF149 /* Pods_Wisnuc_iOS_SwiftTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2116,6 +2121,8 @@
 			children = (
 				A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */,
 				72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */,
+				AF8641CF97D3F3B834A1395F /* Pods-Wisnuc-iOS-SwiftTests.debug.xcconfig */,
+				F0FBA964FF17C52619FECC31 /* Pods-Wisnuc-iOS-SwiftTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -2124,6 +2131,7 @@
 			isa = PBXGroup;
 			children = (
 				8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */,
+				CC624A8B343908C1991C848B /* Pods_Wisnuc_iOS_SwiftTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2167,9 +2175,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1FD9B77A207CBE8900906D80 /* Build configuration list for PBXNativeTarget "Wisnuc-iOS-SwiftTests" */;
 			buildPhases = (
+				17F259258F9379BB9C4DF16A /* [CP] Check Pods Manifest.lock */,
 				1FD9B75F207CBE8900906D80 /* Sources */,
 				1FD9B760207CBE8900906D80 /* Frameworks */,
 				1FD9B761207CBE8900906D80 /* Resources */,
+				70C296087E35F5E009822D8C /* [CP] Embed Pods Frameworks */,
+				99291CBD8EE3648390F67806 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2576,6 +2587,46 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		17F259258F9379BB9C4DF16A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Wisnuc-iOS-SwiftTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		70C296087E35F5E009822D8C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-SwiftTests/Pods-Wisnuc-iOS-SwiftTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/RxBlocking/RxBlocking.framework",
+				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxBlocking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxTest.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-SwiftTests/Pods-Wisnuc-iOS-SwiftTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		86DDF45F5CCB6C594636B31F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2601,6 +2652,7 @@
 				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
 				"${BUILT_PRODUCTS_DIR}/RealReachability/RealReachability.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
@@ -2627,6 +2679,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealReachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
@@ -2636,6 +2689,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		99291CBD8EE3648390F67806 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-SwiftTests/Pods-Wisnuc-iOS-SwiftTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B859D02CD8822540FF13F31D /* [CP] Copy Pods Resources */ = {
@@ -3009,10 +3077,7 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
@@ -3020,10 +3085,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/**",
-					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
-				);
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
 			};
 			name = Debug;
 		};
@@ -3040,36 +3102,27 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/**",
-					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
-				);
+				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
 			};
 			name = Release;
 		};
 		1FD9B77B207CBE8900906D80 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF8641CF97D3F3B834A1395F /* Pods-Wisnuc-iOS-SwiftTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -3080,17 +3133,14 @@
 		};
 		1FD9B77C207CBE8900906D80 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F0FBA964FF17C52619FECC31 /* Pods-Wisnuc-iOS-SwiftTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -3106,11 +3156,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -3126,11 +3172,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

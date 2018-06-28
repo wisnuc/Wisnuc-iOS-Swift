@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 enum FilesTasksType:String{
     case copy
     case move
@@ -58,8 +59,8 @@ class TasksAPI: BaseRequest {
         case .local?:
             let src = [kRequestTaskDriveKey:srcDrive!,kRequestTaskDirKey:srcDir!]
             let dst = [kRequestTaskDriveKey:dstDrive!,kRequestTaskDirKey:dstDir!]
-            let dic = [kRequestTaskTypeKey:type!,kRequestTaskSrcKey:src,kRequestTaskDstKey:dst,kRequestEntriesValueKey:names!]
-            return "/tasks"
+            let dic = [kRequestTaskTypeKey:type!,kRequestTaskSrcKey:src,kRequestTaskDstKey:dst,kRequestEntriesValueKey:names!] as [String : Any]
+            return dic
         default:
             return RequestParameters.init()
         }
@@ -76,4 +77,7 @@ class TasksAPI: BaseRequest {
         }
     }
     
+    override func requestEncoding() -> RequestParameterEncoding {
+        return  JSONEncoding.default
+    }
 }

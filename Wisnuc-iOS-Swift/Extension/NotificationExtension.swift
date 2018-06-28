@@ -14,4 +14,9 @@ extension Notification.Name{
         public static let SelectNotiKey = Notification.Name(rawValue: "cell.notification.name.select")
 
     }
+    
+    public struct Refresh {
+        public static let MoveRefreshNotiKey = Notification.Name(rawValue: "cell.notification.name.moveRefresh")
+        
+    }
 }

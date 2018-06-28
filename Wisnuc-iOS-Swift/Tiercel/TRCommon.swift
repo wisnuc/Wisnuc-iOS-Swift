@@ -73,9 +73,19 @@ extension TiercelCompatible {
 
 extension Int64: TiercelCompatible {}
 extension Double: TiercelCompatible {}
-extension UIDevice: TiercelCompatible {}
-extension UIView: TiercelCompatible {}
-extension DispatchQueue: TiercelCompatible {}
+//extension UIDevice: TiercelCompatible {}
+//extension UIView: TiercelCompatible {}
+extension DispatchQueue: TiercelCompatible {
+    var tr: NSObject {
+        set {
+            self.tr = newValue
+        }
+        
+        get {
+            return self.tr
+        }
+    }
+}
 
 
 extension Tiercel where Base == Int64 {

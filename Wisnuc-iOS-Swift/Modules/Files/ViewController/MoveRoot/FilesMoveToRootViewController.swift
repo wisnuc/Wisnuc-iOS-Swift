@@ -12,7 +12,8 @@ import MaterialComponents.MaterialButtons
 private let moveButtonWidth:CGFloat = 64.0
 private let moveButtonHeight:CGFloat = 36.0
 class FilesMoveToRootViewController: BaseViewController {
-
+    var srcDictionary: Dictionary<String, String>?
+    var moveModelArray: Array<EntriesModel>?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = LocalizedString(forKey: "Select destination")
@@ -45,7 +46,7 @@ class FilesMoveToRootViewController: BaseViewController {
     }
     
     @objc func movetoButtonTap(_ sender:MDCFlatButton){
-        let names:Array<String> = ?
+//        let names:Array<String> = []
 //        TasksAPI.init(type: FilesTasksType.move, names: <#T##Array<String>#>, srcDrive: <#T##String#>, srcDir: <#T##String#>, dstDrive: <#T##String#>, dstDir: <#T##String#>)
     }
     
@@ -137,6 +138,8 @@ extension FilesMoveToRootViewController:UITableViewDelegate,UITableViewDataSourc
         case 0:
             let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.whiteStyle)
             filesRootViewController.title = LocalizedString(forKey: "My Drive")
+            filesRootViewController.srcDictionary = srcDictionary
+            filesRootViewController.moveModelArray = moveModelArray
             filesRootViewController.selfState = .movecopy
             self.navigationController?.pushViewController(filesRootViewController, animated: true)
         case 1:
