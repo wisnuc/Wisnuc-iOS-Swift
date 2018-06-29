@@ -9,13 +9,14 @@
 import UIKit
 
 @objc protocol FilesBottomSheetContentVCDelegate{
-    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath,model:Any?)
     func filesBottomSheetContentInfoButtonTap(_ sender:UIButton)
 }
 private let cellReuseIdentifier = "reuseIdentifier"
 private let headerHeight:CGFloat = 56 + 8
 class FilesFilesBottomSheetContentTableViewController: UITableViewController {
     weak var delegate:FilesBottomSheetContentVCDelegate?
+    var filesModel:EntriesModel?
     override init(style: UITableViewStyle) {
         super.init(style: style)
     }
@@ -137,7 +138,7 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if let delegateOK = self.delegate {
-            delegateOK.filesBottomSheetContentTableView(tableView, didSelectRowAt: indexPath)
+            delegateOK.filesBottomSheetContentTableView(tableView, didSelectRowAt: indexPath, model: self.filesModel)
         }
     }
 

@@ -26,6 +26,7 @@ class TasksAPI: BaseRequest {
     var srcDir:String?
     var dstDrive:String?
     var dstDir:String?
+    var method:RequestHTTPMethod?
     
     init(type:String,names:Array<String>,srcDrive:String,srcDir:String,dstDrive:String,dstDir:String) {
         super.init()
@@ -35,6 +36,12 @@ class TasksAPI: BaseRequest {
         self.srcDir = srcDir
         self.dstDrive = dstDrive
         self.dstDir = dstDir
+        self.method = RequestHTTPMethod.post
+    }
+    
+    override init() {
+        super.init()
+        self.method = RequestHTTPMethod.get
     }
     
     override func requestURL() -> String {
@@ -49,20 +56,24 @@ class TasksAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-        return RequestHTTPMethod.post
+        return  self.method ?? RequestHTTPMethod.get
     }
     
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return RequestParameters.init()
+            return nil
         case .local?:
-            let src = [kRequestTaskDriveKey:srcDrive!,kRequestTaskDirKey:srcDir!]
-            let dst = [kRequestTaskDriveKey:dstDrive!,kRequestTaskDirKey:dstDir!]
-            let dic = [kRequestTaskTypeKey:type!,kRequestTaskSrcKey:src,kRequestTaskDstKey:dst,kRequestEntriesValueKey:names!] as [String : Any]
-            return dic
+            if self.method != RequestHTTPMethod.get{
+                let src = [kRequestTaskDriveKey:srcDrive!,kRequestTaskDirKey:srcDir!]
+                let dst = [kRequestTaskDriveKey:dstDrive!,kRequestTaskDirKey:dstDir!]
+                let dic = [kRequestTaskTypeKey:type!,kRequestTaskSrcKey:src,kRequestTaskDstKey:dst,kRequestEntriesValueKey:names!] as [String : Any]
+                return dic
+            }else{
+                return nil
+            }
         default:
-            return RequestParameters.init()
+            return nil
         }
     }
     
@@ -78,6 +89,6 @@ class TasksAPI: BaseRequest {
     }
     
     override func requestEncoding() -> RequestParameterEncoding {
-        return  JSONEncoding.default
+        return  self.method == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
     }
 }

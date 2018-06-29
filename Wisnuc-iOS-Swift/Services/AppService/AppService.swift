@@ -64,7 +64,15 @@ class AppService: NSObject,ServiceProtocol{
                 AppNetworkService.networkState = .local
                 self?.nextStepForLogin(callback: callBackClosure)
             }else{
-                AppNetworkService.networkState = .local
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                        print(backToString ?? "ddd")
+                    }
+                }
                 callBackClosure(response.error,nil)
             }
         }

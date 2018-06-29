@@ -151,9 +151,9 @@ class LocalNetworkLoginViewController: BaseViewController {
                         Message.message(text: baseError.localizedDescription, duration: 2.0)
                     default:
                         Message.message(text: (error?.localizedDescription)!, duration: 2.0)
+                        
                     }
                 }
-                 AppNetworkService.networkState = .normal
             }
             
             ActivityIndicator.stopActivityIndicatorAnimation()

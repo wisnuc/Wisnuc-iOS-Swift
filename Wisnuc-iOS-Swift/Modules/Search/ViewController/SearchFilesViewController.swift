@@ -463,8 +463,8 @@ extension SearchFilesViewController:DZNEmptyDataSetDelegate{
 }
 
 extension SearchFilesViewController:FilesBottomSheetContentVCDelegate{
-    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-         filesBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
+    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
+        filesBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton) {

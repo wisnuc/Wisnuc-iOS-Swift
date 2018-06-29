@@ -15,6 +15,18 @@ class TransferTaskTableViewController: BaseViewController {
     lazy var downloadURLStrings = [String]()
     lazy var downloadNameStrings = [String]()
     var downloadManager: TRManager?
+    var taskDataSource: Array<Any>?
+    
+    override init(style: NavigationStyle) {
+        super.init(style: style)
+        taskDataSource = Array.init()
+   
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         appBar.headerViewController.headerView.trackingScrollView = tableView
@@ -24,14 +36,42 @@ class TransferTaskTableViewController: BaseViewController {
         // 因为会读取缓存到沙盒的任务，所以第一次的时候，不要马上开始下载
         downloadManager?.isStartDownloadImmediately = false
         setupManager()
+        taskDataSource?.append(contentsOf: downloadURLStrings)
+        getTasks()
         self.view.addSubview(self.tableView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
     }
     
+    func getTasks(){
+        var array:Array<FilesTasksModel> = Array.init()
+        TasksAPI.init().startRequestJSONCompletionHandler { [weak self] (response) in
+            if response.error == nil {
+                if response.value is NSArray{
+                    let rootArray = response.value as! NSArray
+                    for  value  in rootArray {
+                        let dic = value as! NSDictionary
+                        if let model = FilesTasksModel.deserialize(from: dic){
+                           array.append(model)
+                        }
+                    }
+                    self?.taskDataSource?.append(contentsOf: array)
+//                    print(self?.taskDataSource ?? "sss")
+                }
+            }else{
+                Message.message(text: (response.error?.localizedDescription)!)
+            }
+            
+            self?.tableView.reloadData()
+        }
+    }
+    
     func setupManager() {
-        
+        guard let downloadManager = downloadManager else { return  }
+        downloadURLStrings = downloadManager.tasks.map({ $0.URLString })
+        downloadNameStrings = downloadManager.tasks.map({ $0.fileName })
+        tableView.reloadData()
         // 设置manager的回调
-        downloadManager?.progress { [weak self] (manager) in
+        downloadManager.progress { [weak self] (manager) in
 //            guard let strongSelf = self else { return }
 
             
@@ -68,10 +108,6 @@ class TransferTaskTableViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.appBar.headerViewController.headerView.isHidden = false
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
-        guard let downloadManager = downloadManager else { return  }
-        downloadURLStrings = downloadManager.tasks.map({ $0.URLString })
-        downloadNameStrings = downloadManager.tasks.map({ $0.fileName })
-        tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -143,29 +179,40 @@ extension TransferTaskTableViewController:UITableViewDataSource{
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell:TransferTaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! TransferTaskTableViewCell
     
-    let URLString = downloadURLStrings[indexPath.row]
-    guard let downloadManager = downloadManager,
-        let task = downloadManager.fetchTask(URLString)
-        
-        else { return cell }
-    cell.titleLabel.text = task.fileName
-    cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType.file, format: FilesFormatType(rawValue: task.fileName)))
-    cell.detailImageView.image = #imageLiteral(resourceName: "files_download_transfer.png")
-    var image: UIImage?
-    switch task.status {
-    case .running:
-        break
-    case .suspend:
-        cell.suspendButton.setImage(#imageLiteral(resourceName: "task_suspend.png"), for: .normal)
-    case .completed:
-        image = #imageLiteral(resourceName: "file_finish.png")
-    case .waiting:
-        break
-    default: break
+    let any = taskDataSource![indexPath.row]
+    var downloadTask :TRTask?
+    var model:FilesTasksModel?
+    if any is String {
+        guard let downloadManager = downloadManager,
+            let task = downloadManager.fetchTask(any as! String)
+            else { return cell }
+        downloadTask = task
+        var image: UIImage?
+        switch downloadTask?.status {
+        case .running?:
+            break
+        case .suspend?:
+            cell.suspendButton.setImage(#imageLiteral(resourceName: "task_suspend.png"), for: .normal)
+        case .completed?:
+            image = #imageLiteral(resourceName: "file_finish.png")
+        case .waiting?:
+            break
+        default: break
+        }
+        cell.controlButton.setImage(image, for: .normal)
+        cell.updateProgress(task: downloadTask!)
+    }else if any is FilesTasksModel{
+        model = any as? FilesTasksModel
     }
-    cell.controlButton.setImage(image, for: .normal)
-    cell.updateProgress(task: task)
     
+    let fileName = model != nil ? model?.entries?.reduce("", { "\(String(describing: $0))\(String(describing: $1))" }) : downloadTask?.fileName ?? ""
+    cell.titleLabel.text = fileName
+    cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType.file, format: FilesFormatType(rawValue: fileName!)))
+    cell.detailImageView.image = #imageLiteral(resourceName: "files_download_transfer.png")
+ 
+    if downloadTask != nil {
+        
+    }
 //    let imageViewWidth:CGFloat = 24
 //    let imageView = UIImageView.init(frame: CGRect(x:cell.width - 16 - imageViewWidth, y: cell.height/2 - imageViewWidth/2, width: imageViewWidth, height: imageViewWidth))
 //    imageView.image = UIImage.init(named: "files_error.png")
@@ -180,7 +227,7 @@ extension TransferTaskTableViewController:UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return downloadURLStrings.count
+        return taskDataSource!.count
     }
 }
 

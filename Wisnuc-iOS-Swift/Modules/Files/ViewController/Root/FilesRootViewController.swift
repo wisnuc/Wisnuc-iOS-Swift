@@ -78,18 +78,14 @@ class FilesRootViewController: BaseViewController{
             case .root?:
                 self.directoryUUID = AppUserService.currentUser?.userHome
                 self.driveUUID = AppUserService.currentUser?.userHome
-                defaultNotificationCenter().rx.notification(Notification.Name.Refresh.MoveRefreshNotiKey)
-                    .subscribe(onNext: { (notification) in
-                        print("Application Will Enter Foreground")
-                    })
-                    .disposed(by: DisposeBag.init())
             case .movecopy?:
                 let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
                 let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
                 if drive ==  self.srcDictionary![kRequestTaskDriveKey]! &&  dir == self.srcDictionary![kRequestTaskDirKey]!{
                    self.movetoButton.isEnabled = false
                 }
-            case .next?: break
+            case .next?:
+               break
             default:
                 break
             }
@@ -98,9 +94,10 @@ class FilesRootViewController: BaseViewController{
     }
     
     deinit {
-       print("deinit called")
-       removeCollectionView()
-       FilesRootViewController.downloadManager.invalidate()
+        print("deinit called")
+        removeCollectionView()
+//        FilesRootViewController.downloadManager.invalidate()
+        defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
     }
     
     override init(style: NavigationStyle) {
@@ -158,7 +155,7 @@ class FilesRootViewController: BaseViewController{
         case .root?:
             selfStateRootWillAppearAction()
         default:
-             selfStateOtherWillAppearAction()
+            selfStateOtherWillAppearAction()
         }
         if isSelectModel != nil && isSelectModel!{
             isSelectModel = false
@@ -170,20 +167,30 @@ class FilesRootViewController: BaseViewController{
             self.collcectionViewController.collectionView?.reloadData()
         }
         
-            let isListStyle = AppUserService.currentUser?.isListStyle == nil ? CellStyle(rawValue: 0) : CellStyle(rawValue: (AppUserService.currentUser?.isListStyle?.intValue)!)
-            self.cellStyle = isListStyle
+        let isListStyle = AppUserService.currentUser?.isListStyle == nil ? CellStyle(rawValue: 0) : CellStyle(rawValue: (AppUserService.currentUser?.isListStyle?.intValue)!)
+        self.cellStyle = isListStyle
+        popBackRefresh()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationDrawerController?.isLeftPanGestureEnabled = false
         self.view.endEditing(true)
-        
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
    
+    }
+    
+    func popBackRefresh(){
+        let fromViewController = self.navigationController?.transitionCoordinator?.viewController(forKey: UITransitionContextViewControllerKey.from)
+        if fromViewController != nil{
+            if !(self.navigationController?.viewControllers.contains(fromViewController!))! && self.presentedViewController == nil
+            {//Something is being popped and we are being revealed
+                self.prepareData()
+            }
+        }
     }
     
     func setCellStyle(){
@@ -513,6 +520,24 @@ class FilesRootViewController: BaseViewController{
         self.navigationItem.rightBarButtonItems = [moreItem,styleItem,searchItem]
     }
     
+    func registerNotification(){
+        defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
+        defaultNotificationCenter().addObserver(self, selector: #selector(refreshNotification(_ :)), name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
+    }
+    
+    func readFile(filePath:String){
+        documentController.url = URL.init(fileURLWithPath: filePath)
+        let  canOpen = self.documentController.presentPreview(animated: true)
+        if (!canOpen) {
+            Message.message(text: LocalizedString(forKey: "File preview failed"))
+            documentController.presentOptionsMenu(from: self.view.bounds, in: self.view, animated: true)
+        }
+    }
+    
+    @objc func refreshNotification(_ notifa:Notification){
+      self.prepareData()
+    }
+    
     @objc func enterSearch(){
         let searchVC = SearchFilesViewController.init(style: NavigationStyle.whiteStyle)
         searchVC.modalPresentationStyle = .custom
@@ -548,6 +573,7 @@ class FilesRootViewController: BaseViewController{
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : drive,kRequestTaskDirKey:dir]
         filesMoveToRootViewController.moveModelArray =  FilesHelper.sharedInstance().selectFilesArray as? Array<EntriesModel>
+        self.registerNotification()
         let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
         self.present(navi, animated: true, completion: nil)
     }
@@ -644,6 +670,7 @@ class FilesRootViewController: BaseViewController{
                 self.dismiss(animated: true, completion: {
                     let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) moved to \(self.title ?? "files")") : LocalizedString(forKey: "\(names.count)files moved to \(self.title ?? "files")")
                      Message.message(text: message)
+                     defaultNotificationCenter().post(name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
                 })
             }else{
                 if response.data != nil {
@@ -820,6 +847,11 @@ class FilesRootViewController: BaseViewController{
         return barItem
     }()
 
+    lazy var documentController: UIDocumentInteractionController = {
+        let doucumentController = UIDocumentInteractionController.init()
+        doucumentController.delegate = self
+        return doucumentController
+    }()
 }
 
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
@@ -840,6 +872,14 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                 tab.setTabBarHidden(true, animated: true)
                 nextViewController.title = model.name ?? ""
                 self.navigationController?.pushViewController(nextViewController, animated: true)
+                defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
+            }else{
+                if FilesRootViewController.downloadManager.cache.fileExists(fileName: model.name ?? ""){
+                    self.readFile(filePath: FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
+                }
+//                for (_,value) in FilesRootViewController.downloadManager.completedTasks.enumerated(){
+//                    value
+//                }
             }
         }
     }
@@ -852,6 +892,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         let exestr = (model.name! as NSString).pathExtension
         filesBottomVC.headerTitleLabel.text = model.name ?? ""
         filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type!), format: FilesFormatType(rawValue: exestr)))
+        filesBottomVC.filesModel = model
         self.present(bottomSheet, animated: true, completion: {
         })
     }
@@ -1006,6 +1047,26 @@ extension FilesRootViewController:SearchMoreBottomSheetVCDelegate{
 }
 
 extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
+    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
+        filesBottomVC.presentingViewController?.dismiss(animated: true, completion: {
+            switch indexPath.row {
+            case 0:
+                break
+            case 1:
+                let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.whiteStyle)
+                let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+                let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+                filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : drive,kRequestTaskDirKey:dir]
+                filesMoveToRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
+                self.registerNotification()
+                let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
+                self.present(navi, animated: true, completion: nil)
+            default:
+                break
+            }
+        })
+    }
+    
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton) {
         filesBottomVC.presentingViewController?.dismiss(animated: true, completion:{
             let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
@@ -1013,10 +1074,6 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
             self.navigationController?.pushViewController(filesInfoVC, animated: true)
         })
-    }
-    
-    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        filesBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 }
 
@@ -1075,5 +1132,19 @@ extension FilesRootViewController:DZNEmptyDataSetDelegate{
         }else{
             return false
         }
+    }
+}
+
+extension FilesRootViewController:UIDocumentInteractionControllerDelegate{
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
+    }
+    
+    func documentInteractionControllerViewForPreview(_ controller: UIDocumentInteractionController) -> UIView? {
+        return self.view
+    }
+    
+    func documentInteractionControllerRectForPreview(_ controller: UIDocumentInteractionController) -> CGRect {
+        return self.view.frame
     }
 }

@@ -73,6 +73,7 @@ class UserService: NSObject,ServiceProtocol{
         userDefaults.removeObject(forKey: kCurrentUserUUID)
         userDefaults.synchronize()
         NetEngine.sharedInstance.cancleAllRequest()
+        defaultNotificationCenter().removeObserver(self)
     }
     
     func user(uuid:String) ->User?{
