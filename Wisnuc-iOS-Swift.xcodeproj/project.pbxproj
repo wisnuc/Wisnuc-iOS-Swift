@@ -451,6 +451,10 @@
 		1FFD12B020E3662D0053A3F7 /* MDCFreshHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12AF20E3662D0053A3F7 /* MDCFreshHeader.swift */; };
 		1FFD12B220E3979F0053A3F7 /* TasksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */; };
 		1FFD12B520E61B4D0053A3F7 /* FilesTasksModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12B420E61B4D0053A3F7 /* FilesTasksModel.swift */; };
+		1FFD12B720E9C7270053A3F7 /* files_move_to.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD12B620E9C7250053A3F7 /* files_move_to.png */; };
+		1FFD12B920E9C72F0053A3F7 /* files_move_to@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD12B820E9C72F0053A3F7 /* files_move_to@2x.png */; };
+		1FFD12BB20E9C73C0053A3F7 /* files_move_to@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD12BA20E9C73C0053A3F7 /* files_move_to@3x.png */; };
+		1FFD12BD20EA265E0053A3F7 /* DeletTasksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12BC20EA265E0053A3F7 /* DeletTasksAPI.swift */; };
 		1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFF3EA12094649900828623 /* MyStationCollectionViewController.swift */; };
 		715325B314D083BF76AFF149 /* Pods_Wisnuc_iOS_SwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC624A8B343908C1991C848B /* Pods_Wisnuc_iOS_SwiftTests.framework */; };
 		F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */; };
@@ -931,6 +935,10 @@
 		1FFD12AF20E3662D0053A3F7 /* MDCFreshHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDCFreshHeader.swift; sourceTree = "<group>"; };
 		1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksAPI.swift; sourceTree = "<group>"; };
 		1FFD12B420E61B4D0053A3F7 /* FilesTasksModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesTasksModel.swift; sourceTree = "<group>"; };
+		1FFD12B620E9C7250053A3F7 /* files_move_to.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_move_to.png; sourceTree = "<group>"; };
+		1FFD12B820E9C72F0053A3F7 /* files_move_to@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_move_to@2x.png"; sourceTree = "<group>"; };
+		1FFD12BA20E9C73C0053A3F7 /* files_move_to@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_move_to@3x.png"; sourceTree = "<group>"; };
+		1FFD12BC20EA265E0053A3F7 /* DeletTasksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletTasksAPI.swift; sourceTree = "<group>"; };
 		1FFF3EA12094649900828623 /* MyStationCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationCollectionViewController.swift; sourceTree = "<group>"; };
 		72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.release.xcconfig"; sourceTree = "<group>"; };
 		8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wisnuc_iOS_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1300,6 +1308,7 @@
 				1F1BABA920C5290700D32C5A /* MkdirAPI.swift */,
 				1F2A380720DBAD750035EED5 /* SearchAPI.swift */,
 				1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */,
+				1FFD12BC20EA265E0053A3F7 /* DeletTasksAPI.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -1566,6 +1575,9 @@
 		1F8EBB4A209FF05A00E8AB83 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD12B620E9C7250053A3F7 /* files_move_to.png */,
+				1FFD12B820E9C72F0053A3F7 /* files_move_to@2x.png */,
+				1FFD12BA20E9C73C0053A3F7 /* files_move_to@3x.png */,
 				1FC5CC1820D3C3E100499E63 /* files_download_transfer@3x.png */,
 				1FC5CC1620D3C3D500499E63 /* files_download_transfer@2x.png */,
 				1FC5CC1420D3C3C800499E63 /* files_download_transfer.png */,
@@ -2286,6 +2298,7 @@
 				1F4E93812089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib in Resources */,
 				1F1BAC4B20CA72D600D32C5A /* files_down@3x.png in Resources */,
 				1F83AE7D20886BDA007CCCFD /* change@3x.png in Resources */,
+				1FFD12B920E9C72F0053A3F7 /* files_move_to@2x.png in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
 				1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */,
 				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
@@ -2420,6 +2433,7 @@
 				1F3C241520A42D1200E6B953 /* files_select@2x.png in Resources */,
 				1FBD1DF820AEE0360067BE3E /* close_white@2x.png in Resources */,
 				1F050E3720AA7BCB0037F00A /* files_share_all@3x.png in Resources */,
+				1FFD12BB20E9C73C0053A3F7 /* files_move_to@3x.png in Resources */,
 				1F4E93892089D64D00DD1EA7 /* disk@3x.png in Resources */,
 				1FC8FF7E20AE6F3800F65194 /* chips_close.png in Resources */,
 				1FA6A1AF20CFA69C007A0AB2 /* files_video_normal.png in Resources */,
@@ -2573,6 +2587,7 @@
 				1F5AD93F20AD80980065DAD3 /* files_audio_small@2x.png in Resources */,
 				1FAADEC120ABFD6A00739220 /* files_move_gray.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
+				1FFD12B720E9C7270053A3F7 /* files_move_to.png in Resources */,
 				1FEABB6520A14C6000824448 /* files_ppt_small.png in Resources */,
 				1F1BAC3320CA621000D32C5A /* files_arrow_down@3x.png in Resources */,
 				1F359FCE2091A95D00E2FF36 /* disk_new_add@3x.png in Resources */,
@@ -2820,6 +2835,7 @@
 				1F2A380820DBAD750035EED5 /* SearchAPI.swift in Sources */,
 				1F050E3020AA77E90037F00A /* FilesShareFolderTableViewCell.swift in Sources */,
 				1FBD1DFD20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.swift in Sources */,
+				1FFD12BD20EA265E0053A3F7 /* DeletTasksAPI.swift in Sources */,
 				1F3C240B20A4225300E6B953 /* DrawerViewController.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
 				1F8EBB5420A01EF100E8AB83 /* FilesRootCollectionViewController.swift in Sources */,

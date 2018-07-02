@@ -139,6 +139,7 @@ class FilesRootViewController: BaseViewController{
             moveFilesBottomBar.addSubview(cancelMovetoButton)
         case .next?:
             preparenNextAppNavigtionBar()
+            self.view.addSubview(fabButton)
         default:
             break
         }
@@ -1011,21 +1012,29 @@ extension FilesRootViewController:MDCBottomSheetControllerDelegate{
 }
 
 extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
-    func cllButtonTap(_ sender: UIButton) {
-        self.fabBottomVC.dismiss(animated: true) {
-            self.fabButton.expand(true, completion: {
-            })
-        }
-    }
-    
+
     func folderButtonTap(_ sender: UIButton) {
         self.fabBottomVC.dismiss(animated: true) {
             self.fabButton.expand(true, completion: {
+//                DialogWithPreferredContentSizeViewController *viewController =
+//                    [storyboard instantiateViewControllerWithIdentifier:identifier];
+//                viewController.modalPresentationStyle = UIModalPresentationCustom;
+//                viewController.transitioningDelegate = self.transitionController;
+//                viewController.colorScheme = self.colorScheme;
+//                viewController.typographyScheme = self.typographyScheme;
+//                [self presentViewController:viewController animated:YES completion:NULL];
             })
         }
     }
     
     func uploadButtonTap(_ sender: UIButton) {
+        self.fabBottomVC.dismiss(animated: true) {
+            self.fabButton.expand(true, completion: {
+            })
+        }
+    }
+    
+    func cllButtonTap(_ sender: UIButton) {
         self.fabBottomVC.dismiss(animated: true) {
             self.fabButton.expand(true, completion: {
             })
