@@ -64,6 +64,7 @@ class BaseRequest: NSObject{
         return ""
     }
     
+    
     func startRequestJSONCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler) {
         networkState { (isConnect) in
             if isConnect{
@@ -100,6 +101,16 @@ class BaseRequest: NSObject{
                 NetEngine.sharedInstance.addNormalRequetString(requestObj: self, requestCompletionHandler)
             }else{
                 requestCompletionHandler(DataResponse<String>.init(request: nil, response: nil, data: nil, result: Result<String>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络"), code: ErrorCode.Network.NotConnect))))
+            }
+        }
+    }
+    
+    func startFormDataRequestJSONCompletionHandler(_ queue: DispatchQueue? = nil ,multipartFormData:@escaping (MultipartFormData) -> Void,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler,errorHandler:@escaping FormDataErrorHandler) {
+        networkState { (isConnect) in
+            if isConnect{
+                NetEngine.sharedInstance.addFormDataRequetJOSN(requestObj: self, queue: queue, multipartFormData: multipartFormData, requestCompletionHandler, errorHandler: errorHandler)
+            }else{
+                requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络"), code: ErrorCode.Network.NotConnect))))
             }
         }
     }

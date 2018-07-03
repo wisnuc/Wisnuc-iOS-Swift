@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 
+typealias FormDataErrorHandler = (Error) -> (Void)
 typealias NetworkResonseJSONCompletionHandler = (DataResponse<Any>) -> Void
 typealias NetworkResonseDataCompletionHandler = (DataResponse<Data>) -> Void
 typealias NetworkResonseStringCompletionHandler = (DataResponse<String>) -> Void
@@ -122,6 +123,43 @@ class NetEngine: NSObject {
             baseRequsetObject.dataRequest = request
             addRecord(request: request)
          } catch {
+            requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
+        }
+    }
+    
+    func addFormDataRequetJOSN(requestObj:BaseRequest ,queue: DispatchQueue? = nil,multipartFormData:@escaping (MultipartFormData) -> Void,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler,errorHandler:@escaping FormDataErrorHandler){
+        let baseRequsetObject = requestObj
+        
+        let requestURL = bulidRequestURL(request: requestObj)
+        var requestParameters:RequestParameters = [:]
+        var requestHTTPHeaders:RequestHTTPHeaders = [:]
+        if baseRequsetObject.requestParameters() != nil {
+            requestParameters = baseRequsetObject.requestParameters()!
+        }
+        if baseRequsetObject.requestHTTPHeaders() != nil {
+            requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
+        }
+        var originalRequest: URLRequest?
+        do {
+            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
+            let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
+            Alamofire.upload(multipartFormData: multipartFormData, with: encodedURLRequest) { [weak self](encodingResult) in
+                switch encodingResult {
+                case .success(let upload, _, _):
+                    upload.validate(statusCode: 200..<500)
+                    upload.responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
+                    let request = upload
+                    baseRequsetObject.task = request.task
+                    baseRequsetObject.dataRequest = request
+                    self?.addRecord(request: request)
+                case .failure(let error):
+                    errorHandler(error)
+                }
+            
+            }
+            
+        } catch {
             requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
         }
     }

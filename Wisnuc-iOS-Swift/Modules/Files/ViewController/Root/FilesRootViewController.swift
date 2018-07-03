@@ -50,6 +50,7 @@ class FilesRootViewController: BaseViewController{
     var navigationTitle:String?
     var srcDictionary: Dictionary<String, String>?
     var moveModelArray: Array<EntriesModel>?
+    let transitionController = MDCDialogTransitionController.init()
     var cellStyle:CellStyle?{
         didSet{
             switch cellStyle {
@@ -535,6 +536,65 @@ class FilesRootViewController: BaseViewController{
         }
     }
     
+    
+    func localNetStateFilesRemoveOptionRequest(name:String){
+        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: FilesOptionType.remove.rawValue).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
+            let dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
+                mainThreadSafe {
+                    formData.append(data, withName: name)
+                }
+            }catch{
+                Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
+            }
+        }, { [weak self] (response) in
+            if response.error == nil{
+                Message.message(text: LocalizedString(forKey: "Folder removed"))
+                self?.prepareData()
+            }else{
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                        Message.message(text: backToString ?? "error")
+                    }
+                }else{
+                    Message.message(text: (response.error?.localizedDescription)!)
+                }
+            }
+        }, errorHandler: { (error) -> (Void) in
+            Message.message(text: error.localizedDescription)
+        })
+    }
+    
+    func normalNetStateFilesRemoveOptionRequest(name:String){
+        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: FilesOptionType.remove.rawValue).startRequestJSONCompletionHandler { [weak self] (response) in
+            if response.error == nil{
+                Message.message(text: LocalizedString(forKey: "Folder removed"))
+                 self?.prepareData()
+            }else{
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                        Message.message(text: backToString ?? "error")
+                    }
+                }else{
+                    Message.message(text: (response.error?.localizedDescription)!)
+                }
+            }
+        }
+    }
+    
     @objc func refreshNotification(_ notifa:Notification){
       self.prepareData()
     }
@@ -612,6 +672,7 @@ class FilesRootViewController: BaseViewController{
             let bottomSheet = AppBottomSheetController.init(contentViewController: self.fabBottomVC)
             bottomSheet.delegate = self
             self.present(bottomSheet, animated: true, completion: {
+            
             })
         }
     }
@@ -1012,17 +1073,28 @@ extension FilesRootViewController:MDCBottomSheetControllerDelegate{
 }
 
 extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
-
     func folderButtonTap(_ sender: UIButton) {
-        self.fabBottomVC.dismiss(animated: true) {
-            self.fabButton.expand(true, completion: {
-//                DialogWithPreferredContentSizeViewController *viewController =
-//                    [storyboard instantiateViewControllerWithIdentifier:identifier];
-//                viewController.modalPresentationStyle = UIModalPresentationCustom;
-//                viewController.transitioningDelegate = self.transitionController;
-//                viewController.colorScheme = self.colorScheme;
-//                viewController.typographyScheme = self.typographyScheme;
-//                [self presentViewController:viewController animated:YES completion:NULL];
+        self.fabBottomVC.dismiss(animated: true) { [weak self] in
+            self?.fabButton.expand(true, completion: { [weak self] in
+                let bundle = Bundle.init(for: NewFolderViewController.self)
+                let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
+                let identifier = "inputNewFolderDialogID"
+                
+                let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+                viewController.modalPresentationStyle = UIModalPresentationStyle.custom
+                viewController.transitioningDelegate = self?.transitionController
+                
+                let vc =  viewController as! NewFolderViewController
+                let drive = self?.driveUUID ?? AppUserService.currentUser?.userHome
+                let dir = self?.directoryUUID ?? AppUserService.currentUser?.userHome
+                vc.drive = drive
+                vc.dir = dir
+                vc.delegate = self
+                self?.present(viewController, animated: true, completion: {
+                    vc.inputTextField.becomeFirstResponder()
+                    
+                })
+                
             })
         }
     }
@@ -1070,6 +1142,17 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 self.registerNotification()
                 let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
                 self.present(navi, animated: true, completion: nil)
+            case 8:
+                let name = model != nil ? (model as! EntriesModel).name! : ""
+                switch AppNetworkService.networkState {
+                case .local?:
+                    self.localNetStateFilesRemoveOptionRequest(name:name)
+                case .normal?:
+                    self.normalNetStateFilesRemoveOptionRequest(name:name)
+                default:
+                    break
+                }
+              
             default:
                 break
             }
@@ -1155,5 +1238,11 @@ extension FilesRootViewController:UIDocumentInteractionControllerDelegate{
     
     func documentInteractionControllerRectForPreview(_ controller: UIDocumentInteractionController) -> CGRect {
         return self.view.frame
+    }
+}
+
+extension FilesRootViewController:NewFolderViewControllerDelegate{
+    func createNewFolderfDidFinish() {
+        self.prepareData()
     }
 }

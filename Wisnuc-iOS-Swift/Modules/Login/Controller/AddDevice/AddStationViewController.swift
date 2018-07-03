@@ -160,6 +160,8 @@ class AddStationViewController: BaseViewController {
                                     Message.message(text: LocalizedString(forKey: "添加成功"))
                                 }
                             }
+                        }else{
+                            ActivityIndicator.stopActivityIndicatorAnimation()
                         }
                     }else{
                         ActivityIndicator.stopActivityIndicatorAnimation()

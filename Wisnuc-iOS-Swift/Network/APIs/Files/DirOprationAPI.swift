@@ -1,22 +1,27 @@
 //
-//  MkdirAPI.swift
+//  DirOprationAPI.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/6/4.
+//  Created by wisnuc-imac on 2018/7/3.
 //  Copyright © 2018年 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
+enum FilesOptionType:String{
+    case remove
+}
 
-class MkdirAPI: BaseRequest {
+class DirOprationAPI: BaseRequest {
     var driveUUID:String?
     var directoryUUID:String?
     var name:String?
     var detailUrl:String!
-    init(driveUUID:String,directoryUUID:String,name:String) {
+    var op:String?
+    init(driveUUID:String,directoryUUID:String,name:String,op:String) {
         self.driveUUID = driveUUID
         self.directoryUUID = directoryUUID
         self.name = name
+        self.op = op
         self.detailUrl = "\(kRquestDrivesURL)/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries"
     }
     
@@ -38,9 +43,9 @@ class MkdirAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestResourceKey:detailUrl.toBase64(),kRequestMethodKey:RequestMethodValue.POST,kRequestOpKey:kRequestMkdirValue,kRequestToNameKey:name!]
+            return [kRequestResourceKey:detailUrl.toBase64(),kRequestMethodKey:RequestMethodValue.POST,kRequestOpKey:op!,kRequestToNameKey:name!]
         case .local?:
-           return nil
+            return nil
         default:
             return nil
         }

@@ -455,6 +455,9 @@
 		1FFD12B920E9C72F0053A3F7 /* files_move_to@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD12B820E9C72F0053A3F7 /* files_move_to@2x.png */; };
 		1FFD12BB20E9C73C0053A3F7 /* files_move_to@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD12BA20E9C73C0053A3F7 /* files_move_to@3x.png */; };
 		1FFD12BD20EA265E0053A3F7 /* DeletTasksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12BC20EA265E0053A3F7 /* DeletTasksAPI.swift */; };
+		1FFD12C120EB0F310053A3F7 /* NewFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12BF20EB0F310053A3F7 /* NewFolderViewController.swift */; };
+		1FFD12C420EB175E0053A3F7 /* NewFolderViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD12C320EB175E0053A3F7 /* NewFolderViewController.storyboard */; };
+		1FFD12C620EB80E80053A3F7 /* DirOprationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12C520EB80E70053A3F7 /* DirOprationAPI.swift */; };
 		1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFF3EA12094649900828623 /* MyStationCollectionViewController.swift */; };
 		715325B314D083BF76AFF149 /* Pods_Wisnuc_iOS_SwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC624A8B343908C1991C848B /* Pods_Wisnuc_iOS_SwiftTests.framework */; };
 		F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */; };
@@ -939,6 +942,9 @@
 		1FFD12B820E9C72F0053A3F7 /* files_move_to@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_move_to@2x.png"; sourceTree = "<group>"; };
 		1FFD12BA20E9C73C0053A3F7 /* files_move_to@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_move_to@3x.png"; sourceTree = "<group>"; };
 		1FFD12BC20EA265E0053A3F7 /* DeletTasksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletTasksAPI.swift; sourceTree = "<group>"; };
+		1FFD12BF20EB0F310053A3F7 /* NewFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFolderViewController.swift; sourceTree = "<group>"; };
+		1FFD12C320EB175E0053A3F7 /* NewFolderViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NewFolderViewController.storyboard; sourceTree = "<group>"; };
+		1FFD12C520EB80E70053A3F7 /* DirOprationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirOprationAPI.swift; sourceTree = "<group>"; };
 		1FFF3EA12094649900828623 /* MyStationCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationCollectionViewController.swift; sourceTree = "<group>"; };
 		72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.release.xcconfig"; sourceTree = "<group>"; };
 		8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wisnuc_iOS_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1309,6 +1315,7 @@
 				1F2A380720DBAD750035EED5 /* SearchAPI.swift */,
 				1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */,
 				1FFD12BC20EA265E0053A3F7 /* DeletTasksAPI.swift */,
+				1FFD12C520EB80E70053A3F7 /* DirOprationAPI.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -1563,6 +1570,7 @@
 		1F8EBB3F209C4F5800E8AB83 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD12BE20EB0EDD0053A3F7 /* AlertController */,
 				1FFD12AB20E340D80053A3F7 /* MoveRoot */,
 				1FAADEF420AC145F00739220 /* Info */,
 				1F050E5620AAC4470037F00A /* BottomSheetContentViewController */,
@@ -2131,6 +2139,15 @@
 			path = "New Group";
 			sourceTree = "<group>";
 		};
+		1FFD12BE20EB0EDD0053A3F7 /* AlertController */ = {
+			isa = PBXGroup;
+			children = (
+				1FFD12BF20EB0F310053A3F7 /* NewFolderViewController.swift */,
+				1FFD12C320EB175E0053A3F7 /* NewFolderViewController.storyboard */,
+			);
+			path = AlertController;
+			sourceTree = "<group>";
+		};
 		1FFF3EA02094643300828623 /* CollectionViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2584,6 +2601,7 @@
 				1F3C241320A42CFF00E6B953 /* files_select.png in Resources */,
 				1F5AD93920AD804D0065DAD3 /* files_video_small@2x.png in Resources */,
 				1F4E9398208DBB7600DD1EA7 /* radio_button@3x.png in Resources */,
+				1FFD12C420EB175E0053A3F7 /* NewFolderViewController.storyboard in Resources */,
 				1F5AD93F20AD80980065DAD3 /* files_audio_small@2x.png in Resources */,
 				1FAADEC120ABFD6A00739220 /* files_move_gray.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
@@ -2889,10 +2907,12 @@
 				1FAADEF820AC149500739220 /* FilesFileInfoTableViewCell.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
 				1F8EBB35209AD91200E8AB83 /* WSTabBarController.swift in Sources */,
+				1FFD12C120EB0F310053A3F7 /* NewFolderViewController.swift in Sources */,
 				1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */,
 				1F83AE7720886A13007CCCFD /* LogOutViewController.swift in Sources */,
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
 				1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */,
+				1FFD12C620EB80E80053A3F7 /* DirOprationAPI.swift in Sources */,
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
 				1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */,
 				1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */,

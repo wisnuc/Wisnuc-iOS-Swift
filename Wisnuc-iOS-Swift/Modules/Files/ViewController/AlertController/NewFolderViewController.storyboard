@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--New Folder View Controller-->
+        <scene sceneID="dAq-Zd-VPh">
+            <objects>
+                <viewController storyboardIdentifier="inputNewFolderDialogID" useStoryboardIdentifierAsRestorationIdentifier="YES" id="N3f-ut-TD1" customClass="NewFolderViewController" customModule="Wisnuc_iOS_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="wHb-kj-MsB">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="192"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wbk-gv-WL9">
+                                <rect key="frame" x="16" y="24" width="208" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="DialogWithInputFieldDialogWithInputField" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFv-qt-uG8" customClass="MDCFlatButton">
+                                <rect key="frame" x="140" y="155" width="30" height="29"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <connections>
+                                    <action selector="cancelButtonTap:" destination="N3f-ut-TD1" eventType="touchUpInside" id="XoC-t3-lfL"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GTO-Cg-ZNF" customClass="MDCTextField">
+                                <rect key="frame" x="16" y="40" width="208" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7z4-T2-pfe" customClass="MDCFlatButton">
+                                <rect key="frame" x="186" y="155" width="30" height="29"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <connections>
+                                    <action selector="createButtonTap:" destination="N3f-ut-TD1" eventType="touchUpInside" id="Rai-n0-Vyl"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="WKa-WV-7VK" firstAttribute="bottom" secondItem="DFv-qt-uG8" secondAttribute="bottom" constant="8" id="2de-Ng-OXa"/>
+                            <constraint firstItem="WKa-WV-7VK" firstAttribute="trailing" secondItem="7z4-T2-pfe" secondAttribute="trailing" constant="24" id="HND-f8-KE6"/>
+                            <constraint firstItem="Wbk-gv-WL9" firstAttribute="top" secondItem="WKa-WV-7VK" secondAttribute="top" constant="24" id="JOP-ix-kVb"/>
+                            <constraint firstItem="GTO-Cg-ZNF" firstAttribute="top" secondItem="Wbk-gv-WL9" secondAttribute="bottom" constant="16" id="OI4-h4-Cvd"/>
+                            <constraint firstItem="GTO-Cg-ZNF" firstAttribute="leading" secondItem="WKa-WV-7VK" secondAttribute="leading" constant="16" id="WNY-ah-4qN"/>
+                            <constraint firstItem="WKa-WV-7VK" firstAttribute="bottom" secondItem="7z4-T2-pfe" secondAttribute="bottom" constant="8" id="i7o-1s-LUo"/>
+                            <constraint firstItem="WKa-WV-7VK" firstAttribute="trailing" secondItem="Wbk-gv-WL9" secondAttribute="trailing" constant="16" id="j2s-fJ-xiu"/>
+                            <constraint firstItem="Wbk-gv-WL9" firstAttribute="leading" secondItem="WKa-WV-7VK" secondAttribute="leading" constant="16" id="owL-NS-tgF"/>
+                            <constraint firstItem="WKa-WV-7VK" firstAttribute="trailing" secondItem="GTO-Cg-ZNF" secondAttribute="trailing" constant="16" id="qqP-bx-TD6"/>
+                            <constraint firstItem="7z4-T2-pfe" firstAttribute="leading" secondItem="DFv-qt-uG8" secondAttribute="trailing" constant="16" id="tSL-Mb-y9K"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="WKa-WV-7VK"/>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="240" height="192"/>
+                    <size key="freeformSize" width="240" height="192"/>
+                    <connections>
+                        <outlet property="cancelButton" destination="DFv-qt-uG8" id="paO-4h-xJa"/>
+                        <outlet property="creatButton" destination="7z4-T2-pfe" id="5Ph-Wr-xRu"/>
+                        <outlet property="inputTextField" destination="GTO-Cg-ZNF" id="t1C-LW-qEj"/>
+                        <outlet property="titleLabel" destination="Wbk-gv-WL9" id="Rh8-Tp-nrN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hL3-td-Ex9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-482" y="82"/>
+        </scene>
+    </scenes>
+</document>
