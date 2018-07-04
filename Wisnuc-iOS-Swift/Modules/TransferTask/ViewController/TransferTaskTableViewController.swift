@@ -12,11 +12,10 @@ import Material
 private let reuseIdentifier = "cellreuseIdentifier"
 
 class TransferTaskTableViewController: BaseViewController {
-    lazy var downloadURLStrings = [String]()
-    lazy var downloadNameStrings = [String]()
+    lazy var downloadTasks = [TRTask]()
     var downloadManager: TRManager?
     var taskDataSource: Array<Any>?
-    
+
     override init(style: NavigationStyle) {
         super.init(style: style)
         taskDataSource = Array.init()
@@ -36,7 +35,7 @@ class TransferTaskTableViewController: BaseViewController {
         // 因为会读取缓存到沙盒的任务，所以第一次的时候，不要马上开始下载
         downloadManager?.isStartDownloadImmediately = false
         setupManager()
-        taskDataSource?.append(contentsOf: downloadURLStrings)
+        taskDataSource?.append(contentsOf: downloadTasks)
         getTasks()
         self.view.addSubview(self.tableView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
@@ -67,8 +66,7 @@ class TransferTaskTableViewController: BaseViewController {
     
     func setupManager() {
         guard let downloadManager = downloadManager else { return  }
-        downloadURLStrings = downloadManager.tasks.map({ $0.URLString })
-        downloadNameStrings = downloadManager.tasks.map({ $0.fileName })
+        downloadTasks = downloadManager.tasks.map({ $0 })
         tableView.reloadData()
         // 设置manager的回调
         downloadManager.progress { [weak self] (manager) in
@@ -88,9 +86,9 @@ class TransferTaskTableViewController: BaseViewController {
 //                guard let strongSelf = self,
 //                    let downloadManager = strongSelf.downloadManager
 //                    else { return }
-                self?.downloadURLStrings = (self?.downloadManager?.tasks.map({ $0.URLString }))!
-                self?.downloadNameStrings = (self?.downloadManager?.tasks.map({ $0.fileName }))!
-                self?.tableView.reloadData()
+//                self?.downloadTasks = (self?.downloadManager?.tasks.map({ $0}))!
+                
+//                self?.tableView.reloadData()
                 
                 if manager.status == .failed {
                     // manager 失败了
@@ -182,10 +180,10 @@ extension TransferTaskTableViewController:UITableViewDataSource{
     let any = taskDataSource![indexPath.row]
     var downloadTask :TRTask?
     var model:FilesTasksModel?
-    if any is String {
-        guard let downloadManager = downloadManager,
-            let task = downloadManager.fetchTask(any as! String)
+    if any is TRTask {
+        guard downloadManager != nil
             else { return cell }
+        let task = any as! TRTask
         downloadTask = task
         var image: UIImage?
         switch downloadTask?.status {
@@ -251,8 +249,8 @@ extension TransferTaskTableViewController:UITableViewDelegate{
         let deleteRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "delete")) { [weak self](tableViewForAction, indexForAction) in
             let index = indexForAction.row
             let any = self?.taskDataSource![index]
-            if any is String{
-                let URLString = any as! String
+            if any is TRTask{
+                let task = any as! TRTask
                 guard let downloadManager = self?.downloadManager else { return  }
                 let count = self?.taskDataSource?.count
                 guard count! > 0 else { return }
@@ -260,7 +258,7 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                 self?.taskDataSource?.remove(at: index)
 
                 tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-                downloadManager.remove(URLString, completely: true)
+                downloadManager.remove(task.URLString, completely: true)
             }else if any is FilesTasksModel{
                 let model = any as? FilesTasksModel
                 DeletTasksAPI.init(taskUUID: (model?.uuid!)!).startRequestJSONCompletionHandler({ (response) in
@@ -288,25 +286,23 @@ extension TransferTaskTableViewController:UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let any = taskDataSource![indexPath.row]
-        if any is String {
-            let URLString = any as! String
-            guard let downloadManager = downloadManager,
-                let task = downloadManager.fetchTask(URLString)
-                
-                else { return  }
+        if any is TRTask {
+
+            let task:TRTask = taskDataSource?.safeObjectAtIndex(indexPath.row) as! TRTask
             switch task.status {
             case .running:
-                downloadManager.suspend(URLString)
+                downloadManager?.suspend(task.URLString)
             case .completed:
-                if task.cache.fileExists(fileName: downloadNameStrings[indexPath.row]){
-                    self.readFile(filePath: task.cache.filePtah(fileName: downloadNameStrings[indexPath.row])!)
+                let filName = task.fileName
+                if task.cache.fileExists(fileName: filName){
+                    self.readFile(filePath: task.cache.filePtah(fileName: filName)!)
                 }else{
                     Message.message(text: LocalizedString(forKey: "File not exist"))
                 }
             case .suspend:
-                downloadManager.start(URLString)
+                downloadManager?.start(task.URLString)
             case .preSuspend:
-                downloadManager.start(URLString)
+                downloadManager?.start(task.URLString)
             default:
                 break
             }
@@ -318,11 +314,8 @@ extension TransferTaskTableViewController:UITableViewDelegate{
     // 每个cell中的状态更新，应该在willDisplay中执行
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let any = taskDataSource![indexPath.row]
-        if any is String {
-            guard let URLString = taskDataSource?.safeObjectAtIndex(indexPath.row),
-                let task = downloadManager?.fetchTask(URLString as! String)
-                else { return }
-            
+        if any is TRTask {
+            let task:TRTask = taskDataSource?.safeObjectAtIndex(indexPath.row) as! TRTask
             task.progress { [weak cell] (task) in
                 guard let cell = cell as? TransferTaskTableViewCell else { return }
                 cell.detailImageView.image = #imageLiteral(resourceName: "files_download_transfer.png")
@@ -380,10 +373,8 @@ extension TransferTaskTableViewController:UITableViewDelegate{
             return
         }
         let any = taskDataSource![indexPath.row]
-        if any is String {
-            guard let URLString = taskDataSource?.safeObjectAtIndex(indexPath.row),
-                let task = downloadManager?.fetchTask(URLString as! String)
-                else { return }
+        if any is TRTask {
+            let task = taskDataSource?.safeObjectAtIndex(indexPath.row) as! TRTask
             task.progress { _ in }.success({ _ in }).failure({ _ in})
         }
     }
@@ -394,18 +385,18 @@ extension TransferTaskTableViewController:TransferTaskBottomSheetContentVCDelega
     func transferTaskBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.transferTaskBottomSheetContentVC.presentingViewController?.dismiss(animated: true, completion: {
             for  any  in self.taskDataSource!{
-                if any is String{
-                    guard let downloadManager = self.downloadManager,
-                        let task = downloadManager.fetchTask(any as! String)
+                if any is TRTask{
+                    guard let downloadManager = self.downloadManager
                         else { return  }
+                    let task = any as! TRTask
                     switch indexPath.row {
                     case 0:
                         if task.status == .suspend || task.status == .preSuspend{
-                            downloadManager.start(any as! String)
+                            downloadManager.start(task.URLString)
                         }
                     case 1:
                         if task.status == .running {
-                            downloadManager.suspend(any as! String)
+                            downloadManager.suspend(task.URLString)
                         }
                     default:
                         break
@@ -419,7 +410,7 @@ extension TransferTaskTableViewController:TransferTaskBottomSheetContentVCDelega
                 downloadManager.totalRemove(completely: true)
                 let array:NSArray = self.taskDataSource! as NSArray
                 for value in array{
-                    if value is String{
+                    if value is TRTask{
                         let index = array.index(of:value)
                         self.taskDataSource?.remove(at: index)
                     }
