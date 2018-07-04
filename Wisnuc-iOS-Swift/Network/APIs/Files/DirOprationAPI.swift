@@ -9,6 +9,7 @@
 import UIKit
 enum FilesOptionType:String{
     case remove
+    case rename
 }
 
 class DirOprationAPI: BaseRequest {

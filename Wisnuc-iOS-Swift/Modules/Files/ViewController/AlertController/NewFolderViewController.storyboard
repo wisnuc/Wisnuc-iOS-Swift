@@ -41,7 +41,7 @@
                                 <rect key="frame" x="186" y="155" width="30" height="29"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                 <connections>
-                                    <action selector="createButtonTap:" destination="N3f-ut-TD1" eventType="touchUpInside" id="Rai-n0-Vyl"/>
+                                    <action selector="confirmButtonButtonTap:" destination="N3f-ut-TD1" eventType="touchUpInside" id="iJt-53-mow"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -64,7 +64,7 @@
                     <size key="freeformSize" width="240" height="192"/>
                     <connections>
                         <outlet property="cancelButton" destination="DFv-qt-uG8" id="paO-4h-xJa"/>
-                        <outlet property="creatButton" destination="7z4-T2-pfe" id="5Ph-Wr-xRu"/>
+                        <outlet property="confirmButton" destination="7z4-T2-pfe" id="0Zf-3c-hV8"/>
                         <outlet property="inputTextField" destination="GTO-Cg-ZNF" id="t1C-LW-qEj"/>
                         <outlet property="titleLabel" destination="Wbk-gv-WL9" id="Rh8-Tp-nrN"/>
                     </connections>

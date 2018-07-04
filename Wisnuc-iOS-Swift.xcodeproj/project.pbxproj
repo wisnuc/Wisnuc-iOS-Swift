@@ -458,6 +458,7 @@
 		1FFD12C120EB0F310053A3F7 /* NewFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12BF20EB0F310053A3F7 /* NewFolderViewController.swift */; };
 		1FFD12C420EB175E0053A3F7 /* NewFolderViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FFD12C320EB175E0053A3F7 /* NewFolderViewController.storyboard */; };
 		1FFD12C620EB80E80053A3F7 /* DirOprationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12C520EB80E70053A3F7 /* DirOprationAPI.swift */; };
+		1FFD12C920ECA7B60053A3F7 /* FilesControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12C820ECA7B50053A3F7 /* FilesControllerExtension.swift */; };
 		1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFF3EA12094649900828623 /* MyStationCollectionViewController.swift */; };
 		715325B314D083BF76AFF149 /* Pods_Wisnuc_iOS_SwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC624A8B343908C1991C848B /* Pods_Wisnuc_iOS_SwiftTests.framework */; };
 		F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */; };
@@ -945,6 +946,7 @@
 		1FFD12BF20EB0F310053A3F7 /* NewFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFolderViewController.swift; sourceTree = "<group>"; };
 		1FFD12C320EB175E0053A3F7 /* NewFolderViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NewFolderViewController.storyboard; sourceTree = "<group>"; };
 		1FFD12C520EB80E70053A3F7 /* DirOprationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirOprationAPI.swift; sourceTree = "<group>"; };
+		1FFD12C820ECA7B50053A3F7 /* FilesControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesControllerExtension.swift; sourceTree = "<group>"; };
 		1FFF3EA12094649900828623 /* MyStationCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationCollectionViewController.swift; sourceTree = "<group>"; };
 		72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.release.xcconfig"; sourceTree = "<group>"; };
 		8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wisnuc_iOS_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1511,6 +1513,7 @@
 		1F8EBB31209ABF1800E8AB83 /* Files */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD12C720ECA7860053A3F7 /* Extension */,
 				1F3C241820A4499900E6B953 /* Helper */,
 				1FEABB6A20A14C9F00824448 /* Model */,
 				1F8EBB3F209C4F5800E8AB83 /* ViewController */,
@@ -2146,6 +2149,14 @@
 				1FFD12C320EB175E0053A3F7 /* NewFolderViewController.storyboard */,
 			);
 			path = AlertController;
+			sourceTree = "<group>";
+		};
+		1FFD12C720ECA7860053A3F7 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				1FFD12C820ECA7B50053A3F7 /* FilesControllerExtension.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		1FFF3EA02094643300828623 /* CollectionViewController */ = {
@@ -2807,6 +2818,7 @@
 				1F050E4020AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.swift in Sources */,
 				1FE674E020D21B11006F97DB /* TRSessionDelegate.swift in Sources */,
 				1F359FEA2092C87900E2FF36 /* UIImage+extension.m in Sources */,
+				1FFD12C920ECA7B60053A3F7 /* FilesControllerExtension.swift in Sources */,
 				1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */,
 				1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,

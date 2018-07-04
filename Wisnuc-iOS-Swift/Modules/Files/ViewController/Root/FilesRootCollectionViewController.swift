@@ -347,8 +347,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             if let cell = cell as? FilesListCollectionViewCell {
                 cell.moreButton.isEnabled = isSelectModel! ? false : true
                 cell.moreButton.isHidden = self.state == .movecopy ? true : false
-                let imageName = indexPath.section == 0 ? "files_folder.png" : "files_ppt_small.png"
-                cell.leftImageView.image = UIImage.init(named: imageName)
                 cell.titleLabel.text = model.name
                 let time = model.mtime != nil ? timeString(TimeInterval(model.mtime!/1000)) : LocalizedString(forKey: "No time")
                 let size = model.size != nil ? sizeString(Int64(model.size!)) : ""
@@ -371,6 +369,15 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
                     cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(model))! ? true : false
                 }
+                
+                if !isNilString(model.name){
+                    let exestr = (model.name! as NSString).pathExtension
+                    
+                    let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr.lowercased()))
+
+                    cell.leftImageView.image = UIImage.init(named: imageName)
+                }
+                
                 if  model.type == FilesType.file.rawValue{
                     if self.state == .movecopy {
                         cell.alpha = 0.5
@@ -379,25 +386,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         cell.alpha = 1.0
                         cell.isUserInteractionEnabled = true
                     }
-                    if !isNilString(model.name){
-                        let exestr = (model.name! as NSString).pathExtension
-                        switch FilesFormatType(rawValue: exestr.lowercased()) {
-                        case .PDF?:
-                            cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
-                        case .JPG?:
-                            cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
-                        case .PNG?:
-                            cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
-                        case .DOC?,.DOCX?:
-                            cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
-                        case .PPT?,.PPTX?:
-                            cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                        case .XLS?,.XLSX?:
-                            cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
-                        default:
-                            cell.leftImageView.image = UIImage.init(named: "file_icon.png")
-                        }
-                    }
+                   
                 }else{
                     cell.alpha = 1.0
                     cell.isUserInteractionEnabled = true

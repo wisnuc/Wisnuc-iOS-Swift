@@ -13,7 +13,7 @@ class MkdirAPI: BaseRequest {
     var directoryUUID:String?
     var name:String?
     var detailUrl:String!
-    init(driveUUID:String,directoryUUID:String,name:String) {
+    init(driveUUID:String,directoryUUID:String,name:String? = nil) {
         self.driveUUID = driveUUID
         self.directoryUUID = directoryUUID
         self.name = name

@@ -215,10 +215,9 @@ extension TransferTaskTableViewController:UITableViewDataSource{
          cell.detailImageView.image = image
 //         cell.detailLabel.text =
     }
-    
-    let fileName = model != nil ? model?.entries?.reduce(nil, { "\(String(describing: $0))\(String(describing: $1))" }) : downloadTask?.fileName ?? ""
+    let fileName = model != nil ? (model?.entries as! Array<String>).joined(separator: ",") : downloadTask?.fileName ?? ""
     cell.titleLabel.text = fileName
-    let exestr = (fileName! as NSString).pathExtension
+    let exestr = (fileName as NSString).pathExtension
     cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType.file, format: FilesFormatType(rawValue: exestr)))
    
 //    let imageViewWidth:CGFloat = 24
@@ -266,10 +265,10 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                 let model = any as? FilesTasksModel
                 DeletTasksAPI.init(taskUUID: (model?.uuid!)!).startRequestJSONCompletionHandler({ (response) in
                     if response.error == nil {
-                        mainThreadSafe {
+//                        mainThreadSafe {
                             self?.taskDataSource?.remove(at: index)
                             tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-                        }
+//                        }
                     }else{
                         Message.message(text: (response.error?.localizedDescription)!)
                     }
