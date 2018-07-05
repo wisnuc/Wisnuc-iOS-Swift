@@ -227,6 +227,61 @@ extension FilesRootViewController:SearchMoreBottomSheetVCDelegate{
 }
 
 extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
+    func patchNodes(taskUUID:String,nodeUUID:String,policySameValue:String? = nil , policyDiffValue:String? = nil){
+        TasksAPI.init(taskUUID: taskUUID, nodeUUID: nodeUUID, policySameValue: policySameValue, policyDiffValue: policyDiffValue).startRequestJSONCompletionHandler { [weak self] (response) in
+            if response.error == nil{
+                self?.prepareData()
+            }else{
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                        Message.message(text: backToString ?? "error")
+                    }
+                }else{
+                    Message.message(text: (response.error?.localizedDescription)!)
+                }
+            }
+        }
+    }
+    
+    func getTask(taskUUID:String) {
+        TasksAPI.init(taskUUID: taskUUID).startRequestJSONCompletionHandler {[weak self](response) in
+            if response.error == nil{
+                let dic = response.value as! NSDictionary
+                if let taskModel = FilesTasksModel.deserialize(from: dic){
+                    if taskModel.nodes?.count != 0 && taskModel.nodes?.first?.error != nil{
+                        if taskModel.nodes?.first?.state == .Conflict && taskModel.nodes?.first?.error?.code == .EEXIST{
+                            self?.patchNodes(taskUUID: taskModel.uuid!, nodeUUID: (taskModel.nodes?.first?.src?.uuid!)!, policySameValue: FilesTaskPolicy.rename.rawValue)
+                        }
+                    }
+                }
+            }else{
+                
+            }
+        }
+    }
+    
+    func makeCopyTaskCreate(model:Any?){
+        if !(model is EntriesModel) || model == nil {
+            return
+        }
+        let existModel = model as! EntriesModel
+        let names = existModel.name != nil ? [existModel.name!] : []
+        TasksAPI.init(type: FilesTasksType.copy.rawValue, names: names, srcDrive:self.existDrive(), srcDir: self.existDir(), dstDrive: self.existDrive(), dstDir: self.existDir()).startRequestJSONCompletionHandler { [weak self] (response) in
+            if response.error == nil{
+                let dic = response.value as! NSDictionary
+                if let taskModel = FilesTasksModel.deserialize(from: dic){
+                  self?.getTask(taskUUID: taskModel.uuid!)
+                }
+            }else{
+                Message.message(text: (response.error?.localizedDescription)!)
+            }
+        }
+    }
+    
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
         filesBottomVC.presentingViewController?.dismiss(animated: true, completion: {
             switch indexPath.row {
@@ -259,13 +314,14 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 }
             case 1:
                 let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.whiteStyle)
-                let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
-                let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
-                filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : drive,kRequestTaskDirKey:dir]
+               
+                filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
                 filesMoveToRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
                 self.registerNotification()
                 let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
                 self.present(navi, animated: true, completion: nil)
+            case 4:
+                self.makeCopyTaskCreate(model: model)
             case 8:
                 let type = (model as! EntriesModel).type
                 let typeString = type == FilesType.directory.rawValue ? LocalizedString(forKey: "folder") : LocalizedString(forKey: "file")
@@ -314,19 +370,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
 extension FilesRootViewController:UINavigationControllerDelegate{
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = SearchTransition()
-        if operation == .push {
-            if toVC.isKind(of: SearchFilesViewController.self){
-                return transition
-            }else{
-                return nil
-            }
-        }else{
-            if fromVC.isKind(of: SearchFilesViewController.self){
-                return transition
-            }else{
-                return nil
-            }
-        }
+        return operation == .push ? toVC.isKind(of: SearchFilesViewController.self) ? transition : nil : fromVC.isKind(of: SearchFilesViewController.self) ? transition : nil
     }
 }
 

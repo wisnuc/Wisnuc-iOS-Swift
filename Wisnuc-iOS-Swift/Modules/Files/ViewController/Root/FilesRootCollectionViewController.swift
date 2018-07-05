@@ -174,45 +174,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         }
     }
 
-    
-//    @objc func longPressAction(_ sender:UIGestureRecognizer){
-//        if sender.state != UIGestureRecognizerState.ended{
-//            return
-//        }
-//        if isSelectModel! {
-//            return
-//        }
-//        let point = sender.location(in:self.collectionView)
-//        let indexPath = self.collectionView?.indexPathForItem(at: point)
-//        if (self.collectionView(self.collectionView!, shouldSelectItemAt: indexPath!)) {
-//
-//
-//        }
-//        if indexPath != nil {
-////            let cell = self.collectionView?.cellForItem(at: indexPath!)
-////            if let cell = cell as? FilesFolderCollectionViewCell {
-//                if let delegateOK = delegate{
-//                    isSelectModel = true
-//                    delegateOK.collectionView(self, isSelectModel: isSelectModel!)
-//                }
-//
-//                let sectionArray:Array<FilesModel> = dataSource![indexPath!.section] as! Array
-//                let model  = sectionArray[(indexPath?.item)!]
-//                FilesHelper.sharedInstance.addSelectFiles(model: model)
-////                cell.isSelectModel = isSelectModel
-//
-//                let allCellArray = self.collectionView?.visibleCells
-//                if allCellArray != nil {
-//                    for allcell in allCellArray!{
-//                        if let cell = allcell as! FilesFolderCollectionViewCell{
-//
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-    
     func isSelectModelAction(){
         self.collectionView?.reloadData()
     }
@@ -309,35 +270,14 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                        cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(model))! ? true : false
             
                     }
-                     if  model.type == FilesType.file.rawValue{
-                        if !isNilString(model.name){
-                            let exestr = (model.name! as NSString).pathExtension
-                            switch FilesFormatType(rawValue: exestr.lowercased()) {
-                            case .PDF?:
-                                cell.leftImageView.image = UIImage.init(named: "files_pdf_small.png")
-                                cell.mainImageView.image = UIImage.init(named: "files_pdf_normal.png")
-                            case .JPG?:
-                                cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
-                                cell.mainImageView.image = UIImage.init(named: "files_photo_normal.png")
-                            case .PNG?:
-                                cell.leftImageView.image = UIImage.init(named: "files_photo_normal.png")
-                                cell.mainImageView.image = UIImage.init(named: "files_photo_normal.png")
-                            case .DOC?,.DOCX?:
-                                cell.leftImageView.image = UIImage.init(named: "files_word_small.png")
-                                cell.mainImageView.image = UIImage.init(named: "files_wrod_normal.png")
-                            case .PPT?,.PPTX?:
-                                cell.leftImageView.image = UIImage.init(named: "files_ppt_small.png")
-                                cell.mainImageView.image = UIImage.init(named: "files_ppt_normal.png")
-                            case .XLS?,.XLSX?:
-                                cell.leftImageView.image = UIImage.init(named: "files_excel_small.png")
-                                cell.mainImageView.image = UIImage.init(named: "files_excel_small.png")
-                                
-                            default:
-                                cell.leftImageView.image = UIImage.init(named: "file_icon.png")
-                                cell.mainImageView.image = UIImage.init(named: "file_icon.png")
-                            }
-                        }
-                     }
+                    
+                    if !isNilString(model.name){
+                        let exestr = (model.name! as NSString).pathExtension
+                        let detailImageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type!), format: FilesFormatType(rawValue: exestr.lowercased()))
+                        cell.leftImageView.image = UIImage.init(named: detailImageName)
+                        let normalImageName = FileTools.switchFilesFormatTypeNormalImage(type: FilesType(rawValue: model.type!), format: FilesFormatType(rawValue: exestr.lowercased()))
+                        cell.mainImageView.image = UIImage.init(named: normalImageName)
+                    }
                 }
                 return cell
             }

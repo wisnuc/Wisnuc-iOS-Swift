@@ -204,16 +204,19 @@ extension TransferTaskTableViewController:UITableViewDataSource{
         model = any as? FilesTasksModel
         var image = #imageLiteral(resourceName: "files_download_transfer.png")
         switch model?.type {
-        case FilesTasksType.move.rawValue:
+        case .move?:
             image = #imageLiteral(resourceName: "files_move_to.png")
+        case .copy?:
+            image = #imageLiteral(resourceName: "task_copy.png")
         default:
             break
         }
-        
+         cell.detailLabel.text = ""
          cell.detailImageView.image = image
-//         cell.detailLabel.text =
+         cell.controlButton.setImage(nil, for: UIControlState.normal)
     }
     let fileName = model != nil ? (model?.entries as! Array<String>).joined(separator: ",") : downloadTask?.fileName ?? ""
+//    let type = model?.type != nil ? model?.type
     cell.titleLabel.text = fileName
     let exestr = (fileName as NSString).pathExtension
     cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType.file, format: FilesFormatType(rawValue: exestr)))
@@ -306,8 +309,8 @@ extension TransferTaskTableViewController:UITableViewDelegate{
             default:
                 break
             }
-        }else{
-            
+        }else if any is FilesTasksModel{
+
         }
     }
     
@@ -363,7 +366,20 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                     }
                 })
         }else if any is FilesTasksModel{
-        
+            let model = any as! FilesTasksModel
+            var image = #imageLiteral(resourceName: "files_download_transfer.png")
+            switch model.type {
+            case .move?:
+                image = #imageLiteral(resourceName: "files_move_to.png")
+            case .copy?:
+                image = #imageLiteral(resourceName: "task_copy.png")
+            default:
+                break
+            }
+            guard let cell = cell as? TransferTaskTableViewCell else { return }
+            cell.detailImageView.image = image
+            cell.detailLabel.text = ""
+            cell.controlButton.setImage(nil, for: UIControlState.normal)
         }
     }
     

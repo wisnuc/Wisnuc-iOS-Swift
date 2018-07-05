@@ -18,7 +18,7 @@ class BaseNavigationController: UINavigationController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.setNavigationBarHidden(true, animated: true)
+        self.setNavigationBarHidden(true, animated: false)
         guard let navigationController = navigationController else {
             return
         }

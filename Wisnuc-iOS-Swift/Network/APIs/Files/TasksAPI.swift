@@ -8,15 +8,8 @@
 
 import UIKit
 import Alamofire
-enum FilesTasksType:String{
-    case copy
-    case move
-    case icopy
-    case imove
-    case ecopy
-    case emove
-    case ncopy
-    case nmove
+enum FilesTaskPolicy:String {
+    case skip, keep,replace, rename
 }
 
 class TasksAPI: BaseRequest {
@@ -26,6 +19,11 @@ class TasksAPI: BaseRequest {
     var srcDir:String?
     var dstDrive:String?
     var dstDir:String?
+    var taskUUID:String?
+    var nodeUUID:String?
+    var policySameValue:String?
+    var policyDiffValue:String?
+    var applyToAll:NSNumber?
     var method:RequestHTTPMethod?
     
     init(type:String,names:Array<String>,srcDrive:String,srcDir:String,dstDrive:String,dstDir:String) {
@@ -39,9 +37,25 @@ class TasksAPI: BaseRequest {
         self.method = RequestHTTPMethod.post
     }
     
+    init(taskUUID:String) {
+        super.init()
+        self.taskUUID = taskUUID
+        self.method = RequestHTTPMethod.get
+    }
+    
     override init() {
         super.init()
         self.method = RequestHTTPMethod.get
+    }
+    
+    init(taskUUID:String,nodeUUID:String,policySameValue:String?,policyDiffValue:String?,applyToAll:Bool? = nil) {
+        super.init()
+        self.method = RequestHTTPMethod.patch
+        self.taskUUID = taskUUID
+        self.nodeUUID = nodeUUID
+        self.policySameValue = policySameValue
+        self.policyDiffValue = policyDiffValue
+        self.applyToAll = applyToAll != nil ? NSNumber.init(value: applyToAll!) : nil
     }
     
     override func requestURL() -> String {
@@ -49,7 +63,7 @@ class TasksAPI: BaseRequest {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return "/tasks"
+            return  nodeUUID !=  nil ? "/tasks/\(self.taskUUID!)/nodes/\(self.nodeUUID!)" : taskUUID != nil ? "/tasks/\(self.taskUUID!)" : "/tasks"
         default:
             return ""
         }
@@ -64,10 +78,13 @@ class TasksAPI: BaseRequest {
         case .normal?:
             return nil
         case .local?:
-            if self.method != RequestHTTPMethod.get{
+            if self.method == RequestHTTPMethod.post{
                 let src = [kRequestTaskDriveKey:srcDrive!,kRequestTaskDirKey:srcDir!]
                 let dst = [kRequestTaskDriveKey:dstDrive!,kRequestTaskDirKey:dstDir!]
                 let dic = [kRequestTaskTypeKey:type!,kRequestTaskSrcKey:src,kRequestTaskDstKey:dst,kRequestEntriesValueKey:names!] as [String : Any]
+                return dic
+            }else if self.method == RequestHTTPMethod.patch{
+                let dic = [kRequestTaskPolicyKey:[policySameValue != nil ? policySameValue : nil ,policyDiffValue != nil ? policyDiffValue! : nil], "applyToAll" : applyToAll ?? NSNumber.init(value: false)] as [String : Any]
                 return dic
             }else{
                 return nil

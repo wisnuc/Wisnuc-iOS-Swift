@@ -33,4 +33,30 @@ class FileTools: NSObject {
         }
         return name
     }
+    
+    class func switchFilesFormatTypeNormalImage(type:FilesType?, format:FilesFormatType?) -> String{
+        if type == nil {
+            return "file_icon.png"
+        }
+        var name:String!
+        if type == .directory {
+            name = "files_folder.png"
+        }else{
+            switch format {
+            case .PDF?:
+                name = "files_pdf_normal.png"
+            case .PNG?,.JPG?,.JPEG?:
+                name = "files_photo_normal.png"
+            case .DOC?,.DOCX?:
+                name = "files_word_normal.png"
+            case .PPT?,.PPTX?:
+                name = "files_ppt_normal.png"
+            case .XLS?,.XLSX?:
+                name = "files_excel_normal.png"
+            default:
+                name = "file_icon.png"
+            }
+        }
+        return name
+    }
 }

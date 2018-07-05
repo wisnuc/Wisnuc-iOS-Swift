@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+
+
 public func sgm_safeAreaInset(view:UIView) -> UIEdgeInsets{
      if #available(iOS 11.0, *) {
         return view.safeAreaInsets

@@ -9,14 +9,36 @@
 import Foundation
 import HandyJSON
 
+enum FilesTasksType:String,HandyJSONEnum{
+    case copy
+    case move
+    case icopy
+    case imove
+    case ecopy
+    case emove
+    case ncopy
+    case nmove
+}
+enum FilesTaskState:String,HandyJSONEnum{
+    case Conflict
+}
+
+enum FilesTaskErrorCode:String,HandyJSONEnum{
+    case EEXIST
+}
+
+enum FilesTaskErrorXCode:String,HandyJSONEnum{
+    case EISDIR
+}
+
 class FilesTasksModel: HandyJSON {
     var dst:DstSrcModel?
     var src:DstSrcModel?
     var entries:NSArray?
     var finished:Bool?
-    var nodes:NSArray?
+    var nodes:Array<NodesModel>?
     var stepping:Bool?
-    var type:String?
+    var type:FilesTasksType?
     var uuid:String?
     required init() {
         
@@ -27,7 +49,29 @@ class DstSrcModel: HandyJSON {
     var dir:String?
     var drive:String?
     required init() {
-        
+    }
+}
+
+class NodesSrcModel: HandyJSON {
+    var name:String?
+    var uuid:String?
+    required init() {
+    }
+}
+
+class NodesErrorModel: HandyJSON {
+    var code:FilesTaskErrorCode?
+    var xcode:FilesTaskErrorXCode?
+    required init() {
+    }
+}
+
+class NodesModel: HandyJSON {
+    var src:NodesSrcModel?
+    var parent:String?
+    var state:FilesTaskState?
+    var error:NodesErrorModel?
+    required init() {
     }
 }
 

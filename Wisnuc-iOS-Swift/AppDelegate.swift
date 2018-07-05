@@ -115,9 +115,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let filesVC = FilesRootViewController()
         filesVC.selfState = .root
         filesVC.title = LocalizedString(forKey: "Files")
-        let photosVC = BaseViewController()
+        let photosVC = PhotoRootViewController.init()
         photosVC.title = LocalizedString(forKey: "Photos")
-        photosVC.view.backgroundColor = UIColor.blue
         let shareVC = BaseViewController()
         shareVC.title = LocalizedString(forKey: "Share")
         shareVC.view.backgroundColor = UIColor.cyan

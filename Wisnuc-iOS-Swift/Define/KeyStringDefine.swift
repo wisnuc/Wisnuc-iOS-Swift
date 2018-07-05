@@ -47,6 +47,7 @@ public let kRequestTaskDriveKey = "drive"
 public let kRequestTaskDirKey = "dir"
 public let kRequestTaskSrcKey = "src"
 public let kRequestTaskDstKey = "dst"
+public let kRequestTaskPolicyKey = "policy"
 
 public let kRequestContentTypeKey = "Content-Type"
 public let kRequestContentTypeJsonValue = "application/json"

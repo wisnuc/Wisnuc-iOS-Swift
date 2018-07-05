@@ -32,7 +32,7 @@ enum RootControllerState:Int {
 private let reusableIdentifierItem = "itemCellIdentifier"
 private let cellFolderHeight:CGFloat = 48
 private let cellWidth:CGFloat = (__kWidth - 4)/2
-private let cellHeight:CGFloat = 137
+public let searchBarHeight:CGFloat = 137
 internal let SearchBarBottom:CGFloat = 77.0
 private let moveButtonWidth:CGFloat = 64.0
 private let moveButtonHeight:CGFloat = 36.0
@@ -533,6 +533,14 @@ class FilesRootViewController: BaseViewController{
         }
     }
     
+    func existDrive()->String{
+        return self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+    }
+    
+    func existDir()->String{
+        return self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+    }
+    
     func localNetStateFilesRemoveOptionRequest(name:String){
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
@@ -768,7 +776,7 @@ class FilesRootViewController: BaseViewController{
     }()
     
     lazy var searchBar: BaseSearchBar = {
-        let searchBar = BaseSearchBar.init(frame: CGRect(x: MarginsCloseWidth, y: 20 + MarginsCloseWidth, width: __kWidth - MarginsWidth, height: cellHeight))
+        let searchBar = BaseSearchBar.init(frame: CGRect(x: MarginsCloseWidth, y: 20 + MarginsCloseWidth, width: __kWidth - MarginsWidth, height: searchBarHeight))
         searchBar.delegate = self
         return searchBar
     }()
