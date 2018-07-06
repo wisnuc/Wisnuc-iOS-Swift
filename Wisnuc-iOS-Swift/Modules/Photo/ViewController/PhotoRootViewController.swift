@@ -18,7 +18,7 @@ class PhotoRootViewController: BaseViewController {
         super.viewDidLoad()
         prepareCollectionView()
         prepareSearchBar()
-   
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,13 +42,7 @@ class PhotoRootViewController: BaseViewController {
 //        })
     }
     
-    func forceTouchAvailable() -> Bool{
-        if Float(UIDevice.current.systemVersion)! >= Float(9.0) {
-            return self.traitCollection.forceTouchCapability == UIForceTouchCapability.available
-        } else {
-            return false
-        }
-    }
+   
 
     func prepareCollectionView(){
         self.addChildViewController(photoCollcectionViewController)

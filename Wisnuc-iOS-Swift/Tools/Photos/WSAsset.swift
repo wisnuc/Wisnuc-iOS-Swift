@@ -10,14 +10,14 @@ import UIKit
 import Photos
 
 enum WSAssetType{
-    case WSAssetTypeImage
-    case WSAssetTypeGIF
-    case WSAssetTypeLivePhoto
-    case WSAssetTypeVideo
-    case WSAssetTypeAudio
-    case WSAssetTypeNetImage
-    case WSAssetTypeNetVideo
-    case WSAssetTypeUnknown
+    case Image
+    case GIF
+    case LivePhoto
+    case Video
+    case Audio
+    case NetImage
+    case NetVideo
+    case Unknown
 }
 
 class WSAsset: NSObject {
@@ -44,4 +44,24 @@ class WSAsset: NSObject {
     
     var indexPath:IndexPath?
     
+   
+    class func assetModel(asset:PHAsset?,type:WSAssetType?,duration:String?)->WSAsset{
+        let model = WSAsset.init()
+        model.asset = asset
+        model.type = type
+        model.duration = duration
+        model.selected = false
+        if (asset) != nil {
+            model.assetLocalIdentifier = asset?.localIdentifier;
+        }
+        return model
+    }
+}
+
+@objc class WSAssetList: NSObject {
+    var title:String?
+    var count:Int?
+    var isCameraRoll:Bool?
+    var result:PHFetchResult<PHAsset>?
+    var models:Array<WSAsset>?
 }

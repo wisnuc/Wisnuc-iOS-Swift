@@ -10,7 +10,8 @@ import UIKit
 import MaterialComponents.MaterialCollections
 
 private let reuseIdentifier = "Cell"
-
+private var currentScale:CGFloat = 0
+private var showIndicator:Bool!
 @objc protocol PhotoCollectionViewControllerDelegate{
     
 }
@@ -20,12 +21,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
     var dataSource:Array<WSAsset>?
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+     
 
      
     }
@@ -33,6 +29,58 @@ class PhotoCollectionViewController: MDCCollectionViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func initCollectionViewLayout() {
+        showIndicator = true
+        currentScale = 3
+        let fmCollectionViewLayout = TYDecorationSectionLayout.init()
+        fmCollectionViewLayout.alternateDecorationViews = true
+        fmCollectionViewLayout.decorationViewOfKinds = ["FMHeadView"]
+        fmCollectionViewLayout.scrollDirection = UICollectionViewScrollDirection.vertical
+        fmCollectionViewLayout.minimumLineSpacing = 2
+        fmCollectionViewLayout.minimumInteritemSpacing = 2
+        fmCollectionViewLayout.itemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: __kWidth - 2 * (currentScale-1)/currentScale)
+
+        self.collectionView?.collectionViewLayout = fmCollectionViewLayout
+        self.collectionView?.backgroundColor = UIColor.white
+        self.collectionView?.showsVerticalScrollIndicator = false
+        self.collectionView?.showsHorizontalScrollIndicator = false
+        self.collectionView?.register(FMHeadView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headView")
+        // Uncomment the following line to preserve selection between presentations
+         self.clearsSelectionOnViewWillAppear = true
+        
+        // Register cell classes
+        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        if self.forceTouchAvailable(){
+            self.registerForPreviewing(with: self as! UIViewControllerPreviewingDelegate, sourceView: self.collectionView!)
+        }
+        self.collectionView?.reloadData()
+        
+        //        if #available(iOS 10.0, *) {
+        //            self.collectionView?.prefetchDataSource = self
+        //             self.collectionView?.isPrefetchingEnabled = true
+        //        } else {
+        //
+        //        }
+        
+        if showIndicator{
+            initIndicator()
+        }
+    }
+    
+    func initIndicator() {
+        self.collectionView?.registerILSIndicator()
+        self.collectionView?.indicator.slider.addObserver(self, forKeyPath: "sliderState", options: NSKeyValueObservingOptions(rawValue: 0x01), context: nil)
+        self.collectionView?.indicator.frame = CGRect(x: self.collectionView!.indicator.frame.origin.x, y:  self.collectionView!.indicator.frame.origin.y, width: 1, height: self.collectionView!.height - CGFloat(2 * kILSDefaultSliderMargin))
+    }
+        
+    func forceTouchAvailable() -> Bool{
+        if Float(UIDevice.current.systemVersion)! >= Float(9.0) {
+            return self.traitCollection.forceTouchCapability == UIForceTouchCapability.available
+        } else {
+            return false
+        }
     }
 
     /*
@@ -64,6 +112,10 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         // Configure the cell
     
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        
     }
 
     // MARK: UICollectionViewDelegate

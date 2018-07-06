@@ -431,6 +431,15 @@
 		1FE674E020D21B11006F97DB /* TRSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE674D820D21B11006F97DB /* TRSessionDelegate.swift */; };
 		1FE674E120D21B11006F97DB /* TRManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE674D920D21B11006F97DB /* TRManager.swift */; };
 		1FE674E320D21B11006F97DB /* TRCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE674DB20D21B11006F97DB /* TRCache.swift */; };
+		1FE9EF8020EF5A9C00732728 /* FileDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF7F20EF5A9C00732728 /* FileDefine.swift */; };
+		1FE9EF8820EF5DEA00732728 /* FileHash.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE9EF8220EF5DE900732728 /* FileHash.h */; };
+		1FE9EF8920EF5DEA00732728 /* Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE9EF8320EF5DE900732728 /* Base64.h */; };
+		1FE9EF8A20EF5DEA00732728 /* CocoaSecurity.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FE9EF8420EF5DE900732728 /* CocoaSecurity.h */; };
+		1FE9EF8B20EF5DEA00732728 /* FileHash.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF8520EF5DE900732728 /* FileHash.m */; };
+		1FE9EF8C20EF5DEA00732728 /* Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF8620EF5DE900732728 /* Base64.m */; };
+		1FE9EF8D20EF5DEA00732728 /* CocoaSecurity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF8720EF5DE900732728 /* CocoaSecurity.m */; };
+		1FE9EF8F20EF61A200732728 /* PHPhotoLibraryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF8E20EF61A200732728 /* PHPhotoLibraryExtension.swift */; };
+		1FE9EF9120EF6AC700732728 /* PHAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF9020EF6AC700732728 /* PHAssetExtension.swift */; };
 		1FEABB5320A14B6300824448 /* files_word_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5220A14B6300824448 /* files_word_small.png */; };
 		1FEABB5520A14B6C00824448 /* files_word_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5420A14B6C00824448 /* files_word_small@2x.png */; };
 		1FEABB5720A14B7700824448 /* files_word_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5620A14B7700824448 /* files_word_small@3x.png */; };
@@ -466,6 +475,26 @@
 		1FFD130E20EE1AFD0053A3F7 /* Wisnuc-iOS-Swift-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD130D20EE1AFA0053A3F7 /* Wisnuc-iOS-Swift-Bridging-Header.h */; };
 		1FFD131020EE21620053A3F7 /* PhotoCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD130F20EE21620053A3F7 /* PhotoCollectionViewController.swift */; };
 		1FFD131320EE29460053A3F7 /* WSAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD131220EE29460053A3F7 /* WSAsset.swift */; };
+		1FFD131620EF0ABB0053A3F7 /* TYDecorationSectionLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD131420EF0ABA0053A3F7 /* TYDecorationSectionLayout.h */; };
+		1FFD131720EF0ABB0053A3F7 /* TYDecorationSectionLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD131520EF0ABA0053A3F7 /* TYDecorationSectionLayout.m */; };
+		1FFD131A20EF0FF00053A3F7 /* FMHeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD131820EF0FF00053A3F7 /* FMHeadView.m */; };
+		1FFD131B20EF0FF00053A3F7 /* FMHeadView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD131920EF0FF00053A3F7 /* FMHeadView.h */; };
+		1FFD131E20EF1A340053A3F7 /* UIButton+EnlargeEdge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD131C20EF1A330053A3F7 /* UIButton+EnlargeEdge.m */; };
+		1FFD131F20EF1A340053A3F7 /* UIButton+EnlargeEdge.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD131D20EF1A330053A3F7 /* UIButton+EnlargeEdge.h */; };
+		1FFD132520EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD132120EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.h */; };
+		1FFD132620EF36A50053A3F7 /* UIScrollView+IndicatorExt.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD132220EF36A50053A3F7 /* UIScrollView+IndicatorExt.m */; };
+		1FFD132720EF36A50053A3F7 /* UIScrollView+IndicatorExt.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD132320EF36A50053A3F7 /* UIScrollView+IndicatorExt.h */; };
+		1FFD132820EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD132420EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m */; };
+		1FFD132B20EF3B220053A3F7 /* AssetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD132A20EF3B220053A3F7 /* AssetService.swift */; };
+		1FFD132E20EF3DB50053A3F7 /* LocalAsset+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD132C20EF3DB50053A3F7 /* LocalAsset+CoreDataClass.swift */; };
+		1FFD132F20EF3DB50053A3F7 /* LocalAsset+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD132D20EF3DB50053A3F7 /* LocalAsset+CoreDataProperties.swift */; };
+		1FFD133220EF3E140053A3F7 /* NetAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD133120EF3E140053A3F7 /* NetAsset.swift */; };
+		1FFD136620EF50D10053A3F7 /* JYAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD135E20EF50D10053A3F7 /* JYAsset.m */; };
+		1FFD136720EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD135F20EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m */; };
+		1FFD136820EF50D10053A3F7 /* PHFetchResult+JYEXT.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD136020EF50D10053A3F7 /* PHFetchResult+JYEXT.m */; };
+		1FFD136A20EF50D10053A3F7 /* JYAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD136220EF50D10053A3F7 /* JYAsset.h */; };
+		1FFD136B20EF50D10053A3F7 /* PHFetchResult+JYEXT.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD136320EF50D10053A3F7 /* PHFetchResult+JYEXT.h */; };
+		1FFD136C20EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FFD136420EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.h */; };
 		1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFF3EA12094649900828623 /* MyStationCollectionViewController.swift */; };
 		715325B314D083BF76AFF149 /* Pods_Wisnuc_iOS_SwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC624A8B343908C1991C848B /* Pods_Wisnuc_iOS_SwiftTests.framework */; };
 		F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */; };
@@ -925,6 +954,15 @@
 		1FE674D820D21B11006F97DB /* TRSessionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TRSessionDelegate.swift; sourceTree = "<group>"; };
 		1FE674D920D21B11006F97DB /* TRManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TRManager.swift; sourceTree = "<group>"; };
 		1FE674DB20D21B11006F97DB /* TRCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TRCache.swift; sourceTree = "<group>"; };
+		1FE9EF7F20EF5A9C00732728 /* FileDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDefine.swift; sourceTree = "<group>"; };
+		1FE9EF8220EF5DE900732728 /* FileHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileHash.h; sourceTree = "<group>"; };
+		1FE9EF8320EF5DE900732728 /* Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64.h; sourceTree = "<group>"; };
+		1FE9EF8420EF5DE900732728 /* CocoaSecurity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaSecurity.h; sourceTree = "<group>"; };
+		1FE9EF8520EF5DE900732728 /* FileHash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileHash.m; sourceTree = "<group>"; };
+		1FE9EF8620EF5DE900732728 /* Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64.m; sourceTree = "<group>"; };
+		1FE9EF8720EF5DE900732728 /* CocoaSecurity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaSecurity.m; sourceTree = "<group>"; };
+		1FE9EF8E20EF61A200732728 /* PHPhotoLibraryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHPhotoLibraryExtension.swift; sourceTree = "<group>"; };
+		1FE9EF9020EF6AC700732728 /* PHAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetExtension.swift; sourceTree = "<group>"; };
 		1FEABB5220A14B6300824448 /* files_word_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_word_small.png; sourceTree = "<group>"; };
 		1FEABB5420A14B6C00824448 /* files_word_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_word_small@2x.png"; sourceTree = "<group>"; };
 		1FEABB5620A14B7700824448 /* files_word_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_word_small@3x.png"; sourceTree = "<group>"; };
@@ -960,6 +998,26 @@
 		1FFD130D20EE1AFA0053A3F7 /* Wisnuc-iOS-Swift-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Wisnuc-iOS-Swift-Bridging-Header.h"; sourceTree = "<group>"; };
 		1FFD130F20EE21620053A3F7 /* PhotoCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewController.swift; sourceTree = "<group>"; };
 		1FFD131220EE29460053A3F7 /* WSAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSAsset.swift; sourceTree = "<group>"; };
+		1FFD131420EF0ABA0053A3F7 /* TYDecorationSectionLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYDecorationSectionLayout.h; sourceTree = "<group>"; };
+		1FFD131520EF0ABA0053A3F7 /* TYDecorationSectionLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYDecorationSectionLayout.m; sourceTree = "<group>"; };
+		1FFD131820EF0FF00053A3F7 /* FMHeadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMHeadView.m; sourceTree = "<group>"; };
+		1FFD131920EF0FF00053A3F7 /* FMHeadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMHeadView.h; sourceTree = "<group>"; };
+		1FFD131C20EF1A330053A3F7 /* UIButton+EnlargeEdge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+EnlargeEdge.m"; sourceTree = "<group>"; };
+		1FFD131D20EF1A330053A3F7 /* UIButton+EnlargeEdge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+EnlargeEdge.h"; sourceTree = "<group>"; };
+		1FFD132120EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+JY_ExtendTouchRect.h"; sourceTree = "<group>"; };
+		1FFD132220EF36A50053A3F7 /* UIScrollView+IndicatorExt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+IndicatorExt.m"; sourceTree = "<group>"; };
+		1FFD132320EF36A50053A3F7 /* UIScrollView+IndicatorExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+IndicatorExt.h"; sourceTree = "<group>"; };
+		1FFD132420EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+JY_ExtendTouchRect.m"; sourceTree = "<group>"; };
+		1FFD132A20EF3B220053A3F7 /* AssetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetService.swift; sourceTree = "<group>"; };
+		1FFD132C20EF3DB50053A3F7 /* LocalAsset+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalAsset+CoreDataClass.swift"; sourceTree = "<group>"; };
+		1FFD132D20EF3DB50053A3F7 /* LocalAsset+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalAsset+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1FFD133120EF3E140053A3F7 /* NetAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetAsset.swift; sourceTree = "<group>"; };
+		1FFD135E20EF50D10053A3F7 /* JYAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYAsset.m; sourceTree = "<group>"; };
+		1FFD135F20EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PHPhotoLibrary+JYEXT.m"; sourceTree = "<group>"; };
+		1FFD136020EF50D10053A3F7 /* PHFetchResult+JYEXT.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PHFetchResult+JYEXT.m"; sourceTree = "<group>"; };
+		1FFD136220EF50D10053A3F7 /* JYAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYAsset.h; sourceTree = "<group>"; };
+		1FFD136320EF50D10053A3F7 /* PHFetchResult+JYEXT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PHFetchResult+JYEXT.h"; sourceTree = "<group>"; };
+		1FFD136420EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PHPhotoLibrary+JYEXT.h"; sourceTree = "<group>"; };
 		1FFF3EA12094649900828623 /* MyStationCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationCollectionViewController.swift; sourceTree = "<group>"; };
 		72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wisnuc-iOS-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift.release.xcconfig"; sourceTree = "<group>"; };
 		8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wisnuc_iOS_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1227,6 +1285,7 @@
 		1F2CE30420B50EC700D9E5BD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD132920EF3AE00053A3F7 /* AssetsServices */,
 				1F307C6820BEA20E00AE105C /* NetworkService */,
 				1F2CE39520B5700B00D9E5BD /* UserService */,
 				1F2CE30A20B5374800D9E5BD /* AppService */,
@@ -1791,6 +1850,8 @@
 		1FBD1E0A20B421A20067BE3E /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD132C20EF3DB50053A3F7 /* LocalAsset+CoreDataClass.swift */,
+				1FFD132D20EF3DB50053A3F7 /* LocalAsset+CoreDataProperties.swift */,
 				1F2CE30120B4311000D9E5BD /* User+CoreDataClass.swift */,
 				1F2CE30020B4310F00D9E5BD /* User+CoreDataProperties.swift */,
 				1F2CE30D20B54A7A00D9E5BD /* CoreDataExtension.swift */,
@@ -1848,7 +1909,6 @@
 		1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXGroup;
 			children = (
-				1FE674D320D21B11006F97DB /* Tiercel */,
 				1FD9B78B207CC75500906D80 /* Extension */,
 				1F2CE30420B50EC700D9E5BD /* Services */,
 				1FBD1E0A20B421A20067BE3E /* CoreData */,
@@ -1858,6 +1918,7 @@
 				1FD9B792207CC77900906D80 /* Define */,
 				1FD9B78A207CC75500906D80 /* Tools */,
 				1FD9B780207CBEAD00906D80 /* Modules */,
+				1F169DCF207F4DE100860F31 /* Bridge-Header */,
 				1FD9B789207CC70600906D80 /* Other */,
 			);
 			path = "Wisnuc-iOS-Swift";
@@ -1954,7 +2015,6 @@
 		1FD9B789207CC70600906D80 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				1F169DCF207F4DE100860F31 /* Bridge-Header */,
 				1FD9B74F207CBE8700906D80 /* AppDelegate.swift */,
 				1FD9B751207CBE8700906D80 /* ViewController.swift */,
 				1FD9B753207CBE8700906D80 /* Main.storyboard */,
@@ -1968,6 +2028,10 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1FE9EF8120EF5DE900732728 /* crypto */,
+				1FFD135D20EF50D10053A3F7 /* JYPhotos */,
+				1FE674D320D21B11006F97DB /* Tiercel */,
+				1FFD132020EF36A50053A3F7 /* IndicatorExt */,
 				1FFD131120EE28F30053A3F7 /* Photos */,
 				1FFD12AE20E365F60053A3F7 /* MDCFreshHeader */,
 				1F359FEC2092EF1300E2FF36 /* CNPPopupController */,
@@ -1986,6 +2050,8 @@
 		1FD9B78B207CC75500906D80 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD131D20EF1A330053A3F7 /* UIButton+EnlargeEdge.h */,
+				1FFD131C20EF1A330053A3F7 /* UIButton+EnlargeEdge.m */,
 				1F359FE82092C87800E2FF36 /* UIImage+extension.h */,
 				1F359FE92092C87800E2FF36 /* UIImage+extension.m */,
 				1FD9B78C207CC75500906D80 /* StringExtension.swift */,
@@ -1998,6 +2064,8 @@
 				1F1BAC2C20C92A1900D32C5A /* UIScrollExtension.swift */,
 				1F1BAC4C20CA80F000D32C5A /* CollectionExtension.swift */,
 				1F1BAC4E20CE4EC700D32C5A /* UINavigationControllerExtension.swift */,
+				1FE9EF8E20EF61A200732728 /* PHPhotoLibraryExtension.swift */,
+				1FE9EF9020EF6AC700732728 /* PHAssetExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2014,6 +2082,7 @@
 			isa = PBXGroup;
 			children = (
 				1FD9B793207CC77900906D80 /* BasicDefine.swift */,
+				1FE9EF7F20EF5A9C00732728 /* FileDefine.swift */,
 				1FD9B7A0207DA43C00906D80 /* ColorDefine.swift */,
 				1F58821620849F8000394BD6 /* FontDefine.swift */,
 				1F58821820849FA200394BD6 /* SizeDefine.swift */,
@@ -2126,6 +2195,19 @@
 			path = Tiercel;
 			sourceTree = "<group>";
 		};
+		1FE9EF8120EF5DE900732728 /* crypto */ = {
+			isa = PBXGroup;
+			children = (
+				1FE9EF8220EF5DE900732728 /* FileHash.h */,
+				1FE9EF8320EF5DE900732728 /* Base64.h */,
+				1FE9EF8420EF5DE900732728 /* CocoaSecurity.h */,
+				1FE9EF8520EF5DE900732728 /* FileHash.m */,
+				1FE9EF8620EF5DE900732728 /* Base64.m */,
+				1FE9EF8720EF5DE900732728 /* CocoaSecurity.m */,
+			);
+			path = crypto;
+			sourceTree = "<group>";
+		};
 		1FEABB6A20A14C9F00824448 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -2180,6 +2262,7 @@
 		1FFD12D020EE11540053A3F7 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD133020EF3E010053A3F7 /* Model */,
 				1FFD12E220EE19950053A3F7 /* View */,
 				1FFD12D120EE11670053A3F7 /* ViewController */,
 			);
@@ -2198,6 +2281,10 @@
 		1FFD12E220EE19950053A3F7 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD131920EF0FF00053A3F7 /* FMHeadView.h */,
+				1FFD131820EF0FF00053A3F7 /* FMHeadView.m */,
+				1FFD131420EF0ABA0053A3F7 /* TYDecorationSectionLayout.h */,
+				1FFD131520EF0ABA0053A3F7 /* TYDecorationSectionLayout.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2208,6 +2295,46 @@
 				1FFD131220EE29460053A3F7 /* WSAsset.swift */,
 			);
 			path = Photos;
+			sourceTree = "<group>";
+		};
+		1FFD132020EF36A50053A3F7 /* IndicatorExt */ = {
+			isa = PBXGroup;
+			children = (
+				1FFD132120EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.h */,
+				1FFD132420EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m */,
+				1FFD132320EF36A50053A3F7 /* UIScrollView+IndicatorExt.h */,
+				1FFD132220EF36A50053A3F7 /* UIScrollView+IndicatorExt.m */,
+			);
+			path = IndicatorExt;
+			sourceTree = "<group>";
+		};
+		1FFD132920EF3AE00053A3F7 /* AssetsServices */ = {
+			isa = PBXGroup;
+			children = (
+				1FFD132A20EF3B220053A3F7 /* AssetService.swift */,
+			);
+			path = AssetsServices;
+			sourceTree = "<group>";
+		};
+		1FFD133020EF3E010053A3F7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1FFD133120EF3E140053A3F7 /* NetAsset.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1FFD135D20EF50D10053A3F7 /* JYPhotos */ = {
+			isa = PBXGroup;
+			children = (
+				1FFD136220EF50D10053A3F7 /* JYAsset.h */,
+				1FFD135E20EF50D10053A3F7 /* JYAsset.m */,
+				1FFD136320EF50D10053A3F7 /* PHFetchResult+JYEXT.h */,
+				1FFD136020EF50D10053A3F7 /* PHFetchResult+JYEXT.m */,
+				1FFD136420EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.h */,
+				1FFD135F20EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m */,
+			);
+			path = JYPhotos;
 			sourceTree = "<group>";
 		};
 		1FFF3EA02094643300828623 /* CollectionViewController */ = {
@@ -2245,7 +2372,18 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FE9EF8A20EF5DEA00732728 /* CocoaSecurity.h in Headers */,
+				1FFD131620EF0ABB0053A3F7 /* TYDecorationSectionLayout.h in Headers */,
+				1FFD136B20EF50D10053A3F7 /* PHFetchResult+JYEXT.h in Headers */,
+				1FE9EF8920EF5DEA00732728 /* Base64.h in Headers */,
 				1FFD130E20EE1AFD0053A3F7 /* Wisnuc-iOS-Swift-Bridging-Header.h in Headers */,
+				1FFD136A20EF50D10053A3F7 /* JYAsset.h in Headers */,
+				1FE9EF8820EF5DEA00732728 /* FileHash.h in Headers */,
+				1FFD132520EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.h in Headers */,
+				1FFD131F20EF1A340053A3F7 /* UIButton+EnlargeEdge.h in Headers */,
+				1FFD131B20EF0FF00053A3F7 /* FMHeadView.h in Headers */,
+				1FFD132720EF36A50053A3F7 /* UIScrollView+IndicatorExt.h in Headers */,
+				1FFD136C20EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.h in Headers */,
 				1FE674DD20D21B11006F97DB /* Tiercel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2859,6 +2997,7 @@
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
 				1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */,
+				1FFD132B20EF3B220053A3F7 /* AssetService.swift in Sources */,
 				1F1BABAC20C62EC300D32C5A /* UsersInfoAPI.swift in Sources */,
 				1F1BAC5120CE637000D32C5A /* Enum.swift in Sources */,
 				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
@@ -2868,6 +3007,7 @@
 				1FEABB6C20A14CBA00824448 /* FilesModel.swift in Sources */,
 				1F83AE572087463F007CCCFD /* LocalNetworkLoginViewController.swift in Sources */,
 				1F359FA720907CD700E2FF36 /* InitLastView.swift in Sources */,
+				1FE9EF8D20EF5DEA00732728 /* CocoaSecurity.m in Sources */,
 				1F307C7520BEB18700AE105C /* SettingViewController.swift in Sources */,
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
 				1F050E4020AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.swift in Sources */,
@@ -2875,6 +3015,8 @@
 				1F359FEA2092C87900E2FF36 /* UIImage+extension.m in Sources */,
 				1FFD12C920ECA7B60053A3F7 /* FilesControllerExtension.swift in Sources */,
 				1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */,
+				1FFD133220EF3E140053A3F7 /* NetAsset.swift in Sources */,
+				1FE9EF8020EF5A9C00732728 /* FileDefine.swift in Sources */,
 				1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,
 				1F2CE3A420B7F3F200D9E5BD /* CloudLoginModel.swift in Sources */,
@@ -2893,15 +3035,20 @@
 				1FE674DC20D21B11006F97DB /* TRCommon.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,
+				1FFD136720EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m in Sources */,
 				1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */,
+				1FFD136820EF50D10053A3F7 /* PHFetchResult+JYEXT.m in Sources */,
 				1FAADEF320AC144A00739220 /* FilesFileInfoTableViewController.swift in Sources */,
 				1F1BABA620C5195900D32C5A /* EntriesModel.swift in Sources */,
 				1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */,
+				1FFD131E20EF1A340053A3F7 /* UIButton+EnlargeEdge.m in Sources */,
 				1F050E6920AAEA2C0037F00A /* FilesFilesBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */,
 				1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */,
 				1FE674DF20D21B11006F97DB /* TRDownloadTask.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
+				1FFD132E20EF3DB50053A3F7 /* LocalAsset+CoreDataClass.swift in Sources */,
+				1FE9EF8B20EF5DEA00732728 /* FileHash.m in Sources */,
 				1F050E6020AAC8400037F00A /* FilesSequenceTableViewCell.swift in Sources */,
 				1F307C7A20BFEBC900AE105C /* LocalUserAPI.swift in Sources */,
 				1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */,
@@ -2926,12 +3073,14 @@
 				1F8EBB5420A01EF100E8AB83 /* FilesRootCollectionViewController.swift in Sources */,
 				1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */,
 				1F307C7820BFC7D700AE105C /* DriveAPI.swift in Sources */,
+				1FFD132F20EF3DB50053A3F7 /* LocalAsset+CoreDataProperties.swift in Sources */,
 				1F4E938E208DB8B600DD1EA7 /* RadioButton.m in Sources */,
 				1F5AD92F20AD60700065DAD3 /* SearchTransition.swift in Sources */,
 				1FC5702B20C1150B00D4499D /* LocalTokenInCloudAPI.swift in Sources */,
 				1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */,
 				1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */,
 				1FFD12D320EE119D0053A3F7 /* PhotoRootViewController.swift in Sources */,
+				1FFD131A20EF0FF00053A3F7 /* FMHeadView.m in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */,
 				1F1BABA420C50C7100D32C5A /* DriveDirAPI.swift in Sources */,
@@ -2940,11 +3089,14 @@
 				1FE674E120D21B11006F97DB /* TRManager.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
 				1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */,
+				1FFD131720EF0ABB0053A3F7 /* TYDecorationSectionLayout.m in Sources */,
 				06EE1ED320A70D52000E739D /* BaseTableViewController.swift in Sources */,
 				1F359FC6209182BB00E2FF36 /* DiskErrorViewController.swift in Sources */,
 				1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */,
 				1F2CE30720B50FFE00D9E5BD /* ServiceProtocol.swift in Sources */,
 				1F2CE31020B559CC00D9E5BD /* CoreDataOperation.swift in Sources */,
+				1FFD136620EF50D10053A3F7 /* JYAsset.m in Sources */,
+				1FE9EF9120EF6AC700732728 /* PHAssetExtension.swift in Sources */,
 				1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */,
 				1F8EBB48209C512300E8AB83 /* FilesFileCollectionViewCell.swift in Sources */,
 				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
@@ -2958,6 +3110,7 @@
 				1F58825F2085FA7600394BD6 /* MyStationTapGestureRecognizer.swift in Sources */,
 				1FBD1DF420AEDE640067BE3E /* FilesShareAuthorityChangeViewController.swift in Sources */,
 				1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */,
+				1FE9EF8C20EF5DEA00732728 /* Base64.m in Sources */,
 				1F2A380A20DCD90F0035EED5 /* LocalLoginTokenAPI.swift in Sources */,
 				1F1BAC2D20C92A1A00D32C5A /* UIScrollExtension.swift in Sources */,
 				1FFD12B020E3662D0053A3F7 /* MDCFreshHeader.swift in Sources */,
@@ -2976,13 +3129,16 @@
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
 				1F8EBB35209AD91200E8AB83 /* WSTabBarController.swift in Sources */,
 				1FFD12C120EB0F310053A3F7 /* NewFolderViewController.swift in Sources */,
+				1FE9EF8F20EF61A200732728 /* PHPhotoLibraryExtension.swift in Sources */,
 				1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */,
 				1F83AE7720886A13007CCCFD /* LogOutViewController.swift in Sources */,
 				1FFD131320EE29460053A3F7 /* WSAsset.swift in Sources */,
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
+				1FFD132820EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m in Sources */,
 				1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */,
 				1FFD12C620EB80E80053A3F7 /* DirOprationAPI.swift in Sources */,
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
+				1FFD132620EF36A50053A3F7 /* UIScrollView+IndicatorExt.m in Sources */,
 				1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */,
 				1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */,
 				1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */,
