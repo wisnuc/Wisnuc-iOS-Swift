@@ -9,34 +9,61 @@
 import UIKit
 import Photos
 
+
 class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     var userAuth:Bool?
+    var lastResult:PHFetchResult<PHAsset>?
     var allAssets:Array<WSAsset>?
-//    {
-//        get{
-//            if allAssets == nil && userAuth! {
-//                let all:NSMutableArray = NSMutableArray.init(capacity: 0)
-////                [PHPhotoLibrary getAllAsset:^(PHFetchResult<PHAsset *> *result, NSArray<PHAsset *> *assets) {
-////                    [assets enumerateObjectsUsingBlock:^(PHAsset * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-////                    JYAssetType type = [obj getJYAssetType];
-////                    NSString *duration = [obj getDurationString];
-////                    [all addObject:[JYAsset modelWithAsset:obj type:type duration:duration]];
-////                    }];
-////                    _lastResult = result;
-////                    }];
-////                _allAssets = all;
-//            }
-////            return _allAssets;
-//        }
-//        set{
-//
-//        }
-//    }
+    {
+        get{
+            var all:Array<WSAsset> = Array.init()
+            PHPhotoLibrary.getAllAsset { [weak self] (result, assets) in
+                for (_,value) in (assets?.enumerated())!{
+                    let type = value.getWSAssetType()
+                    let duration = value.getDurationString()
+                    all.append(WSAsset.assetModel(asset: value, type: type, duration: duration))
+                }
+                self?.lastResult = result
+            }
+            return  all
+        }
+        set{
+          
+        }
+    }
     
-    
+    override init() {
+        super.init()
+        self.checkAuth { (userAuth) in
+            if (userAuth) { PHPhotoLibrary.shared().register(self)}
+        }
+    }
     
     deinit {
         
+    }
+    
+    func checkAuth(callback:@escaping ((_ userAuth:Bool)->())){
+        userAuth = false
+        let status = PHPhotoLibrary.authorizationStatus()
+        switch status {
+        case .denied,.restricted:
+            userAuth = false
+            callback(userAuth!)
+        case .authorized:
+            userAuth = true
+            callback(userAuth!)
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization { [weak self] (authorizationStatus) in
+                self?.userAuth = authorizationStatus == .authorized ? true : false
+                if (self?.userAuth!)!{
+                    PHPhotoLibrary.shared().register(self!)
+                }
+                callback((self?.userAuth!)!)
+            }
+        default:
+            break
+        }
     }
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
@@ -47,5 +74,4 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         
     }
     
-
 }

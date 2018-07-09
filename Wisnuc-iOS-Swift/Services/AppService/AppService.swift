@@ -12,6 +12,7 @@ import UIKit
 let MainServices = AppService.sharedInstance
 let AppUserService =  MainServices().userService
 let AppNetworkService =  MainServices().networkService
+let AppAssetService =  MainServices().assetService
 let AppTokenManager =  MainServices().tokenManager
 
 class AppService: NSObject,ServiceProtocol{
@@ -187,6 +188,11 @@ class AppService: NSObject,ServiceProtocol{
     
     lazy var networkService: NetworkService = {
         let service = NetworkService.init()
+        return service
+    }()
+    
+    lazy var assetService: AssetService = {
+        let service = AssetService.init()
         return service
     }()
     

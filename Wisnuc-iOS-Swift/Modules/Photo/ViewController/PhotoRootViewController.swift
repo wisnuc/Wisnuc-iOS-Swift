@@ -9,16 +9,29 @@
 import UIKit
 import Material
 import MaterialComponents.MaterialCollections
-import DZNEmptyDataSet
+
 
 private var menuButton: IconButton!
-class PhotoRootViewController: BaseViewController {
 
+class PhotoRootViewController: BaseViewController {
+    var isSelectMode:Bool?
+    init(localDataSource:Array<WSAsset>?) {
+        super.init()
+        if localDataSource != nil {
+            localAssetDataSources.append(contentsOf: localDataSource!)
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareCollectionView()
         prepareSearchBar()
-
+        self.sort(localAssetDataSources)
+        self.photoCollcectionViewController.dataSource = assetDataSources
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,9 +55,47 @@ class PhotoRootViewController: BaseViewController {
 //        })
     }
     
-   
-
+    func sort(_ assetsArray:Array<WSAsset>){
+        var array:Array<WSAsset> = Array.init()
+        array.append(contentsOf: assetsArray)
+        array.sort { $0.createDate! < $1.createDate! }
+        var timeArray:Array<Date> = Array.init()
+        var photoGroupArray:Array<Array<WSAsset>> = Array.init()
+        if array.count>0 {
+            let firstAsset = array.first
+            firstAsset?.indexPath = IndexPath.init(row: 0, section: 0)
+            var photoDateGroup1:Array<WSAsset> = Array.init() //第一组照片
+            photoDateGroup1.append(firstAsset!)
+            photoGroupArray.append(photoDateGroup1)
+            if firstAsset?.createDate != nil{
+             timeArray.append(firstAsset!.createDate!)
+            }
+            
+            var photoDateGroup2 = photoDateGroup1 //最近的一组
+            
+            for i in 1..<array.count {
+                let photo1 =  array[i]
+                let photo2 = array[i-1]
+                if Calendar.current.isDate(photo1.createDate! , inSameDayAs: photo2.createDate!){
+                   photo1.indexPath = IndexPath.init(row: (photoGroupArray[photoGroupArray.count - 1]).count, section: photoGroupArray.count - 1)
+                   photoDateGroup2.append(photo1)
+                }else{
+                    photo1.indexPath = IndexPath.init(row: 0, section: photoGroupArray.count)
+                    if photo1.createDate != nil{
+                        timeArray.append(photo1.createDate!)
+                    }
+                    photoDateGroup2.removeAll()
+                    photoDateGroup2.append(photo1)
+                    photoGroupArray.append(photoDateGroup2)
+                }
+            }
+        }
+        
+        self.assetDataSources = photoGroupArray
+    }
+    
     func prepareCollectionView(){
+        photoCollcectionViewController.isSelectMode = false
         self.addChildViewController(photoCollcectionViewController)
         photoCollcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height)
         self.view.addSubview(photoCollcectionViewController.view)
@@ -88,6 +139,15 @@ class PhotoRootViewController: BaseViewController {
         return button
     }()
     
+    lazy var localAssetDataSources: Array<WSAsset> = {
+        let array:Array<WSAsset> = Array.init()
+        return array
+    }()
+    
+    lazy var assetDataSources: Array<Array<WSAsset>> = {
+        let array:Array<Array<WSAsset>> = Array.init()
+        return array
+    }()
 }
 
 extension PhotoRootViewController:DZNEmptyDataSetSource,DZNEmptyDataSetDelegate{

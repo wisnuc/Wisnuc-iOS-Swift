@@ -9,7 +9,7 @@
 import UIKit
 import MaterialComponents.MaterialCollections
 
-private let reuseIdentifier = "Cell"
+private let reuseIdentifier = "PhotoCell"
 private var currentScale:CGFloat = 0
 private var showIndicator:Bool!
 @objc protocol PhotoCollectionViewControllerDelegate{
@@ -18,11 +18,18 @@ private var showIndicator:Bool!
 
 class PhotoCollectionViewController: MDCCollectionViewController {
     weak var delegate:PhotoCollectionViewControllerDelegate?
-    var dataSource:Array<WSAsset>?
+    var isSelectMode:Bool?
+    var dataSource:Array<Array<WSAsset>>?{
+        didSet{
+//            self.c
+        }
+    }
+    
+   
     override func viewDidLoad() {
         super.viewDidLoad()
-     
-
+      dataSource = Array.init()
+      initCollectionViewLayout()
      
     }
 
@@ -41,7 +48,6 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         fmCollectionViewLayout.minimumLineSpacing = 2
         fmCollectionViewLayout.minimumInteritemSpacing = 2
         fmCollectionViewLayout.itemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: __kWidth - 2 * (currentScale-1)/currentScale)
-
         self.collectionView?.collectionViewLayout = fmCollectionViewLayout
         self.collectionView?.backgroundColor = UIColor.white
         self.collectionView?.showsVerticalScrollIndicator = false
@@ -51,7 +57,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
          self.clearsSelectionOnViewWillAppear = true
         
         // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView!.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         if self.forceTouchAvailable(){
             self.registerForPreviewing(with: self as! UIViewControllerPreviewingDelegate, sourceView: self.collectionView!)
         }
@@ -71,7 +77,10 @@ class PhotoCollectionViewController: MDCCollectionViewController {
     
     func initIndicator() {
         self.collectionView?.registerILSIndicator()
-        self.collectionView?.indicator.slider.addObserver(self, forKeyPath: "sliderState", options: NSKeyValueObservingOptions(rawValue: 0x01), context: nil)
+        if self.collectionView?.indicator == nil {
+            return
+        }
+        self.collectionView?.indicator.slider.addObserver(self, forKeyPath: "sliderState", options: NSKeyValueObservingOptions.new, context: nil)
         self.collectionView?.indicator.frame = CGRect(x: self.collectionView!.indicator.frame.origin.x, y:  self.collectionView!.indicator.frame.origin.y, width: 1, height: self.collectionView!.height - CGFloat(2 * kILSDefaultSliderMargin))
     }
         
@@ -97,26 +106,32 @@ class PhotoCollectionViewController: MDCCollectionViewController {
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return self.dataSource!.count
     }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return 0
+        return self.dataSource![section].count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-    
-        // Configure the cell
-    
+        let cell:PhotoCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell
+
+        let model = self.dataSource![indexPath.section][indexPath.row]
+        if (self.collectionView!.indicator != nil) {
+//            self.collectionView.indicator.slider.timeLabel.text = [self getMouthDateStringWithPhoto:model.createDate];
+        }
+        cell.isSelectMode = self.isSelectMode
+        cell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
+        cell.model = model
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         
     }
+
 
     // MARK: UICollectionViewDelegate
 
@@ -148,5 +163,10 @@ class PhotoCollectionViewController: MDCCollectionViewController {
     
     }
     */
+    
+    lazy var choosePhotos:Array<WSAsset> = {
+        let array = Array<WSAsset>.init()
+        return array
+    }()
 
 }

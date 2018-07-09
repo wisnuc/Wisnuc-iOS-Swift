@@ -127,7 +127,7 @@ class InitializationDiskViewController: BaseViewController {
         self.navigationController?.pushViewController(creatUserVC, animated: true)
     }
     
-    @objc func radioButtonClick(_ sender: RadioButton){
+    @objc func radioButtonClick(_ sender: WSRadioButton){
     
     }
     
@@ -183,10 +183,10 @@ class InitializationDiskViewController: BaseViewController {
         return button
     }()
     
-    lazy var diskCombinationSingleRadioButton: RadioButton = {
+    lazy var diskCombinationSingleRadioButton: WSRadioButton = {
         let text = "SINGLE"
         let font = MiddleTitleFont
-        let radioButton = RadioButton.init(frame: CGRect(x: MarginsWidth, y: cardLineView.bottom - 22 - checkBoxWidth , width: checkBoxWidth + labelWidthFrom(title: text, font: font ) + 10, height: checkBoxWidth))
+        let radioButton = WSRadioButton.init(frame: CGRect(x: MarginsWidth, y: cardLineView.bottom - 22 - checkBoxWidth , width: checkBoxWidth + labelWidthFrom(title: text, font: font ) + 10, height: checkBoxWidth))
         radioButton.setImage(UIImage.init(named: "radio_button"), for: UIControlState.selected)
         radioButton.setImage(UIImage.init(named: "radio_button_unchecked"), for: UIControlState.normal)
         radioButton.setTitleColor(LightGrayColor, for: UIControlState.normal)
@@ -199,10 +199,10 @@ class InitializationDiskViewController: BaseViewController {
         return radioButton
     }()
     
-    lazy var diskCombinationRAID1RadioButton: RadioButton = {
+    lazy var diskCombinationRAID1RadioButton: WSRadioButton = {
         let text = "RAID1"
         let font = MiddleTitleFont
-        let radioButton = RadioButton.init(frame: CGRect(x: diskCombinationSingleRadioButton.right + 44, y: diskCombinationSingleRadioButton.top, width: checkBoxWidth + labelWidthFrom(title: text, font: font ) + 10, height: checkBoxWidth))
+        let radioButton = WSRadioButton.init(frame: CGRect(x: diskCombinationSingleRadioButton.right + 44, y: diskCombinationSingleRadioButton.top, width: checkBoxWidth + labelWidthFrom(title: text, font: font ) + 10, height: checkBoxWidth))
         radioButton.addTarget(self, action: #selector(radioButtonClick(_ :)), for: UIControlEvents.touchUpInside)
         radioButton.groupButtons = [diskCombinationSingleRadioButton]
         radioButton.setImage(UIImage.init(named: "radio_button"), for: UIControlState.selected)

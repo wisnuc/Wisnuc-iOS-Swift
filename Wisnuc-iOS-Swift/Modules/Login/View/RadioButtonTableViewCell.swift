@@ -14,7 +14,7 @@ class RadioButtonTableViewCell: UITableViewCell {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
-    @IBOutlet weak var radioButton: RadioButton!
+    @IBOutlet weak var radioButton: WSRadioButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         titleLabel.textColor = DarkGrayColor
@@ -26,7 +26,7 @@ class RadioButtonTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    @IBAction func radioButtonClick(_ sender: RadioButton) {
+    @IBAction func radioButtonClick(_ sender: WSRadioButton) {
 //        sender.isSelected = !sender.isSelected
 //        // 当被选中的时候
 //        if ((sender.selected) != nil) {

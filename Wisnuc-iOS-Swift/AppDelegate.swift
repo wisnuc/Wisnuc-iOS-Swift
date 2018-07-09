@@ -115,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let filesVC = FilesRootViewController()
         filesVC.selfState = .root
         filesVC.title = LocalizedString(forKey: "Files")
-        let photosVC = PhotoRootViewController.init()
+        let photosVC = PhotoRootViewController.init(localDataSource: AppAssetService.allAssets)
         photosVC.title = LocalizedString(forKey: "Photos")
         let shareVC = BaseViewController()
         shareVC.title = LocalizedString(forKey: "Share")

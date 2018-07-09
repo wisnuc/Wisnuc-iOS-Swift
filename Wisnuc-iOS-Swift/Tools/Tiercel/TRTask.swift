@@ -176,7 +176,7 @@ public class TRTask: NSObject {
 
     internal func start() {
         let requestUrl = URL(string: URLString)!
-        var request = URLRequest(url: requestUrl, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 0)
+        let request = URLRequest(url: requestUrl, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 0)
        
         self.request = request
     }

@@ -5,7 +5,7 @@
 #import <RealReachability/RealReachability.h>
 #import "WechatOpenSDK/WXApi.h"
 #import <YYKit/YYKit.h>
-#import "RadioButton.h"
+#import "WSRadioButton.h"
 #import "UIImage+extension.h"
 #import "CNPPopupController.h"
 #import "UIScrollView+EmptyDataSet.h"
@@ -20,6 +20,5 @@
 #import "UIView+JY_ExtendTouchRect.h"
 #import "UIScrollView+IndicatorExt.h"
 #import "PHPhotoLibrary+JYEXT.h"
-//#import "PHFetchResult+JYEXT.h"
-//#import "PHAsset+JYEXT.h"
 
+#import "JYConst.h"

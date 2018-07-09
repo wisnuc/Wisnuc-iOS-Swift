@@ -35,8 +35,6 @@ class WSAsset: NSObject {
     //网络/本地 图片url
     var url:URL?
     
-    var createDateB:Date?
-    
     //图片
     var image:UIImage?
     
@@ -44,7 +42,9 @@ class WSAsset: NSObject {
     
     var indexPath:IndexPath?
     
-   
+    var createDateB:Date?
+    
+    
     class func assetModel(asset:PHAsset?,type:WSAssetType?,duration:String?)->WSAsset{
         let model = WSAsset.init()
         model.asset = asset
@@ -56,6 +56,10 @@ class WSAsset: NSObject {
         }
         return model
     }
+    
+    lazy var createDate: Date? = {
+        return self.asset?.creationDate
+        }()
 }
 
 @objc class WSAssetList: NSObject {

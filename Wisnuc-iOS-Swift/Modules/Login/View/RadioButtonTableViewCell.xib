@@ -19,7 +19,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="55.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evZ-Ua-Yms" customClass="RadioButton">
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evZ-Ua-Yms" customClass="WSRadioButton">
                         <rect key="frame" x="24" y="8" width="24" height="24"/>
                         <state key="normal" image="radio_button_unchecked.png"/>
                         <state key="selected" image="radio_button.png"/>
