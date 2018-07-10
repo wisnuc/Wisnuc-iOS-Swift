@@ -54,44 +54,67 @@ class PhotoRootViewController: BaseViewController {
 //        self.present(bottomSheet, animated: true, completion: {
 //        })
     }
+    func isSameDay(date1:Date,date2:Date ) -> Bool {
+       let calendar = Calendar.current
+       let comp1 = calendar.dateComponents([.year,.month,.day], from: date1)
+       let comp2 = calendar.dateComponents([.year,.month,.day], from: date2)
+        //开始比较
+        return comp1.year == comp2.year && comp1.month == comp2.month && comp1.day == comp2.day
+    }
+//    - (BOOL)isSameDay:(NSDate *)date1 date2:(NSDate *)date2 {
+//
+//    NSCalendar *calendar = [NSCalendar currentCalendar];
+//
+//    unsigned unitFlag = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
+//
+//    NSDateComponents *comp1 = [calendar components:unitFlag fromDate:date1];
+//
+//    NSDateComponents *comp2 = [calendar components:unitFlag fromDate:date2];
+//
+//    return (([comp1 day] == [comp2 day]) && ([comp1 month] == [comp2 month]) && ([comp1 year] == [comp2 year]));
+//
+//    }
     
     func sort(_ assetsArray:Array<WSAsset>){
-        var array:Array<WSAsset> = Array.init()
+        var array:Array<WSAsset>  = Array.init()
         array.append(contentsOf: assetsArray)
-        array.sort { $0.createDate! < $1.createDate! }
-        var timeArray:Array<Date> = Array.init()
-        var photoGroupArray:Array<Array<WSAsset>> = Array.init()
+        array.sort { $0.createDate! > $1.createDate! }
+        let timeArray:NSMutableArray = NSMutableArray.init()
+        let photoGroupArray:NSMutableArray = NSMutableArray.init()
         if array.count>0 {
             let firstAsset = array.first
             firstAsset?.indexPath = IndexPath.init(row: 0, section: 0)
-            var photoDateGroup1:Array<WSAsset> = Array.init() //第一组照片
-            photoDateGroup1.append(firstAsset!)
-            photoGroupArray.append(photoDateGroup1)
+            let photoDateGroup1:NSMutableArray = NSMutableArray.init() //第一组照片
+            photoDateGroup1.add(firstAsset!)
+            photoGroupArray.add(photoDateGroup1)
             if firstAsset?.createDate != nil{
-             timeArray.append(firstAsset!.createDate!)
+             timeArray.add(firstAsset!.createDate!)
             }
-            
-            var photoDateGroup2 = photoDateGroup1 //最近的一组
-            
+            if array.count == 1{
+                self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
+               return
+            }
+            var photoDateGroup2:NSMutableArray? = photoDateGroup1 //最近的一组
+
             for i in 1..<array.count {
                 let photo1 =  array[i]
                 let photo2 = array[i-1]
                 if Calendar.current.isDate(photo1.createDate! , inSameDayAs: photo2.createDate!){
-                   photo1.indexPath = IndexPath.init(row: (photoGroupArray[photoGroupArray.count - 1]).count, section: photoGroupArray.count - 1)
-                   photoDateGroup2.append(photo1)
+                    photo1.indexPath = IndexPath.init(row: ((photoGroupArray[photoGroupArray.count - 1]) as! NSMutableArray).count, section: photoGroupArray.count - 1)
+                   photoDateGroup2!.add(photo1)
                 }else{
                     photo1.indexPath = IndexPath.init(row: 0, section: photoGroupArray.count)
                     if photo1.createDate != nil{
-                        timeArray.append(photo1.createDate!)
+                        timeArray.add(photo1.createDate!)
                     }
-                    photoDateGroup2.removeAll()
-                    photoDateGroup2.append(photo1)
-                    photoGroupArray.append(photoDateGroup2)
+                    photoDateGroup2 = nil
+                    photoDateGroup2 = NSMutableArray.init()
+                    photoDateGroup2!.add(photo1)
+                    photoGroupArray.add(photoDateGroup2!)
                 }
             }
         }
-        
-        self.assetDataSources = photoGroupArray
+        self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
     }
     
     func prepareCollectionView(){

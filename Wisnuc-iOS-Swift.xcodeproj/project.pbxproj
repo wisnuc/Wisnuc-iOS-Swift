@@ -206,7 +206,6 @@
 		1F4242A320F338C20085E2F0 /* select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242A020F338C10085E2F0 /* select@2x.png */; };
 		1F4242A420F338C20085E2F0 /* select.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242A120F338C10085E2F0 /* select.png */; };
 		1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242A520F33BAB0085E2F0 /* PhotoCollectionViewCell.swift */; };
-		1F4242A820F33BAB0085E2F0 /* PhotoCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242A620F33BAB0085E2F0 /* PhotoCollectionViewCell.xib */; };
 		1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */; };
 		1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */; };
 		1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */; };
@@ -721,7 +720,6 @@
 		1F4242A020F338C10085E2F0 /* select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select@2x.png"; sourceTree = "<group>"; };
 		1F4242A120F338C10085E2F0 /* select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select.png; sourceTree = "<group>"; };
 		1F4242A520F33BAB0085E2F0 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
-		1F4242A620F33BAB0085E2F0 /* PhotoCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoCollectionViewCell.xib; sourceTree = "<group>"; };
 		1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationDiskViewController.swift; sourceTree = "<group>"; };
 		1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationDiskViewController.xib; sourceTree = "<group>"; };
@@ -2302,7 +2300,6 @@
 				1FFD131420EF0ABA0053A3F7 /* TYDecorationSectionLayout.h */,
 				1FFD131520EF0ABA0053A3F7 /* TYDecorationSectionLayout.m */,
 				1F4242A520F33BAB0085E2F0 /* PhotoCollectionViewCell.swift */,
-				1F4242A620F33BAB0085E2F0 /* PhotoCollectionViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2830,7 +2827,6 @@
 				1F1BAC3320CA621000D32C5A /* files_arrow_down@3x.png in Resources */,
 				1F359FCE2091A95D00E2FF36 /* disk_new_add@3x.png in Resources */,
 				1F5882492085F07E00394BD6 /* disk_warning@3x.png in Resources */,
-				1F4242A820F33BAB0085E2F0 /* PhotoCollectionViewCell.xib in Resources */,
 				1F83AE69208838DD007CCCFD /* eye_off@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

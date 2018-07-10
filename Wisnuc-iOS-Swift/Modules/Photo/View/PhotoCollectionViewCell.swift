@@ -13,6 +13,8 @@ import SnapKit
 private let btnFrame:CGFloat = 23
 
 class PhotoCollectionViewCell: MDCCollectionViewCell {
+    var imageRequestID:PHImageRequestID?
+    var identifier:String?
     var isSelectMode:Bool?
     var isSelect:Bool?
     var selectedBlock:((Bool)->())?
@@ -67,6 +69,33 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
                 self.videoBottomView.isHidden = false
                 self.liveImageView.isHidden = true
                 self.timeLabel.isHidden = true
+            }
+            
+            let size = CGSize.init(width: self.width * 1.7 , height: self.height * 1.7)
+            if self.imageRequestID != nil {
+                if self.imageRequestID! >= PHInvalidImageRequestID{
+                PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
+                }
+            }
+            
+        
+            if model?.asset != nil {
+                self.identifier = model?.asset?.localIdentifier
+            }else{
+              self.identifier =  (model as! NetAsset).fmhash
+            }
+            
+            self.imageView.image = nil
+            if model?.asset != nil{
+                self.imageRequestID = PHPhotoLibrary.requestImage(for: model?.asset!, size: size, completion: { [weak self] (image, info) in
+                    if self?.identifier == self?.model?.assetLocalIdentifier{
+                        self?.imageView.image = image
+                    }
+                    
+                    if !(info![PHImageResultIsDegradedKey] as! Bool) {
+                        self?.imageRequestID = -1
+                    }
+                })
             }
         }
     }

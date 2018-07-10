@@ -32,6 +32,11 @@ class PhotoCollectionViewController: MDCCollectionViewController {
       initCollectionViewLayout()
      
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateIndicatorFrame()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -45,9 +50,8 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         fmCollectionViewLayout.alternateDecorationViews = true
         fmCollectionViewLayout.decorationViewOfKinds = ["FMHeadView"]
         fmCollectionViewLayout.scrollDirection = UICollectionViewScrollDirection.vertical
-        fmCollectionViewLayout.minimumLineSpacing = 2
-        fmCollectionViewLayout.minimumInteritemSpacing = 2
-        fmCollectionViewLayout.itemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: __kWidth - 2 * (currentScale-1)/currentScale)
+        self.styler.cellLayoutType = MDCCollectionViewCellLayoutType.grid
+        self.styler.cellStyle = MDCCollectionViewCellStyle.default
         self.collectionView?.collectionViewLayout = fmCollectionViewLayout
         self.collectionView?.backgroundColor = UIColor.white
         self.collectionView?.showsVerticalScrollIndicator = false
@@ -63,15 +67,21 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         }
         self.collectionView?.reloadData()
         
-        //        if #available(iOS 10.0, *) {
-        //            self.collectionView?.prefetchDataSource = self
-        //             self.collectionView?.isPrefetchingEnabled = true
-        //        } else {
-        //
-        //        }
+        if #available(iOS 10.0, *) {
+            self.collectionView?.prefetchDataSource = self
+             self.collectionView?.isPrefetchingEnabled = true
+        } else {
+
+        }
         
         if showIndicator{
             initIndicator()
+        }
+    }
+    
+    func updateIndicatorFrame() {
+        if self.collectionView?.indicator != nil {
+            self.collectionView?.indicator.frame = CGRect(x: (self.collectionView?.indicator.left)!, y: (self.collectionView?.indicator.top)!, width: 1, height: (self.collectionView?.height)!)
         }
     }
     
@@ -91,6 +101,25 @@ class PhotoCollectionViewController: MDCCollectionViewController {
             return false
         }
     }
+    
+    
+    func getMouthDateString(date:Date) -> String{
+        let formatter = DateFormatter.init()
+        formatter.dateFormat = "yyyy年MM月"
+        var dateString = formatter.string(from: date)
+        if dateString == "1970年01月" {
+            dateString = "未知时间"
+        }
+        return dateString
+    }
+    
+    func getDateString(date:Date) -> String{
+        let formatter = DateFormatter.init()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dateString = formatter.string(from: date)
+        return dateString
+    }
+  
 
     /*
     // MARK: - Navigation
@@ -120,7 +149,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
 
         let model = self.dataSource![indexPath.section][indexPath.row]
         if (self.collectionView!.indicator != nil) {
-//            self.collectionView.indicator.slider.timeLabel.text = [self getMouthDateStringWithPhoto:model.createDate];
+            self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
         }
         cell.isSelectMode = self.isSelectMode
         cell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
@@ -128,11 +157,37 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        
+
+    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let size = CGSize(width: __kWidth, height: 42)
+        return size
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let headView:FMHeadView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headView", for: indexPath) as! FMHeadView
+      
+        headView.headTitle =  self.getDateString(date: dataSource![indexPath.section][indexPath.row].createDate!)
+        headView.fmIndexPath = indexPath
+        headView.isSelectMode = isSelectMode!
+        headView.isChoose = self.chooseSection.contains(indexPath)
+        headView.fmDelegate = self
+        return headView
     }
 
-
+    
+    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let frame = (__kWidth - 2 * (currentScale - 1))/currentScale
+        let itemSize = CGSize(width: frame, height: frame)
+        return itemSize
+    }
     // MARK: UICollectionViewDelegate
 
     /*
@@ -168,5 +223,29 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         let array = Array<WSAsset>.init()
         return array
     }()
+    
+    lazy var chooseSection: Array<IndexPath> = {
+        let array = Array<IndexPath>.init()
+        return array
+    }()
 
 }
+
+extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
+        
+    }
+}
+
+extension PhotoCollectionViewController:FMHeadViewDelegate{
+    func fmHeadView(_ headView: FMHeadView!, isChooseBtn isChoose: Bool) {
+        
+    }
+}
+
+
+
