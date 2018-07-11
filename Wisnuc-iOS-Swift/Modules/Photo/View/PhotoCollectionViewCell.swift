@@ -71,13 +71,12 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
                 self.timeLabel.isHidden = true
             }
             
-            let size = CGSize.init(width: self.width * 1.7 , height: self.height * 1.7)
+         
             if self.imageRequestID != nil {
                 if self.imageRequestID! >= PHInvalidImageRequestID{
                 PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
                 }
             }
-            
         
             if model?.asset != nil {
                 self.identifier = model?.asset?.localIdentifier
@@ -86,23 +85,18 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
             }
             
             self.imageView.image = nil
-            if model?.asset != nil{
-                self.imageRequestID = PHPhotoLibrary.requestImage(for: model?.asset!, size: size, completion: { [weak self] (image, info) in
-                    if self?.identifier == self?.model?.assetLocalIdentifier{
-                        self?.imageView.image = image
-                    }
-                    
-                    if !(info![PHImageResultIsDegradedKey] as! Bool) {
-                        self?.imageRequestID = -1
-                    }
-                })
-            }
+            
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.imageView.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5)
     }
     
     override init(frame: CGRect) {
@@ -157,7 +151,7 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
         }
     }
     
-    @objc func btnSelectClick(_ sender:UIButton){
+    @objc func btnSelectClick(_ sender:UIButton?){
         if self.isSelectMode == nil { return }
         if !self.isSelectMode! { return }
         self.setSelectAnimation(isSelect: !self.isSelect!, animation: true)

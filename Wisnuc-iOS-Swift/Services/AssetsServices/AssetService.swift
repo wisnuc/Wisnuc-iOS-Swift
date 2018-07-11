@@ -56,9 +56,10 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         case .notDetermined:
             PHPhotoLibrary.requestAuthorization { [weak self] (authorizationStatus) in
                 self?.userAuth = authorizationStatus == .authorized ? true : false
-                if (self?.userAuth!)!{
-                    PHPhotoLibrary.shared().register(self!)
-                }
+//                if (self?.userAuth!)!{
+//                    PHPhotoLibrary.shared().register(self!)
+//                }
+                defaultNotificationCenter().post(name: NSNotification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: status)
                 callback((self?.userAuth!)!)
             }
         default:

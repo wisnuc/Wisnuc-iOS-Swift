@@ -5,11 +5,15 @@
 //  Created by JackYang on 2017/9/24.
 //  Copyright © 2017年 JackYang. All rights reserved.
 //
-
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #ifndef JYConst_h
 #define JYConst_h
 
 #define kRGB(r, g, b)   [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1]
+//localized
+#define WBLocalizedString(key, comment) [[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil]
+#define UICOLOR_RGB(RGB)   ([UIColor colorWithRed:((float)((RGB & 0xFF0000) >> 16))/255.0 green:((float)((RGB & 0xFF00) >> 8))/255.0 blue:((float)(RGB & 0xFF))/255.0 alpha:1.0])
 
 #define kNavBar_color kRGB(19, 153, 231)
 #define kNavBar_tintColor kRGB(255, 255, 255)

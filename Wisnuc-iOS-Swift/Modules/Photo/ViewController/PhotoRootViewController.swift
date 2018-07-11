@@ -10,16 +10,27 @@ import UIKit
 import Material
 import MaterialComponents.MaterialCollections
 
-
 private var menuButton: IconButton!
 
 class PhotoRootViewController: BaseViewController {
     var isSelectMode:Bool?
+    var sortedAssetsBackupArray:Array<WSAsset>?
+    
+    override init() {
+        super.init()
+        setNotification()
+    }
+    
     init(localDataSource:Array<WSAsset>?) {
         super.init()
+        setNotification()
         if localDataSource != nil {
             localAssetDataSources.append(contentsOf: localDataSource!)
         }
+    }
+    
+    deinit {
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -28,16 +39,23 @@ class PhotoRootViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         prepareCollectionView()
         prepareSearchBar()
         self.sort(localAssetDataSources)
         self.photoCollcectionViewController.dataSource = assetDataSources
+        self.photoCollcectionViewController.sortedAssetsBackupArray = sortedAssetsBackupArray
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.appBar.headerViewController.headerView.isHidden = true
         
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -54,31 +72,25 @@ class PhotoRootViewController: BaseViewController {
 //        self.present(bottomSheet, animated: true, completion: {
 //        })
     }
-    func isSameDay(date1:Date,date2:Date ) -> Bool {
-       let calendar = Calendar.current
-       let comp1 = calendar.dateComponents([.year,.month,.day], from: date1)
-       let comp2 = calendar.dateComponents([.year,.month,.day], from: date2)
-        //开始比较
-        return comp1.year == comp2.year && comp1.month == comp2.month && comp1.day == comp2.day
+
+    func setNotification(){
+        defaultNotificationCenter().addObserver(forName: Notification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: nil, queue: nil) {  [weak self] (noti) in
+            var allPhotos = Array<WSAsset>.init()
+            allPhotos.append(contentsOf: AppAssetService.allAssets!)
+            self?.localAssetDataSources = allPhotos;
+            self?.sort((self?.merge())!)
+            self?.photoCollcectionViewController.dataSource  = self?.assetDataSources
+            mainThreadSafe({
+                self?.photoCollcectionViewController.collectionView?.reloadData()
+            })
+        }
     }
-//    - (BOOL)isSameDay:(NSDate *)date1 date2:(NSDate *)date2 {
-//
-//    NSCalendar *calendar = [NSCalendar currentCalendar];
-//
-//    unsigned unitFlag = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay;
-//
-//    NSDateComponents *comp1 = [calendar components:unitFlag fromDate:date1];
-//
-//    NSDateComponents *comp2 = [calendar components:unitFlag fromDate:date2];
-//
-//    return (([comp1 day] == [comp2 day]) && ([comp1 month] == [comp2 month]) && ([comp1 year] == [comp2 year]));
-//
-//    }
     
     func sort(_ assetsArray:Array<WSAsset>){
         var array:Array<WSAsset>  = Array.init()
         array.append(contentsOf: assetsArray)
         array.sort { $0.createDate! > $1.createDate! }
+        sortedAssetsBackupArray = array
         let timeArray:NSMutableArray = NSMutableArray.init()
         let photoGroupArray:NSMutableArray = NSMutableArray.init()
         if array.count>0 {
@@ -116,6 +128,29 @@ class PhotoRootViewController: BaseViewController {
         }
         self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
     }
+    
+    func merge()->Array<WSAsset> {
+    let localHashs = NSMutableArray.init(capacity: 0)
+        for asset in self.localAssetDataSources {
+            if !isNilString(asset.digest){
+                localHashs.add(asset.digest!)
+            }
+        }
+  
+    let netTmpArr = NSMutableArray.init(capacity: 0)
+        for asset in self.netAssetDataSource {
+            if asset.fmhash != nil {
+                if localHashs.contains(asset.fmhash!){
+                    netTmpArr.add(asset)
+                }
+            }
+        }
+   
+        let mergedAssets =  NSMutableArray.init(array: self.localAssetDataSources)
+        mergedAssets.addObjects(from: netTmpArr as! [Any])
+        return mergedAssets as! Array<WSAsset>
+    }
+
     
     func prepareCollectionView(){
         photoCollcectionViewController.isSelectMode = false
@@ -164,6 +199,11 @@ class PhotoRootViewController: BaseViewController {
     
     lazy var localAssetDataSources: Array<WSAsset> = {
         let array:Array<WSAsset> = Array.init()
+        return array
+    }()
+    
+    lazy var netAssetDataSource: Array<NetAsset> = {
+        let array:Array<NetAsset> = Array.init()
         return array
     }()
     

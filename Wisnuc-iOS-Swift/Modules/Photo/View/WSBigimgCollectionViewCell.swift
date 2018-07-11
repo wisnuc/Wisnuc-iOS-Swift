@@ -1,0 +1,13 @@
+//
+//  WSBigimgCollectionViewCell.swift
+//  Wisnuc-iOS-Swift
+//
+//  Created by wisnuc-imac on 2018/7/11.
+//  Copyright © 2018年 wisnuc-imac. All rights reserved.
+//
+
+import UIKit
+
+class WSBigimgCollectionViewCell: UICollectionViewCell {
+    
+}

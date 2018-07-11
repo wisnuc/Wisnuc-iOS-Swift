@@ -19,4 +19,9 @@ extension Notification.Name{
         public static let MoveRefreshNotiKey = Notification.Name(rawValue: "cell.notification.name.moveRefresh")
         
     }
+    
+    public struct Change {
+        public static let PhotoCollectionUserAuthChangeNotiKey = Notification.Name(rawValue: "app.notification.name.photoCollectionUserAuthChange")
+        
+    }
 }

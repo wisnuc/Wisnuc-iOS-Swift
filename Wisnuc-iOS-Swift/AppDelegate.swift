@@ -110,12 +110,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     }
     
     func setRootViewController(){
+        
         let tabBarController = WSTabBarController ()
         
         let filesVC = FilesRootViewController()
         filesVC.selfState = .root
         filesVC.title = LocalizedString(forKey: "Files")
-        let photosVC = PhotoRootViewController.init(localDataSource: AppAssetService.allAssets)
+        let photosVC = PhotoRootViewController.init()
+        photosVC.localAssetDataSources.append(contentsOf:AppAssetService.allAssets!)
         photosVC.title = LocalizedString(forKey: "Photos")
         let shareVC = BaseViewController()
         shareVC.title = LocalizedString(forKey: "Share")

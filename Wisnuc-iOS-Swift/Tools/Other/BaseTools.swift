@@ -11,6 +11,19 @@ import Foundation
 import UIKit
 import MaterialComponents
 import SDWebImage
+func MIN<T : Comparable>(x: T, y: T, rest: T...) -> T{
+    if x > y {
+        return y
+    }
+    return x
+}
+
+func MAX<T : Comparable>(x: T, y: T, rest: T...) -> T{
+    if x < y {
+        return y
+    }
+    return x
+}
 
 func jsonToData(jsonDic:NSDictionary) ->Data?{
     

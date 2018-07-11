@@ -206,6 +206,11 @@
 		1F4242A320F338C20085E2F0 /* select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242A020F338C10085E2F0 /* select@2x.png */; };
 		1F4242A420F338C20085E2F0 /* select.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242A120F338C10085E2F0 /* select.png */; };
 		1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242A520F33BAB0085E2F0 /* PhotoCollectionViewCell.swift */; };
+		1F4242AA20F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242A920F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift */; };
+		1F4242AF20F5CBF60085E2F0 /* JYProcessView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242AB20F5CBF40085E2F0 /* JYProcessView.m */; };
+		1F4242B220F5CBF60085E2F0 /* JYProcessView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F4242AE20F5CBF50085E2F0 /* JYProcessView.h */; };
+		1F4242B820F5CEC10085E2F0 /* WSShowBigimgViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242B720F5CEC10085E2F0 /* WSShowBigimgViewController.swift */; };
+		1F4242BA20F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242B920F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift */; };
 		1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */; };
 		1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */; };
 		1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */; };
@@ -720,6 +725,11 @@
 		1F4242A020F338C10085E2F0 /* select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select@2x.png"; sourceTree = "<group>"; };
 		1F4242A120F338C10085E2F0 /* select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select.png; sourceTree = "<group>"; };
 		1F4242A520F33BAB0085E2F0 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		1F4242A920F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSForceTouchPreviewViewController.swift; sourceTree = "<group>"; };
+		1F4242AB20F5CBF40085E2F0 /* JYProcessView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYProcessView.m; sourceTree = "<group>"; };
+		1F4242AE20F5CBF50085E2F0 /* JYProcessView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYProcessView.h; sourceTree = "<group>"; };
+		1F4242B720F5CEC10085E2F0 /* WSShowBigimgViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSShowBigimgViewController.swift; sourceTree = "<group>"; };
+		1F4242B920F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSBigimgCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationDiskViewController.swift; sourceTree = "<group>"; };
 		1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationDiskViewController.xib; sourceTree = "<group>"; };
@@ -2287,6 +2297,7 @@
 			children = (
 				1FFD12D220EE119D0053A3F7 /* PhotoRootViewController.swift */,
 				1FFD130F20EE21620053A3F7 /* PhotoCollectionViewController.swift */,
+				1F4242B720F5CEC10085E2F0 /* WSShowBigimgViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -2294,12 +2305,16 @@
 		1FFD12E220EE19950053A3F7 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1F4242AE20F5CBF50085E2F0 /* JYProcessView.h */,
+				1F4242AB20F5CBF40085E2F0 /* JYProcessView.m */,
 				1F42429C20F335F00085E2F0 /* JYConst.h */,
 				1FFD131920EF0FF00053A3F7 /* FMHeadView.h */,
 				1FFD131820EF0FF00053A3F7 /* FMHeadView.m */,
 				1FFD131420EF0ABA0053A3F7 /* TYDecorationSectionLayout.h */,
 				1FFD131520EF0ABA0053A3F7 /* TYDecorationSectionLayout.m */,
 				1F4242A520F33BAB0085E2F0 /* PhotoCollectionViewCell.swift */,
+				1F4242A920F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift */,
+				1F4242B920F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2387,6 +2402,7 @@
 				1FFD131620EF0ABB0053A3F7 /* TYDecorationSectionLayout.h in Headers */,
 				1FE9EF8920EF5DEA00732728 /* Base64.h in Headers */,
 				1FFD130E20EE1AFD0053A3F7 /* Wisnuc-iOS-Swift-Bridging-Header.h in Headers */,
+				1F4242B220F5CBF60085E2F0 /* JYProcessView.h in Headers */,
 				1FE9EF8820EF5DEA00732728 /* FileHash.h in Headers */,
 				1FFD132520EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.h in Headers */,
 				1FFD131F20EF1A340053A3F7 /* UIButton+EnlargeEdge.h in Headers */,
@@ -3011,11 +3027,13 @@
 			files = (
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
+				1F4242BA20F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift in Sources */,
 				1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */,
 				1FFD132B20EF3B220053A3F7 /* AssetService.swift in Sources */,
 				1F1BABAC20C62EC300D32C5A /* UsersInfoAPI.swift in Sources */,
 				1F1BAC5120CE637000D32C5A /* Enum.swift in Sources */,
 				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
+				1F4242AF20F5CBF60085E2F0 /* JYProcessView.m in Sources */,
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
 				1F83AE7420885FD5007CCCFD /* MDBaseButton.swift in Sources */,
@@ -3095,6 +3113,7 @@
 				1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */,
 				1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */,
 				1FFD12D320EE119D0053A3F7 /* PhotoRootViewController.swift in Sources */,
+				1F4242AA20F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift in Sources */,
 				1FFD131A20EF0FF00053A3F7 /* FMHeadView.m in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */,
@@ -3163,6 +3182,7 @@
 				1FC695F520D26F2400C62E76 /* FileTools.swift in Sources */,
 				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,
 				1FFD131020EE21620053A3F7 /* PhotoCollectionViewController.swift in Sources */,
+				1F4242B820F5CEC10085E2F0 /* WSShowBigimgViewController.swift in Sources */,
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
 				1F5882272085890400394BD6 /* LoginViewController.swift in Sources */,
 				1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */,
