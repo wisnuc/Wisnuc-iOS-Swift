@@ -85,7 +85,18 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
             }
             
             self.imageView.image = nil
-            
+            let size = CGSize.init(width: self.width * 1.7 , height: self.height * 1.7)
+            if model?.asset != nil{
+                self.imageRequestID = PHPhotoLibrary.requestImage(for: model?.asset!, size: size, completion: { [weak self] (image, info) in
+                    if (self?.identifier == self?.model?.asset?.localIdentifier) {
+                        self?.imageView.image = image
+                        //
+                    }
+                    if !(info![PHImageResultIsDegradedKey] as! Bool) {
+                        self?.imageRequestID = -1
+                    }
+                })
+            }
         }
     }
     
@@ -151,6 +162,7 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
         }
     }
     
+
     @objc func btnSelectClick(_ sender:UIButton?){
         if self.isSelectMode == nil { return }
         if !self.isSelectMode! { return }

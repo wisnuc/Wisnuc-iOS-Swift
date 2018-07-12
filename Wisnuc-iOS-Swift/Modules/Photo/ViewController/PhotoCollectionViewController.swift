@@ -12,6 +12,7 @@ import RxSwift
 
 private let reuseIdentifier = "PhotoCell"
 private var currentScale:CGFloat = 0
+private let keyPath:String = "sliderState"
 
 @objc protocol PhotoCollectionViewControllerDelegate{
     
@@ -41,7 +42,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         super.viewDidLoad()
       dataSource = Array.init()
       initCollectionViewLayout()
-   
+      initGuestrue()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -54,6 +55,36 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func initGuestrue(){
+        //增加捏合手势
+        let  pin = UIPinchGestureRecognizer.init(target: self, action: #selector(handlePinch(_ :)))
+        self.collectionView?.addGestureRecognizer(pin)
+    }
+  
+ //捏合响应
+    @objc func handlePinch(_ pin:UIPinchGestureRecognizer){
+    if  pin.state == UIGestureRecognizerState.began {
+        let isSmall = pin.scale > 1.0
+        self.changeFlowLayout(isSmall:!isSmall)
+        self.collectionView?.reloadData()
+    }
+}
+
+    func changeFlowLayout(isSmall:Bool){
+        if ((!isSmall && currentScale == 1) || (isSmall && currentScale == 6)){
+            return
+        }
+   
+     let layout = self.collectionView?.collectionViewLayout as! TYDecorationSectionLayout
+  
+    layout.sectionHeadersPinToVisibleBounds = false
+    currentScale = isSmall ? currentScale + 1 : currentScale - 1;
+    
+        layout.itemSize = CGSize(width: (__kWidth - 2*(currentScale-1))/currentScale, height: (__kWidth - 2*(currentScale-1))/currentScale)
+        self.collectionView?.setCollectionViewLayout(layout, animated: true)
+
+    //    [self.collectionView reloadData];
+}
     func initCollectionViewLayout() {
         showIndicator = true
         currentScale = 3
@@ -102,7 +133,33 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         if self.collectionView?.indicator == nil {
             return
         }
-        self.collectionView?.indicator.slider.addObserver(self, forKeyPath: "sliderState", options: NSKeyValueObservingOptions.new, context: nil)
+    
+
+        self.collectionView?.indicator.slider.rx.observe(String.self, keyPath)
+            .subscribe(onNext: { [weak self] (newValue) in
+                if (self?.showIndicator)! {
+                    if (self?.collectionView?.indicator.slider.sliderState == UIControlState.normal && (self?.collectionView?.indicator.transform)!.isIdentity) {
+                        self?.isDecelerating = false
+                        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                            if !(self?.isDecelerating)!{
+                                self?.isAnimation = false
+                                DispatchQueue.main.async {
+                                    UIView.animate(withDuration: 0.5, animations: {
+                                        self?.collectionView?.indicator.transform = CGAffineTransform(translationX: 40, y: 0)
+                                    }, completion: { (finished) in
+                                        self?.isAnimation = false
+                                        self?.isDecelerating = false
+                                    })
+                                }
+                            }
+                        }
+                    }else{
+                        self?.isDecelerating = true
+                    }
+                }
+            })
+            .dispose()
+//        self.collectionView?.indicator.slider.addObserver(self, forKeyPath: "sliderState", options: NSKeyValueObservingOptions.init(rawValue: 0x01), context: nil)
         self.collectionView?.indicator.frame = CGRect(x: self.collectionView!.indicator.frame.origin.x, y:  self.collectionView!.indicator.frame.origin.y, width: 1, height: self.collectionView!.height - CGFloat(2 * kILSDefaultSliderMargin))
     }
         
@@ -206,6 +263,10 @@ class PhotoCollectionViewController: MDCCollectionViewController {
             }
         }
     }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+    }
 
     // MARK: UICollectionViewDataSource 
 
@@ -222,26 +283,73 @@ class PhotoCollectionViewController: MDCCollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:PhotoCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell
+         let model = self.dataSource![indexPath.section][indexPath.row]
+        cell.selectedBlock = { [weak self] (selected) in
+            if !(self?.isSelectMode)! { return}
+            var needReload = false
+            if selected {
+                self?.choosePhotos.append(model)
+                let dataCollect = (self?.dataSource![indexPath.section])!.filter { value in
+                    (self?.choosePhotos.contains(value))!
+                }
+                if dataCollect.count == 0 {
+                    self?.chooseSection.append(IndexPath.init(row: 0, section: indexPath.section))
+                }
+                
+                needReload = dataCollect.count == 0 ? false : true
+            }else{
+                if let index = self?.choosePhotos.index(of: model) {
+                    self?.choosePhotos.remove(at: index)
+                }
+                let indexP = IndexPath.init(row: 0, section: indexPath.section)
+                if (self?.chooseSection.contains(indexP))!{
+                        if let index = self?.chooseSection.index(of: indexP) {
+                            self?.chooseSection.remove(at: index)
+                        }
+                        needReload = true
+                    }
+            }
+            
+            if(needReload){
+                self?.collectionView?.reloadItems(at: [indexPath])
+            }
+            
+            if self?.choosePhotos.count == 0 {
+                self?.isSelectMode = false
+//                [weakSelf leftBtnClick:_leftBtn];
+            }
+//            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
+        }
+        
+        cell.longPressBlock = { [weak self] in
+            if (self?.isSelectMode)! { return}
+             self?.isSelectMode = true
+            
+            self?.choosePhotos.append(model)
+            //
+            //            [weakSelf addLeftBtn];
+            //            weakSelf.addButton.hidden = NO;
+            //
+            let dataCollect = (self?.dataSource![indexPath.section])!.filter { value in
+                (self?.choosePhotos.contains(value))!
+            }
+            if dataCollect.count == 0 {
+                self?.chooseSection.append(IndexPath.init(row: 0, section: indexPath.section))
+            }
+            
+            //            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
+            //
+            self?.collectionView?.reloadItems(at: [indexPath])
+           
+        }
 
-        let model = self.dataSource![indexPath.section][indexPath.row]
         if (self.collectionView!.indicator != nil) {
             self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
         }
         cell.isSelectMode = self.isSelectMode
         cell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
         cell.model = model
-        let size = CGSize.init(width: cell.width * 1.7 , height: cell.height * 1.7)
-        if model.asset != nil{
-            cell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak cell] (image, info) in
-                if (cell?.identifier == model.asset?.localIdentifier) {
-                    cell?.imageView.image = image
-//
-                }
-                if !(info![PHImageResultIsDegradedKey] as! Bool) {
-                    cell?.imageRequestID = -1
-                }
-            })
-        }
+      
         return cell
     }
     
@@ -301,7 +409,34 @@ class PhotoCollectionViewController: MDCCollectionViewController {
             if self.collectionView?.indicator == nil {
                 //导航按钮
                 self.collectionView?.registerILSIndicator()
-                self.collectionView?.indicator.slider.addObserver(self, forKeyPath: "sliderState", options: NSKeyValueObservingOptions.new, context: nil)
+                if self.collectionView?.indicator == nil{
+                    return
+                }
+
+                self.collectionView?.indicator.slider.rx.observe(String.self, keyPath)
+                    .subscribe(onNext: { [weak self] (newValue) in
+                        if (self?.showIndicator)! {
+                            if (self?.collectionView?.indicator.slider.sliderState == UIControlState.normal && (self?.collectionView?.indicator.transform)!.isIdentity) {
+                                self?.isDecelerating = false
+                                DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                                    if !(self?.isDecelerating)!{
+                                        self?.isAnimation = false
+                                        DispatchQueue.main.async {
+                                            UIView.animate(withDuration: 0.5, animations: {
+                                                self?.collectionView?.indicator.transform = CGAffineTransform(translationX: 40, y: 0)
+                                            }, completion: { (finished) in
+                                                self?.isAnimation = false
+                                                self?.isDecelerating = false
+                                            })
+                                        }
+                                    }
+                                }
+                            }else{
+                                self?.isDecelerating = true
+                            }
+                        }
+                    })
+                    .dispose()
             }else {
                 if (!isAnimation) {
                     self.collectionView?.indicator.transform = CGAffineTransform.identity
@@ -335,29 +470,26 @@ class PhotoCollectionViewController: MDCCollectionViewController {
 extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            let cell = collectionView.cellForItem(at: indexPath)
-            if cell != nil{
-                let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
-                let model = self.dataSource![indexPath.section][indexPath.row]
-                if (self.collectionView!.indicator != nil) {
-                    self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
-                }
-                photoCell.isSelectMode = self.isSelectMode
-                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
-                photoCell.model = model
-                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
-                if model.asset != nil{
-                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
-                        if (photoCell?.identifier == model.asset?.localIdentifier) {
-                            photoCell?.imageView.image = image
-//                            image?.arcDebugRelease()
-                        }
-                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
-                            photoCell?.imageRequestID = -1
-                        }
-                    })
-                }
-            }
+//            let cell = collectionView.cellForItem(at: indexPath)
+//            let photoCell:PhotoCollectionViewCell = cell == nil ? collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell : cell as! PhotoCollectionViewCell
+//                let model = self.dataSource![indexPath.section][indexPath.row]
+//                if (self.collectionView!.indicator != nil) {
+//                    self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
+//                }
+//                photoCell.isSelectMode = self.isSelectMode
+//                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
+//                photoCell.model = model
+//                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
+//                if model.asset != nil{
+//                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
+//                        if (photoCell?.identifier == model.asset?.localIdentifier) {
+//                            photoCell?.imageView.image = image
+//                        }
+//                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
+//                            photoCell?.imageRequestID = -1
+//                        }
+//                })
+//            }
         }
     }
     
@@ -374,7 +506,23 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
 
 extension PhotoCollectionViewController:FMHeadViewDelegate{
     func fmHeadView(_ headView: FMHeadView!, isChooseBtn isChoose: Bool) {
+        if isChoose {
+            self.chooseSection.append(headView.fmIndexPath)
+            self.choosePhotos.append(contentsOf: self.dataSource![headView.fmIndexPath.section])
+        }else{
+            let idx = self.chooseSection.index(of: headView.fmIndexPath)
+            self.chooseSection.remove(at: idx!)
+            self.choosePhotos  = self.choosePhotos.filter { value in
+                !self.dataSource![headView.fmIndexPath.section].contains(value)
+            }
+        }
         
+        if self.choosePhotos.count == 0 {
+            self.isSelectMode = false
+//            self leftBtnClick:_leftBtn];
+        }
+//        _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)self.choosePhotos.count];
+        self.collectionView?.reloadData()
     }
 }
 
