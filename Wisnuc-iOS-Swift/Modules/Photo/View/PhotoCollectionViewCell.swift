@@ -87,15 +87,19 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
             self.imageView.image = nil
             let size = CGSize.init(width: self.width * 1.7 , height: self.height * 1.7)
             if model?.asset != nil{
-                self.imageRequestID = PHPhotoLibrary.requestImage(for: model?.asset!, size: size, completion: { [weak self] (image, info) in
-                    if (self?.identifier == self?.model?.asset?.localIdentifier) {
-                        self?.imageView.image = image
-                        //
-                    }
-                    if !(info![PHImageResultIsDegradedKey] as! Bool) {
-                        self?.imageRequestID = -1
-                    }
-                })
+                DispatchQueue.global(qos: .default).async {
+                    self.imageRequestID = PHPhotoLibrary.requestImage(for: self.model?.asset!, size: size, completion: { [weak self] (image, info) in
+                        if (self?.identifier == self?.model?.asset?.localIdentifier) {
+                            DispatchQueue.main.async {
+                                 self?.imageView.image = image
+                            }
+                        }
+                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
+                            self?.imageRequestID = -1
+                        }
+                    })
+                }
+               
             }
         }
     }

@@ -107,15 +107,29 @@ class WSShowBigimgViewController: UIViewController {
 
 extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDataSource{
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 0
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+        return self.models!.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:WSBigimgCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! WSBigimgCollectionViewCell
+        let model = self.models![indexPath.row]
+//        cell.previewView.videoView.delegate = self;
+        
+//        cell.showGif = true
+//        cell.showLivePhoto = true
+//        cell.model = model;
+   
+//        cell.singleTapCallBack = ^() {
+//            jy_strongify(weakSelf);
+//            [strongSelf handlerSingleTap];
+//        };
         return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
     }
 }

@@ -58,5 +58,17 @@ extension PHAsset{
     func isImage() -> Bool{
     return (self.mediaType == PHAssetMediaType.image) && !self.isGif() && !self.isLivePhoto()
     }
+    
+    func isLocal() -> Bool{
+        let option = PHImageRequestOptions.init()
+        option.isNetworkAccessAllowed = false
+        option.isSynchronous = true
+        
+        var isInLocalAblum = true
+        PHCachingImageManager.default().requestImageData(for: self, options: option) { (imageData, dataUTI, orientation, info) in
+            isInLocalAblum = imageData != nil ? true : false
+        }
+        return isInLocalAblum;
+    }
 
 }

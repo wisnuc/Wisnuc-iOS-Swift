@@ -470,26 +470,34 @@ class PhotoCollectionViewController: MDCCollectionViewController {
 extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-//            let cell = collectionView.cellForItem(at: indexPath)
-//            let photoCell:PhotoCollectionViewCell = cell == nil ? collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell : cell as! PhotoCollectionViewCell
-//                let model = self.dataSource![indexPath.section][indexPath.row]
-//                if (self.collectionView!.indicator != nil) {
-//                    self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
-//                }
-//                photoCell.isSelectMode = self.isSelectMode
-//                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
-//                photoCell.model = model
-//                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
-//                if model.asset != nil{
-//                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
-//                        if (photoCell?.identifier == model.asset?.localIdentifier) {
-//                            photoCell?.imageView.image = image
-//                        }
-//                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
-//                            photoCell?.imageRequestID = -1
-//                        }
-//                })
-//            }
+            let cell = collectionView.cellForItem(at: indexPath)
+            let photoCell:PhotoCollectionViewCell = cell == nil ? collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell : cell as! PhotoCollectionViewCell
+                let model = self.dataSource![indexPath.section][indexPath.row]
+                if (self.collectionView!.indicator != nil) {
+                    self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
+                }
+                photoCell.isSelectMode = self.isSelectMode
+                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
+                photoCell.model = model
+                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
+                if model.asset != nil{
+                    DispatchQueue.global(qos: .default).async {
+             
+                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
+                        if (photoCell?.identifier == model.asset?.localIdentifier) {
+                            DispatchQueue.main.async {
+                                   photoCell?.imageView.image = image
+                            }
+                        
+                        }
+                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
+                            photoCell?.imageRequestID = -1
+                        }
+                })
+                        
+                    }
+                    
+            }
         }
     }
     
