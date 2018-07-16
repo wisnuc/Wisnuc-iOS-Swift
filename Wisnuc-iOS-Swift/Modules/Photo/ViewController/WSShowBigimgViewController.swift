@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import PhotosUI
+import Photos
+import AVKit
+import SnapKit
 
 @objc protocol WSShowBigImgViewControllerDelegate {
-//    - (void)photoBrowser:(JYShowBigImgViewController *)browser scrollToIndexPath:(NSIndexPath *)indexPath;
-//
-//    - (UIView *)photoBrowser:(JYShowBigImgViewController *)browser willDismissAtIndexPath:(NSIndexPath *)indexPath;
+    func photoBrowser(browser:WSShowBigimgViewController, indexPath:IndexPath)
+    func photoBrowser(browser:WSShowBigimgViewController, willDismiss indexPath:IndexPath) ->UIView
 }
 
 class WSShowBigimgViewController: UIViewController {
@@ -21,6 +24,10 @@ class WSShowBigimgViewController: UIViewController {
     var models:Array<WSAsset>?
     var scaleImage:UIImage?
     var senderViewForAnimation:UIView?
+    var isdraggingPhoto:Bool = false
+    var currentPage:Int = 0
+    var isFirstAppear:Bool = true
+    var currentModelForRecord:WSAsset?
     private let cellReuseIdentifier = "WSBigimgCollectionViewCell"
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -40,7 +47,18 @@ class WSShowBigimgViewController: UIViewController {
         super.viewDidLoad()
         basicSetting()
         self.view.addSubview(self.collectionView)
-//        [self initNavBtns];
+        collectionView.setContentOffset(CGPoint(x: __kWidth + CGFloat(kItemMargin)*CGFloat(indexBeforeRotation), y: 0), animated: false)
+        initNavBtns()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if (!isFirstAppear) {
+            return
+        }
+        collectionView.setContentOffset(CGPoint(x: (__kWidth+CGFloat(kItemMargin))*CGFloat(indexBeforeRotation), y: 0), animated: false)
+        self.performPresentAnimation()
+//        WBApplication.statusBarStyle = UIStatusBarStyleLightContent;
     }
     
     func basicSetting(){
@@ -48,6 +66,52 @@ class WSShowBigimgViewController: UIViewController {
         ViewTools.automaticallyAdjustsScrollView(scrollView: collectionView, viewController: self)
         self.view.clipsToBounds = true
         self.view.alpha = 0
+        currentPage = self.selectIndex+1
+        indexBeforeRotation = self.selectIndex
+        gestureSetting()
+    }
+    
+    func initNavBtns(){
+       naviView.addSubview(leftNaviButton)
+        leftNaviButton.snp.makeConstraints { [weak self] (make) in
+            make.centerY.equalTo((self?.naviView.snp.centerY)!).offset(10)
+            make.left.equalTo((self?.naviView.snp.left)!).offset(16)
+            make.size.equalTo(CGSize(width: 24, height: 24))
+        }
+       
+        leftNaviButton.setEnlargeEdgeWithTop(5, right: 5, bottom: 5, left: 5)
+
+//        titleLabel.text =  [NSString stringWithFormat:@"%ld/%ld", _currentPage, self.models.count];
+        naviView.addSubview(titleLabel)
+        
+        titleLabel.snp.makeConstraints { [weak self] (make) in
+            make.centerX.equalTo((self?.naviView.snp.centerX)!)
+            make.centerY.equalTo((self?.naviView.snp.centerY)!).offset(10)
+        }
+        
+        naviView.addSubview(rightNaviButton)
+        
+        rightNaviButton.snp.makeConstraints { [weak self] (make) in
+            make.centerY.equalTo((self?.titleLabel.snp.centerY)!)
+            make.right.equalTo((self?.naviView.snp.right)!).offset(-10)
+            make.size.equalTo(CGSize(width: 24, height: 24))
+        }
+        
+        rightNaviButton.setEnlargeEdgeWithTop(5, right: 5, bottom: 5, left: 5)
+   
+        naviView.addSubview(rightImageView)
+        
+        rightImageView.snp.makeConstraints { [weak self] (make) in
+            make.centerY.equalTo((self?.titleLabel.snp.centerY)!)
+            make.right.equalTo((self?.rightNaviButton.snp.left)!).offset(-16)
+            make.size.equalTo(CGSize(width: 24, height: 24))
+        }
+        
+        if (self.getCurrentPageModel()?.type != .NetImage ) {
+            rightImageView.isHidden = true
+        }
+        
+        self.view.addSubview(naviView)
     }
     
     func gestureSetting(){
@@ -56,14 +120,308 @@ class WSShowBigimgViewController: UIViewController {
         self.view.addGestureRecognizer(longGesture)
     }
     
-    @objc func panGestureRecognized(_ gesture:UIPanGestureRecognizer){
+    func getImageFromView(view:UIView)->UIImage?{
+            if view is UIImageView {
+                return (view as! UIImageView).image
+            }
+            UIGraphicsBeginImageContextWithOptions(view.bounds.size, true, 2);
+        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return image
+    }
+    
+    func getCurrentPageModel() -> WSAsset?{
+        let offset = self.collectionView.contentOffset
         
+        let page = offset.x/__kWidth+CGFloat(kItemMargin)
+        if (ceilf(Float(page)) >= Float(self.models!.count) || page < 0) {
+            return nil
+        }
+        let str = NSString.init(format: "%.0f", page)
+        currentPage = str.integerValue + 1
+        let model = self.models![currentPage-1]
+        return model
+    }
+    
+    func getCurrentPageRect()->CGRect{
+        var frame = CGRect.zero
+        let model = self.getCurrentPageModel()
+        
+        var w:CGFloat? = 0, h:CGFloat? = 0
+        if (model?.asset != nil) {
+            w = CGFloat((model?.asset?.pixelWidth)!)
+            h = CGFloat((model?.asset?.pixelHeight)!)
+        } else if model is NetAsset {
+            w = CGFloat((model as! NetAsset).w!)
+            h = CGFloat((model as! NetAsset).h!)
+        } else {
+            w = __kWidth
+            h = __kHeight
+        }
+        
+        let width = MIN(x: __kWidth, y: w!)
+        frame.origin = CGPoint.zero
+        frame.size.width = width
+        
+        let imageScale = h!/w!
+        let screenScale = __kHeight/__kWidth
+        
+        if (imageScale > screenScale) {
+            frame.size.height = __kHeight;
+            frame.size.width = CGFloat(floorf(Float(width * __kHeight / h!)));
+        } else {
+            var height = floorf(Float(width * imageScale));
+            if (height < 1 || height.isNaN) {
+                //iCloud图片height为NaN
+                height = Float(self.view.height)
+            }
+            frame.size.height = CGFloat(height);
+        }
+        frame.origin.x = (__kWidth - frame.size.width)/2;
+        frame.origin.y = (__kHeight - frame.size.height)/2;
+        
+        return frame
+    }
+    
+    func reloadCurrentCell(){
+        let m = self.getCurrentPageModel()
+        if (m?.type == .GIF ||
+            m?.type == .LivePhoto) {
+            let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+            let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
+            cell?.reloadGifLivePhoto()
+        }
+    }
+
+    
+    func handlerSingleTap(){
+//    if sharing {
+//    [self dismissShareView];
+//    return;
+//    }
+//    _hideNavBar = !_hideNavBar;
+//
+//    [self setNeedsStatusBarAppearanceUpdate];
+//
+//    CGRect frame = _hideNavBar?CGRectMake(0, -64, __kWidth, 64):CGRectMake(0, 0, __kWidth, 64);
+//    [UIView animateWithDuration:0.3 animations:^{
+//    _navView.frame = frame;
+//    }];
+    }
+    
+    func performPresentAnimation(){
+        self.view.alpha = 0
+        collectionView.alpha = 0
+        
+        let imageFromView = scaleImage != nil ? scaleImage : self.getImageFromView(view: senderViewForAnimation!)
+        
+        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)!, to: nil)
+        
+        let fadeView = UIView.init(frame: self.view.bounds)
+        fadeView.backgroundColor = UIColor.clear
+        let mainWindow = UIApplication.shared.keyWindow
+        mainWindow?.addSubview(fadeView)
+        let resizableImageView = UIImageView.init(image: imageFromView)
+        resizableImageView.frame = senderViewOriginalFrame!
+        resizableImageView.clipsToBounds = true
+        resizableImageView.contentMode = senderViewForAnimation != nil ? (senderViewForAnimation?.contentMode)! : UIViewContentMode.scaleAspectFill
+        resizableImageView.backgroundColor = UIColor.clear
+        mainWindow?.addSubview(resizableImageView)
+        //
+        //    //jy
+        //    //    _senderViewForAnimation.hidden = YES;
+        //
+        let completion:()->Void =  {
+            self.view.alpha = 1.0
+            self.collectionView.alpha = 1.0
+            resizableImageView.backgroundColor = UIColor.init(white: 1, alpha: 1)
+            fadeView.removeFromSuperview()
+            resizableImageView.removeFromSuperview()
+
+        }
+        // FIXME: net video animation error!
+        if self.getCurrentPageModel()?.type == .Video{
+        return completion()
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            fadeView.backgroundColor =  UIColor.black
+        }) { (finished) in
+            
+        }
+        
+        let finalImageViewFrame = self.getCurrentPageRect()
+        self.view.isOpaque = true
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            resizableImageView.frame = finalImageViewFrame
+        }) { (finished) in
+            completion()
+        }
+    }
+  
+    func performDismissAnimation(){
+        let fadeAlpha = 1 - fabs(collectionView.frame.origin.y)/collectionView.frame.size.height
+        
+        //    JYBigImgCell * cell = _collectionView.visibleCells[0];
+        let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+        let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
+        
+        if cell == nil{
+            return
+        }
+        let mainWindow = UIApplication.shared.keyWindow
+        
+        let rect = cell?.previewView.convert((cell?.previewView.imageViewFrame())!, to: self.view)
+        
+        if let delegateOK = self.delegate{
+            senderViewForAnimation =  delegateOK.photoBrowser(browser: self, willDismiss: (cell?.model?.indexPath!)!)
+        }
+
+        let image = self.getImageFromView(view: senderViewForAnimation!)
+        
+        
+        let fadeView = UIView.init(frame: (mainWindow?.bounds)!)
+        fadeView.backgroundColor = UIColor.black
+        fadeView.alpha = fadeAlpha
+        mainWindow?.addSubview(fadeView)
+        
+        let resizableImageView = UIImageView.init(image: image)
+        resizableImageView.frame = rect!
+        resizableImageView.contentMode = senderViewForAnimation != nil ? (senderViewForAnimation?.contentMode)! : UIViewContentMode.scaleAspectFill
+        resizableImageView.backgroundColor = UIColor.clear
+        resizableImageView.layer.masksToBounds = true
+        mainWindow?.addSubview(resizableImageView)
+        self.view.isHidden = true
+        
+        let completion:()->() = { [weak self] in
+            self?.senderViewForAnimation?.isHidden = false
+            self?.senderViewForAnimation = nil
+            self?.scaleImage = nil
+            fadeView.removeFromSuperview()
+            resizableImageView.removeFromSuperview()
+            // Gesture
+            mainWindow?.removeGestureRecognizer((self?.panGesture)!)
+            // Controls
+            NSObject.cancelPreviousPerformRequests(withTarget: self!)
+            
+            self?.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            self?.dismiss(animated: false, completion: nil)
+        }
+        
+        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: nil)
+        UIView.animate(withDuration: 0.4, animations: {
+            resizableImageView.frame = senderViewOriginalFrame!
+            fadeView.alpha = 0
+            self.view.backgroundColor = UIColor.clear
+        }) { (finished) in
+             completion()
+        }
+    }
+    
+    @objc func panGestureRecognized(_ gesture:UIPanGestureRecognizer){
+        // Initial Setup
+        let scrollView = self.collectionView
+        
+        var  firstX:CGFloat = 0, firstY:CGFloat = 0
+        
+        let viewHeight = scrollView.frame.size.height
+        let viewHalfHeight = viewHeight/2
+        
+        var translatedPoint = gesture.translation(in: self.view)
+        
+        // Gesture Began
+        if gesture.state == UIGestureRecognizerState.began {
+            firstX = scrollView.center.x
+            firstY = scrollView.center.y
+            isdraggingPhoto = true
+            self.setNeedsStatusBarAppearanceUpdate()
+        }
+        
+        translatedPoint = CGPoint(x: firstX, y: firstY+translatedPoint.y)
+        scrollView.center = translatedPoint
+        
+        let newY:CGFloat = scrollView.center.y - viewHalfHeight;
+        let newAlpha:CGFloat = 1 - CGFloat(fabsf(Float(newY)))/viewHeight; //abs(newY)/viewHeight * 1.8;
+        
+        self.view.isOpaque = true
+        
+        self.view.backgroundColor = UIColor.init(white: 0, alpha: newAlpha)
+        
+        // Gesture Ended
+        if (gesture.state == UIGestureRecognizerState.ended) {
+            if (scrollView.center.y > viewHalfHeight+40 || scrollView.center.y < viewHalfHeight-40) // Automatic Dismiss View
+            {
+                if ((senderViewForAnimation) != nil) {
+                    self.performDismissAnimation()
+                    return
+                }
+                
+                let finalX:CGFloat  = firstX
+                var finalY:CGFloat  = firstX
+                
+                let windowsHeigt:CGFloat  = self.view.height
+                
+                if(scrollView.center.y > viewHalfHeight+30){ // swipe down
+                finalY = windowsHeigt*2
+                }else{ // swipe up
+                finalY = -viewHalfHeight
+                }
+                
+                let animationDuration:CGFloat = 0.35
+                
+                UIView.beginAnimations(nil, context: nil)
+                UIView.setAnimationDuration(TimeInterval(animationDuration))
+                UIView.setAnimationCurve(UIViewAnimationCurve.easeIn)
+                UIView.setAnimationDelegate(self)
+                scrollView.center = CGPoint(x: finalX, y: finalY)
+                self.view.backgroundColor = UIColor.init(white: 0, alpha: newAlpha)
+                UIView.commitAnimations()
+
+                self.perform(#selector(back), with: self, afterDelay: TimeInterval(animationDuration))
+            }
+            else // Continue Showing View
+            {
+                isdraggingPhoto = false
+                self.setNeedsStatusBarAppearanceUpdate()
+                
+                self.view.backgroundColor = UIColor.init(white: 0, alpha: 1)
+                
+                let velocityY:CGFloat = (0.35*gesture.velocity(in: self.view).y);
+                
+                let finalX:CGFloat = firstX
+                let finalY:CGFloat = viewHalfHeight
+                
+                let animationDuration  = abs((velocityY)*0.0002)+0.2
+                
+                
+                UIView.beginAnimations(nil, context: nil)
+                UIView.setAnimationDuration(TimeInterval(animationDuration))
+                UIView.setAnimationCurve(UIViewAnimationCurve.easeOut)
+                UIView.setAnimationDelegate(self)
+                scrollView.center = CGPoint(x: finalX, y: finalY)
+                UIView.commitAnimations()
+            }
+        }
     }
     
     @objc func longGestureRecognized(_ sender:UILongPressGestureRecognizer){
         if (sender.state == UIGestureRecognizerState.began) {
            
         }
+    }
+    
+    @objc func back(){
+        
+    }
+    
+    @objc func readyToShare(){
+        
+    }
+    
+    @objc func doneButtonPressed(){
+       self.performDismissAnimation()
     }
 
     override func didReceiveMemoryWarning() {
@@ -92,7 +450,7 @@ class WSShowBigimgViewController: UIViewController {
         collection.setCollectionViewLayout(collectionViewlayout, animated: true)
         collection.frame = CGRect(x: -CGFloat(kItemMargin)/2, y: 0, width: __kWidth+CGFloat(kItemMargin), height: __kHeight)
 //        // TODO: rotation
-        collection.setContentOffset(CGPoint(x: __kWidth + CGFloat(kItemMargin)*CGFloat(indexBeforeRotation), y: 0), animated: false)
+       
         return collection
     }()
     
@@ -102,7 +460,38 @@ class WSShowBigimgViewController: UIViewController {
         gesture.maximumNumberOfTouches = 1
         return gesture
     }()
+    
+    lazy var titleLabel: UILabel = {
+        let label = UILabel.init()
+        label.textColor = UIColor.white
+        label.textAlignment = NSTextAlignment.center
+        return label
+    }()
 
+    lazy var naviView: UIView = {
+        let view = UIView.init(frame: CGRect(x: 0, y: 0, width: __kWidth, height: 64))
+        view.backgroundColor = UIColor.clear
+        return view
+    }()
+    
+    lazy var leftNaviButton: UIButton = {
+        let button = UIButton.init()
+        button.setImage(UIImage.init(named: "back"), for: UIControlState.normal)
+        button.addTarget(self, action: #selector(doneButtonPressed), for: UIControlEvents.touchUpInside)
+        return button
+    }()
+    
+    lazy var rightNaviButton: UIButton = {
+        let button  = UIButton.init()
+        button.setImage(UIImage.init(named: "more_white"), for: UIControlState.normal)
+        button.addTarget(self, action: #selector(readyToShare), for: UIControlEvents.touchUpInside)
+        return button
+    }()
+    
+    lazy var rightImageView: UIImageView = {
+        let imageView = UIImageView.init(image: UIImage.init(named: "ic_cloud_white"))
+        return imageView
+    }()
 }
 
 extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDataSource{
@@ -117,19 +506,60 @@ extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:WSBigimgCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! WSBigimgCollectionViewCell
         let model = self.models![indexPath.row]
-//        cell.previewView.videoView.delegate = self;
+        cell.previewView.videoView.delegate = self
         
-//        cell.showGif = true
-//        cell.showLivePhoto = true
-//        cell.model = model;
+        cell.showGif = true
+        cell.showLivePhoto = true
+        cell.model = model
    
-//        cell.singleTapCallBack = ^() {
-//            jy_strongify(weakSelf);
-//            [strongSelf handlerSingleTap];
-//        };
+        cell.singleTapCallBack = { [weak self] in
+            self?.handlerSingleTap()
+        };
         return cell
     }
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        (cell as! WSBigimgCollectionViewCell).previewView.resetScale()
+        (cell as! WSBigimgCollectionViewCell).willDisplaying = true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        (cell as! WSBigimgCollectionViewCell).previewView.handlerEndDisplaying()
+    }
+}
+
+extension WSShowBigimgViewController:UIScrollViewDelegate{
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        if scrollView == collectionView as UIScrollView {
+            let m =  self.getCurrentPageModel()
+            if (m == nil || currentModelForRecord == m){
+                return
+            }
+            currentModelForRecord = m
+            //改变导航标题
+            if self.delegate != nil && !isFirstAppear{
+                self.delegate?.photoBrowser(browser: self, indexPath: (m?.indexPath!)!)
+            }
+            //!!!!!: change Title
+            titleLabel.text = "\(currentPage)/\(String(describing: self.models?.count))"
+            if (m!.type == .GIF ||
+                m!.type == .LivePhoto ||
+                m!.type == .Video || m?.type == .NetVideo) {
+                let cell = collectionView.cellForItem(at: IndexPath.init(row: currentPage-1 , section: 0))
+                if  cell != nil{
+                      (cell as! WSBigimgCollectionViewCell).pausePlay()
+                }
+            }
+//        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+         self.reloadCurrentCell()
+    }
+}
+
+extension WSShowBigimgViewController:SWPreviewVideoPlayerDelegate{
+    func playVideo(viewController: AVPlayerViewController) {
         
     }
 }

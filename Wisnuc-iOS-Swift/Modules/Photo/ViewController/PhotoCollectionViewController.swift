@@ -577,5 +577,14 @@ extension PhotoCollectionViewController : UIViewControllerPreviewingDelegate {
 
 
 extension PhotoCollectionViewController : WSShowBigImgViewControllerDelegate {
+    func photoBrowser(browser: WSShowBigimgViewController, indexPath: IndexPath) {
+        self.collectionView?.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.centeredVertically, animated: false)
+        self.collectionView?.layoutIfNeeded()
+    }
+    
+    func photoBrowser(browser: WSShowBigimgViewController, willDismiss indexPath: IndexPath) -> UIView {
+        let cell = self.collectionView?.cellForItem(at: indexPath)
+        return cell!
+    }
 }
 

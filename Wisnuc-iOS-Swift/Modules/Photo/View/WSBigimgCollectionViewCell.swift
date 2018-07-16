@@ -87,7 +87,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         self.scrollView.frame = self.bounds
         self.scrollView.setZoomScale(1.0, animated: true)
         if (loadOK) {
-            self.resetSubviewSize(self.wsAsset!.asset != nil ? self.wsAsset?.asset! : self.imageView.image ?? nil)
+            self.resetSubviewSize(self.wsAsset!.asset != nil ? self.wsAsset : self.imageView.image ?? nil)
         }
     }
     
@@ -481,28 +481,29 @@ class WSPreviewVideo: WSBasePreviewView {
         })
     }
     func loadNetNormalImage(asset:WSAsset){
-//        if (self.jyAsset.asset && self.imageRequestID >= 0) {
-//            [[PHCachingImageManager defaultManager] cancelImageRequest:self.imageRequestID];
-//        }
-//        self.jyAsset = asset;
-//        if (_playLayer) {
-//            _playLayer.player = nil;
-//            [_playLayer removeFromSuperlayer];
+        if (self.wsAsset?.asset != nil && self.imageRequestID != nil) {
+            if self.imageRequestID! >= 0{
+                PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
+            }
+        }
+        self.wsAsset = asset
+        if ((playLayer) != nil) {
+            playLayer?.player = nil
+            playLayer?.removeFromSuperlayer()
 //            [_playLayer removeObserver:self forKeyPath:@"status"];
-//            _hasObserverStatus = NO;
-//            _playLayer = nil;
-//        }
+            hasObserverStatus = false
+            playLayer = nil
+        }
+        self.imageView.image = nil
+        self.playBtn.isEnabled = true
+        self.playBtn.isHidden = false
+        self.icloudLoadFailedLabel.isHidden = true
+        self.imageView.isHidden = false
+        if AppNetworkService.networkState == .normal{
+            Message.message(text: LocalizedString(forKey: "Operation not support"))
+        }
 //
-//        self.imageView.image = nil;
-//
-//        self.playBtn.enabled = YES;
-//        self.playBtn.hidden = NO;
-//        self.icloudLoadFailedLabel.hidden = YES;
-//        self.imageView.hidden = NO;
-//
-//        if(WB_UserService.currentUser.isCloudLogin) return [SXLoadingView showAlertHUD:WBLocalizedString(@"operation_not_support", nil) duration:1];
-//
-//        [self.indicator startAnimating];
+        self.indicator.startAnimating()
 //
 //        jy_weakify(self);
 //        [[FMMediaRamdomKeyAPI apiWithHash:[(WBAsset *)self.jyAsset fmhash]] startWithCompletionBlockWithSuccess:^(__kindof JYBaseRequest *request) {
@@ -723,6 +724,101 @@ class WSPreviewView: UIView {
         }
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        switch self.model?.type {
+        case .Image?,.GIF?:
+            self.imageGifView.frame = self.bounds
+        case .LivePhoto?:
+            if !self.showLivePhoto {
+                 self.imageGifView.frame = self.bounds
+            }else{
+                self.livePhotoView.frame = self.bounds
+            }
+        case .Video?,.NetVideo?:
+            self.videoView.frame = self.bounds
+        default:
+            break
+        }
+    }
+    
+    func imageViewFrame() -> CGRect{
+        switch self.model?.type {
+        case .Image?,.GIF?:
+           return self.imageGifView.containerView.frame
+        case .LivePhoto?:
+            if !self.showLivePhoto {
+                return self.imageGifView.containerView.frame
+            }else{
+                return self.livePhotoView.lpView.frame
+            }
+        case .Video?,.NetVideo?:
+            return self.videoView.playLayer?.frame ?? CGRect.zero
+        default:
+            break
+        }
+        return CGRect.zero
+    }
+    
+    func reload(){
+        if self.showGif! &&
+            self.model?.type == .GIF {
+            if self.model is NetAsset {
+                self.imageGifView.loadImage(asset: self.model!)
+                return
+            }
+            self.imageGifView.loadGifImage(asset: self.model!)
+        } else if self.showLivePhoto &&
+            self.model?.type == .LivePhoto {
+            self.livePhotoView.loadLivePhoto(asset: self.model!)
+        }
+    }
+
+    func resumePlay(){
+        if self.model?.type == .GIF {
+            self.imageGifView.resumeGif()
+        }
+    }
+    
+    func pausePlay(){
+        switch self.model?.type{
+        case .GIF? :
+            self.imageGifView.pauseGif()
+        case .LivePhoto? :
+            self.livePhotoView.stopPlayLivePhoto()
+        case .Video?,.NetVideo?:
+            self.videoView.stopPlayVideo()
+        default: break
+            
+        }
+    }
+    
+    func handlerEndDisplaying(){
+        switch self.model?.type {
+        case .GIF?:
+            if  (self.imageGifView.imageView.image?.isKind(of: NSClassFromString("_UIAnimatedImage")!))!{
+                self.imageGifView.loadNormalImage(asset: self.model!)
+            }
+        case .Video?:
+            if self.videoView.haveLoadVideo() {
+                self.videoView.loadNormalImage(asset: self.model!)
+            }
+        default:
+            break
+        }
+    }
+    
+    func resetScale(){
+      self.imageGifView.resetScale()
+    }
+    
+    func image() ->UIImage?{
+        if  self.model?.type == .Image {
+            return self.imageGifView.imageView.image
+        }
+        return nil
+    }
+
     lazy var imageGifView: WSPreviewImageAndGif = {
         let imageView = WSPreviewImageAndGif.init(frame: self.bounds)
         imageView.singleTapCallback = self.singleTapCallBack
@@ -740,40 +836,58 @@ class WSPreviewView: UIView {
         imageView.singleTapCallback = self.singleTapCallBack
         return imageView
     }()
-    
-    
-    //     JYAsset *model;
-    //    @property (nonatomic, copy)   void (^singleTapCallBack)(void);
-    //
-    //    /**
-    //     界面每次即将显示时，重置scrollview缩放状态
-    //     */
-    //    - (void)resetScale;
-    //
-    //    /**
-    //     * 获取图片的frame
-    //     */
-    //    - (CGRect)imageViewFrame;
-    //
-    //    /**
-    //     处理划出界面后操作
-    //     */
-    //    - (void)handlerEndDisplaying;
-    //
-    //    /**
-    //     reload gif,livephoto,video
-    //     */
-    //    - (void)reload;
-    //
-    //    - (void)resumePlay;
-    //
-    //    - (void)pausePlay;
-    //
-    //    - (UIImage *)image;
-    
 }
 
 class WSBigimgCollectionViewCell: UICollectionViewCell {
+    var singleTapCallBack:(()->())?
+    var showGif:Bool = false
+    var showLivePhoto:Bool = false
+    var willDisplaying:Bool = false
+    var model:WSAsset?{
+        didSet{
+            self.previewView.showGif = self.showGif
+            self.previewView.showLivePhoto = self.showLivePhoto
+            self.previewView.model = model
+        }
+    }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.addSubview(previewView)
+        previewView.singleTapCallBack = { [weak self] in
+            if let singleTapCallBack = self?.singleTapCallBack {
+                singleTapCallBack()
+            }
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func resetCellStatus(){
+        self.previewView.resetScale()
+    }
+    
+    func reloadGifLivePhoto(){
+        if  self.willDisplaying {
+            self.willDisplaying = false
+            self.previewView.reload()
+        } else {
+            self.previewView.resumePlay()
+        }
+    }
+    
+    func pausePlay(){
+        self.previewView.pausePlay()
+    }
+    
+    lazy var previewView: WSPreviewView = {
+        let view = WSPreviewView.init(frame: self.bounds)
+        view.autoresizingMask = UIViewAutoresizing(rawValue: UIViewAutoresizing.RawValue(UInt8(UIViewAutoresizing.flexibleWidth.rawValue) | UInt8(UIViewAutoresizing.flexibleHeight.rawValue)))
+        return view
+    }()
 }
+
+
 
