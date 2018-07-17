@@ -111,6 +111,7 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        self.imageView.image = nil
         self.imageView.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5)
     }
     

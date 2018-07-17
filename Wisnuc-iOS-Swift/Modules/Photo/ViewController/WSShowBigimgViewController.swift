@@ -11,10 +11,11 @@ import PhotosUI
 import Photos
 import AVKit
 import SnapKit
+import RxSwift
 
 @objc protocol WSShowBigImgViewControllerDelegate {
     func photoBrowser(browser:WSShowBigimgViewController, indexPath:IndexPath)
-    func photoBrowser(browser:WSShowBigimgViewController, willDismiss indexPath:IndexPath) ->UIView
+    func photoBrowser(browser:WSShowBigimgViewController, willDismiss indexPath:IndexPath) ->UIView?
 }
 
 class WSShowBigimgViewController: UIViewController {
@@ -28,6 +29,7 @@ class WSShowBigimgViewController: UIViewController {
     var currentPage:Int = 0
     var isFirstAppear:Bool = true
     var currentModelForRecord:WSAsset?
+    var disposeBag = DisposeBag()
     private let cellReuseIdentifier = "WSBigimgCollectionViewCell"
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -41,6 +43,10 @@ class WSShowBigimgViewController: UIViewController {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        print("show big image deinit")
     }
     
     override func viewDidLoad() {
@@ -59,6 +65,24 @@ class WSShowBigimgViewController: UIViewController {
         collectionView.setContentOffset(CGPoint(x: (__kWidth+CGFloat(kItemMargin))*CGFloat(indexBeforeRotation), y: 0), animated: false)
         self.performPresentAnimation()
 //        WBApplication.statusBarStyle = UIStatusBarStyleLightContent;
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if (isFirstAppear) {
+            return
+        }
+        isFirstAppear = false
+        self.reloadCurrentCell()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if (self.getCurrentPageModel()!.type == .Image && self.getCurrentPageModel()?.type != .NetImage) {
+            rightImageView.isHidden = true
+        }else if self.getCurrentPageModel()?.type == .NetImage {
+            rightImageView.isHidden = false
+        }
     }
     
     func basicSetting(){
@@ -114,6 +138,16 @@ class WSShowBigimgViewController: UIViewController {
         self.view.addSubview(naviView)
     }
     
+    func notificationSetting(){
+        defaultNotificationCenter()
+            .rx
+            .notification(NSNotification.Name.UIApplicationDidChangeStatusBarOrientation)
+            .subscribe(onNext: { (noti) in
+               self.indexBeforeRotation = self.currentPage - 1
+            })
+            .disposed(by:disposeBag )
+    }
+    
     func gestureSetting(){
         self.view.addGestureRecognizer(panGesture)
         let longGesture = UILongPressGestureRecognizer.init(target: self, action:#selector(longGestureRecognized(_ :)))
@@ -134,7 +168,7 @@ class WSShowBigimgViewController: UIViewController {
     func getCurrentPageModel() -> WSAsset?{
         let offset = self.collectionView.contentOffset
         
-        let page = offset.x/__kWidth+CGFloat(kItemMargin)
+        let page = offset.x/(__kWidth+CGFloat(kItemMargin))
         if (ceilf(Float(page)) >= Float(self.models!.count) || page < 0) {
             return nil
         }
@@ -262,7 +296,10 @@ class WSShowBigimgViewController: UIViewController {
     }
   
     func performDismissAnimation(){
-        let fadeAlpha = 1 - fabs(collectionView.frame.origin.y)/collectionView.frame.size.height
+        
+
+        
+        let fadeAlpha = 1 - fabs(collectionView.top)/collectionView.frame.size.height
         
         //    JYBigImgCell * cell = _collectionView.visibleCells[0];
         let indexP = IndexPath.init(row: currentPage - 1, section: 0)
@@ -277,6 +314,10 @@ class WSShowBigimgViewController: UIViewController {
         
         if let delegateOK = self.delegate{
             senderViewForAnimation =  delegateOK.photoBrowser(browser: self, willDismiss: (cell?.model?.indexPath!)!)
+        }
+        
+        if senderViewForAnimation == nil {
+            return
         }
 
         let image = self.getImageFromView(view: senderViewForAnimation!)
@@ -321,38 +362,36 @@ class WSShowBigimgViewController: UIViewController {
     }
     
     @objc func panGestureRecognized(_ gesture:UIPanGestureRecognizer){
-        // Initial Setup
+        
         let scrollView = self.collectionView
         
-        var  firstX:CGFloat = 0, firstY:CGFloat = 0
+        var  firstX:CGFloat = self.view.width/2, firstY:CGFloat = 0
         
-        let viewHeight = scrollView.frame.size.height
+        let viewHeight = scrollView.height
         let viewHalfHeight = viewHeight/2
+        firstY = viewHalfHeight
         
-        var translatedPoint = gesture.translation(in: self.view)
-        
-        // Gesture Began
-        if gesture.state == UIGestureRecognizerState.began {
-            firstX = scrollView.center.x
-            firstY = scrollView.center.y
-            isdraggingPhoto = true
-            self.setNeedsStatusBarAppearanceUpdate()
+        let translatedPoint = gesture.translation(in: self.view)
+        isdraggingPhoto = true
+        self.setNeedsStatusBarAppearanceUpdate()
+        let newTranslatedPoint = CGPoint(x: firstX+translatedPoint.x, y: firstY+translatedPoint.y)
+        if gesture.state == UIGestureRecognizerState.changed {
+        scrollView.center = newTranslatedPoint
         }
         
-        translatedPoint = CGPoint(x: firstX, y: firstY+translatedPoint.y)
-        scrollView.center = translatedPoint
-        
-        let newY:CGFloat = scrollView.center.y - viewHalfHeight;
-        let newAlpha:CGFloat = 1 - CGFloat(fabsf(Float(newY)))/viewHeight; //abs(newY)/viewHeight * 1.8;
-        
+        let newY = scrollView.center.y - viewHalfHeight
+        let newAlpha =  1.0 - (fabsf(Float(newY))/Float(viewHeight))//abs(newY)/viewHeight * 1.8;
+      
         self.view.isOpaque = true
+
+        self.view.backgroundColor = UIColor.init(white: 0, alpha: CGFloat(newAlpha))
         
-        self.view.backgroundColor = UIColor.init(white: 0, alpha: newAlpha)
-        
+        scrollView.isScrollEnabled = false
+
         // Gesture Ended
         if (gesture.state == UIGestureRecognizerState.ended) {
-            if (scrollView.center.y > viewHalfHeight+40 || scrollView.center.y < viewHalfHeight-40) // Automatic Dismiss View
-            {
+            scrollView.isScrollEnabled = true
+            if (scrollView.center.y > viewHalfHeight+120 || scrollView.center.y < viewHalfHeight-120) {
                 if ((senderViewForAnimation) != nil) {
                     self.performDismissAnimation()
                     return
@@ -376,7 +415,7 @@ class WSShowBigimgViewController: UIViewController {
                 UIView.setAnimationCurve(UIViewAnimationCurve.easeIn)
                 UIView.setAnimationDelegate(self)
                 scrollView.center = CGPoint(x: finalX, y: finalY)
-                self.view.backgroundColor = UIColor.init(white: 0, alpha: newAlpha)
+                self.view.backgroundColor = UIColor.init(white: 0, alpha: CGFloat(newAlpha))
                 UIView.commitAnimations()
 
                 self.perform(#selector(back), with: self, afterDelay: TimeInterval(animationDuration))
@@ -413,7 +452,7 @@ class WSShowBigimgViewController: UIViewController {
     }
     
     @objc func back(){
-        
+        self.dismiss(animated: true, completion: nil)
     }
     
     @objc func readyToShare(){
@@ -530,7 +569,7 @@ extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDa
 
 extension WSShowBigimgViewController:UIScrollViewDelegate{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if scrollView == collectionView as UIScrollView {
+        if scrollView == collectionView  {
             let m =  self.getCurrentPageModel()
             if (m == nil || currentModelForRecord == m){
                 return
@@ -541,7 +580,7 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
                 self.delegate?.photoBrowser(browser: self, indexPath: (m?.indexPath!)!)
             }
             //!!!!!: change Title
-            titleLabel.text = "\(currentPage)/\(String(describing: self.models?.count))"
+            titleLabel.text = "\(currentPage)/\(String(describing: (self.models?.count)!))"
             if (m!.type == .GIF ||
                 m!.type == .LivePhoto ||
                 m!.type == .Video || m?.type == .NetVideo) {
@@ -550,7 +589,7 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
                       (cell as! WSBigimgCollectionViewCell).pausePlay()
                 }
             }
-//        }
+        }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -560,6 +599,10 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
 
 extension WSShowBigimgViewController:SWPreviewVideoPlayerDelegate{
     func playVideo(viewController: AVPlayerViewController) {
-        
+        let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+        let  cell =  collectionView.cellForItem(at: indexP)
+        if cell != nil {
+            (cell as! WSBigimgCollectionViewCell).previewView.videoView.stopPlayVideo()
+        }
     }
 }

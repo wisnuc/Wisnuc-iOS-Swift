@@ -211,6 +211,9 @@
 		1F4242B220F5CBF60085E2F0 /* JYProcessView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F4242AE20F5CBF50085E2F0 /* JYProcessView.h */; };
 		1F4242B820F5CEC10085E2F0 /* WSShowBigimgViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242B720F5CEC10085E2F0 /* WSShowBigimgViewController.swift */; };
 		1F4242BA20F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242B920F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift */; };
+		1F4242BE20FDF7570085E2F0 /* handrail.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242BB20FDF7550085E2F0 /* handrail.png */; };
+		1F4242BF20FDF7570085E2F0 /* handrail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242BC20FDF7560085E2F0 /* handrail@2x.png */; };
+		1F4242C020FDF7570085E2F0 /* handrail@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242BD20FDF7560085E2F0 /* handrail@3x.png */; };
 		1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */; };
 		1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */; };
 		1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */; };
@@ -730,6 +733,9 @@
 		1F4242AE20F5CBF50085E2F0 /* JYProcessView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYProcessView.h; sourceTree = "<group>"; };
 		1F4242B720F5CEC10085E2F0 /* WSShowBigimgViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSShowBigimgViewController.swift; sourceTree = "<group>"; };
 		1F4242B920F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSBigimgCollectionViewCell.swift; sourceTree = "<group>"; };
+		1F4242BB20FDF7550085E2F0 /* handrail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = handrail.png; sourceTree = "<group>"; };
+		1F4242BC20FDF7560085E2F0 /* handrail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "handrail@2x.png"; sourceTree = "<group>"; };
+		1F4242BD20FDF7560085E2F0 /* handrail@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "handrail@3x.png"; sourceTree = "<group>"; };
 		1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationDiskViewController.swift; sourceTree = "<group>"; };
 		1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationDiskViewController.xib; sourceTree = "<group>"; };
@@ -1463,6 +1469,9 @@
 		1F42429E20F338B40085E2F0 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1F4242BB20FDF7550085E2F0 /* handrail.png */,
+				1F4242BC20FDF7560085E2F0 /* handrail@2x.png */,
+				1F4242BD20FDF7560085E2F0 /* handrail@3x.png */,
 				1F4242A120F338C10085E2F0 /* select.png */,
 				1F4242A020F338C10085E2F0 /* select@2x.png */,
 				1F42429F20F338C10085E2F0 /* select@3x.png */,
@@ -2701,6 +2710,7 @@
 				1F5882392085DCAF00394BD6 /* device@2x.png in Resources */,
 				1FEABB7220A1AA1400824448 /* files_up@3x.png in Resources */,
 				1F359FBD2091761500E2FF36 /* account@3x.png in Resources */,
+				1F4242BF20FDF7570085E2F0 /* handrail@2x.png in Resources */,
 				1F5AD93520AD7FC00065DAD3 /* files_excel_small@3x.png in Resources */,
 				1F4242A220F338C20085E2F0 /* select@3x.png in Resources */,
 				1F5882542085F0F800394BD6 /* station_review@3x.png in Resources */,
@@ -2733,6 +2743,7 @@
 				1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */,
 				1FA6A1CB20CFBD72007A0AB2 /* gridstyle@3x.png in Resources */,
 				1F050E1620A967FA0037F00A /* files_cloud@2x.png in Resources */,
+				1F4242C020FDF7570085E2F0 /* handrail@3x.png in Resources */,
 				1F5882252085885C00394BD6 /* logo.png in Resources */,
 				1F359FD62091A97C00E2FF36 /* disk_error.png in Resources */,
 				1F4E9397208DBB7600DD1EA7 /* radio_button_unchecked@2x.png in Resources */,
@@ -2753,6 +2764,7 @@
 				1F359FD02091A95D00E2FF36 /* disk_main_color@3x.png in Resources */,
 				1F3C242E20A59BCE00E6B953 /* transfer@2x.png in Resources */,
 				1F1BAC5620CE703300D32C5A /* files_gif_small@2x.png in Resources */,
+				1F4242BE20FDF7570085E2F0 /* handrail.png in Resources */,
 				1F359FB720916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.xib in Resources */,
 				1F5AD92820AD52360065DAD3 /* back_gray.png in Resources */,
 				1F5882242085885C00394BD6 /* logo@2x.png in Resources */,

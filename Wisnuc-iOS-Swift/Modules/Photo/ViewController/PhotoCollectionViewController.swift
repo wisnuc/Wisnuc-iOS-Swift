@@ -11,6 +11,7 @@ import MaterialComponents.MaterialCollections
 import RxSwift
 
 private let reuseIdentifier = "PhotoCell"
+private let headerReuseIdentifier = "headView"
 private var currentScale:CGFloat = 0
 private let keyPath:String = "sliderState"
 
@@ -98,7 +99,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         self.collectionView?.backgroundColor = UIColor.white
         self.collectionView?.showsVerticalScrollIndicator = false
         self.collectionView?.showsHorizontalScrollIndicator = false
-        self.collectionView?.register(FMHeadView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headView")
+        self.collectionView?.register(FMHeadView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier)
         // Uncomment the following line to preserve selection between presentations
          self.clearsSelectionOnViewWillAppear = true
         
@@ -133,7 +134,6 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         if self.collectionView?.indicator == nil {
             return
         }
-    
 
         self.collectionView?.indicator.slider.rx.observe(String.self, keyPath)
             .subscribe(onNext: { [weak self] (newValue) in
@@ -355,6 +355,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
     
 
     // MARK: UICollectionViewDelegate
+    
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         let size = CGSize(width: __kWidth, height: 42)
         return size
@@ -369,7 +370,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let headView:FMHeadView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headView", for: indexPath) as! FMHeadView
+        let headView:FMHeadView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! FMHeadView
       
         headView.headTitle =  self.getDateString(date: dataSource![indexPath.section][indexPath.row].createDate!)
         headView.fmIndexPath = indexPath
@@ -468,36 +469,37 @@ class PhotoCollectionViewController: MDCCollectionViewController {
 }
 
 extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
+    
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            let cell = collectionView.cellForItem(at: indexPath)
-            let photoCell:PhotoCollectionViewCell = cell == nil ? collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell : cell as! PhotoCollectionViewCell
-                let model = self.dataSource![indexPath.section][indexPath.row]
-                if (self.collectionView!.indicator != nil) {
-                    self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
-                }
-                photoCell.isSelectMode = self.isSelectMode
-                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
-                photoCell.model = model
-                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
-                if model.asset != nil{
-                    DispatchQueue.global(qos: .default).async {
-             
-                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
-                        if (photoCell?.identifier == model.asset?.localIdentifier) {
-                            DispatchQueue.main.async {
-                                   photoCell?.imageView.image = image
-                            }
-                        
-                        }
-                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
-                            photoCell?.imageRequestID = -1
-                        }
-                })
-                        
-                    }
-                    
-            }
+//            let cell = collectionView.cellForItem(at: indexPath)
+//            let photoCell:PhotoCollectionViewCell = cell == nil ? collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell : cell as! PhotoCollectionViewCell
+//                let model = self.dataSource![indexPath.section][indexPath.row]
+//                if (self.collectionView!.indicator != nil) {
+//                    self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
+//                }
+//                photoCell.isSelectMode = self.isSelectMode
+//                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
+//                photoCell.model = model
+//                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
+//                if model.asset != nil{
+//                    DispatchQueue.global(qos: .default).async {
+//
+//                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
+//                        if (photoCell?.identifier == model.asset?.localIdentifier) {
+//                            DispatchQueue.main.async {
+//                                   photoCell?.imageView.image = image
+//                            }
+//
+//                        }
+//                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
+//                            photoCell?.imageRequestID = -1
+//                        }
+//                })
+//
+//                    }
+//
+//            }
         }
     }
     
@@ -582,9 +584,9 @@ extension PhotoCollectionViewController : WSShowBigImgViewControllerDelegate {
         self.collectionView?.layoutIfNeeded()
     }
     
-    func photoBrowser(browser: WSShowBigimgViewController, willDismiss indexPath: IndexPath) -> UIView {
+    func photoBrowser(browser: WSShowBigimgViewController, willDismiss indexPath: IndexPath) -> UIView? {
         let cell = self.collectionView?.cellForItem(at: indexPath)
-        return cell!
+        return cell
     }
 }
 

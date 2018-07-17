@@ -7,7 +7,7 @@
 //
 
 #import "FMHeadView.h"
-//#import <SnapKit/SnapKit-Swift.h>
+#import "Masonry.h"
 #import "UIButton+EnlargeEdge.h"
 #import <YYKit/YYKit.h>
 
@@ -35,14 +35,14 @@
         [_contentView addSubview:_choosebtn];
         [_choosebtn setEnlargeEdgeWithTop:5 right:5 bottom:5 left:5];
         [self addSubview:_contentView];
-        CGFloat left = -((20+44/2));
-        _contentView.frame = CGRectMake(left, self.top, self.right - left , self.height);
-//        [_contentView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.left.mas_equalTo(self.mas_left).with.offset(-((20+44/2)));
-//            make.right.mas_equalTo(self.mas_right);
-//            make.top.mas_equalTo(self.mas_top);
-//            make.bottom.mas_equalTo(self.mas_bottom);
-//        }];
+//        CGFloat left = -((20+44/2));
+//        _contentView.frame = CGRectMake(left, self.top, self.right - left , self.height);
+        [_contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.mas_left).with.offset(-((20+44/2)));
+            make.right.mas_equalTo(self.mas_right);
+            make.top.mas_equalTo(self.mas_top);
+            make.bottom.mas_equalTo(self.mas_bottom);
+        }];
     }
 }
 
