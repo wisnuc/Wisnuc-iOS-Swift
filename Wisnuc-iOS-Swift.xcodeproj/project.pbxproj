@@ -214,6 +214,9 @@
 		1F4242BE20FDF7570085E2F0 /* handrail.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242BB20FDF7550085E2F0 /* handrail.png */; };
 		1F4242BF20FDF7570085E2F0 /* handrail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242BC20FDF7560085E2F0 /* handrail@2x.png */; };
 		1F4242C020FDF7570085E2F0 /* handrail@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242BD20FDF7560085E2F0 /* handrail@3x.png */; };
+		1F4242C420FF34EC0085E2F0 /* unselected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242C120FF34EA0085E2F0 /* unselected@3x.png */; };
+		1F4242C520FF34EC0085E2F0 /* unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242C220FF34EB0085E2F0 /* unselected.png */; };
+		1F4242C620FF34EC0085E2F0 /* unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242C320FF34EB0085E2F0 /* unselected@2x.png */; };
 		1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */; };
 		1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */; };
 		1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */; };
@@ -736,6 +739,9 @@
 		1F4242BB20FDF7550085E2F0 /* handrail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = handrail.png; sourceTree = "<group>"; };
 		1F4242BC20FDF7560085E2F0 /* handrail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "handrail@2x.png"; sourceTree = "<group>"; };
 		1F4242BD20FDF7560085E2F0 /* handrail@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "handrail@3x.png"; sourceTree = "<group>"; };
+		1F4242C120FF34EA0085E2F0 /* unselected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselected@3x.png"; sourceTree = "<group>"; };
+		1F4242C220FF34EB0085E2F0 /* unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unselected.png; sourceTree = "<group>"; };
+		1F4242C320FF34EB0085E2F0 /* unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselected@2x.png"; sourceTree = "<group>"; };
 		1F4E93782089B1EE00DD1EA7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1F4E937A2089B23E00DD1EA7 /* InitializationDiskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitializationDiskViewController.swift; sourceTree = "<group>"; };
 		1F4E937B2089B23E00DD1EA7 /* InitializationDiskViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InitializationDiskViewController.xib; sourceTree = "<group>"; };
@@ -1469,6 +1475,9 @@
 		1F42429E20F338B40085E2F0 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1F4242C220FF34EB0085E2F0 /* unselected.png */,
+				1F4242C320FF34EB0085E2F0 /* unselected@2x.png */,
+				1F4242C120FF34EA0085E2F0 /* unselected@3x.png */,
 				1F4242BB20FDF7550085E2F0 /* handrail.png */,
 				1F4242BC20FDF7560085E2F0 /* handrail@2x.png */,
 				1F4242BD20FDF7560085E2F0 /* handrail@3x.png */,
@@ -2546,6 +2555,7 @@
 				1FD9B75D207CBE8900906D80 /* LaunchScreen.storyboard in Resources */,
 				1F307C7220BEAB7800AE105C /* setting_gray@3x.png in Resources */,
 				1F1BAC2F20CA61D800D32C5A /* files_arrow_down.png in Resources */,
+				1F4242C420FF34EC0085E2F0 /* unselected@3x.png in Resources */,
 				1FFD12CF20EDC46E0053A3F7 /* task_copy.png in Resources */,
 				1FA6A1BB20CFA70B007A0AB2 /* files_pdf_normal.png in Resources */,
 				1FAADECB20ABFE1100739220 /* files_offline_normal@3x.png in Resources */,
@@ -2628,6 +2638,7 @@
 				1F4E9395208DBB7600DD1EA7 /* radio_button@2x.png in Resources */,
 				1F4E938A2089D64D00DD1EA7 /* disk.png in Resources */,
 				1F58822D208591A100394BD6 /* add_station@2x.png in Resources */,
+				1F4242C620FF34EC0085E2F0 /* unselected@2x.png in Resources */,
 				1F359FC22091764000E2FF36 /* diskinit@3x.png in Resources */,
 				1F58823C2085DCAF00394BD6 /* device_circle.png in Resources */,
 				1FA6A1B720CFA6E2007A0AB2 /* files_audio_normal@2x.png in Resources */,
@@ -2791,6 +2802,7 @@
 				1F3C244220A5AD3D00E6B953 /* files_tag@2x.png in Resources */,
 				1F050E0C20A9640D0037F00A /* TransferTaskTableViewCell.xib in Resources */,
 				1F5882552085F0F800394BD6 /* station_review.png in Resources */,
+				1F4242C520FF34EC0085E2F0 /* unselected.png in Resources */,
 				1FA6A1C120CFA780007A0AB2 /* files_photo_normal.png in Resources */,
 				1FAADEBD20ABE39700739220 /* files_info@2x.png in Resources */,
 				1F1BAC5E20CE709100D32C5A /* files_png_small.png in Resources */,

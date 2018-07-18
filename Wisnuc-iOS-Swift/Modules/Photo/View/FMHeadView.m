@@ -33,7 +33,7 @@
         [_choosebtn setBackgroundImage:[UIImage imageNamed:[self getImageWithChoose:_isChoose]] forState:UIControlStateNormal];
         [_contentView addSubview:_titleLb];
         [_contentView addSubview:_choosebtn];
-        [_choosebtn setEnlargeEdgeWithTop:5 right:5 bottom:5 left:5];
+        [_choosebtn setEnlargeEdgeWithTop:6 right:6 bottom:10 left:10];
         [self addSubview:_contentView];
 //        CGFloat left = -((20+44/2));
 //        _contentView.frame = CGRectMake(left, self.top, self.right - left , self.height);

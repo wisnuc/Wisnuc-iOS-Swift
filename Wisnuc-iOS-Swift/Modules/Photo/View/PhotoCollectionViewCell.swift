@@ -15,6 +15,7 @@ private let btnFrame:CGFloat = 23
 class PhotoCollectionViewCell: MDCCollectionViewCell {
     var imageRequestID:PHImageRequestID?
     var identifier:String?
+    var image:UIImage?
     var isSelectMode:Bool?
     var isSelect:Bool?
     var selectedBlock:((Bool)->())?
@@ -70,7 +71,7 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
                 self.liveImageView.isHidden = true
                 self.timeLabel.isHidden = true
             }
-            
+       
          
             if self.imageRequestID != nil {
                 if self.imageRequestID! >= PHInvalidImageRequestID{
@@ -83,8 +84,9 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
             }else{
               self.identifier =  (model as! NetAsset).fmhash
             }
-            
-            self.imageView.image = nil
+
+            self.imageView.image =  nil
+
             let size = CGSize.init(width: self.width * 1.7 , height: self.height * 1.7)
             if model?.asset != nil{
                 DispatchQueue.global(qos: .default).async {
@@ -99,7 +101,6 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
                         }
                     })
                 }
-               
             }
         }
     }
@@ -111,7 +112,7 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.imageView.image = nil
+//        self.imageView.image = nil
         self.imageView.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5)
     }
     

@@ -102,7 +102,6 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         self.collectionView?.register(FMHeadView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier)
         // Uncomment the following line to preserve selection between presentations
          self.clearsSelectionOnViewWillAppear = true
-        
         // Register cell classes
         self.collectionView!.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         if self.forceTouchAvailable(){
@@ -297,25 +296,39 @@ class PhotoCollectionViewController: MDCCollectionViewController {
                 }
                 
                 needReload = dataCollect.count == 0 ? false : true
+                
             }else{
                 if let index = self?.choosePhotos.index(of: model) {
                     self?.choosePhotos.remove(at: index)
                 }
                 let indexP = IndexPath.init(row: 0, section: indexPath.section)
                 if (self?.chooseSection.contains(indexP))!{
-                        if let index = self?.chooseSection.index(of: indexP) {
-                            self?.chooseSection.remove(at: index)
-                        }
-                        needReload = true
+                    if let index = self?.chooseSection.index(of: indexP) {
+                        self?.chooseSection.remove(at: index)
                     }
+                }
+                   needReload = true
             }
-            
+            let header = self?.collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at:IndexPath.init(item: 0, section: indexPath.section))
             if(needReload){
                 self?.collectionView?.reloadItems(at: [indexPath])
+                let listSet = Set((self?.dataSource![indexPath.section])!)
+                let findSet = Set((self?.choosePhotos)!)
+                if header != nil{
+                 (header as! FMHeadView).isChoose =  listSet.isSubset(of: findSet)
+                }
             }
             
             if self?.choosePhotos.count == 0 {
                 self?.isSelectMode = false
+                let headers = self?.collectionView?.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionHeader)
+                if let headers = headers {
+                    for header in headers {
+                        (header as! FMHeadView).isChoose = false
+                        (header as! FMHeadView).isSelectMode = (self?.isSelectMode)!
+                     
+                    }
+                }
 //                [weakSelf leftBtnClick:_leftBtn];
             }
 //            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
@@ -339,8 +352,30 @@ class PhotoCollectionViewController: MDCCollectionViewController {
             
             //            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
             //
+            var indexPaths =  self?.collectionView?.indexPathsForVisibleItems
+            if indexPaths != nil {
+                indexPaths = indexPaths?.filter{$0 != indexPath}
+                DispatchQueue.global(qos: .default).async {
+                    for value in indexPaths!{
+                        DispatchQueue.main.async {
+                            let relaodCell:PhotoCollectionViewCell = collectionView.cellForItem(at: value) as! PhotoCollectionViewCell
+                            relaodCell.isSelectMode = self?.isSelectMode
+                        }
+                    }
+                }
+            }
             self?.collectionView?.reloadItems(at: [indexPath])
-           
+            let headers = self?.collectionView?.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionHeader)
+            if let headers = headers {
+                for header in headers {
+                    (header as! FMHeadView).isSelectMode = (self?.isSelectMode)!
+                }
+            }
+            
+            let nowHeader = self?.collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at:IndexPath.init(item: 0, section: indexPath.section))
+                let listSet = Set((self?.dataSource![indexPath.section])!)
+                let findSet = Set((self?.choosePhotos)!)
+                (nowHeader as! FMHeadView).isChoose =  listSet.isSubset(of: findSet)
         }
 
         if (self.collectionView!.indicator != nil) {
@@ -349,7 +384,6 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         cell.isSelectMode = self.isSelectMode
         cell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
         cell.model = model
-      
         return cell
     }
     
@@ -375,7 +409,10 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         headView.headTitle =  self.getDateString(date: dataSource![indexPath.section][indexPath.row].createDate!)
         headView.fmIndexPath = indexPath
         headView.isSelectMode = isSelectMode!
-        headView.isChoose = self.chooseSection.contains(indexPath)
+        let listSet = Set(self.dataSource![indexPath.section])
+        let findSet = Set(self.choosePhotos)
+        headView.isChoose = listSet.isSubset(of: findSet)
+//        headView.isChoose = self.chooseSection.contains(indexPath)
         headView.fmDelegate = self
         return headView
     }
@@ -471,7 +508,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
 extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        for indexPath in indexPaths {
+//        for indexPath in indexPaths {
 //            let cell = collectionView.cellForItem(at: indexPath)
 //            let photoCell:PhotoCollectionViewCell = cell == nil ? collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell : cell as! PhotoCollectionViewCell
 //                let model = self.dataSource![indexPath.section][indexPath.row]
@@ -500,7 +537,7 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
 //                    }
 //
 //            }
-        }
+//        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
@@ -520,8 +557,9 @@ extension PhotoCollectionViewController:FMHeadViewDelegate{
             self.chooseSection.append(headView.fmIndexPath)
             self.choosePhotos.append(contentsOf: self.dataSource![headView.fmIndexPath.section])
         }else{
-            let idx = self.chooseSection.index(of: headView.fmIndexPath)
-            self.chooseSection.remove(at: idx!)
+            if let idx = self.chooseSection.index(of: headView.fmIndexPath){
+                self.chooseSection.remove(at: idx)
+            }
             self.choosePhotos  = self.choosePhotos.filter { value in
                 !self.dataSource![headView.fmIndexPath.section].contains(value)
             }
@@ -529,10 +567,19 @@ extension PhotoCollectionViewController:FMHeadViewDelegate{
         
         if self.choosePhotos.count == 0 {
             self.isSelectMode = false
+            let headers = self.collectionView?.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionHeader)
+            if let headers = headers {
+                for header in headers {
+                    (header as! FMHeadView).isSelectMode = (self.isSelectMode)!
+                }
+            }
 //            self leftBtnClick:_leftBtn];
         }
 //        _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)self.choosePhotos.count];
-        self.collectionView?.reloadData()
+        let indexSet = IndexSet.init(integer: headView.fmIndexPath.section)
+        collectionView?.performBatchUpdates({
+              self.collectionView?.reloadSections(indexSet)
+        }, completion: nil)
     }
 }
 
@@ -541,11 +588,9 @@ extension PhotoCollectionViewController:FMHeadViewDelegate{
 extension PhotoCollectionViewController : UIViewControllerPreviewingDelegate {
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         let indexPath = self.collectionView?.indexPathForItem(at: location)
-        
         if (indexPath == nil) {
             return nil
         }
-        
         let cell:PhotoCollectionViewCell = self.collectionView?.cellForItem(at: indexPath!) as! PhotoCollectionViewCell
         
         //设置突出区域
