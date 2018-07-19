@@ -7,14 +7,16 @@
 //
 
 import UIKit
-import MaterialComponents.MaterialCollections
+//import MaterialComponents.MaterialCollections
 import SnapKit
+
 
 private let btnFrame:CGFloat = 23
 
-class PhotoCollectionViewCell: MDCCollectionViewCell {
+class PhotoCollectionViewCell: UICollectionViewCell {
     var imageRequestID:PHImageRequestID?
     var identifier:String?
+    var btnSelect:UIButton?
     var image:UIImage?
     var isSelectMode:Bool?
     var isSelect:Bool?
@@ -72,7 +74,7 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
                 self.timeLabel.isHidden = true
             }
        
-         
+            
             if self.imageRequestID != nil {
                 if self.imageRequestID! >= PHInvalidImageRequestID{
                 PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
@@ -86,14 +88,14 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
             }
 
             self.imageView.image =  nil
-
-            let size = CGSize.init(width: self.width * 1.7 , height: self.height * 1.7)
+            let size = CGSize.init(width: self.width  , height: self.height )
             if model?.asset != nil{
                 DispatchQueue.global(qos: .default).async {
                     self.imageRequestID = PHPhotoLibrary.requestImage(for: self.model?.asset!, size: size, completion: { [weak self] (image, info) in
                         if (self?.identifier == self?.model?.asset?.localIdentifier) {
                             DispatchQueue.main.async {
-                                 self?.imageView.image = image
+                                    self?.imageView.image = image
+//                                image?.arcDebugAutorelease()
                             }
                         }
                         if !(info![PHImageResultIsDegradedKey] as! Bool) {
@@ -101,6 +103,7 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
                         }
                     })
                 }
+            
             }
         }
     }
@@ -130,6 +133,7 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.contentView.backgroundColor = UIColor.colorFromRGB(rgbValue: 0xf5f5f5)
@@ -153,14 +157,31 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
             make.top.equalTo((self?.videoBottomView.top)!).offset(2)
             make.size.equalTo(CGSize(width: 16, height: 16))
         }
+        
+        self.contentView.bringSubview(toFront: self.videoBottomView)
+        if self.btnSelect != nil {
+             self.contentView.bringSubview(toFront: self.btnSelect!)
+        }
+    }
+    
+    func setSelectButton(indexPath:IndexPath){
+        if (self.contentView.subviews.count == 2 && self.contentView.subviews[1] is UIButton) {//如果是重用cell，则不用再添加button
+            self.btnSelect = self.contentView.subviews[1] as? UIButton
+        } else {
+            self.btnSelect = UIButton.init()
+            self.btnSelect?.frame = CGRect.init(x: self.contentView.width - 26, y: 5, width: btnFrame, height: btnFrame)
+            self.btnSelect?.setBackgroundImage(UIImage.init(named: "select.png"), for: UIControlState.normal)
+            self.btnSelect?.addTarget(self, action: #selector(btnSelectClick(_ :)), for: UIControlEvents.touchUpInside)
+        }
+        self.contentView.addSubview(self.btnSelect!)
     }
     
     func setSelectAnimation(isSelect:Bool,animation:Bool){
         self.isSelect = isSelect
-        self.btnSelect.isHidden = !isSelect
+        self.btnSelect?.isHidden = !isSelect
         if (isSelect) {
             if(animation) {
-                self.btnSelect.layer.add(GetBtnStatusChangedAnimation(), forKey: nil)
+                self.btnSelect?.layer.add(GetBtnStatusChangedAnimation(), forKey: nil)
             }
             self.imageView.transform = CGAffineTransform.init(scaleX: 0.8, y: 0.8)
         }else{
@@ -190,19 +211,18 @@ class PhotoCollectionViewCell: MDCCollectionViewCell {
         imgView.clipsToBounds = true
         self.contentView.clipsToBounds = true
         self.contentView.addSubview(imgView)
-        self.contentView.bringSubview(toFront: self.videoBottomView)
-        self.contentView.bringSubview(toFront: self.btnSelect)
+
         return imgView
         }()
     
-    lazy var btnSelect: UIButton = {
-        let button = UIButton.init()
-        button.frame = CGRect.init(x: self.contentView.width - 26, y: 5, width: btnFrame, height: btnFrame)
-        button.setBackgroundImage(UIImage.init(named: "select.png"), for: UIControlState.normal)
-        button.addTarget(self, action: #selector(btnSelectClick(_ :)), for: UIControlEvents.touchUpInside)
-        self.contentView.addSubview(button)
-        return button
-    }()
+//    lazy var btnSelect: UIButton = {
+//        let button = UIButton.init()
+//        button.frame = CGRect.init(x: self.contentView.width - 26, y: 5, width: btnFrame, height: btnFrame)
+//        button.setBackgroundImage(UIImage.init(named: "select.png"), for: UIControlState.normal)
+//        button.addTarget(self, action: #selector(btnSelectClick(_ :)), for: UIControlEvents.touchUpInside)
+//        self.contentView.addSubview(button)
+//        return button
+//    }()
     
     lazy var videoBottomView: UIImageView = {
         let imgView = UIImageView.init()

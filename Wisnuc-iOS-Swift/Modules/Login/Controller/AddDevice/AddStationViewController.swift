@@ -198,8 +198,8 @@ class AddStationViewController: BaseViewController {
             diskModel1.capacity = 10.0
             diskModel1.effectiveCapacity = 5.23
             
-//            let diskArray = [diskModel1]
-//            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
+            let diskArray = [diskModel1]
+            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
         case DeviceForSearchState.initialization.rawValue:
             break
         case DeviceForSearchState.importTo.rawValue:
@@ -217,8 +217,8 @@ class AddStationViewController: BaseViewController {
             diskModel2.effectiveCapacity = 2.20
             diskModel2.type = "RAID1"
             
-//            let diskArray = [diskModel1,diskModel2]
-//            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
+            let diskArray = [diskModel1,diskModel2]
+            DiskPopUpViewManager.sharedInstance.showPopupWithStyle(DeviceForSearchState(rawValue: model.type!)!, CNPPopupStyle.centered, diskArray:diskArray , stationModel: model)
         default:
             break
         }

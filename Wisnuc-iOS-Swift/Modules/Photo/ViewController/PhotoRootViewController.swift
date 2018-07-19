@@ -13,6 +13,9 @@ import MaterialComponents.MaterialCollections
 private var menuButton: IconButton!
 
 class PhotoRootViewController: BaseViewController {
+    override func willDealloc() -> Bool {
+        return false
+    }
     var isSelectMode:Bool?
     var sortedAssetsBackupArray:Array<WSAsset>?
     

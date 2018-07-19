@@ -19,7 +19,10 @@ private let keyPath:String = "sliderState"
     
 }
 
-class PhotoCollectionViewController: MDCCollectionViewController {
+class PhotoCollectionViewController: UICollectionViewController {
+    override func willDealloc() -> Bool {
+        return false
+    }
     weak var delegate:PhotoCollectionViewControllerDelegate?
     var isSelectMode:Bool?
     var showIndicator:Bool = true
@@ -93,8 +96,8 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         fmCollectionViewLayout.alternateDecorationViews = true
         fmCollectionViewLayout.decorationViewOfKinds = ["FMHeadView"]
         fmCollectionViewLayout.scrollDirection = UICollectionViewScrollDirection.vertical
-        self.styler.cellLayoutType = MDCCollectionViewCellLayoutType.grid
-        self.styler.cellStyle = MDCCollectionViewCellStyle.default
+//        self.styler.cellLayoutType = MDCCollectionViewCellLayoutType.grid
+//        self.styler.cellStyle = MDCCollectionViewCellStyle.default
         self.collectionView?.collectionViewLayout = fmCollectionViewLayout
         self.collectionView?.backgroundColor = UIColor.white
         self.collectionView?.showsVerticalScrollIndicator = false
@@ -163,7 +166,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
     }
         
     func forceTouchAvailable() -> Bool{
-        if Float(UIDevice.current.systemVersion)! >= Float(9.0) {
+         if #available(iOS 9.1, *) {
             return self.traitCollection.forceTouchCapability == UIForceTouchCapability.available
         } else {
             return false
@@ -381,27 +384,18 @@ class PhotoCollectionViewController: MDCCollectionViewController {
         if (self.collectionView!.indicator != nil) {
             self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
         }
+        cell.setSelectButton(indexPath: indexPath)
         cell.isSelectMode = self.isSelectMode
         cell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
         cell.model = model
+       
         return cell
     }
     
 
     // MARK: UICollectionViewDelegate
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let size = CGSize(width: __kWidth, height: 42)
-        return size
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 2
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 2
-    }
+  
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headView:FMHeadView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! FMHeadView
@@ -418,7 +412,7 @@ class PhotoCollectionViewController: MDCCollectionViewController {
     }
 
     
-    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let frame = (__kWidth - 2 * (currentScale - 1))/currentScale
         let itemSize = CGSize(width: frame, height: frame)
         return itemSize
@@ -508,36 +502,35 @@ class PhotoCollectionViewController: MDCCollectionViewController {
 extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-//        for indexPath in indexPaths {
-//            let cell = collectionView.cellForItem(at: indexPath)
-//            let photoCell:PhotoCollectionViewCell = cell == nil ? collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell : cell as! PhotoCollectionViewCell
-//                let model = self.dataSource![indexPath.section][indexPath.row]
-//                if (self.collectionView!.indicator != nil) {
-//                    self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
-//                }
-//                photoCell.isSelectMode = self.isSelectMode
-//                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
-//                photoCell.model = model
-//                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
-//                if model.asset != nil{
-//                    DispatchQueue.global(qos: .default).async {
-//
-//                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
-//                        if (photoCell?.identifier == model.asset?.localIdentifier) {
-//                            DispatchQueue.main.async {
-//                                   photoCell?.imageView.image = image
-//                            }
-//
-//                        }
-//                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
-//                            photoCell?.imageRequestID = -1
-//                        }
-//                })
-//
-//                    }
-//
-//            }
-//        }
+        for indexPath in indexPaths {
+            let cell = collectionView.cellForItem(at: indexPath)
+            if cell != nil{
+            let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
+                let model = self.dataSource![indexPath.section][indexPath.row]
+                if (self.collectionView!.indicator != nil) {
+                    self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
+                }
+                photoCell.isSelectMode = self.isSelectMode
+                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
+                photoCell.model = model
+                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
+                if model.asset != nil{
+                    DispatchQueue.global(qos: .default).async {
+                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
+                        if (photoCell?.identifier == model.asset?.localIdentifier) {
+                            DispatchQueue.main.async {
+                                   photoCell?.imageView.image = image
+                            }
+                        }
+                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
+                            photoCell?.imageRequestID = -1
+                        }
+                })
+
+                    }
+                }
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
@@ -583,6 +576,22 @@ extension PhotoCollectionViewController:FMHeadViewDelegate{
     }
 }
 
+
+extension PhotoCollectionViewController :UICollectionViewDelegateFlowLayout{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let size = CGSize(width: __kWidth, height: 42)
+        return size
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
+    }
+}
 
 //3D Touch delegate method
 extension PhotoCollectionViewController : UIViewControllerPreviewingDelegate {

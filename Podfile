@@ -27,7 +27,8 @@ pod 'MJRefresh'
 pod 'RxSwift',    '~> 4.0'
 pod 'RxCocoa',    '~> 4.0'
 pod 'Masonry'
-
+pod 'MLeaksFinder'
+pod 'FBRetainCycleDetector'
 end
 
 

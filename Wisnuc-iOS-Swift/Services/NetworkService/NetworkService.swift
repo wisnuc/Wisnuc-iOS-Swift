@@ -28,38 +28,42 @@ class NetworkService: NSObject {
     }
     
     func changeNet(_ status:WSNetworkStatus){
+        if !AppUserService.isUserLogin{
+            return
+        }
         switch status {
         case .WIFI:
-        if networkState == .normal{
-            getLocalInCloudLogin { [weak self] (error, localToken) in
-                if error == nil {
-                    self?.checkIP(address: (AppUserService.currentUser?.localAddr)!, { (isLocal) in
-                        if isLocal{
-                            AppUserService.currentUser?.localToken = localToken
-                            AppUserService.synchronizedCurrentUser()
-                            self?.networkState = .local
-                        }
-                    })
+            if networkState == .normal{
+           
+                getLocalInCloudLogin { [weak self] (error, localToken) in
+                    if error == nil {
+                        self?.checkIP(address: (AppUserService.currentUser?.localAddr)!, { (isLocal) in
+                            if isLocal{
+                                AppUserService.currentUser?.localToken = localToken
+                                AppUserService.synchronizedCurrentUser()
+                                self?.networkState = .local
+                            }
+                        })
+                    }else{
+                        Message.message(text: (error?.localizedDescription)!)
+                        self?.networkState = .normal
+                    }
+                }
+            }else{
+                if AppUserService.currentUser?.cloudToken != nil {
+                    self.networkState = .normal
                 }else{
-                    Message.message(text: (error?.localizedDescription)!)
-                    self?.networkState = .normal
+                    self.networkState = .local
                 }
             }
-        }else{
-            if AppUserService.currentUser?.cloudToken != nil {
-                self.networkState = .normal
-            }else{
-                self.networkState = .local
-            }
-        }
         case .ViaWWAN:
-        if networkState == .local{
-            if AppUserService.currentUser?.cloudToken != nil {
-               self.networkState = .normal
-            }else{
-               self.networkState = .local
+            if networkState == .local{
+                if AppUserService.currentUser?.cloudToken != nil {
+                    self.networkState = .normal
+                }else{
+                    self.networkState = .local
+                }
             }
-        }
         default:
             break
         }

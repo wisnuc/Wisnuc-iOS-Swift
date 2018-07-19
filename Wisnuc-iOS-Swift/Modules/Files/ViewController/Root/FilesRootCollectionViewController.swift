@@ -47,6 +47,9 @@ enum SortType:Int64{
 }
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
+    override func willDealloc() -> Bool {
+        return false
+    }
     weak var delegate:FilesRootCollectionViewControllerDelegate?
     var reusableView:UICollectionReusableView!
     var sortType:SortType?

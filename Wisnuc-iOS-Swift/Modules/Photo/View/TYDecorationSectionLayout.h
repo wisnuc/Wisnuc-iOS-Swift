@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MaterialComponents/MaterialCollections.h>
 
-@interface TYDecorationSectionLayout :  MDCCollectionViewFlowLayout
+@interface TYDecorationSectionLayout :  UICollectionViewFlowLayout
 
 @property (nonatomic, assign) BOOL alternateDecorationViews; // 交替DecorationView
 @property (nonatomic, assign) BOOL decorationViewContainXib; // default YES decorationView contain xib

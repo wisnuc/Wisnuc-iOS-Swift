@@ -9,6 +9,7 @@
 #import "UIScrollView+IndicatorExt.h"
 #import <objc/runtime.h>
 #import "UIView+JY_ExtendTouchRect.h"
+#import "JYConst.h"
 
 @interface ILSSlider ()
 {
@@ -40,7 +41,7 @@
         _timeBgView.image = [UIImage imageNamed:@"date_bg"];
         _timeLabel = [[UILabel alloc]initWithFrame:_timeBgView.bounds];
         _timeLabel.font = [UIFont systemFontOfSize:17];
-        _timeLabel.text = @"今天";
+        _timeLabel.text =  WBLocalizedString(@"今天", nil);
         _timeLabel.textColor = [UIColor whiteColor];
         _timeLabel.textAlignment = NSTextAlignmentCenter;
         _timeBgView.hidden = YES;

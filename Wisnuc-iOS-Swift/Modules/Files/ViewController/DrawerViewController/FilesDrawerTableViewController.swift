@@ -17,6 +17,9 @@ private let cellReuseIdentifier = "reuseIdentifier"
 private let tableViewHeaderHeight:CGFloat =  StatusBarHeight + 64 + MarginsCloseWidth
 private let cellHeight:CGFloat =  48
 class FilesDrawerTableViewController: UITableViewController {
+    override func willDealloc() -> Bool {
+        return false
+    }
     var cellCount = 4
     weak var delegate:FilesDrawerViewControllerDelegate?
     override func viewDidLoad() {

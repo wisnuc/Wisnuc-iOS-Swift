@@ -391,7 +391,8 @@ class WSShowBigimgViewController: UIViewController {
         // Gesture Ended
         if (gesture.state == UIGestureRecognizerState.ended) {
             scrollView.isScrollEnabled = true
-            if (scrollView.center.y > viewHalfHeight+120 || scrollView.center.y < viewHalfHeight-120) {
+            let moveDismissDistance:CGFloat = 80
+            if (scrollView.center.y > viewHalfHeight+moveDismissDistance || scrollView.center.y < viewHalfHeight-moveDismissDistance) {
                 if ((senderViewForAnimation) != nil) {
                     self.performDismissAnimation()
                     return

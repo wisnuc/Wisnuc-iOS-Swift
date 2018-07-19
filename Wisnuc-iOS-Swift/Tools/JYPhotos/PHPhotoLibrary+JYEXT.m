@@ -94,12 +94,12 @@
     NSDictionary *gifProperties = frameProperties[(NSString *)kCGImagePropertyGIFDictionary];
     
     NSNumber *delayTimeUnclampedProp = gifProperties[(NSString *)kCGImagePropertyGIFUnclampedDelayTime];
-    if (delayTimeUnclampedProp) {
+    if (delayTimeUnclampedProp != nil) {
         frameDuration = [delayTimeUnclampedProp floatValue];
     } else {
         
         NSNumber *delayTimeProp = gifProperties[(NSString *)kCGImagePropertyGIFDelayTime];
-        if (delayTimeProp) {
+        if (delayTimeProp != nil) {
             frameDuration = [delayTimeProp floatValue];
         }
     }
@@ -371,7 +371,7 @@
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
     
     option.resizeMode = resizeMode;//控制照片尺寸
-    //    option.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;//控制照片质量
+//        option.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;//控制照片质量
     option.networkAccessAllowed = YES;
     
     return [[PHCachingImageManager defaultManager] requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable image, NSDictionary * _Nullable info) {
@@ -420,6 +420,9 @@
         PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
         options.version = PHImageRequestOptionsVersionCurrent;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        if (resource == nil) {
+             result([[NSError alloc]initWithDomain:@"not video" code:555 userInfo:nil], nil);
+        }
         [[PHAssetResourceManager defaultManager] writeDataForAssetResource:resource
                                                                     toFile:[NSURL fileURLWithPath:filePath]
                                                                    options:nil
