@@ -235,7 +235,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         vc.selectIndex = index
         let cell:PhotoCollectionViewCell = self.collectionView?.cellForItem(at: (self.collectionView?.indexPathsForSelectedItems?.first)!) as! PhotoCollectionViewCell
         vc.senderViewForAnimation = cell
-        vc.scaleImage = cell.imageView.image
+        vc.scaleImage = cell.imageView?.layer.contents as? UIImage
         //    weakify(self);
         //    [vc setBtnBackBlock:^(NSArray<JYAsset *> *selectedModels, BOOL isOriginal) {
         //        strongify(weakSelf);
@@ -378,17 +378,22 @@ class PhotoCollectionViewController: UICollectionViewController {
             let nowHeader = self?.collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at:IndexPath.init(item: 0, section: indexPath.section))
                 let listSet = Set((self?.dataSource![indexPath.section])!)
                 let findSet = Set((self?.choosePhotos)!)
+            if nowHeader != nil {
                 (nowHeader as! FMHeadView).isChoose =  listSet.isSubset(of: findSet)
+            }
         }
 
         if (self.collectionView!.indicator != nil) {
             self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
         }
+        
+        cell.setImagView(indexPath:indexPath)
         cell.setSelectButton(indexPath: indexPath)
         cell.isSelectMode = self.isSelectMode
         cell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
         cell.model = model
-       
+        let tagString = "\(indexPath.section)\(indexPath.item)"
+        cell.tag = (NSNumber.init(string: tagString)?.intValue)!
         return cell
     }
     
@@ -519,7 +524,7 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
                     photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
                         if (photoCell?.identifier == model.asset?.localIdentifier) {
                             DispatchQueue.main.async {
-                                   photoCell?.imageView.image = image
+//                                   photoCell?.imageView.layer.contents = nil
                             }
                         }
                         if !(info![PHImageResultIsDegradedKey] as! Bool) {
@@ -538,7 +543,7 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
             let cell = collectionView.cellForItem(at: indexPath)
             if cell != nil{
               let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
-              photoCell.imageView.image = nil
+              photoCell.imageView?.layer.contents  = nil
             }
         }
     }
@@ -607,7 +612,7 @@ extension PhotoCollectionViewController : UIViewControllerPreviewingDelegate {
         let vc = WSForceTouchPreviewViewController.init()
         let model = self.dataSource![(indexPath?.section)!][(indexPath?.row)!]
         vc.model = model
-        vc.placeHolder = cell.imageView.image
+        vc.placeHolder = cell.imageView?.layer.contents as? UIImage
         vc.allowSelectGif = true
         vc.allowSelectLivePhoto = true
         vc.preferredContentSize = self.getSize(model:model)

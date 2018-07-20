@@ -250,7 +250,7 @@ class WSShowBigimgViewController: UIViewController {
         
         let imageFromView = scaleImage != nil ? scaleImage : self.getImageFromView(view: senderViewForAnimation!)
         
-        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)!, to: nil)
+        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)!, to: self.view)
         
         let fadeView = UIView.init(frame: self.view.bounds)
         fadeView.backgroundColor = UIColor.clear
