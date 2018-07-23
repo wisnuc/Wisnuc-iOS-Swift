@@ -9,6 +9,7 @@
 import UIKit
 //import MaterialComponents.MaterialCollections
 import SnapKit
+import SDWebImage
 
 
 private let btnFrame:CGFloat = 23
@@ -26,55 +27,55 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     var model:WSAsset?{
         didSet{
             
-//            switch model?.type {
-//            case .Image?:
-//                self.videoImageView.isHidden = true
-//                self.videoBottomView.isHidden = true
-//                self.liveImageView.isHidden = true
-//                self.videoBottomView.isHidden = false
-//                self.liveImageView.isHidden = true
-//                self.timeLabel.isHidden = true
-//            case .NetImage?:
-//                self.videoImageView.isHidden = false
-//                self.videoBottomView.isHidden = true
-//                self.liveImageView.isHidden = true
-//                self.videoImageView.image = UIImage.init(named: "ic_cloud_white")
-//                self.videoBottomView.isHidden = false
-//                self.liveImageView.isHidden = true
-//                self.timeLabel.isHidden = true
-//            case .Video?,.NetVideo?:
-//                self.videoBottomView.isHidden = false
-//                self.videoImageView.isHidden = false
-//                self.liveImageView.isHidden = true
-//                self.timeLabel.text = model?.duration
-//                self.timeLabel.isHidden = false
-//                self.videoImageView.image = UIImage.init(named: "ic_play")
-//            case .LivePhoto? :
-//                self.videoBottomView.isHidden = false
-//                self.videoImageView.isHidden = true
-//                self.liveImageView.isHidden = false
-//                self.liveImageView.image = UIImage.init(named: "livePhoto")
-//                self.timeLabel.text = "Live"
-//            case .GIF? :
-//                self.videoBottomView.isHidden = false
-//                self.videoImageView.isHidden = true
-//                self.liveImageView.isHidden = false
-//                self.liveImageView.image = UIImage .init(named: "gif_photo")
-//                self.timeLabel.text = ""
-//            default:
-//                self.videoImageView.isHidden = true
-//                self.videoBottomView.isHidden = true
-//                self.liveImageView.isHidden = true
-//            }
-//
-//            if model?.type == .Image && model?.type != .NetImage {
-//                self.videoImageView.isHidden = true
-//                self.videoBottomView.isHidden = true
-//                self.liveImageView.isHidden = true
-//                self.videoBottomView.isHidden = false
-//                self.liveImageView.isHidden = true
-//                self.timeLabel.isHidden = true
-//            }
+            switch model?.type {
+            case .Image?:
+                self.videoImageView.isHidden = true
+                self.videoBottomView.isHidden = true
+                self.liveImageView.isHidden = true
+                self.videoBottomView.isHidden = false
+                self.liveImageView.isHidden = true
+                self.timeLabel.isHidden = true
+            case .NetImage?:
+                self.videoImageView.isHidden = false
+                self.videoBottomView.isHidden = true
+                self.liveImageView.isHidden = true
+                self.videoImageView.image = UIImage.init(named: "ic_cloud_white")
+                self.videoBottomView.isHidden = false
+                self.liveImageView.isHidden = true
+                self.timeLabel.isHidden = true
+            case .Video?,.NetVideo?:
+                self.videoBottomView.isHidden = false
+                self.videoImageView.isHidden = false
+                self.liveImageView.isHidden = true
+                self.timeLabel.text = model?.duration
+                self.timeLabel.isHidden = false
+                self.videoImageView.image = UIImage.init(named: "ic_play")
+            case .LivePhoto? :
+                self.videoBottomView.isHidden = false
+                self.videoImageView.isHidden = true
+                self.liveImageView.isHidden = false
+                self.liveImageView.image = UIImage.init(named: "livePhoto")
+                self.timeLabel.text = "Live"
+            case .GIF? :
+                self.videoBottomView.isHidden = false
+                self.videoImageView.isHidden = true
+                self.liveImageView.isHidden = false
+                self.liveImageView.image = UIImage .init(named: "gif_photo")
+                self.timeLabel.text = ""
+            default:
+                self.videoImageView.isHidden = true
+                self.videoBottomView.isHidden = true
+                self.liveImageView.isHidden = true
+            }
+
+            if model?.type == .Image && model?.type != .NetImage {
+                self.videoImageView.isHidden = true
+                self.videoBottomView.isHidden = true
+                self.liveImageView.isHidden = true
+                self.videoBottomView.isHidden = false
+                self.liveImageView.isHidden = true
+                self.timeLabel.isHidden = true
+            }
        
             
 //            if self.imageRequestID != nil {
@@ -85,26 +86,34 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         
             if model?.asset != nil {
                 self.identifier = model?.asset?.localIdentifier
-            }else{
+            }else if model is NetAsset{
               self.identifier =  (model as! NetAsset).fmhash
             }
 
             let size = CGSize.init(width: self.width  , height: self.height )
 
             if model?.asset != nil{
-//                DispatchQueue.global(qos: .default).async {
-                    self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: PHImageContentMode.aspectFill, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
-                        let downloadFinined =  !(info![PHImageResultIsDegradedKey] as! Bool)
-                        if downloadFinined {
-//                            DispatchQueue.main.async {
-                                if  self?.imageView?.layer.contents != nil{
-                                    self?.imageView?.layer.contents = nil
-                                }
-                                self?.imageView?.layer.contents = image?.cgImage
-                            }
-//                        }
-                    })
-               }
+                //                DispatchQueue.global(qos: .default).async {
+                self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: PHImageContentMode.aspectFill, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
+                    let downloadFinined =  !(info![PHImageResultIsDegradedKey] as! Bool)
+                    if downloadFinined {
+                        //                            DispatchQueue.main.async {
+                        if  self?.imageView?.layer.contents != nil{
+                            self?.imageView?.layer.contents = nil
+                        }
+                        self?.imageView?.layer.contents = image?.cgImage
+                    }
+                    //                        }
+                })
+            }else if model is NetAsset{
+                let netAsset = model as! NetAsset
+                _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!) { [weak self]  (error, image) in
+                    if error == nil {
+                        self?.model?.image = image
+                        self?.imageView?.layer.contents = image?.cgImage
+                    }
+                }
+            }
         }
     }
     
@@ -148,20 +157,20 @@ class PhotoCollectionViewCell: UICollectionViewCell {
 //        }
 
 
-//        self.videoBottomView.snp.makeConstraints { [weak self] (make) in
-//            make.left.equalTo((self?.contentView.left)!)
-//            make.right.equalTo((self?.contentView.right)!)
-//            make.top.equalTo((self?.contentView.bottom)!).offset(-20)
-//            make.bottom.equalTo((self?.contentView.bottom)!)
-//        }
-//
-//        self.videoImageView.snp.makeConstraints { [weak self] (make) in
-//            make.left.equalTo((self?.videoBottomView.left)!).offset(5)
-//            make.top.equalTo((self?.videoBottomView.top)!).offset(2)
-//            make.size.equalTo(CGSize(width: 16, height: 16))
-//        }
-//
-//        self.contentView.bringSubview(toFront: self.videoBottomView)
+        self.videoBottomView.snp.makeConstraints { [weak self] (make) in
+            make.left.equalTo((self?.contentView.left)!)
+            make.right.equalTo((self?.contentView.right)!)
+            make.top.equalTo((self?.contentView.bottom)!).offset(-20)
+            make.bottom.equalTo((self?.contentView.bottom)!)
+        }
+
+        self.videoImageView.snp.makeConstraints { [weak self] (make) in
+            make.left.equalTo((self?.videoBottomView.left)!).offset(5)
+            make.top.equalTo((self?.videoBottomView.top)!).offset(2)
+            make.size.equalTo(CGSize(width: 16, height: 16))
+        }
+
+        self.contentView.bringSubview(toFront: self.videoBottomView)
         if self.btnSelect != nil {
 //             self.contentView.bringSubview(toFront: self.btnSelect!)
         }
@@ -243,7 +252,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
 //        self.contentView.clipsToBounds = true
 //        return imgView
 //        }()
-    
+//
 //    lazy var btnSelect: UIButton = {
 //        let button = UIButton.init()
 //        button.frame = CGRect.init(x: self.contentView.width - 26, y: 5, width: btnFrame, height: btnFrame)
@@ -252,46 +261,46 @@ class PhotoCollectionViewCell: UICollectionViewCell {
 //        self.contentView.addSubview(button)
 //        return button
 //    }()
-    
-//    lazy var videoBottomView: UIImageView = {
-//        let imgView = UIImageView.init()
-//        imgView.frame = CGRect(x: 0, y: self.height - 20, width: self.width, height: 20)
-//        self.contentView.addSubview(imgView)
-//        return imgView
-//    }()
 //
-//    lazy var videoImageView: UIImageView = {
-//        let imgView = UIImageView.init()
-//        imgView.frame = CGRect(x: 5, y: 2, width: 16, height: 16)
-//        imgView.image = UIImage.init(named: "ic_play")
-//        videoBottomView.addSubview(imgView)
-//        return imgView
-//    }()
-//
-//    lazy var liveImageView: UIImageView = {
-//        let imgView = UIImageView.init()
-//        imgView.frame = CGRect(x: 5, y: 2, width: 16, height: 16)
-//        imgView.image = UIImage.init(named: "livePhoto")
-//        videoBottomView.addSubview(imgView)
-//        return imgView
-//    }()
-//
-//
-//    lazy var timeLabel: UILabel = {
-//        let label = UILabel.init()
-//        label.frame = CGRect(x: 30, y: 4, width: self.width - 35, height: 12)
-//        label.textAlignment = NSTextAlignment.right
-//        label.font = UIFont.systemFont(ofSize: 13)
-//        label.textColor = UIColor.white
-//        videoBottomView.addSubview(label)
-//        return label
-//    }()
-//
-//    lazy var topView: UIView = {
-//        let view = UIView.init()
-//        view.isUserInteractionEnabled = false
-//        view.isHidden = true
-//        self.contentView.addSubview(view)
-//        return view
-//    }()
+    lazy var videoBottomView: UIImageView = {
+        let imgView = UIImageView.init()
+        imgView.frame = CGRect(x: 0, y: self.height - 20, width: self.width, height: 20)
+        self.contentView.addSubview(imgView)
+        return imgView
+    }()
+
+    lazy var videoImageView: UIImageView = {
+        let imgView = UIImageView.init()
+        imgView.frame = CGRect(x: 5, y: 2, width: 16, height: 16)
+        imgView.image = UIImage.init(named: "ic_play")
+        videoBottomView.addSubview(imgView)
+        return imgView
+    }()
+
+    lazy var liveImageView: UIImageView = {
+        let imgView = UIImageView.init()
+        imgView.frame = CGRect(x: 5, y: 2, width: 16, height: 16)
+        imgView.image = UIImage.init(named: "livePhoto")
+        videoBottomView.addSubview(imgView)
+        return imgView
+    }()
+
+
+    lazy var timeLabel: UILabel = {
+        let label = UILabel.init()
+        label.frame = CGRect(x: 30, y: 4, width: self.width - 35, height: 12)
+        label.textAlignment = NSTextAlignment.right
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = UIColor.white
+        videoBottomView.addSubview(label)
+        return label
+    }()
+
+    lazy var topView: UIView = {
+        let view = UIView.init()
+        view.isUserInteractionEnabled = false
+        view.isHidden = true
+        self.contentView.addSubview(view)
+        return view
+    }()
 }

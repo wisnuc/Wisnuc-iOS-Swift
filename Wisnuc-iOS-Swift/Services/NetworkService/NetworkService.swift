@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import SDWebImage
 
 class NetworkService: NSObject {
     var networkState:NetworkServiceState?{
@@ -316,7 +317,28 @@ class NetworkService: NSObject {
             }
         }
     }
-    
-}
 
+    //Asset
+    func getThumbnail(hash:String,callback:@escaping (Error?,UIImage?)->())->SDWebImageDownloadToken{
+        SDWebImageManager.shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
+            var dic = Dictionary<String, String>.init()
+            dic.merge(with: headers!)
+            dic = [kRequestAuthorizationKey : self?.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!)]
+            return dic
+            }
+        let detailURL = "media"
+        let frameLength = 200
+        let resource = "media/\(hash)".toBase64()
+        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(frameLength)&\(kRequestImageHeightKey)=\(frameLength)&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+        SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
+        let url = self.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
+        return SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.useNSURLCache, progress: nil, completed: { (image, data, error, finished) in
+            if (image != nil) {
+            callback(nil, image)
+            }else{
+            callback(error, nil)
+            }
+        })!
+    }
+}
 

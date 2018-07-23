@@ -153,6 +153,16 @@ class PhotoRootViewController: BaseViewController {
         mergedAssets.addObjects(from: netTmpArr as! [Any])
         return mergedAssets as! Array<WSAsset>
     }
+    
+    func addNetAssets(assetsArr:Array<NetAsset>) {
+        DispatchQueue.global(qos: .default).async {
+           self.netAssetDataSource = assetsArr
+            self.sort(self.merge())
+            DispatchQueue.main.async {
+                self.photoCollcectionViewController.collectionView?.reloadData()
+            }
+        }
+    }
 
     
     func prepareCollectionView(){

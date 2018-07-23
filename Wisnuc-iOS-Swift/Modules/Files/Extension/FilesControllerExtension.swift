@@ -169,16 +169,15 @@ extension FilesRootViewController:MDCBottomSheetControllerDelegate{
 
 extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
     func folderButtonTap(_ sender: UIButton) {
-        self.fabBottomVC.dismiss(animated: true) { [weak self] in
-            self?.fabButton.expand(true, completion: { [weak self] in
+            self.fabButton.expand(true, completion: { [weak self] in
                 let bundle = Bundle.init(for: NewFolderViewController.self)
                 let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
                 let identifier = "inputNewFolderDialogID"
-                
+
                 let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
                 viewController.modalPresentationStyle = UIModalPresentationStyle.custom
                 viewController.transitioningDelegate = self?.transitionController
-                
+
                 let vc =  viewController as! NewFolderViewController
                 vc.type = InputAlertType.creatNewFolder
                 vc.titleString = LocalizedString(forKey:"New folder")
@@ -195,7 +194,6 @@ extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
                     presentationController?.dismissOnBackgroundTap = false
                 }
             })
-        }
     }
     
     func uploadButtonTap(_ sender: UIButton) {

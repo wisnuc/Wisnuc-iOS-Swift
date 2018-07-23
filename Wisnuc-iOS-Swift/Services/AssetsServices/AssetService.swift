@@ -13,6 +13,7 @@ import Photos
 class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     var userAuth:Bool?
     var lastResult:PHFetchResult<PHAsset>?
+    lazy var allNetAssets:Array<NetAsset>? = Array.init()
     var allAssets:Array<WSAsset>?
     {
         get{
@@ -25,6 +26,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
                 }
                 self?.lastResult = result
             }
+        
             return  all
         }
         set{
@@ -41,6 +43,40 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     
     deinit {
         
+    }
+    
+    func getNetAssets(callback:@escaping (_ error:Error?,_ assets:Array<NetAsset>?)->()){
+        let isLocalRequest = AppNetworkService.networkState == .local
+        GetMediaAPI.init().startRequestJSONCompletionHandler { [weak self] (response) in
+            if response.error == nil{
+                let medias:NSArray = (isLocalRequest ? response.value as? NSArray : (response.value as! Dictionary)["data"])!
+                DispatchQueue.global(qos: .default).async {
+                    var array = Array<NetAsset>.init()
+                    medias.enumerateObjects({ (object, idx, stop) in
+                        if object is NSDictionary{
+                            if let model = NetAsset.deserialize(from: object as? NSDictionary) {
+                                array.append(model)
+                            }
+                        }
+                    })
+                    DispatchQueue.main.async {
+                        self?.allNetAssets = array
+                        callback(nil,array)
+                    }
+                }
+            }else{
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                        print(backToString ?? "error")
+                    }
+                }
+                callback(response.error,nil)
+            }
+        }
     }
     
     func checkAuth(callback:@escaping ((_ userAuth:Bool)->())){

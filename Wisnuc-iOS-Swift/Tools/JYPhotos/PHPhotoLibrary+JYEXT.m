@@ -251,6 +251,8 @@
         [tempDic setObject:obj forKey:obj.localIdentifier];
     }];
     if(block) block(lastresult, [tempDic allValues]);
+    
+    
 }
 
 //get album(collection)

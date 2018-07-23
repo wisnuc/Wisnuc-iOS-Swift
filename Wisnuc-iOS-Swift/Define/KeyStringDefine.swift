@@ -49,6 +49,16 @@ public let kRequestTaskSrcKey = "src"
 public let kRequestTaskDstKey = "dst"
 public let kRequestTaskPolicyKey = "policy"
 
+public let kRequestImageAltKey = "alt"
+public let kRequestImageWidthKey = "width"
+public let kRequestImageHeightKey = "height"
+public let kRequestImageModifierKey = "modifier"
+public let kRequestImageAutoOrientKey = "autoOrient"
+
+public let kRequestImageCaretValue = "caret"
+public let kRequestImageThumbnailValue = "thumbnail"
+
+
 public let kRequestContentTypeKey = "Content-Type"
 public let kRequestContentTypeJsonValue = "application/json"
 

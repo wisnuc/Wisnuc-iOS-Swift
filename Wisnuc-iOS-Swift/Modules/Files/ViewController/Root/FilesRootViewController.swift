@@ -53,7 +53,7 @@ class FilesRootViewController: BaseViewController{
     var navigationTitle:String?
     var srcDictionary: Dictionary<String, String>?
     var moveModelArray: Array<EntriesModel>?
-    let transitionController = MDCDialogTransitionController.init()
+
     var cellStyle:CellStyle?{
         didSet{
             switch cellStyle {
@@ -678,10 +678,10 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func fabButtonDidTap(_ sender:MDCFloatingButton){
-        self.fabButton.collapse(true) {
-            let bottomSheet = AppBottomSheetController.init(contentViewController: self.fabBottomVC)
+        self.fabButton.collapse(true) { [weak self] in
+            let bottomSheet = AppBottomSheetController.init(contentViewController: (self?.fabBottomVC)!)
             bottomSheet.delegate = self
-            self.present(bottomSheet, animated: true, completion: {
+            self?.present(bottomSheet, animated: true, completion: {
             
             })
         }
@@ -877,7 +877,8 @@ class FilesRootViewController: BaseViewController{
     lazy var fabBottomVC: FilesFABBottomSheetDisplayViewController = {
         let fabBottom = FilesFABBottomSheetDisplayViewController()
         fabBottom.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
-        fabBottom.delegate = self
+        fabBottom.transitioningDelegate = self.transitionController
+        fabBottom.delegate =  self
         return fabBottom
     }()
     
@@ -897,6 +898,11 @@ class FilesRootViewController: BaseViewController{
         let bottomVC = FilesSearchMoreBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
         bottomVC.delegate = self
         return bottomVC
+    }()
+    
+    lazy var transitionController: MDCDialogTransitionController = {
+        let controller = MDCDialogTransitionController.init()
+        return controller
     }()
     
     lazy var moveButton: MDCFlatButton = {

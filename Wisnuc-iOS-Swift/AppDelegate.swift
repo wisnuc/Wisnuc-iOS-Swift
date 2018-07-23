@@ -118,6 +118,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         filesVC.title = LocalizedString(forKey: "Files")
         let photosVC = PhotoRootViewController.init()
         photosVC.localAssetDataSources.append(contentsOf:AppAssetService.allAssets!)
+        AppAssetService.getNetAssets { (error, netAssets) in
+            if error == nil{
+                photosVC.addNetAssets(assetsArr: netAssets!)
+            }
+        }
         photosVC.title = LocalizedString(forKey: "Photos")
         let shareVC = BaseViewController()
         shareVC.title = LocalizedString(forKey: "Share")

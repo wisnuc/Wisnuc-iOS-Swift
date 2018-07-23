@@ -27,6 +27,14 @@ class NetAsset: WSAsset,HandyJSON {
     var dur:Float?
     
     required override init() {
-        
+
+    }
+    
+    func mapping(mapper: HelpingMapper) {
+        mapper <<<
+            self.fmlong <-- "long"
+
+        mapper <<<
+            self.fmhash <-- "hash"
     }
 }

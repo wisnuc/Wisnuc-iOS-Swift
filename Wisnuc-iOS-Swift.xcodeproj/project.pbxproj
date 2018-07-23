@@ -360,6 +360,8 @@
 		1FA6A1C720CFBD57007A0AB2 /* gridstyle.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA6A1C620CFBD57007A0AB2 /* gridstyle.png */; };
 		1FA6A1C920CFBD63007A0AB2 /* gridstyle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA6A1C820CFBD62007A0AB2 /* gridstyle@2x.png */; };
 		1FA6A1CB20CFBD72007A0AB2 /* gridstyle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA6A1CA20CFBD71007A0AB2 /* gridstyle@3x.png */; };
+		1FA9C3DE210585FE00E8411E /* GetMediaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA9C3DD210585FE00E8411E /* GetMediaAPI.swift */; };
+		1FA9C3E02105B76A00E8411E /* DictionaryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA9C3DF2105B76A00E8411E /* DictionaryExtension.swift */; };
 		1FAADEBB20ABE38400739220 /* files_info.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAADEBA20ABE38300739220 /* files_info.png */; };
 		1FAADEBD20ABE39700739220 /* files_info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAADEBC20ABE39600739220 /* files_info@2x.png */; };
 		1FAADEBF20ABE3A200739220 /* files_info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAADEBE20ABE3A100739220 /* files_info@3x.png */; };
@@ -886,6 +888,8 @@
 		1FA6A1C620CFBD57007A0AB2 /* gridstyle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gridstyle.png; sourceTree = "<group>"; };
 		1FA6A1C820CFBD62007A0AB2 /* gridstyle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gridstyle@2x.png"; sourceTree = "<group>"; };
 		1FA6A1CA20CFBD71007A0AB2 /* gridstyle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gridstyle@3x.png"; sourceTree = "<group>"; };
+		1FA9C3DD210585FE00E8411E /* GetMediaAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMediaAPI.swift; sourceTree = "<group>"; };
+		1FA9C3DF2105B76A00E8411E /* DictionaryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtension.swift; sourceTree = "<group>"; };
 		1FAADEBA20ABE38300739220 /* files_info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_info.png; sourceTree = "<group>"; };
 		1FAADEBC20ABE39600739220 /* files_info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_info@2x.png"; sourceTree = "<group>"; };
 		1FAADEBE20ABE3A100739220 /* files_info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_info@3x.png"; sourceTree = "<group>"; };
@@ -1861,6 +1865,14 @@
 			path = Files;
 			sourceTree = "<group>";
 		};
+		1FA9C3DC210585C600E8411E /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				1FA9C3DD210585FE00E8411E /* GetMediaAPI.swift */,
+			);
+			path = Photos;
+			sourceTree = "<group>";
+		};
 		1FAADEF420AC145F00739220 /* Info */ = {
 			isa = PBXGroup;
 			children = (
@@ -2106,6 +2118,7 @@
 				1F1BAC4E20CE4EC700D32C5A /* UINavigationControllerExtension.swift */,
 				1FE9EF8E20EF61A200732728 /* PHPhotoLibraryExtension.swift */,
 				1FE9EF9020EF6AC700732728 /* PHAssetExtension.swift */,
+				1FA9C3DF2105B76A00E8411E /* DictionaryExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2146,6 +2159,7 @@
 		1FD9B796207CC78B00906D80 /* APIs */ = {
 			isa = PBXGroup;
 			children = (
+				1FA9C3DC210585C600E8411E /* Photos */,
 				1F307C7620BFC76D00AE105C /* Files */,
 				1F2CE39D20B6D20400D9E5BD /* Login */,
 				1F2CE39820B6B30C00D9E5BD /* TestAPI.swift */,
@@ -3084,6 +3098,7 @@
 				1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */,
 				1F1BABA820C51F5100D32C5A /* DirectoriesModel.swift in Sources */,
 				1FE674E320D21B11006F97DB /* TRCache.swift in Sources */,
+				1FA9C3DE210585FE00E8411E /* GetMediaAPI.swift in Sources */,
 				1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */,
 				1F1BAC4D20CA80F000D32C5A /* CollectionExtension.swift in Sources */,
 				1FC8FF8720AE887800F65194 /* searchTableViewCell.swift in Sources */,
@@ -3143,6 +3158,7 @@
 				1FFD12D320EE119D0053A3F7 /* PhotoRootViewController.swift in Sources */,
 				1F4242AA20F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift in Sources */,
 				1FFD131A20EF0FF00053A3F7 /* FMHeadView.m in Sources */,
+				1FA9C3E02105B76A00E8411E /* DictionaryExtension.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */,
 				1F1BABA420C50C7100D32C5A /* DriveDirAPI.swift in Sources */,
@@ -3408,12 +3424,16 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
@@ -3421,7 +3441,10 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/**",
+					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
+				);
 			};
 			name = Debug;
 		};
@@ -3438,14 +3461,20 @@
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Wisnuc-iOS-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/**";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/** \"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"";
+				USER_HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/**",
+					"\"$(SRCROOT)/Wisnuc-iOS-Swift/Wisnuc-iOS-Swift-Bridging-Header.h\"",
+				);
 			};
 			name = Release;
 		};
@@ -3458,7 +3487,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -3476,7 +3509,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -3492,7 +3529,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -3508,7 +3549,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;
 				INFOPLIST_FILE = "Wisnuc-iOS-SwiftUITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-SwiftUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

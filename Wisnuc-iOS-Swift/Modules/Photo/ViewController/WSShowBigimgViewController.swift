@@ -69,7 +69,7 @@ class WSShowBigimgViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if (isFirstAppear) {
+        if (!isFirstAppear) {
             return
         }
         isFirstAppear = false

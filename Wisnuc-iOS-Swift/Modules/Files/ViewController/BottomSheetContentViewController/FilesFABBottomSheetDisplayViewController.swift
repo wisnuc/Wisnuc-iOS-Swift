@@ -52,7 +52,9 @@ class FilesFABBottomSheetDisplayViewController: UIViewController {
     
     @IBAction func folderButtonTap(_ sender: UIButton) {
         if let delegateOK = self.delegate {
-            delegateOK.folderButtonTap(sender)
+            self.presentingViewController?.dismiss(animated: true, completion: {
+                delegateOK.folderButtonTap(sender)
+            })
         }
     }
     
@@ -60,5 +62,9 @@ class FilesFABBottomSheetDisplayViewController: UIViewController {
         if let delegateOK = self.delegate {
             delegateOK.uploadButtonTap(sender)
         }
+    }
+    
+    deinit {
+        print("fabBottom deinit")
     }
 }
