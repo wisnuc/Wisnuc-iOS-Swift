@@ -12,7 +12,7 @@ import MaterialComponents.MDCButton
     func logOutButtonTap(sender:UIButton)
 }
 class LogOutViewController: BaseViewController {
-    @objc var delegate:LogOutViewControllerDelegate?
+    weak var delegate:LogOutViewControllerDelegate?
     
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var nameTextField: UITextField!

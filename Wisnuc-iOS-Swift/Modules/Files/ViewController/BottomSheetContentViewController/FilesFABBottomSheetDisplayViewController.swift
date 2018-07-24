@@ -8,12 +8,16 @@
 
 import UIKit
 
+
 @objc protocol  FABBottomSheetDisplayVCDelegte{
     func cllButtonTap(_ sender: UIButton)
     func folderButtonTap(_ sender: UIButton)
     func uploadButtonTap(_ sender: UIButton)
 }
 class FilesFABBottomSheetDisplayViewController: UIViewController {
+    override func willDealloc() -> Bool {
+        return false
+    }
     weak var delegate:FABBottomSheetDisplayVCDelegte?
     @IBOutlet weak var folderButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!
@@ -45,23 +49,27 @@ class FilesFABBottomSheetDisplayViewController: UIViewController {
     }
 
     @IBAction func cllButtonTap(_ sender: UIButton) {
-        if let delegateOK = self.delegate {
-            delegateOK.cllButtonTap(sender)
-        }
+        self.dismiss(animated: true, completion: {
+            if let delegateOK = self.delegate {
+                delegateOK.cllButtonTap(sender)
+            }
+        })
     }
     
     @IBAction func folderButtonTap(_ sender: UIButton) {
-        if let delegateOK = self.delegate {
-            self.presentingViewController?.dismiss(animated: true, completion: {
+        self.dismiss(animated: true, completion: {
+            if let delegateOK = self.delegate {
                 delegateOK.folderButtonTap(sender)
-            })
-        }
+            }
+        })
     }
     
     @IBAction func uploadButtonTap(_ sender: UIButton) {
-        if let delegateOK = self.delegate {
-            delegateOK.uploadButtonTap(sender)
-        }
+        self.dismiss(animated: true, completion: {
+            if let delegateOK = self.delegate {
+                delegateOK.uploadButtonTap(sender)
+            }
+        })
     }
     
     deinit {

@@ -25,6 +25,9 @@
  private let imageViewSize = CGSize(width: UserImageViewWidth, height: UserImageViewWidth)
  
  class LoginViewController: UIViewController {
+    override func willDealloc() -> Bool {
+        return false
+    }
     var commonLoginButon:UIButton!
     var userName:String?
     var cloudLoginArray:Array<CloadLoginUserRemotModel>?
@@ -81,7 +84,7 @@
     }
     
     deinit {
-        
+       print("\(className()) deinit")
     }
     
     func setCommonButtonType() {
@@ -629,7 +632,10 @@
             if self.stationView.stationArray != nil && (self.stationView.stationArray?.count)! > 0{
                 let model = self.stationView.stationArray![(sender.view?.tag)!]
                 let localNetVC = LocalNetworkLoginViewController.init(model: model)
-                self.navigationController?.pushViewController(localNetVC, animated: true)
+                let navi = UINavigationController.init(rootViewController: localNetVC)
+                self.present(navi, animated: true, completion: {
+                    
+                })
             }else{
                 Message.message(text: LocalizedString(forKey: "Device is not exist"))
             }

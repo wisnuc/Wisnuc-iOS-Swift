@@ -259,7 +259,11 @@ class FilesRootViewController: BaseViewController{
                         return
                     }
                 }
-                if let model = FilesModel.deserialize(from: responseDic){
+                
+                do{
+                    let data = jsonToData(jsonDic: responseDic)
+                    let model = try JSONDecoder().decode(FilesModel.self, from: data!)
+//                if let model = FilesModel.deserialize(from: responseDic){
                     var filesArray = Array<EntriesModel>.init()
                     var directoryArray = Array<EntriesModel>.init()
                     var finishArray = Array<Any>.init()
@@ -286,7 +290,10 @@ class FilesRootViewController: BaseViewController{
                         self?.isRequesting = false
                         self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
                     }
+                }catch{
+                    
                 }
+//                }
                 ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 mainThreadSafe {

@@ -27,7 +27,7 @@ class NetAsset: WSAsset,HandyJSON {
     var dur:Float?
     
     required override init() {
-
+        super.init()
     }
     
     func mapping(mapper: HelpingMapper) {

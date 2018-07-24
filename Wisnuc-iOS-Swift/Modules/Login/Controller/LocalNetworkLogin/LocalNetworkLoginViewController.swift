@@ -10,7 +10,9 @@ import UIKit
 import MaterialComponents
 
 class LocalNetworkLoginViewController: BaseViewController {
-
+    override func willDealloc() -> Bool {
+        return false
+    }
     @IBOutlet weak var mainbackgroudView: UIView!
     @IBOutlet weak var stationNameLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
@@ -35,6 +37,10 @@ class LocalNetworkLoginViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        print("\(className()) deinit")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setMainUI()
@@ -49,6 +55,7 @@ class LocalNetworkLoginViewController: BaseViewController {
         mainbackgroudView.backgroundColor = SkyBlueColor
         appBar.navigationBar.backgroundColor = SkyBlueColor
         appBar.headerViewController.headerView.backgroundColor = SkyBlueColor
+        appBar.navigationBar.leftBarButtonItem = UIBarButtonItem.init(image: MDCIcons.imageFor_ic_arrow_back()?.byTintColor(UIColor.white), style: UIBarButtonItemStyle.plain, target: self, action: #selector(backButtonTap(_ :)))
     }
     
     func setDetailsUI(){
@@ -103,6 +110,12 @@ class LocalNetworkLoginViewController: BaseViewController {
         help2Label.text = LocalizedString(forKey: "2.请联系设备管理员重置密码")
     }
     
+    @objc func backButtonTap(_ sender:UIBarButtonItem){
+        self.dismiss(animated: true) {
+            
+        }
+    }
+    
     @objc func eyeButtonClick(_ sender:UIButton){
         sender.isSelected = !sender.isSelected
         if sender.isSelected {
@@ -134,12 +147,14 @@ class LocalNetworkLoginViewController: BaseViewController {
         let basicAuth = authString.toBase64()
         let url = "http://\(String(describing: (model?.LANIP!)!)):3000"
 
-        AppService.sharedInstance().loginAction(model: model!, url: url, basicAuth: basicAuth) { (error, user) in
+        AppService.sharedInstance().loginAction(model: model!, url: url, basicAuth: basicAuth) { [weak self] (error, user) in
             if error == nil && user != nil{
                 AppUserService.setCurrentUser(user)
                 AppUserService.synchronizedCurrentUser()
                 AppNetworkService.networkState = .local
-                appDelegate.setRootViewController()
+                self?.dismiss(animated: true, completion: {
+                    appDelegate.setRootViewController()
+                })
             }else{
                 if error != nil{
                     switch error {

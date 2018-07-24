@@ -197,17 +197,13 @@ extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
     }
     
     func uploadButtonTap(_ sender: UIButton) {
-        self.fabBottomVC.dismiss(animated: true) {
-            self.fabButton.expand(true, completion: {
-            })
-        }
+        self.fabButton.expand(true, completion: {
+        })
     }
     
     func cllButtonTap(_ sender: UIButton) {
-        self.fabBottomVC.dismiss(animated: true) {
-            self.fabButton.expand(true, completion: {
-            })
-        }
+        self.fabButton.expand(true, completion: {
+        })
     }
 }
 

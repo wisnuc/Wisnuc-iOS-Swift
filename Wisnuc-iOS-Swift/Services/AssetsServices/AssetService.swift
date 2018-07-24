@@ -19,10 +19,11 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         get{
             var all:Array<WSAsset> = Array.init()
             PHPhotoLibrary.getAllAsset { [weak self] (result, assets) in
-                for (_,value) in (assets?.enumerated())!{
+                for (_,value) in assets.enumerated(){
                     let type = value.getWSAssetType()
                     let duration = value.getDurationString()
-                    all.append(WSAsset.assetModel(asset: value, type: type, duration: duration))
+                    let asset = WSAsset.init(asset: value, type: type, duration: duration)
+                    all.append(asset)
                 }
                 self?.lastResult = result
             }

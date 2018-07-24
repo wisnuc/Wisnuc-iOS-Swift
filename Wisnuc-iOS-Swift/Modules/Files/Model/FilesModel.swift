@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import HandyJSON
+//import HandyJSON
 
-class FilesModel:HandyJSON {
-    var entries:Array<EntriesModel>?
-    required init() {
-        
-    }
+struct FilesModel:Codable {
+    var entries:[EntriesModel]?
+//    required init() {
+//
+//    }
     
 }

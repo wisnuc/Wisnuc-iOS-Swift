@@ -32,14 +32,13 @@
 /*
  * get all asset and last fetchresult handle (use for library change)
  */
-+ (void)getAllAsset:(void(^)(PHFetchResult<PHAsset *> *result, NSArray<PHAsset *> *assets))block;
+//+ (void)getAllAsset:(void(^)(PHFetchResult<PHAsset *> *result, NSArray<PHAsset *> *assets))block;
 
 /**
  * @brief 获取相机胶卷相册列表对象
  */
 //+ (WSAssetList *)getCameraRollAlbumList:(BOOL)allowSelectVideo allowSelectImage:(BOOL)allowSelectImage;
 //+ (WSAssetList *)getCameraRollAlbumList:(BOOL)allowSelectVideo allowSelectImage:(BOOL)allowSelectImage sortAscend:(BOOL)sortAscending;
-
 
 #pragma mark - request image
 

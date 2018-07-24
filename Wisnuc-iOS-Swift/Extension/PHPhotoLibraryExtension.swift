@@ -120,5 +120,27 @@ extension PHPhotoLibrary{
         }
     }
     
+    class func getAllAsset(complete:@escaping (_ result:PHFetchResult<PHAsset>,_ assets:Array<PHAsset>)->()){
+        var tempDic = Dictionary<String, PHAsset>.init()
+        let collectionResult = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: nil)
+        let options = PHFetchOptions.init()
+        options.sortDescriptors = [NSSortDescriptor.init(key: "creationDate", ascending: false)]
+        collectionResult.enumerateObjects { (c, idx, stop) in
+            //            if c.assetCollectionSubtype == 100){continue} //屏蔽 我的照片流
+            
+            // 遍历这个相册中的所有图片
+            let assetResult = PHAsset.fetchAssets(in: c, options: options)
+            assetResult.enumerateObjects({ (obj, idx, stop) in
+                tempDic[obj.localIdentifier] = obj
+            })
+          
+        }
+        options.includeHiddenAssets = true
+        let lastresult = PHAsset.fetchAssets(with: options)
+        lastresult.enumerateObjects({ (obj, idx, stop) in
+            tempDic[obj.localIdentifier] = obj
+        })
+        complete(lastresult,tempDic.map({$0.value}))
+    }
 }
 

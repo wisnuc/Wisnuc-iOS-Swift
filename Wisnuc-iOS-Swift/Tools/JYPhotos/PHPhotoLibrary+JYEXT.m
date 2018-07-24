@@ -231,7 +231,7 @@
 
 + (void)getAllAsset:(void(^)(PHFetchResult<PHAsset *> *result, NSArray<PHAsset *> *assets))block {
     NSMutableDictionary * tempDic = [NSMutableDictionary dictionaryWithCapacity:0];
-    PHFetchResult<PHAssetCollection *> *collectionResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
+    PHFetchResult<PHAssetCollection *> *collectionResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
     for (PHAssetCollection * c in collectionResult) {
         if(c.assetCollectionSubtype == 100) continue; //屏蔽 我的照片流
         PHFetchOptions *options = [[PHFetchOptions alloc] init];
@@ -251,8 +251,28 @@
         [tempDic setObject:obj forKey:obj.localIdentifier];
     }];
     if(block) block(lastresult, [tempDic allValues]);
+}
+
+
+
+#pragma mark - <  获取相册里的所有图片的PHAsset对象  >
++ (NSArray *)getAllPhotosAssetInAblumCollection:(PHAssetCollection *)assetCollection ascending:(BOOL)ascending
+{
+    // 存放所有图片对象
+    NSMutableArray *assets = [NSMutableArray array];
     
+    // 是否按创建时间排序
+    PHFetchOptions *option = [[PHFetchOptions alloc] init];
+    option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:ascending]];
+//    option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
     
+    // 获取所有图片对象
+    PHFetchResult *result = [PHAsset fetchAssetsInAssetCollection:assetCollection options:option];
+    // 遍历
+    [result enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL * _Nonnull stop) {
+        [assets addObject:asset];
+    }];
+    return assets;
 }
 
 //get album(collection)

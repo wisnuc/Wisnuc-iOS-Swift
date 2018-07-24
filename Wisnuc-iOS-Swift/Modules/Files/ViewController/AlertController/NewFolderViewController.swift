@@ -20,6 +20,9 @@ import MaterialComponents.MaterialTextFields
 }
 
 class NewFolderViewController: UIViewController {
+    override func willDealloc() -> Bool {
+        return false
+    }
     weak var delegate : NewFolderViewControllerDelegate?
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var inputTextField: MDCTextField!
@@ -48,6 +51,9 @@ class NewFolderViewController: UIViewController {
         inputTextField.text =  inputString!
     }
     
+    deinit {
+        print("newFolder VC deinit")
+    }
     
     @IBAction func confirmButtonButtonTap(_ sender: MDCFlatButton) {
         self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
@@ -62,9 +68,7 @@ class NewFolderViewController: UIViewController {
     }
     
     @IBAction func cancelButtonTap(_ sender: MDCFlatButton) {
-        self.presentingViewController?.dismiss(animated: true, completion: {
-            
-        })
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,5 +79,4 @@ class NewFolderViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
 }

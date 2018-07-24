@@ -44,6 +44,20 @@ class WSAsset: NSObject {
     
     var createDateB:Date?
     
+    override init() {
+        super.init()
+    }
+    
+    init(asset:PHAsset?,type:WSAssetType?,duration:String?) {
+        super.init()
+        self.asset = asset
+        self.type = type
+        self.duration = duration
+        self.selected = false
+        if (asset) != nil {
+            self.assetLocalIdentifier = asset?.localIdentifier
+        }
+    }
     
     class func assetModel(asset:PHAsset?,type:WSAssetType?,duration:String?)->WSAsset{
         let model = WSAsset.init()

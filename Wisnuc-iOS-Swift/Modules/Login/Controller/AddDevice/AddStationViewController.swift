@@ -138,7 +138,7 @@ class AddStationViewController: BaseViewController {
     }
     
     @objc func nextStepForSearchEndButtonClick(_ sender:MDBaseButton){
-        let model = deviceArray![sender.tag]
+        var model = deviceArray![sender.tag]
         switch model.type {
         case DeviceForSearchState.initialization.rawValue:
             let initDiskVC = InitializationDiskViewController.init()
@@ -377,7 +377,7 @@ class AddStationViewController: BaseViewController {
     
     func searchStation(_ server:NetService, _ baseURL:String){
         if Validate.IP(baseURL).isRight {
-            let model = CloadLoginUserRemotModel.init()
+            var model = CloadLoginUserRemotModel.init()
             model.name = server.name
             model.type = DeviceForSearchState.applyToUse.rawValue
             model.LANIP = baseURL

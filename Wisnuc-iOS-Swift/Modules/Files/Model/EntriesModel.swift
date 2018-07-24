@@ -7,41 +7,42 @@
 //
 
 import Foundation
-import HandyJSON
+//import HandyJSON
 
-public class EntriesModel:HandyJSON {
-    var name:String?
-    var type:String?
-    var uuid:String?
-    var hash:String?
-    var magic:NSNumber?
-    var mtime:UInt64?
-    var size:UInt64?
-    var driveUUID:String?
-    var parentUUID:String?
-    var metadata:Metadata?
+
+public struct EntriesModel:Codable {
+    var name:String? = nil
+    var type:String? = nil
+    var uuid:String? = nil
+    var hash:String? = nil
+    var magic:Bool? = nil
+    var mtime:UInt64? = nil
+    var size:UInt64? = nil
+    var driveUUID:String? = nil
+    var parentUUID:String? = nil
+    var metadata:Metadata? = nil
     
-    required public init() {}
-    
-    public func mapping(mapper: HelpingMapper) {
-        mapper >>> self.driveUUID
-        mapper >>> self.parentUUID
-    }
-    
-    public func didFinishMapping() {
-//        print("you can fill some observing logic here")
-        if self.size == nil {
-            self.size = 0
-        }
-    }
+//    required public init() {}
+//
+//    public func mapping(mapper: HelpingMapper) {
+//        mapper >>> self.driveUUID
+//        mapper >>> self.parentUUID
+//    }
+//
+//    public func didFinishMapping() {
+////        print("you can fill some observing logic here")
+//        if self.size == nil {
+//            self.size = 0
+//        }
+//    }
 }
 
 
-class Metadata: HandyJSON {
-    var w: NSNumber?
-    var h: NSNumber?
-    var type: String?
-    var orient: NSNumber?
+struct Metadata: Codable {
+    var w: Int? = nil
+    var h: Int? = nil
+    var type: String? = nil
+    var orient: Int? = nil
     
-    required init() {}
+//    required init() {}
 }

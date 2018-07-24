@@ -194,12 +194,18 @@ class NetworkService: NSObject {
                 var find:Bool = false
                 arr.enumerateObjects({ (obj, idx, stop) in
                     let dic = obj as! NSDictionary
-                    if let model = EntriesModel.deserialize(from: dic) {
+//                    if let model = EntriesModel.deserialize(from: dic) {
+
+                    do{
+                        let data = jsonToData(jsonDic: dic)
+                        let model = try JSONDecoder().decode(EntriesModel.self, from: data!)
                         if model.name == name && model.type == "directory" {
                             find = true
                             stop.pointee = true
                             return callBack(nil, model.uuid)
                         }
+                    }catch{
+//                        return  complete(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
                     }
                 })
                 

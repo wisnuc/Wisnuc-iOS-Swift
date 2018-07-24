@@ -89,6 +89,7 @@ class SearchFilesViewController: BaseViewController {
     func searchAny(text:String? = nil,types:String? = nil,sClass:String? = nil,complete:@escaping (_ error:Error?)->()){
         var array:Array<EntriesModel> =  Array.init()
         var order:String?
+        
         mainTableView.reloadEmptyDataSet()
         order = !isNilString(types) || !isNilString(sClass) ? nil : SearhOrder.find.rawValue
         let request = SearchAPI.init(order:order, places: uuid!,class:sClass, types:types, name:text)
@@ -99,8 +100,17 @@ class SearchFilesViewController: BaseViewController {
                     for (_ , value) in rootArray.enumerated(){
                         if value is NSDictionary{
                             let dic = value as! NSDictionary
-                            if let model = EntriesModel.deserialize(from: dic) {
+//
+//                            if let model = EntriesModel.deserialize(from: dic) {
+//                                array.append(model)
+//                            }
+                            
+                            do{
+                                let data = jsonToData(jsonDic: dic)
+                                let model = try JSONDecoder().decode(EntriesModel.self, from: data!)
                                 array.append(model)
+                            }catch{
+                                return  complete(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
                             }
                         }
                     }
