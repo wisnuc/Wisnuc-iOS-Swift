@@ -50,7 +50,8 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         let isLocalRequest = AppNetworkService.networkState == .local
         GetMediaAPI.init().startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
-                let medias:NSArray = (isLocalRequest ? response.value as? NSArray : (response.value as! Dictionary)["data"])!
+//                print("😆\(String(describing: response.value))")
+                let medias:NSArray = (isLocalRequest ? response.value as? NSArray : (response.value as! NSDictionary)["data"]) as! NSArray
                 DispatchQueue.global(qos: .default).async {
                     var array = Array<NetAsset>.init()
                     medias.enumerateObjects({ (object, idx, stop) in

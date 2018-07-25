@@ -37,4 +37,18 @@ class NetAsset: WSAsset,HandyJSON {
         mapper <<<
             self.fmhash <-- "hash"
     }
+    
+    func didFinishMapping() {
+        if !isNilString(self.date){
+            let dateFormat =  DateFormatter.init()
+            dateFormat.dateFormat = "yyyy:MM:dd HH:mm:ss"
+            self.createDate = dateFormat.date(from: self.date!)
+        }else{
+            self.createDate = Date.init(timeIntervalSinceReferenceDate: 0)
+        }
+        
+        if self.createDate == nil {
+            self.createDate = Date.init(timeIntervalSinceReferenceDate: 0)
+        }
+    }
 }

@@ -233,6 +233,9 @@
 		1F4E9398208DBB7600DD1EA7 /* radio_button@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9392208DBB7500DD1EA7 /* radio_button@3x.png */; };
 		1F4E9399208DBB7600DD1EA7 /* radio_button_unchecked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9393208DBB7600DD1EA7 /* radio_button_unchecked@3x.png */; };
 		1F4E939A208DBB7600DD1EA7 /* radio_button_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9394208DBB7600DD1EA7 /* radio_button_unchecked.png */; };
+		1F5378772108754F00A555C5 /* AnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378742108754E00A555C5 /* AnyDecodable.swift */; };
+		1F5378782108754F00A555C5 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378752108754E00A555C5 /* AnyCodable.swift */; };
+		1F5378792108754F00A555C5 /* AnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378762108754E00A555C5 /* AnyEncodable.swift */; };
 		1F5659F320D0E35B00D86FDB /* share@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F220D0E35900D86FDB /* share@3x.png */; };
 		1F5659F520D0E36200D86FDB /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F420D0E36200D86FDB /* share@2x.png */; };
 		1F5659F720D0E36B00D86FDB /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F620D0E36A00D86FDB /* share.png */; };
@@ -761,6 +764,9 @@
 		1F4E9392208DBB7500DD1EA7 /* radio_button@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radio_button@3x.png"; sourceTree = "<group>"; };
 		1F4E9393208DBB7600DD1EA7 /* radio_button_unchecked@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radio_button_unchecked@3x.png"; sourceTree = "<group>"; };
 		1F4E9394208DBB7600DD1EA7 /* radio_button_unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radio_button_unchecked.png; sourceTree = "<group>"; };
+		1F5378742108754E00A555C5 /* AnyDecodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyDecodable.swift; sourceTree = "<group>"; };
+		1F5378752108754E00A555C5 /* AnyCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
+		1F5378762108754E00A555C5 /* AnyEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyEncodable.swift; sourceTree = "<group>"; };
 		1F5659F220D0E35900D86FDB /* share@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@3x.png"; sourceTree = "<group>"; };
 		1F5659F420D0E36200D86FDB /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		1F5659F620D0E36A00D86FDB /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -1512,6 +1518,16 @@
 			path = RadioButton;
 			sourceTree = "<group>";
 		};
+		1F5378732108754E00A555C5 /* AnyCodable */ = {
+			isa = PBXGroup;
+			children = (
+				1F5378742108754E00A555C5 /* AnyDecodable.swift */,
+				1F5378752108754E00A555C5 /* AnyCodable.swift */,
+				1F5378762108754E00A555C5 /* AnyEncodable.swift */,
+			);
+			path = AnyCodable;
+			sourceTree = "<group>";
+		};
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -2080,6 +2096,7 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1F5378732108754E00A555C5 /* AnyCodable */,
 				1FE9EF8120EF5DE900732728 /* crypto */,
 				1FFD135D20EF50D10053A3F7 /* JYPhotos */,
 				1FE674D320D21B11006F97DB /* Tiercel */,
@@ -3121,6 +3138,7 @@
 				1F050E6920AAEA2C0037F00A /* FilesFilesBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */,
 				1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */,
+				1F5378772108754F00A555C5 /* AnyDecodable.swift in Sources */,
 				1FE674DF20D21B11006F97DB /* TRDownloadTask.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1FFD132E20EF3DB50053A3F7 /* LocalAsset+CoreDataClass.swift in Sources */,
@@ -3198,9 +3216,11 @@
 				1FE674DE20D21B11006F97DB /* TRTask.swift in Sources */,
 				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,
 				1FFD12AD20E3412E0053A3F7 /* FilesMoveToRootViewController.swift in Sources */,
+				1F5378792108754F00A555C5 /* AnyEncodable.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
 				1F2CE30220B4311000D9E5BD /* User+CoreDataProperties.swift in Sources */,
 				1F8EBB52209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift in Sources */,
+				1F5378782108754F00A555C5 /* AnyCodable.swift in Sources */,
 				1F307C6720BE91B200AE105C /* ErrorDfine.swift in Sources */,
 				1FAADEF820AC149500739220 /* FilesFileInfoTableViewCell.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,

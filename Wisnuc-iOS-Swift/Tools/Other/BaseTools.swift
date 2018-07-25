@@ -39,7 +39,7 @@ func jsonToData(jsonDic:NSDictionary) ->Data?{
     
     //如果设置options为JSONSerialization.WritingOptions.prettyPrinted，则打印格式更好阅读
     
-    let data = try? JSONSerialization.data(withJSONObject: jsonDic, options: [])
+    let data = try? JSONSerialization.data(withJSONObject: jsonDic, options: [JSONSerialization.WritingOptions.prettyPrinted])
     
     //Data转换成String打印输出
     

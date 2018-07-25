@@ -9,19 +9,28 @@
 import Foundation
 //import HandyJSON
 
-
-public struct EntriesModel:Codable {
-    var name:String? = nil
-    var type:String? = nil
-    var uuid:String? = nil
-    var hash:String? = nil
-    var magic:Bool? = nil
-    var mtime:UInt64? = nil
-    var size:UInt64? = nil
-    var driveUUID:String? = nil
-    var parentUUID:String? = nil
-    var metadata:Metadata? = nil
+public struct EntriesModel:Codable  {
+    var name:String?
+    var type:String?
+    var uuid:String?
+    var hash:String?
+    var magic:AnyCodable?
+    var mtime:UInt64?
+    var size:Int?
+    var driveUUID:String?
+    var parentUUID:String?
+    var metadata:Metadata?
     
+    enum CodingKeys : String, CodingKey {
+        case name
+        case type
+        case uuid
+        case hash
+        case magic
+        case mtime
+        case size
+        case metadata
+    }
 //    required public init() {}
 //
 //    public func mapping(mapper: HelpingMapper) {
@@ -39,10 +48,10 @@ public struct EntriesModel:Codable {
 
 
 struct Metadata: Codable {
-    var w: Int? = nil
-    var h: Int? = nil
-    var type: String? = nil
-    var orient: Int? = nil
+    var w: Int?
+    var h: Int?
+    var type: String?
+    var orient: Int?
     
 //    required init() {}
 }

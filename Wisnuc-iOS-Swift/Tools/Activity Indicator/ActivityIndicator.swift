@@ -44,6 +44,7 @@ class ActivityIndicator: NSObject{
             window?.windowLevel = UIWindowLevelNormal
             window?.isUserInteractionEnabled = false
             window?.addSubview(shareSingleOneActivityIndicator)
+            window?.bringSubview(toFront: shareSingleOneActivityIndicator)
         }
     }
     

@@ -325,7 +325,7 @@ class NetworkService: NSObject {
     }
 
     //Asset
-    func getThumbnail(hash:String,callback:@escaping (Error?,UIImage?)->())->SDWebImageDownloadToken{
+    func getThumbnail(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?)->())->SDWebImageDownloadToken{
         SDWebImageManager.shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
             var dic = Dictionary<String, String>.init()
             dic.merge(with: headers!)
@@ -333,11 +333,16 @@ class NetworkService: NSObject {
             return dic
             }
         let detailURL = "media"
-        let frameLength = 200
+        var frameWidth = size?.width
+        var frameHeight = size?.height
+        if size == nil {
+            frameWidth = 200
+            frameHeight = 200
+        }
         let resource = "media/\(hash)".toBase64()
-        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(frameLength)&\(kRequestImageHeightKey)=\(frameLength)&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
         SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
-        let url = self.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
+        let url = self.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
         return SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.useNSURLCache, progress: nil, completed: { (image, data, error, finished) in
             if (image != nil) {
             callback(nil, image)

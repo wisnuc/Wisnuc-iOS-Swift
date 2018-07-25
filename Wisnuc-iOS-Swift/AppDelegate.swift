@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         }
     }
     var window: UIWindow?
-    var _loginController:LoginViewController?
+    var loginController:LoginViewController?
     var colorScheme: (MDCColorScheme & NSObjectProtocol)!
     var coreDataContext: NSManagedObjectContext?
     
@@ -40,6 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         colorScheme = MDCBasicColorScheme(primaryColor: COR1)
         startNotifierNetworkStutas() // networkObserveNotification
         MDCAlertColorThemer.apply(colorScheme)
+//        self.window = UIWindow.init(frame: UIScreen.main.bounds)
         initRootVC()
         return true
     }
@@ -64,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
                 let type:LoginState?
                 type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
                 let loginController = LoginViewController.init(type!)
-                _loginController = loginController;
+                self.loginController = loginController;
                 UIApplication.shared.statusBarStyle = .lightContent
                 let navigationController = UINavigationController.init(rootViewController:loginController)
                 self.window?.rootViewController = navigationController
@@ -120,7 +121,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         photosVC.localAssetDataSources.append(contentsOf:AppAssetService.allAssets!)
         AppAssetService.getNetAssets { (error, netAssets) in
             if error == nil{
-                photosVC.addNetAssets(assetsArr: netAssets!)
+                DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.0){
+                    DispatchQueue.main.async {
+                        photosVC.addNetAssets(assetsArr: netAssets!)
+                    }
+                }
             }
         }
         photosVC.title = LocalizedString(forKey: "Photos")
@@ -154,6 +159,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let drawerVC = FilesDrawerTableViewController.init(style: UITableViewStyle.grouped)
         let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
         window?.rootViewController = naviNavigationDrawer
+        if loginController != nil {
+            loginController = nil
+        }
     }
     
     func setAppNetworkState(){

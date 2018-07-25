@@ -259,9 +259,8 @@ class FilesRootViewController: BaseViewController{
                         return
                     }
                 }
-                
+                   let data = jsonToData(jsonDic: responseDic)
                 do{
-                    let data = jsonToData(jsonDic: responseDic)
                     let model = try JSONDecoder().decode(FilesModel.self, from: data!)
 //                if let model = FilesModel.deserialize(from: responseDic){
                     var filesArray = Array<EntriesModel>.init()
@@ -291,7 +290,7 @@ class FilesRootViewController: BaseViewController{
                         self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
                     }
                 }catch{
-                    
+                    print(error.localizedDescription)
                 }
 //                }
                 ActivityIndicator.stopActivityIndicatorAnimation()

@@ -347,7 +347,7 @@ extension TRManager {
                     let fileName = fileNames.safeObjectAtIndex(index),let model = filesModels?.safeObjectAtIndex(index) {
                     task!.fileName = fileName
                     task!.fileModel = model
-                    task!.size = Int64.init(bitPattern: model.size!)
+                    task!.size = Int64.init(bitPattern: UInt64(model.size!))
                 }
             } else {
                 var fileName: String?

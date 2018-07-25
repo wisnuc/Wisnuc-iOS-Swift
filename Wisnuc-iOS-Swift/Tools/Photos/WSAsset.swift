@@ -42,11 +42,12 @@ class WSAsset: NSObject {
     
     var indexPath:IndexPath?
     
-    var createDateB:Date?
+    var createDate:Date?
     
     override init() {
         super.init()
     }
+    
     
     init(asset:PHAsset?,type:WSAssetType?,duration:String?) {
         super.init()
@@ -54,6 +55,7 @@ class WSAsset: NSObject {
         self.type = type
         self.duration = duration
         self.selected = false
+        self.createDate = self.createDateB
         if (asset) != nil {
             self.assetLocalIdentifier = asset?.localIdentifier
         }
@@ -65,13 +67,15 @@ class WSAsset: NSObject {
         model.type = type
         model.duration = duration
         model.selected = false
+        model.createDate = model.createDateB
         if (asset) != nil {
             model.assetLocalIdentifier = asset?.localIdentifier;
         }
         return model
     }
     
-    lazy var createDate: Date? = {
+    
+    lazy var createDateB: Date? = {
         return self.asset?.creationDate
         }()
 }

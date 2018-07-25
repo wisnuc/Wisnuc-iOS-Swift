@@ -107,7 +107,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                 })
             }else if model is NetAsset{
                 let netAsset = model as! NetAsset
-                _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!) { [weak self]  (error, image) in
+                _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image) in
                     if error == nil {
                         self?.model?.image = image
                         self?.imageView?.layer.contents = image?.cgImage
@@ -149,12 +149,12 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.imageView?.backgroundColor = UIColor.colorFromRGB(rgbValue: 0xf5f5f5)
-//        self.imageView.snp.makeConstraints { [weak self] (make) in
-//            make.left.equalTo((self?.contentView.snp.left)!)
-//            make.right.equalTo((self?.contentView.snp.right)!)
-//            make.top.equalTo((self?.contentView.snp.top)!)
-//            make.bottom.equalTo((self?.contentView.snp.bottom)!)
-//        }
+        self.imageView?.snp.makeConstraints { [weak self] (make) in
+            make.left.equalTo((self?.contentView.snp.left)!)
+            make.right.equalTo((self?.contentView.snp.right)!)
+            make.top.equalTo((self?.contentView.snp.top)!)
+            make.bottom.equalTo((self?.contentView.snp.bottom)!)
+        }
 
 
         self.videoBottomView.snp.makeConstraints { [weak self] (make) in

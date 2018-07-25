@@ -130,6 +130,7 @@ class PhotoRootViewController: BaseViewController {
             }
         }
         self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
+        self.photoCollcectionViewController.dataSource = self.assetDataSources
     }
     
     func merge()->Array<WSAsset> {
@@ -143,7 +144,7 @@ class PhotoRootViewController: BaseViewController {
     let netTmpArr = NSMutableArray.init(capacity: 0)
         for asset in self.netAssetDataSource {
             if asset.fmhash != nil {
-                if localHashs.contains(asset.fmhash!){
+                if !localHashs.contains(asset.fmhash!){
                     netTmpArr.add(asset)
                 }
             }
@@ -155,13 +156,13 @@ class PhotoRootViewController: BaseViewController {
     }
     
     func addNetAssets(assetsArr:Array<NetAsset>) {
-        DispatchQueue.global(qos: .default).async {
+//        DispatchQueue.global(qos: .default).async {
            self.netAssetDataSource = assetsArr
             self.sort(self.merge())
-            DispatchQueue.main.async {
-                self.photoCollcectionViewController.collectionView?.reloadData()
-            }
-        }
+//            DispatchQueue.main.async {
+        
+//            }
+//        }
     }
 
     

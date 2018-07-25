@@ -27,9 +27,10 @@ class PhotoCollectionViewController: UICollectionViewController {
     var isSelectMode:Bool?
     var showIndicator:Bool = true
     var sortedAssetsBackupArray:Array<WSAsset>?
+    var dispose = DisposeBag()
     var dataSource:Array<Array<WSAsset>>?{
         didSet{
-//            self.c
+            self.collectionView?.reloadData()
         }
     }
     override init(collectionViewLayout layout: UICollectionViewLayout) {
@@ -87,7 +88,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         layout.itemSize = CGSize(width: (__kWidth - 2*(currentScale-1))/currentScale, height: (__kWidth - 2*(currentScale-1))/currentScale)
         self.collectionView?.setCollectionViewLayout(layout, animated: true)
 
-    //    [self.collectionView reloadData];
+        self.collectionView?.reloadData()
 }
     func initCollectionViewLayout() {
         showIndicator = true
@@ -160,7 +161,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                     }
                 }
             })
-            .dispose()
+            .disposed(by: dispose)
 //        self.collectionView?.indicator.slider.addObserver(self, forKeyPath: "sliderState", options: NSKeyValueObservingOptions.init(rawValue: 0x01), context: nil)
         self.collectionView?.indicator.frame = CGRect(x: self.collectionView!.indicator.frame.origin.x, y:  self.collectionView!.indicator.frame.origin.y, width: 1, height: self.collectionView!.height - CGFloat(2 * kILSDefaultSliderMargin))
     }
@@ -449,7 +450,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                 if self.collectionView?.indicator == nil{
                     return
                 }
-
+//
                 self.collectionView?.indicator.slider.rx.observe(String.self, keyPath)
                     .subscribe(onNext: { [weak self] (newValue) in
                         if (self?.showIndicator)! {
@@ -473,7 +474,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                             }
                         }
                     })
-                    .dispose()
+                    .disposed(by: dispose)
             }else {
                 if (!isAnimation) {
                     self.collectionView?.indicator.transform = CGAffineTransform.identity

@@ -9,10 +9,15 @@
 import UIKit
 import MaterialComponents
 
+@objc protocol LocalNetworkLoginViewControllerDelegate:NSObjectProtocol{
+    func dismissComplete()
+}
+
 class LocalNetworkLoginViewController: BaseViewController {
     override func willDealloc() -> Bool {
         return false
     }
+    weak var delegate:LocalNetworkLoginViewControllerDelegate?
     @IBOutlet weak var mainbackgroudView: UIView!
     @IBOutlet weak var stationNameLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
@@ -152,8 +157,13 @@ class LocalNetworkLoginViewController: BaseViewController {
                 AppUserService.setCurrentUser(user)
                 AppUserService.synchronizedCurrentUser()
                 AppNetworkService.networkState = .local
-                self?.dismiss(animated: true, completion: {
-                    appDelegate.setRootViewController()
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                sender.isUserInteractionEnabled = true
+                self?.dismiss(animated: true, completion: { [weak self] in
+                    if let delegateOK = self?.delegate{
+                        delegateOK.dismissComplete()
+                    }
+//                    defaultNotificationCenter().post(name: NSNotification.Name.Change.LocalLoginDismissNotiKey, object: nil)
                 })
             }else{
                 if error != nil{
@@ -169,10 +179,9 @@ class LocalNetworkLoginViewController: BaseViewController {
                         
                     }
                 }
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                sender.isUserInteractionEnabled = true
             }
-            
-            ActivityIndicator.stopActivityIndicatorAnimation()
-            sender.isUserInteractionEnabled = true
         }
     }
     

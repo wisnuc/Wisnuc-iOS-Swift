@@ -11,6 +11,7 @@
  import MaterialComponents
  import HandyJSON
  import Alamofire
+ import RxSwift
  
  enum LoginState:Int{
     case wechat = 0
@@ -30,6 +31,7 @@
     }
     var commonLoginButon:UIButton!
     var userName:String?
+    var disposeBag = DisposeBag()
     var cloudLoginArray:Array<CloadLoginUserRemotModel>?
     var loginModel:CloudLoginModel?
     var logintype:LoginState?{
@@ -66,6 +68,7 @@
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.registerNotification()
         self.view.backgroundColor = COR1
         self.view.addSubview(self.agreementButton)
         self.view.addSubview(self.wisnucLabel)
@@ -85,6 +88,18 @@
     
     deinit {
        print("\(className()) deinit")
+    }
+    
+    func registerNotification(){
+//        defaultNotificationCenter()
+//            .rx
+//            .notification(Notification.Name.Change.LocalLoginDismissNotiKey)
+//            .subscribe(onNext: { (noti) in
+//                 ActivityIndicator.startActivityIndicatorAnimation()
+//                 appDelegate.setRootViewController()
+//                 ActivityIndicator.stopActivityIndicatorAnimation()
+//            })
+//            .disposed(by: disposeBag)
     }
     
     func setCommonButtonType() {
@@ -632,6 +647,7 @@
             if self.stationView.stationArray != nil && (self.stationView.stationArray?.count)! > 0{
                 let model = self.stationView.stationArray![(sender.view?.tag)!]
                 let localNetVC = LocalNetworkLoginViewController.init(model: model)
+                localNetVC.delegate = self
                 let navi = UINavigationController.init(rootViewController: localNetVC)
                 self.present(navi, animated: true, completion: {
                     
@@ -677,3 +693,25 @@
         self.logintype = .wechat
     }
  }
+ 
+ extension LoginViewController:LocalNetworkLoginViewControllerDelegate{
+    struct MDCPalette {
+        static let blue: UIColor = UIColor(red: 0.129, green: 0.588, blue: 0.953, alpha: 1.0)
+        static let red: UIColor = UIColor(red: 0.957, green: 0.263, blue: 0.212, alpha: 1.0)
+        static let green: UIColor = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 1.0)
+        static let yellow: UIColor = UIColor(red: 1.0, green: 0.922, blue: 0.231, alpha: 1.0)
+    }
+    func dismissComplete() {
+//        let testActivityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+//        testActivityIndicator.center = self.view.center//只能设置中心，不能设置大小
+//        let window = UIWindow.init(frame: self.view.bounds)
+//        window.makeKeyAndVisible()
+//        window.addSubview(testActivityIndicator)
+////        appDelegate.window?.bringSubview(toFront: testActivityIndicator)
+//        testActivityIndicator.color = UIColor.red // 改变圈圈的颜色为红色； iOS5引入
+//        testActivityIndicator.startAnimating() // 开始旋转
+        
+        appDelegate.setRootViewController()
+    }
+ }
+ 

@@ -9,10 +9,18 @@
 import UIKit
 //import HandyJSON
 
-struct FilesModel:Codable {
+struct FilesModel:Codable  {
     var entries:[EntriesModel]?
+    var path:[pathModel]?
 //    required init() {
 //
 //    }
     
 }
+struct pathModel:Codable {
+    var name:String?
+    var mtime:Int64?
+    var uuid:String?
+}
+
+
