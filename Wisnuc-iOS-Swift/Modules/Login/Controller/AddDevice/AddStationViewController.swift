@@ -116,6 +116,10 @@ class AddStationViewController: BaseViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    deinit {
+        print("\(className()) deinit")
+    }
+    
     @objc func reSearchClick(_ sender:UIButton){
         state = StationSearchState.searching
     }

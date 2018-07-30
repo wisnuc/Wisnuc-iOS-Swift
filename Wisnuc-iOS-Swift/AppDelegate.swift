@@ -111,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     }
     
     func setRootViewController(){
-        self.window?.rootViewController = nil
+   
         let tabBarController = WSTabBarController ()
         
         let filesVC = FilesRootViewController()

@@ -449,13 +449,13 @@ class WSPreviewVideo: WSBasePreviewView {
         }
         self.wsAsset = asset
         
-        if playLayer != nil {
-            playLayer?.player = nil
-            playLayer?.removeFromSuperlayer()
-//            [_playLayer removeObserver:self forKeyPath:@"status"];
-            hasObserverStatus = false
-            playLayer = nil
-        }
+//        if playLayer != nil {
+//            playLayer?.player = nil
+//            playLayer?.removeFromSuperlayer()
+////            [_playLayer removeObserver:self forKeyPath:@"status"];
+//            hasObserverStatus = false
+//            playLayer = nil
+//        }
         
         self.imageView.image = nil;
         
@@ -480,6 +480,7 @@ class WSPreviewVideo: WSBasePreviewView {
             }
         })
     }
+    
     func loadNetNormalImage(asset:WSAsset){
         if (self.wsAsset?.asset != nil && self.imageRequestID != nil) {
             if self.imageRequestID! >= 0{
@@ -487,13 +488,13 @@ class WSPreviewVideo: WSBasePreviewView {
             }
         }
         self.wsAsset = asset
-        if ((playLayer) != nil) {
-            playLayer?.player = nil
-            playLayer?.removeFromSuperlayer()
-//            [_playLayer removeObserver:self forKeyPath:@"status"];
-            hasObserverStatus = false
-            playLayer = nil
-        }
+//        if ((playLayer) != nil) {
+//            playLayer?.player = nil
+//            playLayer?.removeFromSuperlayer()
+////            [_playLayer removeObserver:self forKeyPath:@"status"];
+//            hasObserverStatus = false
+//            playLayer = nil
+//        }
         self.imageView.image = nil
         self.playBtn.isEnabled = true
         self.playBtn.isHidden = false
@@ -565,7 +566,7 @@ class WSPreviewVideo: WSBasePreviewView {
     }
     
     func startPlayVideo(){
-        if self.playLayer == nil {
+        if self.playLayer?.player == nil {
             if self.wsAsset?.type == .Video{
                 PHPhotoLibrary.requestVideo(for: self.wsAsset?.asset, completion: { (item, info) in
                     DispatchQueue.main.async {
@@ -636,7 +637,9 @@ class WSPreviewVideo: WSBasePreviewView {
                 delegateOK.playVideo(viewController: playerViewController)
             }
             playerViewController.player?.play()
-            
+        }else{
+            self.playBtn.isHidden = false
+            player?.pause()
         }
     }
     

@@ -2475,7 +2475,6 @@
 				1FD9B749207CBE8700906D80 /* Frameworks */,
 				1FD9B74A207CBE8700906D80 /* Resources */,
 				86DDF45F5CCB6C594636B31F /* [CP] Embed Pods Frameworks */,
-				B859D02CD8822540FF13F31D /* [CP] Copy Pods Resources */,
 				1FC5702520C0E77200D4499D /* Headers */,
 			);
 			buildRules = (
@@ -2496,7 +2495,6 @@
 				1FD9B760207CBE8900906D80 /* Frameworks */,
 				1FD9B761207CBE8900906D80 /* Resources */,
 				70C296087E35F5E009822D8C /* [CP] Embed Pods Frameworks */,
-				99291CBD8EE3648390F67806 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3027,36 +3025,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		99291CBD8EE3648390F67806 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-SwiftTests/Pods-Wisnuc-iOS-SwiftTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B859D02CD8822540FF13F31D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C538C2D765CA23AA36581B6A /* [CP] Check Pods Manifest.lock */ = {

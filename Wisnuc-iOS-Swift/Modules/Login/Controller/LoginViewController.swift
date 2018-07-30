@@ -701,17 +701,14 @@
         static let green: UIColor = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 1.0)
         static let yellow: UIColor = UIColor(red: 1.0, green: 0.922, blue: 0.231, alpha: 1.0)
     }
+    
     func dismissComplete() {
-//        let testActivityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
-//        testActivityIndicator.center = self.view.center//只能设置中心，不能设置大小
-//        let window = UIWindow.init(frame: self.view.bounds)
-//        window.makeKeyAndVisible()
-//        window.addSubview(testActivityIndicator)
-////        appDelegate.window?.bringSubview(toFront: testActivityIndicator)
-//        testActivityIndicator.color = UIColor.red // 改变圈圈的颜色为红色； iOS5引入
-//        testActivityIndicator.startAnimating() // 开始旋转
-        
-        appDelegate.setRootViewController()
+        ActivityIndicator.startActivityIndicatorAnimation()
+        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.5) {
+            DispatchQueue.main.async {
+                appDelegate.setRootViewController()
+            }
+        }
     }
  }
  

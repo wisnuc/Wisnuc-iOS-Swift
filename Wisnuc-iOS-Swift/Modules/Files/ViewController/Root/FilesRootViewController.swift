@@ -98,7 +98,8 @@ class FilesRootViewController: BaseViewController{
     }
     
     deinit {
-        print("deinit called")
+        print("\(className()) deinit")
+
         removeCollectionView()
 //        FilesRootViewController.downloadManager.invalidate()
         defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)

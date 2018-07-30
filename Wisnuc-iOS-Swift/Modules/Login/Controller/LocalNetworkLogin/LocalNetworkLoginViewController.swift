@@ -157,9 +157,10 @@ class LocalNetworkLoginViewController: BaseViewController {
                 AppUserService.setCurrentUser(user)
                 AppUserService.synchronizedCurrentUser()
                 AppNetworkService.networkState = .local
-                ActivityIndicator.stopActivityIndicatorAnimation()
-                sender.isUserInteractionEnabled = true
+
                 self?.dismiss(animated: true, completion: { [weak self] in
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    sender.isUserInteractionEnabled = true
                     if let delegateOK = self?.delegate{
                         delegateOK.dismissComplete()
                     }

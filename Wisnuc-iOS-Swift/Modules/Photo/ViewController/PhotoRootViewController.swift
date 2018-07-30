@@ -33,7 +33,7 @@ class PhotoRootViewController: BaseViewController {
     }
     
     deinit {
-        
+      print("\(className()) deinit")
     }
     
     required init?(coder aDecoder: NSCoder) {

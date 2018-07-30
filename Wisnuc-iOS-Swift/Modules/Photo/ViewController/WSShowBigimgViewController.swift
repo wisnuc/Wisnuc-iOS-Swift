@@ -297,8 +297,6 @@ class WSShowBigimgViewController: UIViewController {
   
     func performDismissAnimation(){
         
-
-        
         let fadeAlpha = 1 - fabs(collectionView.top)/collectionView.frame.size.height
         
         //    JYBigImgCell * cell = _collectionView.visibleCells[0];
@@ -351,7 +349,7 @@ class WSShowBigimgViewController: UIViewController {
             self?.dismiss(animated: false, completion: nil)
         }
         
-        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: nil)
+        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: self.view)
         UIView.animate(withDuration: 0.4, animations: {
             resizableImageView.frame = senderViewOriginalFrame!
             fadeView.alpha = 0
