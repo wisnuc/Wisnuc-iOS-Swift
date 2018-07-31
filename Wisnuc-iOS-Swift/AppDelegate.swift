@@ -12,7 +12,7 @@ import MaterialComponents
 import RealReachability
 import CatalogByConvention
 import MagicalRecord
-
+import SugarRecord
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
@@ -79,6 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     }
 
     func registerCoreDataContext(){
+        
         MagicalRecord.setupCoreDataStack()
         MagicalRecord.setLoggingLevel(MagicalRecordLoggingLevel.warn)
 //        if #available(iOS 10.0, *) {

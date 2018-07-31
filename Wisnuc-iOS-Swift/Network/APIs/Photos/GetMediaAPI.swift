@@ -9,6 +9,13 @@
 import UIKit
 
 class GetMediaAPI: BaseRequest {
+    var classType:String?
+    var placesUUID:String?
+    init(classType:String,placesUUID:String) {
+        self.classType = classType
+        self.placesUUID = placesUUID
+    }
+    
     override func requestMethod() -> RequestHTTPMethod {
         return .get
     }
@@ -18,7 +25,7 @@ class GetMediaAPI: BaseRequest {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return "/media"
+            return "/files"
         default:
             return ""
         }
@@ -27,13 +34,14 @@ class GetMediaAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestResourceKey:"media".toBase64(),kRequestMethodKey:RequestMethodValue.GET]
+            return [kRequestResourceKey:"files".toBase64(),kRequestMethodKey:RequestMethodValue.GET]
         case .local?:
-            return nil
+            return [kRequestClassKey:self.classType!,kRequestPlacesKey:self.placesUUID!]
         default:
             return nil
         }
     }
+    
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {

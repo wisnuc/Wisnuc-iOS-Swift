@@ -7,8 +7,7 @@
 //
 
 #import "UIImage+extension.h"
-#import "UIImageView+WebCache.h"
-#import "UIButton+WebCache.h"
+#import <YYKit/YYKit.h>
 
 @implementation UIImage (extension)
 
@@ -148,22 +147,29 @@
         //占位图片不为空的情况
         //1.现将占位图圆角化，这样就避免了如图片下载失败，使用占位图的时候占位图不是圆角的问题
         [image was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusPlaceHolder) {
+            //2.使用sd的方法缓存异步下载的图片
+            [weakSelf setImageWithURL:url placeholder:radiusPlaceHolder options:YYWebImageOptionIgnoreFailedURL completion:^(UIImage * _Nullable img, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+//                3.如果下载成功那么讲下载成功的图进行圆角化
+                    [img was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusImage) {
+                        weakSelf.image = radiusImage;
+                    }];
+            }];
             
             //2.使用sd的方法缓存异步下载的图片
-            [weakSelf sd_setImageWithURL:url placeholderImage:radiusPlaceHolder completed:^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                
-                //3.如果下载成功那么讲下载成功的图进行圆角化
-                [img was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusImage) {
-                    weakSelf.image = radiusImage;
-                }];
-                
-            }];
+//            [weakSelf sd_setImageWithURL:url placeholderImage:radiusPlaceHolder completed:^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+//
+//                //3.如果下载成功那么讲下载成功的图进行圆角化
+//                [img was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusImage) {
+//                    weakSelf.image = radiusImage;
+//                }];
+//
+//            }];
             
         }];
     } else {
         //占位图片为空的情况
         //2.使用sd的方法缓存异步下载的图片
-        [weakSelf sd_setImageWithURL:url placeholderImage:nil completed:^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+       [weakSelf setImageWithURL:url placeholder:nil options:YYWebImageOptionIgnoreFailedURL completion:^(UIImage * _Nullable img, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
             
             //3.如果下载成功那么讲下载成功的图进行圆角化
             [img was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusImage) {
@@ -186,7 +192,7 @@
         [image was_roundRectImageWithSize:size fillColor:color opaque:opaque radius:cornerRadius completion:^(UIImage *roundRectPlaceHolder) {
             
             //2.使用sd的方法缓存异步下载的图片
-            [weakSelf sd_setImageWithURL:url placeholderImage:roundRectPlaceHolder completed:^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [weakSelf setImageWithURL:url placeholder:roundRectPlaceHolder options:YYWebImageOptionIgnoreFailedURL completion:^(UIImage * _Nullable img, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
                 
                 //3.如果下载成功那么讲下载成功的图进行圆角化
                 [img was_roundRectImageWithSize:size fillColor:color opaque:opaque radius:cornerRadius completion:^(UIImage *radiusImage) {
@@ -199,7 +205,7 @@
     } else {
         //占位图片为空的情况
         //.使用sd的方法缓存异步下载的图片
-        [weakSelf sd_setImageWithURL:url placeholderImage:nil completed:^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+       [weakSelf setImageWithURL:url placeholder:nil options:YYWebImageOptionIgnoreFailedURL completion:^(UIImage * _Nullable img, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
             
             //3.如果下载成功那么讲下载成功的图进行圆角化
             [img was_roundRectImageWithSize:size fillColor:color opaque:opaque radius:cornerRadius completion:^(UIImage *radiusImage) {
@@ -246,7 +252,8 @@
         //占位处理
         [image was_roundRectImageWithSize:size fillColor:color opaque:opaque radius:cornerRadius completion:^(UIImage *roundRectPlaceHolder) {
             //sd
-            [weakSelf sd_setImageWithURL:url forState:state placeholderImage:roundRectPlaceHolder completed:^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            
+            [weakSelf setImageWithURL:url forState:state placeholder:roundRectPlaceHolder options:YYWebImageOptionRefreshImageCache completion:^(UIImage * _Nullable img, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
                 //3.如果下载成功那么讲下载成功的图进行圆角化
                 [img was_roundRectImageWithSize:size fillColor:color opaque:opaque radius:cornerRadius completion:^(UIImage *roundRectImage) {
                     [weakSelf setImage:roundRectImage forState:state];
@@ -257,7 +264,7 @@
         }];
     } else {
         //占位图片为空的情况
-        [weakSelf sd_setImageWithURL:url forState:state placeholderImage:nil completed:^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+           [weakSelf setImageWithURL:url forState:state placeholder:nil options:YYWebImageOptionRefreshImageCache completion:^(UIImage * _Nullable img, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
             //3.如果下载成功那么讲下载成功的图进行圆角化
             [img was_roundRectImageWithSize:size fillColor:color opaque:opaque radius:cornerRadius completion:^(UIImage *roundRectImage) {
                 [weakSelf setImage:roundRectImage forState:state];
@@ -279,7 +286,7 @@
         //占位处理
         [image was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusPlaceHolder) {
             //sd
-            [weakSelf sd_setImageWithURL:url forState:state placeholderImage:radiusPlaceHolder completed:^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+               [weakSelf setImageWithURL:url forState:state placeholder:radiusPlaceHolder options:YYWebImageOptionRefreshImageCache completion:^(UIImage * _Nullable img, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
                 //3.如果下载成功那么讲下载成功的图进行圆角化
                 [img was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusImage) {
                     [weakSelf setImage:radiusImage forState:state];
@@ -290,7 +297,7 @@
         }];
     } else {
         //占位图片为空的情况
-        [weakSelf sd_setImageWithURL:url forState:state placeholderImage:nil completed:^(UIImage *img, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+          [weakSelf setImageWithURL:url forState:state placeholder:nil options:YYWebImageOptionRefreshImageCache completion:^(UIImage * _Nullable img, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
             //3.如果下载成功那么讲下载成功的图进行圆角化
             [img was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusImage) {
                 [weakSelf setImage:radiusImage forState:state];

@@ -8,7 +8,7 @@
 
 import UIKit
 import MaterialComponents.MDCActivityIndicator
-import SDWebImage
+//import SDWebImage
 class ActivityIndicator: NSObject{
     
     static let shareSingleOneActivityIndicator = MDCActivityIndicator(frame: CGRect.zero)

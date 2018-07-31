@@ -12,6 +12,10 @@ import MaterialComponents.MaterialButtons
 let numOfPages = 4
 
 class FirstLaunchViewController: UIViewController {
+    deinit {
+        print("\(className()) deinit")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(mainScrollView)

@@ -42,11 +42,16 @@ private let CollectionCellHeight:CGFloat = ViewHeight
 }
 
 class MyStationView: UIView {
+    deinit {
+        print("\(className()) deinit")
+    }
+    
     var stationArray:Array<CloadLoginUserRemotModel>?{
         didSet{
            self.reloadData()
         }
     }
+    
     weak var delegate: StationViewDelegate?
     
     override init(frame: CGRect) {

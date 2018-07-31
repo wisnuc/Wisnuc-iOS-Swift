@@ -9,7 +9,7 @@
 import UIKit
 import MaterialComponents.MDCActivityIndicator
 import Photos
-import SDWebImage
+import Kingfisher
 import PhotosUI
 import RxSwift
 import AVKit
@@ -23,7 +23,7 @@ class WSBasePreviewView: UIView {
     
     var singleTapCallback:(()->())?
     
-    var sdDownloadToken:SDWebImageDownloadToken?
+    var imageDownloadTask:RetrieveImageDownloadTask?
     
     func image()->UIImage?
     {return imageView.image}
@@ -138,10 +138,11 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             }
         }
         
-        if(self.sdDownloadToken != nil){
-            SDWebImageDownloader.shared().cancel(self.sdDownloadToken)
-            self.sdDownloadToken = nil
+        if(self.imageDownloadTask != nil){
+            imageDownloadTask?.cancel()
+            self.imageDownloadTask = nil
         }
+        
         self.wsAsset = asset
         
         self.indicator.startAnimating()
@@ -169,28 +170,28 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                 PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
             }
         }
-        if(self.sdDownloadToken != nil){
-            SDWebImageDownloader.shared().cancel(self.sdDownloadToken)
-            self.sdDownloadToken = nil
+        
+        if(self.imageDownloadTask != nil){
+            imageDownloadTask?.cancel()
+            self.imageDownloadTask = nil
         }
         self.wsAsset = asset
         self.indicator.startAnimating()
-//        jy_weakify(self);
-//        self.sdDownloadToken =  [WB_NetService getHighWebImageWithHash:[(WBAsset *)asset fmhash] completeBlock:^(NSError *error, UIImage *img) {
-//            [weakSelf.indicator stopAnimating];
-//            jy_strongify(weakSelf);
-//            if(!self) return;
-//            if (error) {
-//            // TODO: Load Error Image
-//            } else {
-//            self->_loadOK = YES;
-//            self.imageView.image = img;
-//            if(asset.type == JYAssetTypeGIF) [self resumeGif];
-//            [self resetSubviewSize:img];
-//            }
-//            self.sdDownloadToken = nil;
-//            }];
-        
+
+        self.imageDownloadTask = AppNetworkService.getHighWebImage(hash: (asset as! NetAsset).fmhash!, callback: { [weak self] (error, img) in
+            self?.indicator.stopAnimating()
+            if error != nil {
+                // TODO: Load Error Image
+            } else {
+                self?.loadOK = true
+                self?.imageView.image = img
+                if asset.type == WSAssetType.GIF{
+                  self?.resumeGif()
+                }
+                self?.resetSubviewSize(img)
+            }
+            self?.imageDownloadTask = nil
+        })
     }
 
     @objc func doubleTapAction(_ sender:UITapGestureRecognizer?){

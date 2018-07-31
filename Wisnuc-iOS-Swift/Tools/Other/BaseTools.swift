@@ -10,7 +10,7 @@
 import Foundation
 import UIKit
 import MaterialComponents
-import SDWebImage
+//import SDWebImage
 func MIN<T : Comparable>(x: T, y: T) -> T{
     if x > y {
         return y
@@ -109,20 +109,21 @@ class Weak<T: AnyObject> {
 
 
 func mainThreadSafe(_ closure: @escaping ()->()){
-    if let currentQueueLabel = OperationQueue.current?.underlyingQueue?.label {
-        print(currentQueueLabel)
-        if currentQueueLabel == DispatchQueue.main.label {
+//    if let currentQueueLabel = OperationQueue.current?.underlyingQueue?.label {
+//        print(currentQueueLabel)
+//        if currentQueueLabel == DispatchQueue.main.label {
+       if dispatch_is_main_queue(){
             closure()
         }else{
             DispatchQueue.main.async {
                 closure()
             }
         }
-    }else{
-        DispatchQueue.main.async {
-            closure()
-        }
-    }
+//    }else{
+//        DispatchQueue.main.async {
+//            closure()
+//        }
+//    }
 }
 
 func synced(_ lock: Any, closure: () -> ()) {

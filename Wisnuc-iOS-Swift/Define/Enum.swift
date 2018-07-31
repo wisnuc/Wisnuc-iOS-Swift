@@ -14,6 +14,8 @@ enum FilesType:String{
     case directory = "directory"
 }
 
+public let kVideoTypes = [FilesFormatType.MP4.rawValue,FilesFormatType.RMVB.rawValue,FilesFormatType.RM.rawValue,FilesFormatType.AVI.rawValue,FilesFormatType.MKV.rawValue,FilesFormatType.WMV.rawValue,FilesFormatType.SWF.rawValue,FilesFormatType.FLV.rawValue,FilesFormatType.MOV.rawValue]
+
 enum FilesFormatType:String {
 
     case EXE = "exe"

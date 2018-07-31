@@ -40,7 +40,6 @@ class AppService: NSObject,ServiceProtocol{
     }
     
     func loginAction(model:CloadLoginUserRemotModel,url:String,basicAuth:String,complete:@escaping ((_ error:Error?,_ user:User?)->())){
-        
         if model.uuid == nil || isNilString(model.uuid){
             complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
         }

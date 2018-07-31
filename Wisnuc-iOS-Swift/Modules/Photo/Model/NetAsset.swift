@@ -10,45 +10,57 @@ import Foundation
 import HandyJSON
 
 class NetAsset: WSAsset,HandyJSON {
-    var m:String?
-    var h:Int?
-    var w:Int?
-    var size:Int?
-    var orient:Int?
-    var date:String?
-    var make:String?
-    var model:String?
-    var lat:String?
-    var latr:String?
-    var fmlong:String?
-    var longr:String?
-    var fmhash:String?
-    var rot:String?
-    var dur:Float?
     
+    var name:String?
+    var mtime:Int64?
+    var size:Int64?
+    var uuid:String?
+    var fmhash:String?
+    var place:Int?
+    var pdir:String?
+    var namepath:NSArray?
+    var metadata:HJMetadata?
     required override init() {
         super.init()
+        self.type = WSAssetType.NetImage
     }
     
+    
     func mapping(mapper: HelpingMapper) {
-        mapper <<<
-            self.fmlong <-- "long"
-
         mapper <<<
             self.fmhash <-- "hash"
     }
     
     func didFinishMapping() {
-        if !isNilString(self.date){
+        if !isNilString(self.metadata?.date){
             let dateFormat =  DateFormatter.init()
             dateFormat.dateFormat = "yyyy:MM:dd HH:mm:ss"
-            self.createDate = dateFormat.date(from: self.date!)
+            dateFormat.timeZone = TimeZone.current
+            self.createDate = dateFormat.date(from: (self.metadata?.date!)!)
         }else{
             self.createDate = Date.init(timeIntervalSinceReferenceDate: 0)
         }
-        
+
         if self.createDate == nil {
             self.createDate = Date.init(timeIntervalSinceReferenceDate: 0)
         }
+        
+        if(!isNilString(self.metadata?.type) && kVideoTypes.contains((self.metadata?.type!)!)){
+            self.type = WSAssetType.NetVideo
+        }else if self.metadata?.type ==  FilesFormatType.GIF.rawValue {
+            self.type = WSAssetType.GIF
+        }
     }
+}
+
+class HJMetadata: HandyJSON {
+    var date:String?
+    var h:Int?
+    var w:Int?
+    var make:String?
+    var model:String?
+    var orient:Int?
+    var type:String?
+   
+    required init() {}
 }

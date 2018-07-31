@@ -187,8 +187,8 @@ class WSShowBigimgViewController: UIViewController {
             w = CGFloat((model?.asset?.pixelWidth)!)
             h = CGFloat((model?.asset?.pixelHeight)!)
         } else if model is NetAsset {
-            w = CGFloat((model as! NetAsset).w!)
-            h = CGFloat((model as! NetAsset).h!)
+            w = CGFloat(((model as! NetAsset).metadata?.w!)!)
+            h = CGFloat(((model as! NetAsset).metadata?.h!)!)
         } else {
             w = __kWidth
             h = __kHeight

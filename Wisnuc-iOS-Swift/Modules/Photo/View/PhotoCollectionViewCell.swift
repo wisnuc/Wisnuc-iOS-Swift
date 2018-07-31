@@ -9,7 +9,7 @@
 import UIKit
 //import MaterialComponents.MaterialCollections
 import SnapKit
-import SDWebImage
+//import SDWebImage
 
 
 private let btnFrame:CGFloat = 23

@@ -30,7 +30,9 @@ class PhotoCollectionViewController: UICollectionViewController {
     var dispose = DisposeBag()
     var dataSource:Array<Array<WSAsset>>?{
         didSet{
-            self.collectionView?.reloadData()
+            mainThreadSafe {
+                 self.collectionView?.reloadData()
+            }
         }
     }
     override init(collectionViewLayout layout: UICollectionViewLayout) {
@@ -201,8 +203,8 @@ class PhotoCollectionViewController: UICollectionViewController {
             w = MIN(x: CGFloat(model.asset!.pixelWidth), y: __kWidth)
             h = w * CGFloat((model.asset?.pixelHeight)!) / CGFloat((model.asset?.pixelWidth)!)
         }else{
-            w = MIN(x: CGFloat((model as! NetAsset).w!), y: __kWidth)
-            h = w * CGFloat((model as! NetAsset).h!) / CGFloat((model as! NetAsset).w!)
+            w = MIN(x: CGFloat(((model as! NetAsset).metadata?.w!)!), y: __kWidth)
+            h = w * CGFloat(((model as! NetAsset).metadata?.h)!) / CGFloat(((model as! NetAsset).metadata?.w!)!)
         }
     
         if h.isNaN{
@@ -212,7 +214,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         if h > __kHeight || h.isNaN {
             h = __kHeight
             w = (model.asset != nil) ? h * CGFloat(model.asset!.pixelWidth) / CGFloat(model.asset!.pixelHeight)
-                : h * CGFloat((model as! NetAsset).w!)  / CGFloat((model as! NetAsset).w!)
+                : h * CGFloat(((model as! NetAsset).metadata?.w!)!)  / CGFloat(((model as! NetAsset).metadata?.w!)!)
         }
         
         return CGSize(width: w, height: h)
@@ -409,14 +411,14 @@ class PhotoCollectionViewController: UICollectionViewController {
         headView.headTitle =  self.getDateString(date: dataSource![indexPath.section][indexPath.row].createDate!)
         headView.fmIndexPath = indexPath
         headView.isSelectMode = isSelectMode!
-        let listSet = Set(self.dataSource![indexPath.section])
-        let findSet = Set(self.choosePhotos)
-        headView.isChoose = listSet.isSubset(of: findSet)
+        headView.isChoose =  self.dataSource![indexPath.section].contains(array: self.choosePhotos)
+//        let listSet = Set(self.dataSource![indexPath.section])
+//        let findSet = Set(self.choosePhotos)
+//        headView.isChoose = listSet.isSubset(of: findSet)
 //        headView.isChoose = self.chooseSection.contains(indexPath)
         headView.fmDelegate = self
         return headView
     }
-
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let frame = (__kWidth - 2 * (currentScale - 1))/currentScale
@@ -636,8 +638,6 @@ extension PhotoCollectionViewController : UIViewControllerPreviewingDelegate {
     
 }
 
-
-
 extension PhotoCollectionViewController : WSShowBigImgViewControllerDelegate {
     func photoBrowser(browser: WSShowBigimgViewController, indexPath: IndexPath) {
         self.collectionView?.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.centeredVertically, animated: false)
@@ -649,4 +649,5 @@ extension PhotoCollectionViewController : WSShowBigImgViewControllerDelegate {
         return cell
     }
 }
+
 

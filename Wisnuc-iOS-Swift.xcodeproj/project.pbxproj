@@ -236,6 +236,7 @@
 		1F5378772108754F00A555C5 /* AnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378742108754E00A555C5 /* AnyDecodable.swift */; };
 		1F5378782108754F00A555C5 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378752108754E00A555C5 /* AnyCodable.swift */; };
 		1F5378792108754F00A555C5 /* AnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378762108754E00A555C5 /* AnyEncodable.swift */; };
+		1F53789A21106FA200A555C5 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53789921106FA200A555C5 /* ArrayExtension.swift */; };
 		1F5659F320D0E35B00D86FDB /* share@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F220D0E35900D86FDB /* share@3x.png */; };
 		1F5659F520D0E36200D86FDB /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F420D0E36200D86FDB /* share@2x.png */; };
 		1F5659F720D0E36B00D86FDB /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F620D0E36A00D86FDB /* share.png */; };
@@ -767,6 +768,7 @@
 		1F5378742108754E00A555C5 /* AnyDecodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyDecodable.swift; sourceTree = "<group>"; };
 		1F5378752108754E00A555C5 /* AnyCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		1F5378762108754E00A555C5 /* AnyEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyEncodable.swift; sourceTree = "<group>"; };
+		1F53789921106FA200A555C5 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		1F5659F220D0E35900D86FDB /* share@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@3x.png"; sourceTree = "<group>"; };
 		1F5659F420D0E36200D86FDB /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		1F5659F620D0E36A00D86FDB /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -1528,6 +1530,13 @@
 			path = AnyCodable;
 			sourceTree = "<group>";
 		};
+		1F537898210FFB9600A555C5 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Media;
+			sourceTree = "<group>";
+		};
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -2136,6 +2145,7 @@
 				1FE9EF8E20EF61A200732728 /* PHPhotoLibraryExtension.swift */,
 				1FE9EF9020EF6AC700732728 /* PHAssetExtension.swift */,
 				1FA9C3DF2105B76A00E8411E /* DictionaryExtension.swift */,
+				1F53789921106FA200A555C5 /* ArrayExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -2176,6 +2186,7 @@
 		1FD9B796207CC78B00906D80 /* APIs */ = {
 			isa = PBXGroup;
 			children = (
+				1F537898210FFB9600A555C5 /* Media */,
 				1FA9C3DC210585C600E8411E /* Photos */,
 				1F307C7620BFC76D00AE105C /* Files */,
 				1F2CE39D20B6D20400D9E5BD /* Login */,
@@ -2970,6 +2981,7 @@
 				"${BUILT_PRODUCTS_DIR}/DZNEmptyDataSet/DZNEmptyDataSet.framework",
 				"${BUILT_PRODUCTS_DIR}/FBRetainCycleDetector/FBRetainCycleDetector.framework",
 				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFInternationalization/MDFInternationalization.framework",
 				"${BUILT_PRODUCTS_DIR}/MDFTextAccessibility/MDFTextAccessibility.framework",
 				"${BUILT_PRODUCTS_DIR}/MDRadialProgress/MDRadialProgress.framework",
@@ -2987,7 +2999,6 @@
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SugarRecord/SugarRecord.framework",
 				"${BUILT_PRODUCTS_DIR}/YYKit/YYKit.framework",
@@ -3000,6 +3011,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DZNEmptyDataSet.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBRetainCycleDetector.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFInternationalization.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFTextAccessibility.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDRadialProgress.framework",
@@ -3017,7 +3029,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SugarRecord.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKit.framework",
@@ -3175,6 +3186,7 @@
 				1F2B459D208F255800C8971F /* IPAddDeviceViewController.swift in Sources */,
 				1FE9EF8C20EF5DEA00732728 /* Base64.m in Sources */,
 				1F2A380A20DCD90F0035EED5 /* LocalLoginTokenAPI.swift in Sources */,
+				1F53789A21106FA200A555C5 /* ArrayExtension.swift in Sources */,
 				1F1BAC2D20C92A1A00D32C5A /* UIScrollExtension.swift in Sources */,
 				1FFD12B020E3662D0053A3F7 /* MDCFreshHeader.swift in Sources */,
 				1F359FEF2092EF1300E2FF36 /* CNPPopupController.m in Sources */,

@@ -16,6 +16,10 @@ struct RequestMethodValue {
     public static let PUT:String = "PUT"
 }
 
+struct RequestMediaClassValue {
+    public static let Image:String = "image"
+}
+
 public let KWxAppID = "wx99b54eb728323fe8"
 public let kCloudAddr = "http://www.siyouqun.com"
 public let kCloudBaseURL = "http://www.siyouqun.com/c/v1"
@@ -57,7 +61,10 @@ public let kRequestImageAutoOrientKey = "autoOrient"
 
 public let kRequestImageCaretValue = "caret"
 public let kRequestImageThumbnailValue = "thumbnail"
+public let kRequestImageDataValue = "data"
 
+public let kRequestClassKey = "class"
+public let kRequestPlacesKey = "places"
 
 public let kRequestContentTypeKey = "Content-Type"
 public let kRequestContentTypeJsonValue = "application/json"

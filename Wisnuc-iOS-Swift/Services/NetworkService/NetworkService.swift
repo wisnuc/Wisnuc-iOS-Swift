@@ -8,7 +8,7 @@
 
 import UIKit
 import Alamofire
-import SDWebImage
+import Kingfisher
 
 class NetworkService: NSObject {
     var networkState:NetworkServiceState?{
@@ -35,7 +35,7 @@ class NetworkService: NSObject {
         switch status {
         case .WIFI:
             if networkState == .normal{
-           
+                
                 getLocalInCloudLogin { [weak self] (error, localToken) in
                     if error == nil {
                         self?.checkIP(address: (AppUserService.currentUser?.localAddr)!, { (isLocal) in
@@ -126,10 +126,11 @@ class NetworkService: NSObject {
         if !AppUserService.isUserLogin {
             return callBack(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)
         }
-        let isLocalRequest = AppNetworkService.networkState == .local
+        
         var find:Bool = false
         DriveAPI.init().startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
+                let isLocalRequest = AppNetworkService.networkState == .local
                 let responseArr = isLocalRequest ? response.value as! NSArray : (response.value as! NSDictionary).object(forKey: "data") as! NSArray
                 responseArr.enumerateObjects({ (obj, idx, stop) in
                     let dic = obj as! NSDictionary
@@ -160,7 +161,7 @@ class NetworkService: NSObject {
             if getDirUUIDError != nil{
                 return callback(getDirUUIDError, nil)
             }else{
-//                saveToUserDefault(value: directoryUUID!, key: kBackupBaseEntryKey)
+                //                saveToUserDefault(value: directoryUUID!, key: kBackupBaseEntryKey)
                 // 获取backup 目录 ，如果没有就创建
                 // backupBaseDir 就是 “上传的图片” 文件夹 , backupDir 就是 “来自xxx” 文件夹
                 let fromName:String = "来自\(UIDevice.current.modelName)"
@@ -168,7 +169,7 @@ class NetworkService: NSObject {
                     if deviceFromError != nil{
                         return callback(deviceFromError,nil)
                     }else{
-//                        saveToUserDefault(value: directoryUUID!, key: kBackupDirectory)
+                        //                        saveToUserDefault(value: directoryUUID!, key: kBackupDirectory)
                         return callback(nil, deviceFromDirUUID);
                     }
                 })
@@ -179,9 +180,10 @@ class NetworkService: NSObject {
     // 获取 名为 “上传的照片”（任何name都可以） 的文件夹， 没有就创建
     func getDirUUID(name:String,driveUUID:String,dirUUID:String,callBack:@escaping ((_ error:Error?,_ directoryUUID:String?)->())) {
         let request = DriveDirAPI.init(driveUUID:driveUUID, directoryUUID: dirUUID)
-        let isLocalRequest = AppNetworkService.networkState == .local
+        
         request.startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
+                let isLocalRequest = AppNetworkService.networkState == .local
                 let dic = isLocalRequest ? response.value as! NSDictionary : (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
                 if dic["code"] != nil{
                     let code = dic["code"] as! NSNumber
@@ -194,8 +196,8 @@ class NetworkService: NSObject {
                 var find:Bool = false
                 arr.enumerateObjects({ (obj, idx, stop) in
                     let dic = obj as! NSDictionary
-//                    if let model = EntriesModel.deserialize(from: dic) {
-
+                    //                    if let model = EntriesModel.deserialize(from: dic) {
+                    
                     do{
                         let data = jsonToData(jsonDic: dic)
                         let model = try JSONDecoder().decode(EntriesModel.self, from: data!)
@@ -205,14 +207,14 @@ class NetworkService: NSObject {
                             return callBack(nil, model.uuid)
                         }
                     }catch{
-//                        return  complete(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
+                        //                        return  complete(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
                     }
                 })
                 
                 if(!find) {
                     let closure = {(_ callBackError:Error?,directoriesModel:DirectoriesModel?)->() in
                         if callBackError != nil {
-                           return callBack(callBackError,nil)
+                            return callBack(callBackError,nil)
                         }else{
                             return callBack(nil,directoriesModel!.uuid)
                         }
@@ -239,72 +241,72 @@ class NetworkService: NSObject {
                 let dic = [kRequestOpKey: kRequestMkdirValue]
                 do {
                     let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
-                     formData.append(data, withName: name)
+                    formData.append(data, withName: name)
                     
                 }catch{
-                  return  closure(BaseError.init(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTODataFail, code: ErrorCode.JsonModel.SwitchTODataFail),nil)
+                    return  closure(BaseError.init(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTODataFail, code: ErrorCode.JsonModel.SwitchTODataFail),nil)
                 }
-               
+                
             }, with: encodedURLRequest) { (response) in
                 switch response {
                 case .success(let upload, _, _):
                     upload.validate(statusCode: 200..<500)
-                    .validate(contentType: ["application/json"])
-                    .responseData(completionHandler: { (responseData) in
-                        do{
-                            let json = try JSONSerialization.jsonObject(with: responseData.data!, options: .mutableContainers)
-                            if json is NSArray{
-                                let array = json as! NSArray
-                                for value in array{
-                                    let dic =  value as! NSDictionary
-                                    let dataDic = dic["data"] as! NSDictionary
-                                    if dataDic["name"] as! String == name && dataDic["type"] as! String == FilesType.directory.rawValue {
-                                       let data = jsonToData(jsonDic: dataDic)
-                                      do{
-                                            let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: data!)
-                                            return closure(nil,directoriesModel)
-                                        }catch{
-                                          return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                        .validate(contentType: ["application/json"])
+                        .responseData(completionHandler: { (responseData) in
+                            do{
+                                let json = try JSONSerialization.jsonObject(with: responseData.data!, options: .mutableContainers)
+                                if json is NSArray{
+                                    let array = json as! NSArray
+                                    for value in array{
+                                        let dic =  value as! NSDictionary
+                                        let dataDic = dic["data"] as! NSDictionary
+                                        if dataDic["name"] as! String == name && dataDic["type"] as! String == FilesType.directory.rawValue {
+                                            let data = jsonToData(jsonDic: dataDic)
+                                            do{
+                                                let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: data!)
+                                                return closure(nil,directoriesModel)
+                                            }catch{
+                                                return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                                            }
+                                        }
+                                    }
+                                    print(array)
+                                }else if json is NSDictionary{
+                                    let dic = json as! NSDictionary
+                                    if dic["code"] != nil{
+                                        if dic["message"] is String{
+                                            let code = dic["code"] as! String
+                                            let message = dic["message"] as! NSString
+                                            if code == "EEXIST"{
+                                                return closure(BaseError.init(localizedDescription: message as String, code: 0), nil)
+                                            }
+                                        }else{
+                                            let code = dic["code"] as! NSNumber
+                                            let message = dic["message"] as! NSString
+                                            if code.intValue != 1 && code.intValue > 200 {
+                                                return  closure(BaseError.init(localizedDescription: message as String, code: Int(code.int64Value)), nil)
+                                            }
                                         }
                                     }
                                 }
-                                print(array)
-                            }else if json is NSDictionary{
-                                let dic = json as! NSDictionary
-                                if dic["code"] != nil{
-                                    if dic["message"] is String{
-                                        let code = dic["code"] as! String
-                                        let message = dic["message"] as! NSString
-                                        if code == "EEXIST"{
-                                           return closure(BaseError.init(localizedDescription: message as String, code: 0), nil)
-                                        }
-                                    }else{
-                                        let code = dic["code"] as! NSNumber
-                                        let message = dic["message"] as! NSString
-                                        if code.intValue != 1 && code.intValue > 200 {
-                                          return  closure(BaseError.init(localizedDescription: message as String, code: Int(code.int64Value)), nil)
-                                        }
-                                    }
-                                }
+                            }catch{
+                                return closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
                             }
-                        }catch{
-                           return closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
-                        }
-                        do{
-                            let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: responseData.data!)
-                            return closure(nil,directoriesModel)
-                        }catch{
-                            return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail,  code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
-                        }
-                       
-                    })
+                            do{
+                                let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: responseData.data!)
+                                return closure(nil,directoriesModel)
+                            }catch{
+                                return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail,  code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                            }
+                            
+                        })
                 case .failure(let error):
-                   return  closure(error,nil)
+                    return  closure(error,nil)
                 }
             }
-
+            
         } catch {
-           return closure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest),nil)
+            return closure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest),nil)
         }
         
     }
@@ -313,25 +315,32 @@ class NetworkService: NSObject {
         MkdirAPI.init(driveUUID: dirveUUID, directoryUUID: directoryUUID, name: name).startRequestDataCompletionHandler { (response) in
             if response.error == nil{
                 do{
-                   let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: response.data!)
-                   closure(nil,directoriesModel)
+                    let directoriesModel = try JSONDecoder().decode(DirectoriesModel.self, from: response.data!)
+                    closure(nil,directoriesModel)
                 }catch{
-                   closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                    closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
                 }
             }else{
-                 closure(response.error,nil)
+                closure(response.error,nil)
             }
         }
     }
-
+    
     //Asset
-    func getThumbnail(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?)->())->SDWebImageDownloadToken{
-        SDWebImageManager.shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
-            var dic = Dictionary<String, String>.init()
-            dic.merge(with: headers!)
-            dic = [kRequestAuthorizationKey : self?.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!)]
-            return dic
-            }
+    func getThumbnail(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?)->())->RetrieveImageDownloadTask{
+        let modifier = AnyModifier { request in
+            var req = request
+            req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
+            return req
+        }
+        
+        //        KingfisherManager.shared
+        //            .shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
+        //            var dic = Dictionary<String, String>.init()
+        //            dic.merge(with: headers!)
+        //            dic = [kRequestAuthorizationKey : self?.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!)]
+        //            return dic
+        //            }
         let detailURL = "media"
         var frameWidth = size?.width
         var frameHeight = size?.height
@@ -340,16 +349,56 @@ class NetworkService: NSObject {
             frameHeight = 200
         }
         let resource = "media/\(hash)".toBase64()
-        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-        SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
+        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+        //        SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
         let url = self.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
-        return SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.useNSURLCache, progress: nil, completed: { (image, data, error, finished) in
+        ImageDownloader.default.downloadTimeout = 20000
+        return  ImageDownloader.default.downloadImage(with: url!, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
-            callback(nil, image)
+                callback(nil, image)
             }else{
-            callback(error, nil)
+                callback(error, nil)
             }
-        })!
+            }!
+        //        return SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.useNSURLCache, progress: nil, completed: { (image, data, error, finished) in
+        //            if (image != nil) {
+        //            callback(nil, image)
+        //            }else{
+        //            callback(error, nil)
+        //            }
+        //        })!
+    }
+    
+    
+    /*
+     * WISNUC API:GET IMAGE(High Resolution)
+     */
+    func getHighWebImage(hash:String,callback:@escaping (Error?,UIImage?)->())->RetrieveImageDownloadTask{
+        //        SDWebImageManager.shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
+        //            var dic = Dictionary<String, String>.init()
+        //            dic.merge(with: headers!)
+        //            dic = [kRequestAuthorizationKey : self?.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!)]
+        //            return dic
+        //        }
+        
+        let modifier = AnyModifier { request in
+            var req = request
+            req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
+            return req
+        }
+        let detailURL = "media"
+        let resource = "media/\(hash)".toBase64()
+        let param = "\(kRequestImageAltKey)=\(kRequestImageDataValue)"
+        ImageDownloader.default.downloadTimeout = 20000
+        let url = self.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
+        return  ImageDownloader.default.downloadImage(with: url!, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
+            if (image != nil) {
+                callback(nil, image)
+            }else{
+                callback(error, nil)
+            }
+        }!
     }
 }
+
 
