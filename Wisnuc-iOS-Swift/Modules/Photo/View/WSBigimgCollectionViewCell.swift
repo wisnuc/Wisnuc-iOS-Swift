@@ -16,7 +16,6 @@ import AVKit
 //---------------base preview---------------
 class WSBasePreviewView: UIView {
     
-    
     var wsAsset:WSAsset?
     
     var imageRequestID:PHImageRequestID?
@@ -39,6 +38,7 @@ class WSBasePreviewView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.addGestureRecognizer(singleTap)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -67,7 +67,7 @@ class WSBasePreviewView: UIView {
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(singleTapAction(_ :)))
         return tap
     }()
-    
+
 }
 
 class WSPreviewImageAndGif: WSBasePreviewView {

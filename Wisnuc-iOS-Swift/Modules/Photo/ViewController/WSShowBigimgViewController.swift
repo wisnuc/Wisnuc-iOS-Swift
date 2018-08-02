@@ -359,6 +359,44 @@ class WSShowBigimgViewController: UIViewController {
         }
     }
     
+    func shareAlert(){
+        share()
+    }
+    
+    func share(){
+//        NSString *titleText = title;
+//        NSString *shareText = text;
+//        NSURL *URL = [NSURL URLWithString:siteurl];
+//        UIImage *image =[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url]]];
+//        UIActivityViewController *a = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:titleText,shareText,URL,image, nil] applicationActivities:nil];
+//        self.presentViewController:a animated:true completion:nil];
+        var array = Array<Any>.init()
+        
+        let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+        let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
+        
+        if cell?.previewView.image() != nil{
+           array.append((cell?.previewView.image())!)
+        }
+       
+        let activityViewController =  UIActivityViewController.init(activityItems: array, applicationActivities: nil)
+        self.present(activityViewController, animated: true) {
+            
+        }
+        activityViewController.completionWithItemsHandler = { (activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
+            if completed {
+                if activityType == UIActivityType.saveToCameraRoll {
+                   Message.message(text: LocalizedString(forKey: "已存入相册"))
+                }else{
+                    Message.message(text: LocalizedString(forKey: "分享完成"))
+                }
+            }
+            else{
+                
+            }
+        }
+    }
+    
     @objc func panGestureRecognized(_ gesture:UIPanGestureRecognizer){
         
         let scrollView = self.collectionView
@@ -446,7 +484,7 @@ class WSShowBigimgViewController: UIViewController {
     
     @objc func longGestureRecognized(_ sender:UILongPressGestureRecognizer){
         if (sender.state == UIGestureRecognizerState.began) {
-           
+           shareAlert()
         }
     }
     
