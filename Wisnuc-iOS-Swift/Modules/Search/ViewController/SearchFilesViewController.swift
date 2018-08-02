@@ -253,11 +253,6 @@ class SearchFilesViewController: BaseViewController {
         return chips
     }()
     
-    lazy var filesBottomVC: FilesFilesBottomSheetContentTableViewController = {
-        let bottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
-        bottomVC.delegate = self
-        return bottomVC
-    }()
 }
 
 extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
@@ -297,11 +292,13 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
             let size = model.size != nil ? sizeString(Int64(model.size!)) : ""
             cell.detailLabel.text = "\(time) \(size)"
             cell.cellCallBack = { [weak self](callBackCell , button) in
-                let bottomSheet = AppBottomSheetController.init(contentViewController: (self?.filesBottomVC)!)
-                bottomSheet.trackingScrollView = self?.filesBottomVC.tableView
+                let filesBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+                filesBottomVC.delegate = self
+                let bottomSheet = AppBottomSheetController.init(contentViewController: filesBottomVC)
+                bottomSheet.trackingScrollView = filesBottomVC.tableView
                 let exestr = (model.name! as NSString).pathExtension
-                self?.filesBottomVC.headerTitleLabel.text = model.name ?? ""
-                self?.filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr)))
+                filesBottomVC.headerTitleLabel.text = model.name ?? ""
+                filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr)))
                 self?.present(bottomSheet, animated: true, completion: {
                 })
             }
@@ -474,14 +471,12 @@ extension SearchFilesViewController:DZNEmptyDataSetDelegate{
 
 extension SearchFilesViewController:FilesBottomSheetContentVCDelegate{
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
-        filesBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
+        
     }
     
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton) {
-        filesBottomVC.presentingViewController?.dismiss(animated: true, completion:{
-            let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
-            self.navigationController?.pushViewController(filesInfoVC, animated: true)
-        })
+        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
+        self.navigationController?.pushViewController(filesInfoVC, animated: true)
     }
     
 }

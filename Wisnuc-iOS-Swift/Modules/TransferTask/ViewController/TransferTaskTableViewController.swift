@@ -69,7 +69,7 @@ class TransferTaskTableViewController: BaseViewController {
         downloadTasks = downloadManager.tasks.map({ $0 })
         tableView.reloadData()
         // 设置manager的回调
-        downloadManager.progress { [weak self] (manager) in
+         downloadManager.progress { [weak self] (manager) in
 //            guard let strongSelf = self else { return }
 
             

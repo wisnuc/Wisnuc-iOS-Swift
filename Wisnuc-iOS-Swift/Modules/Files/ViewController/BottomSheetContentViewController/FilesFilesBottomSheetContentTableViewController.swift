@@ -15,6 +15,11 @@ import UIKit
 private let cellReuseIdentifier = "reuseIdentifier"
 private let headerHeight:CGFloat = 56 + 8
 class FilesFilesBottomSheetContentTableViewController: UITableViewController {
+    
+    deinit {
+        print("\(className()) deinit")
+    }
+    
     weak var delegate:FilesBottomSheetContentVCDelegate?
     var filesModel:EntriesModel?
     override init(style: UITableViewStyle) {
@@ -24,6 +29,7 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setData()
@@ -47,9 +53,11 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
     }
     
     @objc func headerRightButtonTap(_ sender:UIButton){
-        if let delegateOK = self.delegate {
-            delegateOK.filesBottomSheetContentInfoButtonTap(sender)
-        }
+        self.dismiss(animated: true, completion: { [weak self] in
+        if let delegateOK = self?.delegate {
+                delegateOK.filesBottomSheetContentInfoButtonTap(sender)
+            }
+        })
     }
 
     // MARK: - Table view data source
@@ -137,9 +145,11 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let delegateOK = self.delegate {
-            delegateOK.filesBottomSheetContentTableView(tableView, didSelectRowAt: indexPath, model: self.filesModel)
-        }
+        self.dismiss(animated: true, completion: { [weak self] in
+            if let delegateOK = self?.delegate {
+                delegateOK.filesBottomSheetContentTableView(tableView, didSelectRowAt: indexPath, model: self?.filesModel)
+            }
+        })
     }
 
     lazy var headerImageView: UIImageView = {

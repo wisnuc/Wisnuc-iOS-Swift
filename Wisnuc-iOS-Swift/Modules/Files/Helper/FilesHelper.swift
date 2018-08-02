@@ -9,7 +9,7 @@
 import UIKit
 
 class FilesHelper: NSObject {
-    var selectFilesArray:NSMutableArray?
+    var selectFilesArray:Array<EntriesModel>?
     private static var privateShared : FilesHelper?
     class func sharedInstance() -> FilesHelper { // change class to final to prevent override
         guard let uwShared = privateShared else {
@@ -24,7 +24,7 @@ class FilesHelper: NSObject {
     }
 
     override init() {
-        selectFilesArray = []
+        selectFilesArray = Array<EntriesModel>.init()
     }
 
     deinit {
@@ -33,7 +33,7 @@ class FilesHelper: NSObject {
     
     
     func addSelectFiles(model:EntriesModel){
-        if !(selectFilesArray?.contains(model))! {
+        if !(selectFilesArray?.contains(where: { $0.uuid == model.uuid }))! {
             synced(self) {
                 selectFilesArray?.append(model)
                 if (selectFilesArray?.count == 1) {
@@ -44,11 +44,11 @@ class FilesHelper: NSObject {
     }
     
     func removeSelectFiles(model:EntriesModel){
-        if (selectFilesArray?.contains(model))! {
+        if (selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! {
             synced(self) {
-                let index = selectFilesArray?.index(of: model)
+                let index = selectFilesArray?.index(where: {$0.hash == model.hash})
                 if index != nil{
-                    selectFilesArray?.removeObject(at: index!)
+                    selectFilesArray?.remove(at: index!)
                 }
                 if (selectFilesArray?.count == 0) {
                     defaultNotificationCenter().post(name: Notification.Name.Cell.SelectNotiKey, object: NSNumber.init(value: false))
@@ -59,7 +59,7 @@ class FilesHelper: NSObject {
     
     func removeAllSelectFiles(){
         synced(self) {
-            selectFilesArray?.removeAllObjects()
+            selectFilesArray?.removeAll()
         }
     }
 }

@@ -373,7 +373,7 @@ class NetworkService: NSObject {
     /*
      * WISNUC API:GET IMAGE(High Resolution)
      */
-    func getHighWebImage(hash:String,callback:@escaping (Error?,UIImage?)->())->RetrieveImageDownloadTask{
+    func getHighWebImage(hash:String,callback:@escaping (Error?,UIImage?)->())->RetrieveImageDownloadTask?{
         //        SDWebImageManager.shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
         //            var dic = Dictionary<String, String>.init()
         //            dic.merge(with: headers!)
@@ -397,7 +397,7 @@ class NetworkService: NSObject {
             }else{
                 callback(error, nil)
             }
-        }!
+        }
     }
 }
 

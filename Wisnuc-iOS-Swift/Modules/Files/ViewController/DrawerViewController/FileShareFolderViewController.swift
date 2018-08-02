@@ -12,7 +12,9 @@ import Material
 private let reuseIdentifier = "cellreuseIdentifier"
 
 class FileShareFolderViewController: BaseViewController {
-    
+    deinit {
+        print("\(className()) deinit")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.appBar.navigationBar.title = LocalizedString(forKey: "files_offline")
@@ -72,9 +74,9 @@ extension FileShareFolderViewController:UITableViewDataSource{
         cell.selectionStyle = .none
         cell.leftImageView.image = UIImage.init(named: "files_share_all.png")
         cell.titleLabel.text = "共享文件夹"
-        cell.cellCallback = { (callbackCell,moreButton) in
-            let bottomSheet = AppBottomSheetController.init(contentViewController: self.moreButtonBottomSheetContentVC)
-           self.present(bottomSheet, animated: true, completion: nil)
+        cell.cellCallback = { [weak self ] (callbackCell,moreButton) in
+            let bottomSheet = AppBottomSheetController.init(contentViewController: (self?.moreButtonBottomSheetContentVC)!)
+            self?.present(bottomSheet, animated: true, completion: nil)
         }
         return cell
     }
@@ -103,7 +105,6 @@ extension FileShareFolderViewController:ShareBottomSheetContentVCDelegte{
             self.present(authorityVC, animated: true, completion: nil)
         })
     }
-    
- 
+
 }
 

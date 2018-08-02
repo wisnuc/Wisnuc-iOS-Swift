@@ -13,7 +13,9 @@ import MaterialComponents.MaterialShadowLayer
 private let reuseIdentifier = "cellreuseIdentifier"
 
 class FilesOfflineViewController: BaseViewController {
-    
+    deinit {
+        print("\(className()) deinit")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.appBar.navigationBar.title = LocalizedString(forKey: "files_offline")

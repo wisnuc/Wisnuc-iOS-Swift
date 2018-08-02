@@ -10,6 +10,9 @@ import UIKit
 import MaterialComponents.MDCAppBar
 private let cellReuseIdentifier = "reuseIdentifier"
 class FilesFileInfoTableViewController: BaseViewController {
+    deinit {
+        print("\(className()) deinit")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

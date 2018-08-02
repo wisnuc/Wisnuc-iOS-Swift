@@ -202,18 +202,18 @@ class WSShowBigimgViewController: UIViewController {
         let screenScale = __kHeight/__kWidth
         
         if (imageScale > screenScale) {
-            frame.size.height = __kHeight;
-            frame.size.width = CGFloat(floorf(Float(width * __kHeight / h!)));
+            frame.size.height = __kHeight
+            frame.size.width = CGFloat(floorf(Float(width * __kHeight / h!)))
         } else {
-            var height = floorf(Float(width * imageScale));
+            var height = floorf(Float(width * imageScale))
             if (height < 1 || height.isNaN) {
                 //iCloud图片height为NaN
                 height = Float(self.view.height)
             }
-            frame.size.height = CGFloat(height);
+            frame.size.height = CGFloat(height)
         }
-        frame.origin.x = (__kWidth - frame.size.width)/2;
-        frame.origin.y = (__kHeight - frame.size.height)/2;
+        frame.origin.x = (__kWidth - frame.size.width)/2
+        frame.origin.y = (__kHeight - frame.size.height)/2
         
         return frame
     }
@@ -250,7 +250,7 @@ class WSShowBigimgViewController: UIViewController {
         
         let imageFromView = scaleImage != nil ? scaleImage : self.getImageFromView(view: senderViewForAnimation!)
         
-        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)!, to: self.view)
+        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)!, to: nil)
         
         let fadeView = UIView.init(frame: self.view.bounds)
         fadeView.backgroundColor = UIColor.clear

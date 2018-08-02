@@ -318,10 +318,10 @@ class PhotoCollectionViewController: UICollectionViewController {
             let header = self?.collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at:IndexPath.init(item: 0, section: indexPath.section))
             if(needReload){
                 self?.collectionView?.reloadItems(at: [indexPath])
-                let listSet = Set((self?.dataSource![indexPath.section])!)
-                let findSet = Set((self?.choosePhotos)!)
+//                let listSet = Set((self?.dataSource![indexPath.section])!)
+//                let findSet = Set((self?.choosePhotos)!)
                 if header != nil{
-                 (header as! FMHeadView).isChoose =  listSet.isSubset(of: findSet)
+                    (header as! FMHeadView).isChoose =  (self?.choosePhotos.contains(array:(self?.dataSource![indexPath.section])!))!
                 }
             }
             
@@ -379,10 +379,10 @@ class PhotoCollectionViewController: UICollectionViewController {
             }
             
             let nowHeader = self?.collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at:IndexPath.init(item: 0, section: indexPath.section))
-                let listSet = Set((self?.dataSource![indexPath.section])!)
-                let findSet = Set((self?.choosePhotos)!)
+//                let listSet = Set((self?.dataSource![indexPath.section])!)
+//                let findSet = Set((self?.choosePhotos)!)
             if nowHeader != nil {
-                (nowHeader as! FMHeadView).isChoose =  listSet.isSubset(of: findSet)
+                (nowHeader as! FMHeadView).isChoose =  (self?.choosePhotos.contains(array:(self?.dataSource![indexPath.section])!))!
             }
         }
 
@@ -411,7 +411,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         headView.headTitle =  self.getDateString(date: dataSource![indexPath.section][indexPath.row].createDate!)
         headView.fmIndexPath = indexPath
         headView.isSelectMode = isSelectMode!
-        headView.isChoose =  self.dataSource![indexPath.section].contains(array: self.choosePhotos)
+        headView.isChoose =  self.choosePhotos.contains(array:self.dataSource![indexPath.section])
 //        let listSet = Set(self.dataSource![indexPath.section])
 //        let findSet = Set(self.choosePhotos)
 //        headView.isChoose = listSet.isSubset(of: findSet)

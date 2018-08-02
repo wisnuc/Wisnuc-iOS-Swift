@@ -9,6 +9,7 @@
 import UIKit
 import Material
 import MaterialComponents.MaterialCollections
+import MaterialComponents.MaterialButtons
 
 private var menuButton: IconButton!
 
@@ -47,6 +48,7 @@ class PhotoRootViewController: BaseViewController {
         prepareSearchBar()
 //        self.sort(localAssetDataSources)
 //        self.photoCollcectionViewController.dataSource = assetDataSources
+        view.addSubview(self.fabButton)
        
     }
     
@@ -74,6 +76,20 @@ class PhotoRootViewController: BaseViewController {
 //        bottomSheet.trackingScrollView = filesSearchMoreBottomVC.tableView
 //        self.present(bottomSheet, animated: true, completion: {
 //        })
+    }
+    
+    @objc func fabButtonDidTap(_ sender:MDCFloatingButton){
+        self.fabButton.collapse(true) { [weak self] in
+            let fabBottomVC = FilesFABBottomSheetDisplayViewController()
+            fabBottomVC.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
+            fabBottomVC.transitioningDelegate = self?.transitionController
+            fabBottomVC.delegate =  self
+            let bottomSheet = AppBottomSheetController.init(contentViewController: fabBottomVC)
+            bottomSheet.delegate = self
+            self?.present(bottomSheet, animated: true, completion: {
+                
+            })
+        }
     }
 
     func setNotification(){
@@ -226,6 +242,28 @@ class PhotoRootViewController: BaseViewController {
         let array:Array<Array<WSAsset>> = Array.init()
         return array
     }()
+    
+    lazy var fabButton: MDCFloatingButton = {
+        let plusImage = #imageLiteral(resourceName: "Plus")
+        let buttonWidth:CGFloat = 56
+        let defaultFloatingButton = MDCFloatingButton.init(frame: CGRect.init(x: __kWidth - 30 - buttonWidth, y: __kHeight - TabBarHeight - 16 - buttonWidth, width: buttonWidth, height: buttonWidth))
+        
+        let plusImage36 = UIImage(named: "plus_white_36", in: Bundle(for: type(of: self)),
+                                  compatibleWith: traitCollection)
+        
+        //        defaultFloatingButton.sizeToFit()
+        //        defaultFloatingButton.translatesAutoresizingMaskIntoConstraints = false
+        defaultFloatingButton.setImage(plusImage, for: .normal)
+        let mdcColorScheme = MDCButtonScheme.init()
+        MDCButtonColorThemer.apply(appDelegate.colorScheme, to: defaultFloatingButton)
+        defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
+        return defaultFloatingButton
+    }()
+    
+    lazy var transitionController: MDCDialogTransitionController = {
+        let controller = MDCDialogTransitionController.init()
+        return controller
+    }()
 }
 
 extension PhotoRootViewController:DZNEmptyDataSetSource,DZNEmptyDataSetDelegate{
@@ -253,5 +291,27 @@ extension PhotoRootViewController:SearchBarDelegate{
 extension PhotoRootViewController:TextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
 //        self.enterSearch()
+    }
+}
+
+extension PhotoRootViewController:FABBottomSheetDisplayVCDelegte{
+    func cllButtonTap(_ sender: UIButton) {
+        
+    }
+    
+    func folderButtonTap(_ sender: UIButton) {
+        
+    }
+    
+    func uploadButtonTap(_ sender: UIButton) {
+    
+    }
+    
+    
+}
+
+extension PhotoRootViewController:MDCBottomSheetControllerDelegate{
+    func bottomSheetControllerDidDismissBottomSheet(_ controller: MDCBottomSheetController) {
+        
     }
 }

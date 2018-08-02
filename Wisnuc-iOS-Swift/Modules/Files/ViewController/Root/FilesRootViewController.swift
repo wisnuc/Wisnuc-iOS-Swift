@@ -686,7 +686,11 @@ class FilesRootViewController: BaseViewController{
     
     @objc func fabButtonDidTap(_ sender:MDCFloatingButton){
         self.fabButton.collapse(true) { [weak self] in
-            let bottomSheet = AppBottomSheetController.init(contentViewController: (self?.fabBottomVC)!)
+            let fabBottomVC = FilesFABBottomSheetDisplayViewController()
+            fabBottomVC.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
+            fabBottomVC.transitioningDelegate = self?.transitionController
+            fabBottomVC.delegate =  self
+            let bottomSheet = AppBottomSheetController.init(contentViewController: fabBottomVC)
             bottomSheet.delegate = self
             self?.present(bottomSheet, animated: true, completion: {
             
@@ -881,13 +885,13 @@ class FilesRootViewController: BaseViewController{
         return button
     }()
     
-    lazy var fabBottomVC: FilesFABBottomSheetDisplayViewController = {
-        let fabBottom = FilesFABBottomSheetDisplayViewController()
-        fabBottom.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
-        fabBottom.transitioningDelegate = self.transitionController
-        fabBottom.delegate =  self
-        return fabBottom
-    }()
+//    lazy var fabBottomVC: FilesFABBottomSheetDisplayViewController = {
+//        let fabBottom = FilesFABBottomSheetDisplayViewController()
+//        fabBottom.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
+//        fabBottom.transitioningDelegate = self.transitionController
+//        fabBottom.delegate =  self
+//        return fabBottom
+//    }()
     
     lazy var sequenceBottomVC: FilesSequenceBottomSheetContentTableViewController = {
         let bottomVC = FilesSequenceBottomSheetContentTableViewController()
@@ -895,11 +899,11 @@ class FilesRootViewController: BaseViewController{
         return bottomVC
     }()
     
-    lazy var filesBottomVC: FilesFilesBottomSheetContentTableViewController = {
-        let bottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
-        bottomVC.delegate = self
-        return bottomVC
-    }()
+//    lazy var filesBottomVC: FilesFilesBottomSheetContentTableViewController = {
+//        let bottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+//        bottomVC.delegate = self
+//        return bottomVC
+//    }()
     
     lazy var filesSearchMoreBottomVC: FilesSearchMoreBottomSheetContentTableViewController = {
         let bottomVC = FilesSearchMoreBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)

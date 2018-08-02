@@ -229,7 +229,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                   
                     cell.isSelectModel = isSelectModel
                     if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                        if (FilesHelper.sharedInstance().selectFilesArray?.contains(model))!{
+                        if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))!{
                             cell.isSelect = true
                         }else{
                             cell.isSelect = false
@@ -270,7 +270,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     
                     cell.isSelectModel = isSelectModel
                     if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                       cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(model))! ? true : false
+                       cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.hash == model.hash}))! ? true : false
             
                     }
                     
@@ -310,7 +310,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 
                 cell.isSelectModel = self.isSelectModel
                 if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                    cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(model))! ? true : false
+                    cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! ? true : false
                 }
                 
                 if !isNilString(model.name){
@@ -454,7 +454,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         let model  = sectionArray[indexPath.item]
         var exitSelectModel = false
           if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-            if (FilesHelper.sharedInstance().selectFilesArray?.contains(model))!{
+            if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))!{
                 FilesHelper.sharedInstance().removeSelectFiles(model: model)
                 if FilesHelper.sharedInstance().selectFilesArray?.count == 0{
                     exitSelectModel = true

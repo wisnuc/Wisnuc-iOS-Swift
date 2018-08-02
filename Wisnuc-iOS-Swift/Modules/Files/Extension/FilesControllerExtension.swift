@@ -42,7 +42,9 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     }
     
     func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton, _ indexPath: IndexPath) {
-        let bottomSheet = AppBottomSheetController.init(contentViewController: self.filesBottomVC)
+        let filesBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        filesBottomVC.delegate = self
+        let bottomSheet = AppBottomSheetController.init(contentViewController: filesBottomVC)
         bottomSheet.trackingScrollView = filesBottomVC.tableView
         let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
         let model  = sectionArray[indexPath.item]
@@ -277,7 +279,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     }
     
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
-        filesBottomVC.presentingViewController?.dismiss(animated: true, completion: {
+//        filesBottomVC.dismiss(animated: true, completion: { [weak self] in
             switch indexPath.row {
             case 0:
                 let filesType =  model != nil ? (model as! EntriesModel).type : ""
@@ -348,16 +350,16 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             default:
                 break
             }
-        })
+//        })
     }
     
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton) {
-        filesBottomVC.presentingViewController?.dismiss(animated: true, completion:{
-            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+//        filesBottomVC.dismiss(animated: true, completion:{ [weak self] in
+        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
             tab.setTabBarHidden(true, animated: true)
             let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
-            self.navigationController?.pushViewController(filesInfoVC, animated: true)
-        })
+        self.navigationController?.pushViewController(filesInfoVC, animated: true)
+//        })
     }
 }
 
