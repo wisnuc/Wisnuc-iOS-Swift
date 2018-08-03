@@ -130,16 +130,20 @@ extension PHPhotoLibrary{
             
             // 遍历这个相册中的所有图片
             let assetResult = PHAsset.fetchAssets(in: c, options: options)
+            autoreleasepool {
             assetResult.enumerateObjects({ (obj, idx, stop) in
                 tempDic[obj.localIdentifier] = obj
             })
+            }
           
         }
         options.includeHiddenAssets = true
         let lastresult = PHAsset.fetchAssets(with: options)
+         autoreleasepool {
         lastresult.enumerateObjects({ (obj, idx, stop) in
             tempDic[obj.localIdentifier] = obj
         })
+        }
         complete(lastresult,tempDic.map({$0.value}))
     }
 }

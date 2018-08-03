@@ -17,7 +17,15 @@ class PhotoRootViewController: BaseViewController {
     override func willDealloc() -> Bool {
         return false
     }
-    var isSelectMode:Bool?
+    var isSelectMode:Bool?{
+        didSet{
+            if isSelectMode!{
+               selectModeAction()
+            }else{
+               unselectModeAction()
+            }
+        }
+    }
     var sortedAssetsBackupArray:Array<WSAsset>?
     
     override init() {
@@ -43,13 +51,14 @@ class PhotoRootViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         prepareCollectionView()
         prepareSearchBar()
 //        self.sort(localAssetDataSources)
 //        self.photoCollcectionViewController.dataSource = assetDataSources
         view.addSubview(self.fabButton)
-       
+        self.photoCollcectionViewController.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
+            self?.reloadAssetData()
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,6 +74,45 @@ class PhotoRootViewController: BaseViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func reloadAssetData() {
+        AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
+            if error == nil{
+                self?.localAssetDataSources = AppAssetService.allAssets!
+                self?.addNetAssets(assetsArr: assetDataSource!)
+                self?.isSelectMode = self?.isSelectMode
+                
+                self?.photoCollcectionViewController.collectionView?.reloadData()
+                self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
+            }else{
+                
+            }
+        }
+    }
+    
+    func selectModeAction(){
+        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+        if !tab.tabBarHidden {
+        tab.setTabBarHidden(true, animated: true)
+        }
+        if !fabButton.isHidden  {
+            self.fabButton.collapse(true) {
+                self.fabButton.isHidden = true
+            }
+        }
+    }
+    
+    func unselectModeAction(){
+        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
+        if tab.tabBarHidden {
+            tab.setTabBarHidden(false, animated: true)
+        }
+        if self.fabButton.isHidden {
+            self.fabButton.isHidden = false
+            self.fabButton.expand(true) {
+            }
+        }
     }
     
     @objc func menuButtonTap(_ sender:IconButton){
@@ -87,7 +135,6 @@ class PhotoRootViewController: BaseViewController {
             let bottomSheet = AppBottomSheetController.init(contentViewController: fabBottomVC)
             bottomSheet.delegate = self
             self?.present(bottomSheet, animated: true, completion: {
-                
             })
         }
     }
@@ -103,51 +150,71 @@ class PhotoRootViewController: BaseViewController {
                 self?.photoCollcectionViewController.collectionView?.reloadData()
             })
         }
+        
+        defaultNotificationCenter().addObserver(forName:  Notification.Name.Change.AssetChangeNotiKey, object: nil, queue: nil) { [weak self] (noti) in
+            let changeDic = noti.object
+//            let removeArray = (changeDic as! Dictionary<String,Array<WSAsset>>)[kAssetsRemovedKey]
+//            let insertArraay = (changeDic as! Dictionary<String,Array<WSAsset>>)[kAssetsInsertedKey]
+//            if removeArray != nil && removeArray?.count != 0{
+//                self?.localAssetDataSources = (self?.localAssetDataSources.filter { !(removeArray?.contains($0))! })!
+//            }
+//            if insertArraay != nil && insertArraay?.count != 0{
+//                self?.localAssetDataSources.append(contentsOf: insertArraay!)
+//            }
+            self?.localAssetDataSources = changeDic as! Array<WSAsset>
+            self?.sort((self?.merge())!)
+//            mainThreadSafe {
+//               self?.photoCollcectionViewController.collectionView?.reloadData()
+//            }
+        }
     }
     
     func sort(_ assetsArray:Array<WSAsset>){
-        var array:Array<WSAsset>  = Array.init()
-        array.append(contentsOf: assetsArray)
-        array.sort { $0.createDate! > $1.createDate! }
-        sortedAssetsBackupArray = array
-        let timeArray:NSMutableArray = NSMutableArray.init()
-        let photoGroupArray:NSMutableArray = NSMutableArray.init()
-        if array.count>0 {
-            let firstAsset = array.first
-            firstAsset?.indexPath = IndexPath.init(row: 0, section: 0)
-            let photoDateGroup1:NSMutableArray = NSMutableArray.init() //第一组照片
-            photoDateGroup1.add(firstAsset!)
-            photoGroupArray.add(photoDateGroup1)
-            if firstAsset?.createDate != nil{
-             timeArray.add(firstAsset!.createDate!)
-            }
-            if array.count == 1{
-                self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
-               return
-            }
-            var photoDateGroup2:NSMutableArray? = photoDateGroup1 //最近的一组
-
-            for i in 1..<array.count {
-                let photo1 =  array[i]
-                let photo2 = array[i-1]
-                if Calendar.current.isDate(photo1.createDate! , inSameDayAs: photo2.createDate!){
-                    photo1.indexPath = IndexPath.init(row: ((photoGroupArray[photoGroupArray.count - 1]) as! NSMutableArray).count, section: photoGroupArray.count - 1)
-                   photoDateGroup2!.add(photo1)
-                }else{
-                    photo1.indexPath = IndexPath.init(row: 0, section: photoGroupArray.count)
-                    if photo1.createDate != nil{
-                        timeArray.add(photo1.createDate!)
+        autoreleasepool {
+            var array:Array<WSAsset>  = Array.init()
+            array.append(contentsOf: assetsArray)
+            array.sort { $0.createDate! > $1.createDate! }
+            sortedAssetsBackupArray = array
+            let timeArray:NSMutableArray = NSMutableArray.init()
+            let photoGroupArray:NSMutableArray = NSMutableArray.init()
+            if array.count>0 {
+                let firstAsset = array.first
+                firstAsset?.indexPath = IndexPath.init(row: 0, section: 0)
+                let photoDateGroup1:NSMutableArray = NSMutableArray.init() //第一组照片
+                photoDateGroup1.add(firstAsset!)
+                photoGroupArray.add(photoDateGroup1)
+                if firstAsset?.createDate != nil{
+                    timeArray.add(firstAsset!.createDate!)
+                }
+                if array.count == 1{
+                    self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
+                    return
+                }
+                var photoDateGroup2:NSMutableArray? = photoDateGroup1 //最近的一组
+                
+                for i in 1..<array.count {
+                    let photo1 =  array[i]
+                    let photo2 = array[i-1]
+                    if Calendar.current.isDate(photo1.createDate! , inSameDayAs: photo2.createDate!){
+                        photo1.indexPath = IndexPath.init(row: ((photoGroupArray[photoGroupArray.count - 1]) as! NSMutableArray).count, section: photoGroupArray.count - 1)
+                        photoDateGroup2!.add(photo1)
+                    }else{
+                        photo1.indexPath = IndexPath.init(row: 0, section: photoGroupArray.count)
+                        if photo1.createDate != nil{
+                            timeArray.add(photo1.createDate!)
+                        }
+                        photoDateGroup2 = nil
+                        photoDateGroup2 = NSMutableArray.init()
+                        photoDateGroup2!.add(photo1)
+                        photoGroupArray.add(photoDateGroup2!)
                     }
-                    photoDateGroup2 = nil
-                    photoDateGroup2 = NSMutableArray.init()
-                    photoDateGroup2!.add(photo1)
-                    photoGroupArray.add(photoDateGroup2!)
                 }
             }
+            self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
+            self.photoCollcectionViewController.dataSource = self.assetDataSources
+            self.photoCollcectionViewController.sortedAssetsBackupArray = self.sortedAssetsBackupArray
         }
-        self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
-        self.photoCollcectionViewController.dataSource = self.assetDataSources
-        self.photoCollcectionViewController.sortedAssetsBackupArray = self.sortedAssetsBackupArray
+
     }
     
     func merge()->Array<WSAsset> {
@@ -266,11 +333,13 @@ class PhotoRootViewController: BaseViewController {
     }()
 }
 
-extension PhotoRootViewController:DZNEmptyDataSetSource,DZNEmptyDataSetDelegate{
-    
+extension PhotoRootViewController:PhotoCollectionViewControllerDelegate{
+    func collectionView(_ collectionView: UICollectionView, isSelectMode: Bool) {
+         self.isSelectMode = isSelectMode
+    }
 }
 
-extension PhotoRootViewController:PhotoCollectionViewControllerDelegate{
+extension PhotoRootViewController:DZNEmptyDataSetSource,DZNEmptyDataSetDelegate{
     
 }
 

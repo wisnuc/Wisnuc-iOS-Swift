@@ -16,7 +16,7 @@ private var currentScale:CGFloat = 0
 private let keyPath:String = "sliderState"
 
 @objc protocol PhotoCollectionViewControllerDelegate{
-    
+    func collectionView(_ collectionView: UICollectionView, isSelectMode:Bool)
 }
 
 class PhotoCollectionViewController: UICollectionViewController {
@@ -24,7 +24,15 @@ class PhotoCollectionViewController: UICollectionViewController {
         return false
     }
     weak var delegate:PhotoCollectionViewControllerDelegate?
-    var isSelectMode:Bool?
+    var isSelectMode:Bool?{
+        didSet{
+            if  isSelectMode! {
+                selectModeAction()
+            }else{
+                unselectModeAction()
+            }
+        }
+    }
     var showIndicator:Bool = true
     var sortedAssetsBackupArray:Array<WSAsset>?
     var dispose = DisposeBag()
@@ -66,6 +74,18 @@ class PhotoCollectionViewController: UICollectionViewController {
         //增加捏合手势
         let  pin = UIPinchGestureRecognizer.init(target: self, action: #selector(handlePinch(_ :)))
         self.collectionView?.addGestureRecognizer(pin)
+    }
+    
+    func selectModeAction(){
+       if let delegateOK = self.delegate{
+        delegateOK.collectionView(self.collectionView!, isSelectMode: self.isSelectMode!)
+        }
+    }
+    
+    func unselectModeAction(){
+        if let delegateOK = self.delegate{
+            delegateOK.collectionView(self.collectionView!, isSelectMode: self.isSelectMode!)
+        }
     }
   
  //捏合响应

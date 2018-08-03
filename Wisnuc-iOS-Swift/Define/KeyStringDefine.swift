@@ -72,3 +72,5 @@ public let kRequestContentTypeJsonValue = "application/json"
 public let kHTTPTCPSearchBrowerType = "_http._tcp"
 
 
+public let kAssetsRemovedKey = "kAssetsRemovedKey"
+public let kAssetsInsertedKey = "kAssetsInsertedKey"

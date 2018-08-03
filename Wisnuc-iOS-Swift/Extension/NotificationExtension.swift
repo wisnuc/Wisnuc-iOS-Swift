@@ -23,6 +23,7 @@ extension Notification.Name{
     public struct Change {
         public static let PhotoCollectionUserAuthChangeNotiKey = Notification.Name(rawValue: "app.notification.name.photoCollectionUserAuthChange")
         public static let LocalLoginDismissNotiKey = Notification.Name(rawValue: "app.notification.name.LocalLoginDismissNotiKey")
+        public static let AssetChangeNotiKey = Notification.Name(rawValue: "app.notification.name.AssetChangeNotiKey")
         
     }
     

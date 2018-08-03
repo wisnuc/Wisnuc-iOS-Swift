@@ -64,7 +64,13 @@ class WSShowBigimgViewController: UIViewController {
         }
         collectionView.setContentOffset(CGPoint(x: (__kWidth+CGFloat(kItemMargin))*CGFloat(indexBeforeRotation), y: 0), animated: false)
         self.performPresentAnimation()
+        UIApplication.shared.statusBarStyle = .lightContent
 //        WBApplication.statusBarStyle = UIStatusBarStyleLightContent;
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        UIApplication.shared.statusBarStyle = .default
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -540,6 +546,8 @@ class WSShowBigimgViewController: UIViewController {
     lazy var titleLabel: UILabel = {
         let label = UILabel.init()
         label.textColor = UIColor.white
+        let font = UIFont.mdc_standardFont(forMaterialTextStyle: MDCFontTextStyle.body1)
+        label.font = font.withSize(20)
         label.textAlignment = NSTextAlignment.center
         return label
     }()
@@ -552,7 +560,7 @@ class WSShowBigimgViewController: UIViewController {
     
     lazy var leftNaviButton: UIButton = {
         let button = UIButton.init()
-        button.setImage(UIImage.init(named: "back"), for: UIControlState.normal)
+        button.setImage(MDCIcons.imageFor_ic_arrow_back()?.byTintColor(UIColor.white), for: UIControlState.normal)
         button.addTarget(self, action: #selector(doneButtonPressed), for: UIControlEvents.touchUpInside)
         return button
     }()

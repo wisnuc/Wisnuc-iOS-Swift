@@ -55,6 +55,6 @@ class GetMediaAPI: BaseRequest {
     }
     
     override func timeoutIntervalForRequest() -> TimeInterval {
-        return 2000
+        return 20
     }
 }
