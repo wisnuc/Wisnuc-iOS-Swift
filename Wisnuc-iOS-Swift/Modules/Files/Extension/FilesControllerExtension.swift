@@ -57,7 +57,9 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     }
     
     func sequenceButtonTap(_ sender: UIButton) {
-        let bottomSheet = AppBottomSheetController.init(contentViewController: self.sequenceBottomVC)
+        let sequenceBottomVC = FilesSequenceBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        sequenceBottomVC.delegate = self
+        let bottomSheet = MDCBottomSheetController.init(contentViewController: sequenceBottomVC)
         self.present(bottomSheet, animated: true, completion: {
         })
     }
@@ -218,7 +220,7 @@ extension FilesRootViewController:SequenceBottomSheetContentVCDelegate{
 
 extension FilesRootViewController:SearchMoreBottomSheetVCDelegate{
     func searchMoreBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        filesSearchMoreBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
+//        filesSearchMoreBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 }
 

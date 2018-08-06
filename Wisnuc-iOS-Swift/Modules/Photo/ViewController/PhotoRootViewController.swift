@@ -248,7 +248,11 @@ class PhotoRootViewController: BaseViewController {
 //            }
 //        }
     }
-
+    
+    
+    func localDataSouceSort() {
+        self.sort(self.merge())
+    }
     
     func prepareCollectionView(){
         photoCollcectionViewController.isSelectMode = false

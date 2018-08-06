@@ -56,8 +56,10 @@ class FilesSearchMoreBottomSheetContentTableViewController: UITableViewControlle
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if let delegateOK = self.delegate {
-            delegateOK.searchMoreBottomSheettableView(tableView, didSelectRowAt: indexPath)
+        self.dismiss(animated: true) { [weak self] in
+            if let delegateOK = self?.delegate {
+                delegateOK.searchMoreBottomSheettableView(tableView, didSelectRowAt: indexPath)
+            }
         }
     }
     

@@ -440,6 +440,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             return CGSize(width: __kWidth, height: 64.0)
         }
     }
+    
     // MARK: UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return true

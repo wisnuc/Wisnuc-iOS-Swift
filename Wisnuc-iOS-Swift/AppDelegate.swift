@@ -13,6 +13,7 @@ import RealReachability
 import CatalogByConvention
 import MagicalRecord
 import SugarRecord
+import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
@@ -35,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     var coreDataContext: NSManagedObjectContext?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        IQKeyboardManager.shared.enable = true
         registerCoreDataContext()
         registerWeChat()   // Wechat
         colorScheme = MDCBasicColorScheme(primaryColor: COR1)
@@ -127,6 +129,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
                         photosVC.addNetAssets(assetsArr: netAssets!)
                     }
                 }
+            }else{
+                photosVC.localDataSouceSort()
             }
         }
         photosVC.title = LocalizedString(forKey: "Photos")

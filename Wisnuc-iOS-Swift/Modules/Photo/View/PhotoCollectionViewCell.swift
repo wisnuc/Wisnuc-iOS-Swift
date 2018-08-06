@@ -178,11 +178,11 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     func setImagView(indexPath:IndexPath){
         var imageView = self.contentView.subviews.first
-        if imageView == nil && imageView?.tag != Int(INTMAX_MAX) {
+        if imageView == nil && imageView?.tag != Int(NSIntegerMax) {
             imageView = UIView.init(frame: self.bounds)
             imageView?.contentMode = UIViewContentMode.scaleAspectFill
             imageView?.clipsToBounds = true
-            imageView?.tag = Int(INTMAX_MAX)
+            imageView?.tag = Int(NSIntegerMax)
             self.contentView.addSubview(imageView!)
         }
         self.imageView = imageView

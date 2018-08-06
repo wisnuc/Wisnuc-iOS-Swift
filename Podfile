@@ -30,6 +30,8 @@ pod 'RxCocoa',    '~> 4.0'
 pod 'Masonry'
 pod 'MLeaksFinder'
 pod 'FBRetainCycleDetector'
+
+pod 'IQKeyboardManagerSwift'
 end
 
 

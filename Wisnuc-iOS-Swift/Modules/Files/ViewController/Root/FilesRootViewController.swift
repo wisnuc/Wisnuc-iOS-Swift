@@ -723,7 +723,9 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func moreButtonTap(_ sender:IconButton){
-        let bottomSheet = AppBottomSheetController.init(contentViewController: self.filesSearchMoreBottomVC)
+        let filesSearchMoreBottomVC = FilesSearchMoreBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        filesSearchMoreBottomVC.delegate = self
+        let bottomSheet = AppBottomSheetController.init(contentViewController: filesSearchMoreBottomVC)
         bottomSheet.trackingScrollView = filesSearchMoreBottomVC.tableView
         self.present(bottomSheet, animated: true, completion: {
         })
@@ -893,23 +895,12 @@ class FilesRootViewController: BaseViewController{
 //        return fabBottom
 //    }()
     
-    lazy var sequenceBottomVC: FilesSequenceBottomSheetContentTableViewController = {
-        let bottomVC = FilesSequenceBottomSheetContentTableViewController()
-        bottomVC.delegate = self
-        return bottomVC
-    }()
-    
-//    lazy var filesBottomVC: FilesFilesBottomSheetContentTableViewController = {
-//        let bottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+//    lazy var sequenceBottomVC: FilesSequenceBottomSheetContentTableViewController = {
+//        let bottomVC = FilesSequenceBottomSheetContentTableViewController()
 //        bottomVC.delegate = self
 //        return bottomVC
 //    }()
     
-    lazy var filesSearchMoreBottomVC: FilesSearchMoreBottomSheetContentTableViewController = {
-        let bottomVC = FilesSearchMoreBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
-        bottomVC.delegate = self
-        return bottomVC
-    }()
     
     lazy var transitionController: MDCDialogTransitionController = {
         let controller = MDCDialogTransitionController.init()

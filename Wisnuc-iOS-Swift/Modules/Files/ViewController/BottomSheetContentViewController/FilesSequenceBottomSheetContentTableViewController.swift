@@ -16,6 +16,9 @@ private let cellHeight:CGFloat = 48.0
 }
 
 class FilesSequenceBottomSheetContentTableViewController: UITableViewController {
+    deinit {
+        print("\(className()) deinit")
+    }
     weak var delegate:SequenceBottomSheetContentVCDelegate?
     var lastPath:IndexPath?
     var isDown:Bool?

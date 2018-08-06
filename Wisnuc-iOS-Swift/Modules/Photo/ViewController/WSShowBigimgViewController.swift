@@ -516,7 +516,7 @@ class WSShowBigimgViewController: UIViewController {
         layout.scrollDirection = UICollectionViewScrollDirection.horizontal
         layout.minimumLineSpacing = CGFloat(kItemMargin);
         layout.sectionInset = UIEdgeInsetsMake(0, CGFloat(kItemMargin/2), 0, CGFloat(kItemMargin/2));
-        layout.itemSize = self.view.bounds.size;
+        layout.itemSize = self.view.bounds.size
         return layout
     }()
 
