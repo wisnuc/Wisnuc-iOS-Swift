@@ -300,6 +300,43 @@ extension TRManager {
         return task
 
     }
+    
+    
+    @discardableResult
+    public func download(_ URLString: String, fileName: String? = nil,filesModel:EntriesModel? = nil, progressHandler: TRTaskHandler? = nil, successHandler: TRTaskHandler? = nil, failureHandler: TRTaskHandler? = nil) -> TRDownloadTask? {
+        status = .waiting
+        
+        guard let url = URL(string: URLString) else {
+            TiercelLog("[manager] 下载无效的URLString：\(URLString)")
+            return nil
+        }
+        
+        isCompleted = false
+        
+        var task = fetchTask(URLString) as? TRDownloadTask
+        if task != nil {
+            task!.progressHandler = progressHandler
+            task!.successHandler = successHandler
+            task!.failureHandler = failureHandler
+        
+            if let fileName = fileName,let model = filesModel{
+                task!.fileName = fileName
+                task!.fileModel = model
+                task!.size = Int64.init(bitPattern: UInt64((model.size)!))
+            }
+        } else {
+
+            task = TRDownloadTask(url, fileName: fileName, cache: cache,fileModel:filesModel, progressHandler: progressHandler, successHandler: successHandler, failureHandler: failureHandler)
+            tasks.append(task!)
+        }
+        if isStartDownloadImmediately {
+            start(URLString)
+        }
+        
+        return task
+        
+    }
+
 
 
     /// 批量开启多个下载任务
@@ -507,8 +544,6 @@ extension TRManager {
 
 // MARK: - status handle
 extension TRManager {
-
-
     internal func taskDidCancelOrRemove(_ URLString: String) {
         guard let task = fetchTask(URLString) as? TRDownloadTask else { return }
         cache.removeTaskInfo(task)

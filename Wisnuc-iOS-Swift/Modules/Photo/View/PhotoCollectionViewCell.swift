@@ -11,7 +11,6 @@ import UIKit
 import SnapKit
 //import SDWebImage
 
-
 private let btnFrame:CGFloat = 23
 
 class PhotoCollectionViewCell: UICollectionViewCell {
@@ -26,7 +25,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     var longPressBlock:(()->())?
     var model:WSAsset?{
         didSet{
-            
             switch model?.type {
             case .Image?:
                 self.videoImageView.isHidden = true
@@ -76,8 +74,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                 self.liveImageView.isHidden = true
                 self.timeLabel.isHidden = true
             }
-       
-            
 //            if self.imageRequestID != nil {
 //                if self.imageRequestID! >= PHInvalidImageRequestID{
 //                PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
@@ -187,7 +183,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         }
         self.imageView = imageView
          self.imageView?.layer.contents =  nil
-     
     }
     
     func setSelectButton(indexPath:IndexPath){

@@ -153,7 +153,7 @@ class AddStationViewController: BaseViewController {
             DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2.3) {
                 self.searchUser(model.LANIP!, closure: { [weak self] (error, userModel) in
                     if error == nil{
-                        if userModel?.username == "13165786562"{
+                        if userModel?.username == "admin"{
                             dispatch_async_on_main_queue {
                                 ActivityIndicator.stopActivityIndicatorAnimation()
                                 self?.navigationController?.popViewController(animated: true)
@@ -504,7 +504,6 @@ extension AddStationViewController:UIScrollViewDelegate{
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         deviceBrowserPageControl.scrollViewDidEndScrollingAnimation(scrollView)
     }
-
 }
 
 extension AddStationViewController:BottomSheetDelegate{

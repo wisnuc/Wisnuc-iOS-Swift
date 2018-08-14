@@ -308,8 +308,9 @@ class FilesRootViewController: BaseViewController{
                     self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
                 }
             }
-            
+            if self?.collcectionViewController.collectionView?.mj_header != nil {
             self?.collcectionViewController.collectionView?.mj_header.endRefreshing()
+            }
         }
     }
     
@@ -650,7 +651,7 @@ class FilesRootViewController: BaseViewController{
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : drive,kRequestTaskDirKey:dir]
-        filesMoveToRootViewController.moveModelArray =  FilesHelper.sharedInstance().selectFilesArray as? Array<EntriesModel>
+        filesMoveToRootViewController.moveModelArray =  FilesHelper.sharedInstance().selectFilesArray
         self.registerNotification()
         let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
         self.present(navi, animated: true, completion: nil)
@@ -665,7 +666,7 @@ class FilesRootViewController: BaseViewController{
         var fileModels:Array<EntriesModel> = Array.init()
         TRManager.logLevel = .high
         for value in  FilesHelper.sharedInstance().selectFilesArray!{
-            let model = value as! EntriesModel
+            let model = value
             let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
             let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
             let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
@@ -753,7 +754,7 @@ class FilesRootViewController: BaseViewController{
         task.startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
                 self.dismiss(animated: true, completion: {
-                    let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) moved to \(self.title ?? "files")") : LocalizedString(forKey: "\(names.count)files moved to \(self.title ?? "files")")
+                    let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) moved to \(self.title ?? "files")") : LocalizedString(forKey: "\(names.count) files moved to \(self.title ?? "files")")
                      Message.message(text: message)
                      defaultNotificationCenter().post(name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
                 })

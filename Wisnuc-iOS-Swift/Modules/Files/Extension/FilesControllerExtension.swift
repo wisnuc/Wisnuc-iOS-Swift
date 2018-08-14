@@ -10,7 +10,7 @@ import Foundation
 import MaterialComponents
 import Material
 //private let SearchBarBottom:CGFloat = 77.0
-
+var downloadTask:TRTask?
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath, isSelectModel: Bool) {
         if isSelectModel == NSNumber.init(value: FilesStatus.select.rawValue).boolValue{
@@ -33,10 +33,55 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
             }else{
                 if FilesRootViewController.downloadManager.cache.fileExists(fileName: model.name ?? ""){
                     self.readFile(filePath: FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
+                }else{
+                    let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
+                    let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
+                    let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
+
+                    let bundle = Bundle.init(for: FilesDownloadAlertViewController.self)
+                    let storyboard = UIStoryboard.init(name: "FilesDownloadAlertViewController", bundle: bundle)
+                    let identifier = "FilesDownloadDialogID"
+
+                    let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+                    viewController.modalPresentationStyle = UIModalPresentationStyle.custom
+                    viewController.transitioningDelegate = self.transitionController
+
+                    let vc =  viewController as! FilesDownloadAlertViewController
+                    vc.delegate = self
+                    self.present(viewController, animated: true, completion: {
+
+                    })
+                    let presentationController =
+                        viewController.mdc_dialogPresentationController
+                    if presentationController != nil{
+                        presentationController?.dismissOnBackgroundTap = false
+                    }
+                    if downloadTask != nil{
+                        downloadTask?.cancel()
+                        downloadTask = nil
+                    }
+                  FilesRootViewController.downloadManager.isStartDownloadImmediately = true
+                  let task =  FilesRootViewController.downloadManager.download(requestURL, fileName: model.name!, filesModel: model)
+
+                    task?.progressHandler = {[weak vc] (taskP)in
+                        let float:Float = Float(taskP.progress.completedUnitCount)/Float(taskP.progress.totalUnitCount)
+                        vc?.downloadProgressView.progress = Float(float)
+                    }
+                    
+                    task?.successHandler  = { [weak vc] (taskS) in
+                        vc?.dismiss(animated: true, completion: {
+                            Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载完成"))
+                        })
+                    }
+                    
+                    task?.failureHandler  = { [weak vc] (taskF) in
+                        vc?.dismiss(animated: true, completion: {
+                            
+                        })
+                    }
+                    
+                   downloadTask = task
                 }
-                //                for (_,value) in FilesRootViewController.downloadManager.completedTasks.enumerated(){
-                //                    value
-                //                }
             }
         }
     }
@@ -111,6 +156,15 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         let headerView = self.appBar.headerViewController.headerView
         if scrollView == headerView.trackingScrollView {
             headerView.trackingScrollWillEndDragging(withVelocity: velocity, targetContentOffset: targetContentOffset)
+        }
+    }
+}
+
+extension FilesRootViewController:FilesDownloadAlertViewControllerDelegate{
+    func cancelButtonTap() {
+        if downloadTask != nil{
+            downloadTask?.cancel()
+            downloadTask?.remove()
         }
     }
 }

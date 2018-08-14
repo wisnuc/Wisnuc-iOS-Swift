@@ -237,6 +237,8 @@
 		1F5378782108754F00A555C5 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378752108754E00A555C5 /* AnyCodable.swift */; };
 		1F5378792108754F00A555C5 /* AnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378762108754E00A555C5 /* AnyEncodable.swift */; };
 		1F53789A21106FA200A555C5 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53789921106FA200A555C5 /* ArrayExtension.swift */; };
+		1F537A082122809300A555C5 /* FilesDownloadAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F537A072122809300A555C5 /* FilesDownloadAlertViewController.swift */; };
+		1F537A0A2122816400A555C5 /* FilesDownloadAlertViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */; };
 		1F5659F320D0E35B00D86FDB /* share@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F220D0E35900D86FDB /* share@3x.png */; };
 		1F5659F520D0E36200D86FDB /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F420D0E36200D86FDB /* share@2x.png */; };
 		1F5659F720D0E36B00D86FDB /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F620D0E36A00D86FDB /* share.png */; };
@@ -769,6 +771,8 @@
 		1F5378752108754E00A555C5 /* AnyCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		1F5378762108754E00A555C5 /* AnyEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyEncodable.swift; sourceTree = "<group>"; };
 		1F53789921106FA200A555C5 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
+		1F537A072122809300A555C5 /* FilesDownloadAlertViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesDownloadAlertViewController.swift; sourceTree = "<group>"; };
+		1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FilesDownloadAlertViewController.storyboard; sourceTree = "<group>"; };
 		1F5659F220D0E35900D86FDB /* share@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@3x.png"; sourceTree = "<group>"; };
 		1F5659F420D0E36200D86FDB /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		1F5659F620D0E36A00D86FDB /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -2328,6 +2332,8 @@
 		1FFD12BE20EB0EDD0053A3F7 /* AlertController */ = {
 			isa = PBXGroup;
 			children = (
+				1F537A072122809300A555C5 /* FilesDownloadAlertViewController.swift */,
+				1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */,
 				1FFD12BF20EB0F310053A3F7 /* NewFolderViewController.swift */,
 				1FFD12C320EB175E0053A3F7 /* NewFolderViewController.storyboard */,
 			);
@@ -2706,6 +2712,7 @@
 				1F5AD92C20AD524E0065DAD3 /* back_gray@3x.png in Resources */,
 				1F359FAF2090819000E2FF36 /* ok@2x.png in Resources */,
 				1F3C241E20A5428300E6B953 /* files_move@2x.png in Resources */,
+				1F537A0A2122816400A555C5 /* FilesDownloadAlertViewController.storyboard in Resources */,
 				1F3C23FF20A2DACD00E6B953 /* liststyle@3x.png in Resources */,
 				1FAADEEF20ABFFF700739220 /* files_remove@3x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
@@ -3151,6 +3158,7 @@
 				1FFD132F20EF3DB50053A3F7 /* LocalAsset+CoreDataProperties.swift in Sources */,
 				1F4E938E208DB8B600DD1EA7 /* WSRadioButton.m in Sources */,
 				1F5AD92F20AD60700065DAD3 /* SearchTransition.swift in Sources */,
+				1F537A082122809300A555C5 /* FilesDownloadAlertViewController.swift in Sources */,
 				1FC5702B20C1150B00D4499D /* LocalTokenInCloudAPI.swift in Sources */,
 				1F3C241A20A449B400E6B953 /* FilesHelper.swift in Sources */,
 				1F3C242920A58E0600E6B953 /* FilesDrawerTableViewController.swift in Sources */,

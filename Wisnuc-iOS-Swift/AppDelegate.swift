@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             switch networkStatus {
             case .WIFI?: break
             case .ViaWWAN?:break
-                
             case .Disconnected?: break
                 
             default:

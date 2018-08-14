@@ -12,7 +12,7 @@ import MaterialComponents.MaterialChips
 import Foundation
  enum SearhCellType {
     case searchWill
-    case searchEnd
+    case searchWithType
     case searching
     case searchingWithoutType
 }
@@ -33,13 +33,15 @@ class SearchFilesViewController: BaseViewController {
     var cellHeight = 0
     var dataSouce:Array<EntriesModel>?
     var requests:Array<BaseRequest>?
+    var types:String?
+    var classes:String?
     var cellType:SearhCellType?{
         didSet{
             switch cellType{
             case .searchWill?:
                 searchWillTypeAction()
-            case .searchEnd?:
-                searchEndTypeAction()
+            case .searchWithType?:
+                searchWithTypeAction()
             case .searching?:
                 searchingAction()
             case .searchingWithoutType?:
@@ -140,7 +142,8 @@ class SearchFilesViewController: BaseViewController {
        requests?.removeAll()
     }
     
-    func searchEndTypeAction(){
+    
+    func searchWithTypeAction(){
         cellIdentifier = "EndCellIdentifier"
         self.mainTableView.register(UINib.init(nibName: StringExtension.classNameAsString(targetClass: FilesOfflineTableViewCell.self), bundle: nil), forCellReuseIdentifier: cellIdentifier)
         cellCount = (dataSouce?.count)!
@@ -180,8 +183,8 @@ class SearchFilesViewController: BaseViewController {
         mainTableView.reloadData()
     }
     
-    @objc func goSearch(_ anyObject: AnyObject){
-        if cellType != .searchEnd && (searchTextField.text?.count)!>0{
+    @objc func goSearch(_ anyObject: AnyObject?){
+        if cellType != .searchWithType && (searchTextField.text?.count)!>0{
             self.searchAny(text: self.searchTextField.text!) { [weak self] (error) in
                 if error != nil{
                     Message.message(text: (error?.localizedDescription)!)
@@ -190,12 +193,21 @@ class SearchFilesViewController: BaseViewController {
                 self?.mainTableView.reloadData()
                 self?.mainTableView.reloadEmptyDataSet()
             }
+        }else if cellType == .searchWithType && (searchTextField.text?.count)!>0{
+            self.searchAny(text: self.searchTextField.text!,types: types,sClass:classes) { [weak self] (error) in
+                if error != nil{
+                    Message.message(text: (error?.localizedDescription)!)
+                }
+                self?.cellType = .searchWithType
+                self?.mainTableView.reloadData()
+                self?.mainTableView.reloadEmptyDataSet()
+            }
         }
     }
     
     @objc func textFieldTextChange(_ textField:UITextField){
         if textField.text?.count == 0 {
-            if cellType != .searchEnd{
+            if cellType != .searchWithType{
                clearButtonTap(nil)
             }
         }else{
@@ -338,7 +350,7 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if cellType == .searchingWithoutType || cellType == .searchEnd{
+        if cellType == .searchingWithoutType || cellType == .searchWithType{
             let model = dataSouce![indexPath.row]
             
         }else{
@@ -388,10 +400,13 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
                 if error != nil{
                     Message.message(text: (error?.localizedDescription)!)
                 }
-                 self?.cellType = .searchEnd
+                 self?.cellType = .searchWithType
                  self?.mainTableView.reloadData()
                  self?.mainTableView.reloadEmptyDataSet()
             }
+            
+            classes = sclass
+            self.types = types
         }
     }
 }
@@ -402,6 +417,7 @@ extension SearchFilesViewController:ChipsViewDelegate{
             cellType = .searchWill
         }else{
             cellType = .searchingWithoutType
+            goSearch(nil)
         }
 
         mainTableView.reloadData()
@@ -461,7 +477,7 @@ extension SearchFilesViewController:DZNEmptyDataSetDelegate{
     }
     
     func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
-        if self.dataSouce?.count == 0 && (cellType == .searchEnd || cellType == .searchingWithoutType){
+        if self.dataSouce?.count == 0 && (cellType == .searchWithType || cellType == .searchingWithoutType){
             return true
         }else{
             return false

@@ -131,8 +131,10 @@ class TransferTaskTableViewController: BaseViewController {
     }
     
     func readFile(filePath:String){
+        let documentController = UIDocumentInteractionController.init()
+        documentController.delegate = self
         documentController.url = URL.init(fileURLWithPath: filePath)
-        let  canOpen = self.documentController.presentPreview(animated: true)
+        let  canOpen = documentController.presentPreview(animated: true)
         if (!canOpen) {
             Message.message(text: LocalizedString(forKey: "File preview failed"))
             documentController.presentOptionsMenu(from: self.view.bounds, in: self.view, animated: true)
@@ -160,11 +162,11 @@ class TransferTaskTableViewController: BaseViewController {
         return vc
     }()
     
-    lazy var documentController: UIDocumentInteractionController = {
-       let doucumentController = UIDocumentInteractionController.init()
-        doucumentController.delegate = self
-        return doucumentController
-    }()
+//    lazy var documentController: UIDocumentInteractionController = {
+//       let doucumentController = UIDocumentInteractionController.init()
+//        doucumentController.delegate = self
+//        return doucumentController
+//    }()
     
 //    lazy var finishImageView: UIImageView = {
 //
