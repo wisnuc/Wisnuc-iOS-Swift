@@ -34,4 +34,6 @@ extension User {
     @NSManaged public var sortType:NSNumber?
     @NSManaged public var sortIsDown:NSNumber?
     @NSManaged public var isListStyle:NSNumber?
+    @NSManaged public var autoBackUp:NSNumber?
+    @NSManaged public var askForBackup:NSNumber?
 }

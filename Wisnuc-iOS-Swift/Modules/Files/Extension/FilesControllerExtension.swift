@@ -25,8 +25,8 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                     nextViewController.srcDictionary = srcDictionary
                     nextViewController.selfState = self.selfState
                 }
-                let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-                tab.setTabBarHidden(true, animated: true)
+                let tab = retrieveTabbarController()
+                tab?.setTabBarHidden(true, animated: true)
                 nextViewController.title = model.name ?? ""
                 self.navigationController?.pushViewController(nextViewController, animated: true)
                 defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
@@ -72,7 +72,11 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                     task?.successHandler  = { [weak self] (taskS) in
                         vc?.dismiss(animated: true, completion: {
                             Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载完成"))
-                            self?.readFile(filePath:FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
+                            DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2) {
+                                DispatchQueue.main.async {
+                                    self?.readFile(filePath:FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
+                                }
+                            }
                         })
                     }
                     
@@ -189,8 +193,8 @@ extension FilesRootViewController:FilesDrawerViewControllerDelegate{
     func settingButtonTap(_ sender: UIButton) {
         navigationDrawerController?.closeLeftView()
         let settingVC = SettingViewController.init(style: NavigationStyle.whiteStyle)
-        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-        tab.setTabBarHidden(true, animated: true)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
         self.navigationController?.pushViewController(settingVC, animated: true)
     }
     
@@ -199,18 +203,18 @@ extension FilesRootViewController:FilesDrawerViewControllerDelegate{
         switch indexPath.row {
         case 0:
             let transferTaskTableViewController = TransferTaskTableViewController.init(style:NavigationStyle.whiteStyle)
-            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-            tab.setTabBarHidden(true, animated: true)
+            let tab = retrieveTabbarController()
+            tab?.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
         case 1:
             let shareVC = FileShareFolderViewController.init(style:.whiteStyle)
-            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-            tab.setTabBarHidden(true, animated: true)
+            let tab = retrieveTabbarController()
+            tab?.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(shareVC, animated: true)
         case 2:
             let offlineVC = FilesOfflineViewController.init(style:.whiteStyle)
-            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-            tab.setTabBarHidden(true, animated: true)
+            let tab = retrieveTabbarController()
+            tab?.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(offlineVC, animated: true)
         case 3:
             break
@@ -413,8 +417,8 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton) {
 //        filesBottomVC.dismiss(animated: true, completion:{ [weak self] in
-        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-            tab.setTabBarHidden(true, animated: true)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
             let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
         self.navigationController?.pushViewController(filesInfoVC, animated: true)
 //        })

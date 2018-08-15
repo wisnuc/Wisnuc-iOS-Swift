@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17F77" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="LocalAsset" representedClassName="LocalAsset" syncable="YES">
         <attribute name="digest" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="User" representedClassName="User" syncable="YES">
+        <attribute name="askForBackup" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="autoBackUp" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="avaterURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="backUpDirectoryUUID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="bonjour_name" optional="YES" attributeType="String" syncable="YES"/>
@@ -24,7 +26,7 @@
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="User" positionX="-54" positionY="-9" width="128" height="300"/>
         <element name="LocalAsset" positionX="-54" positionY="117" width="128" height="75"/>
+        <element name="User" positionX="-54" positionY="-9" width="128" height="330"/>
     </elements>
 </model>

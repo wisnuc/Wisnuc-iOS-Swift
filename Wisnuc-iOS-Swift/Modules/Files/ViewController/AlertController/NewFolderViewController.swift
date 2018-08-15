@@ -9,6 +9,7 @@
 import UIKit
 import MaterialComponents.MaterialButtons
 import MaterialComponents.MaterialTextFields
+import IQKeyboardManagerSwift
 
 @objc enum InputAlertType:Int {
     case creatNewFolder
@@ -55,6 +56,17 @@ class NewFolderViewController: UIViewController {
         print("newFolder VC deinit")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let keyboardManager =  IQKeyboardManager.shared
+        keyboardManager.enable = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        let keyboardManager =  IQKeyboardManager.shared
+        keyboardManager.enable = true
+    }
+    
     @IBAction func confirmButtonButtonTap(_ sender: MDCFlatButton) {
         self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
             if self?.inputTextField.text == nil ||  self?.inputTextField.text?.count == 0{
@@ -71,10 +83,7 @@ class NewFolderViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-    }
+  
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

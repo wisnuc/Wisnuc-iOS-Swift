@@ -76,7 +76,7 @@ public class TRCache {
         
         downloadTmpPath = (downloadPath as NSString).appendingPathComponent("Tmp")
         
-        downloadFilePath = (downloadPath as NSString).appendingPathComponent("File-\(String(describing: AppUserService.currentUser?.uuid!))")
+        downloadFilePath = (downloadPath as NSString).appendingPathComponent("File-\(String(describing: (AppUserService.currentUser?.uuid!)!))")
                 
         createDirectory()
         
@@ -190,7 +190,7 @@ extension TRCache {
     }
     
     public func retrieveTaskInfos() -> [[String: Any]]? {
-        let path = (downloadPath as NSString).appendingPathComponent(name + "Tasks.plist")
+        let path = (downloadPath as NSString).appendingPathComponent((AppUserService.currentUser?.uuid!)! + name + "Tasks.plist")
         if fileManager.fileExists(atPath: path) {
             guard let array = NSArray(contentsOfFile: path) as? [[String: Any]] else { return nil }
             return array
@@ -219,8 +219,9 @@ extension TRCache {
                                         "totalBytes": task.progress.totalUnitCount,
                                         "completedBytes": task.progress.completedUnitCount,
                                         "status": task.status.rawValue,
-                                        "URLString": task.URLString]
-            let path = (self.downloadPath as NSString).appendingPathComponent("\(self.name)Tasks.plist")
+                                        "URLString": task.URLString,
+                                        "useruuid": (AppUserService.currentUser?.uuid!)!]
+            let path = (self.downloadPath as NSString).appendingPathComponent("\((AppUserService.currentUser?.uuid!)!)\(self.name)Tasks.plist")
             
             if let taskInfoArray = self.retrieveTaskInfos() {
                 var isExists = false

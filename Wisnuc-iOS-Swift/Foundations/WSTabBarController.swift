@@ -71,9 +71,9 @@ extension WSTabBarController:MDCTabBarControllerDelegate{
         case 0:
             item.image = FilesSelectImage
         case 1:
-            item.image = PhotoSelectImage
-        case 2:
             item.image = ShareSelectImage
+        case 2:
+            item.image = PhotoSelectImage
         default:
             break
         }
@@ -84,9 +84,9 @@ extension WSTabBarController:MDCTabBarControllerDelegate{
                 case 0:
                     value.image = FilesNormalImage
                 case 1:
-                    value.image = PhotoNormalImage
-                case 2:
                     value.image = ShareNormalImage
+                case 2:
+                    value.image = PhotoNormalImage
                 default:
                     break
                 }

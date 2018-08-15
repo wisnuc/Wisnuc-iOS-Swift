@@ -46,7 +46,7 @@ class FilesHelper: NSObject {
     func removeSelectFiles(model:EntriesModel){
         if (selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! {
             synced(self) {
-                let index = selectFilesArray?.index(where: {$0.hash == model.hash})
+                let index = selectFilesArray?.index(where: {$0.uuid == model.uuid})
                 if index != nil{
                     selectFilesArray?.remove(at: index!)
                 }

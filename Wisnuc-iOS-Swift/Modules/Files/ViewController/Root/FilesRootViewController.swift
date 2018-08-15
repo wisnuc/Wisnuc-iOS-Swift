@@ -414,8 +414,8 @@ class FilesRootViewController: BaseViewController{
         fabButton.collapse(true) {
 
         }
-        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-        tab.setTabBarHidden(true, animated: true)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
         
         if selfState != .root{
             selectedNavigationBarView.addSubviewsToParent()
@@ -444,8 +444,8 @@ class FilesRootViewController: BaseViewController{
         }
         
         if selfState == .root{
-            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-            tab.setTabBarHidden(false, animated: true)
+            let tab = retrieveTabbarController()
+            tab?.setTabBarHidden(false, animated: true)
             DispatchQueue.main.async {
                 self.unselectSearchBarAction()
             }
@@ -478,12 +478,12 @@ class FilesRootViewController: BaseViewController{
         self.appBar.headerViewController.headerView.isHidden = true
         self.navigationDrawerController?.isLeftPanGestureEnabled = true
         navigationController?.delegate = self
-        if (self.navigationDrawerController?.rootViewController) != nil {
-            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-            tab.setTabBarHidden(false, animated: true)
-            let drawerController:FilesDrawerTableViewController = self.navigationDrawerController?.leftViewController as! FilesDrawerTableViewController
-            drawerController.delegate = self
-        }
+//        if (self.navigationDrawerController?.rootViewController) != nil {
+            let tab = retrieveTabbarController()
+            tab?.setTabBarHidden(false, animated: true)
+//            let drawerController:FilesDrawerTableViewController = self.navigationDrawerController?.leftViewController as! FilesDrawerTableViewController
+//            drawerController.delegate = self
+//        }
         self.view.endEditing(true)
     }
     
@@ -491,10 +491,8 @@ class FilesRootViewController: BaseViewController{
         self.appBar.headerViewController.headerView.isHidden = false
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
         Application.statusBarStyle = .default
-        if (self.navigationDrawerController?.rootViewController) != nil {
-            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-            tab.setTabBarHidden(true, animated: true)
-        }
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
     }
     
     func prepareRootAppNavigtionBar(){
@@ -536,8 +534,10 @@ class FilesRootViewController: BaseViewController{
     }
     
     func readFile(filePath:String){
+        let documentController = UIDocumentInteractionController.init()
+        documentController.delegate = self
         documentController.url = URL.init(fileURLWithPath: filePath)
-        let  canOpen = self.documentController.presentPreview(animated: true)
+        let  canOpen = documentController.presentPreview(animated: true)
         if (!canOpen) {
             Message.message(text: LocalizedString(forKey: "File preview failed"))
             documentController.presentOptionsMenu(from: self.view.bounds, in: self.view, animated: true)
@@ -622,8 +622,8 @@ class FilesRootViewController: BaseViewController{
         searchVC.modalPresentationStyle = .custom
         searchVC.modalTransitionStyle = .crossDissolve
         searchVC.uuid = directoryUUID
-        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-        tab.setTabBarHidden(true, animated: true)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
         self.navigationController?.pushViewController(searchVC, animated: true)
     }
     
@@ -928,10 +928,10 @@ class FilesRootViewController: BaseViewController{
         return barItem
     }()
 
-    lazy var documentController: UIDocumentInteractionController = {
-        let doucumentController = UIDocumentInteractionController.init()
-        doucumentController.delegate = self
-        return doucumentController
-    }()
+//    lazy var documentController: UIDocumentInteractionController = {
+//        let doucumentController = UIDocumentInteractionController.init()
+//        doucumentController.delegate = self
+//        return doucumentController
+//    }()
 }
 

@@ -92,9 +92,12 @@ class PhotoRootViewController: BaseViewController {
     }
     
     func selectModeAction(){
-        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-        if !tab.tabBarHidden {
-        tab.setTabBarHidden(true, animated: true)
+        let tab = retrieveTabbarController()
+        if tab == nil{
+            return
+        }
+        if !(tab?.tabBarHidden)! {
+            tab?.setTabBarHidden(true, animated: true)
         }
         if !fabButton.isHidden  {
             self.fabButton.collapse(true) {
@@ -104,9 +107,12 @@ class PhotoRootViewController: BaseViewController {
     }
     
     func unselectModeAction(){
-        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-        if tab.tabBarHidden {
-            tab.setTabBarHidden(false, animated: true)
+        let tab = retrieveTabbarController()
+        if tab == nil{
+            return
+        }
+        if (tab?.tabBarHidden)! {
+            tab?.setTabBarHidden(false, animated: true)
         }
         if self.fabButton.isHidden {
             self.fabButton.isHidden = false

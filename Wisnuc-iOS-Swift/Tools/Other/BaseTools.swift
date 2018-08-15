@@ -154,6 +154,15 @@ func changeControllerFromOldController(self:UIViewController, oldController:UIVi
     }
 }
 
+func retrieveTabbarController() -> WSTabBarController?{
+    let window = UIApplication.shared.keyWindow
+    let tabbarController = window?.rootViewController
+    if  tabbarController is WSTabBarController {
+        return tabbarController as? WSTabBarController
+    }
+    return nil
+}
+
 
 
 //- (void)changeControllerFromOldController:(UIViewController *)oldController toNewController:(UIViewController *)newController

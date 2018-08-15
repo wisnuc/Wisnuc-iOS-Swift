@@ -136,19 +136,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let shareVC = BaseViewController()
         shareVC.title = LocalizedString(forKey: "Share")
         shareVC.view.backgroundColor = UIColor.cyan
-        
+        let settingVC = SettingRootViewController.init(style: NavigationStyle.whiteStyle)
+        let pcVC = BaseViewController()
         let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
         let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
         let shareNavi = BaseNavigationController.init(rootViewController: shareVC)
+        let settingNavi = BaseNavigationController.init(rootViewController: settingVC)
+        let pcNavi = BaseNavigationController.init(rootViewController: pcVC)
         filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Files"), image: UIImage.init(named: "Home")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 0)
-        photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Photos"), image: UIImage.init(named: "photos.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 1)
-        shareNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Share"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 2)
+        shareNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Share"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 1)
+                photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Photos"), image: UIImage.init(named: "photos.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 2)
+        pcNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "PC"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 3)
+        settingNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Setting"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 4)
         filesNavi.tabBarItem.selectedImage = UIImage.init(named: "tab_files_selected.png")
-        let controllers = [filesNavi, photosNavi, shareNavi]
+        let controllers = [filesNavi, shareNavi,photosNavi,pcNavi,settingNavi]
         tabBarController.viewControllers = controllers
         tabBarController.tabBar?.items = [filesNavi.tabBarItem,
-                                          photosNavi.tabBarItem ,
-                                          shareNavi.tabBarItem]
+                                          shareNavi.tabBarItem,
+                                          photosNavi.tabBarItem,
+                                          pcNavi.tabBarItem,
+                                          settingNavi.tabBarItem]
         tabBarController.tabBar?.setImageTintColor(COR1, for: MDCTabBarItemState.normal)
         tabBarController.tabBar?.setImageTintColor(LightGrayColor, for: MDCTabBarItemState.selected)
         tabBarController.tabBar?.selectedItem = tabBarController.tabBar?.items[0]
@@ -160,12 +167,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         tabBarController.tabBar?.backgroundColor = UIColor.white
         tabBarController.tabBar?.selectedItemTintColor = COR1
         tabBarController.tabBar?.unselectedItemTintColor = LightGrayColor
-        let drawerVC = FilesDrawerTableViewController.init(style: UITableViewStyle.grouped)
-        let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
-        window?.rootViewController = naviNavigationDrawer
+//        let drawerVC = FilesDrawerTableViewController.init(style: UITableViewStyle.grouped)
+//        let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
+        window?.rootViewController = tabBarController
         if loginController != nil {
             loginController = nil
         }
+        MainServices().backupAseetsAction()
     }
     
     func setAppNetworkState(){

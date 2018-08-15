@@ -686,6 +686,11 @@
         let transerModel = model as! CloadLoginUserRemotModel
         self.stationView.addStation(model: transerModel)
     }
+    
+    func addStationFinish(models: [Any]) {
+        let stations = models.map{$0 as! CloadLoginUserRemotModel }
+        self.stationView.addStations(models: stations)
+    }
  }
  
  extension LoginViewController:LogOutViewControllerDelegate{

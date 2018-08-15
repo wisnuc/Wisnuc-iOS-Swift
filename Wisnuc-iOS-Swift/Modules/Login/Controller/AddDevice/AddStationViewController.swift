@@ -27,6 +27,7 @@ enum StationSearchState:Int {
 
 @objc protocol AddStationDelegate {
     func addStationFinish(model:Any)
+    @objc optional func addStationFinish(models:[Any])
 }
 
 class AddStationViewController: BaseViewController {
@@ -142,7 +143,7 @@ class AddStationViewController: BaseViewController {
     }
     
     @objc func nextStepForSearchEndButtonClick(_ sender:MDBaseButton){
-        var model = deviceArray![sender.tag]
+        let model = deviceArray![sender.tag]
         switch model.type {
         case DeviceForSearchState.initialization.rawValue:
             let initDiskVC = InitializationDiskViewController.init()
@@ -151,22 +152,34 @@ class AddStationViewController: BaseViewController {
          case DeviceForSearchState.applyToUse.rawValue:
            ActivityIndicator.startActivityIndicatorAnimation()
             DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2.3) {
-                self.searchUser(model.LANIP!, closure: { [weak self] (error, userModel) in
+                self.searchUser(model.LANIP!, closure: { [weak self] (error, userModels) in
                     if error == nil{
-                        if userModel?.username == "admin"{
+//                        if userModel?.username == "136165786562"{
                             dispatch_async_on_main_queue {
                                 ActivityIndicator.stopActivityIndicatorAnimation()
                                 self?.navigationController?.popViewController(animated: true)
                                 if let delegateOK = self?.delegate{
-                                    model.username = userModel?.username
-                                    model.uuid = userModel?.uuid
-                                    delegateOK.addStationFinish(model: model)
+                                    var userModelArray = [CloadLoginUserRemotModel]()
+                                    for userModel in userModels!{
+                                        let newModel = CloadLoginUserRemotModel.init()
+                                        newModel.username = userModel.username
+                                        newModel.uuid = userModel.uuid
+                                        newModel.type = model.type
+                                        newModel.name = model.name
+                                        newModel.LANIP = model.LANIP
+                                        newModel.state = model.state
+                                        userModelArray.append(newModel)
+                                    }
+                                   
+//                                    model.username = userModel?.username
+//                                    model.uuid = userModel?.uuid
+                                    delegateOK.addStationFinish!(models: userModelArray)
                                     Message.message(text: LocalizedString(forKey: "添加成功"))
                                 }
                             }
-                        }else{
-                            ActivityIndicator.stopActivityIndicatorAnimation()
-                        }
+//                        }else{
+//                            ActivityIndicator.stopActivityIndicatorAnimation()
+//                        }
                     }else{
                         ActivityIndicator.stopActivityIndicatorAnimation()
                         Message.message(text: LocalizedString(forKey: "添加失败->\(String(describing: (error?.localizedDescription)!))"))
@@ -392,21 +405,22 @@ class AddStationViewController: BaseViewController {
         }
     }
     
-    func searchUser( _ baseURL:String, closure:@escaping (_ error:Error?,_ usermodel:UserModel?)->()){
+    func searchUser( _ baseURL:String, closure:@escaping (_ error:Error?,_ usermodel:[UserModel]?)->()){
         let urlString = "http://\(baseURL):3000"
         LocalUserAPI.init(url: urlString).startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
                let rootArray = response.result.value as! NSArray
+                var array = [UserModel]()
                for value in rootArray{
                     do {
                         let data = try?JSONSerialization.data(withJSONObject: value, options: JSONSerialization.WritingOptions.prettyPrinted)
                         let userModel = try JSONDecoder().decode(UserModel.self, from: data!)
-                        closure(nil, userModel)
+                        array.append(userModel)
                     } catch {
                         closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
                     }
                 }
-               
+                closure(nil, array)
             }else{
                 closure(response.error,nil)
             }

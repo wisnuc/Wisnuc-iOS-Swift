@@ -138,6 +138,12 @@ class MyStationView: UIView {
        setStationsView()
     }
     
+    func addStations(models:[CloadLoginUserRemotModel]){
+        stationArray?.append(contentsOf: models)
+        stationScrollView.removeAllSubviews()
+        setStationsView()
+    }
+    
     func reloadData() {
         stationScrollView.removeAllSubviews()
         setStationsView()

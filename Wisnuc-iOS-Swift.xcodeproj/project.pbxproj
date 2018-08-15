@@ -239,6 +239,7 @@
 		1F53789A21106FA200A555C5 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F53789921106FA200A555C5 /* ArrayExtension.swift */; };
 		1F537A082122809300A555C5 /* FilesDownloadAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F537A072122809300A555C5 /* FilesDownloadAlertViewController.swift */; };
 		1F537A0A2122816400A555C5 /* FilesDownloadAlertViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */; };
+		1F537A0D212412A600A555C5 /* SettingRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F537A0C212412A500A555C5 /* SettingRootViewController.swift */; };
 		1F5659F320D0E35B00D86FDB /* share@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F220D0E35900D86FDB /* share@3x.png */; };
 		1F5659F520D0E36200D86FDB /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F420D0E36200D86FDB /* share@2x.png */; };
 		1F5659F720D0E36B00D86FDB /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F620D0E36A00D86FDB /* share.png */; };
@@ -773,6 +774,7 @@
 		1F53789921106FA200A555C5 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
 		1F537A072122809300A555C5 /* FilesDownloadAlertViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesDownloadAlertViewController.swift; sourceTree = "<group>"; };
 		1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FilesDownloadAlertViewController.storyboard; sourceTree = "<group>"; };
+		1F537A0C212412A500A555C5 /* SettingRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingRootViewController.swift; sourceTree = "<group>"; };
 		1F5659F220D0E35900D86FDB /* share@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@3x.png"; sourceTree = "<group>"; };
 		1F5659F420D0E36200D86FDB /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		1F5659F620D0E36A00D86FDB /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -1541,6 +1543,14 @@
 			path = Media;
 			sourceTree = "<group>";
 		};
+		1F537A0B2124128600A555C5 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				1F537A0C212412A500A555C5 /* SettingRootViewController.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -2026,6 +2036,7 @@
 		1FD9B780207CBEAD00906D80 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				1F537A0B2124128600A555C5 /* Setting */,
 				1FFD12D020EE11540053A3F7 /* Photo */,
 				1F307C7320BEB16200AE105C /* Model */,
 				1F17697F20AD3712003D955F /* Search */,
@@ -3213,6 +3224,7 @@
 				1F5378782108754F00A555C5 /* AnyCodable.swift in Sources */,
 				1F307C6720BE91B200AE105C /* ErrorDfine.swift in Sources */,
 				1FAADEF820AC149500739220 /* FilesFileInfoTableViewCell.swift in Sources */,
+				1F537A0D212412A600A555C5 /* SettingRootViewController.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
 				1F8EBB35209AD91200E8AB83 /* WSTabBarController.swift in Sources */,
 				1FFD12C120EB0F310053A3F7 /* NewFolderViewController.swift in Sources */,

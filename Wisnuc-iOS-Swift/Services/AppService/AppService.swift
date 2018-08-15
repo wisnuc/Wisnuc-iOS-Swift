@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import MaterialComponents.MDCAlertController
 
 let MainServices = AppService.sharedInstance
 let AppUserService =  MainServices().userService
@@ -145,15 +145,44 @@ class AppService: NSObject,ServiceProtocol{
                     currentUser?.backUpDirectoryUUID = entryUUID;
                     AppUserService.synchronizedCurrentUser()
                 }
-                
+               
                 // MARK:Upload Opration
                 //===================
+//                if(!user.askForBackup)
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [weak_self requestForBackupPhotos:^(BOOL shouldUpload) {
+//                user.askForBackup = YES;
+//                user.autoBackUp = shouldUpload;
+//                [WB_UserService synchronizedCurrentUser];
+//                if(shouldUpload) {
+//                [weak_self startUploadAssets:nil];
+//                }
+//                }];
+//                });
+//                else if(user.autoBackUp && WB_NetService.status == AFNetworkReachabilityStatusReachableViaWiFi)
+//                [weak_self startUploadAssets:nil];
+//                dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//                [weak_self updateCurrentUserInfoWithCompleteBlock:nil];
+//                });
                 self?.updateCurrentUserInfo()
                 return callback(nil, currentUser);
             })
         }
     }
     
+    func backupAseetsAction(){
+        if let askForBackup = AppUserService.currentUser?.askForBackup{
+            if !(askForBackup.boolValue) {
+                
+            }
+        }else{
+            self.requestForBackupPhotos(callback: { (isUpload) in
+                AppUserService.currentUser?.autoBackUp = NSNumber.init(value: isUpload)
+                AppUserService.currentUser?.askForBackup = NSNumber.init(value: false)
+                AppUserService.synchronizedCurrentUser()
+            })
+        }
+    }
     
     func updateCurrentUserInfo(){
         UsersInfoAPI.init().startRequestDataCompletionHandler { (response) in
@@ -178,6 +207,40 @@ class AppService: NSObject,ServiceProtocol{
                 Message.message(text: (response.error?.localizedDescription)!)
             }
         }
+    }
+    
+    func requestForBackupPhotos(callback:(_ shouldUpload:Bool)->()) {
+        let alertTitle = LocalizedString(forKey: "backup_tips")
+        let alertMessage = LocalizedString(forKey: "backup_alert_message")
+        let cancelTitle = LocalizedString(forKey:"cancel")
+        let confirmTitle = LocalizedString(forKey:"backup")
+        Alert.alert(title: alertTitle, message: alertMessage, action1Title: confirmTitle, action2Title: cancelTitle, handler1: { (action) in
+//                AppUserService.currentUser.autoBackUp = NSNumber.init(value: true)
+            //    [[NSNotificationCenter defaultCenter] postNotificationName:UserBackUpConfigChangeNotify object:@(1)];
+            //    [WB_UserService synchronizedCurrentUser];
+        }) { (action) in
+            
+        }
+        
+        //    UIAlertAction *cancle = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        //    NSLog(@"点击了取消按钮");
+        //    WB_UserService.currentUser.autoBackUp = NO;
+        //    [[NSNotificationCenter defaultCenter] postNotificationName:UserBackUpConfigChangeNotify object:@(0)];
+        //    [WB_UserService synchronizedCurrentUser];
+        //    callback(NO);
+        //    }];
+        //
+        //    UIAlertAction *confirm = [UIAlertAction actionWithTitle:WBLocalizedString(@"backup", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        //    NSLog(@"点击了确定按钮");
+        //    WB_UserService.currentUser.autoBackUp = YES;
+        //    [[NSNotificationCenter defaultCenter] postNotificationName:UserBackUpConfigChangeNotify object:@(1)];
+        //    [WB_UserService synchronizedCurrentUser];
+        //    callback(YES);
+        //    }];
+        //    [alertVc addAction:cancle];
+        //    [alertVc addAction:confirm];
+        //    [MyAppDelegate.window.rootViewController presentViewController:alertVc animated:YES completion:^{
+        //    }];
     }
     
     lazy var userService: UserService = {
