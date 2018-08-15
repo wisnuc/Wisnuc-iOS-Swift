@@ -276,9 +276,7 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                         Message.message(text: (response.error?.localizedDescription)!)
                     }
                 })
-                
             }
-           
         }
         deleteRowAction.backgroundColor = UIColor.red
         let priorityRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "priority_transfer")) { (tableViewForAction, indexForAction) in

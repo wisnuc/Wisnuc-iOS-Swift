@@ -73,9 +73,10 @@ public class TRCache {
         
         downloadPath = (diskCachePath as NSString).appendingPathComponent("Downloads")
 
+        
         downloadTmpPath = (downloadPath as NSString).appendingPathComponent("Tmp")
         
-        downloadFilePath = (downloadPath as NSString).appendingPathComponent("File")
+        downloadFilePath = (downloadPath as NSString).appendingPathComponent("File-\(String(describing: AppUserService.currentUser?.uuid!))")
                 
         createDirectory()
         

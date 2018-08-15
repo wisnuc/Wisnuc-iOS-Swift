@@ -20,6 +20,8 @@ public struct EntriesModel:Codable  {
     var driveUUID:String?
     var parentUUID:String?
     var metadata:Metadata?
+    var pdir:String?
+    var place:Int?
     
     enum CodingKeys : String, CodingKey {
         case name
@@ -30,6 +32,8 @@ public struct EntriesModel:Codable  {
         case mtime
         case size
         case metadata
+        case pdir
+        case place
     }
 //    required public init() {}
 //

@@ -36,8 +36,8 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                 }else{
                     let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
                     let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
-                    let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
-
+                    var requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
+                    requestURL = requestURL.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
                     let bundle = Bundle.init(for: FilesDownloadAlertViewController.self)
                     let storyboard = UIStoryboard.init(name: "FilesDownloadAlertViewController", bundle: bundle)
                     let identifier = "FilesDownloadDialogID"
@@ -46,8 +46,9 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                     viewController.modalPresentationStyle = UIModalPresentationStyle.custom
                     viewController.transitioningDelegate = self.transitionController
 
-                    let vc =  viewController as! FilesDownloadAlertViewController
-                    vc.delegate = self
+                    weak var vc =  viewController as? FilesDownloadAlertViewController
+                    vc?.delegate = self
+        
                     self.present(viewController, animated: true, completion: {
 
                     })
@@ -63,18 +64,19 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                   FilesRootViewController.downloadManager.isStartDownloadImmediately = true
                   let task =  FilesRootViewController.downloadManager.download(requestURL, fileName: model.name!, filesModel: model)
 
-                    task?.progressHandler = {[weak vc] (taskP)in
+                    task?.progressHandler = { (taskP)in
                         let float:Float = Float(taskP.progress.completedUnitCount)/Float(taskP.progress.totalUnitCount)
                         vc?.downloadProgressView.progress = Float(float)
                     }
                     
-                    task?.successHandler  = { [weak vc] (taskS) in
+                    task?.successHandler  = { [weak self] (taskS) in
                         vc?.dismiss(animated: true, completion: {
                             Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载完成"))
+                            self?.readFile(filePath:FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
                         })
                     }
                     
-                    task?.failureHandler  = { [weak vc] (taskF) in
+                    task?.failureHandler  = { (taskF) in
                         vc?.dismiss(animated: true, completion: {
                             
                         })
