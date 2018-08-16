@@ -27,5 +27,8 @@ extension Notification.Name{
         
     }
     
-    
+    public struct Backup {
+        public static let HashCalculateFinishedNotiKey = Notification.Name(rawValue: "app.notification.name.HashCalculateFinishedNotiKey")
+         public static let AutoBackupDestroyedNotiKey = Notification.Name(rawValue: "app.notification.name.AutoBackupDestroyedNotiKey")
+    }
 }

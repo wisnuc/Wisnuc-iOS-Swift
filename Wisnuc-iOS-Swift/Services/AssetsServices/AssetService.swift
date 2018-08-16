@@ -108,7 +108,11 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         }
     }
     
-
+    func getAsset(localId:String) ->LocalAsset? {
+        let predicate = NSPredicate.init(format: "localId = %@", localId)
+        let asset = LocalAsset.mr_findFirst(with: predicate)
+        return asset
+    }
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
 //        autoreleasepool {

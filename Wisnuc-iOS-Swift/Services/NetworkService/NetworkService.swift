@@ -177,6 +177,61 @@ class NetworkService: NSObject {
         }
     }
     
+    // 获取backup目录下的所有文件
+    func getEntriesInUserBackupDirectory(callback:@escaping (_ error:Error?,_ entries:Array<EntriesModel>?)->()){
+        if let backUpDirectoryUUID = AppUserService.currentUser?.backUpDirectoryUUID {
+            DriveDirAPI.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: backUpDirectoryUUID).startRequestJSONCompletionHandler { [weak self] (response) in
+                if response.error == nil{
+                    let dic = self?.networkState == .normal ? (response.value as! NSDictionary)["data"] as! NSDictionary: response.value as! NSDictionary
+                    let array = NSArray.init(array: dic.object(forKey: "entries") as! NSArray)
+                    var entries = Array<EntriesModel>.init()
+                    array.enumerateObjects({ (obj, idx, stop) in
+                        let dic = obj as! NSDictionary
+                        do{
+                            let data = jsonToData(jsonDic: dic)
+                            let model = try JSONDecoder().decode(EntriesModel.self, from: data!)
+                            entries.append(model)
+                        }catch{
+                            callback(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                        }
+                    })
+                  callback(nil,entries)
+                }else{
+                    if let httpStatusCode = response.response?.statusCode {
+                        switch(httpStatusCode) {
+                        case 404:
+                         callback(BaseError(localizedDescription: ErrorLocalizedDescription.Backup.BackupDirNotFound, code: ErrorCode.Backup.BackupDirNotFound), nil)
+                        default:
+                         callback(response.error, nil)
+                        }
+                    } else {
+                        callback(response.error, nil)
+                    }
+                }
+            }
+        }else{
+           
+            callback(BaseError(localizedDescription: ErrorLocalizedDescription.Backup.BackupDirNotFound, code: ErrorCode.Backup.BackupDirNotFound), nil)
+        }
+       
+//    FLGetDriveDirAPI *api = [FLGetDriveDirAPI apiWithDrive:WB_UserService.currentUser.userHome dir:WB_UserService.currentUser.backUpDir];
+//    [api startWithCompletionBlockWithSuccess:^(__kindof JYBaseRequest *request) {
+//    NSDictionary * dic = WB_UserService.currentUser.isCloudLogin ? request.responseJsonObject[@"data"] : request.responseJsonObject;
+//    NSArray * arr = [NSArray arrayWithArray:[dic objectForKey:@"entries"]];
+//    NSMutableArray * entries = [NSMutableArray arrayWithCapacity:0];
+//    [arr enumerateObjectsUsingBlock:^(NSDictionary *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//    EntriesModel *model = [EntriesModel modelWithDictionary:obj];
+//    [entries addObject:model];
+//    }];
+//    callback(nil, entries);
+//    } failure:^(__kindof JYBaseRequest *request) {
+//    if(request.responseStatusCode == 404)
+//    request.error.wbCode = WBUploadDirNotFound;
+//    NSLog(@"get backup dir entries error : %@", request.error);
+//    callback(request.error, nil);
+//    }];
+    }
+    
     // 获取 名为 “上传的照片”（任何name都可以） 的文件夹， 没有就创建
     func getDirUUID(name:String,driveUUID:String,dirUUID:String,callBack:@escaping ((_ error:Error?,_ directoryUUID:String?)->())) {
         let request = DriveDirAPI.init(driveUUID:driveUUID, directoryUUID: dirUUID)
@@ -207,7 +262,7 @@ class NetworkService: NSObject {
                             return callBack(nil, model.uuid)
                         }
                     }catch{
-                        //                        return  complete(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
+                        return  callBack(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail), nil)
                     }
                 })
                 

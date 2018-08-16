@@ -73,6 +73,18 @@ extension String{
 
         return base64
     }
+    
+    func appendingPathComponent(_ string: String) -> String {
+        return URL(fileURLWithPath: self).appendingPathComponent(string).path
+    }
+    
+    var floatValue: Float {
+        return (self as NSString).floatValue
+    }
+    
+    var lastPathComponent: String {
+        return (self as NSString).lastPathComponent
+    }
 }
 
 class StringExtension: NSObject {

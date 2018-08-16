@@ -240,6 +240,7 @@
 		1F537A082122809300A555C5 /* FilesDownloadAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F537A072122809300A555C5 /* FilesDownloadAlertViewController.swift */; };
 		1F537A0A2122816400A555C5 /* FilesDownloadAlertViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */; };
 		1F537A0D212412A600A555C5 /* SettingRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F537A0C212412A500A555C5 /* SettingRootViewController.swift */; };
+		1F537A102125150D00A555C5 /* AutoBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F537A0F2125150D00A555C5 /* AutoBackupManager.swift */; };
 		1F5659F320D0E35B00D86FDB /* share@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F220D0E35900D86FDB /* share@3x.png */; };
 		1F5659F520D0E36200D86FDB /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F420D0E36200D86FDB /* share@2x.png */; };
 		1F5659F720D0E36B00D86FDB /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F620D0E36A00D86FDB /* share.png */; };
@@ -775,6 +776,7 @@
 		1F537A072122809300A555C5 /* FilesDownloadAlertViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesDownloadAlertViewController.swift; sourceTree = "<group>"; };
 		1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FilesDownloadAlertViewController.storyboard; sourceTree = "<group>"; };
 		1F537A0C212412A500A555C5 /* SettingRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingRootViewController.swift; sourceTree = "<group>"; };
+		1F537A0F2125150D00A555C5 /* AutoBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoBackupManager.swift; sourceTree = "<group>"; };
 		1F5659F220D0E35900D86FDB /* share@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@3x.png"; sourceTree = "<group>"; };
 		1F5659F420D0E36200D86FDB /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		1F5659F620D0E36A00D86FDB /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -1551,6 +1553,14 @@
 			path = Setting;
 			sourceTree = "<group>";
 		};
+		1F537A0E212514DC00A555C5 /* AutoBackup */ = {
+			isa = PBXGroup;
+			children = (
+				1F537A0F2125150D00A555C5 /* AutoBackupManager.swift */,
+			);
+			path = AutoBackup;
+			sourceTree = "<group>";
+		};
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -2036,6 +2046,7 @@
 		1FD9B780207CBEAD00906D80 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				1F537A0E212514DC00A555C5 /* AutoBackup */,
 				1F537A0B2124128600A555C5 /* Setting */,
 				1FFD12D020EE11540053A3F7 /* Photo */,
 				1F307C7320BEB16200AE105C /* Model */,
@@ -3128,6 +3139,7 @@
 				1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,
+				1F537A102125150D00A555C5 /* AutoBackupManager.swift in Sources */,
 				1FFD136720EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m in Sources */,
 				1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */,
 				1FAADEF320AC144A00739220 /* FilesFileInfoTableViewController.swift in Sources */,

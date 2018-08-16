@@ -27,6 +27,16 @@ struct ErrorCode {
         public static let SwitchTOModelFail:Int = 60001
         public static let SwitchTODataFail:Int = 60002
     }
+    
+    struct Backup{
+        public static let BackupDirNotFound:Int = 70001
+    }
+    
+    struct Asset{
+        public static let AssetNotFound:Int = 80001
+        public static let AVAssetExportSessionStatusFailed:Int = 80002
+        public static let AVAssetExportSessionStatusCancelled:Int = 80003
+    }
 }
 
 
@@ -65,6 +75,16 @@ struct ErrorLocalizedDescription{
     struct JsonModel {
         public static let SwitchTOModelFail = "Json to Model error"
         public static let SwitchTODataFail = "dic to Model error"
+    }
+    
+    struct Backup{
+        public static let BackupDirNotFound  = "Backup directory Not Found"
+    }
+    
+    struct Asset{
+        public static let AssetNotFound  = "Asset Not Found"
+        public static let AVAssetExportSessionStatusFailed = "AVAssetExportSession Failed"
+        public static let AVAssetExportSessionStatusCancelled = "AVAssetExportSession Cancelled"
     }
 }
 

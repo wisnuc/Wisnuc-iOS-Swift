@@ -145,6 +145,7 @@ class AppService: NSObject,ServiceProtocol{
                     currentUser?.backUpDirectoryUUID = entryUUID;
                     AppUserService.synchronizedCurrentUser()
                 }
+                
                
                 // MARK:Upload Opration
                 //===================
@@ -180,6 +181,8 @@ class AppService: NSObject,ServiceProtocol{
                 AppUserService.currentUser?.autoBackUp = NSNumber.init(value: isUpload)
                 AppUserService.currentUser?.askForBackup = NSNumber.init(value: false)
                 AppUserService.synchronizedCurrentUser()
+                
+                //backUpStart
             })
         }
     }
@@ -209,17 +212,18 @@ class AppService: NSObject,ServiceProtocol{
         }
     }
     
-    func requestForBackupPhotos(callback:(_ shouldUpload:Bool)->()) {
+    func requestForBackupPhotos(callback: @escaping (_ shouldUpload:Bool)->()) {
         let alertTitle = LocalizedString(forKey: "backup_tips")
         let alertMessage = LocalizedString(forKey: "backup_alert_message")
         let cancelTitle = LocalizedString(forKey:"cancel")
         let confirmTitle = LocalizedString(forKey:"backup")
         Alert.alert(title: alertTitle, message: alertMessage, action1Title: confirmTitle, action2Title: cancelTitle, handler1: { (action) in
-//                AppUserService.currentUser.autoBackUp = NSNumber.init(value: true)
+//            print("😁")
+            callback(true)
             //    [[NSNotificationCenter defaultCenter] postNotificationName:UserBackUpConfigChangeNotify object:@(1)];
-            //    [WB_UserService synchronizedCurrentUser];
         }) { (action) in
-            
+//             print("👌")
+            callback(false)
         }
         
         //    UIAlertAction *cancle = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
@@ -243,6 +247,52 @@ class AppService: NSObject,ServiceProtocol{
         //    }];
     }
     
+    var isStartingUpload = false
+    var needRestart  = false
+    func startAutoBackup(callBack:(()->())?){
+        if  isStartingUpload {
+            needRestart = true
+            if((callBack) != nil){
+                callBack!()
+            }
+            return
+        }
+        isStartingUpload = true
+        let isWIFIBackup = self.userService.currentUser?.isWIFIAutoBackup?.boolValue ?? true
+        if  (RealReachability.sharedInstance().currentReachabilityStatus() == ReachabilityStatus.RealStatusViaWiFi && isWIFIBackup) || (RealReachability.sharedInstance().currentReachabilityStatus() != ReachabilityStatus.RealStatusNotReachable && !isWIFIBackup){
+            self.networkService.getEntriesInUserBackupDirectory { [weak self](error, entries) in
+                if error != nil {
+                    self?.isStartingUpload = false
+                    if error is BaseError{
+                        let baseErrot = error as! BaseError
+                        if  baseErrot.code == ErrorCode.Backup.BackupDirNotFound{
+                            //retry
+                        }
+                    }else{
+                        //retry
+                    }
+    //                    request.error.wbCode = WBUploadDirNotFound;
+    //                    NSLog(@"get backup dir entries error : %@", request.error);
+    //                    callback(request.error, nil);
+    //                    [weak_self rebulidUploadManager];
+    //                    return NSLog(@"Get BackupDir entries error");
+                }else{
+                    print("Start Upload ...")
+                    var netEntries = Array<EntriesModel>.init()
+                    netEntries.append(contentsOf: netEntries)
+//                    [self.photoUploadManager setNetAssets:netEntries];
+//                    [self.photoUploadManager startUpload];
+                    self?.isStartingUpload = false
+                    if(callBack != nil) {
+                        callBack!()
+                    }
+                }
+            }
+        }else{
+    //
+        }
+    }
+    
     lazy var userService: UserService = {
         let service = UserService.init()
         return service
@@ -261,6 +311,11 @@ class AppService: NSObject,ServiceProtocol{
     lazy var tokenManager: TokenManager = {
         let manager = TokenManager.init()
         return manager
+    }()
+    
+    lazy var autoBackupManager: AutoBackupManager = {
+        let photoUploadManager = AutoBackupManager.init()
+        return photoUploadManager
     }()
 }
 

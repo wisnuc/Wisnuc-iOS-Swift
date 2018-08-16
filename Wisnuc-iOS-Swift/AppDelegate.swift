@@ -137,24 +137,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         shareVC.title = LocalizedString(forKey: "Share")
         shareVC.view.backgroundColor = UIColor.cyan
         let settingVC = SettingRootViewController.init(style: NavigationStyle.whiteStyle)
-        let pcVC = BaseViewController()
+        let computersVC = BaseViewController()
         let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
         let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
         let shareNavi = BaseNavigationController.init(rootViewController: shareVC)
         let settingNavi = BaseNavigationController.init(rootViewController: settingVC)
-        let pcNavi = BaseNavigationController.init(rootViewController: pcVC)
+        let computersNavi = BaseNavigationController.init(rootViewController: computersVC)
         filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Files"), image: UIImage.init(named: "Home")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 0)
         shareNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Share"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 1)
                 photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Photos"), image: UIImage.init(named: "photos.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 2)
-        pcNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "PC"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 3)
-        settingNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Setting"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 4)
+        computersNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Computers"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 3)
+        settingNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Settings"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 4)
         filesNavi.tabBarItem.selectedImage = UIImage.init(named: "tab_files_selected.png")
-        let controllers = [filesNavi, shareNavi,photosNavi,pcNavi,settingNavi]
+        let controllers = [filesNavi, shareNavi,photosNavi,computersNavi,settingNavi]
         tabBarController.viewControllers = controllers
         tabBarController.tabBar?.items = [filesNavi.tabBarItem,
                                           shareNavi.tabBarItem,
                                           photosNavi.tabBarItem,
-                                          pcNavi.tabBarItem,
+                                          computersNavi.tabBarItem,
                                           settingNavi.tabBarItem]
         tabBarController.tabBar?.setImageTintColor(COR1, for: MDCTabBarItemState.normal)
         tabBarController.tabBar?.setImageTintColor(LightGrayColor, for: MDCTabBarItemState.selected)

@@ -11,11 +11,12 @@ import UIKit
 class SettingRootViewController: BaseViewController {
     let identifier = "Cellidentifier"
     let cellHtight:CGFloat = 52
-    var switchOn = false
+    var autoBackupSwitchOn = false
+    var wifiSwitchOn = true
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = LocalizedString(forKey: "Setting")
-        switchOn = AppUserService.currentUser?.autoBackUp?.boolValue ?? false
+        self.title = LocalizedString(forKey: "Settings")
+       
         appBar.headerViewController.headerView.trackingScrollView = settingTabelView
         self.view.addSubview(settingTabelView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
@@ -26,17 +27,45 @@ class SettingRootViewController: BaseViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let tab = retrieveTabbarController(){
+           if tab.tabBarHidden{
+                tab.setTabBarHidden(false, animated: true)
+            }
+        }
+    }
+    
+    func setSwitchState(){
+        autoBackupSwitchOn = AppUserService.currentUser?.autoBackUp?.boolValue ?? false
+        wifiSwitchOn = AppUserService.currentUser?.isWIFIAutoBackup?.boolValue ?? true
+    }
+    
     @objc func switchBtnHandleForSync(_ sender:UISwitch){
         AppUserService.currentUser?.autoBackUp = NSNumber.init(value: sender.isOn)
         AppUserService.synchronizedCurrentUser()
-        switchOn = sender.isOn
-        if switchOn {
+        autoBackupSwitchOn = sender.isOn
+        if autoBackupSwitchOn {
 //            [SXLoadingView showProgressHUD:@" "];
 //            [WB_AppServices startUploadAssets:^{
 //                [SXLoadingView hideProgressHUD];
 //                }];
         } else{
 //            [WB_AppServices.photoUploadManager stop];
+        }
+    }
+    
+    @objc func switchBtnHandleForWIFISync(_ sender:UISwitch){
+        AppUserService.currentUser?.isWIFIAutoBackup = NSNumber.init(value: sender.isOn)
+        AppUserService.synchronizedCurrentUser()
+        wifiSwitchOn = sender.isOn
+        if wifiSwitchOn {
+            //            [SXLoadingView showProgressHUD:@" "];
+            //            [WB_AppServices startUploadAssets:^{
+            //                [SXLoadingView hideProgressHUD];
+            //                }];
+        } else{
+            //            [WB_AppServices.photoUploadManager stop];
         }
     }
     
@@ -60,8 +89,15 @@ extension SettingRootViewController:UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
-        case 0:break
-        case 1:
+        case 0:
+            let transferTaskTableViewController = TransferTaskTableViewController.init(style:NavigationStyle.whiteStyle)
+            self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
+            if let tab = retrieveTabbarController(){
+                tab.setTabBarHidden(true, animated: true)
+            }
+        case 1:break
+        case 2:break
+        case 3:
           self.logoutAction()
         default: break
             
@@ -74,7 +110,7 @@ extension SettingRootViewController:UITableViewDataSource{
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 4
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -85,16 +121,28 @@ extension SettingRootViewController:UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         switch indexPath.row {
         case 0:
+            cell.textLabel?.text = LocalizedString(forKey: "transfer")
+            cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+        case 1:
             cell.textLabel?.text = LocalizedString(forKey: "自动备份照片")
             let switchBtn = UISwitch.init()
-            switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.center.y)
-            switchBtn.isOn = switchOn
+            switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
+            switchBtn.isOn = autoBackupSwitchOn
             switchBtn.addTarget(self, action: #selector(switchBtnHandleForSync(_ :)), for: UIControlEvents.valueChanged)
-            //        if(!AppUserService.isUserLogin) switchBtn.enabled = NO;
+            if(!AppUserService.isUserLogin)
+            {switchBtn.isEnabled = false}
             cell.contentView.addSubview(switchBtn)
-        case 1:
-             cell.textLabel?.text = LocalizedString(forKey: "Log out")
-            
+        case 2:
+            cell.textLabel?.text = LocalizedString(forKey: "仅WIFI下备份")
+            let switchBtn = UISwitch.init()
+            switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
+            switchBtn.isOn = wifiSwitchOn
+            switchBtn.addTarget(self, action: #selector(switchBtnHandleForWIFISync(_ :)), for: UIControlEvents.valueChanged)
+            if(!AppUserService.isUserLogin)
+            {switchBtn.isEnabled = false}
+            cell.contentView.addSubview(switchBtn)
+        case 3:
+            cell.textLabel?.text = LocalizedString(forKey: "Log out")
         default: break
             
         }

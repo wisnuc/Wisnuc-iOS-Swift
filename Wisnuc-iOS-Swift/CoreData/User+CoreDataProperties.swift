@@ -36,4 +36,5 @@ extension User {
     @NSManaged public var isListStyle:NSNumber?
     @NSManaged public var autoBackUp:NSNumber?
     @NSManaged public var askForBackup:NSNumber?
+    @NSManaged public var isWIFIAutoBackup:NSNumber?
 }

@@ -16,6 +16,7 @@
         <attribute name="isFirstUser" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isListStyle" optional="YES" attributeType="Boolean" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isLocalLogin" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isWIFIAutoBackup" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="localAddr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localToken" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sortIsDown" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
@@ -27,6 +28,6 @@
     </entity>
     <elements>
         <element name="LocalAsset" positionX="-54" positionY="117" width="128" height="75"/>
-        <element name="User" positionX="-54" positionY="-9" width="128" height="330"/>
+        <element name="User" positionX="-54" positionY="-9" width="128" height="345"/>
     </elements>
 </model>
