@@ -13,6 +13,7 @@ let MainServices = AppService.sharedInstance
 let AppUserService =  MainServices().userService
 let AppNetworkService =  MainServices().networkService
 let AppAssetService =  MainServices().assetService
+let AppDBService =  MainServices().dbService
 let AppTokenManager =  MainServices().tokenManager
 
 class AppService: NSObject,ServiceProtocol{
@@ -305,6 +306,11 @@ class AppService: NSObject,ServiceProtocol{
     
     lazy var assetService: AssetService = {
         let service = AssetService.init()
+        return service
+    }()
+    
+    lazy var dbService: DBService = {
+        let service = DBService.init()
         return service
     }()
     

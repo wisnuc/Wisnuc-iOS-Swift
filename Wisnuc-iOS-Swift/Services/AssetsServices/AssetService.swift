@@ -8,7 +8,7 @@
 
 import UIKit
 import Photos
-
+import MagicalRecord
 
 class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     var userAuth:Bool?
@@ -105,6 +105,24 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
             }
         default:
             break
+        }
+    }
+    
+    func saveAsset(localId:String,digest:String){
+        var oldAsset = self.getAsset(localId: localId)
+        AppDBService.saveQueue.async {
+            if oldAsset == nil {
+            let context = NSManagedObjectContext.mr_default()
+                context.perform({
+                    oldAsset = LocalAsset.mr_createEntity(in: context)
+                    oldAsset?.localId = localId
+                    oldAsset?.digest = digest
+                    context.mr_saveToPersistentStoreAndWait()
+                })
+            }else {
+                oldAsset?.digest = digest
+              NSManagedObjectContext.mr_default().mr_saveToPersistentStoreAndWait()
+            }
         }
     }
     

@@ -17,10 +17,12 @@
 #import "FMHeadView.h"
 
 #import "UIButton+EnlargeEdge.h"
+#import "FileHash.h"
 
 #import "UIView+JY_ExtendTouchRect.h"
 #import "UIScrollView+IndicatorExt.h"
 #import "PHPhotoLibrary+JYEXT.h"
 
 #import "JYConst.h"
+
 

@@ -84,32 +84,43 @@ extension PHAsset{
         return tmp!
     }
     
-    func getSha256(callback:(_ error:Error, _ sha256:String)->()) ->PHImageRequestID{
-//    return [self getFile:^(NSError *error, NSString *filePath) {
-//    if(error) return callback(error, NULL);
-//    NSError * err;
-//    NSDate * beforeDate = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&err] objectForKey:NSFileCreationDate];
-//    if(err) return callback(err, NULL);
-//    NSString * hashStr = [FileHash sha256HashOfFileAtPath:filePath];
-//    NSDate * afterDate = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:&err] objectForKey:NSFileCreationDate];
-//    if(err) return callback(err, NULL);
-//    // time  mismatch
-//    if(![beforeDate isEqualToDate:afterDate]) return callback([NSError errorWithDomain:@"CreateTime MISMATCH" code:667 userInfo:nil], NULL);
-//    if(!hashStr || !hashStr.length) return callback([NSError errorWithDomain:@"FILE HASH ERROR" code:666 userInfo:nil], NULL);
-//    @try {
-//    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-//    } @catch (NSException *exception) {
-//    NSLog(@"%@", exception);
-//    }
-//    return callback(nil, hashStr);
-//    }];
+    func getSha256(callback:@escaping (_ error:Error?, _ sha256:String?)->()) ->PHImageRequestID{
+        return self.getFile(callBack: { (requestError, filePath) in
+            if requestError != nil {
+               return callback(requestError, nil)
+            }
+            do {
+                let beforeDate =  try (FileManager.default.attributesOfItem(atPath: filePath!))[FileAttributeKey.creationDate] as! Date
+                let hashStr = FileHash.sha256HashOfFile(atPath: filePath!)
+                
+                do {
+                    let afterDate =  try (FileManager.default.attributesOfItem(atPath: filePath!))[FileAttributeKey.creationDate] as! Date
+                    if  beforeDate != afterDate {
+                        return callback(BaseError(localizedDescription:ErrorLocalizedDescription.Asset.CreateTimeMismatch , code: ErrorCode.Asset.CreateTimeMismatch), nil)
+                    }else{
+                        if  hashStr == nil || hashStr?.count == 0{
+                            return callback(BaseError(localizedDescription: ErrorLocalizedDescription.Asset.HashError, code: ErrorCode.Asset.HashError), nil)
+                        }
+                        do {
+                            try  FileManager.default.removeItem(atPath: filePath!)
+                        } catch  {
+                            return callback(error, nil);
+                        }
+                        return callback(nil, hashStr)
+                    }
+                } catch  {
+                    return callback(error, nil);
+                }
+            } catch  {
+                    return callback(error, nil);
+            }
+        })
     }
     
     func getFile(callBack:@escaping (_ error:Error?, _ filePath:String?)->()) -> PHImageRequestID {
         let fileName = "tmp_\(Date.init().timeIntervalSince1970)_\(UIDevice.current.identifierForVendor!.uuidString)"
         var filePath = self.getTmpPath().appendingPathComponent(fileName)
         //TODO: do something for livephoto
-        
         if(!self.isVideo()) {
             return PHPhotoLibrary.requestHighImageDataSync(for: self, completion: { (error, imageData, info) in
                 if(imageData != nil) {

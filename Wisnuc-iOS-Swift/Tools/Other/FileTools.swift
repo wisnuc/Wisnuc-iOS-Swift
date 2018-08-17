@@ -59,4 +59,22 @@ class FileTools: NSObject {
         }
         return name
     }
+    
+    
+    class func fileSizeAtPath(filePath:String)->UInt64{
+        
+        let manager = FileManager.default
+        
+        if manager.fileExists(atPath: filePath){
+            
+            do{
+                let size:UInt64 = try manager.attributesOfItem(atPath: filePath)[FileAttributeKey.size] as! UInt64
+                return size
+            }catch{
+                return 0
+            }
+        }
+        
+        return 0
+    }
 }

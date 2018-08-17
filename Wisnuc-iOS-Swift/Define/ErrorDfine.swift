@@ -30,12 +30,15 @@ struct ErrorCode {
     
     struct Backup{
         public static let BackupDirNotFound:Int = 70001
+        public static let BackupCancel  = 70002
     }
     
     struct Asset{
         public static let AssetNotFound:Int = 80001
         public static let AVAssetExportSessionStatusFailed:Int = 80002
         public static let AVAssetExportSessionStatusCancelled:Int = 80003
+        public static let CreateTimeMismatch:Int = 80003
+        public static let HashError:Int = 80004
     }
 }
 
@@ -79,12 +82,15 @@ struct ErrorLocalizedDescription{
     
     struct Backup{
         public static let BackupDirNotFound  = "Backup directory Not Found"
+        public static let BackupCancel  = "Backup Cancel"
     }
     
     struct Asset{
         public static let AssetNotFound  = "Asset Not Found"
         public static let AVAssetExportSessionStatusFailed = "AVAssetExportSession Failed"
         public static let AVAssetExportSessionStatusCancelled = "AVAssetExportSession Cancelled"
+        public static let CreateTimeMismatch =  " CreateTime Mismatch"
+        public static let HashError  = "Hash Error"
     }
 }
 

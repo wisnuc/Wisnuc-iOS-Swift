@@ -163,6 +163,7 @@
 		1F359FEF2092EF1300E2FF36 /* CNPPopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F359FEE2092EF1300E2FF36 /* CNPPopupController.m */; };
 		1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F359FF0209310A200E2FF36 /* RadioButtonTableViewCell.swift */; };
 		1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FF1209310A200E2FF36 /* RadioButtonTableViewCell.xib */; };
+		1F362F11212672F2000B3384 /* DBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F10212672F2000B3384 /* DBService.swift */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -698,6 +699,7 @@
 		1F359FEE2092EF1300E2FF36 /* CNPPopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNPPopupController.m; sourceTree = "<group>"; };
 		1F359FF0209310A200E2FF36 /* RadioButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonTableViewCell.swift; sourceTree = "<group>"; };
 		1F359FF1209310A200E2FF36 /* RadioButtonTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RadioButtonTableViewCell.xib; sourceTree = "<group>"; };
+		1F362F10212672F2000B3384 /* DBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBService.swift; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -1329,6 +1331,7 @@
 		1F2CE30420B50EC700D9E5BD /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				1F362F0F212672D1000B3384 /* DBServices */,
 				1FFD132920EF3AE00053A3F7 /* AssetsServices */,
 				1F307C6820BEA20E00AE105C /* NetworkService */,
 				1F2CE39520B5700B00D9E5BD /* UserService */,
@@ -1463,6 +1466,14 @@
 				1F359FEE2092EF1300E2FF36 /* CNPPopupController.m */,
 			);
 			path = CNPPopupController;
+			sourceTree = "<group>";
+		};
+		1F362F0F212672D1000B3384 /* DBServices */ = {
+			isa = PBXGroup;
+			children = (
+				1F362F10212672F2000B3384 /* DBService.swift */,
+			);
+			path = DBServices;
 			sourceTree = "<group>";
 		};
 		1F3C241820A4499900E6B953 /* Helper */ = {
@@ -3247,6 +3258,7 @@
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
 				1FFD132820EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m in Sources */,
 				1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */,
+				1F362F11212672F2000B3384 /* DBService.swift in Sources */,
 				1FFD12C620EB80E80053A3F7 /* DirOprationAPI.swift in Sources */,
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
 				1FFD132620EF36A50053A3F7 /* UIScrollView+IndicatorExt.m in Sources */,
