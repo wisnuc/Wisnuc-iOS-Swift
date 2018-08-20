@@ -11,9 +11,10 @@ import UIKit
 import Alamofire
 
 class AutoBackupManager: NSObject {
-    private var isdestroing = false
+    private var isDestroying = false
     private var shouldNotify = false
     private var needRetry = true
+
     lazy var hashwaitingQueue = Array<WSAsset>.init()
     
     lazy var hashWorkingQueue = Array<WSAsset>.init()
@@ -27,6 +28,8 @@ class AutoBackupManager: NSObject {
     lazy var uploadedQueue = Array<WSUploadModel>.init()
     
     lazy var uploadErrorQueue = Array<WSUploadModel>.init()
+    
+    var sessionManager: SessionManager!
     
     var hashLimitCount:Int? // default 2
     
@@ -42,16 +45,53 @@ class AutoBackupManager: NSObject {
     
     override init() {
         super.init()
+        let configuration = URLSessionConfiguration.default
+        sessionManager = Alamofire.SessionManager(configuration: configuration)
         shouldUpload = false
         hashLimitCount = 4
+        uploadLimitCount = 4
     }
     
 //    func getAllCount:(callback:(allCount:Int)-())?
 //
-//    func startWithLocalAssets:(NSArray<WSAsset>)localAssets andNetAssets:(NSArray<EntriesModel>)netAssets?
-//
-//    func startUpload?
-//
+
+  
+    func startAutoBcakup() {
+        self.shouldUpload = false
+        // notify for start
+        defaultNotificationCenter().post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
+        self.managerQueue.async { [weak self]  in
+            for model in (self?.uploadErrorQueue)!{
+                self?.uploadPaddingQueue.append(model.asset!)
+            }
+            self?.uploadErrorQueue.removeAll()
+            self?.shouldUpload = true
+            self?.needRetry  = true
+            self?.schedule()
+        }
+    }
+    
+    func destroy(){
+        isDestroying = true
+        self.hashwaitingQueue.removeAll()
+        // TODO: cancel working queue?
+        self.hashWorkingQueue.removeAll()
+        self.hashFailQueue.removeAll()
+        
+        self.uploadPaddingQueue.removeAll()
+        self.stop()
+        self.uploadingQueue.removeAll()
+        self.uploadedQueue.removeAll()
+        self.uploadErrorQueue.removeAll()
+        self.uploadedNetQueue.removeAll()
+        self.uploadedLocalHashSet.removeAll()
+        self.sessionManager.session.invalidateAndCancel()
+        shouldNotify = false
+        needRetry = true
+        shouldUpload = false
+        isDestroying = false
+    }
+    
     func setNetAssets(netAssets:Array<EntriesModel>){
         managerQueue.async {
             self.uploadedNetQueue = netAssets
@@ -67,8 +107,27 @@ class AutoBackupManager: NSObject {
         }
     }
     
+    func start(localAssets:Array<WSAsset>,netAssets:Array<EntriesModel>){
+        self.managerQueue.async { [weak self] in
+            self?.shouldNotify = true
+            self?.needRetry = true
+            self?.hashwaitingQueue.append(contentsOf: localAssets)
+            self?.hashwaitingQueue.sort { $0.createDate! > $1.createDate! }
+            self?.uploadedNetQueue.append(contentsOf: netAssets)
+            var hashSet = Set<String>.init()
+            for model in netAssets{
+                if model.type == FilesType.file.rawValue && model.hash != nil{
+                    hashSet.insert(model.hash!)
+                }
+            }
+
+            self?.uploadedNetHashSet = hashSet
+            self?.schedule()
+        }
+    }
+    
     func schedule(){
-        if isdestroing {return}
+        if isDestroying {return}
         if(self.hashwaitingQueue.count == 0 && self.hashWorkingQueue.count == 0) {
             if shouldNotify {
                 shouldNotify = false
@@ -102,7 +161,9 @@ class AutoBackupManager: NSObject {
             while((self?.hashWorkingQueue.count)! < (self?.hashLimitCount!)! && (self?.hashwaitingQueue.count)! > 0) {
                 let asset = self?.hashwaitingQueue.first
                 let location = self?.hashwaitingQueue.index(of: asset!)
-                self?.hashwaitingQueue.remove(at: location!)
+                if let eLocation = location{
+                    self?.hashwaitingQueue.remove(at: eLocation)
+                }
                 self?.hashWorkingQueue.append(asset!)
                 self?.workingQueue.async {
                     self?.getAssetSha256(asset: asset!, callback: { [weak self] (error, sha256) in
@@ -115,18 +176,23 @@ class AutoBackupManager: NSObject {
                             }
                             
                             let location = self?.hashWorkingQueue.index(of: asset!)
-                            self?.hashWorkingQueue.remove(at: location!)
+                            if let eLocation = location{
+                                self?.hashWorkingQueue.remove(at: eLocation)
+                            }
                             self?.schedule()
                         }
                     })
                 }
             }
+            
             if !(self?.shouldUpload!)! {return}
             while((self?.uploadPaddingQueue.count)! > 0 && (self?.uploadingQueue.count)! < (self?.uploadLimitCount)!) {
                 let asset = self?.uploadPaddingQueue.first
                 let location = self?.uploadPaddingQueue.index(of: asset!)
-                self?.uploadPaddingQueue.remove(at: location!)
-                let model = WSUploadModel.init(asset: asset!)
+                if let eLocation = location{
+                     self?.uploadPaddingQueue.remove(at: eLocation)
+                }
+                let model = WSUploadModel.init(asset: asset!, manager: (self?.sessionManager)!)
                 if (self?.uploadedNetHashSet.contains((asset?.digest)!))! || (self?.uploadedLocalHashSet.contains((asset?.digest)!))! {
                     self?.uploadedQueue.append(model)
                     print("发现一个已上传的，直接跳过, error: \(String(describing: (self?.uploadErrorQueue.count)!)) finish:\(String(describing: (self?.uploadedQueue.count)!))")
@@ -136,7 +202,7 @@ class AutoBackupManager: NSObject {
                 }else {
                     self?.uploadingQueue.append(model)
                     self?.workingQueue.async {
-//                           [self scheduleForUpload:model andUseTimeStamp:NO];
+                           self?.scheduleForUpload(model: model, useTimeStamp: false)
                     }
                 }
             }
@@ -149,54 +215,71 @@ class AutoBackupManager: NSObject {
 //    __weak typeof(self) weakSelf = self;
 //    __weak typeof(WB_AppServices) weak_AppService = WB_AppServices;
         self.workingQueue.async { [weak self] in
-            model.start(useTimeStamp:useTimeStamp , callback: { (error, response) in
-                
+            model.start(useTimeStamp:useTimeStamp , callback: { [weak self](error, response) in
+                self?.managerQueue.async {
+                    if error != nil{
+                        if error is BaseError{
+                            let baseError = error as! BaseError
+                            switch baseError.code {
+                            case ErrorCode.Backup.BackupDirNotFound:
+                                 self?.stop()
+                                 self?.destroy()
+//                                 NSLog(@"文件上传目录丢失 开始重建");
+                                 AppService.sharedInstance().rebuildAutoBackupManager()
+                            case ErrorCode.Backup.BackupFileExist:
+                                self?.scheduleForUpload(model: model, useTimeStamp: true)
+                            default:
+                                if !model.isRemoved!{
+                                    self?.uploadErrorQueue.append(model)
+                                    let location = self?.uploadingQueue.index(of: model)
+                                    if let eLocation = location{
+                                        self?.uploadingQueue.remove(at: eLocation)
+                                    }
+                                    print("上传失败 , error:\(String(describing: self?.uploadErrorQueue.count))  finish:\(String(describing: self?.uploadedQueue.count))")
+                                }
+                            }
+                        }
+                    }else{
+                        print("上传成功 , error:\(String(describing: self?.uploadErrorQueue.count))  finish:\(String(describing: self?.uploadedQueue.count))")
+                        if let location = self?.uploadingQueue.index(of: model){
+                            self?.uploadingQueue.remove(at: location)
+                        }
+                        
+                        self?.uploadedLocalHashSet.insert((model.asset?.digest!)!)
+                        if !((self?.uploadedQueue.contains(model))!){
+                            if !model.isRemoved! {
+                                self?.uploadedQueue.append(model)
+                                if let location = self?.uploadingQueue.index(of: model){
+                                    self?.uploadingQueue.remove(at: location)
+                                }
+                                defaultNotificationCenter().post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
+                            }
+                        }
+                    }
+                    self?.schedule()
+                }
             })
         }
-        
-        
-//    dispatch_async(self.workingQueue, ^{
-//    [model startUseTimeStamp:yesOrNo completeBlock:^(NSError *error, id response) {
-//    if(!weakSelf) return;
-//    dispatch_async(weakSelf.managerQueue, ^{
-//    if (error) {
-//    if (error.wbCode == WBUploadDirNotFound) {
-//    [weakSelf stop];   // stop
-//    // need rebuild
-//    [weakSelf destroy];
-//    NSLog(@"文件上传目录丢失 开始重建");
-//    [weak_AppService rebulidUploadManager];
-//    }else if (error.wbCode == WBUploadFileExist) {
-//    // rename then retry
-//    NSLog(@"文件 EExist,  重命名 再次尝试！");
-//    [weakSelf scheduleForUpload:model andUseTimeStamp:YES];
-//    }else {
-//    if(!model.isRemoved)
-//    [weakSelf.uploadErrorQueue addObject:model];
-//    [weakSelf.uploadingQueue removeObject:model];
-//    NSLog(@"上传失败 , error: %lu  finish:%lu", (unsigned long)weakSelf.uploadErrorQueue.count, (unsigned long)weakSelf.uploadedQueue.count);
-//    }
-//    }else{  // success
-//    NSLog(@"上传成功 , error: %lu  finish:%lu", (unsigned long)weakSelf.uploadErrorQueue.count, (unsigned long)weakSelf.uploadedQueue.count);
-//    [weakSelf.uploadingQueue removeObject:model];
-//    [weakSelf.uploadedLocalHashSet addObject:model.asset.digest]; // record for skip equal-hash asset
-//    if(![weakSelf.uploadedQueue containsObject:model]) {
-//    if(!model.isRemoved)
-//    [weakSelf.uploadedQueue addObject:model];
-//    [weakSelf.uploadingQueue removeObject:model];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:WBBackupCountChangeNotify object:nil];
-//    }
-//    }
-//    [weakSelf schedule];
-//    });
-//    }];
-//    });
     }
     
 //
-//    func stop?
+    func stop(){
+        self.shouldUpload = false
+        //TODO: hash queue should stop?
+        
+        for model in self.uploadingQueue {
+            model.cancel()
+        }
+       
+        if let manager = sessionManager {
+            manager.session.getAllTasks(completionHandler: { (uploadTasks) in
+                uploadTasks.forEach { $0.cancel() }
+            })
+        }
+    }
+    
+
 //
-//    func destroy?
 //
 //    func addTask:(WSAsset)asset?
 //
@@ -257,15 +340,29 @@ class WSUploadModel: NSObject {
     
     var isRemoved:Bool?
     
-    var dataTask:URLSessionDataTask?
-    
     var requestFileID:PHImageRequestID?
     
-    init(asset:WSAsset) {
+    var manager:SessionManager?
+    init(asset:WSAsset,manager:SessionManager) {
         super.init()
         self.asset = asset
+        self.manager = manager
         self.shouldStop = false
     }
+    
+    func cancel() {
+        self.shouldStop = false
+        if requestFileID != nil {
+            PHImageManager.default().cancelImageRequest(requestFileID!)
+            requestFileID = PHInvalidImageRequestID
+        }
+        if manager != nil{
+            manager?.session.getAllTasks(completionHandler: { (uploadTasks) in
+                uploadTasks.forEach { $0.cancel() }
+            })
+        }
+    }
+
     
     func start(useTimeStamp:Bool,callback:@escaping (_ error:Error?,_ any:Any?)->()){
     /*
@@ -303,15 +400,15 @@ class WSUploadModel: NSObject {
             if(useTimeStamp) {
                 fileName = "\(Date.init().timeIntervalSince1970)_\(String(describing: fileName))"
             }
-            NSLog("filename :\(String(describing: fileName))")
+            NSLog("filename :\(String(describing: fileName!))")
             var urlString:String?
             let requestHTTPHeaders = [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
             var mutableDic:Dictionary<String, Any>? = Dictionary<String, Any>.init()
             if AppUserService.currentUser?.isLocalLogin == nil {return}
             if AppNetworkService.networkState == .local {
-                //    urlString = [NSString stringWithFormat:@"%@drives/%@/dirs/%@/entries/",[JYRequestConfig sharedConfig].baseURL,AppUserService.currentUser.userHome, AppUserService.currentUser.backUpDir];
-                //    mutableDic = nil;
-                //    [_manager.requestSerializer setValue:[NSString stringWithFormat:@"JWT %@",AppUserService.defaultToken] forHTTPHeaderField:@"Authorization"];
+                urlString = "\((RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: (AppUserService.currentUser?.userHome!)!))/dirs/\(String(describing: (AppUserService.currentUser?.backUpDirectoryUUID!)!))/entries/"
+                mutableDic = nil
+                mutableDic = Dictionary<String, Any>.init()
             }else {
                     urlString = "\(kCloudAddr)\(kCloudCommonPipeUrl)"
                 let requestUrl = "/drives/\((AppUserService.currentUser?.userHome!)!)/dirs/\((AppUserService.currentUser?.backUpDirectoryUUID!)!)/entries"
@@ -333,7 +430,7 @@ class WSUploadModel: NSObject {
                 originalRequest = try URLRequest(url: URL.init(string: urlString!)! , method:.post, headers: requestHTTPHeaders)
                 originalRequest?.timeoutInterval = TimeInterval(30)
                 let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: nil)
-                Alamofire.upload(multipartFormData: { (formData) in
+                self?.manager?.upload(multipartFormData: { (formData) in
                     if AppNetworkService.networkState == .normal{
                         formData.append(URL.init(fileURLWithPath: filePath!), withName: fileName!, fileName: fileName!, mimeType: "image/jpeg")
                     }else{
@@ -341,27 +438,31 @@ class WSUploadModel: NSObject {
                         let jsonData =  jsonToData(jsonDic: dic)
                         let jsonString = String.init(data: jsonData!, encoding: String.Encoding.utf8)
                         formData.append(URL.init(fileURLWithPath: filePath!), withName: fileName!, fileName: jsonString!, mimeType: "image/jpeg")
+    
                     }
                 }, with: encodedURLRequest, encodingCompletion: { (response) in
                     switch response {
                     case .success(let upload, _, _):
                         upload.validate(statusCode: 200..<500)
-                            .validate(contentType: ["application/json"])
+//                            .validate(contentType: ["application/json"])
                             .responseData(completionHandler: { (responseData) in
-                            
-                                    
-                                
+                                if  responseData.error != nil{
+                                    print(responseData.error ?? "error")
+                                    callback(responseData.error,nil)
+                                }
                             })
+                      
                     case .failure(let error):
+                        print(error )
                         return  callback(error,nil)
                     }
                 })
-                
+    
             } catch {
                 return callback(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest),nil)
             }
           
-            
+           
 //    NSString * requestTempPath = [NSString stringWithFormat:@"%@_temp", filePath];
 //    NSURL *requestFileTempPath = [NSURL fileURLWithPath:requestTempPath];
 //    

@@ -46,12 +46,10 @@ class SettingRootViewController: BaseViewController {
         AppUserService.synchronizedCurrentUser()
         autoBackupSwitchOn = sender.isOn
         if autoBackupSwitchOn {
-//            [SXLoadingView showProgressHUD:@" "];
-//            [WB_AppServices startUploadAssets:^{
-//                [SXLoadingView hideProgressHUD];
-//                }];
+            AppService.sharedInstance().startAutoBackup {
+            }
         } else{
-//            [WB_AppServices.photoUploadManager stop];
+            AppService.sharedInstance().autoBackupManager.stop()
         }
     }
     
@@ -60,12 +58,9 @@ class SettingRootViewController: BaseViewController {
         AppUserService.synchronizedCurrentUser()
         wifiSwitchOn = sender.isOn
         if wifiSwitchOn {
-            //            [SXLoadingView showProgressHUD:@" "];
-            //            [WB_AppServices startUploadAssets:^{
-            //                [SXLoadingView hideProgressHUD];
-            //                }];
+          
         } else{
-            //            [WB_AppServices.photoUploadManager stop];
+           
         }
     }
     

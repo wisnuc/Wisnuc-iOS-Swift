@@ -17,7 +17,7 @@ let AppDBService =  MainServices().dbService
 let AppTokenManager =  MainServices().tokenManager
 
 class AppService: NSObject,ServiceProtocol{
-    
+    private var isRebuildingAutoBackupManager = false
     private static var privateShared : AppService?
     class func sharedInstance() -> AppService { // change class to final to prevent override
         guard let uwShared = privateShared else {
@@ -28,7 +28,10 @@ class AppService: NSObject,ServiceProtocol{
     }
     
     override init() {
-        
+        super.init()
+        if self.assetService.userAuth! {
+            self.autoBackupManager.start(localAssets: self.assetService.allAssets!, netAssets: [EntriesModel]())
+        }
     }
     
     func abort() {
@@ -188,6 +191,43 @@ class AppService: NSObject,ServiceProtocol{
         }
     }
     
+    func rebuildAutoBackupManager(){
+        if isRebuildingAutoBackupManager  {return}
+        isRebuildingAutoBackupManager = false
+        DispatchQueue.main.sync {
+            autoBackupManager.destroy()
+            self.updateUserBackupDirectory(callback: { [weak self](error, user) in
+                if error == nil{
+               self?.isRebuildingAutoBackupManager = false
+                self?.autoBackupManager.start(localAssets: (self?.assetService.allAssets)!, netAssets: [EntriesModel]())
+                self?.startAutoBackup(callBack: nil)
+                }else{
+                    print("--------->> Update User BackUp Dir Error <<------------- \n error: \(String(describing: error))")
+                }
+            })
+        }
+    }
+    
+    func updateUserBackupDirectory(callback:@escaping (_ error:Error?,_ user:User?)->()){
+        AppNetworkService.getUserHome { [weak AppNetworkService](error, userHome) in
+            if error != nil{
+                return callback(error,nil)
+            }else{
+                AppUserService.currentUser?.userHome = userHome
+                AppUserService.synchronizedCurrentUser()
+                AppNetworkService?.getUserBackupDir(name: kBackupDirectory, { (backupDirerror, entryUUID) in
+                    if error != nil{
+                      return callback(backupDirerror,nil)
+                    }else{
+                        AppUserService.currentUser?.backUpDirectoryUUID = entryUUID
+                        AppUserService.synchronizedCurrentUser()
+                        return callback(nil, AppUserService.currentUser)
+                    }
+                })
+            }
+        }
+    }
+    
     func updateCurrentUserInfo(){
         UsersInfoAPI.init().startRequestDataCompletionHandler { (response) in
             if  response.error == nil{
@@ -267,22 +307,17 @@ class AppService: NSObject,ServiceProtocol{
                     if error is BaseError{
                         let baseErrot = error as! BaseError
                         if  baseErrot.code == ErrorCode.Backup.BackupDirNotFound{
-                            //retry
+                               self?.rebuildAutoBackupManager()
                         }
                     }else{
                         //retry
                     }
-    //                    request.error.wbCode = WBUploadDirNotFound;
-    //                    NSLog(@"get backup dir entries error : %@", request.error);
-    //                    callback(request.error, nil);
-    //                    [weak_self rebulidUploadManager];
-    //                    return NSLog(@"Get BackupDir entries error");
                 }else{
                     print("Start Upload ...")
                     var netEntries = Array<EntriesModel>.init()
                     netEntries.append(contentsOf: netEntries)
-//                    [self.photoUploadManager setNetAssets:netEntries];
-//                    [self.photoUploadManager startUpload];
+                    self?.autoBackupManager.setNetAssets(netAssets: netEntries)
+                   self?.autoBackupManager.startAutoBcakup()
                     self?.isStartingUpload = false
                     if(callBack != nil) {
                         callBack!()

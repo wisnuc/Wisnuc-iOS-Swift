@@ -31,6 +31,7 @@ struct ErrorCode {
     struct Backup{
         public static let BackupDirNotFound:Int = 70001
         public static let BackupCancel  = 70002
+        public static let BackupFileExist = 70003
     }
     
     struct Asset{
@@ -83,6 +84,7 @@ struct ErrorLocalizedDescription{
     struct Backup{
         public static let BackupDirNotFound  = "Backup directory Not Found"
         public static let BackupCancel  = "Backup Cancel"
+        public static let BackupFileExist = "Backup File Exist"
     }
     
     struct Asset{

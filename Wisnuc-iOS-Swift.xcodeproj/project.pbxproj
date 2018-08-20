@@ -164,6 +164,8 @@
 		1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F359FF0209310A200E2FF36 /* RadioButtonTableViewCell.swift */; };
 		1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FF1209310A200E2FF36 /* RadioButtonTableViewCell.xib */; };
 		1F362F11212672F2000B3384 /* DBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F10212672F2000B3384 /* DBService.swift */; };
+		1F362F14212ACF7D000B3384 /* WBUploadManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F362F12212ACF7D000B3384 /* WBUploadManager.h */; };
+		1F362F15212ACF7D000B3384 /* WBUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F13212ACF7D000B3384 /* WBUploadManager.m */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -700,6 +702,8 @@
 		1F359FF0209310A200E2FF36 /* RadioButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonTableViewCell.swift; sourceTree = "<group>"; };
 		1F359FF1209310A200E2FF36 /* RadioButtonTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RadioButtonTableViewCell.xib; sourceTree = "<group>"; };
 		1F362F10212672F2000B3384 /* DBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBService.swift; sourceTree = "<group>"; };
+		1F362F12212ACF7D000B3384 /* WBUploadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WBUploadManager.h; sourceTree = "<group>"; };
+		1F362F13212ACF7D000B3384 /* WBUploadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WBUploadManager.m; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -1568,6 +1572,8 @@
 			isa = PBXGroup;
 			children = (
 				1F537A0F2125150D00A555C5 /* AutoBackupManager.swift */,
+				1F362F12212ACF7D000B3384 /* WBUploadManager.h */,
+				1F362F13212ACF7D000B3384 /* WBUploadManager.m */,
 			);
 			path = AutoBackup;
 			sourceTree = "<group>";
@@ -2505,6 +2511,7 @@
 				1FE9EF8820EF5DEA00732728 /* FileHash.h in Headers */,
 				1FFD132520EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.h in Headers */,
 				1FFD131F20EF1A340053A3F7 /* UIButton+EnlargeEdge.h in Headers */,
+				1F362F14212ACF7D000B3384 /* WBUploadManager.h in Headers */,
 				1FFD131B20EF0FF00053A3F7 /* FMHeadView.h in Headers */,
 				1FFD132720EF36A50053A3F7 /* UIScrollView+IndicatorExt.h in Headers */,
 				1FFD136C20EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.h in Headers */,
@@ -3015,6 +3022,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework",
 				"${BUILT_PRODUCTS_DIR}/CatalogByConvention/CatalogByConvention.framework",
@@ -3046,6 +3054,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BEMCheckBox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CatalogByConvention.framework",
@@ -3149,6 +3158,7 @@
 				1FE674DC20D21B11006F97DB /* TRCommon.swift in Sources */,
 				1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
+				1F362F15212ACF7D000B3384 /* WBUploadManager.m in Sources */,
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,
 				1F537A102125150D00A555C5 /* AutoBackupManager.swift in Sources */,
 				1FFD136720EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m in Sources */,

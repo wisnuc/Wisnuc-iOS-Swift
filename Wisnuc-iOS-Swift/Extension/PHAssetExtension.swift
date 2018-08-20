@@ -126,15 +126,16 @@ extension PHAsset{
                 if(imageData != nil) {
                     if( UIDevice.current.systemVersion.floatValue < 9.0 && info!["PHImageFileURLKey"] != nil){
                         filePath = self.getTmpPath().appendingPathComponent("PHImageFileURLKey").lastPathComponent
+                    }
                         do {
                             try imageData?.write(to: URL(fileURLWithPath: filePath), options: .atomic)
                         } catch {
                             print(error)
                         }
                         return callBack(nil, filePath)
-                    }else{
+               
+                }else{
                         return callBack(error, nil);
-                    }
                 }
             })
         } else { // video

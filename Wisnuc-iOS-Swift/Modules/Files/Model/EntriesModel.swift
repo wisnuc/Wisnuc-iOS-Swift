@@ -9,7 +9,7 @@
 import Foundation
 //import HandyJSON
 
-public struct EntriesModel:Codable  {
+public struct EntriesModel:Codable {
     var name:String?
     var type:String?
     var uuid:String?
