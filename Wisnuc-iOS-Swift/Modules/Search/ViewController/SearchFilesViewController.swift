@@ -250,7 +250,7 @@ class SearchFilesViewController: BaseViewController {
         let clearButton = UIButton.init(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
         clearButton.setImage(Icon.clear?.byTintColor(LightGrayColor), for: UIControlState.normal)
         clearButton.addTarget(self, action: #selector(clearButtonTap(_ :)), for: UIControlEvents.touchUpInside)
-        textField.rightView = clearButton
+//        textField.rightView = clearButton
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldTextChange(_ :)), for: UIControlEvents.editingChanged)
 //        textField.backgroundColor = UIColor.cyan
@@ -417,7 +417,7 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
                 task?.successHandler  = { [weak self] (taskS) in
                     vc?.dismiss(animated: true, completion: {
                         Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载完成"))
-                        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2) {
+                        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 0.5) {
                             DispatchQueue.main.async {
                                 self?.readFile(filePath:FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
                             }
@@ -565,13 +565,18 @@ extension SearchFilesViewController:DZNEmptyDataSetDelegate{
 }
 
 extension SearchFilesViewController:FilesBottomSheetContentVCDelegate{
-    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
+    func filesBottomSheetContentInfoButtonTap(_ sender: UIButton, model: Any) {
+        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
+        filesInfoVC.model = model as! EntriesModel
+        self.navigationController?.pushViewController(filesInfoVC, animated: true)
+    }
+    
+    func filesBottomSheetContentSwitch(_ sender: UISwitch, model: Any) {
         
     }
     
-    func filesBottomSheetContentInfoButtonTap(_ sender: UIButton) {
-        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
-        self.navigationController?.pushViewController(filesInfoVC, animated: true)
+    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
+        
     }
     
 }

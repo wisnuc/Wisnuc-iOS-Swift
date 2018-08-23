@@ -21,6 +21,7 @@ enum FilesTasksType:String,HandyJSONEnum{
 }
 enum FilesTaskState:String,HandyJSONEnum{
     case Conflict
+    case Working
 }
 
 enum FilesTaskErrorCode:String,HandyJSONEnum{

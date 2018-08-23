@@ -10,7 +10,7 @@ import UIKit
 
 class SearchTransition: NSObject ,UIViewControllerAnimatedTransitioning{
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.8
+        return 0.2
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -26,12 +26,12 @@ class SearchTransition: NSObject ,UIViewControllerAnimatedTransitioning{
         
         // 转场动画
         toView?.alpha = 0
-        UIView.animate(withDuration: 0.4, animations: {
+        UIView.animate(withDuration: 0.1, animations: {
             fromView?.alpha = 0
             
             
         }, completion: { finished in
-            UIView.animate(withDuration: 0.4, animations: {
+            UIView.animate(withDuration: 0.1, animations: {
                 toView?.alpha = 1
                 
             }, completion: { finished in

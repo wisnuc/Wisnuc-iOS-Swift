@@ -24,6 +24,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                     nextViewController.moveModelArray = moveModelArray
                     nextViewController.srcDictionary = srcDictionary
                     nextViewController.selfState = self.selfState
+                    nextViewController.model = model
                 }
                 let tab = retrieveTabbarController()
                 tab?.setTabBarHidden(true, animated: true)
@@ -34,10 +35,6 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                 if FilesRootViewController.downloadManager.cache.fileExists(fileName: model.name ?? ""){
                     self.readFile(filePath: FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
                 }else{
-                    let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
-                    let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
-                    var requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
-                    requestURL = requestURL.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
                     let bundle = Bundle.init(for: FilesDownloadAlertViewController.self)
                     let storyboard = UIStoryboard.init(name: "FilesDownloadAlertViewController", bundle: bundle)
                     let identifier = "FilesDownloadDialogID"
@@ -62,6 +59,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                         downloadTask = nil
                     }
                   FilesRootViewController.downloadManager.isStartDownloadImmediately = true
+                  let requestURL = downloadRequestURL(model:model)
                   let task =  FilesRootViewController.downloadManager.download(requestURL, fileName: model.name!, filesModel: model)
 
                     task?.progressHandler = { (taskP)in
@@ -72,7 +70,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                     task?.successHandler  = { [weak self] (taskS) in
                         vc?.dismiss(animated: true, completion: {
                             Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载完成"))
-                            DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2) {
+                            DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 0.5) {
                                 DispatchQueue.main.async {
                                     self?.readFile(filePath:FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
                                 }
@@ -107,7 +105,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         })
     }
     
-    func sequenceButtonTap(_ sender: UIButton) {
+    func sequenceButtonTap(_ sender: UIButton?) {
         let sequenceBottomVC = FilesSequenceBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
         sequenceBottomVC.delegate = self
         let bottomSheet = MDCBottomSheetController.init(contentViewController: sequenceBottomVC)
@@ -261,7 +259,28 @@ extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
     }
     
     func uploadButtonTap(_ sender: UIButton) {
-        self.fabButton.expand(true, completion: {
+        self.fabButton.expand(true, completion: { [weak self] in
+      
+//            } else {
+//                Message.message(text: LocalizedString(forKey: "系统在iOS 11以下版本不支持该功能"))
+//                // Fallback on earlier versions
+//            }
+        })
+        
+//       let i = UIDocumentBrowserViewController.init()
+//        i.browserUserInterfaceStyle =
+        let documentPickerViewController =  UIDocumentPickerViewController.init(documentTypes:   ["com.apple.iwork.pages.pages", "com.apple.iwork.numbers.numbers", "com.apple.iwork.keynote.key","public.image", "com.apple.application", "public.item","public.data", "public.content", "public.audiovisual-content", "public.movie", "public.audiovisual-content", "public.video", "public.audio", "public.text", "public.data", "public.zip-archive", "com.pkware.zip-archive", "public.composite-content", "public.text"], in: .import)
+//        //            if #available(iOS 11.0, *) {
+//        //                let documentBrowserViewController = UIDocumentBrowserViewController.init()
+        documentPickerViewController.delegate = self
+        if #available(iOS 11.0, *) {
+            documentPickerViewController.allowsMultipleSelection = true
+        } else {
+            // Fallback on earlier versions
+        }
+
+        self.present(documentPickerViewController, animated: true, completion: {
+            
         })
     }
     
@@ -280,15 +299,60 @@ extension FilesRootViewController:SequenceBottomSheetContentVCDelegate{
 
 extension FilesRootViewController:SearchMoreBottomSheetVCDelegate{
     func searchMoreBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        filesSearchMoreBottomVC.presentingViewController?.dismiss(animated: true, completion: nil)
+        switch indexPath.row {
+        case 0:
+            self.sequenceButtonTap(nil)
+        case 1:
+            self.isSelectModel = true
+            self.collcectionViewController.isSelectModel = self.isSelectModel
+        case 2:
+            self.isSelectModel = true
+            self.collcectionViewController.isSelectModel = self.isSelectModel
+            FilesHelper.sharedInstance().addAllSelectFiles(array: self.originDataSource ?? Array<EntriesModel>.init())
+            self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
+        default:break
+        }
     }
 }
 
 extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
-    func patchNodes(taskUUID:String,nodeUUID:String,policySameValue:String? = nil , policyDiffValue:String? = nil){
+    func filesBottomSheetContentInfoButtonTap(_ sender: UIButton, model: Any) {
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
+        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
+        filesInfoVC.model = model as? EntriesModel
+        self.navigationController?.pushViewController(filesInfoVC, animated: true)
+    }
+    
+    func filesBottomSheetContentSwitch(_ sender: UISwitch, model: Any) {
+        let filesModel = model as! EntriesModel
+        if sender.isOn{
+            FilesRootViewController.downloadManager.isStartDownloadImmediately = true
+            let requestURL = self.downloadRequestURL(model: model as! EntriesModel)
+            let _ =  FilesRootViewController.downloadManager.download(requestURL, fileName: filesModel.name!, filesModel: filesModel, successHandler: { (task) in
+//                Message.message(text: LocalizedString(forKey: "\(filesModel.name!)离线可用完成"))
+            }) { (task) in
+                Message.message(text: LocalizedString(forKey: "\(filesModel.name!)离线可用失败"))
+            }
+            Message.message(text: LocalizedString(forKey: "正在使\(filesModel.name!)离线可用"))
+        }else{
+            if FilesRootViewController.downloadManager.cache.fileExists(fileName: filesModel.name!){
+                for task in FilesRootViewController.downloadManager.completedTasks{
+                    if task.fileName == filesModel.name{
+                        FilesRootViewController.downloadManager.remove(task.URLString, completely: true)
+                        FilesRootViewController.downloadManager.cache.remove(task as! TRDownloadTask, completely: true)
+                        Message.message(text: LocalizedString(forKey: "\(filesModel.name!) 离线已不可用"))
+                    }
+                }
+            }
+        }
+    }
+    
+    func patchNodes(taskUUID:String,nodeUUID:String,policySameValue:String? = nil , policyDiffValue:String? = nil ,callback:@escaping ((_ error:Error?)->())){
         TasksAPI.init(taskUUID: taskUUID, nodeUUID: nodeUUID, policySameValue: policySameValue, policyDiffValue: policyDiffValue).startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
                 self?.prepareData()
+                callback(nil)
             }else{
                 if response.data != nil {
                     let errorDict =  dataToNSDictionary(data: response.data!)
@@ -299,25 +363,24 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                         Message.message(text: backToString ?? "error")
                     }
                 }else{
-                    Message.message(text: (response.error?.localizedDescription)!)
+//                    Message.message(text: (response.error?.localizedDescription)!)
+                    callback(response.error)
                 }
             }
         }
     }
     
-    func getTask(taskUUID:String) {
-        TasksAPI.init(taskUUID: taskUUID).startRequestJSONCompletionHandler {[weak self](response) in
+    func getTask(taskUUID:String,callback:@escaping (_ task:FilesTasksModel? ,_ error:Error?)->()) {
+        TasksAPI.init(taskUUID: taskUUID).startRequestJSONCompletionHandler {(response) in
             if response.error == nil{
                 let dic = response.value as! NSDictionary
                 if let taskModel = FilesTasksModel.deserialize(from: dic){
-                    if taskModel.nodes?.count != 0 && taskModel.nodes?.first?.error != nil{
-                        if taskModel.nodes?.first?.state == .Conflict && taskModel.nodes?.first?.error?.code == .EEXIST{
-                            self?.patchNodes(taskUUID: taskModel.uuid!, nodeUUID: (taskModel.nodes?.first?.src?.uuid!)!, policySameValue: FilesTaskPolicy.rename.rawValue)
-                        }
-                    }
+                    return callback(taskModel,nil)
+                }else{
+                  return callback(nil,BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
                 }
             }else{
-                
+                return callback(nil,response.error)
             }
         }
     }
@@ -332,12 +395,31 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             if response.error == nil{
                 let dic = response.value as! NSDictionary
                 if let taskModel = FilesTasksModel.deserialize(from: dic){
-                  self?.getTask(taskUUID: taskModel.uuid!)
+                   self?.taskHandle(taskModel: taskModel)
                 }
+                
             }else{
                 Message.message(text: (response.error?.localizedDescription)!)
             }
         }
+    }
+    
+    func taskHandle(taskModel:FilesTasksModel){
+        self.getTask(taskUUID: taskModel.uuid!, callback: { [weak self](model, error) in
+            if model?.nodes?.count != 0 && model?.nodes?.first?.error != nil{
+            if model?.nodes?.first?.state == .Conflict && model?.nodes?.first?.error?.code == .EEXIST{
+//
+                self?.patchNodes(taskUUID: (model?.uuid!)!, nodeUUID: (model?.nodes?.first?.src?.uuid!)!, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { [weak self] (error)in
+                        if error == nil{
+                            Message.message(text: LocalizedString(forKey: "创建副本成功"))
+                            self?.prepareData()
+                        }
+                    })
+            }else if model?.nodes?.first?.state == .Working{
+                   self?.taskHandle(taskModel: taskModel)
+                }
+            }
+        })
     }
     
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
@@ -378,6 +460,8 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 self.registerNotification()
                 let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
                 self.present(navi, animated: true, completion: nil)
+//            case 3:
+//
             case 4:
                 self.makeCopyTaskCreate(model: model)
             case 8:
@@ -414,15 +498,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             }
 //        })
     }
-    
-    func filesBottomSheetContentInfoButtonTap(_ sender: UIButton) {
-//        filesBottomVC.dismiss(animated: true, completion:{ [weak self] in
-        let tab = retrieveTabbarController()
-        tab?.setTabBarHidden(true, animated: true)
-            let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
-        self.navigationController?.pushViewController(filesInfoVC, animated: true)
-//        })
-    }
+      
 }
 
 extension FilesRootViewController:UINavigationControllerDelegate{
@@ -627,4 +703,29 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
             }
         }
     }
+}
+
+extension  FilesRootViewController:UIDocumentPickerDelegate{
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+         print("cancel")
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        print(url)
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        for url in urls {
+            do{
+                let fileData = try Data.init(contentsOf: url)
+                print(fileData)
+            }catch{
+                print(error)
+            }
+        }
+    
+         print(urls)
+    }
+    
+    
 }

@@ -44,6 +44,7 @@ class FilesRootViewController: BaseViewController{
     static let downloadManager =  TRManager.init("Downloads", MaximumRunning: LONG_MAX, isStoreInfo: true)
     private var menuButton: IconButton!
     var dataSource:Array<Any>?
+    var originDataSource:Array<EntriesModel>?
     var driveUUID:String?
     var directoryUUID:String?
     var sortType:SortType?
@@ -53,7 +54,7 @@ class FilesRootViewController: BaseViewController{
     var navigationTitle:String?
     var srcDictionary: Dictionary<String, String>?
     var moveModelArray: Array<EntriesModel>?
-
+    var model:EntriesModel?
     var cellStyle:CellStyle?{
         didSet{
             switch cellStyle {
@@ -87,6 +88,9 @@ class FilesRootViewController: BaseViewController{
                 let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
                 if drive ==  self.srcDictionary![kRequestTaskDriveKey]! &&  dir == self.srcDictionary![kRequestTaskDirKey]!{
                    self.movetoButton.isEnabled = false
+                }
+                if  ((FilesHelper.sharedInstance().selectFilesArray?.contains(where: {$0.uuid == model?.uuid})!))!{
+                    self.movetoButton.isEnabled = false
                 }
             case .next?:
                break
@@ -263,6 +267,7 @@ class FilesRootViewController: BaseViewController{
                    let data = jsonToData(jsonDic: responseDic)
                 do{
                     let model = try JSONDecoder().decode(FilesModel.self, from: data!)
+                    self?.originDataSource = model.entries
 //                if let model = FilesModel.deserialize(from: responseDic){
                     var filesArray = Array<EntriesModel>.init()
                     var directoryArray = Array<EntriesModel>.init()
@@ -630,20 +635,28 @@ class FilesRootViewController: BaseViewController{
     
     private func prepareSearchBar() {
         self.view.addSubview(searchBar)
-        let menuImage = UIImage.init(named:"menu.png")
-        menuButton = IconButton(image: menuImage)
-        menuButton.addTarget(self, action: #selector(menuButtonTap(_:)), for: UIControlEvents.touchUpInside)
+//        let menuImage = UIImage.init(named:"menu.png")
+//        menuButton = IconButton(image: menuImage)
+//        menuButton.addTarget(self, action: #selector(menuButtonTap(_:)), for: UIControlEvents.touchUpInside)
       
         if self.cellStyle == .list{
              listStyleButton.isSelected = true
         }else{
              listStyleButton.isSelected = false
         }
-        searchBar.leftViews = [menuButton]
+        let view = IconButton.init(image: Icon.search?.byTintColor(LightGrayColor))
+        searchBar.leftViews = [view]
         searchBar.rightViews = [listStyleButton,moreButton]
         searchBar.textField.delegate = self
     }
     
+    func downloadRequestURL(model:EntriesModel) -> String{
+        let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
+        let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
+        var requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
+        requestURL = requestURL.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        return requestURL
+    }
     
     // ojbc function (Selector)
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){

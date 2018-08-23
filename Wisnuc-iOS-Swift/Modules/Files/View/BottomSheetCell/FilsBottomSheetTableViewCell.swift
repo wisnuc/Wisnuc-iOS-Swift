@@ -8,8 +8,13 @@
 
 import UIKit
 import Material
-class FilsBottomSheetTableViewCell: UITableViewCell {
 
+@objc protocol  FilsBottomSheetTableViewCellDelegate{
+    
+}
+
+class FilsBottomSheetTableViewCell: UITableViewCell {
+    var switchChangeCallback:((_ sender:UISwitch)->())?
     @IBOutlet weak var mainSwitch: UISwitch!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var leftImageView: UIImageView!
@@ -17,6 +22,7 @@ class FilsBottomSheetTableViewCell: UITableViewCell {
         super.awakeFromNib()
         titleLabel.textColor = DarkGrayColor
         titleLabel.font = MiddleTitleFont
+        mainSwitch.addTarget(self, action: #selector(switchChangeTap(_ :)), for: UIControlEvents.valueChanged)
 //        self.contentView.addSubview(materialSwitch)
         // Initialization code
     }
@@ -27,6 +33,12 @@ class FilsBottomSheetTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    @objc func switchChangeTap(_ sender:UISwitch){
+        if let switchChangeCallback = self.switchChangeCallback{
+            switchChangeCallback(sender)
+        }
+    }
+
 //    lazy var materialSwitch: Switch = {
 //        let contentSwitch = Switch.init(state: SwitchState.off, style: SwitchStyle.dark  , size: SwitchSize.medium)
 //        contentSwitch.frame = CGRect(x: self.contentView.width - 16 - contentSwitch.width, y: contentView.height/2 - contentSwitch.height/2, width: 20, height: 20)

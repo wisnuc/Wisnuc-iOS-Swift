@@ -29,8 +29,9 @@ class AppService: NSObject,ServiceProtocol{
     
     override init() {
         super.init()
+        isStartingUpload = false
         if self.assetService.userAuth! {
-            self.autoBackupManager.start(localAssets: self.assetService.allAssets!, netAssets: [EntriesModel]())
+//            self.autoBackupManager.start(localAssets: self.assetService.allAssets!, netAssets: [EntriesModel]())
         }
     }
     
@@ -316,8 +317,9 @@ class AppService: NSObject,ServiceProtocol{
                     print("Start Upload ...")
                     var netEntries = Array<EntriesModel>.init()
                     netEntries.append(contentsOf: netEntries)
-                    self?.autoBackupManager.setNetAssets(netAssets: netEntries)
-                   self?.autoBackupManager.startAutoBcakup()
+//                    self?.autoBackupManager.setNetAssets(netAssets: netEntries)
+                    self?.autoBackupManager.start(localAssets: (self?.assetService.allAssets)!, netAssets: netEntries)
+                    self?.autoBackupManager.startAutoBcakup()
                     self?.isStartingUpload = false
                     if(callBack != nil) {
                         callBack!()

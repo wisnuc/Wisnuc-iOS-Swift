@@ -10,6 +10,7 @@ import UIKit
 import MaterialComponents.MDCAppBar
 private let cellReuseIdentifier = "reuseIdentifier"
 class FilesFileInfoTableViewController: BaseViewController {
+    var model:EntriesModel?
     deinit {
         print("\(className()) deinit")
     }
@@ -22,8 +23,8 @@ class FilesFileInfoTableViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.headerViewController.headerView.isHidden = false
-        let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-        tab.setTabBarHidden(true, animated: true)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -36,12 +37,12 @@ class FilesFileInfoTableViewController: BaseViewController {
         self.view.addSubview(tableView)
         ViewTools.automaticallyAdjustsScrollView(scrollView: tableView, viewController: self)
         view.bringSubview(toFront: appBar.headerViewController.headerView)
-        appBar.navigationBar.title = "fom.pdf"
+        appBar.navigationBar.title = model?.name ?? "未命名文件"
         appBar.navigationBar.titleTextColor = .clear
         appBar.headerViewController.headerView.addSubview(navigationBarBottomImageView)
         appBar.headerViewController.headerView.addSubview(navigationBarBottomLabel)
         appBar.headerViewController.headerView.delegate = self
-        navigationBarBottomImageView.image = UIImage.init(named: "files_folder.png")
+        navigationBarBottomImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: (model?.type)!), format: FilesFormatType(rawValue: (model?.name?.pathExtension)!)))
         navigationBarBottomLabel.text = appBar.navigationBar.title
     }
 
@@ -92,7 +93,12 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
     
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 7
+        if model?.type == FilesType.directory.rawValue {
+             return 4
+        }else{
+            return 4
+        }
+      
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -100,29 +106,29 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
         cell.selectionStyle = .none
         switch indexPath.row {
         case 0:
-            cell.leftLabel.text = LocalizedString(forKey: "Type")
-            cell.rightLabel.text = "Microsoft Powerpoint"
+            cell.leftLabel.text = LocalizedString(forKey: "类型")
+            cell.rightLabel.text = model?.name?.pathExtension
         case 1:
-            cell.leftLabel.text = LocalizedString(forKey: "Size")
-            cell.rightLabel.text = "1MB"
+            cell.leftLabel.text = LocalizedString(forKey: "大小")
+            cell.rightLabel.text = model?.size != nil ? sizeString((model?.size!)!) : ""
         case 2:
-            cell.leftLabel.text = LocalizedString(forKey: "Position")
+            cell.leftLabel.text = LocalizedString(forKey: "位置")
             cell.rightLabel.isHidden = true
             cell.filesImageView.isHidden = false
             cell.folderButton.isHidden = false
             cell.folderButton.setTitle("My Drive", for: UIControlState.normal)
+//        case 3:
+//            cell.leftLabel.text = LocalizedString(forKey: "Files quantity")
+//            cell.rightLabel.text = "10"
+//        case 4:
+//            cell.leftLabel.text = LocalizedString(forKey: "Media files quantity")
+//            cell.rightLabel.text = "2"
         case 3:
-            cell.leftLabel.text = LocalizedString(forKey: "Files quantity")
-            cell.rightLabel.text = "10"
-        case 4:
-            cell.leftLabel.text = LocalizedString(forKey: "Media files quantity")
-            cell.rightLabel.text = "2"
-        case 5:
-            cell.leftLabel.text = LocalizedString(forKey: "Creat Time")
-            cell.rightLabel.text = "30/12/2016 by Leo An"
-        case 6:
-            cell.leftLabel.text = LocalizedString(forKey: "Modify")
-            cell.rightLabel.text = "30/12/2016 by Leo An"
+            cell.leftLabel.text = LocalizedString(forKey: "创建时间")
+            cell.rightLabel.text =  model?.mtime != nil ? timeString(TimeInterval((model?.mtime!)!/1000)) : LocalizedString(forKey: "No time")
+//        case 6:
+//            cell.leftLabel.text = LocalizedString(forKey: "Modify")
+//            cell.rightLabel.text = "30/12/2016 by Leo An"
         default:
             break
         }

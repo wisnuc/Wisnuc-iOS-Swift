@@ -164,8 +164,7 @@
 		1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F359FF0209310A200E2FF36 /* RadioButtonTableViewCell.swift */; };
 		1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FF1209310A200E2FF36 /* RadioButtonTableViewCell.xib */; };
 		1F362F11212672F2000B3384 /* DBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F10212672F2000B3384 /* DBService.swift */; };
-		1F362F14212ACF7D000B3384 /* WBUploadManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F362F12212ACF7D000B3384 /* WBUploadManager.h */; };
-		1F362F15212ACF7D000B3384 /* WBUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F13212ACF7D000B3384 /* WBUploadManager.m */; };
+		1F362F3B212BECDA000B3384 /* TRUploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F3A212BECDA000B3384 /* TRUploadTask.swift */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -702,8 +701,8 @@
 		1F359FF0209310A200E2FF36 /* RadioButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonTableViewCell.swift; sourceTree = "<group>"; };
 		1F359FF1209310A200E2FF36 /* RadioButtonTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RadioButtonTableViewCell.xib; sourceTree = "<group>"; };
 		1F362F10212672F2000B3384 /* DBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBService.swift; sourceTree = "<group>"; };
-		1F362F12212ACF7D000B3384 /* WBUploadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WBUploadManager.h; sourceTree = "<group>"; };
-		1F362F13212ACF7D000B3384 /* WBUploadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WBUploadManager.m; sourceTree = "<group>"; };
+		1F362F16212BC17D000B3384 /* Wisnuc-iOS-Swift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Wisnuc-iOS-Swift.entitlements"; sourceTree = "<group>"; };
+		1F362F3A212BECDA000B3384 /* TRUploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TRUploadTask.swift; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -1491,7 +1490,6 @@
 		1F3C244B20A5AF6600E6B953 /* TransferTask */ = {
 			isa = PBXGroup;
 			children = (
-				1FFD12B320E61B180053A3F7 /* New Group */,
 				1F050E0620A963A50037F00A /* View */,
 				1F3C244C20A5AF8200E6B953 /* ViewController */,
 			);
@@ -1572,8 +1570,6 @@
 			isa = PBXGroup;
 			children = (
 				1F537A0F2125150D00A555C5 /* AutoBackupManager.swift */,
-				1F362F12212ACF7D000B3384 /* WBUploadManager.h */,
-				1F362F13212ACF7D000B3384 /* WBUploadManager.m */,
 			);
 			path = AutoBackup;
 			sourceTree = "<group>";
@@ -2027,6 +2023,7 @@
 		1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXGroup;
 			children = (
+				1F362F16212BC17D000B3384 /* Wisnuc-iOS-Swift.entitlements */,
 				1FD9B78B207CC75500906D80 /* Extension */,
 				1F2CE30420B50EC700D9E5BD /* Services */,
 				1FBD1E0A20B421A20067BE3E /* CoreData */,
@@ -2317,6 +2314,7 @@
 				1FE674D820D21B11006F97DB /* TRSessionDelegate.swift */,
 				1FE674D920D21B11006F97DB /* TRManager.swift */,
 				1FE674DB20D21B11006F97DB /* TRCache.swift */,
+				1F362F3A212BECDA000B3384 /* TRUploadTask.swift */,
 			);
 			path = Tiercel;
 			sourceTree = "<group>";
@@ -2359,13 +2357,6 @@
 				1FFD12AF20E3662D0053A3F7 /* MDCFreshHeader.swift */,
 			);
 			path = MDCFreshHeader;
-			sourceTree = "<group>";
-		};
-		1FFD12B320E61B180053A3F7 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Group";
 			sourceTree = "<group>";
 		};
 		1FFD12BE20EB0EDD0053A3F7 /* AlertController */ = {
@@ -2511,7 +2502,6 @@
 				1FE9EF8820EF5DEA00732728 /* FileHash.h in Headers */,
 				1FFD132520EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.h in Headers */,
 				1FFD131F20EF1A340053A3F7 /* UIButton+EnlargeEdge.h in Headers */,
-				1F362F14212ACF7D000B3384 /* WBUploadManager.h in Headers */,
 				1FFD131B20EF0FF00053A3F7 /* FMHeadView.h in Headers */,
 				1FFD132720EF36A50053A3F7 /* UIScrollView+IndicatorExt.h in Headers */,
 				1FFD136C20EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.h in Headers */,
@@ -2594,6 +2584,11 @@
 					1FD9B74B207CBE8700906D80 = {
 						CreatedOnToolsVersion = 9.3;
 						LastSwiftMigration = 0930;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 					1FD9B762207CBE8900906D80 = {
 						CreatedOnToolsVersion = 9.3;
@@ -3022,7 +3017,6 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-Swift/Pods-Wisnuc-iOS-Swift-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework",
 				"${BUILT_PRODUCTS_DIR}/CatalogByConvention/CatalogByConvention.framework",
@@ -3054,7 +3048,6 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BEMCheckBox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CatalogByConvention.framework",
@@ -3139,6 +3132,7 @@
 				1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */,
 				1FFD133220EF3E140053A3F7 /* NetAsset.swift in Sources */,
 				1FE9EF8020EF5A9C00732728 /* FileDefine.swift in Sources */,
+				1F362F3B212BECDA000B3384 /* TRUploadTask.swift in Sources */,
 				1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,
 				1F2CE3A420B7F3F200D9E5BD /* CloudLoginModel.swift in Sources */,
@@ -3158,7 +3152,6 @@
 				1FE674DC20D21B11006F97DB /* TRCommon.swift in Sources */,
 				1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
-				1F362F15212ACF7D000B3384 /* WBUploadManager.m in Sources */,
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,
 				1F537A102125150D00A555C5 /* AutoBackupManager.swift in Sources */,
 				1FFD136720EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m in Sources */,
@@ -3479,6 +3472,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Wisnuc-iOS-Swift/Wisnuc-iOS-Swift.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
@@ -3511,6 +3505,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Wisnuc-iOS-Swift/Wisnuc-iOS-Swift.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 8SC32MU7TG;

@@ -16,7 +16,7 @@ public struct EntriesModel:Codable {
     var hash:String?
     var magic:AnyCodable?
     var mtime:UInt64?
-    var size:Int?
+    var size:Int64?
     var driveUUID:String?
     var parentUUID:String?
     var metadata:Metadata?

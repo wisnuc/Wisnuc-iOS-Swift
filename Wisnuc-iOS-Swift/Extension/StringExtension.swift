@@ -85,6 +85,11 @@ extension String{
     var lastPathComponent: String {
         return (self as NSString).lastPathComponent
     }
+    
+    var pathExtension: String {
+        return (self as NSString).pathExtension
+    }
+   
 }
 
 class StringExtension: NSObject {

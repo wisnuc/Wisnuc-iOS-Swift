@@ -43,6 +43,15 @@ class FilesHelper: NSObject {
         }
     }
     
+    func addAllSelectFiles(array:Array<EntriesModel>){
+        synced(self) {
+            selectFilesArray = array
+            if (selectFilesArray?.count == 1) {
+                defaultNotificationCenter().post(name: Notification.Name.Cell.SelectNotiKey, object: NSNumber.init(value: true))
+            }
+        }
+    }
+    
     func removeSelectFiles(model:EntriesModel){
         if (selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! {
             synced(self) {

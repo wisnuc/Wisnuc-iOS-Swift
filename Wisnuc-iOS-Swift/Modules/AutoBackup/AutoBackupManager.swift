@@ -51,11 +51,8 @@ class AutoBackupManager: NSObject {
         hashLimitCount = 4
         uploadLimitCount = 4
     }
-    
 //    func getAllCount:(callback:(allCount:Int)-())?
-//
 
-  
     func startAutoBcakup() {
         self.shouldUpload = false
         // notify for start
@@ -111,6 +108,7 @@ class AutoBackupManager: NSObject {
         self.managerQueue.async { [weak self] in
             self?.shouldNotify = true
             self?.needRetry = true
+//            self?.shouldUpload = true
             self?.hashwaitingQueue.append(contentsOf: localAssets)
             self?.hashwaitingQueue.sort { $0.createDate! > $1.createDate! }
             self?.uploadedNetQueue.append(contentsOf: netAssets)
@@ -321,7 +319,7 @@ class AutoBackupManager: NSObject {
     
     lazy var managerQueue: DispatchQueue = {
         let queue = DispatchQueue.init(label: "com.wisnuc.autoBackupManager.main")
-        DispatchQueue.global(qos: .default).setTarget(queue: queue)
+        DispatchQueue.global(qos: .background).setTarget(queue: queue)
         return queue
     }()
 
@@ -338,7 +336,7 @@ class WSUploadModel: NSObject {
     
     var asset:WSAsset?
     
-    var isRemoved:Bool?
+    var isRemoved:Bool? = false
     
     var requestFileID:PHImageRequestID?
     
@@ -449,6 +447,8 @@ class WSUploadModel: NSObject {
                                 if  responseData.error != nil{
                                     print(responseData.error ?? "error")
                                     callback(responseData.error,nil)
+                                }else{
+                                    callback(nil,responseData.value)
                                 }
                             })
                       

@@ -12,20 +12,20 @@ import YYKit
 class Message: NSObject {
     
     class func message(text:String ,duration:TimeInterval) -> Void{
-        mainThreadSafe {
+        mainThreadSafe({
             let message  = MDCSnackbarMessage.init()
             message.text = text
             message.duration = duration
             MDCSnackbarManager.show(message)
-        }
+        })
     }
     
     class func message(text:String) -> Void{
-        mainThreadSafe {
+        mainThreadSafe({
             let message  = MDCSnackbarMessage.init()
             message.text = text
             message.duration = 2
             MDCSnackbarManager.show(message)
-        }
+        })
     }
 }

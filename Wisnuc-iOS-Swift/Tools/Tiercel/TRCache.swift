@@ -81,7 +81,6 @@ public class TRCache {
         createDirectory()
         
     }
-
 }
 
 
@@ -284,7 +283,7 @@ extension TRCache {
     public func removeTaskInfo(_ task: TRDownloadTask) {
         ioQueue.async {
             guard var taskInfoArray = self.retrieveTaskInfos() else { return }
-            let path = (self.downloadPath as NSString).appendingPathComponent("\(self.name)Tasks.plist")
+            let path = (self.downloadPath as NSString).appendingPathComponent("\((AppUserService.currentUser?.uuid!)!)\(self.name)Tasks.plist")
             if let index = taskInfoArray.index(where: { $0["URLString"] as! String == task.URLString }) {
                 taskInfoArray.remove(at: index)
                 let _ = (taskInfoArray as NSArray).write(toFile: path, atomically: true)

@@ -32,7 +32,7 @@ pod 'MLeaksFinder'
 pod 'FBRetainCycleDetector'
 
 pod 'IQKeyboardManagerSwift'
-pod 'AFNetworking'
+#pod 'AFNetworking'
 #pod 'FBMemoryProfiler'
 end
 

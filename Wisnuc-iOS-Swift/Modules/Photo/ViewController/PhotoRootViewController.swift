@@ -49,21 +49,27 @@ class PhotoRootViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override init(style: NavigationStyle) {
+        super.init(style: style)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareCollectionView()
-        prepareSearchBar()
+        prepareNavigationBar()
+//        prepareSearchBar()
 //        self.sort(localAssetDataSources)
 //        self.photoCollcectionViewController.dataSource = assetDataSources
         view.addSubview(self.fabButton)
         self.photoCollcectionViewController.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
             self?.reloadAssetData()
         })
+        self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.appBar.headerViewController.headerView.isHidden = true
+//        self.appBar.headerViewController.headerView.isHidden = true
         
     }
     
@@ -74,6 +80,10 @@ class PhotoRootViewController: BaseViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func prepareNavigationBar(){
+        
     }
     
     func reloadAssetData() {
@@ -267,7 +277,7 @@ class PhotoRootViewController: BaseViewController {
         self.view.addSubview(photoCollcectionViewController.view)
         photoCollcectionViewController.didMove(toParentViewController: self)
         // self.view.top + searchBar.bottom + MarginsCloseWidth/2
-        let topEdgeInsets:CGFloat = kCurrentSystemVersion >= 11.0 ? searchBar.bottom + MarginsCloseWidth/2-20 : searchBar.bottom + MarginsCloseWidth/2
+        let topEdgeInsets:CGFloat = kCurrentSystemVersion >= 11.0 ? MDCAppNavigationBarHeight + MarginsCloseWidth/2-20 : MDCAppNavigationBarHeight + MarginsCloseWidth/2
         photoCollcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(topEdgeInsets, 0, 0 , 0)
     }
     
