@@ -42,7 +42,7 @@ enum SortType:Int64{
     
     func collectionView(_ collectionViewController: MDCCollectionViewController , isSelectModel:Bool)
     func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath ,isSelectModel:Bool)
-    func sequenceButtonTap(_ sender:UIButton)
+    func sequenceButtonTap(_ sender:UIButton?)
     func cellButtonCallBack(_ cell:MDCCollectionViewCell, _ button:UIButton, _ indexPath:IndexPath)
 }
 
@@ -229,7 +229,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                   
                     cell.isSelectModel = isSelectModel
                     if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                        if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))!{
+                        if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))!{
                             cell.isSelect = true
                         }else{
                             cell.isSelect = false
@@ -270,7 +270,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     
                     cell.isSelectModel = isSelectModel
                     if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                       cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.hash == model.hash}))! ? true : false
+                       cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))! ? true : false
             
                     }
                     
@@ -310,7 +310,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 
                 cell.isSelectModel = self.isSelectModel
                 if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                    cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! ? true : false
+                    cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))! ? true : false
                 }
                 
                 if !isNilString(model.name){
@@ -455,7 +455,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         let model  = sectionArray[indexPath.item]
         var exitSelectModel = false
           if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-            if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))!{
+            if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))!{
                 FilesHelper.sharedInstance().removeSelectFiles(model: model)
                 if FilesHelper.sharedInstance().selectFilesArray?.count == 0{
                     exitSelectModel = true

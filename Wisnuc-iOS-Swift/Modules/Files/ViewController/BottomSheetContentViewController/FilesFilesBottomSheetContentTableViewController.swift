@@ -54,7 +54,7 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
     }
     
     @objc func headerRightButtonTap(_ sender:UIButton){
-        self.dismiss(animated: true, completion: { [weak self] in
+        self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
         if let delegateOK = self?.delegate {
             delegateOK.filesBottomSheetContentInfoButtonTap(sender,model:(self?.filesModel!)!)
             }
@@ -70,7 +70,11 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 8
+        if filesModel?.type == FilesType.file.rawValue{
+            return 8
+        }else{
+            return 6
+        }
     }
 
 
@@ -83,36 +87,65 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
             cell.mainSwitch.isHidden = true
         case 1:
             cell.leftImageView.image = UIImage.init(named: "files_move_gray.png")
-            cell.titleLabel.text = LocalizedString(forKey: "Move to...")
+            cell.titleLabel.text = LocalizedString(forKey: "移动到...")
             cell.mainSwitch.isHidden = true
         case 2:
-            cell.leftImageView.image = UIImage.init(named: "files_offline_normal.png")
-            cell.titleLabel.text = LocalizedString(forKey: "Offline available")
-            cell.mainSwitch.isOn =  FilesRootViewController.downloadManager.cache.fileExists(fileName: (self.filesModel?.name)!) ? true : false
-            cell.switchChangeCallback = { [weak self] (sender) in
-                self?.dismiss(animated: true, completion: { [weak self] in
-                    if let delegateOK = self?.delegate{
-                        delegateOK.filesBottomSheetContentSwitch(sender, model: ((self?.filesModel)!)!)
-                    }
-                })
+            if filesModel?.type == FilesType.file.rawValue{
+                cell.leftImageView.image = UIImage.init(named: "files_offline_normal.png")
+                cell.titleLabel.text = LocalizedString(forKey: "Offline available")
+                cell.mainSwitch.isOn =  FilesRootViewController.downloadManager.cache.fileExists(fileName: (self.filesModel?.name)!) ? true : false
+                cell.switchChangeCallback = { [weak self] (sender) in
+                    self?.dismiss(animated: true, completion: { [weak self] in
+                        if let delegateOK = self?.delegate{
+                            delegateOK.filesBottomSheetContentSwitch(sender, model: ((self?.filesModel)!)!)
+                        }
+                    })
+                }
+          
+                if FilesRootViewController.downloadManager.runningTasks.contains(where: {$0.fileName == filesModel?.name}){
+                    cell.mainSwitch.isEnabled = false
+                }
+            
+                cell.mainSwitch.isHidden = false
+            }else{
+                cell.leftImageView.image = UIImage.init(named: "files_creat_copy.png")
+                cell.titleLabel.text = LocalizedString(forKey: "Create a copy")
+                cell.mainSwitch.isHidden = true
             }
-            cell.mainSwitch.isHidden = false
         case 3:
-            cell.leftImageView.image = UIImage.init(named: "files_share_other_app.png")
-            cell.titleLabel.text = LocalizedString(forKey: "Open with other apps")
-            cell.mainSwitch.isHidden = true
+            if filesModel?.type == FilesType.file.rawValue{
+                cell.leftImageView.image = UIImage.init(named: "files_share_other_app.png")
+                cell.titleLabel.text = LocalizedString(forKey: "Open with other apps")
+                cell.mainSwitch.isHidden = true
+            }else{
+                cell.leftImageView.image = UIImage.init(named: "files_share.png")
+                cell.titleLabel.text = LocalizedString(forKey: "Share to shared folder")
+                cell.mainSwitch.isHidden = true
+            }
         case 4:
-            cell.leftImageView.image = UIImage.init(named: "files_creat_copy.png")
-            cell.titleLabel.text = LocalizedString(forKey: "Create a copy")
-            cell.mainSwitch.isHidden = true
+            if filesModel?.type == FilesType.file.rawValue{
+                cell.leftImageView.image = UIImage.init(named: "files_creat_copy.png")
+                cell.titleLabel.text = LocalizedString(forKey: "Create a copy")
+                cell.mainSwitch.isHidden = true
+            }else{
+                cell.leftImageView.image = UIImage.init(named: "files_copy_to.png")
+                cell.titleLabel.text = LocalizedString(forKey: "Copy to...")
+                cell.mainSwitch.isHidden = true
+            }
 //        case 5:
 //            cell.leftImageView.image = UIImage.init(named: "files_edit_tag.png")
 //            cell.titleLabel.text = LocalizedString(forKey: "Edit tag")
 //            cell.mainSwitch.isHidden = true
         case 5:
+             if filesModel?.type == FilesType.file.rawValue{
             cell.leftImageView.image = UIImage.init(named: "files_share.png")
             cell.titleLabel.text = LocalizedString(forKey: "Share to shared folder")
             cell.mainSwitch.isHidden = true
+            }else{
+                cell.leftImageView.image = UIImage.init(named: "files_remove.png")
+                cell.titleLabel.text = LocalizedString(forKey: "Remove")
+                cell.mainSwitch.isHidden = true
+            }
         case 6:
             cell.leftImageView.image = UIImage.init(named: "files_copy_to.png")
             cell.titleLabel.text = LocalizedString(forKey: "Copy to...")
@@ -154,9 +187,10 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        self.dismiss(animated: true, completion: { [weak self] in
-            if let delegateOK = self?.delegate {
-                delegateOK.filesBottomSheetContentTableView(tableView, didSelectRowAt: indexPath, model: self?.filesModel)
+      
+        self.presentingViewController?.dismiss(animated: true, completion: {
+            if let model = self.filesModel{
+                self.delegate?.filesBottomSheetContentTableView(tableView, didSelectRowAt: indexPath, model: model)
             }
         })
     }

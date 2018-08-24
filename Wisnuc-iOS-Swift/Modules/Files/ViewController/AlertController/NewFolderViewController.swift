@@ -80,7 +80,7 @@ class NewFolderViewController: UIViewController {
     }
     
     @IBAction func cancelButtonTap(_ sender: MDCFlatButton) {
-        self.dismiss(animated: true, completion: nil)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
   

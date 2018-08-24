@@ -28,11 +28,11 @@ class FilesShareAuthorityChangeViewController: BaseViewController {
     }
     
     @objc func closeBarButtonItemTap(_ sender:UIBarButtonItem){
-        self.dismiss(animated: true, completion: nil)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){
-        self.dismiss(animated: true, completion: nil)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 
     func prepareForNavigationBar() {

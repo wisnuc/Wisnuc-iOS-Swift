@@ -14,6 +14,7 @@ private let moveButtonHeight:CGFloat = 36.0
 class FilesMoveToRootViewController: BaseViewController {
     var srcDictionary: Dictionary<String, String>?
     var moveModelArray: Array<EntriesModel>?
+    var isCopy:Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = LocalizedString(forKey: "Select destination")
@@ -25,6 +26,8 @@ class FilesMoveToRootViewController: BaseViewController {
         appBar.headerViewController.headerView.trackingScrollView = mainTableView
         ViewTools.automaticallyAdjustsScrollView(scrollView: mainTableView, viewController: self)
         movetoButton.isEnabled = false
+        let buttonTitle = isCopy ? LocalizedString(forKey: "复制到") : LocalizedString(forKey: "移动到")
+        movetoButton.setTitle(buttonTitle, for: UIControlState.normal)
         moveFilesBottomBar.addSubview(movetoButton)
         moveFilesBottomBar.addSubview(cancelMovetoButton)
     }
@@ -40,7 +43,7 @@ class FilesMoveToRootViewController: BaseViewController {
     }
     
     @objc func closeTap(_ sender:UIBarButtonItem){
-        self.dismiss(animated: true) {
+        self.presentingViewController?.dismiss(animated: true) {
             
         }
     }
@@ -51,7 +54,7 @@ class FilesMoveToRootViewController: BaseViewController {
     }
     
     @objc func cancelMovetoButtonTap(_ sender:MDCFlatButton){
-        self.dismiss(animated: true) {
+        self.presentingViewController?.dismiss(animated: true) {
         }
     }
     
@@ -86,6 +89,7 @@ class FilesMoveToRootViewController: BaseViewController {
     
     lazy var movetoButton: MDCFlatButton = {
         let button = MDCFlatButton.init(frame: CGRect(x: self.moveFilesBottomBar.width - moveButtonWidth - MarginsWidth, y: self.moveFilesBottomBar.height/2 - moveButtonHeight/2, width: moveButtonWidth, height: moveButtonHeight))
+
         button.setTitle(LocalizedString(forKey: "Save Here"), for: UIControlState.normal)
         button.setTitleColor(COR1, for: UIControlState.normal)
         button.setTitleColor(LightGrayColor, for: UIControlState.disabled)
@@ -140,6 +144,7 @@ extension FilesMoveToRootViewController:UITableViewDelegate,UITableViewDataSourc
             filesRootViewController.title = LocalizedString(forKey: "My Drive")
             filesRootViewController.srcDictionary = srcDictionary
             filesRootViewController.moveModelArray = moveModelArray
+            filesRootViewController.isCopy = isCopy
             filesRootViewController.selfState = .movecopy
             self.navigationController?.pushViewController(filesRootViewController, animated: true)
         case 1:

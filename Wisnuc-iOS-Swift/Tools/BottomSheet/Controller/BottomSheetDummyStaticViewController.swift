@@ -76,7 +76,7 @@ extension BottomSheetDummyStaticViewController:UICollectionViewDelegate{
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.dismiss(animated: true) {
+        self.presentingViewController?.dismiss(animated: true) {
         }
         if let delegateOK = self.delegate{
             delegateOK.bottomSheetTap(indexPath)

@@ -33,7 +33,7 @@ class FilesDownloadAlertViewController: UIViewController {
     
     @IBAction func cancelButtonTap(_ sender: MDCFlatButton) {
         if let delegateOK = delegate{
-            self.dismiss(animated: true) { [weak delegateOK] in
+            self.presentingViewController?.dismiss(animated: true) { [weak delegateOK] in
                 delegateOK?.cancelButtonTap()
             }
         }

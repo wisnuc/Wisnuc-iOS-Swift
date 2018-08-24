@@ -49,7 +49,7 @@ class FilesFABBottomSheetDisplayViewController: UIViewController {
     }
 
     @IBAction func cllButtonTap(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: {
+        self.presentingViewController?.dismiss(animated: true, completion: {
             if let delegateOK = self.delegate {
                 delegateOK.cllButtonTap(sender)
             }
@@ -57,7 +57,7 @@ class FilesFABBottomSheetDisplayViewController: UIViewController {
     }
     
     @IBAction func folderButtonTap(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: {
+        self.presentingViewController?.dismiss(animated: true, completion: {
             if let delegateOK = self.delegate {
                 delegateOK.folderButtonTap(sender)
             }
@@ -65,7 +65,7 @@ class FilesFABBottomSheetDisplayViewController: UIViewController {
     }
     
     @IBAction func uploadButtonTap(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: {
+        self.presentingViewController?.dismiss(animated: true, completion: {
             if let delegateOK = self.delegate {
                 delegateOK.uploadButtonTap(sender)
             }

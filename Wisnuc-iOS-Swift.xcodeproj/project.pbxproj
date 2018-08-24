@@ -165,6 +165,7 @@
 		1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F359FF1209310A200E2FF36 /* RadioButtonTableViewCell.xib */; };
 		1F362F11212672F2000B3384 /* DBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F10212672F2000B3384 /* DBService.swift */; };
 		1F362F3B212BECDA000B3384 /* TRUploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F3A212BECDA000B3384 /* TRUploadTask.swift */; };
+		1F362F73212FF6B6000B3384 /* FunctionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F72212FF6B6000B3384 /* FunctionViewController.swift */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -703,6 +704,7 @@
 		1F362F10212672F2000B3384 /* DBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBService.swift; sourceTree = "<group>"; };
 		1F362F16212BC17D000B3384 /* Wisnuc-iOS-Swift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Wisnuc-iOS-Swift.entitlements"; sourceTree = "<group>"; };
 		1F362F3A212BECDA000B3384 /* TRUploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TRUploadTask.swift; sourceTree = "<group>"; };
+		1F362F72212FF6B6000B3384 /* FunctionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionViewController.swift; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -1479,6 +1481,14 @@
 			path = DBServices;
 			sourceTree = "<group>";
 		};
+		1F362F71212FF421000B3384 /* Function */ = {
+			isa = PBXGroup;
+			children = (
+				1F362F72212FF6B6000B3384 /* FunctionViewController.swift */,
+			);
+			path = Function;
+			sourceTree = "<group>";
+		};
 		1F3C241820A4499900E6B953 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -2060,6 +2070,7 @@
 		1FD9B780207CBEAD00906D80 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				1F362F71212FF421000B3384 /* Function */,
 				1F537A0E212514DC00A555C5 /* AutoBackup */,
 				1F537A0B2124128600A555C5 /* Setting */,
 				1FFD12D020EE11540053A3F7 /* Photo */,
@@ -3239,6 +3250,7 @@
 				1F359FEF2092EF1300E2FF36 /* CNPPopupController.m in Sources */,
 				1F2CE2F120B42D0000D9E5BD /* Wisnuc-iOS-Swift.xcdatamodeld in Sources */,
 				1F2B4599208F236F00C8971F /* ViewTools.swift in Sources */,
+				1F362F73212FF6B6000B3384 /* FunctionViewController.swift in Sources */,
 				1F1BAC4F20CE4EC700D32C5A /* UINavigationControllerExtension.swift in Sources */,
 				1FE674DE20D21B11006F97DB /* TRTask.swift in Sources */,
 				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,

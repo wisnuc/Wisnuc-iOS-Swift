@@ -54,6 +54,7 @@ class FilesRootViewController: BaseViewController{
     var navigationTitle:String?
     var srcDictionary: Dictionary<String, String>?
     var moveModelArray: Array<EntriesModel>?
+    var isCopy:Bool = false
     var model:EntriesModel?
     var cellStyle:CellStyle?{
         didSet{
@@ -86,10 +87,12 @@ class FilesRootViewController: BaseViewController{
             case .movecopy?:
                 let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
                 let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+                let title = isCopy ? LocalizedString(forKey: "复制到") : LocalizedString(forKey: "移动到")
+                self.movetoButton.setTitle(title, for: UIControlState.normal)
                 if drive ==  self.srcDictionary![kRequestTaskDriveKey]! &&  dir == self.srcDictionary![kRequestTaskDirKey]!{
                    self.movetoButton.isEnabled = false
                 }
-                if  ((FilesHelper.sharedInstance().selectFilesArray?.contains(where: {$0.uuid == model?.uuid})!))!{
+                if  (self.moveModelArray?.contains(where: {$0.uuid == model?.uuid}))!{
                     self.movetoButton.isEnabled = false
                 }
             case .next?:
@@ -706,9 +709,7 @@ class FilesRootViewController: BaseViewController{
             fabBottomVC.delegate =  self
             let bottomSheet = AppBottomSheetController.init(contentViewController: fabBottomVC)
             bottomSheet.delegate = self
-            self?.present(bottomSheet, animated: true, completion: {
-            
-            })
+            self?.present(bottomSheet, animated: true, completion: {})
         }
     }
     
@@ -763,11 +764,13 @@ class FilesRootViewController: BaseViewController{
             Message.message(text: LocalizedString(forKey: "无法完成此操作"))
             return
         }
-        let task = TasksAPI.init(type: FilesTasksType.move.rawValue, names: names, srcDrive: self.srcDictionary![kRequestTaskDriveKey]!, srcDir: self.srcDictionary![kRequestTaskDirKey]!, dstDrive: drive, dstDir: dir)
+        let type = isCopy ? FilesTasksType.copy.rawValue : FilesTasksType.move.rawValue
+        let task = TasksAPI.init(type: type, names: names, srcDrive: self.srcDictionary![kRequestTaskDriveKey]!, srcDir: self.srcDictionary![kRequestTaskDirKey]!, dstDrive: drive, dstDir: dir)
         task.startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
-                self.dismiss(animated: true, completion: {
-                    let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) moved to \(self.title ?? "files")") : LocalizedString(forKey: "\(names.count) files moved to \(self.title ?? "files")")
+                self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
+                    let messageDetail = (self?.isCopy)! ? LocalizedString(forKey: "已复制到") : LocalizedString(forKey: "已移动到")
+                    let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) \(messageDetail) \(self?.title ?? "files")") : LocalizedString(forKey: "\(names.count) 个文件 \(messageDetail) \(self?.title ?? "files")")
                      Message.message(text: message)
                      defaultNotificationCenter().post(name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
                 })
@@ -787,7 +790,7 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func cancelMovetoButtonTap(_ sender:UIButton){
-        self.dismiss(animated: true) {
+        self.presentingViewController?.dismiss(animated: true) {
             
         }
     }

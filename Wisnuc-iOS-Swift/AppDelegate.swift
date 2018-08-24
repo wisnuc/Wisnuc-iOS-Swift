@@ -133,9 +133,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             }
         }
         photosVC.title = LocalizedString(forKey: "Photos")
-        let functionVC = BaseViewController()
+        let functionVC = FunctionViewController.init(style: NavigationStyle.whiteStyle)
         functionVC.title = LocalizedString(forKey: "功能")
-        functionVC.view.backgroundColor = UIColor.cyan
         let settingVC = SettingRootViewController.init(style: NavigationStyle.whiteStyle)
         let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
         let photosNavi = BaseNavigationController.init(rootViewController: photosVC)

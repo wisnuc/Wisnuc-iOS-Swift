@@ -23,71 +23,83 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                 if self.selfState == .movecopy{
                     nextViewController.moveModelArray = moveModelArray
                     nextViewController.srcDictionary = srcDictionary
-                    nextViewController.selfState = self.selfState
                     nextViewController.model = model
+                    nextViewController.isCopy = isCopy
+                    nextViewController.selfState = self.selfState
                 }
                 let tab = retrieveTabbarController()
                 tab?.setTabBarHidden(true, animated: true)
                 nextViewController.title = model.name ?? ""
+         
                 self.navigationController?.pushViewController(nextViewController, animated: true)
                 defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
             }else{
                 if FilesRootViewController.downloadManager.cache.fileExists(fileName: model.name ?? ""){
                     self.readFile(filePath: FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
                 }else{
-                    let bundle = Bundle.init(for: FilesDownloadAlertViewController.self)
-                    let storyboard = UIStoryboard.init(name: "FilesDownloadAlertViewController", bundle: bundle)
-                    let identifier = "FilesDownloadDialogID"
-
-                    let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
-                    viewController.modalPresentationStyle = UIModalPresentationStyle.custom
-                    viewController.transitioningDelegate = self.transitionController
-
-                    weak var vc =  viewController as? FilesDownloadAlertViewController
-                    vc?.delegate = self
-        
-                    self.present(viewController, animated: true, completion: {
-
-                    })
-                    let presentationController =
-                        viewController.mdc_dialogPresentationController
-                    if presentationController != nil{
-                        presentationController?.dismissOnBackgroundTap = false
-                    }
-                    if downloadTask != nil{
-                        downloadTask?.cancel()
-                        downloadTask = nil
-                    }
-                  FilesRootViewController.downloadManager.isStartDownloadImmediately = true
-                  let requestURL = downloadRequestURL(model:model)
-                  let task =  FilesRootViewController.downloadManager.download(requestURL, fileName: model.name!, filesModel: model)
-
-                    task?.progressHandler = { (taskP)in
-                        let float:Float = Float(taskP.progress.completedUnitCount)/Float(taskP.progress.totalUnitCount)
-                        vc?.downloadProgressView.progress = Float(float)
-                    }
-                    
-                    task?.successHandler  = { [weak self] (taskS) in
-                        vc?.dismiss(animated: true, completion: {
+                    self.downloadFile(model: model, complete: { [weak self] (error, task) in
+                        if error == nil{
                             Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载完成"))
                             DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 0.5) {
                                 DispatchQueue.main.async {
                                     self?.readFile(filePath:FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
                                 }
                             }
-                        })
-                    }
-                    
-                    task?.failureHandler  = { (taskF) in
-                        vc?.dismiss(animated: true, completion: {
-                            
-                        })
-                    }
-                    
-                   downloadTask = task
+                        }else{
+                            Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载失败"))
+                        }
+                    })
                 }
             }
         }
+    }
+    
+    func downloadFile(model:EntriesModel,complete:@escaping ((_ error:Error?, _ task: TRTask)->())){
+        let bundle = Bundle.init(for: FilesDownloadAlertViewController.self)
+        let storyboard = UIStoryboard.init(name: "FilesDownloadAlertViewController", bundle: bundle)
+        let identifier = "FilesDownloadDialogID"
+        
+        let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+        viewController.modalPresentationStyle = UIModalPresentationStyle.custom
+        viewController.transitioningDelegate = self.transitionController
+        
+        weak var vc =  viewController as? FilesDownloadAlertViewController
+        vc?.delegate = self
+        
+        self.present(viewController, animated: true, completion: {
+            
+        })
+        let presentationController =
+            viewController.mdc_dialogPresentationController
+        if presentationController != nil{
+            presentationController?.dismissOnBackgroundTap = false
+        }
+        if downloadTask != nil{
+            downloadTask?.cancel()
+            downloadTask = nil
+        }
+        FilesRootViewController.downloadManager.isStartDownloadImmediately = true
+        let requestURL = downloadRequestURL(model:model)
+        let task =  FilesRootViewController.downloadManager.download(requestURL, fileName: model.name!, filesModel: model)
+        
+        task?.progressHandler = { (taskP)in
+            let float:Float = Float(taskP.progress.completedUnitCount)/Float(taskP.progress.totalUnitCount)
+            vc?.downloadProgressView.progress = Float(float)
+        }
+        
+        task?.successHandler  = { (taskS) in
+            vc?.dismiss(animated: true, completion: {
+                return complete(nil,taskS)
+            })
+        }
+        
+        task?.failureHandler  = { (taskF) in
+            vc?.dismiss(animated: true, completion: {
+                return complete(taskF.error,taskF)
+            })
+        }
+        
+        downloadTask = task
     }
     
     func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton, _ indexPath: IndexPath) {
@@ -231,54 +243,54 @@ extension FilesRootViewController:MDCBottomSheetControllerDelegate{
 
 extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
     func folderButtonTap(_ sender: UIButton) {
-            self.fabButton.expand(true, completion: { [weak self] in
-                let bundle = Bundle.init(for: NewFolderViewController.self)
-                let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
-                let identifier = "inputNewFolderDialogID"
-
-                let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
-                viewController.modalPresentationStyle = UIModalPresentationStyle.custom
-                viewController.transitioningDelegate = self?.transitionController
-
-                let vc =  viewController as! NewFolderViewController
-                vc.type = InputAlertType.creatNewFolder
-                vc.titleString = LocalizedString(forKey:"New folder")
-                vc.inputString =  LocalizedString(forKey: "Untitled folder")
-                vc.inputPlaceholder =  LocalizedString(forKey: "Folder name")
-                vc.confirmButtonName =  LocalizedString(forKey: "Create")
-                vc.delegate = self
-                self?.present(viewController, animated: true, completion: {
-                    vc.inputTextField.becomeFirstResponder()
-                })
-                let presentationController =
-                    viewController.mdc_dialogPresentationController
-                if presentationController != nil{
-                    presentationController?.dismissOnBackgroundTap = false
-                }
+        self.fabButton.expand(true, completion: { [weak self] in
+            let bundle = Bundle.init(for: NewFolderViewController.self)
+            let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
+            let identifier = "inputNewFolderDialogID"
+            
+            let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+            viewController.modalPresentationStyle = UIModalPresentationStyle.custom
+            viewController.transitioningDelegate = self?.transitionController
+            
+            let vc =  viewController as! NewFolderViewController
+            vc.type = InputAlertType.creatNewFolder
+            vc.titleString = LocalizedString(forKey:"New folder")
+            vc.inputString =  LocalizedString(forKey: "Untitled folder")
+            vc.inputPlaceholder =  LocalizedString(forKey: "Folder name")
+            vc.confirmButtonName =  LocalizedString(forKey: "Create")
+            vc.delegate = self
+            self?.present(viewController, animated: true, completion: {
+                vc.inputTextField.becomeFirstResponder()
             })
+            let presentationController =
+                viewController.mdc_dialogPresentationController
+            if presentationController != nil{
+                presentationController?.dismissOnBackgroundTap = false
+            }
+        })
     }
     
     func uploadButtonTap(_ sender: UIButton) {
         self.fabButton.expand(true, completion: { [weak self] in
-      
-//            } else {
-//                Message.message(text: LocalizedString(forKey: "系统在iOS 11以下版本不支持该功能"))
-//                // Fallback on earlier versions
-//            }
+            
+            //            } else {
+            //                Message.message(text: LocalizedString(forKey: "系统在iOS 11以下版本不支持该功能"))
+            //                // Fallback on earlier versions
+            //            }
         })
         
-//       let i = UIDocumentBrowserViewController.init()
-//        i.browserUserInterfaceStyle =
+        //       let i = UIDocumentBrowserViewController.init()
+        //        i.browserUserInterfaceStyle =
         let documentPickerViewController =  UIDocumentPickerViewController.init(documentTypes:   ["com.apple.iwork.pages.pages", "com.apple.iwork.numbers.numbers", "com.apple.iwork.keynote.key","public.image", "com.apple.application", "public.item","public.data", "public.content", "public.audiovisual-content", "public.movie", "public.audiovisual-content", "public.video", "public.audio", "public.text", "public.data", "public.zip-archive", "com.pkware.zip-archive", "public.composite-content", "public.text"], in: .import)
-//        //            if #available(iOS 11.0, *) {
-//        //                let documentBrowserViewController = UIDocumentBrowserViewController.init()
+        //        //            if #available(iOS 11.0, *) {
+        //        //                let documentBrowserViewController = UIDocumentBrowserViewController.init()
         documentPickerViewController.delegate = self
         if #available(iOS 11.0, *) {
             documentPickerViewController.allowsMultipleSelection = true
         } else {
             // Fallback on earlier versions
         }
-
+        
         self.present(documentPickerViewController, animated: true, completion: {
             
         })
@@ -330,7 +342,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             FilesRootViewController.downloadManager.isStartDownloadImmediately = true
             let requestURL = self.downloadRequestURL(model: model as! EntriesModel)
             let _ =  FilesRootViewController.downloadManager.download(requestURL, fileName: filesModel.name!, filesModel: filesModel, successHandler: { (task) in
-//                Message.message(text: LocalizedString(forKey: "\(filesModel.name!)离线可用完成"))
+                //                Message.message(text: LocalizedString(forKey: "\(filesModel.name!)离线可用完成"))
             }) { (task) in
                 Message.message(text: LocalizedString(forKey: "\(filesModel.name!)离线可用失败"))
             }
@@ -363,7 +375,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                         Message.message(text: backToString ?? "error")
                     }
                 }else{
-//                    Message.message(text: (response.error?.localizedDescription)!)
+                    //                    Message.message(text: (response.error?.localizedDescription)!)
                     callback(response.error)
                 }
             }
@@ -377,7 +389,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 if let taskModel = FilesTasksModel.deserialize(from: dic){
                     return callback(taskModel,nil)
                 }else{
-                  return callback(nil,BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
+                    return callback(nil,BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
                 }
             }else{
                 return callback(nil,response.error)
@@ -386,6 +398,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     }
     
     func makeCopyTaskCreate(model:Any?){
+        ActivityIndicator.startActivityIndicatorAnimation()
         if !(model is EntriesModel) || model == nil {
             return
         }
@@ -395,7 +408,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             if response.error == nil{
                 let dic = response.value as! NSDictionary
                 if let taskModel = FilesTasksModel.deserialize(from: dic){
-                   self?.taskHandle(taskModel: taskModel)
+                    self?.taskHandle(taskModel: taskModel)
                 }
                 
             }else{
@@ -406,99 +419,152 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     
     func taskHandle(taskModel:FilesTasksModel){
         self.getTask(taskUUID: taskModel.uuid!, callback: { [weak self](model, error) in
-            if model?.nodes?.count != 0 && model?.nodes?.first?.error != nil{
-            if model?.nodes?.first?.state == .Conflict && model?.nodes?.first?.error?.code == .EEXIST{
-//
-                self?.patchNodes(taskUUID: (model?.uuid!)!, nodeUUID: (model?.nodes?.first?.src?.uuid!)!, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { [weak self] (error)in
+            if model?.nodes?.count != 0 {
+                if model?.nodes?.first?.state == .Conflict && model?.nodes?.first?.error?.code == .EEXIST{
+                    self?.patchNodes(taskUUID: (model?.uuid!)!, nodeUUID: (model?.nodes?.first?.src?.uuid!)!, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { [weak self] (error)in
+                        ActivityIndicator.stopActivityIndicatorAnimation()
                         if error == nil{
                             Message.message(text: LocalizedString(forKey: "创建副本成功"))
                             self?.prepareData()
                         }
+                        
                     })
-            }else if model?.nodes?.first?.state == .Working{
-                   self?.taskHandle(taskModel: taskModel)
+                }else if model?.nodes?.first?.state == .Working{
+                    self?.taskHandle(taskModel: taskModel)
                 }
             }
         })
     }
     
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
-//        filesBottomVC.dismiss(animated: true, completion: { [weak self] in
-            switch indexPath.row {
-            case 0:
-                let filesType =  model != nil ? (model as! EntriesModel).type : ""
-                let name =  model != nil ? (model as! EntriesModel).name : ""
-                let bundle = Bundle.init(for: NewFolderViewController.self)
-                let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
-                let identifier = "inputNewFolderDialogID"
-                
-                let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
-                viewController.modalPresentationStyle = UIModalPresentationStyle.custom
-                viewController.transitioningDelegate = self.transitionController
-                
-                let vc =  viewController as! NewFolderViewController
-                vc.type = InputAlertType.rename
-                vc.theFilesName = name
-                vc.titleString = "\(LocalizedString(forKey:"Rename")) \(LocalizedString(forKey: filesType == FilesType.directory.rawValue ? "Folder" : "File"))"
-                vc.inputString =  name
-                vc.inputPlaceholder =  "\(LocalizedString(forKey:filesType == FilesType.directory.rawValue ? "Folder" : "File")) \(LocalizedString(forKey:"name"))"
-                vc.confirmButtonName =  LocalizedString(forKey: "Rename")
-                vc.delegate = self
-                self.present(viewController, animated: true, completion: {
-                    vc.inputTextField.becomeFirstResponder()
-                })
-                let presentationController =
-                    viewController.mdc_dialogPresentationController
-                if presentationController != nil{
-                    presentationController?.dismissOnBackgroundTap = false
+        //        filesBottomVC.dismiss(animated: true, completion: { [weak self] in、
+        let filesModel = model as! EntriesModel
+        switch indexPath.row {
+        case 0:
+            let filesType =  model != nil ? (model as! EntriesModel).type : ""
+            let name =  model != nil ? (model as! EntriesModel).name : ""
+            let bundle = Bundle.init(for: NewFolderViewController.self)
+            let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
+            let identifier = "inputNewFolderDialogID"
+            
+            let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+            viewController.modalPresentationStyle = UIModalPresentationStyle.custom
+            viewController.transitioningDelegate = self.transitionController
+            
+            let vc =  viewController as! NewFolderViewController
+            vc.type = InputAlertType.rename
+            vc.theFilesName = name
+            vc.titleString = "\(LocalizedString(forKey:"Rename")) \(LocalizedString(forKey: filesType == FilesType.directory.rawValue ? "Folder" : "File"))"
+            vc.inputString =  name
+            vc.inputPlaceholder =  "\(LocalizedString(forKey:filesType == FilesType.directory.rawValue ? "Folder" : "File")) \(LocalizedString(forKey:"name"))"
+            vc.confirmButtonName =  LocalizedString(forKey: "Rename")
+            vc.delegate = self
+            self.present(viewController, animated: true, completion: {
+                vc.inputTextField.becomeFirstResponder()
+            })
+            let presentationController =
+                viewController.mdc_dialogPresentationController
+            if presentationController != nil{
+                presentationController?.dismissOnBackgroundTap = false
+            }
+        case 1:
+            let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.whiteStyle)
+            
+            filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
+            filesMoveToRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
+            self.registerNotification()
+            let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
+            self.present(navi, animated: true, completion: nil)
+        case 2:
+            if filesModel.type != FilesType.file.rawValue{
+                self.makeCopyTaskCreate(model: model)
+            }
+            
+        case 3 :
+            if filesModel.type == FilesType.file.rawValue{
+                if FilesRootViewController.downloadManager.cache.fileExists(fileName: filesModel.name!){
+                    self.openForOtherApp(filesModel: filesModel)
+                }else{
+                    self.downloadFile(model: filesModel) { [weak self](error, task) in
+                        if error == nil{
+                            self?.openForOtherApp(filesModel: filesModel)
+                        }else{
+                            Message.message(text: LocalizedString(forKey: "\(filesModel.name ?? "文件")下载失败"))
+                        }
+                    }
                 }
-            case 1:
+            }else{
+                
+            }
+        case 4:
+            if filesModel.type == FilesType.file.rawValue{
+                self.makeCopyTaskCreate(model: model)
+            }else{
+                
+            }
+        case 5:
+            if filesModel.type == FilesType.file.rawValue{
+                
+            }else{
+                self.removeFileOrDirectory(model: filesModel)
+            }
+        case 6:
+            if filesModel.type == FilesType.file.rawValue{
                 let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.whiteStyle)
-               
+                
                 filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
                 filesMoveToRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
+                filesMoveToRootViewController.isCopy = true
                 self.registerNotification()
                 let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
                 self.present(navi, animated: true, completion: nil)
-//            case 3:
-//
-            case 4:
-                self.makeCopyTaskCreate(model: model)
-            case 8:
-                let type = (model as! EntriesModel).type
-                let typeString = type == FilesType.directory.rawValue ? LocalizedString(forKey: "folder") : LocalizedString(forKey: "file")
-                let title = "\(LocalizedString(forKey: "Remove")) \(typeString)"
-                let name = model != nil ? (model as! EntriesModel).name! : ""
-                let messageString =  "\(name) \(LocalizedString(forKey: "will be moved"))"
+            }else{
                 
-                let alertController = MDCAlertController(title: title, message: messageString)
-                
-                let acceptAction = MDCAlertAction(title:LocalizedString(forKey: "Remove")) { [weak self] (_) in
-                    switch AppNetworkService.networkState {
-                    case .local?:
-                        self?.localNetStateFilesRemoveOptionRequest(name:name)
-                    case .normal?:
-                        self?.normalNetStateFilesRemoveOptionRequest(name:name)
-                    default:
-                        break
-                    }
-                }
-                alertController.addAction(acceptAction)
-                
-                let considerAction = MDCAlertAction(title:LocalizedString(forKey: "Cancel")) { (_) in print("Cancel") }
-                alertController.addAction(considerAction)
-                
-                let presentationController =
-                    alertController.mdc_dialogPresentationController
-                presentationController?.dismissOnBackgroundTap = false
-                self.present(alertController, animated: true, completion: nil)
-                
+            }
+        case 7:
+            self.removeFileOrDirectory(model: filesModel)
+            
+        default:
+            break
+        }
+        //        })
+    }
+    
+    func openForOtherApp(filesModel:EntriesModel){
+        let documentController = UIDocumentInteractionController.init(url: URL.init(fileURLWithPath: FilesRootViewController.downloadManager.cache.filePtah(fileName: filesModel.name!)!))
+        documentController.delegate = self
+        documentController.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
+    }
+    
+    func removeFileOrDirectory(model:EntriesModel){
+        let type = model.type
+        let typeString = type == FilesType.directory.rawValue ? LocalizedString(forKey: "folder") : LocalizedString(forKey: "file")
+        let title = "\(LocalizedString(forKey: "Remove")) \(typeString)"
+        let name = model.name ?? ""
+        let messageString =  "\(name) \(LocalizedString(forKey: "will be moved"))"
+        
+        let alertController = MDCAlertController(title: title, message: messageString)
+        
+        let acceptAction = MDCAlertAction(title:LocalizedString(forKey: "Remove")) { [weak self] (_) in
+            switch AppNetworkService.networkState {
+            case .local?:
+                self?.localNetStateFilesRemoveOptionRequest(name:name)
+            case .normal?:
+                self?.normalNetStateFilesRemoveOptionRequest(name:name)
             default:
                 break
             }
-//        })
+        }
+        alertController.addAction(acceptAction)
+        
+        let considerAction = MDCAlertAction(title:LocalizedString(forKey: "Cancel")) { (_) in print("Cancel") }
+        alertController.addAction(considerAction)
+        
+        let presentationController =
+            alertController.mdc_dialogPresentationController
+        presentationController?.dismissOnBackgroundTap = false
+        self.present(alertController, animated: true, completion: nil)
     }
-      
 }
 
 extension FilesRootViewController:UINavigationControllerDelegate{
@@ -618,7 +684,7 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
                 }
             }
         }) { (error) -> (Void) in
-              Message.message(text: error.localizedDescription)
+            Message.message(text: error.localizedDescription)
         }
     }
     
@@ -676,8 +742,8 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
                     Message.message(text: (response.error?.localizedDescription)!)
                 }
             }
-        }, errorHandler: { (error) -> (Void) in
-            Message.message(text: error.localizedDescription)
+            }, errorHandler: { (error) -> (Void) in
+                Message.message(text: error.localizedDescription)
         })
     }
     
@@ -707,7 +773,7 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
 
 extension  FilesRootViewController:UIDocumentPickerDelegate{
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
-         print("cancel")
+        print("cancel")
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
@@ -723,9 +789,7 @@ extension  FilesRootViewController:UIDocumentPickerDelegate{
                 print(error)
             }
         }
-    
-         print(urls)
+        print(urls)
     }
-    
-    
 }
+

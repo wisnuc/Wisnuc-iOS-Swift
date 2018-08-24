@@ -82,7 +82,7 @@ class IPAddDeviceViewController: BaseViewController {
     
   
     @objc func leftBarButtonItemClick(_ sender:UIBarButtonItem){
-        self.dismiss(animated: true) {
+        self.presentingViewController?.dismiss(animated: true) {
             
         }
     }

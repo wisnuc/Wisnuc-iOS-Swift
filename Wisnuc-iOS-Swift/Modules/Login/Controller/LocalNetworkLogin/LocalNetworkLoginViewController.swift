@@ -116,7 +116,7 @@ class LocalNetworkLoginViewController: BaseViewController {
     }
     
     @objc func backButtonTap(_ sender:UIBarButtonItem){
-        self.dismiss(animated: true) {
+        self.presentingViewController?.dismiss(animated: true) {
             
         }
     }

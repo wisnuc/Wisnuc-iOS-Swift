@@ -34,11 +34,19 @@ class FilesHelper: NSObject {
     
     func addSelectFiles(model:EntriesModel){
         if !(selectFilesArray?.contains(where: { $0.uuid == model.uuid }))! {
-            synced(self) {
-                selectFilesArray?.append(model)
-                if (selectFilesArray?.count == 1) {
-                    defaultNotificationCenter().post(name: Notification.Name.Cell.SelectNotiKey, object: NSNumber.init(value: true))
-                }
+             self.addTrueFiles(model: model)
+        }else{
+            if !(FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))!{
+               self.addTrueFiles(model: model)
+            }
+        }
+    }
+    
+    private func addTrueFiles(model:EntriesModel){
+        synced(self) {
+            selectFilesArray?.append(model)
+            if (selectFilesArray?.count == 1) {
+                defaultNotificationCenter().post(name: Notification.Name.Cell.SelectNotiKey, object: NSNumber.init(value: true))
             }
         }
     }
@@ -53,9 +61,9 @@ class FilesHelper: NSObject {
     }
     
     func removeSelectFiles(model:EntriesModel){
-        if (selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! {
+        if (selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (selectFilesArray?.contains(where:{$0.name == model.name}))!{
             synced(self) {
-                let index = selectFilesArray?.index(where: {$0.uuid == model.uuid})
+                let index = selectFilesArray?.index(where: {$0.uuid == model.uuid && $0.name == model.name})
                 if index != nil{
                     selectFilesArray?.remove(at: index!)
                 }
@@ -64,6 +72,10 @@ class FilesHelper: NSObject {
                 }
             }
         }
+    }
+    
+    private func removeTrueFiles(model:EntriesModel){
+        
     }
     
     func removeAllSelectFiles(){
