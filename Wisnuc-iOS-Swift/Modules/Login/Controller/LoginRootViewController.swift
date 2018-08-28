@@ -391,8 +391,10 @@
     }
     
     @objc func  loginButtonClick(){
-        
-        
+        let loginVC = LoginViewController.init(style: NavigationStyle.defaultStyle)
+        let navigationController = UINavigationController.init(rootViewController: loginVC)
+        navigationController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+        self.present(navigationController, animated: true, completion: nil)
 //        self.setSelfType(.chooseStation)
 //        self.loginAction()
     }
