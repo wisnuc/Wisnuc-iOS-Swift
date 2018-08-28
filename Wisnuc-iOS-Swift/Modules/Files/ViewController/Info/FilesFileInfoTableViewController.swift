@@ -107,7 +107,7 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
         switch indexPath.row {
         case 0:
             cell.leftLabel.text = LocalizedString(forKey: "类型")
-            cell.rightLabel.text = model?.name?.pathExtension
+            cell.rightLabel.text = model?.type == FilesType.directory.rawValue ? "文件夹" : model?.name?.pathExtension
         case 1:
             cell.leftLabel.text = LocalizedString(forKey: "大小")
             cell.rightLabel.text = model?.size != nil ? sizeString((model?.size!)!) : ""
@@ -116,7 +116,7 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
             cell.rightLabel.isHidden = true
             cell.filesImageView.isHidden = false
             cell.folderButton.isHidden = false
-            cell.folderButton.setTitle("My Drive", for: UIControlState.normal)
+//            cell.folderButton.setTitle("My Drive", for: UIControlState.normal)
 //        case 3:
 //            cell.leftLabel.text = LocalizedString(forKey: "Files quantity")
 //            cell.rightLabel.text = "10"

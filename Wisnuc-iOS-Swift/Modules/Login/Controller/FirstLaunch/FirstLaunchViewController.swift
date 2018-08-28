@@ -31,7 +31,7 @@ class FirstLaunchViewController: UIViewController {
     @objc func startButtonClick(){
         let type:LoginState?
         type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
-        let loginController = LoginViewController.init(type!)
+        let loginController = LoginRootViewController.init(type!)
         UIApplication.shared.statusBarStyle = .lightContent
         let navigationController = UINavigationController.init(rootViewController:loginController)
         let window =  UIApplication.shared.keyWindow

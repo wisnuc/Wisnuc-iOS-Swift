@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         }
     }
     var window: UIWindow?
-    var loginController:LoginViewController?
+    var loginController:LoginRootViewController?
     var colorScheme: (MDCColorScheme & NSObjectProtocol)!
     var coreDataContext: NSManagedObjectContext?
     
@@ -65,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             }else{
                 let type:LoginState?
                 type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
-                let loginController = LoginViewController.init(type!)
+                let loginController = LoginRootViewController.init(type!)
                 self.loginController = loginController;
                 UIApplication.shared.statusBarStyle = .lightContent
                 let navigationController = UINavigationController.init(rootViewController:loginController)
@@ -253,8 +253,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         case Int((WXSuccess).rawValue): //用户同意
             Message.message(text: "授权成功")
             let aresp = resp as! SendAuthResp
-            if  UIViewController.currentViewController().isKind(of: LoginViewController.self){
-                let loginVC = UIViewController.currentViewController() as! LoginViewController
+            if  UIViewController.currentViewController().isKind(of: LoginRootViewController.self){
+                let loginVC = UIViewController.currentViewController() as! LoginRootViewController
                 loginVC.weChatCallBackRespCode(code: aresp.code)
             }
 //            SendAuthResp *aresp = (SendAuthResp *)resp;

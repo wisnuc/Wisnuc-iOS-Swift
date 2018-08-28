@@ -45,7 +45,7 @@ class AutoBackupManager: NSObject {
     
     override init() {
         super.init()
-        let configuration = URLSessionConfiguration.default
+        let configuration = URLSessionConfiguration.background(withIdentifier: "com.wisnuc.app.backgroundtransfer")
         sessionManager = Alamofire.SessionManager(configuration: configuration)
         shouldUpload = false
         hashLimitCount = 4
@@ -108,7 +108,7 @@ class AutoBackupManager: NSObject {
         self.managerQueue.async { [weak self] in
             self?.shouldNotify = true
             self?.needRetry = true
-//            self?.shouldUpload = true
+//
             self?.hashwaitingQueue.append(contentsOf: localAssets)
             self?.hashwaitingQueue.sort { $0.createDate! > $1.createDate! }
             self?.uploadedNetQueue.append(contentsOf: netAssets)
@@ -118,9 +118,34 @@ class AutoBackupManager: NSObject {
                     hashSet.insert(model.hash!)
                 }
             }
-
+            self?.shouldUpload = true
             self?.uploadedNetHashSet = hashSet
-            self?.schedule()
+//            self?.schedule()
+            let asset = self?.hashwaitingQueue[3]
+//            let location = self?.uploadPaddingQueue.index(of: asset!)
+//            if let eLocation = location{
+//                self?.uploadPaddingQueue.remove(at: eLocation)
+//            }
+            
+            
+            self?.workingQueue.async {
+                self?.getAssetSha256(asset: asset!, callback: { [weak self] (error, sha256) in
+                    self?.managerQueue.async {
+                        if (error != nil) {
+                           
+                        }else{
+                            asset?.digest = sha256
+                            let model = WSUploadModel.init(asset: asset!, manager: (self?.sessionManager)!)
+                            self?.workingQueue.async {
+                                self?.scheduleForUpload(model: model, useTimeStamp: false)
+                            }
+                        }
+                        
+                    }
+                })
+            }
+            
+           
         }
     }
     
@@ -239,22 +264,22 @@ class AutoBackupManager: NSObject {
                         }
                     }else{
                         print("上传成功 , error:\(String(describing: self?.uploadErrorQueue.count))  finish:\(String(describing: self?.uploadedQueue.count))")
-                        if let location = self?.uploadingQueue.index(of: model){
-                            self?.uploadingQueue.remove(at: location)
-                        }
+//                        if let location = self?.uploadingQueue.index(of: model){
+//                            self?.uploadingQueue.remove(at: location)
+//                        }
                         
-                        self?.uploadedLocalHashSet.insert((model.asset?.digest!)!)
-                        if !((self?.uploadedQueue.contains(model))!){
-                            if !model.isRemoved! {
-                                self?.uploadedQueue.append(model)
-                                if let location = self?.uploadingQueue.index(of: model){
-                                    self?.uploadingQueue.remove(at: location)
-                                }
-                                defaultNotificationCenter().post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
-                            }
-                        }
+//                        self?.uploadedLocalHashSet.insert((model.asset?.digest!)!)
+//                        if !((self?.uploadedQueue.contains(model))!){
+//                            if !model.isRemoved! {
+//                                self?.uploadedQueue.append(model)
+//                                if let location = self?.uploadingQueue.index(of: model){
+//                                    self?.uploadingQueue.remove(at: location)
+//                                }
+//                                defaultNotificationCenter().post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
+//                            }
+//                        }
                     }
-                    self?.schedule()
+//                    self?.schedule()
                 }
             })
         }
@@ -412,7 +437,7 @@ class WSUploadModel: NSObject {
                 let requestUrl = "/drives/\((AppUserService.currentUser?.userHome!)!)/dirs/\((AppUserService.currentUser?.backUpDirectoryUUID!)!)/entries"
                     let resource = requestUrl.toBase64()
                 var manifestDic  = Dictionary<String, Any>.init()
-                    manifestDic[kRequestOpKey] = "newfile"
+                    manifestDic[kRequestOpKey] = kRequestOpNewFileValue
                     manifestDic[kRequestMethodKey] = RequestMethodValue.POST
                     manifestDic[kRequestToNameKey] = fileName!
                     manifestDic[kRequestResourceKey] = resource
@@ -428,36 +453,52 @@ class WSUploadModel: NSObject {
                 originalRequest = try URLRequest(url: URL.init(string: urlString!)! , method:.post, headers: requestHTTPHeaders)
                 originalRequest?.timeoutInterval = TimeInterval(30)
                 let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: nil)
+                
                 self?.manager?.upload(multipartFormData: { (formData) in
                     if AppNetworkService.networkState == .normal{
                         formData.append(URL.init(fileURLWithPath: filePath!), withName: fileName!, fileName: fileName!, mimeType: "image/jpeg")
                     }else{
-                        let dic = ["size":NSNumber.init(value: sizeNumber) ,"sha256":hashString!] as NSDictionary
+                        let dic = ["size":NSNumber.init(value: sizeNumber) ,"sha256":hashString!, kRequestOpKey:kRequestOpNewFileValue] as NSDictionary
                         let jsonData =  jsonToData(jsonDic: dic)
                         let jsonString = String.init(data: jsonData!, encoding: String.Encoding.utf8)
                         formData.append(URL.init(fileURLWithPath: filePath!), withName: fileName!, fileName: jsonString!, mimeType: "image/jpeg")
-    
                     }
-                }, with: encodedURLRequest, encodingCompletion: { (response) in
-                    switch response {
-                    case .success(let upload, _, _):
-                        upload.validate(statusCode: 200..<500)
-//                            .validate(contentType: ["application/json"])
-                            .responseData(completionHandler: { (responseData) in
-                                if  responseData.error != nil{
-                                    print(responseData.error ?? "error")
-                                    callback(responseData.error,nil)
-                                }else{
-                                    callback(nil,responseData.value)
+                }, usingThreshold: SessionManager.multipartFormDataEncodingMemoryThreshold, with: encodedURLRequest, encodingCompletion: { (encodingResult) in
+                    switch (encodingResult) {
+                    // encodingResult success
+                    case .success(let request, let streamingFromDisk, let streamFileURL):
+                        print("\(streamingFromDisk) \(String(describing: streamFileURL))")
+                        // upload progress closure
+                        request.uploadProgress(closure: { (progress) in
+                            print("upload progress: \(progress.fractionCompleted)")
+                            // here you can send out to a delegate or via notifications the upload progress to interested parties
+                        })
+                        request.validate(statusCode: 200..<500)
+                        // response handler
+                        request.responseJSON(completionHandler: { response in
+                            switch response.result {
+                            case .success(let jsonData):
+                                // do any parsing on your request's response if needed
+                                callback(nil,(jsonData as AnyObject).value)
+                            case .failure(let error):
+                                print(error)
+                                return callback(error,nil)
+                            }
+                            if let streamFileURL = streamFileURL{
+                                do {
+                                    try FileManager.default.removeItem(at: streamFileURL)
+                                }catch{
+                                    print(error)
                                 }
-                            })
-                      
+                            }
+                        })
+                       
+                    // encodingResult failure
                     case .failure(let error):
-                        print(error )
-                        return  callback(error,nil)
+                    print(error )
+                    return  callback(error,nil)
                     }
                 })
-    
             } catch {
                 return callback(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest),nil)
             }

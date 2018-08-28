@@ -166,6 +166,13 @@
 		1F362F11212672F2000B3384 /* DBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F10212672F2000B3384 /* DBService.swift */; };
 		1F362F3B212BECDA000B3384 /* TRUploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F3A212BECDA000B3384 /* TRUploadTask.swift */; };
 		1F362F73212FF6B6000B3384 /* FunctionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F72212FF6B6000B3384 /* FunctionViewController.swift */; };
+		1F362F792133FF9C000B3384 /* wechat_icon_mian_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F782133FF9A000B3384 /* wechat_icon_mian_color.png */; };
+		1F362F7B2133FFA6000B3384 /* wechat_icon_mian_color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F7A2133FFA5000B3384 /* wechat_icon_mian_color@2x.png */; };
+		1F362F7D2133FFAF000B3384 /* wechat_icon_mian_color@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F7C2133FFAF000B3384 /* wechat_icon_mian_color@3x.png */; };
+		1F362F8221351782000B3384 /* LoginNextStepViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F8021351782000B3384 /* LoginNextStepViewController.swift */; };
+		1F362F8321351782000B3384 /* LoginNextStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8121351782000B3384 /* LoginNextStepViewController.xib */; };
+		1F362F8621351FAC000B3384 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F8521351FAC000B3384 /* LoginViewController.swift */; };
+		1F362F8821351FDA000B3384 /* LoginRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F8721351FDA000B3384 /* LoginRootViewController.swift */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -263,7 +270,6 @@
 		1F5882232085885C00394BD6 /* logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5882202085885B00394BD6 /* logo@3x.png */; };
 		1F5882242085885C00394BD6 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5882212085885B00394BD6 /* logo@2x.png */; };
 		1F5882252085885C00394BD6 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5882222085885C00394BD6 /* logo.png */; };
-		1F5882272085890400394BD6 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5882262085890300394BD6 /* LoginViewController.swift */; };
 		1F58822C208591A100394BD6 /* add_station.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F588229208591A000394BD6 /* add_station.png */; };
 		1F58822D208591A100394BD6 /* add_station@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F58822A208591A000394BD6 /* add_station@2x.png */; };
 		1F58822E208591A100394BD6 /* add_station@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F58822B208591A000394BD6 /* add_station@3x.png */; };
@@ -705,6 +711,13 @@
 		1F362F16212BC17D000B3384 /* Wisnuc-iOS-Swift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Wisnuc-iOS-Swift.entitlements"; sourceTree = "<group>"; };
 		1F362F3A212BECDA000B3384 /* TRUploadTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TRUploadTask.swift; sourceTree = "<group>"; };
 		1F362F72212FF6B6000B3384 /* FunctionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionViewController.swift; sourceTree = "<group>"; };
+		1F362F782133FF9A000B3384 /* wechat_icon_mian_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat_icon_mian_color.png; sourceTree = "<group>"; };
+		1F362F7A2133FFA5000B3384 /* wechat_icon_mian_color@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wechat_icon_mian_color@2x.png"; sourceTree = "<group>"; };
+		1F362F7C2133FFAF000B3384 /* wechat_icon_mian_color@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wechat_icon_mian_color@3x.png"; sourceTree = "<group>"; };
+		1F362F8021351782000B3384 /* LoginNextStepViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNextStepViewController.swift; sourceTree = "<group>"; };
+		1F362F8121351782000B3384 /* LoginNextStepViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginNextStepViewController.xib; sourceTree = "<group>"; };
+		1F362F8521351FAC000B3384 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		1F362F8721351FDA000B3384 /* LoginRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginRootViewController.swift; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -803,7 +816,6 @@
 		1F5882202085885B00394BD6 /* logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@3x.png"; sourceTree = "<group>"; };
 		1F5882212085885B00394BD6 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		1F5882222085885C00394BD6 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
-		1F5882262085890300394BD6 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1F588229208591A000394BD6 /* add_station.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_station.png; sourceTree = "<group>"; };
 		1F58822A208591A000394BD6 /* add_station@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_station@2x.png"; sourceTree = "<group>"; };
 		1F58822B208591A000394BD6 /* add_station@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_station@3x.png"; sourceTree = "<group>"; };
@@ -1489,6 +1501,15 @@
 			path = Function;
 			sourceTree = "<group>";
 		};
+		1F362F8421351787000B3384 /* LoginNextStepViewController */ = {
+			isa = PBXGroup;
+			children = (
+				1F362F8021351782000B3384 /* LoginNextStepViewController.swift */,
+				1F362F8121351782000B3384 /* LoginNextStepViewController.xib */,
+			);
+			path = LoginNextStepViewController;
+			sourceTree = "<group>";
+		};
 		1F3C241820A4499900E6B953 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1587,6 +1608,9 @@
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F362F782133FF9A000B3384 /* wechat_icon_mian_color.png */,
+				1F362F7A2133FFA5000B3384 /* wechat_icon_mian_color@2x.png */,
+				1F362F7C2133FFAF000B3384 /* wechat_icon_mian_color@3x.png */,
 				1F359FE12091B2A900E2FF36 /* warning.png */,
 				1F359FDF2091B2A800E2FF36 /* warning@2x.png */,
 				1F359FE02091B2A800E2FF36 /* warning@3x.png */,
@@ -2106,6 +2130,9 @@
 		1FD9B784207CC6F400906D80 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				1F362F8521351FAC000B3384 /* LoginViewController.swift */,
+				1F362F8721351FDA000B3384 /* LoginRootViewController.swift */,
+				1F362F8421351787000B3384 /* LoginNextStepViewController */,
 				1F307C5F20BBDBD600AE105C /* FirstLaunch */,
 				1F307C5E20BBDBC600AE105C /* LocalNetworkLogin */,
 				1FFF3EA02094643300828623 /* CollectionViewController */,
@@ -2114,7 +2141,6 @@
 				1F2B459F208F27E400C8971F /* AddDevice */,
 				1F2B45A0208F280200C8971F /* LogOut */,
 				1F2B459A208F24EB00C8971F /* Init */,
-				1F5882262085890300394BD6 /* LoginViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2596,6 +2622,9 @@
 						CreatedOnToolsVersion = 9.3;
 						LastSwiftMigration = 0930;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.iCloud = {
 								enabled = 1;
 							};
@@ -2704,6 +2733,7 @@
 				1F58824E2085F09F00394BD6 /* station_normal@3x.png in Resources */,
 				1FC5CC1120D3BDBB00499E63 /* file_finish@2x.png in Resources */,
 				1F359FB02090819000E2FF36 /* no@2x.png in Resources */,
+				1F362F7B2133FFA6000B3384 /* wechat_icon_mian_color@2x.png in Resources */,
 				1FEABB5520A14B6C00824448 /* files_word_small@2x.png in Resources */,
 				1F83AE8220887936007CCCFD /* more@2x.png in Resources */,
 				1FAADEC320ABFD8700739220 /* files_move_gray@2x.png in Resources */,
@@ -2750,6 +2780,7 @@
 				1F58822C208591A100394BD6 /* add_station.png in Resources */,
 				1F1BAC6020CE709100D32C5A /* files_jpg_small@2x.png in Resources */,
 				1F5AD94720AD80F00065DAD3 /* files_photo_small@3x.png in Resources */,
+				1F362F8321351782000B3384 /* LoginNextStepViewController.xib in Resources */,
 				1F5882482085F07E00394BD6 /* disk_warning@2x.png in Resources */,
 				1F359FB22090819000E2FF36 /* no.png in Resources */,
 				1FA6A1B920CFA6EE007A0AB2 /* files_audio_normal@3x.png in Resources */,
@@ -2765,6 +2796,7 @@
 				1F050E7720ABCE6E0037F00A /* files_edit@3x.png in Resources */,
 				1F359FD22091A95D00E2FF36 /* disk_new_add@2x.png in Resources */,
 				1F3C242420A547D000E6B953 /* files_download@2x.png in Resources */,
+				1F362F792133FF9C000B3384 /* wechat_icon_mian_color.png in Resources */,
 				1F050E4520AAB5F80037F00A /* files_upload_big@2x.png in Resources */,
 				1F4E9396208DBB7600DD1EA7 /* radio_button.png in Resources */,
 				1F5659FF20D10F4400D86FDB /* logo_gray.png in Resources */,
@@ -2947,6 +2979,7 @@
 				1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */,
 				1F8EBB38209ADC6700E8AB83 /* tab_files_selected.png in Resources */,
 				1F8EBB4E209FF07C00E8AB83 /* more_gray_horizontal@2x.png in Resources */,
+				1F362F7D2133FFAF000B3384 /* wechat_icon_mian_color@3x.png in Resources */,
 				1F050E1A20A985A80037F00A /* files_error.png in Resources */,
 				1F3C241320A42CFF00E6B953 /* files_select.png in Resources */,
 				1F5AD93920AD804D0065DAD3 /* files_video_small@2x.png in Resources */,
@@ -3163,12 +3196,14 @@
 				1FE674DC20D21B11006F97DB /* TRCommon.swift in Sources */,
 				1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
+				1F362F8221351782000B3384 /* LoginNextStepViewController.swift in Sources */,
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,
 				1F537A102125150D00A555C5 /* AutoBackupManager.swift in Sources */,
 				1FFD136720EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m in Sources */,
 				1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */,
 				1FAADEF320AC144A00739220 /* FilesFileInfoTableViewController.swift in Sources */,
 				1F1BABA620C5195900D32C5A /* EntriesModel.swift in Sources */,
+				1F362F8821351FDA000B3384 /* LoginRootViewController.swift in Sources */,
 				1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */,
 				1FFD131E20EF1A340053A3F7 /* UIButton+EnlargeEdge.m in Sources */,
 				1F050E6920AAEA2C0037F00A /* FilesFilesBottomSheetContentTableViewController.swift in Sources */,
@@ -3180,6 +3215,7 @@
 				1FFD132E20EF3DB50053A3F7 /* LocalAsset+CoreDataClass.swift in Sources */,
 				1FE9EF8B20EF5DEA00732728 /* FileHash.m in Sources */,
 				1F050E6020AAC8400037F00A /* FilesSequenceTableViewCell.swift in Sources */,
+				1F362F8621351FAC000B3384 /* LoginViewController.swift in Sources */,
 				1F307C7A20BFEBC900AE105C /* LocalUserAPI.swift in Sources */,
 				1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */,
 				1F050E2D20A99F280037F00A /* FileShareFolderViewController.swift in Sources */,
@@ -3289,7 +3325,6 @@
 				1FFD131020EE21620053A3F7 /* PhotoCollectionViewController.swift in Sources */,
 				1F4242B820F5CEC10085E2F0 /* WSShowBigimgViewController.swift in Sources */,
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
-				1F5882272085890400394BD6 /* LoginViewController.swift in Sources */,
 				1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */,
 				1FFD12B220E3979F0053A3F7 /* TasksAPI.swift in Sources */,
 			);

@@ -46,6 +46,8 @@ public let kRequestOpKey       = "op"
 public let kRequestToNameKey  =  "toName"
 public let kRequestFromNameKey  = "fromName"
 
+public let kRequestOpNewFileValue    = "newfile"
+
 public let kRequestTaskTypeKey = "type"
 public let kRequestTaskDriveKey = "drive"
 public let kRequestTaskDirKey = "dir"

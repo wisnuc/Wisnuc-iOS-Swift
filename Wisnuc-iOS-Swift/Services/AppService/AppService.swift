@@ -319,7 +319,7 @@ class AppService: NSObject,ServiceProtocol{
                     netEntries.append(contentsOf: netEntries)
 //                    self?.autoBackupManager.setNetAssets(netAssets: netEntries)
                     self?.autoBackupManager.start(localAssets: (self?.assetService.allAssets)!, netAssets: netEntries)
-                    self?.autoBackupManager.startAutoBcakup()
+//                    self?.autoBackupManager.startAutoBcakup()
                     self?.isStartingUpload = false
                     if(callBack != nil) {
                         callBack!()
