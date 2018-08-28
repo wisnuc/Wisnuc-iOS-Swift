@@ -173,6 +173,9 @@
 		1F362F8321351782000B3384 /* LoginNextStepViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8121351782000B3384 /* LoginNextStepViewController.xib */; };
 		1F362F8621351FAC000B3384 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F8521351FAC000B3384 /* LoginViewController.swift */; };
 		1F362F8821351FDA000B3384 /* LoginRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F362F8721351FDA000B3384 /* LoginRootViewController.swift */; };
+		1F362F8A21355E26000B3384 /* next_button_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8921355E25000B3384 /* next_button_arrow@3x.png */; };
+		1F362F8C21355E2F000B3384 /* next_button_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8B21355E2E000B3384 /* next_button_arrow@2x.png */; };
+		1F362F8E21355E36000B3384 /* next_button_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8D21355E35000B3384 /* next_button_arrow.png */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -718,6 +721,9 @@
 		1F362F8121351782000B3384 /* LoginNextStepViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginNextStepViewController.xib; sourceTree = "<group>"; };
 		1F362F8521351FAC000B3384 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1F362F8721351FDA000B3384 /* LoginRootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginRootViewController.swift; sourceTree = "<group>"; };
+		1F362F8921355E25000B3384 /* next_button_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next_button_arrow@3x.png"; sourceTree = "<group>"; };
+		1F362F8B21355E2E000B3384 /* next_button_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next_button_arrow@2x.png"; sourceTree = "<group>"; };
+		1F362F8D21355E35000B3384 /* next_button_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next_button_arrow.png; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -1608,6 +1614,9 @@
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F362F8D21355E35000B3384 /* next_button_arrow.png */,
+				1F362F8B21355E2E000B3384 /* next_button_arrow@2x.png */,
+				1F362F8921355E25000B3384 /* next_button_arrow@3x.png */,
 				1F362F782133FF9A000B3384 /* wechat_icon_mian_color.png */,
 				1F362F7A2133FFA5000B3384 /* wechat_icon_mian_color@2x.png */,
 				1F362F7C2133FFAF000B3384 /* wechat_icon_mian_color@3x.png */,
@@ -2797,6 +2806,7 @@
 				1F359FD22091A95D00E2FF36 /* disk_new_add@2x.png in Resources */,
 				1F3C242420A547D000E6B953 /* files_download@2x.png in Resources */,
 				1F362F792133FF9C000B3384 /* wechat_icon_mian_color.png in Resources */,
+				1F362F8A21355E26000B3384 /* next_button_arrow@3x.png in Resources */,
 				1F050E4520AAB5F80037F00A /* files_upload_big@2x.png in Resources */,
 				1F4E9396208DBB7600DD1EA7 /* radio_button.png in Resources */,
 				1F5659FF20D10F4400D86FDB /* logo_gray.png in Resources */,
@@ -2888,6 +2898,7 @@
 				1F050E4B20AAB6B50037F00A /* files_cl_big@2x.png in Resources */,
 				1F050E7520ABCE610037F00A /* files_edit@2x.png in Resources */,
 				1F359FB12090819000E2FF36 /* no@3x.png in Resources */,
+				1F362F8C21355E2F000B3384 /* next_button_arrow@2x.png in Resources */,
 				1FFD12CD20EDC4690053A3F7 /* task_copy@2x.png in Resources */,
 				1FEABB5B20A14BC100824448 /* files_word_normal@2x.png in Resources */,
 				1F359FD12091A95D00E2FF36 /* disk_main_color@2x.png in Resources */,
@@ -2963,6 +2974,7 @@
 				1F050E5320AAB71D0037F00A /* files_file_big@3x.png in Resources */,
 				1FBD1E0620B3EF9F0067BE3E /* files_new_folder_gray@3x.png in Resources */,
 				1F5AD93320AD7FAB0065DAD3 /* files_excel_small@2x.png in Resources */,
+				1F362F8E21355E36000B3384 /* next_button_arrow.png in Resources */,
 				1F58823A2085DCAF00394BD6 /* device_circle@3x.png in Resources */,
 				1F359FAE2090819000E2FF36 /* ok.png in Resources */,
 				1F307C7020BEAB6D00AE105C /* setting_gray@2x.png in Resources */,

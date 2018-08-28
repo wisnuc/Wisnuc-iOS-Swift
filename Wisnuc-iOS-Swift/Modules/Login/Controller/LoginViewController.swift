@@ -21,8 +21,6 @@ class LoginViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,7 +34,8 @@ class LoginViewController: BaseViewController {
     }
     
     @objc func forgetPwdTap(_ sender:UIBarButtonItem){
-        self.presentingViewController?.dismiss(animated: true, completion: nil)
+        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "忘记密码"), detailTitleString:LocalizedString(forKey: "请输入您的手机号码来查找账号"), state: .phoneNumber)
+        self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
     @objc func backButtonTap(_ sender:UIBarButtonItem){
