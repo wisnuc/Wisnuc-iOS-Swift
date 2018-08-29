@@ -176,6 +176,8 @@
 		1F362F8A21355E26000B3384 /* next_button_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8921355E25000B3384 /* next_button_arrow@3x.png */; };
 		1F362F8C21355E2F000B3384 /* next_button_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8B21355E2E000B3384 /* next_button_arrow@2x.png */; };
 		1F362F8E21355E36000B3384 /* next_button_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8D21355E35000B3384 /* next_button_arrow.png */; };
+		1F362F902136803B000B3384 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F362F8F2136803B000B3384 /* ExternalAccessory.framework */; };
+		1F362F92213680BC000B3384 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F362F91213680BC000B3384 /* NetworkExtension.framework */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -724,6 +726,8 @@
 		1F362F8921355E25000B3384 /* next_button_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next_button_arrow@3x.png"; sourceTree = "<group>"; };
 		1F362F8B21355E2E000B3384 /* next_button_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next_button_arrow@2x.png"; sourceTree = "<group>"; };
 		1F362F8D21355E35000B3384 /* next_button_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next_button_arrow.png; sourceTree = "<group>"; };
+		1F362F8F2136803B000B3384 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		1F362F91213680BC000B3384 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -1101,6 +1105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F362F902136803B000B3384 /* ExternalAccessory.framework in Frameworks */,
+				1F362F92213680BC000B3384 /* NetworkExtension.framework in Frameworks */,
 				F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2527,6 +2533,8 @@
 		8F207FC9B9AE44C14EAC998A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F362F91213680BC000B3384 /* NetworkExtension.framework */,
+				1F362F8F2136803B000B3384 /* ExternalAccessory.framework */,
 				8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */,
 				CC624A8B343908C1991C848B /* Pods_Wisnuc_iOS_SwiftTests.framework */,
 			);
@@ -2632,6 +2640,12 @@
 						LastSwiftMigration = 0930;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.NetworkExtensions.iOS = {
+								enabled = 1;
+							};
+							com.apple.WAC = {
 								enabled = 1;
 							};
 							com.apple.iCloud = {

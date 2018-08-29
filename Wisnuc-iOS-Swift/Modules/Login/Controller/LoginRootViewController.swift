@@ -537,8 +537,8 @@
         return view
     }()
     
-    lazy var agreementButton: UIView = {
-        let bgView = UIView.init(frame: CGRect(x: MarginsWidth, y: self.creatNewAccoutButton.bottom + 32, width: __kWidth - MarginsWidth * 2, height: 48))
+    lazy var agreementButton: UIView = { [weak self] in
+        let bgView = UIView.init(frame: CGRect(x: MarginsWidth, y: (self?.creatNewAccoutButton.bottom)! + 32, width: __kWidth - MarginsWidth * 2, height: 48))
         let button = UIButton.init(frame: CGRect(x: 0, y: 0, width: bgView.bounds.width, height: 13))
         
 //        let str = "点击继续创建账户即表明同意闻上云盘的产品使用协议和隐私政策"
@@ -564,8 +564,8 @@
         return bgView
     }()
     
-    lazy var weChatButton: MDBaseButton = {
-        let innerWechatView = MDBaseButton.init(frame: CGRect(x: MarginsWidth, y: self.wisnucLabel.bottom + 48, width: __kWidth - MarginsWidth * 2, height: ButtonHeight))
+    lazy var weChatButton: MDBaseButton = { [weak self] in
+        let innerWechatView = MDBaseButton.init(frame: CGRect(x: MarginsWidth, y: (self?.wisnucLabel.bottom)! + 48, width: __kWidth - MarginsWidth * 2, height: ButtonHeight))
         innerWechatView.backgroundColor = .white
         innerWechatView.layer.cornerRadius = ButtonHeight/2
         innerWechatView.inkColor = COR1.withAlphaComponent(0.3)
@@ -598,8 +598,8 @@
         return innerWechatView
     }()
     
-    lazy var creatNewAccoutButton: MDBaseButton = {
-        let innerView = MDBaseButton.init(frame: CGRect(x: MarginsWidth, y: self.weChatButton.bottom + 16, width: __kWidth - MarginsWidth * 2, height: ButtonHeight))
+    lazy var creatNewAccoutButton: MDBaseButton = { [weak self] in
+        let innerView = MDBaseButton.init(frame: CGRect(x: MarginsWidth, y: (self?.weChatButton.bottom)! + 16, width: __kWidth - MarginsWidth * 2, height: ButtonHeight))
         innerView.backgroundColor = COR1
         innerView.layer.cornerRadius = ButtonHeight/2
         innerView.setBorderColor(UIColor.white, for: UIControlState.normal)
