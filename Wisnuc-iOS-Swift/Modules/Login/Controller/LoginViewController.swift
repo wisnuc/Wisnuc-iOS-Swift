@@ -14,7 +14,12 @@ enum EditingState {
     case endEditing
 }
 
+@objc protocol LoginViewControllerDelegate {
+    func wechatLogin()
+}
+
 class LoginViewController: BaseViewController {
+    weak var delegate:LoginViewControllerDelegate?
     var textFieldControllerPhoneNumber:MDCTextInputControllerUnderline?
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
     var editingState:EditingState?{
@@ -122,7 +127,8 @@ class LoginViewController: BaseViewController {
     }
     
     @objc func forgetPwdTap(_ sender:UIBarButtonItem){
-        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "忘记密码"), detailTitleString:LocalizedString(forKey: "请输入您的手机号码来查找账号"), state: .phoneNumber)
+        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "忘记密码"), detailTitleString:LocalizedString(forKey: "请输入您的手机号码来查找账号"), state: .forgetPwd)
+        nextViewController.modalTransitionStyle = .crossDissolve
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
@@ -132,7 +138,9 @@ class LoginViewController: BaseViewController {
     
     
     @objc func weChatLoginButtonClick(_ sender:MDBaseButton){
-        
+        self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
+            self?.delegate?.wechatLogin()
+        })
     }
     
     lazy var titleLabel: UILabel = {

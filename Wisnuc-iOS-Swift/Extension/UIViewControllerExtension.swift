@@ -29,9 +29,12 @@ extension UIViewController: BackButtonHandlerProtocol{
                     controller = tabBarController.selectedViewController
                 }else{
                     if (controller?.childViewControllers.count)!>0{
+                        if (controller?.childViewControllers.last?.isKind(of: MDCAppBarViewController.self))!{
+                             return controller!
+                        }
                         controller = controller?.childViewControllers.last
                     }else{
-//                        if (controller?.isKind(of: MDCAppBar.self))!{
+//
 //                            controller = controller?.childViewControllers.last
 //                        }else{
                             return controller!

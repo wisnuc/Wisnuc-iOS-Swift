@@ -165,12 +165,11 @@
                     let cloudLoginModel = try JSONDecoder().decode(CloudLoginModel.self, from: responseData.data!)
                     print(String(data: responseData.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
                     if (cloudLoginModel.data?.token != nil) && (cloudLoginModel.data?.token?.count)!>0 {
-                        self?.logintype = .token
                         let image = UIImage.init(named: "logo")
                         self?.wisnucImageView.was_setCircleImage(withUrlString:cloudLoginModel.data?.user?.avatarUrl ?? "" , placeholder: image!)
-                        DispatchQueue.main.async {
-                            self?.wisnucLabel.text = cloudLoginModel.data?.user?.nickName ?? "WISNUC"
-                        }
+//                        DispatchQueue.main.async {
+//                            self?.wisnucLabel.text = cloudLoginModel.data?.user?.nickName ?? "WISNUC"
+//                        }
                         let user = AppUserService.createUser(uuid: (cloudLoginModel.data?.user?.id)!)
                         user.cloudToken = cloudLoginModel.data?.token!
                         if cloudLoginModel.data?.user?.avatarUrl != nil{
@@ -183,6 +182,8 @@
                         
                         AppUserService.setCurrentUser(user)
                         AppUserService.synchronizedCurrentUser()
+                        self?.setSelfType(.chooseStation)
+                        self?.loginAction()
                     }
                 } catch {
                     // 异常处理
@@ -290,6 +291,7 @@
         let uuid = userDefaults.object(forKey: kCurrentUserUUID) as? String
         if uuid == nil {
             Message.message(text: LocalizedString(forKey: "no uuid"))
+            ActivityIndicator.stopActivityIndicatorAnimation()
             return
         }
         let user = AppUserService.user(uuid:uuid!)
@@ -392,11 +394,10 @@
     
     @objc func  loginButtonClick(){
         let loginVC = LoginViewController.init(style: NavigationStyle.defaultStyle)
+        loginVC.delegate = self
         let navigationController = UINavigationController.init(rootViewController: loginVC)
         navigationController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         self.present(navigationController, animated: true, completion: nil)
-//        self.setSelfType(.chooseStation)
-//        self.loginAction()
     }
     
     @objc func imageViewTap(_ sender:UIGestureRecognizer){
@@ -415,6 +416,13 @@
         let logoutVC = LogOutViewController.init(avatarUrl: avatarUrl, name:name)
         logoutVC.delegate = self
         self.navigationController?.pushViewController(logoutVC, animated: true)
+    }
+    
+    @objc func creatNewAccoutButton(_ sender:MDBaseButton){
+        let creatNewAccoutVC = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "绑定手机号"), detailTitleString: LocalizedString(forKey: "手机号码是您忘记密码时，找回面的唯一途径 请慎重填写"), state: .bindPhoneNumber)
+        let navigationController = UINavigationController.init(rootViewController: creatNewAccoutVC)
+        navigationController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+        self.present(navigationController, animated: true, completion: nil)
     }
     
     func checkNetwork(){
@@ -620,7 +628,7 @@
             make.size.equalTo(CGSize(width: labelWidthFrom(title: label.text!, font: label.font!), height: labelHeightFrom(title: label.text!, font: label.font!)))
         }
         
-        innerView .addTarget(self, action: #selector(weChatViewButtonClick), for: UIControlEvents.touchUpInside)
+        innerView .addTarget(self, action: #selector(creatNewAccoutButton(_ :)), for: UIControlEvents.touchUpInside)
         return innerView
     }()
     
@@ -670,7 +678,7 @@
  extension LoginRootViewController:StationViewDelegate{
     func stationViewSwipeAction() {
         NetEngine.sharedInstance.cancleAllRequest()
-        self.logintype = .token
+        self.logintype = .wechat
     }
     
     func stationViewTapAction(_ sender: MyStationTapGestureRecognizer) {
@@ -754,6 +762,12 @@
                 appDelegate.setRootViewController()
             }
         }
+    }
+ }
+ 
+ extension LoginRootViewController:LoginViewControllerDelegate{
+    func wechatLogin() {
+        self.weChatViewButtonClick()
     }
  }
  

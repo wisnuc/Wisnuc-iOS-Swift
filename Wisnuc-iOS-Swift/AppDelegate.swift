@@ -63,9 +63,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
                 setRootViewController()
                 setAppNetworkState()
             }else{
-                let type:LoginState?
-                type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
-                let loginController = LoginRootViewController.init(type!)
+//                let type:LoginState?
+//                type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
+                let loginController = LoginRootViewController.init(.wechat)
                 self.loginController = loginController;
                 UIApplication.shared.statusBarStyle = .lightContent
                 let navigationController = UINavigationController.init(rootViewController:loginController)
