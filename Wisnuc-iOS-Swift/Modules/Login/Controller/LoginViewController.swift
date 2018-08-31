@@ -22,6 +22,7 @@ class LoginViewController: BaseViewController {
     weak var delegate:LoginViewControllerDelegate?
     var textFieldControllerPhoneNumber:MDCTextInputControllerUnderline?
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
+    var alertView:TipsAlertView?
     var editingState:EditingState?{
         didSet{
             if editingState == .editing{
@@ -65,6 +66,13 @@ class LoginViewController: BaseViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if self.alertView != nil {
+            self.alertView?.dismiss()
+        }
+    }
+    
     func edtingAction(){
         UIView.animate(withDuration: 0.5) {
            self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: kIQUseDefaultKeyboardDistance + 20)
@@ -98,8 +106,66 @@ class LoginViewController: BaseViewController {
         self.textFieldControllerPassword?.activeColor = .white
     }
     
+    func leftView(image:UIImage?) -> UIView{
+        let leftView = UIView.init(frame: CGRect(x: 0, y: 0, width: 36 + 12, height: 24))
+        let imageView = UIImageView.init(image:image)
+        leftView.layer.cornerRadius = 2
+        imageView.frame = CGRect(x: 0, y: 0, width: 36, height: 24)
+        leftView.addSubview(imageView)
+        leftView.backgroundColor = .clear
+        return leftView
+    }
+    
+    func rightView(type:RightViewType) -> UIImageView{
+        var image:UIImage?
+        switch type {
+        case .right:
+            image = UIImage.init(named: "text_right")
+        case .password:
+            image = UIImage.init(named: "eye_open")
+        default:
+            image = UIImage.init(named: "text_right")
+        }
+        
+        let imageView = RightImageView.init(image:image)
+        imageView.type = type
+        imageView.frame = CGRect(x: 0, y: 0, width: (image?.width)!, height: (image?.height)!)
+        imageView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer.init(target: self, action: #selector(rightViewTap(_ :)))
+        imageView.addGestureRecognizer(tap)
+        return imageView
+    }
+    
+    func nextButtonDisableStyle(){
+        self.nextButton.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+    }
+    
+    func nextButtonEnableStyle(){
+        self.nextButton.backgroundColor = UIColor.white
+    }
+    
+    func alertError(errorText:String){
+        for view in (kWindow?.subviews)!{
+            if view.isKind(of: TipsAlertView.self){
+                let alert = view as! TipsAlertView
+                alert.dismiss()
+            }
+        }
+        let alertView = TipsAlertView.init(errorMessage: LocalizedString(forKey: errorText))
+        alertView.alert()
+        alertView.delegate = self
+        self.alertView = alertView
+        UIView.animate(withDuration: alertView.alertDuration()) {
+            self.nextButton.center = CGPoint(x: self.nextButton.center.x, y:self.nextButton.center.y - alertView.height)
+            self.weChatLoginButton.center = CGPoint(x: self.weChatLoginButton.center.x, y:self.weChatLoginButton.center.y - alertView.height)
+        }
+    }
+    
     //键盘弹出监听
     @objc func keyboardShow(note: Notification)  {
+        if self.alertView != nil {
+            self.alertView?.dismiss()
+        }
         guard let userInfo = note.userInfo else {return}
         guard let keyboardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else{return}
         //获取键盘弹起的高度
@@ -143,6 +209,35 @@ class LoginViewController: BaseViewController {
         })
     }
     
+    @objc func rightViewTap(_ gestrue:UIGestureRecognizer){
+        if (gestrue.view?.isKind(of: RightImageView.self))!{
+            let rightView = gestrue.view as! RightImageView
+            if  rightView.type == .password{
+                rightView.isSelect = !rightView.isSelect
+                if rightView.isSelect{
+                    rightView.image = UIImage.init(named: "eye_close.png")
+                    self.passwordTextFiled.isSecureTextEntry = false
+                }else{
+                    rightView.image = UIImage.init(named: "eye_open.png")
+                    self.passwordTextFiled.isSecureTextEntry = true
+                }
+            }
+        }
+    }
+    
+    @objc func nextButtontTap(_ sender:MDCFloatingButton){
+        self.phoneNumberTextFiled.resignFirstResponder()
+        self.passwordTextFiled.resignFirstResponder()
+        if isNilString(self.phoneNumberTitleLabel.text)  {
+            self.alertError(errorText: LocalizedString(forKey: "手机号不能为空"))
+            return
+        }else if !checkIsPhoneNumber(number: self.phoneNumberTitleLabel.text!){
+            self.alertError(errorText: LocalizedString(forKey:"请输入正确的手机号"))
+            return
+        }
+        
+    }
+    
     lazy var titleLabel: UILabel = {
         let label = UILabel.init(frame: CGRect.init(x: MarginsWidth, y: MDCAppNavigationBarHeight + 25, width: __kWidth - MarginsWidth*2 , height: 28))
         label.font = UIFont.boldSystemFont(ofSize: 28)
@@ -172,14 +267,15 @@ class LoginViewController: BaseViewController {
         textInput.keyboardType = .phonePad
         textInput.textColor = .white
         textInput.font = UIFont.systemFont(ofSize: 16)
-        let leftView = UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 24))
-        leftView.backgroundColor = .white
-        textInput.leftView = leftView
+        textInput.leftView = self?.leftView(image: UIImage.init(named: "86.png"))
         if #available(iOS 10.0, *) {
             textInput.adjustsFontForContentSizeCategory = true
         } else {
             textInput.mdc_adjustsFontForContentSizeCategory = true
         }
+        textInput.clearButtonMode = .never
+        textInput.rightViewMode = .always
+        textInput.delegate = self
         return textInput
     }()
     
@@ -197,14 +293,16 @@ class LoginViewController: BaseViewController {
         textInput.textColor = .white
         textInput.font = UIFont.systemFont(ofSize: 16)
         textInput.isSecureTextEntry = true
-        let leftView = UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 24))
-        leftView.backgroundColor = .white
-        textInput.leftView = leftView
+        textInput.leftView = self?.leftView(image: UIImage.init(named: "lock.png"))
+   
         if #available(iOS 10.0, *) {
             textInput.adjustsFontForContentSizeCategory = true
         } else {
             textInput.mdc_adjustsFontForContentSizeCategory = true
         }
+        textInput.clearButtonMode = .never
+        textInput.rightView = rightView(type: RightViewType.password)
+        textInput.rightViewMode = .always
 //        textInput.keyboardDistanceFromTextField = 60
         return textInput
     }()
@@ -216,6 +314,7 @@ class LoginViewController: BaseViewController {
         button.frame = CGRect(x: __kWidth - MarginsWidth - width , y: __kHeight - MarginsWidth - width, width: width, height: width)
         button.setImage(UIImage.init(named: "next_button_arrow"), for: UIControlState.normal)
         button.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+        button.addTarget(self, action: #selector(nextButtontTap(_ :)), for: UIControlEvents.touchUpInside)
         return button
     }()
     
@@ -230,4 +329,34 @@ class LoginViewController: BaseViewController {
         innerButton.addTarget(self, action: #selector(weChatLoginButtonClick(_ :)), for: UIControlEvents.touchUpInside)
         return innerButton
         }()
+}
+
+extension LoginViewController:TipsAlertViewDelegate{
+    func alertDismiss(animateDuration: TimeInterval) {
+        UIView.animate(withDuration: animateDuration) {
+            self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: __kHeight - MarginsWidth - self.nextButton.height/2)
+            self.weChatLoginButton.center = CGPoint(x: self.weChatLoginButton.center.x, y: __kHeight - MarginsWidth - self.weChatLoginButton.height/2)
+        }
+    }
+}
+
+extension LoginViewController:UITextFieldDelegate{
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        guard let rawText = textField.text else {
+            return true
+        }
+        
+        let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
+        print(fullString)
+        if checkIsPhoneNumber(number: fullString) {
+            self.nextButtonEnableStyle()
+            textField.rightView = self.rightView(type: RightViewType.right)
+        }else{
+            self.nextButtonDisableStyle()
+            textField.rightView = nil
+        }
+        return true
+    }
 }

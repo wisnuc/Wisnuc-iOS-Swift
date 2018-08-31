@@ -19,7 +19,13 @@ enum LoginNextStepViewControllerState{
     case creatAccountFinish
 }
 
+enum RightViewType{
+    case password
+    case right
+}
+
 class LoginNextStepViewController: BaseViewController {
+    var alertView:TipsAlertView?
     var textFieldController:MDCTextInputControllerUnderline?
     var state:LoginNextStepViewControllerState?{
         didSet{
@@ -64,6 +70,13 @@ class LoginNextStepViewController: BaseViewController {
 //        IQKeyboardManager.shared.
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if self.alertView != nil {
+            self.alertView?.dismiss()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareNotification()
@@ -77,6 +90,7 @@ class LoginNextStepViewController: BaseViewController {
 
         view.addSubview(nextButton)
         self.nextButton.addTarget(self, action: #selector(nextButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+        setRightView()
         // Do any additional setup after loading the view.
     }
     
@@ -108,6 +122,7 @@ class LoginNextStepViewController: BaseViewController {
     func  resetPwdStyle(){
         self.textFiledTitleLabel.text = LocalizedString(forKey: "密码")
         self.inputTextField.isSecureTextEntry = true
+        self.inputTextField.leftView = self.leftView(image: UIImage.init(named: "lock.png"))
     }
     
     func bindPhoneNumberStyle(){
@@ -129,10 +144,76 @@ class LoginNextStepViewController: BaseViewController {
         self.textFieldController?.isFloatingEnabled = false
         self.textFieldController?.normalColor = UIColor.white.withAlphaComponent(0.38)
         self.textFieldController?.activeColor = .white
+//        self.textFieldController?.tr
+//        self.textFieldController?.textInsets(UIEdgeInsets.init(top: 100, left: -100, bottom: 100, right: 100))
+//        self.textFieldController?.textInputDidUpdateConstraints()
+    }
+    
+    func nextButtonDisableStyle(){
+        self.nextButton.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+    }
+    
+    func nextButtonEnableStyle(){
+        self.nextButton.backgroundColor = UIColor.white
+    }
+    
+    func setRightView(){
+        if state == .resetPwd ||  state == .creatPwd {
+          self.inputTextField.rightView = self.rightView(type: RightViewType.password)
+        }
+    }
+    
+    func leftView(image:UIImage?) -> UIView{
+        let leftView = UIView.init(frame: CGRect(x: 0, y: 0, width: 36 + 12, height: 24))
+        let imageView = UIImageView.init(image:image)
+        leftView.layer.cornerRadius = 2
+        imageView.frame = CGRect(x: 0, y: 0, width: 36, height: 24)
+        leftView.addSubview(imageView)
+        leftView.backgroundColor = .clear
+        return leftView
+    }
+    
+    func rightView(type:RightViewType) -> UIImageView{
+        var image:UIImage?
+        switch type {
+        case .right:
+            image = UIImage.init(named: "text_right")
+        case .password:
+            image = UIImage.init(named: "eye_open")
+        default:
+            image = UIImage.init(named: "text_right")
+        }
+        
+        let imageView = RightImageView.init(image:image)
+        imageView.type = type
+        imageView.frame = CGRect(x: 0, y: 0, width: (image?.width)!, height: (image?.height)!)
+        imageView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer.init(target: self, action: #selector(rightViewTap(_ :)))
+        imageView.addGestureRecognizer(tap)
+        return imageView
+    }
+    
+    func alertError(errorText:String){
+        for view in (kWindow?.subviews)!{
+            if view.isKind(of: TipsAlertView.self){
+                let alert = view as! TipsAlertView
+                alert.dismiss()
+            }
+        }
+        let alertView = TipsAlertView.init(errorMessage: LocalizedString(forKey: errorText))
+        alertView.alert()
+        alertView.delegate = self
+        self.alertView = alertView
+        UIView.animate(withDuration: alertView.alertDuration()) {
+            self.nextButton.center = CGPoint(x: self.nextButton.center.x, y:self.nextButton.center.y - alertView.height)
+        }
     }
     
     //键盘弹出监听
     @objc func keyboardShow(note: Notification)  {
+        if self.alertView != nil {
+            self.alertView?.dismiss()
+        }
         guard let userInfo = note.userInfo else {return}
         guard let keyboardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else{return}
         //获取键盘弹起的高度
@@ -151,13 +232,13 @@ class LoginNextStepViewController: BaseViewController {
         //        //获取键盘弹起的高度
         let keyboardTopYPosition = keyboardRect.origin.y
         let duration = note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
-        
         UIView.animate(withDuration: duration) {
-            self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: keyboardTopYPosition - MarginsWidth - self.nextButton.height/2)
+            self.nextButton.center = CGPoint(x: self.nextButton.center.x, y:keyboardTopYPosition - MarginsWidth - self.nextButton.height/2 )
         }
     }
     
     @objc func nextButtonTap(_ sender:MDCFloatingButton){
+        self.inputTextField.resignFirstResponder()
         switch self.state {
         case .forgetPwd?:
             verifyCodePush()
@@ -200,10 +281,28 @@ class LoginNextStepViewController: BaseViewController {
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
+    @objc func rightViewTap(_ gestrue:UIGestureRecognizer){
+        if (gestrue.view?.isKind(of: RightImageView.self))!{
+            let rightView = gestrue.view as! RightImageView
+            if  rightView.type == .password{
+                rightView.isSelect = !rightView.isSelect
+                if rightView.isSelect{
+                    rightView.image = UIImage.init(named: "eye_close.png")
+                    self.inputTextField.isSecureTextEntry = false
+                }else{
+                    rightView.image = UIImage.init(named: "eye_open.png")
+                    self.inputTextField.isSecureTextEntry = true
+                }
+            }
+        }
+    }
+    
     func verifyCodePush(){
         if isNilString(self.inputTextField.text)  {
-            let alertView = TipsAlertView.init(errorMessage: LocalizedString(forKey: "手机号码不能为空"))
-            alertView.alert()
+            self.alertError(errorText: LocalizedString(forKey: "手机号不能为空"))
+            return
+        }else if !checkIsPhoneNumber(number: self.inputTextField.text!){
+            self.alertError(errorText: LocalizedString(forKey:"请输入正确的手机号"))
             return
         }
         
@@ -211,7 +310,6 @@ class LoginNextStepViewController: BaseViewController {
         let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "请输入4位验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: inputTextField.text ?? "手机号")) 发送了一个验证码 请在下面输入"), state: state)
         nextViewController.modalTransitionStyle = .crossDissolve
         self.navigationController?.pushViewController(nextViewController, animated: true)
-        
     }
     
     func resetOrCreatPwdPush(){
@@ -256,18 +354,19 @@ class LoginNextStepViewController: BaseViewController {
     
     lazy var inputTextField: MDCTextField = { [weak self] in
         let textInput = MDCTextField.init(frame: CGRect(x: MarginsWidth, y: (self?.textFiledTitleLabel.bottom)! + 16, width: __kWidth - MarginsWidth*2, height: 120))
-        textInput.leftViewMode = .always
         textInput.keyboardType = .phonePad
         textInput.textColor = .white
         textInput.font = UIFont.systemFont(ofSize: 16)
-        let leftView = UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 24))
-        leftView.backgroundColor = .white
-        textInput.leftView = leftView
+        textInput.leftView = self?.leftView(image: UIImage.init(named: "86.png"))
+        textInput.leftViewMode = .always
+        textInput.clearButtonMode = .never
         if #available(iOS 10.0, *) {
             textInput.adjustsFontForContentSizeCategory = true
         } else {
             textInput.mdc_adjustsFontForContentSizeCategory = true
         }
+        textInput.delegate = self
+        textInput.rightViewMode = .always
         return textInput
     }()
 
@@ -281,4 +380,52 @@ class LoginNextStepViewController: BaseViewController {
     }()
     
     lazy var successImageView: UIImageView = UIImageView.init(image: UIImage.init(named: "success_white.png"))
+}
+
+extension LoginNextStepViewController:TipsAlertViewDelegate{
+    func alertDismiss(animateDuration: TimeInterval) {
+        UIView.animate(withDuration: animateDuration) {
+            self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: __kHeight - MarginsWidth - self.nextButton.height/2)
+        }
+    }
+}
+
+extension LoginNextStepViewController:UITextFieldDelegate{
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        guard let rawText = textField.text else {
+            return true
+        }
+        
+        let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
+        print(fullString)
+        switch state {
+        case .bindPhoneNumber?, .forgetPwd?:
+            if checkIsPhoneNumber(number: fullString) {
+                self.nextButtonEnableStyle()
+                textField.rightView = self.rightView(type: RightViewType.right)
+            }else{
+                self.nextButtonDisableStyle()
+                textField.rightView = nil
+            }
+            
+        default:
+            break
+        }
+    
+        return true
+    }
+}
+
+class RightImageView: UIImageView {
+    var type:RightViewType?
+    var isSelect:Bool = false
+    override init(image: UIImage?) {
+        super.init(image: image)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

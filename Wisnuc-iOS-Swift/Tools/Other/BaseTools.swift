@@ -11,6 +11,14 @@ import Foundation
 import UIKit
 import MaterialComponents
 //import SDWebImage
+
+
+func checkIsPhoneNumber(number:String)-> Bool{
+    let phoneRegex = "^(1[3-9])\\d{9}$"
+    let phonePredicate = NSPredicate.init(format: "SELF MATCHES %@", phoneRegex)
+    return phonePredicate.evaluate(with: number)
+}
+
 func MIN<T : Comparable>(x: T, y: T) -> T{
     if x > y {
         return y
