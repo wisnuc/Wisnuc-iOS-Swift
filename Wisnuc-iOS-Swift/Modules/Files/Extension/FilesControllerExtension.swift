@@ -436,6 +436,17 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         })
     }
     
+    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, models: [Any]?){
+//        let filesModels =
+        switch indexPath.row {
+        case 0:
+            self.removeFileOrDirectory(models: models as! [EntriesModel])
+        default:
+            break
+        }
+        self.isSelectModel = false
+    }
+    
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
         //        filesBottomVC.dismiss(animated: true, completion: { [weak self] in、
         let filesModel = model as! EntriesModel
@@ -527,6 +538,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         default:
             break
         }
+       
         //        })
     }
     
@@ -551,6 +563,41 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 self?.localNetStateFilesRemoveOptionRequest(name:name)
             case .normal?:
                 self?.normalNetStateFilesRemoveOptionRequest(name:name)
+            default:
+                break
+            }
+        }
+        alertController.addAction(acceptAction)
+        
+        let considerAction = MDCAlertAction(title:LocalizedString(forKey: "Cancel")) { (_) in print("Cancel") }
+        alertController.addAction(considerAction)
+        
+        let presentationController =
+            alertController.mdc_dialogPresentationController
+        presentationController?.dismissOnBackgroundTap = false
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func removeFileOrDirectory(models:[EntriesModel]){
+      
+        let title = "\(LocalizedString(forKey: "Remove"))"
+        var message = "\(LocalizedString(forKey: "文件"))"
+        if models.contains(where: {$0.type == FilesType.directory.rawValue}) && models.contains(where: {$0.type == FilesType.file.rawValue}){
+            message = "\(LocalizedString(forKey: "文件和文件夹"))"
+        }else  if models.contains(where: {$0.type == FilesType.directory.rawValue}) && models.contains(where: {$0.type != FilesType.file.rawValue}){
+            message = "\(LocalizedString(forKey: "文件夹"))"
+        }
+        
+        let messageString =  "\(models.count) 个\(message)\(LocalizedString(forKey: "将被删除"))"
+        
+        let alertController = MDCAlertController(title: title, message: messageString)
+        
+        let acceptAction = MDCAlertAction(title:LocalizedString(forKey: "Remove")) { [weak self] (_) in
+            switch AppNetworkService.networkState {
+            case .local?:
+                self?.localNetStateFilesRemoveOptionRequest(names:models.map({$0.name!}))
+            case .normal?:
+                self?.normalNetStateFilesRemoveOptionRequest(names:models.map({$0.name!}))
             default:
                 break
             }

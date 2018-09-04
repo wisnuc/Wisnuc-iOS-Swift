@@ -25,6 +25,8 @@ enum RightViewType{
 }
 
 class LoginNextStepViewController: BaseViewController {
+    let verifyCodeLimitCount = 4
+    let passwordLimitCount = 8
     var alertView:TipsAlertView?
     var textFieldController:MDCTextInputControllerUnderline?
     var state:LoginNextStepViewControllerState?{
@@ -67,6 +69,7 @@ class LoginNextStepViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+//        self.navigationController?.delegate = self
 //        IQKeyboardManager.shared.
     }
     
@@ -79,6 +82,7 @@ class LoginNextStepViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         prepareNotification()
         self.view.backgroundColor = COR1
         view.addSubview(titleLabel)
@@ -136,7 +140,7 @@ class LoginNextStepViewController: BaseViewController {
         let rectWidth:CGFloat = 48
         self.successImageView.frame = CGRect(x: __kWidth/2 - rectWidth/2, y: self.detailTitleLabel.bottom + 44 , width: rectWidth, height: rectWidth)
         self.view.addSubview(self.successImageView)
-        nextButton.backgroundColor = UIColor.white
+        nextButtonEnableStyle()
     }
     
     func preparerTextFieldController() {
@@ -151,10 +155,12 @@ class LoginNextStepViewController: BaseViewController {
     
     func nextButtonDisableStyle(){
         self.nextButton.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+        self.nextButton.isEnabled = false
     }
     
     func nextButtonEnableStyle(){
         self.nextButton.backgroundColor = UIColor.white
+        self.nextButton.isEnabled = true
     }
     
     func setRightView(){
@@ -282,6 +288,9 @@ class LoginNextStepViewController: BaseViewController {
     }
     
     @objc func rightViewTap(_ gestrue:UIGestureRecognizer){
+        if self.alertView != nil {
+            self.alertView?.dismiss()
+        }
         if (gestrue.view?.isKind(of: RightImageView.self))!{
             let rightView = gestrue.view as! RightImageView
             if  rightView.type == .password{
@@ -370,12 +379,15 @@ class LoginNextStepViewController: BaseViewController {
         return textInput
     }()
 
-    lazy var nextButton: MDCFloatingButton = {
-        let button = MDCFloatingButton.init(shape: MDCFloatingButtonShape.default)
+    lazy var nextButton: UIButton = {
+        let button = UIButton.init(type: .custom)
         let width:CGFloat = 40
         button.frame = CGRect(x: __kWidth - MarginsWidth - width , y: __kHeight - MarginsWidth - width, width: width, height: width)
         button.setImage(UIImage.init(named: "next_button_arrow"), for: UIControlState.normal)
         button.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+        button.isEnabled = false
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = width/2
         return button
     }()
     
@@ -410,11 +422,36 @@ extension LoginNextStepViewController:UITextFieldDelegate{
                 textField.rightView = nil
             }
             
+        case .verifyCode?, .signUpverifyCode?:
+            if  fullString.count > verifyCodeLimitCount {
+                self.inputTextField.text = textField.text?.subString(to: verifyCodeLimitCount)
+                return false
+            }
+            if fullString.count == verifyCodeLimitCount {
+                self.nextButtonEnableStyle()
+                textField.rightView = self.rightView(type: RightViewType.right)
+            }else{
+                self.nextButtonDisableStyle()
+                textField.rightView = nil
+            }
+            
+        case .resetPwd?,.creatPwd?:
+            if fullString.count >= passwordLimitCount {
+                self.nextButtonEnableStyle()
+            }else{
+                self.nextButtonDisableStyle()
+            }
         default:
             break
         }
-    
         return true
+    }
+}
+
+extension LoginNextStepViewController:UINavigationControllerDelegate{
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        let transition = SearchTransition()
+        return transition
     }
 }
 

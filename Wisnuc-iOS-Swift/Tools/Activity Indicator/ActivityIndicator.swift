@@ -42,7 +42,7 @@ class ActivityIndicator: NSObject{
             shareSingleOneActivityIndicator.startAnimating()
             let window = UIApplication.shared.keyWindow
             window?.windowLevel = UIWindowLevelNormal
-            window?.isUserInteractionEnabled = false
+            UIViewController.currentViewController().view.isUserInteractionEnabled = false
             window?.addSubview(shareSingleOneActivityIndicator)
             window?.bringSubview(toFront: shareSingleOneActivityIndicator)
         }
@@ -77,8 +77,8 @@ class ActivityIndicator: NSObject{
         DispatchQueue.main.async  {
         shareSingleOneActivityIndicator.stopAnimating()
         shareSingleOneActivityIndicator.removeFromSuperview()
-        let window = UIApplication.shared.keyWindow
-        window?.isUserInteractionEnabled = true
+//        let window = UIApplication.shared.keyWindow
+        UIViewController.currentViewController().view.isUserInteractionEnabled  = true
         }
     }
     

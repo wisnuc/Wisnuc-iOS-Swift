@@ -51,7 +51,6 @@ class AutoBackupManager: NSObject {
         hashLimitCount = 4
         uploadLimitCount = 4
     }
-//    func getAllCount:(callback:(allCount:Int)-())?
 
     func startAutoBcakup() {
         self.shouldUpload = false
@@ -70,24 +69,52 @@ class AutoBackupManager: NSObject {
     
     func destroy(){
         isDestroying = true
-        self.hashwaitingQueue.removeAll()
-        // TODO: cancel working queue?
-        self.hashWorkingQueue.removeAll()
-        self.hashFailQueue.removeAll()
-        
-        self.uploadPaddingQueue.removeAll()
         self.stop()
-        self.uploadingQueue.removeAll()
-        self.uploadedQueue.removeAll()
-        self.uploadErrorQueue.removeAll()
-        self.uploadedNetQueue.removeAll()
-        self.uploadedLocalHashSet.removeAll()
+        removeAll()
+//        self.hashwaitingQueue.removeAll()
+//        // TODO: cancel working queue?
+//        self.hashWorkingQueue.removeAll()
+//        self.hashFailQueue.removeAll()
+//
+//        self.uploadPaddingQueue.removeAll()
+//
+//        self.uploadingQueue.removeAll()
+//        self.uploadedQueue.removeAll()
+//        self.uploadErrorQueue.removeAll()
+//        self.uploadedNetQueue.removeAll()
+//        self.uploadedLocalHashSet.removeAll()
+//
         self.sessionManager.session.invalidateAndCancel()
         shouldNotify = false
         needRetry = true
         shouldUpload = false
         isDestroying = false
     }
+    
+    
+    func removeAll(){
+        self.hashwaitingQueue.removeAll()
+        // TODO: cancel working queue?
+        self.hashWorkingQueue.removeAll()
+        self.hashFailQueue.removeAll()
+        
+        self.uploadPaddingQueue.removeAll()
+        self.uploadingQueue.removeAll()
+        self.uploadedQueue.removeAll()
+        self.uploadErrorQueue.removeAll()
+        self.uploadedNetQueue.removeAll()
+        self.uploadedLocalHashSet.removeAll()
+    }
+    
+    func fetchAllCount(callback:@escaping (_ allCount:Int)->()) {
+        self.managerQueue.async {
+            let allCount =  self.hashwaitingQueue.count + self.hashWorkingQueue.count + self.hashFailQueue.count
+            + self.uploadPaddingQueue.count + self.uploadingQueue.count
+            + self.uploadedQueue.count + self.uploadErrorQueue.count
+            callback(allCount)
+        }
+    }
+
     
     func setNetAssets(netAssets:Array<EntriesModel>){
         managerQueue.async {
@@ -118,34 +145,9 @@ class AutoBackupManager: NSObject {
                     hashSet.insert(model.hash!)
                 }
             }
-            self?.shouldUpload = true
+            self?.shouldUpload = false
             self?.uploadedNetHashSet = hashSet
-//            self?.schedule()
-            let asset = self?.hashwaitingQueue[3]
-//            let location = self?.uploadPaddingQueue.index(of: asset!)
-//            if let eLocation = location{
-//                self?.uploadPaddingQueue.remove(at: eLocation)
-//            }
-            
-            
-            self?.workingQueue.async {
-                self?.getAssetSha256(asset: asset!, callback: { [weak self] (error, sha256) in
-                    self?.managerQueue.async {
-                        if (error != nil) {
-                           
-                        }else{
-                            asset?.digest = sha256
-                            let model = WSUploadModel.init(asset: asset!, manager: (self?.sessionManager)!)
-                            self?.workingQueue.async {
-                                self?.scheduleForUpload(model: model, useTimeStamp: false)
-                            }
-                        }
-                        
-                    }
-                })
-            }
-            
-           
+            self?.schedule()
         }
     }
     
@@ -264,22 +266,22 @@ class AutoBackupManager: NSObject {
                         }
                     }else{
                         print("上传成功 , error:\(String(describing: self?.uploadErrorQueue.count))  finish:\(String(describing: self?.uploadedQueue.count))")
-//                        if let location = self?.uploadingQueue.index(of: model){
-//                            self?.uploadingQueue.remove(at: location)
-//                        }
+                        if let location = self?.uploadingQueue.index(of: model){
+                            self?.uploadingQueue.remove(at: location)
+                        }
                         
-//                        self?.uploadedLocalHashSet.insert((model.asset?.digest!)!)
-//                        if !((self?.uploadedQueue.contains(model))!){
-//                            if !model.isRemoved! {
-//                                self?.uploadedQueue.append(model)
-//                                if let location = self?.uploadingQueue.index(of: model){
-//                                    self?.uploadingQueue.remove(at: location)
-//                                }
-//                                defaultNotificationCenter().post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
-//                            }
-//                        }
+                        self?.uploadedLocalHashSet.insert((model.asset?.digest!)!)
+                        if !((self?.uploadedQueue.contains(model))!){
+                            if !model.isRemoved! {
+                                self?.uploadedQueue.append(model)
+                                if let location = self?.uploadingQueue.index(of: model){
+                                    self?.uploadingQueue.remove(at: location)
+                                }
+                                defaultNotificationCenter().post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
+                            }
+                        }
                     }
-//                    self?.schedule()
+                    self?.schedule()
                 }
             })
         }
@@ -299,6 +301,8 @@ class AutoBackupManager: NSObject {
                 uploadTasks.forEach { $0.cancel() }
             })
         }
+        
+         removeAll()
     }
     
 
@@ -409,8 +413,8 @@ class WSUploadModel: NSObject {
                 fileName = exestr
             }
             
-            let requestTempPath = "\(filePath!)_temp"
-            let requestFileTempPathUrl = NSURL.init(fileURLWithPath: requestTempPath)
+//            let requestTempPath = "\(filePath!)_temp"
+//            let requestFileTempPathUrl = NSURL.init(fileURLWithPath: requestTempPath)
            
             
             let  tempFileName = NSMutableString.init(string: fileName!)
@@ -484,6 +488,15 @@ class WSUploadModel: NSObject {
                                 print(error)
                                 return callback(error,nil)
                             }
+                            
+                            if let filePath = filePath{
+                                do {
+                                    try FileManager.default.removeItem(atPath: filePath)
+                                }catch{
+                                    print(error)
+                                }
+                            }
+                          
                             if let streamFileURL = streamFileURL{
                                 do {
                                     try FileManager.default.removeItem(at: streamFileURL)
@@ -492,7 +505,6 @@ class WSUploadModel: NSObject {
                                 }
                             }
                         })
-                       
                     // encodingResult failure
                     case .failure(let error):
                     print(error )

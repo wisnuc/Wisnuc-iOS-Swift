@@ -19,6 +19,8 @@ enum EditingState {
 }
 
 class LoginViewController: BaseViewController {
+    let passwordLimitCount = 8
+    var phoneNumberIsRight = false
     weak var delegate:LoginViewControllerDelegate?
     var textFieldControllerPhoneNumber:MDCTextInputControllerUnderline?
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
@@ -49,6 +51,7 @@ class LoginViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.delegate = self
         self.view.backgroundColor = COR1
         self.view.addSubview(titleLabel)
         titleLabel.text = LocalizedString(forKey: "登录")
@@ -138,10 +141,12 @@ class LoginViewController: BaseViewController {
     
     func nextButtonDisableStyle(){
         self.nextButton.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+        self.nextButton.isEnabled = false
     }
     
     func nextButtonEnableStyle(){
         self.nextButton.backgroundColor = UIColor.white
+        self.nextButton.isEnabled = true
     }
     
     func alertError(errorText:String){
@@ -284,6 +289,7 @@ class LoginViewController: BaseViewController {
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .white
         label.text = LocalizedString(forKey: "密码")
+        
         return label
     }()
     
@@ -303,18 +309,21 @@ class LoginViewController: BaseViewController {
         textInput.clearButtonMode = .never
         textInput.rightView = rightView(type: RightViewType.password)
         textInput.rightViewMode = .always
+        textInput.delegate = self
 //        textInput.keyboardDistanceFromTextField = 60
         return textInput
     }()
     
 
-    lazy var nextButton: MDCFloatingButton = {
-        let button = MDCFloatingButton.init(shape: MDCFloatingButtonShape.default)
+    lazy var nextButton: UIButton = {
+        let button = UIButton.init(type: .custom)
         let width:CGFloat = 40
         button.frame = CGRect(x: __kWidth - MarginsWidth - width , y: __kHeight - MarginsWidth - width, width: width, height: width)
         button.setImage(UIImage.init(named: "next_button_arrow"), for: UIControlState.normal)
         button.backgroundColor = UIColor.white.withAlphaComponent(0.4)
-        button.addTarget(self, action: #selector(nextButtontTap(_ :)), for: UIControlEvents.touchUpInside)
+        button.isEnabled = false
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = width/2
         return button
     }()
     
@@ -350,13 +359,30 @@ extension LoginViewController:UITextFieldDelegate{
         
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
         print(fullString)
-        if checkIsPhoneNumber(number: fullString) {
-            self.nextButtonEnableStyle()
-            textField.rightView = self.rightView(type: RightViewType.right)
+       
+        if textField == phoneNumberTextFiled {
+            if checkIsPhoneNumber(number: fullString) {
+                textField.rightView = self.rightView(type: RightViewType.right)
+                phoneNumberIsRight = true
+            }else{
+                textField.rightView = nil
+            }
         }else{
-            self.nextButtonDisableStyle()
-            textField.rightView = nil
+            if fullString.count >= passwordLimitCount && phoneNumberIsRight {
+                self.nextButtonEnableStyle()
+            }else{
+                self.nextButtonDisableStyle()
+            }
         }
+       
         return true
     }
 }
+
+extension LoginViewController:UINavigationControllerDelegate{
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        let transition = SearchTransition()
+        return transition
+    }
+}
+

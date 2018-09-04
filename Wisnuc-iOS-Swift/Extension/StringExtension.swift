@@ -89,7 +89,15 @@ extension String{
     var pathExtension: String {
         return (self as NSString).pathExtension
     }
-   
+    
+
+    func subString(to index: Int) -> String {
+        return String(self[..<self.index(self.startIndex, offsetBy: index)])
+    }
+    
+    func subString(from index: Int) -> String {
+        return String(self[self.index(self.startIndex, offsetBy: index)...])
+    }
 }
 
 class StringExtension: NSObject {

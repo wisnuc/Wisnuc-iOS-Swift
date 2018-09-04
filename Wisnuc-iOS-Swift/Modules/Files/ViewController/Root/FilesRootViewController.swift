@@ -560,6 +560,12 @@ class FilesRootViewController: BaseViewController{
         return self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
     }
     
+    func localNetStateFilesRemoveOptionRequest(names:[String]){
+        for name in names {
+            localNetStateFilesRemoveOptionRequest(name: name)
+        }
+    }
+    
     func localNetStateFilesRemoveOptionRequest(name:String){
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
@@ -596,6 +602,12 @@ class FilesRootViewController: BaseViewController{
         }, errorHandler: { (error) -> (Void) in
             Message.message(text: error.localizedDescription)
         })
+    }
+    
+    func normalNetStateFilesRemoveOptionRequest(names:[String]){
+        for name in names {
+            normalNetStateFilesRemoveOptionRequest(name: name)
+        }
     }
     
     func normalNetStateFilesRemoveOptionRequest(name:String){
@@ -698,7 +710,13 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func moreBarButtonItemTap(_ sender:UIBarButtonItem){
-        
+        let filesBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain, type: FilesBottomSheetContentType.selectMore)
+        filesBottomVC.delegate = self
+        let bottomSheet = AppBottomSheetController.init(contentViewController: filesBottomVC)
+        bottomSheet.trackingScrollView = filesBottomVC.tableView
+        filesBottomVC.filesModelArray = FilesHelper.sharedInstance().selectFilesArray
+        self.present(bottomSheet, animated: true, completion: {
+        })
     }
     
     @objc func fabButtonDidTap(_ sender:MDCFloatingButton){

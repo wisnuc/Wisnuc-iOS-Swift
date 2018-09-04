@@ -40,11 +40,10 @@ class TransferTaskTableViewCell: UITableViewCell {
     
     func updateProgress(task: TRTask) {
         detailLabel.text = "\(task.progress.totalUnitCount.tr.convertBytesToString())"
-  
         progress.progressTotal = UInt(task.progress.totalUnitCount)
         progress.progressCounter = UInt(task.progress.completedUnitCount)
-        print("😁\(task.progress.totalUnitCount)")
-        print("😈\(task.progress.completedUnitCount)")
+//        print("😁\(task.progress.totalUnitCount)")
+//        print("😈\(task.progress.completedUnitCount)")
         progress.label.text = task.speed.tr.convertSpeedToString()
         
         switch task.status {
