@@ -14,9 +14,9 @@ import MaterialComponents
 }
 
 class LocalNetworkLoginViewController: BaseViewController {
-    override func willDealloc() -> Bool {
-        return false
-    }
+//    override func willDealloc() -> Bool {
+//        return false
+//    }
     weak var delegate:LocalNetworkLoginViewControllerDelegate?
     @IBOutlet weak var mainbackgroudView: UIView!
     @IBOutlet weak var stationNameLabel: UILabel!

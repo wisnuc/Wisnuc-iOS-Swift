@@ -26,9 +26,9 @@
  private let imageViewSize = CGSize(width: UserImageViewWidth, height: UserImageViewWidth)
  
  class LoginRootViewController: BaseViewController {
-    override func willDealloc() -> Bool {
-        return false
-    }
+//    override func willDealloc() -> Bool {
+//        return false
+//    }
     var commonLoginButon:UIButton!
     var userName:String?
     var disposeBag = DisposeBag()

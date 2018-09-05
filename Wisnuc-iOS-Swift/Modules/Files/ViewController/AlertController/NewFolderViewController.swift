@@ -21,9 +21,9 @@ import IQKeyboardManagerSwift
 }
 
 class NewFolderViewController: UIViewController {
-    override func willDealloc() -> Bool {
-        return false
-    }
+//    override func willDealloc() -> Bool {
+//        return false
+//    }
     weak var delegate : NewFolderViewControllerDelegate?
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var inputTextField: MDCTextField!

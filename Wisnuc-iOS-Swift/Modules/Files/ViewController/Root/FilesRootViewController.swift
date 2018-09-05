@@ -38,9 +38,9 @@ private let moveButtonWidth:CGFloat = 64.0
 private let moveButtonHeight:CGFloat = 36.0
 
 class FilesRootViewController: BaseViewController{
-    override func willDealloc() -> Bool {
-        return false
-    }
+//    override func willDealloc() -> Bool {
+//        return false
+//    }
     static let downloadManager =  TRManager.init("Downloads", MaximumRunning: LONG_MAX, isStoreInfo: true)
     private var menuButton: IconButton!
     var dataSource:Array<Any>?

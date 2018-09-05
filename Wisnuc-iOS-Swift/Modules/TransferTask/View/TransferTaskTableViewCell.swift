@@ -10,6 +10,11 @@ import UIKit
 import MaterialComponents.MaterialProgressView
 import MDRadialProgress
 
+enum TransferTaskTableViewCellType {
+    case task
+    case model
+}
+
 class TransferTaskTableViewCell: UITableViewCell {
     @IBOutlet weak var leftImageView: UIImageView!
     @IBOutlet weak var detailImageView: UIImageView!
@@ -18,7 +23,9 @@ class TransferTaskTableViewCell: UITableViewCell {
     @IBOutlet weak var controlButton: UIButton!
     @IBOutlet weak var progress: MDRadialProgressView!
     @IBOutlet weak var suspendButton: UIButton!
-    
+    var task:TRTask?
+    var model:FilesTasksModel?
+    var type:TransferTaskTableViewCellType?
     override func awakeFromNib() {
         super.awakeFromNib()
         titleLabel.textColor = DarkGrayColor
@@ -38,7 +45,20 @@ class TransferTaskTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
+    func setModel(model:FilesTasksModel){
+        self.model = model
+        self.type = .model
+    }
+    
+    func setTask(task:TRTask){
+        self.task = task
+        self.type = .task
+    }
+    
     func updateProgress(task: TRTask) {
+        if (task.fileName != self.task?.fileName) {
+            return
+        }
         detailLabel.text = "\(task.progress.totalUnitCount.tr.convertBytesToString())"
         progress.progressTotal = UInt(task.progress.totalUnitCount)
         progress.progressCounter = UInt(task.progress.completedUnitCount)

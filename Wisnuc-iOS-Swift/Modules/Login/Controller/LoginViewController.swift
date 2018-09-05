@@ -131,6 +131,7 @@ class LoginViewController: BaseViewController {
         }
         
         let imageView = RightImageView.init(image:image)
+        imageView.tintColor = .white
         imageView.type = type
         imageView.frame = CGRect(x: 0, y: 0, width: (image?.width)!, height: (image?.height)!)
         imageView.isUserInteractionEnabled = true

@@ -14,9 +14,9 @@ import MaterialComponents.MaterialButtons
 private var menuButton: IconButton!
 
 class PhotoRootViewController: BaseViewController {
-    override func willDealloc() -> Bool {
-        return false
-    }
+//    override func willDealloc() -> Bool {
+//        return false
+//    }
     var isSelectMode:Bool?{
         didSet{
             if isSelectMode!{

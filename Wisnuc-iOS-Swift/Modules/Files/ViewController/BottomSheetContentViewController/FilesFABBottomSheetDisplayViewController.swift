@@ -15,9 +15,9 @@ import UIKit
     func uploadButtonTap(_ sender: UIButton)
 }
 class FilesFABBottomSheetDisplayViewController: UIViewController {
-    override func willDealloc() -> Bool {
-        return false
-    }
+//    override func willDealloc() -> Bool {
+//        return false
+//    }
     weak var delegate:FABBottomSheetDisplayVCDelegte?
     @IBOutlet weak var folderButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!

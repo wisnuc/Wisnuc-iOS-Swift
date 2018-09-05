@@ -20,9 +20,9 @@ private let keyPath:String = "sliderState"
 }
 
 class PhotoCollectionViewController: UICollectionViewController {
-    override func willDealloc() -> Bool {
-        return false
-    }
+//    override func willDealloc() -> Bool {
+//        return false
+//    }
     weak var delegate:PhotoCollectionViewControllerDelegate?
     var isSelectMode:Bool?{
         didSet{

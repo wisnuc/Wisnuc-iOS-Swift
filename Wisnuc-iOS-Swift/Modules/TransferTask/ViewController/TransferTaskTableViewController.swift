@@ -178,7 +178,7 @@ class TransferTaskTableViewController: BaseViewController {
 extension TransferTaskTableViewController:UITableViewDataSource{
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell:TransferTaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! TransferTaskTableViewCell
-    
+
     let any = taskDataSource![indexPath.row]
     var downloadTask :TRTask?
     var model:FilesTasksModel?
@@ -187,6 +187,7 @@ extension TransferTaskTableViewController:UITableViewDataSource{
             else { return cell }
         let task = any as! TRTask
         downloadTask = task
+        cell.setTask(task:task)
         var image: UIImage?
         switch downloadTask?.status {
         case .running?:
@@ -200,13 +201,12 @@ extension TransferTaskTableViewController:UITableViewDataSource{
         default: break
         }
         cell.controlButton.setImage(image, for: .normal)
-        cell.progress.isHidden = false
         cell.updateProgress(task: downloadTask!)
         cell.detailImageView.image = #imageLiteral(resourceName: "files_download_transfer.png")
     }else if any is FilesTasksModel{
         model = any as? FilesTasksModel
+        cell.setModel(model: model!)
         var image = #imageLiteral(resourceName: "files_download_transfer.png")
-        print(model?.type ?? "😁")
         switch model?.type {
         case .move?:
             image = #imageLiteral(resourceName: "files_move_to.png")
@@ -215,11 +215,11 @@ extension TransferTaskTableViewController:UITableViewDataSource{
         default:
             break
         }
-         cell.progress.isHidden = true
          cell.detailLabel.text = ""
          cell.detailImageView.image = image
          cell.controlButton.setImage(nil, for: UIControlState.normal)
     }
+    
     let fileName = model != nil ? (model?.entries as! Array<String>).joined(separator: ",") : downloadTask?.fileName ?? ""
 //    let type = model?.type != nil ? model?.type
     cell.titleLabel.text = fileName
@@ -328,7 +328,7 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                 var image: UIImage?
                 switch task.status {
                 case .running:
-                    cell.updateProgress(task: task)
+                    break
                 case .failed:
                     image = #imageLiteral(resourceName: "files_error.png")
                 case .suspend:
@@ -339,9 +339,8 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                     break
                 default: break
                 }
-                cell.progress.isHidden = false
                 cell.controlButton.setImage(image, for: .normal)
-         
+                cell.updateProgress(task: task)
                 }
                 .success({ [weak cell] (task) in
                     guard let cell = cell as? TransferTaskTableViewCell else { return }
@@ -353,12 +352,12 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                         // 下载任务完成了
                         cell.controlButton.setImage(#imageLiteral(resourceName: "file_finish.png"), for: .normal)
                     }
-                    
+
                 })
                 .failure({ [weak cell] (task) in
                     guard let cell = cell as? TransferTaskTableViewCell else { return }
                     //                cell.controlButton.setImage(#imageLiteral(resourceName: "suspend"), for: .normal)
-                    
+
                     if task.status == .failed {
                         // 下载任务失败了
                     }
@@ -371,7 +370,6 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                 })
         }else if any is FilesTasksModel{
             let model = any as! FilesTasksModel
-            print("\(String(describing: model.type))😋")
             var image = #imageLiteral(resourceName: "files_download_transfer.png")
             switch model.type {
             case .move?:
@@ -382,7 +380,6 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                 break
             }
             guard let cell = cell as? TransferTaskTableViewCell else { return }
-            cell.progress.isHidden = true
             cell.detailImageView.image = image
             cell.detailLabel.text = ""
             cell.controlButton.setImage(nil, for: UIControlState.normal)
