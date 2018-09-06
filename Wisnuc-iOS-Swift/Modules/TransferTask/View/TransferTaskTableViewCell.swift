@@ -33,6 +33,7 @@ class TransferTaskTableViewCell: UITableViewCell {
         controlButton.isUserInteractionEnabled = false
         controlButton.tintColor = LightGrayColor
         suspendButton.tintColor = DarkGrayColor
+       
         progress.theme.sliceDividerHidden = true
         progress.label.textColor = LightGrayColor
         progress.label.font = UIFont.systemFont(ofSize: 10)
@@ -57,14 +58,13 @@ class TransferTaskTableViewCell: UITableViewCell {
         self.type = .task
     }
     
-
     func updateProgress(task: TRTask) {
         switch task.status {
         case .running:
-           break
+            progress.isHidden = false
         case .completed:
-             progress.isHidden = true
-             self.controlButton.setImage(#imageLiteral(resourceName: "file_finish.png"), for: .normal)
+            progress.isHidden = true
+            self.controlButton.setImage(#imageLiteral(resourceName: "file_finish.png"), for: .normal)
         case .failed:
             self.controlButton.setImage(UIImage.init(named: "files_error.png"), for: .normal)
         case .suspend,.preSuspend:
@@ -73,11 +73,11 @@ class TransferTaskTableViewCell: UITableViewCell {
             progress.label.isHidden = true
             suspendButton.isHidden = false
         default:
-             progress.isHidden = true
-             progress.theme.completedColor = COR1
-             progress.theme.incompletedColor = COR1.withAlphaComponent(0.12)
-             progress.label.isHidden = false
-             suspendButton.isHidden = true
+            progress.isHidden = true
+            progress.theme.completedColor = COR1
+            progress.theme.incompletedColor = COR1.withAlphaComponent(0.12)
+            progress.label.isHidden = false
+            suspendButton.isHidden = true
         }
     }
 
