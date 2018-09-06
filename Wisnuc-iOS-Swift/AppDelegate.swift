@@ -35,6 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     var coreDataContext: NSManagedObjectContext?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+//        let x =  FSOpenSSL.genCsr()
+//        print(x)
+// 
         IQKeyboardManager.shared.enable = true
         registerCoreDataContext()
         registerWeChat()   // Wechat

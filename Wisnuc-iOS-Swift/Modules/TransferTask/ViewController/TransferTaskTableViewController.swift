@@ -200,8 +200,23 @@ extension TransferTaskTableViewController:UITableViewDataSource{
             break
         default: break
         }
+        cell.model = nil
         cell.controlButton.setImage(image, for: .normal)
+        cell.detailLabel.text = "\(task.progress.totalUnitCount.tr.convertBytesToString())"
         cell.updateProgress(task: downloadTask!)
+        task.progressHandler = { (progressTask) in
+            if cell.model != nil{
+                cell.progress.isHidden = true
+                return
+            }
+            cell.progress.isHidden = false
+            cell.progress.progressTotal = UInt(progressTask.progress.totalUnitCount)
+            cell.progress.progressCounter = UInt(progressTask.progress.completedUnitCount)
+            //        print("😁\(task.progress.totalUnitCount)")
+            //        print("😈\(task.progress.completedUnitCount)")
+            cell.progress.label.text = progressTask.speed.tr.convertSpeedToString()
+            cell.updateProgress(task: downloadTask!)
+        }
         cell.detailImageView.image = #imageLiteral(resourceName: "files_download_transfer.png")
     }else if any is FilesTasksModel{
         model = any as? FilesTasksModel
@@ -215,6 +230,7 @@ extension TransferTaskTableViewController:UITableViewDataSource{
         default:
             break
         }
+         cell.progress.isHidden = true
          cell.detailLabel.text = ""
          cell.detailImageView.image = image
          cell.controlButton.setImage(nil, for: UIControlState.normal)
@@ -319,71 +335,75 @@ extension TransferTaskTableViewController:UITableViewDelegate{
     
     // 每个cell中的状态更新，应该在willDisplay中执行
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let any = taskDataSource![indexPath.row]
-        if any is TRTask {
-            let task:TRTask = taskDataSource?.safeObjectAtIndex(indexPath.row) as! TRTask
-            task.progress { [weak cell] (task) in
-                guard let cell = cell as? TransferTaskTableViewCell else { return }
-                cell.detailImageView.image = #imageLiteral(resourceName: "files_download_transfer.png")
-                var image: UIImage?
-                switch task.status {
-                case .running:
-                    break
-                case .failed:
-                    image = #imageLiteral(resourceName: "files_error.png")
-                case .suspend:
-                    cell.suspendButton.setImage(#imageLiteral(resourceName: "task_suspend.png"), for: .normal)
-                case .completed:
-                    image = #imageLiteral(resourceName: "file_finish.png")
-                case .waiting:
-                    break
-                default: break
-                }
-                cell.controlButton.setImage(image, for: .normal)
-                cell.updateProgress(task: task)
-                }
-                .success({ [weak cell] (task) in
-                    guard let cell = cell as? TransferTaskTableViewCell else { return }
-                    //                cell.controlButton.setImage(#imageLiteral(resourceName: "suspend"), for: .normal)
-                    if task.status == .suspend {
-                        // 下载任务暂停了
-                    }
-                    if task.status == .completed {
-                        // 下载任务完成了
-                        cell.controlButton.setImage(#imageLiteral(resourceName: "file_finish.png"), for: .normal)
-                    }
-
-                })
-                .failure({ [weak cell] (task) in
-                    guard let cell = cell as? TransferTaskTableViewCell else { return }
-                    //                cell.controlButton.setImage(#imageLiteral(resourceName: "suspend"), for: .normal)
-
-                    if task.status == .failed {
-                        // 下载任务失败了
-                    }
-                    if task.status == .cancel {
-                        // 下载任务取消了
-                    }
-                    if task.status == .remove {
-                        // 下载任务移除了
-                    }
-                })
-        }else if any is FilesTasksModel{
-            let model = any as! FilesTasksModel
-            var image = #imageLiteral(resourceName: "files_download_transfer.png")
-            switch model.type {
-            case .move?:
-                image = #imageLiteral(resourceName: "files_move_to.png")
-            case .copy?:
-                image = #imageLiteral(resourceName: "task_copy.png")
-            default:
-                break
-            }
-            guard let cell = cell as? TransferTaskTableViewCell else { return }
-            cell.detailImageView.image = image
-            cell.detailLabel.text = ""
-            cell.controlButton.setImage(nil, for: UIControlState.normal)
-        }
+//        let any = taskDataSource![indexPath.row]
+//        if any is TRTask {
+//            let task:TRTask = taskDataSource?.safeObjectAtIndex(indexPath.row) as! TRTask
+//            task.progress { [weak cell] (task) in
+//                guard let cell = cell as? TransferTaskTableViewCell else { return }
+//                cell.setTask(task:task)
+//                cell.detailImageView.image = #imageLiteral(resourceName: "files_download_transfer.png")
+//                var image: UIImage?
+//                switch task.status {
+//                case .running:
+//                    break
+//                case .failed:
+//                    image = #imageLiteral(resourceName: "files_error.png")
+//                case .suspend:
+//                    cell.suspendButton.setImage(#imageLiteral(resourceName: "task_suspend.png"), for: .normal)
+//                case .completed:
+//                    image = #imageLiteral(resourceName: "file_finish.png")
+//                case .waiting:
+//                    break
+//                default: break
+//                }
+//                cell.controlButton.setImage(image, for: .normal)
+//                cell.updateProgress(task: task)
+//                }
+//                .success({ [weak cell] (task) in
+//                    guard let cell = cell as? TransferTaskTableViewCell else { return }
+//                    //                cell.controlButton.setImage(#imageLiteral(resourceName: "suspend"), for: .normal)
+//                    if task.status == .suspend {
+//                        // 下载任务暂停了
+//                    }
+//                    if task.status == .completed {
+//                        // 下载任务完成了
+//                        cell.controlButton.setImage(#imageLiteral(resourceName: "file_finish.png"), for: .normal)
+//                    }
+//
+//                })
+//                .failure({ [weak cell] (task) in
+//                    guard let cell = cell as? TransferTaskTableViewCell else { return }
+//                    //                cell.controlButton.setImage(#imageLiteral(resourceName: "suspend"), for: .normal)
+//
+//                    if task.status == .failed {
+//                        // 下载任务失败了
+//                    }
+//                    if task.status == .cancel {
+//                        // 下载任务取消了
+//                    }
+//                    if task.status == .remove {
+//                        // 下载任务移除了
+//                    }
+//                })
+//        }else if any is FilesTasksModel{
+//            let model = any as! FilesTasksModel
+//           
+//            var image = #imageLiteral(resourceName: "files_download_transfer.png")
+//            switch model.type {
+//            case .move?:
+//                image = #imageLiteral(resourceName: "files_move_to.png")
+//            case .copy?:
+//                image = #imageLiteral(resourceName: "task_copy.png")
+//            default:
+//                break
+//            }
+//            guard let cell = cell as? TransferTaskTableViewCell else { return }
+//            cell.setModel(model: model)
+//            cell.detailImageView.image = image
+//            cell.detailLabel.text = ""
+//            cell.controlButton.setImage(nil, for: UIControlState.normal)
+//            cell.progress.isHidden = true
+//        }
     }
     
     // 由于cell是循环利用的，不在可视范围内的cell，不应该去更新cell的状态

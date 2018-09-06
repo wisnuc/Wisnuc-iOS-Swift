@@ -39,6 +39,7 @@ class TransferTaskTableViewCell: UITableViewCell {
         progress.theme.thickness = 10
         progress.theme.completedColor = COR1
         progress.theme.incompletedColor = COR1.withAlphaComponent(0.12)
+        progress.isHidden = true
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -48,6 +49,7 @@ class TransferTaskTableViewCell: UITableViewCell {
     func setModel(model:FilesTasksModel){
         self.model = model
         self.type = .model
+        self.progress.isHidden = true
     }
     
     func setTask(task:TRTask){
@@ -55,29 +57,23 @@ class TransferTaskTableViewCell: UITableViewCell {
         self.type = .task
     }
     
+
     func updateProgress(task: TRTask) {
-        if (task.fileName != self.task?.fileName) {
-            return
-        }
-        detailLabel.text = "\(task.progress.totalUnitCount.tr.convertBytesToString())"
-        progress.progressTotal = UInt(task.progress.totalUnitCount)
-        progress.progressCounter = UInt(task.progress.completedUnitCount)
-//        print("😁\(task.progress.totalUnitCount)")
-//        print("😈\(task.progress.completedUnitCount)")
-        progress.label.text = task.speed.tr.convertSpeedToString()
-        
         switch task.status {
+        case .running:
+           break
         case .completed:
              progress.isHidden = true
+             self.controlButton.setImage(#imageLiteral(resourceName: "file_finish.png"), for: .normal)
         case .failed:
-             break
+            self.controlButton.setImage(UIImage.init(named: "files_error.png"), for: .normal)
         case .suspend,.preSuspend:
             progress.theme.completedColor = UIColor.black.withAlphaComponent(0.54)
             progress.theme.incompletedColor = UIColor.black.withAlphaComponent(0.12)
             progress.label.isHidden = true
             suspendButton.isHidden = false
         default:
-             progress.isHidden = false
+             progress.isHidden = true
              progress.theme.completedColor = COR1
              progress.theme.incompletedColor = COR1.withAlphaComponent(0.12)
              progress.label.isHidden = false

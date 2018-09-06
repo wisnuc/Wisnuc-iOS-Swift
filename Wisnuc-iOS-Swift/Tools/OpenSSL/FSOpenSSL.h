@@ -25,4 +25,9 @@
 + (NSString *)sha256FromString:(NSString *)string;
 
 + (NSString *)base64FromString:(NSString *)string encodeWithNewlines:(BOOL)encodeWithNewlines;
+
++ (bool)genCsr;
+
 @end
+
+
