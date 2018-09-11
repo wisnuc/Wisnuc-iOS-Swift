@@ -51,15 +51,14 @@ class LoginViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.delegate = self
         self.view.backgroundColor = COR1
         self.view.addSubview(titleLabel)
-        titleLabel.text = LocalizedString(forKey: "登录")
+        self.titleLabel.text = LocalizedString(forKey: "登录")
         self.view.addSubview(phoneNumberTitleLabel)
         self.view.addSubview(phoneNumberTextFiled)
         self.view.addSubview(passwordTitleLabel)
         self.view.addSubview(passwordTextFiled)
-        setTextFieldController()
+        self.setTextFieldController()
         self.view.addSubview(nextButton)
         self.view.addSubview(weChatLoginButton)
     }
@@ -69,11 +68,17 @@ class LoginViewController: BaseViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.delegate = self
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if self.alertView != nil {
             self.alertView?.dismiss()
         }
+        self.view.endEditing(true)
     }
     
     func edtingAction(){
@@ -177,10 +182,17 @@ class LoginViewController: BaseViewController {
         //获取键盘弹起的高度
         let keyboardTopYPosition =  keyboardRect.origin.y
         let duration = note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
+        
+        var nextButtonCenter = CGPoint(x: self.nextButton.center.x, y: keyboardTopYPosition - 36)
+        var weChatLoginButtonCenter = CGPoint(x: self.weChatLoginButton.center.x, y: keyboardTopYPosition - 36)
+        if  is47InchScreen {
+            nextButtonCenter  = CGPoint(x: self.nextButton.center.x, y: keyboardTopYPosition)
+            weChatLoginButtonCenter = CGPoint(x: self.weChatLoginButton.center.x, y: keyboardTopYPosition)
+        }
     
         UIView.animate(withDuration: duration) {
-            self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: keyboardTopYPosition - 36)
-            self.weChatLoginButton.center = CGPoint(x: self.weChatLoginButton.center.x, y: keyboardTopYPosition - 36)
+            self.nextButton.center = nextButtonCenter
+            self.weChatLoginButton.center = weChatLoginButtonCenter
         }
     }
     
@@ -282,6 +294,9 @@ class LoginViewController: BaseViewController {
         textInput.clearButtonMode = .never
         textInput.rightViewMode = .always
         textInput.delegate = self
+        if is47InchScreen{
+            textInput.keyboardDistanceFromTextField = 160
+        }
         return textInput
     }()
     
@@ -311,7 +326,9 @@ class LoginViewController: BaseViewController {
         textInput.rightView = rightView(type: RightViewType.password)
         textInput.rightViewMode = .always
         textInput.delegate = self
-//        textInput.keyboardDistanceFromTextField = 60
+        if is47InchScreen{
+            textInput.keyboardDistanceFromTextField = 36
+        }
         return textInput
     }()
     
@@ -382,7 +399,7 @@ extension LoginViewController:UITextFieldDelegate{
 
 extension LoginViewController:UINavigationControllerDelegate{
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let transition = SearchTransition()
+        let transition = LoginTransition()
         return transition
     }
 }

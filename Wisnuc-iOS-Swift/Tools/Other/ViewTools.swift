@@ -10,6 +10,12 @@ import Foundation
 import UIKit
 import MaterialComponents
 
+
+let isX = __kWidth == 375 && __kHeight == 812 ? true : false
+let is55InchScreen = __kWidth == 414 && __kHeight == 736 ? true : false
+let is47InchScreen = __kWidth == 375 && __kHeight == 667 ? true : false
+let is4InchScreen = __kWidth == 320 && __kHeight == 568 ? true : false
+
 class ViewTools: NSObject {
     class func removeAllSuperViewExceptNavigationBar(view:UIView) {
         for view in view.subviews{
@@ -31,5 +37,11 @@ class ViewTools: NSObject {
         } else {
             viewController.automaticallyAdjustsScrollViewInsets = false
         }
+    }
+    
+    class func setAlertControllerColor(alertController:MDCAlertController){
+        let colorScheme = MDCSemanticColorScheme.init()
+        colorScheme.primaryColor = COR1
+        MDCAlertColorThemer.applySemanticColorScheme(colorScheme, to: alertController)
     }
 }

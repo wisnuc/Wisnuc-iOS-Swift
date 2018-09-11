@@ -42,6 +42,7 @@ class Alert: NSObject {
         materialAlertController.addAction(action1)
         let action2 = MDCAlertAction(title: action2Title, handler: handler2)
         materialAlertController.addAction(action2)
+        ViewTools.setAlertControllerColor(alertController: materialAlertController)
         controller?.present(materialAlertController, animated: true, completion: nil)
     }
 }

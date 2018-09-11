@@ -59,7 +59,6 @@ class TransferTaskTableViewController: BaseViewController {
             }else{
                 Message.message(text: (response.error?.localizedDescription)!)
             }
-            
             self?.tableView.reloadData()
         }
     }
@@ -106,14 +105,20 @@ class TransferTaskTableViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.appBar.headerViewController.headerView.isHidden = false
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
+        if let tab = retrieveTabbarController(){
+            if !tab.tabBarHidden{
+                tab.setTabBarHidden(true, animated: true)
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        if (self.navigationDrawerController?.rootViewController) != nil {
-//            let tab = self.navigationDrawerController?.rootViewController as! WSTabBarController
-//            tab.setTabBarHidden(false, animated: true)
-//        }
+        if let tab = retrieveTabbarController(){
+            if tab.tabBarHidden{
+                tab.setTabBarHidden(false, animated: true)
+            }
+        }
     }
     
     override func viewWillLayoutSubviews() {
@@ -166,11 +171,6 @@ class TransferTaskTableViewController: BaseViewController {
 //       let doucumentController = UIDocumentInteractionController.init()
 //        doucumentController.delegate = self
 //        return doucumentController
-//    }()
-    
-//    lazy var finishImageView: UIImageView = {
-//
-//        return imageView
 //    }()
 }
 
@@ -237,15 +237,9 @@ extension TransferTaskTableViewController:UITableViewDataSource{
     }
     
     let fileName = model != nil ? (model?.entries as! Array<String>).joined(separator: ",") : downloadTask?.fileName ?? ""
-//    let type = model?.type != nil ? model?.type
     cell.titleLabel.text = fileName
     let exestr = (fileName as NSString).pathExtension
     cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType.file, format: FilesFormatType(rawValue: exestr)))
-   
-//    let imageViewWidth:CGFloat = 24
-//    let imageView = UIImageView.init(frame: CGRect(x:cell.width - 16 - imageViewWidth, y: cell.height/2 - imageViewWidth/2, width: imageViewWidth, height: imageViewWidth))
-//    imageView.image = UIImage.init(named: "files_error.png")
-//    cell.contentView.addSubview(imageView)
         return cell
     }
     

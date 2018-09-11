@@ -248,6 +248,7 @@
 		1F4E9398208DBB7600DD1EA7 /* radio_button@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9392208DBB7500DD1EA7 /* radio_button@3x.png */; };
 		1F4E9399208DBB7600DD1EA7 /* radio_button_unchecked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9393208DBB7600DD1EA7 /* radio_button_unchecked@3x.png */; };
 		1F4E939A208DBB7600DD1EA7 /* radio_button_unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4E9394208DBB7600DD1EA7 /* radio_button_unchecked.png */; };
+		1F5209452147B57C0058A8D3 /* LoginTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5209442147B57C0058A8D3 /* LoginTransition.swift */; };
 		1F5378772108754F00A555C5 /* AnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378742108754E00A555C5 /* AnyDecodable.swift */; };
 		1F5378782108754F00A555C5 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378752108754E00A555C5 /* AnyCodable.swift */; };
 		1F5378792108754F00A555C5 /* AnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5378762108754E00A555C5 /* AnyEncodable.swift */; };
@@ -927,6 +928,7 @@
 		1F4E9392208DBB7500DD1EA7 /* radio_button@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radio_button@3x.png"; sourceTree = "<group>"; };
 		1F4E9393208DBB7600DD1EA7 /* radio_button_unchecked@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radio_button_unchecked@3x.png"; sourceTree = "<group>"; };
 		1F4E9394208DBB7600DD1EA7 /* radio_button_unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radio_button_unchecked.png; sourceTree = "<group>"; };
+		1F5209442147B57C0058A8D3 /* LoginTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTransition.swift; sourceTree = "<group>"; };
 		1F5378742108754E00A555C5 /* AnyDecodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyDecodable.swift; sourceTree = "<group>"; };
 		1F5378752108754E00A555C5 /* AnyCodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		1F5378762108754E00A555C5 /* AnyEncodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyEncodable.swift; sourceTree = "<group>"; };
@@ -1842,6 +1844,14 @@
 			path = RadioButton;
 			sourceTree = "<group>";
 		};
+		1F5209432147B5680058A8D3 /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				1F5209442147B57C0058A8D3 /* LoginTransition.swift */,
+			);
+			path = Transition;
+			sourceTree = "<group>";
+		};
 		1F5378732108754E00A555C5 /* AnyCodable */ = {
 			isa = PBXGroup;
 			children = (
@@ -2540,6 +2550,7 @@
 		1FD9B782207CC6F400906D80 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F5209432147B5680058A8D3 /* Transition */,
 				1F2CE39A20B6CBDB00D9E5BD /* Model */,
 				1F58825D2085FA4000394BD6 /* Tool */,
 				1FD9B783207CC6F400906D80 /* ViewModel */,
@@ -3739,6 +3750,7 @@
 				1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */,
 				1FFD133220EF3E140053A3F7 /* NetAsset.swift in Sources */,
 				1FE9EF8020EF5A9C00732728 /* FileDefine.swift in Sources */,
+				1F5209452147B57C0058A8D3 /* LoginTransition.swift in Sources */,
 				1F362F3B212BECDA000B3384 /* TRUploadTask.swift in Sources */,
 				1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,

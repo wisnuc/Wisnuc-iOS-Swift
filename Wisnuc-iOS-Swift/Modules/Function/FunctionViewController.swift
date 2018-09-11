@@ -30,6 +30,9 @@ class FunctionViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.headerViewController.headerView.trackingScrollView = self.functionTableView
+        if let tab = retrieveTabbarController(){
+            tab.setTabBarHidden(false, animated: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {

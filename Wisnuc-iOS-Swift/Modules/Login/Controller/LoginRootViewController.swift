@@ -80,10 +80,13 @@
 //        self.view.addSubview(self.wisnucImageView)
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle{
+        return .lightContent
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
-        UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -134,7 +137,6 @@
         self.logintype = type
     }
     
-    
     @objc func agreementButtonClick () {
         let messageString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur " +
             "ultricies diam libero, eget porta arcu feugiat sit amet. Maecenas placerat felis sed risus " +
@@ -149,7 +151,7 @@
         "euismod libero. Aliquam commodo urna vitae massa convallis aliquet."
         
         let materialAlertController = MDCAlertController(title: "用户协议", message: messageString)
-        
+        ViewTools.setAlertControllerColor(alertController: materialAlertController)
         let action = MDCAlertAction(title:"OK") { (_) in print("OK") }
         
         materialAlertController.addAction(action)
@@ -417,7 +419,7 @@
         logoutVC.delegate = self
         self.navigationController?.pushViewController(logoutVC, animated: true)
     }
-    
+
     @objc func creatNewAccoutButton(_ sender:MDBaseButton){
         let creatNewAccoutVC = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "绑定手机号"), detailTitleString: LocalizedString(forKey: "手机号码是您忘记密码时，找回面的唯一途径 请慎重填写"), state: .bindPhoneNumber)
         let navigationController = UINavigationController.init(rootViewController: creatNewAccoutVC)

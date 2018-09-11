@@ -575,6 +575,8 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         let presentationController =
             alertController.mdc_dialogPresentationController
         presentationController?.dismissOnBackgroundTap = false
+        
+        ViewTools.setAlertControllerColor(alertController:alertController )
         self.present(alertController, animated: true, completion: nil)
     }
     
@@ -606,7 +608,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         
         let considerAction = MDCAlertAction(title:LocalizedString(forKey: "Cancel")) { (_) in print("Cancel") }
         alertController.addAction(considerAction)
-        
+        ViewTools.setAlertControllerColor(alertController:alertController)
         let presentationController =
             alertController.mdc_dialogPresentationController
         presentationController?.dismissOnBackgroundTap = false

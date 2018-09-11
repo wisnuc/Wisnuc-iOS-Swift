@@ -69,8 +69,8 @@ class LoginNextStepViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        self.navigationController?.delegate = self
-//        IQKeyboardManager.shared.
+        self.view.frame = CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight)
+        self.navigationController?.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -78,6 +78,7 @@ class LoginNextStepViewController: BaseViewController {
         if self.alertView != nil {
             self.alertView?.dismiss()
         }
+        self.view.endEditing(true)
     }
     
     override func viewDidLoad() {
@@ -450,7 +451,7 @@ extension LoginNextStepViewController:UITextFieldDelegate{
 
 extension LoginNextStepViewController:UINavigationControllerDelegate{
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let transition = SearchTransition()
+        let transition = LoginTransition()
         return transition
     }
 }

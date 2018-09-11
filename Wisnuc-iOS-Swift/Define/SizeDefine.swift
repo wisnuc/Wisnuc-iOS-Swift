@@ -20,12 +20,12 @@ public let MarginsSoFarWidth:CGFloat = 24
 
 public let SafeAreaBottomHeight:CGFloat = 34.0
 public let CommonButtonHeight:CGFloat = 36
-public let MarginsBottomHeight:CGFloat = UIDevice.current.isX() ? 20 + SafeAreaBottomHeight:20
+public let MarginsBottomHeight:CGFloat = isX ? 20 + SafeAreaBottomHeight:20
 
 public let NormalLabelWidth:CGFloat = __kWidth - MarginsWidth*2
 
 
-public let MDCAppNavigationBarHeight:CGFloat =  UIDevice.current.isX() ? 76.0 + SafeAreaBottomHeight-10:76.0
+public let MDCAppNavigationBarHeight:CGFloat =  isX ? 76.0 + SafeAreaBottomHeight-10:76.0
 public let TabBarHeight:CGFloat =  56.0
 public let StatusBarHeight = UIApplication.shared.statusBarFrame.height
 

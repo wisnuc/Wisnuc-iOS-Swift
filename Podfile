@@ -5,10 +5,8 @@ inhibit_all_warnings!
 
 target :’Wisnuc-iOS-Swift’ do
     
-
-
 pod 'Alamofire'
-pod 'SnapKit', '~> 4.0.0'
+pod 'SnapKit'
 pod 'MaterialComponents'
 pod 'CatalogByConvention'
 pod 'RealReachability'
@@ -21,7 +19,7 @@ pod 'Material'
 pod 'SugarRecord/CoreData'
 pod 'MagicalRecord'
 
-pod 'HandyJSON'
+pod 'HandyJSON',   '~> 4.2.0-beta1'
 pod 'DZNEmptyDataSet'
 pod 'MDRadialProgress'
 pod 'MJRefresh'

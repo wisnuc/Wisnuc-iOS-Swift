@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         registerWeChat()   // Wechat
         colorScheme = MDCBasicColorScheme(primaryColor: COR1)
         startNotifierNetworkStutas() // networkObserveNotification
-        MDCAlertColorThemer.apply(colorScheme)
+//        MDCAlertColorThemer.apply(colorScheme)
 //        self.window = UIWindow.init(frame: UIScreen.main.bounds)
         initRootVC()
         return true
