@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+//#define isXObjc [UIScreen mainScreen].bounds.size.width == 375 &&  [UIScreen mainScreen].bounds.size.height == 812 ? YES : NO
+
+const static NSInteger MDCAppNavigationBarHeight =  76.0;
 const static NSInteger kILSDefaultSliderSize = 40;
 const static NSInteger kILSDefaultSliderWidth = 35;
 const static NSInteger kILSDefaultSliderHeight = 66*35/42;
-const static NSInteger kILSDefaultSliderMargin = 0;
+const static NSInteger kILSDefaultSliderMargin = 70;
 
 typedef enum {
     
