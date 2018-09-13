@@ -65,7 +65,7 @@ extension FunctionViewController:UITableViewDataSource,UITableViewDelegate{
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            let shareVC = FileShareFolderViewController.init(style:.whiteStyle)
+            let shareVC = FileShareFolderViewController.init(style:.white)
             let tab = retrieveTabbarController()
             tab?.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(shareVC, animated: true)

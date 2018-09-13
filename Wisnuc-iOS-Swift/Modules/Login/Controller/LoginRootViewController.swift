@@ -87,6 +87,7 @@
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        defaultNotificationCenter().addObserver(self, selector: #selector(creatAccoutFinish(_:)), name: NSNotification.Name.Login.CreatAccountFinishDismissKey, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -95,6 +96,7 @@
     
     deinit {
        print("\(className()) deinit")
+        defaultNotificationCenter().removeObserver(self)
     }
     
     func prepareNavigationBar(){
@@ -135,6 +137,14 @@
     
     func  setSelfType(_ type:LoginState){
         self.logintype = type
+    }
+    
+    @objc func creatAccoutFinish(_ noti:Notification){
+        let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
+        let navigationController = UINavigationController.init(rootViewController: cofigVC)
+        self.present(navigationController, animated: true) {
+            
+        }
     }
     
     @objc func agreementButtonClick () {
@@ -395,7 +405,7 @@
     }
     
     @objc func  loginButtonClick(){
-        let loginVC = LoginViewController.init(style: NavigationStyle.defaultStyle)
+        let loginVC = LoginViewController.init(style: NavigationStyle.mainTheme)
         loginVC.delegate = self
         let navigationController = UINavigationController.init(rootViewController: loginVC)
         navigationController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
@@ -659,7 +669,7 @@
     lazy var wisnucLabel:UILabel = {
         let label = UILabel.init()
         let string = LocalizedString(forKey: "欢迎使用闻上云盘")
-        let font = UIFont.boldSystemFont(ofSize: 28)
+        let font = UIFont.systemFont(ofSize: 28)
         label.font = font
         label.textColor = UIColor.white
         label.text = string

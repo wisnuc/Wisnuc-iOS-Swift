@@ -85,7 +85,7 @@ extension SettingRootViewController:UITableViewDelegate{
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            let transferTaskTableViewController = TransferTaskTableViewController.init(style:NavigationStyle.whiteStyle)
+            let transferTaskTableViewController = TransferTaskTableViewController.init(style:NavigationStyle.white)
             self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
             if let tab = retrieveTabbarController(){
                 tab.setTabBarHidden(true, animated: true)

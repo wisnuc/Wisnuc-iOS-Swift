@@ -261,7 +261,7 @@ class LoginNextStepViewController: BaseViewController {
             creatAccountFinish()
         case .creatAccountFinish?:
             self.presentingViewController?.dismiss(animated: true, completion: {
-                
+                defaultNotificationCenter().post(name: NSNotification.Name.Login.CreatAccountFinishDismissKey, object: nil)
             })
         default:
             break
@@ -340,16 +340,21 @@ class LoginNextStepViewController: BaseViewController {
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
+    func firstConfigAction() {
+        let configVC =  FirstConfigViewController.init()
+    
+    }
+    
     lazy var titleLabel: UILabel = {
         let label = UILabel.init(frame: CGRect.init(x: MarginsWidth, y: MDCAppNavigationBarHeight + 25, width: __kWidth - MarginsWidth*2 , height: 28))
-        label.font = UIFont.boldSystemFont(ofSize: 28)
+        label.font = UIFont.systemFont(ofSize: 28)
         label.textColor = .white
         return label
     }()
     
     lazy var detailTitleLabel: UILabel = {
         let label = UILabel.init(frame: CGRect.init(x: MarginsWidth, y: titleLabel.bottom + MarginsWidth, width: __kWidth - MarginsWidth*2 , height: 28))
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .white
         label.numberOfLines = 0
         return label

@@ -43,6 +43,10 @@ class AppSearchBarController: SearchBarController {
         prepareSearchBar()
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle{
+        return .lightContent
+    }
+    
     private func prepareMenuButton() {
         menuButton = IconButton(image: Icon.cm.volumeMedium)
     }
@@ -52,7 +56,7 @@ class AppSearchBarController: SearchBarController {
     }
     
     private func prepareStatusBar() {
-        statusBarStyle = .lightContent
+//        statusBarStyle = .lightContent
         
         // Access the statusBar.
 //        statusBar.backgroundColor = Color.grey.base

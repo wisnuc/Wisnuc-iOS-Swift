@@ -566,7 +566,7 @@ extension SearchFilesViewController:DZNEmptyDataSetDelegate{
 
 extension SearchFilesViewController:FilesBottomSheetContentVCDelegate{
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton, model: Any) {
-        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
+        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imagery)
         filesInfoVC.model = model as! EntriesModel
         self.navigationController?.pushViewController(filesInfoVC, animated: true)
     }

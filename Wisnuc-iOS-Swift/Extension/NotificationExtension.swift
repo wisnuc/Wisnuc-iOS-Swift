@@ -32,4 +32,8 @@ extension Notification.Name{
          public static let AutoBackupDestroyedNotiKey = Notification.Name(rawValue: "app.notification.name.AutoBackupDestroyedNotiKey")
          public static let AutoBackupCountChangeNotiKey = Notification.Name(rawValue: "app.notification.name.AutoBackupCountChangeNotiKey")
     }
+    
+    public struct Login {
+        public static let CreatAccountFinishDismissKey = Notification.Name(rawValue: "app.notification.name.CreatAccountFinishDismissKey")
+    }
 }

@@ -104,9 +104,6 @@ class LoginViewController: BaseViewController {
         //        self.textFieldControllerPhoneNumber?.placeholderText = LocalizedString(forKey: "password_text")
         self.textFieldControllerPhoneNumber?.normalColor = UIColor.white.withAlphaComponent(0.38)
         self.textFieldControllerPhoneNumber?.activeColor = .white
-        
-        //        self.textFieldControllerPhoneNumber?.textInsets(UIEdgeInsets(top: 0, left: 70, bottom: 0, right: 0))
-        
         self.textFieldControllerPassword = MDCTextInputControllerUnderline.init(textInput: passwordTextFiled)
         self.textFieldControllerPassword?.isFloatingEnabled = false
         //        self.textFieldControllerPhoneNumber?.placeholderText = LocalizedString(forKey: "password_text")
@@ -246,10 +243,10 @@ class LoginViewController: BaseViewController {
     @objc func nextButtontTap(_ sender:MDCFloatingButton){
         self.phoneNumberTextFiled.resignFirstResponder()
         self.passwordTextFiled.resignFirstResponder()
-        if isNilString(self.phoneNumberTitleLabel.text)  {
+        if isNilString(self.phoneNumberTextFiled.text)  {
             self.alertError(errorText: LocalizedString(forKey: "手机号不能为空"))
             return
-        }else if !checkIsPhoneNumber(number: self.phoneNumberTitleLabel.text!){
+        }else if !checkIsPhoneNumber(number: self.passwordTextFiled.text!){
             self.alertError(errorText: LocalizedString(forKey:"请输入正确的手机号"))
             return
         }
@@ -258,7 +255,7 @@ class LoginViewController: BaseViewController {
     
     lazy var titleLabel: UILabel = {
         let label = UILabel.init(frame: CGRect.init(x: MarginsWidth, y: MDCAppNavigationBarHeight + 25, width: __kWidth - MarginsWidth*2 , height: 28))
-        label.font = UIFont.boldSystemFont(ofSize: 28)
+        label.font = UIFont.systemFont(ofSize: 28)
         label.textColor = .white
         return label
     }()

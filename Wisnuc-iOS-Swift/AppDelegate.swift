@@ -70,7 +70,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
 //                type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
                 let loginController = LoginRootViewController.init(.wechat)
                 self.loginController = loginController;
-                UIApplication.shared.statusBarStyle = .lightContent
                 let navigationController = UINavigationController.init(rootViewController:loginController)
                 self.window?.rootViewController = navigationController
             }
@@ -122,7 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let filesVC = FilesRootViewController()
         filesVC.selfState = .root
         filesVC.title = LocalizedString(forKey: "Files")
-        let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteStyle)
+        let photosVC = PhotoRootViewController.init(style: NavigationStyle.white)
         photosVC.localAssetDataSources.append(contentsOf:AppAssetService.allAssets!)
         AppAssetService.getNetAssets { (error, netAssets) in
             if error == nil{
@@ -136,9 +135,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             }
         }
         photosVC.title = LocalizedString(forKey: "Photos")
-        let functionVC = FunctionViewController.init(style: NavigationStyle.whiteStyle)
+        let functionVC = FunctionViewController.init(style: NavigationStyle.white)
         functionVC.title = LocalizedString(forKey: "功能")
-        let settingVC = SettingRootViewController.init(style: NavigationStyle.whiteStyle)
+        let settingVC = SettingRootViewController.init(style: NavigationStyle.white)
         let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
         let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
         let functionNavi = BaseNavigationController.init(rootViewController: functionVC)

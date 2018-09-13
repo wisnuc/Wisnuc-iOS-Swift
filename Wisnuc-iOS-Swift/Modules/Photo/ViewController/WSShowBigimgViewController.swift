@@ -64,13 +64,14 @@ class WSShowBigimgViewController: UIViewController {
         }
         collectionView.setContentOffset(CGPoint(x: (__kWidth+CGFloat(kItemMargin))*CGFloat(indexBeforeRotation), y: 0), animated: false)
         self.performPresentAnimation()
-        UIApplication.shared.statusBarStyle = .lightContent
-//        WBApplication.statusBarStyle = UIStatusBarStyleLightContent;
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle{
+        return .lightContent
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        UIApplication.shared.statusBarStyle = .default
     }
     
     override func viewDidAppear(_ animated: Bool) {

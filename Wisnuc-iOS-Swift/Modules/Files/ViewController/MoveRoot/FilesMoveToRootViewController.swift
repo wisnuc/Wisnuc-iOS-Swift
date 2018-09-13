@@ -32,8 +32,11 @@ class FilesMoveToRootViewController: BaseViewController {
         moveFilesBottomBar.addSubview(cancelMovetoButton)
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle{
+        return .default
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
-        Application.statusBarStyle = .default
         self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
@@ -140,7 +143,7 @@ extension FilesMoveToRootViewController:UITableViewDelegate,UITableViewDataSourc
         tableView.deselectRow(at: indexPath, animated: true)
         switch  indexPath.row{
         case 0:
-            let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.whiteStyle)
+            let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.white)
             filesRootViewController.title = LocalizedString(forKey: "My Drive")
             filesRootViewController.srcDictionary = srcDictionary
             filesRootViewController.moveModelArray = moveModelArray

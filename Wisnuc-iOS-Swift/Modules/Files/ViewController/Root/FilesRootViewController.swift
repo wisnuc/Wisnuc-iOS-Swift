@@ -418,7 +418,7 @@ class FilesRootViewController: BaseViewController{
         }
         
         self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
-        Application.statusBarStyle = .lightContent
+//        Application.statusBarStyle = .lightContent
         fabButton.collapse(true) {
 
         }
@@ -638,7 +638,7 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func enterSearch(){
-        let searchVC = SearchFilesViewController.init(style: NavigationStyle.whiteStyle)
+        let searchVC = SearchFilesViewController.init(style: NavigationStyle.white)
         searchVC.modalPresentationStyle = .custom
         searchVC.modalTransitionStyle = .crossDissolve
         searchVC.uuid = directoryUUID
@@ -675,7 +675,7 @@ class FilesRootViewController: BaseViewController{
     
     // ojbc function (Selector)
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
-        let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.whiteStyle)
+        let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.white)
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : drive,kRequestTaskDirKey:dir]

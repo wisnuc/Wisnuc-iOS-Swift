@@ -20,9 +20,12 @@ class FilesShareAuthorityChangeViewController: BaseViewController {
         appBar.navigationBar.addSubview(textField)
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle{
+        return .lightContent
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        UIApplication.shared.statusBarStyle = .lightContent
         appBar.headerViewController.headerView.trackingScrollView = self.mainTableView
         mainTableView.contentInset = UIEdgeInsetsMake(mainTableView.contentInset.top + 8, 0, 0, 0)
     }

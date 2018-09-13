@@ -19,7 +19,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
             let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
             let model  = sectionArray[indexPath.item]
             if model.type == FilesType.directory.rawValue{
-                let nextViewController = FilesRootViewController.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: model.uuid!,style:.whiteStyle)
+                let nextViewController = FilesRootViewController.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: model.uuid!,style:.white)
                 if self.selfState == .movecopy{
                     nextViewController.moveModelArray = moveModelArray
                     nextViewController.srcDictionary = srcDictionary
@@ -202,7 +202,7 @@ extension FilesRootViewController:SearchBarDelegate{
 extension FilesRootViewController:FilesDrawerViewControllerDelegate{
     func settingButtonTap(_ sender: UIButton) {
         navigationDrawerController?.closeLeftView()
-        let settingVC = SettingViewController.init(style: NavigationStyle.whiteStyle)
+        let settingVC = SettingViewController.init(style: NavigationStyle.white)
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
         self.navigationController?.pushViewController(settingVC, animated: true)
@@ -212,17 +212,17 @@ extension FilesRootViewController:FilesDrawerViewControllerDelegate{
         navigationDrawerController?.closeLeftView()
         switch indexPath.row {
         case 0:
-            let transferTaskTableViewController = TransferTaskTableViewController.init(style:NavigationStyle.whiteStyle)
+            let transferTaskTableViewController = TransferTaskTableViewController.init(style:NavigationStyle.white)
             let tab = retrieveTabbarController()
             tab?.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
         case 1:
-            let shareVC = FileShareFolderViewController.init(style:.whiteStyle)
+            let shareVC = FileShareFolderViewController.init(style:.white)
             let tab = retrieveTabbarController()
             tab?.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(shareVC, animated: true)
         case 2:
-            let offlineVC = FilesOfflineViewController.init(style:.whiteStyle)
+            let offlineVC = FilesOfflineViewController.init(style:.white)
             let tab = retrieveTabbarController()
             tab?.setTabBarHidden(true, animated: true)
             self.navigationController?.pushViewController(offlineVC, animated: true)
@@ -331,7 +331,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton, model: Any) {
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
-        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imageryStyle)
+        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imagery)
         filesInfoVC.model = model as? EntriesModel
         self.navigationController?.pushViewController(filesInfoVC, animated: true)
     }
@@ -479,7 +479,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 presentationController?.dismissOnBackgroundTap = false
             }
         case 1:
-            let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.whiteStyle)
+            let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.white)
             
             filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
             filesMoveToRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
@@ -521,7 +521,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             }
         case 6:
             if filesModel.type == FilesType.file.rawValue{
-                let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.whiteStyle)
+                let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.white)
                 
                 filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
                 filesMoveToRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()

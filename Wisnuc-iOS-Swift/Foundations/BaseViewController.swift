@@ -9,25 +9,32 @@
 import UIKit
 import MaterialComponents
 enum NavigationStyle:Int{
-    case defaultStyle = 0
-    case whiteStyle
-    case imageryStyle
+    case mainTheme = 0
+    case white
+    case whiteWithoutShadow
+    case imagery
 }
 class BaseViewController: UIViewController {
     
     var style:NavigationStyle?{
         didSet{
             switch style {
-            case .defaultStyle?:
+            case .mainTheme?:
                 defaultStyleAction()
-            case .whiteStyle?:
+            case .white?:
                 whiteStyleAction()
-            case .imageryStyle?:
+            case .whiteWithoutShadow?:
+                whiteWithoutShadowStyleAction()
+            case .imagery?:
                 imageryStyleAction()
             default:
                 break
             }
         }
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle{
+        return .lightContent
     }
     
     init() {
@@ -51,7 +58,7 @@ class BaseViewController: UIViewController {
     }
     
     func setNaviStyle(){
-        style = .defaultStyle
+        style = .mainTheme
     }
     
     func defaultStyleAction(){
@@ -76,6 +83,15 @@ class BaseViewController: UIViewController {
 //        appBar.navigationBar.layer.setLayerShadow(DarkGrayColor, offset: shadowLayer.shadowOffset, radius: shadowLayer.shadowRadius)
         appBar.headerViewController.headerView.setLayerShadow(DarkGrayColor, offset: shadowLayer.shadowOffset, radius: shadowLayer.shadowRadius)
         appBar.headerViewController.headerView.layer.shadowOpacity = shadowLayer.shadowOpacity
+        self.appBar.navigationBar.tintColor = LightGrayColor
+        self.appBar.headerViewController.headerView.tintColor = LightGrayColor
+        self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
+    }
+    
+    func whiteWithoutShadowStyleAction(){
+        appBar.headerViewController.headerView.backgroundColor = .white
+        appBar.navigationBar.backgroundColor = .white
+        appBar.headerStackView.backgroundColor = .white
         self.appBar.navigationBar.tintColor = LightGrayColor
         self.appBar.headerViewController.headerView.tintColor = LightGrayColor
         self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
@@ -107,7 +123,6 @@ class BaseViewController: UIViewController {
         
         // Allow the header to show more of the image.
         headerView.maximumHeight = 160
-        UIApplication.shared.statusBarStyle = .lightContent
         appBar.navigationBar.titleTextColor = UIColor.white
     }
     

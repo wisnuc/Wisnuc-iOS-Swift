@@ -34,9 +34,11 @@ import Material
 class AppNavigationDrawerController: NavigationDrawerController {
     open override func prepare() {
         super.prepare()
-//        self.isHiddenStatusBarEnabled = false
-        Application.statusBarStyle = .default
     }
+}
+
+var preferredStatusBarStyle: UIStatusBarStyle{
+    return .default
 }
 
 //extension AppNavigationDrawerController: NavigationDrawerControllerDelegate {
