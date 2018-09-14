@@ -44,9 +44,9 @@ class DriveDirAPI: BaseRequest {
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestAuthorizationKey:AppTokenManager.token!]
+            return [kRequestAuthorizationKey:AppTokenManager.token ?? ""]
         case .local?:
-            return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
+            return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token ?? "")]
         default:
             return nil
         }

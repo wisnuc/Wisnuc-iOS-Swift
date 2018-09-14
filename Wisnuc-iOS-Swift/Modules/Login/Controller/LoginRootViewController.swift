@@ -29,6 +29,7 @@
 //    override func willDealloc() -> Bool {
 //        return false
 //    }
+    var showTab = false
     var commonLoginButon:UIButton!
     var userName:String?
     var disposeBag = DisposeBag()
@@ -77,7 +78,6 @@
         self.view.addSubview(self.wisnucLabel)
         self.view.addSubview(self.creatNewAccoutButton)
         self.view.addSubview(self.agreementButton)
-//        self.view.addSubview(self.wisnucImageView)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
@@ -87,7 +87,15 @@
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
-        defaultNotificationCenter().addObserver(self, selector: #selector(creatAccoutFinish(_:)), name: NSNotification.Name.Login.CreatAccountFinishDismissKey, object: nil)
+        defaultNotificationCenter().addObserver(self, selector: #selector(configFinishPre(_:)), name: NSNotification.Name.Config.ConfigFinishPreDismissKey, object: nil)
+        defaultNotificationCenter().addObserver(self, selector: #selector(configFinish(_:)), name: NSNotification.Name.Config.ConfigFinishDismissKey, object: nil)
+        if showTab {
+            self.view.removeAllSubviews()
+            self.view.backgroundColor = .white
+            self.prepreTabbar()
+            self.view.addSubview(tabbar)
+            self.tabbar.isHidden = false
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -97,6 +105,22 @@
     deinit {
        print("\(className()) deinit")
         defaultNotificationCenter().removeObserver(self)
+    }
+    
+    func prepreTabbar(){
+        let shadowLayer = tabbar.layer as! MDCShadowLayer
+        shadowLayer.elevation = ShadowElevation.menu
+        tabbar.backgroundColor = UIColor.white
+//        let shadowLayer = CALayer.init()
+//        tabbar.layer.shadowOffset = CGSize(width: 0.8, height: 1.5)
+//        tabbar.layer.shadowRadius = 1
+//        tabbar.layer.shadowOpacity = 0.4
+//        tabbar.layer.shadowColor = DarkGrayColor.cgColor
+//        tabbar.layer.masksToBounds = true
+//        tabbar.layer.cornerRadius = 2
+//        tabbar.layer.masksToBounds = true
+        
+//        tabbar.setLayerShadow(DarkGrayColor, offset: shadowLayer.shadowOffset, radius: shadowLayer.shadowRadius)
     }
     
     func prepareNavigationBar(){
@@ -139,14 +163,18 @@
         self.logintype = type
     }
     
-    @objc func creatAccoutFinish(_ noti:Notification){
-        let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
-        let navigationController = UINavigationController.init(rootViewController: cofigVC)
-        self.present(navigationController, animated: true) {
-            
-        }
+    @objc func configFinish(_ noti:Notification){
+//        let vc  = UIViewController.init()
+//        vc.view.backgroundColor = .white
+//        vc.title = "主界面"
+//        let navigationController = UINavigationController.init(rootViewController: vc)
+//        appDelegate.window?.rootViewController = navigationController
     }
     
+    @objc func configFinishPre(_ noti:Notification){
+        self.showTab = true
+    }
+
     @objc func agreementButtonClick () {
         let messageString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur " +
             "ultricies diam libero, eget porta arcu feugiat sit amet. Maecenas placerat felis sed risus " +
@@ -375,7 +403,7 @@
                 if error == nil && user != nil{
                     AppUserService.setCurrentUser(user)
                     AppUserService.synchronizedCurrentUser()
-                    appDelegate.setRootViewController()
+                    appDelegate.initRootVC()
                 }else{
                     if error != nil{
                         switch error {
@@ -679,6 +707,8 @@
         return label
     }()
     
+     lazy var tabbar =  UIView.init(frame: CGRect(x: 0, y: __kHeight - TabBarHeight, width: __kWidth, height: TabBarHeight))
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -771,7 +801,7 @@
         ActivityIndicator.startActivityIndicatorAnimation()
         DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.5) {
             DispatchQueue.main.async {
-                appDelegate.setRootViewController()
+                appDelegate.initRootVC()
             }
         }
     }

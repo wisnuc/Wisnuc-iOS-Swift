@@ -86,6 +86,11 @@
 		1F0FD0F9214A7119003D7936 /* wifi_config.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0FD0F8214A7118003D7936 /* wifi_config.png */; };
 		1F0FD0FB214A7123003D7936 /* wifi_config@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0FD0FA214A7123003D7936 /* wifi_config@2x.png */; };
 		1F0FD0FD214A712F003D7936 /* wifi_config@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0FD0FC214A712F003D7936 /* wifi_config@3x.png */; };
+		1F0FD0FF214A77AB003D7936 /* IdentifyingFromDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0FD0FE214A77AB003D7936 /* IdentifyingFromDeviceViewController.swift */; };
+		1F0FD101214B698C003D7936 /* DiskFormatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F0FD100214B698C003D7936 /* DiskFormatViewController.swift */; };
+		1F0FD103214B7D95003D7936 /* close_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0FD102214B7D95003D7936 /* close_gray.png */; };
+		1F0FD105214B7DA4003D7936 /* close_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0FD104214B7DA4003D7936 /* close_gray@2x.png */; };
+		1F0FD107214B7DB4003D7936 /* close_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F0FD106214B7DB3003D7936 /* close_gray@3x.png */; };
 		1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DCC207F365B00860F31 /* NetworkStatus.swift */; };
 		1F169DD1207F528800860F31 /* MyStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD0207F528800860F31 /* MyStationView.swift */; };
 		1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */; };
@@ -804,6 +809,11 @@
 		1F0FD0F8214A7118003D7936 /* wifi_config.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wifi_config.png; sourceTree = "<group>"; };
 		1F0FD0FA214A7123003D7936 /* wifi_config@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wifi_config@2x.png"; sourceTree = "<group>"; };
 		1F0FD0FC214A712F003D7936 /* wifi_config@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wifi_config@3x.png"; sourceTree = "<group>"; };
+		1F0FD0FE214A77AB003D7936 /* IdentifyingFromDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifyingFromDeviceViewController.swift; sourceTree = "<group>"; };
+		1F0FD100214B698C003D7936 /* DiskFormatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskFormatViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
+		1F0FD102214B7D95003D7936 /* close_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close_gray.png; sourceTree = "<group>"; };
+		1F0FD104214B7DA4003D7936 /* close_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close_gray@2x.png"; sourceTree = "<group>"; };
+		1F0FD106214B7DB3003D7936 /* close_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close_gray@3x.png"; sourceTree = "<group>"; };
 		1F169DCC207F365B00860F31 /* NetworkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkStatus.swift; sourceTree = "<group>"; };
 		1F169DD0207F528800860F31 /* MyStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStationView.swift; sourceTree = "<group>"; };
 		1F169DD2207F5D0B00860F31 /* FirstLaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
@@ -1957,6 +1967,9 @@
 		1F520951214A0B750058A8D3 /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				1F0FD106214B7DB3003D7936 /* close_gray@3x.png */,
+				1F0FD102214B7D95003D7936 /* close_gray.png */,
+				1F0FD104214B7DA4003D7936 /* close_gray@2x.png */,
 				1F0FD0F8214A7118003D7936 /* wifi_config.png */,
 				1F0FD0FA214A7123003D7936 /* wifi_config@2x.png */,
 				1F0FD0FC214A712F003D7936 /* wifi_config@3x.png */,
@@ -2001,6 +2014,8 @@
 				1F52094E21491DDF0058A8D3 /* FirstConfigViewController.xib */,
 				1F52095E214A0FF20058A8D3 /* SeekNewDeviceViewController.swift */,
 				1F0FD0D6214A4D3B003D7936 /* ConfigNetworkViewController.swift */,
+				1F0FD0FE214A77AB003D7936 /* IdentifyingFromDeviceViewController.swift */,
+				1F0FD100214B698C003D7936 /* DiskFormatViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -3437,6 +3452,7 @@
 				1F5659F320D0E35B00D86FDB /* share@3x.png in Resources */,
 				1F050E6320AAC91E0037F00A /* files_arrow_up.png in Resources */,
 				1FBB6F77213930110090FA57 /* eye_close@2x.png in Resources */,
+				1F0FD105214B7DA4003D7936 /* close_gray@2x.png in Resources */,
 				1FAADEE720ABFF9E00739220 /* files_copy_to@2x.png in Resources */,
 				1FAADEBF20ABE3A200739220 /* files_info@3x.png in Resources */,
 				1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */,
@@ -3541,6 +3557,7 @@
 				1F050E7720ABCE6E0037F00A /* files_edit@3x.png in Resources */,
 				1F359FD22091A95D00E2FF36 /* disk_new_add@2x.png in Resources */,
 				1F3C242420A547D000E6B953 /* files_download@2x.png in Resources */,
+				1F0FD103214B7D95003D7936 /* close_gray.png in Resources */,
 				1FBB6F79213930180090FA57 /* eye_close.png in Resources */,
 				1F362F792133FF9C000B3384 /* wechat_icon_mian_color.png in Resources */,
 				1F362F8A21355E26000B3384 /* next_button_arrow@3x.png in Resources */,
@@ -3597,6 +3614,7 @@
 				1F0FD0F3214A6DBB003D7936 /* next_button_arrow_white.png in Resources */,
 				1FC5CC1520D3C3C900499E63 /* files_download_transfer.png in Resources */,
 				1F83AE60208830B8007CCCFD /* local_area_white@3x.png in Resources */,
+				1F0FD107214B7DB4003D7936 /* close_gray@3x.png in Resources */,
 				1F58825A2085F4C900394BD6 /* local_area.png in Resources */,
 				1F050E4920AAB6A50037F00A /* files_cl_big.png in Resources */,
 				1FC8FF8020AE6F4300F65194 /* chips_close@2x.png in Resources */,
@@ -3871,6 +3889,7 @@
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SugarRecord/SugarRecord.framework",
 				"${BUILT_PRODUCTS_DIR}/YYKit/YYKit.framework",
@@ -3900,6 +3919,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SugarRecord.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKit.framework",
@@ -3951,6 +3971,7 @@
 				1F359FA720907CD700E2FF36 /* InitLastView.swift in Sources */,
 				1FE9EF8D20EF5DEA00732728 /* CocoaSecurity.m in Sources */,
 				1F307C7520BEB18700AE105C /* SettingViewController.swift in Sources */,
+				1F0FD0FF214A77AB003D7936 /* IdentifyingFromDeviceViewController.swift in Sources */,
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
 				1F050E4020AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.swift in Sources */,
 				1FE674E020D21B11006F97DB /* TRSessionDelegate.swift in Sources */,
@@ -4087,6 +4108,7 @@
 				1F5378792108754F00A555C5 /* AnyEncodable.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
 				1F2CE30220B4311000D9E5BD /* User+CoreDataProperties.swift in Sources */,
+				1F0FD101214B698C003D7936 /* DiskFormatViewController.swift in Sources */,
 				1F8EBB52209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift in Sources */,
 				1F5378782108754F00A555C5 /* AnyCodable.swift in Sources */,
 				1F307C6720BE91B200AE105C /* ErrorDfine.swift in Sources */,

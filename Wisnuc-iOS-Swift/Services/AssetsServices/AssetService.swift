@@ -50,6 +50,9 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     }
     
     func getNetAssets(callback:@escaping (_ error:Error?,_ assets:Array<NetAsset>?)->()){
+        if AppUserService.currentUser?.userHome == nil{
+            return
+        }
         GetMediaAPI.init(classType: RequestMediaClassValue.Image, placesUUID: (AppUserService.currentUser?.userHome!)!).startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
 //                print("😆\(String(describing: response.value))")

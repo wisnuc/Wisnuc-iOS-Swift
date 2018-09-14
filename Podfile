@@ -28,7 +28,7 @@ pod 'RxCocoa',    '~> 4.0'
 pod 'Masonry'
 #pod 'MLeaksFinder'
 #pod 'FBRetainCycleDetector'
-
+pod 'SVProgressHUD'
 pod 'IQKeyboardManagerSwift'
 #pod 'AFNetworking'
 #pod 'FBMemoryProfiler'

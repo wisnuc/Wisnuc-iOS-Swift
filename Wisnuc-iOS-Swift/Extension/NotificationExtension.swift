@@ -36,4 +36,10 @@ extension Notification.Name{
     public struct Login {
         public static let CreatAccountFinishDismissKey = Notification.Name(rawValue: "app.notification.name.CreatAccountFinishDismissKey")
     }
+    
+    public struct Config {
+        public static let DiskFormaConfirmDismissKey = Notification.Name(rawValue: "app.notification.name.DiskFormaConfirmDismissKey")
+         public static let ConfigFinishDismissKey = Notification.Name(rawValue: "app.notification.name.ConfigFinishDismissKey")
+        public static let ConfigFinishPreDismissKey = Notification.Name(rawValue: "app.notification.name.ConfigFinishPreDismissKey")
+    }
 }

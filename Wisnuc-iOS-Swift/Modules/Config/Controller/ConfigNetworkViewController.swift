@@ -29,6 +29,13 @@ class ConfigNetworkViewController: BaseViewController {
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if nextButton.isHidden{
+            nextButton.isHidden = false
+        }
+    }
+    
     deinit {
         defaultNotificationCenter().removeObserver(self)
     }
@@ -113,7 +120,16 @@ class ConfigNetworkViewController: BaseViewController {
     @objc func nextButtontTap(_ sender:MDCFloatingButton){
         self.networkNameTextFiled.resignFirstResponder()
         self.passwordTextFiled.resignFirstResponder()
-    
+        SVProgressHUD.setDefaultStyle(SVProgressHUDStyle.dark)
+        SVProgressHUD.show(withStatus: LocalizedString(forKey: "WIFI配置中"))
+        sender.isHidden = true
+        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 3) {
+            DispatchQueue.main.async {
+                 SVProgressHUD.dismiss()
+                let identifyingFromDeviceVC = IdentifyingFromDeviceViewController.init(style: NavigationStyle.whiteWithoutShadow)
+                self.navigationController?.pushViewController(identifyingFromDeviceVC, animated: true)
+            }
+        }
     }
     
     
@@ -252,6 +268,7 @@ class ConfigNetworkViewController: BaseViewController {
         button.isEnabled = false
         button.layer.masksToBounds = true
         button.layer.cornerRadius = width/2
+        button.addTarget(self, action: #selector(nextButtontTap(_:)), for: UIControlEvents.touchUpInside)
         return button
     }()
     

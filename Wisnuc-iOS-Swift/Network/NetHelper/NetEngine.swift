@@ -15,6 +15,7 @@ typealias NetworkResonseDataCompletionHandler = (DataResponse<Data>) -> Void
 typealias NetworkResonseStringCompletionHandler = (DataResponse<String>) -> Void
 
 class NetEngine: NSObject {
+    let urlPlaceholder = "http://"
     var manager:SessionManager?
     static let sharedInstance = NetEngine()
     private override init(){
@@ -35,9 +36,10 @@ class NetEngine: NSObject {
         if baseRequsetObject.requestHTTPHeaders() != nil {
             requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
         }
+        
         var originalRequest: URLRequest?
         do {
-            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest = try URLRequest(url: URL.init(string: requestURL ?? urlPlaceholder)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
             originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
             let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseJSON(completionHandler: requestCompletionHandler)
@@ -63,7 +65,7 @@ class NetEngine: NSObject {
         }
         var originalRequest: URLRequest?
         do {
-            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest = try URLRequest(url: URL.init(string: requestURL ?? urlPlaceholder)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
             originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
             let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseData(completionHandler: requestCompletionHandler)
@@ -89,7 +91,7 @@ class NetEngine: NSObject {
         }
         var originalRequest: URLRequest?
         do {
-            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest = try URLRequest(url: URL.init(string: requestURL ?? urlPlaceholder)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
             originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
             let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseString(completionHandler: requestCompletionHandler)
@@ -115,7 +117,7 @@ class NetEngine: NSObject {
         }
         var originalRequest: URLRequest?
          do {
-            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest = try URLRequest(url: URL.init(string: requestURL ?? urlPlaceholder)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
             originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
             let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
             let request = Alamofire.request(encodedURLRequest).validate().responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
@@ -141,7 +143,7 @@ class NetEngine: NSObject {
         }
         var originalRequest: URLRequest?
         do {
-            originalRequest = try URLRequest(url: URL.init(string: requestURL)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest = try URLRequest(url: URL.init(string: requestURL ?? urlPlaceholder)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
             originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
             let encodedURLRequest = try baseRequsetObject.requestEncoding().encode(originalRequest!, with: requestParameters)
             Alamofire.upload(multipartFormData: multipartFormData, with: encodedURLRequest) { [weak self](encodingResult) in
@@ -209,7 +211,7 @@ class NetEngine: NSObject {
     }
     
     // 合成 全的网址
-    func bulidRequestURL(request:BaseRequest) -> String{
+    func bulidRequestURL(request:BaseRequest) -> String?{
         let detailURL = request.requestURL()
         if detailURL.hasPrefix("http") || detailURL.hasPrefix("https"){
             return detailURL
@@ -229,7 +231,7 @@ class NetEngine: NSObject {
                 baseURL = cofig.baseURL
             }
         }
-        return "\(String(describing: baseURL!))\(String(describing: detailURL))"
+        return  baseURL == nil ? nil : "\(String(describing: baseURL!))\(String(describing: detailURL))"
     }
 }
 

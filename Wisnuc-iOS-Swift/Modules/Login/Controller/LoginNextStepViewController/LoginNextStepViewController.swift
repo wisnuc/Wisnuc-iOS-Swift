@@ -142,6 +142,8 @@ class LoginNextStepViewController: BaseViewController {
         self.successImageView.frame = CGRect(x: __kWidth/2 - rectWidth/2, y: self.detailTitleLabel.bottom + 44 , width: rectWidth, height: rectWidth)
         self.view.addSubview(self.successImageView)
         nextButtonEnableStyle()
+        appBar.headerViewController.navigationItem.backBarButtonItem = nil
+        appBar.navigationBar.backItem = nil
     }
     
     func preparerTextFieldController() {
@@ -260,9 +262,9 @@ class LoginNextStepViewController: BaseViewController {
         case .creatPwd?:
             creatAccountFinish()
         case .creatAccountFinish?:
-            self.presentingViewController?.dismiss(animated: true, completion: {
-                defaultNotificationCenter().post(name: NSNotification.Name.Login.CreatAccountFinishDismissKey, object: nil)
-            })
+          firstConfigAction()
+//                defaultNotificationCenter().post(name: NSNotification.Name.Login.CreatAccountFinishDismissKey, object: nil)
+            
         default:
             break
         }
@@ -341,8 +343,8 @@ class LoginNextStepViewController: BaseViewController {
     }
     
     func firstConfigAction() {
-        let configVC =  FirstConfigViewController.init()
-    
+        let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
+        self.navigationController?.pushViewController(cofigVC, animated: true)
     }
     
     lazy var titleLabel: UILabel = {

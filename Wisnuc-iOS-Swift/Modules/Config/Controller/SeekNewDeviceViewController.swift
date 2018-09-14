@@ -40,12 +40,15 @@ class SeekNewDeviceViewController: BaseViewController {
         self.view.addSubview(titleLabel)
         self.view.addSubview(deviceTableView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+        self.state = .searching
+        self.setData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.headerViewController.headerView.trackingScrollView = self.deviceTableView
         LLBlueTooth.instance.delegate = self
+        defaultNotificationCenter().addObserver(self, selector: #selector(confirmFinish(_:)), name: NSNotification.Name.Config.DiskFormaConfirmDismissKey, object: nil)
     }
     
     func searchingStateAction(){
@@ -87,6 +90,11 @@ class SeekNewDeviceViewController: BaseViewController {
         dataSource.append(data4)
         deviceTableView.reloadData()
         self.state = .found
+    }
+    
+    @objc func confirmFinish(_ noti:Notification){
+        let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow)
+        self.navigationController?.pushViewController(configNetVC, animated: true)
     }
     
     lazy var titleLabel: UILabel = {
@@ -150,12 +158,16 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
         let model = dataSource[indexPath.row]
         switch model.type {
         case .config?:
-            break
-        case .configFinish?:
             let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow)
             self.navigationController?.pushViewController(configNetVC, animated: true)
+        case .configFinish?:
+           break
         case .configWithData?:
-            break
+            let diskFormatVC = DiskFormatViewController.init(style: .whiteWithoutShadow)
+            let navi = UINavigationController.init(rootViewController: diskFormatVC)
+            self.present(navi, animated: true) {
+                
+            }
         case .configErrorNoDisk?:
             break
         default:
@@ -197,14 +209,13 @@ extension SeekNewDeviceViewController:LLBlueToothDelegate{
                 
             case CBManagerState.poweredOn:
                 print("蓝牙打开")
-                self.state = .searching
-                self.setData()
+               
             case CBManagerState.unauthorized:
                 print("没有蓝牙功能")
                 
             case CBManagerState.poweredOff:
                 print("蓝牙关闭")
-                self.state = .bleNotOpen
+//                self.state = .bleNotOpen
                 
             default:
                 print("未知状态")
