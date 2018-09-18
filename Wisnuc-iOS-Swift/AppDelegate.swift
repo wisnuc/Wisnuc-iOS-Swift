@@ -149,6 +149,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         filesNavi.tabBarItem.selectedImage = UIImage.init(named: "tab_files_selected.png")
         let controllers = [filesNavi,photosNavi,functionNavi,settingNavi]
         tabBarController.viewControllers = controllers
+        tabBarController.selectedViewController = controllers[0]
         tabBarController.tabBar?.items = [filesNavi.tabBarItem,
                                           photosNavi.tabBarItem,
                                           functionNavi.tabBarItem,
@@ -157,7 +158,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         tabBarController.tabBar?.setImageTintColor(LightGrayColor, for: MDCTabBarItemState.selected)
         tabBarController.tabBar?.selectedItem = tabBarController.tabBar?.items[0]
         tabBarController.tabBar?.selectedItem?.image = tabBarController.tabBar?.selectedItem?.selectedImage!
-        tabBarController.selectedViewController = controllers[0]
         tabBarController.tabBar?.itemAppearance = MDCTabBarItemAppearance.titledImages
         MDCTabBarColorThemer.apply(appDelegate.colorScheme, to: tabBarController.tabBar!)
         

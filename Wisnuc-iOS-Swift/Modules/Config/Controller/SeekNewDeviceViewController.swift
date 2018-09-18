@@ -15,6 +15,7 @@ enum SeekNewDeviceState {
     case searching
 }
 class SeekNewDeviceViewController: BaseViewController {
+    private let headerViewHeight:CGFloat = 64
     let cellReuseIdentifier = "cell"
     lazy var dataSource:Array<DeviceBLEModel> = [DeviceBLEModel]()
     var state:SeekNewDeviceState?{
@@ -42,13 +43,15 @@ class SeekNewDeviceViewController: BaseViewController {
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
         self.state = .searching
         self.setData()
+         defaultNotificationCenter().addObserver(self, selector: #selector(confirmFinish(_:)), name: NSNotification.Name.Config.DiskFormaConfirmDismissKey, object: nil)
+//        self.title = "发现设备"
+//        appBar.navigationBar.ti
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.headerViewController.headerView.trackingScrollView = self.deviceTableView
         LLBlueTooth.instance.delegate = self
-        defaultNotificationCenter().addObserver(self, selector: #selector(confirmFinish(_:)), name: NSNotification.Name.Config.DiskFormaConfirmDismissKey, object: nil)
     }
     
     func searchingStateAction(){
@@ -186,7 +189,18 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 64
+        return headerViewHeight
+    }
+}
+
+
+extension SeekNewDeviceViewController:UIScrollViewDelegate{
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.deviceTableView{
+            let tableView = scrollView as! UITableView
+            
+            print("\(tableView.contentOffset)")
+        }
     }
 }
 

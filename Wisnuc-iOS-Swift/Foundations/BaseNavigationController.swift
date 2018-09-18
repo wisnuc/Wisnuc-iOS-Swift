@@ -16,6 +16,10 @@ class BaseNavigationController: UINavigationController {
         // Do any additional setup after loading the view.
     }
     
+    override var childViewControllerForStatusBarStyle: UIViewController? {
+        return visibleViewController
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setNavigationBarHidden(true, animated: false)

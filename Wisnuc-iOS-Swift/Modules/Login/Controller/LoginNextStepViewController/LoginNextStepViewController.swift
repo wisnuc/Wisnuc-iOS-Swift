@@ -25,6 +25,10 @@ enum RightViewType{
 }
 
 class LoginNextStepViewController: BaseViewController {
+    private var phoneNumber:String?
+    private var password:String?
+    private var verifyCode:String?
+    let phoneNumberLimitCount = 11
     let verifyCodeLimitCount = 4
     let passwordLimitCount = 8
     var alertView:TipsAlertView?
@@ -56,11 +60,14 @@ class LoginNextStepViewController: BaseViewController {
         NotificationCenter.default.removeObserver(self)
     }
   
-    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState) {
+    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState,phoneNumber:String? = nil,password:String? = nil,verifyCode:String? = nil) {
         super.init()
         titleLabel.text = titleString
         detailTitleLabel.text = detailTitleString
         setState(state:state)
+        self.phoneNumber = phoneNumber
+        self.password = password
+        self.verifyCode = verifyCode
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -71,6 +78,14 @@ class LoginNextStepViewController: BaseViewController {
         super.viewWillAppear(animated)
         self.view.frame = CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight)
         self.navigationController?.delegate = self
+        if self.state != .creatAccountFinish{
+            self.inputTextField.becomeFirstResponder()
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -122,12 +137,14 @@ class LoginNextStepViewController: BaseViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "帮助"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(helpTap(_ :)))
         self.textFiledTitleLabel.text = LocalizedString(forKey: "4位验证码")
         self.inputTextField.leftView = nil
+        
     }
     
     func  resetPwdStyle(){
         self.textFiledTitleLabel.text = LocalizedString(forKey: "密码")
         self.inputTextField.isSecureTextEntry = true
         self.inputTextField.leftView = self.leftView(image: UIImage.init(named: "lock.png"))
+        self.inputTextField.keyboardType = .default
     }
     
     func bindPhoneNumberStyle(){
@@ -318,10 +335,22 @@ class LoginNextStepViewController: BaseViewController {
             return
         }
         
-        let state = self.state == .bindPhoneNumber ? LoginNextStepViewControllerState.signUpverifyCode : LoginNextStepViewControllerState.verifyCode
-        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "请输入4位验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: inputTextField.text ?? "手机号")) 发送了一个验证码 请在下面输入"), state: state)
-        nextViewController.modalTransitionStyle = .crossDissolve
-        self.navigationController?.pushViewController(nextViewController, animated: true)
+        GetSmsCodeAPI.init(phoneNumber: self.inputTextField.text!).startRequestJSONCompletionHandler { [weak self](response) in
+            if  response.error != nil{
+                let responseDic = response.value as! NSDictionary
+                let code = responseDic["code"] as? Int
+                if code == 1 {
+                    let state = self?.state == .bindPhoneNumber ? LoginNextStepViewControllerState.signUpverifyCode : LoginNextStepViewControllerState.verifyCode
+                    let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "请输入4位验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: self?.inputTextField.text ?? "手机号")) 发送了一个验证码 请在下面输入"), state: state,phoneNumber:(self?.inputTextField.text)!)
+                    nextViewController.modalTransitionStyle = .crossDissolve
+                    self?.navigationController?.pushViewController(nextViewController, animated: true)
+                }else{
+                 //error
+                }
+            }else{
+                // error
+            }
+        }
     }
     
     func resetOrCreatPwdPush(){
@@ -343,8 +372,11 @@ class LoginNextStepViewController: BaseViewController {
     }
     
     func firstConfigAction() {
+         self.navigationController?.delegate = nil
         let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
+         cofigVC.modalTransitionStyle = .coverVertical
         self.navigationController?.pushViewController(cofigVC, animated: true)
+       
     }
     
     lazy var titleLabel: UILabel = {
@@ -422,6 +454,10 @@ extension LoginNextStepViewController:UITextFieldDelegate{
         print(fullString)
         switch state {
         case .bindPhoneNumber?, .forgetPwd?:
+            if  fullString.count > phoneNumberLimitCount {
+                self.inputTextField.text = textField.text?.subString(to: phoneNumberLimitCount)
+                return false
+            }
             if checkIsPhoneNumber(number: fullString) {
                 self.nextButtonEnableStyle()
                 textField.rightView = self.rightView(type: RightViewType.right)

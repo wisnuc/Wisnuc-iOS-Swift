@@ -617,6 +617,9 @@
 		1FC8FF8420AE756000F65194 /* chips_close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF8320AE756000F65194 /* chips_close@3x.png */; };
 		1FC8FF8720AE887800F65194 /* searchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC8FF8520AE887800F65194 /* searchTableViewCell.swift */; };
 		1FC8FF8820AE887800F65194 /* searchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FC8FF8620AE887800F65194 /* searchTableViewCell.xib */; };
+		1FD1F2D92150FBA100C3E429 /* GetSmsCodeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2D82150FBA100C3E429 /* GetSmsCodeAPI.swift */; };
+		1FD1F2DB2150FF3900C3E429 /* RequestDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2DA2150FF3900C3E429 /* RequestDefine.swift */; };
+		1FD1F2DD2151092800C3E429 /* SighUpAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2DC2151092800C3E429 /* SighUpAPI.swift */; };
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
 		1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B751207CBE8700906D80 /* ViewController.swift */; };
 		1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B753207CBE8700906D80 /* Main.storyboard */; };
@@ -1344,6 +1347,9 @@
 		1FC8FF8320AE756000F65194 /* chips_close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chips_close@3x.png"; sourceTree = "<group>"; };
 		1FC8FF8520AE887800F65194 /* searchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchTableViewCell.swift; sourceTree = "<group>"; };
 		1FC8FF8620AE887800F65194 /* searchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = searchTableViewCell.xib; sourceTree = "<group>"; };
+		1FD1F2D82150FBA100C3E429 /* GetSmsCodeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSmsCodeAPI.swift; sourceTree = "<group>"; };
+		1FD1F2DA2150FF3900C3E429 /* RequestDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestDefine.swift; sourceTree = "<group>"; };
+		1FD1F2DC2151092800C3E429 /* SighUpAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SighUpAPI.swift; sourceTree = "<group>"; };
 		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1FD9B751207CBE8700906D80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -1776,6 +1782,8 @@
 				1FC5702A20C1150B00D4499D /* LocalTokenInCloudAPI.swift */,
 				1F1BABAB20C62EC300D32C5A /* UsersInfoAPI.swift */,
 				1F2A380920DCD90F0035EED5 /* LocalLoginTokenAPI.swift */,
+				1FD1F2D82150FBA100C3E429 /* GetSmsCodeAPI.swift */,
+				1FD1F2DC2151092800C3E429 /* SighUpAPI.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -2878,6 +2886,7 @@
 				1F58821A20849FCA00394BD6 /* KeyStringDefine.swift */,
 				1F307C6620BE91B200AE105C /* ErrorDfine.swift */,
 				1F1BAC5020CE637000D32C5A /* Enum.swift */,
+				1FD1F2DA2150FF3900C3E429 /* RequestDefine.swift */,
 			);
 			path = Define;
 			sourceTree = "<group>";
@@ -3954,6 +3963,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD1F2DB2150FF3900C3E429 /* RequestDefine.swift in Sources */,
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
 				1F4242BA20F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift in Sources */,
@@ -3973,6 +3983,7 @@
 				1F307C7520BEB18700AE105C /* SettingViewController.swift in Sources */,
 				1F0FD0FF214A77AB003D7936 /* IdentifyingFromDeviceViewController.swift in Sources */,
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
+				1FD1F2DD2151092800C3E429 /* SighUpAPI.swift in Sources */,
 				1F050E4020AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.swift in Sources */,
 				1FE674E020D21B11006F97DB /* TRSessionDelegate.swift in Sources */,
 				1F359FEA2092C87900E2FF36 /* UIImage+extension.m in Sources */,
@@ -4122,6 +4133,7 @@
 				1F83AE7720886A13007CCCFD /* LogOutViewController.swift in Sources */,
 				1FFD131320EE29460053A3F7 /* WSAsset.swift in Sources */,
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
+				1FD1F2D92150FBA100C3E429 /* GetSmsCodeAPI.swift in Sources */,
 				1FFD132820EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m in Sources */,
 				1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */,
 				1F362F11212672F2000B3384 /* DBService.swift in Sources */,

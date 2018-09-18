@@ -20,6 +20,7 @@ enum EditingState {
 
 class LoginViewController: BaseViewController {
     let passwordLimitCount = 8
+    let phoneNumberLimitCount = 11
     var phoneNumberIsRight = false
     weak var delegate:LoginViewControllerDelegate?
     var textFieldControllerPhoneNumber:MDCTextInputControllerUnderline?
@@ -373,9 +374,12 @@ extension LoginViewController:UITextFieldDelegate{
         }
         
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
-        print(fullString)
-       
+//        print(fullString)
         if textField == phoneNumberTextFiled {
+            if  fullString.count > phoneNumberLimitCount {
+                textField.text = textField.text?.subString(to: phoneNumberLimitCount)
+                return false
+            }
             if checkIsPhoneNumber(number: fullString) {
                 textField.rightView = self.rightView(type: RightViewType.right)
                 phoneNumberIsRight = true

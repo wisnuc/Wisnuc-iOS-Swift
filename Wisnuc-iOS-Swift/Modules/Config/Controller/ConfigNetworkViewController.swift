@@ -25,7 +25,7 @@ class ConfigNetworkViewController: BaseViewController {
         self.setTextFieldController()
         self.view.addSubview(nextButton)
         self.view.addSubview(errorLabel)
-        self.networkNameTextFiled.text = getWifiInfo().ssid
+       
         // Do any additional setup after loading the view.
     }
     
@@ -34,6 +34,19 @@ class ConfigNetworkViewController: BaseViewController {
         if nextButton.isHidden{
             nextButton.isHidden = false
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        NetworkStatus.getNetworkStatus { (status) in
+            switch status {
+            case .WIFI:
+                self.networkNameTextFiled.text = self.getWifiInfo().ssid
+            default:
+                self.networkNameTextFiled.text = LocalizedString(forKey: "未连接Wi-Fi")
+            }
+        }
+        
     }
     
     deinit {
@@ -121,7 +134,7 @@ class ConfigNetworkViewController: BaseViewController {
         self.networkNameTextFiled.resignFirstResponder()
         self.passwordTextFiled.resignFirstResponder()
         SVProgressHUD.setDefaultStyle(SVProgressHUDStyle.dark)
-        SVProgressHUD.show(withStatus: LocalizedString(forKey: "WIFI配置中"))
+        SVProgressHUD.show(withStatus: LocalizedString(forKey: "Wi-Fi配置中"))
         sender.isHidden = true
         DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 3) {
             DispatchQueue.main.async {

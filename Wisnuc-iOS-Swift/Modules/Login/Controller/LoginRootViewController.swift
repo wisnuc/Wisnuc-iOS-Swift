@@ -19,7 +19,7 @@
     case chooseStation
  }
  
- private let ButtonHeight:CGFloat = 40
+ private var ButtonHeight:CGFloat = 48
  private let UserImageViewWidth:CGFloat = 114
  public let ImageViewBorderColor:CGColor = UIColor.init(red: 41/255.0, green: 165/255.0, blue: 151/255.0, alpha: 1).cgColor
  private let StationViewScale:CGFloat = __kHeight * 0.36
@@ -108,19 +108,9 @@
     }
     
     func prepreTabbar(){
-        let shadowLayer = tabbar.layer as! MDCShadowLayer
-        shadowLayer.elevation = ShadowElevation.menu
         tabbar.backgroundColor = UIColor.white
-//        let shadowLayer = CALayer.init()
-//        tabbar.layer.shadowOffset = CGSize(width: 0.8, height: 1.5)
-//        tabbar.layer.shadowRadius = 1
-//        tabbar.layer.shadowOpacity = 0.4
-//        tabbar.layer.shadowColor = DarkGrayColor.cgColor
-//        tabbar.layer.masksToBounds = true
-//        tabbar.layer.cornerRadius = 2
-//        tabbar.layer.masksToBounds = true
-        
-//        tabbar.setLayerShadow(DarkGrayColor, offset: shadowLayer.shadowOffset, radius: shadowLayer.shadowRadius)
+        tabbar.setLayerShadow(Gray26Color, offset: CGSize(width: 0, height: -5), radius: 4)
+        tabbar.layer.shadowOpacity = 0.37
     }
     
     func prepareNavigationBar(){

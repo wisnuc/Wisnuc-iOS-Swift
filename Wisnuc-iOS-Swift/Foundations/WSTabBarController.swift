@@ -23,6 +23,10 @@ class WSTabBarController: MDCTabBarViewController  {
         self.view.backgroundColor = UIColor.white
     }
     
+    override var childViewControllerForStatusBarStyle: UIViewController?{
+         return selectedViewController
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

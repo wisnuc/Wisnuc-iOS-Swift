@@ -34,13 +34,13 @@ class BaseViewController: UIViewController {
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
-        return .lightContent
+        return .default
     }
     
     init() {
         super.init(nibName: nil, bundle: nil)
         self.addChildViewController(appBar.headerViewController)
-        setNaviStyle()
+        setNaviStyle(style:.mainTheme)
     }
     
     init(style:NavigationStyle) {
@@ -55,10 +55,6 @@ class BaseViewController: UIViewController {
     
     func setNaviStyle(style:NavigationStyle){
         self.style = style
-    }
-    
-    func setNaviStyle(){
-        style = .mainTheme
     }
     
     func defaultStyleAction(){

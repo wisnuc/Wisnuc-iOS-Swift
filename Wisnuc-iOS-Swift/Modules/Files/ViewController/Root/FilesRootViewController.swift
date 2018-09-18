@@ -160,6 +160,9 @@ class FilesRootViewController: BaseViewController{
         self.collcectionViewController.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
            self?.prepareData()
         })
+        self.appBar.headerViewController.inferPreferredStatusBarStyle = false
+        self.appBar.headerViewController.preferredStatusBarStyle = .default
+        self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -418,7 +421,8 @@ class FilesRootViewController: BaseViewController{
         }
         
         self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
-//        Application.statusBarStyle = .lightContent
+        self.appBar.headerViewController.preferredStatusBarStyle = .lightContent
+        self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
         fabButton.collapse(true) {
 
         }
@@ -446,7 +450,8 @@ class FilesRootViewController: BaseViewController{
         self.appBar.headerViewController.headerView.isHidden = false
 //        if searchBar.bottom <= 0{
         
-        Application.statusBarStyle = .default
+        self.appBar.headerViewController.preferredStatusBarStyle = .default
+        self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
         collcectionViewController.isSelectModel = isSelectModel
         fabButton.expand(true) {
         }
@@ -482,7 +487,8 @@ class FilesRootViewController: BaseViewController{
     }
     
     func selfStateRootWillAppearAction(){
-        Application.statusBarStyle = .default
+        self.appBar.headerViewController.preferredStatusBarStyle = .default
+        self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
         self.appBar.headerViewController.headerView.isHidden = true
         self.navigationDrawerController?.isLeftPanGestureEnabled = true
         navigationController?.delegate = self
@@ -498,7 +504,8 @@ class FilesRootViewController: BaseViewController{
     func selfStateOtherWillAppearAction(){
         self.appBar.headerViewController.headerView.isHidden = false
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
-        Application.statusBarStyle = .default
+        self.appBar.headerViewController.preferredStatusBarStyle = .default
+        self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
     }
