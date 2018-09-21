@@ -24,8 +24,8 @@ struct ErrorCode {
     }
     
     struct JsonModel {
-        public static let SwitchTOModelFail:Int = 60001
-        public static let SwitchTODataFail:Int = 60002
+        public static let SwitchTOModelFail:Int = 61
+        public static let SwitchTODataFail:Int = 62
     }
     
     struct Backup{
@@ -41,6 +41,11 @@ struct ErrorCode {
         public static let CreateTimeMismatch:Int = 80003
         public static let HashError:Int = 80004
     }
+    
+    struct Request {
+        public static let UserAlreadyExist:Int = 60001
+    }
+    
 }
 
 
@@ -93,6 +98,10 @@ struct ErrorLocalizedDescription{
         public static let AVAssetExportSessionStatusCancelled = "AVAssetExportSession Cancelled"
         public static let CreateTimeMismatch =  " CreateTime Mismatch"
         public static let HashError  = "Hash Error"
+    }
+    
+    struct Request {
+        public static let UserAlreadyExist = "user already exist"
     }
 }
 

@@ -14,6 +14,15 @@ struct CloudLoginModel: Decodable {
     var  data:CloadLoginDataModel?
 }
 
+struct WechatSighInModel: Decodable {
+    var  data:WechatSighInData?
+}
+
+struct WechatSighInData: Decodable {
+    var  token:String?
+    var  user:Bool?
+}
+
 struct CloadLoginDataModel: Decodable {
     var token:String?
     var user:CloadLoginUserModel?

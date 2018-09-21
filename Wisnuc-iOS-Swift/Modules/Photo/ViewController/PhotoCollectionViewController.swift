@@ -76,9 +76,14 @@ class PhotoCollectionViewController: UICollectionViewController {
         self.collectionView?.addGestureRecognizer(pin)
     }
     
+//    func setSelectMode(mode:Bool){
+//        self.isSelectMode = mode
+//        self.collectionView?.reloadData()
+//    }
+    
     func selectModeAction(){
-       if let delegateOK = self.delegate{
-        delegateOK.collectionView(self.collectionView!, isSelectMode: self.isSelectMode!)
+        if let delegateOK = self.delegate{
+            delegateOK.collectionView(self.collectionView!, isSelectMode: self.isSelectMode!)
         }
     }
     
@@ -269,19 +274,29 @@ class PhotoCollectionViewController: UICollectionViewController {
 
     func hiddenIndicator(){
         if self.showIndicator {
-            
-            if (self.collectionView?.indicator.slider.sliderState == UIControlState.normal && (self.collectionView?.indicator.transform)!.isIdentity) {
-                isDecelerating = false
-                DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.5) {
-                    if !self.isDecelerating{
-                        self.isAnimation = false
-                        DispatchQueue.main.async {
-                            UIView.animate(withDuration: 0.5, animations: {
-                                self.collectionView?.indicator.transform = CGAffineTransform(translationX: 40, y: 0)
-                            }, completion: { (finished) in
+            if self.collectionView?.indicator == nil {
+                //导航按钮
+                self.collectionView?.registerILSIndicator()
+                if self.collectionView?.indicator == nil{
+                    return
+                }
+            }
+            if (self.collectionView?.indicator.slider.sliderState == UIControlState.normal)  {
+                if let isIdentity = self.collectionView?.indicator.transform.isIdentity{
+                    if isIdentity{
+                        isDecelerating = false
+                        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                            if !self.isDecelerating{
                                 self.isAnimation = false
-                                self.isDecelerating = false
-                            })
+                                DispatchQueue.main.async {
+                                    UIView.animate(withDuration: 0.5, animations: {
+                                        self.collectionView?.indicator.transform = CGAffineTransform(translationX: 40, y: 0)
+                                    }, completion: { (finished) in
+                                        self.isAnimation = false
+                                        self.isDecelerating = false
+                                    })
+                                }
+                            }
                         }
                     }
                 }
@@ -479,7 +494,8 @@ class PhotoCollectionViewController: UICollectionViewController {
                             if (self?.collectionView?.indicator.slider.sliderState == UIControlState.normal && (self?.collectionView?.indicator.transform)!.isIdentity) {
                                 self?.isDecelerating = false
                                 DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.5) {
-                                    if !(self?.isDecelerating)!{
+                                    if let isDecelerating = self?.isDecelerating{
+                                        if isDecelerating {
                                         self?.isAnimation = false
                                         DispatchQueue.main.async {
                                             UIView.animate(withDuration: 0.5, animations: {
@@ -489,6 +505,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                                                 self?.isDecelerating = false
                                             })
                                         }
+                                    }
                                     }
                                 }
                             }else{

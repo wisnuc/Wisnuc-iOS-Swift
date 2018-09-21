@@ -55,12 +55,13 @@ class PhotoRootViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ActivityIndicator.startActivityIndicatorAnimation()
         prepareCollectionView()
         prepareNavigationBar()
 //        prepareSearchBar()
 //        self.sort(localAssetDataSources)
 //        self.photoCollcectionViewController.dataSource = assetDataSources
-        view.addSubview(self.fabButton)
+//        view.addSubview(self.fabButton)
         self.photoCollcectionViewController.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
             self?.reloadAssetData()
         })
@@ -69,6 +70,8 @@ class PhotoRootViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+
 //        self.appBar.headerViewController.headerView.isHidden = true
         
     }
@@ -92,43 +95,35 @@ class PhotoRootViewController: BaseViewController {
                 self?.localAssetDataSources = AppAssetService.allAssets!
                 self?.addNetAssets(assetsArr: assetDataSource!)
                 self?.isSelectMode = self?.isSelectMode
-                
-                self?.photoCollcectionViewController.collectionView?.reloadData()
-                self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
+             
             }else{
                 
             }
+            self?.photoCollcectionViewController.collectionView?.reloadData()
+            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
         }
     }
     
     func selectModeAction(){
-        let tab = retrieveTabbarController()
-        if tab == nil{
-            return
-        }
-        if !(tab?.tabBarHidden)! {
-            tab?.setTabBarHidden(true, animated: true)
-        }
-        if !fabButton.isHidden  {
-            self.fabButton.collapse(true) {
-                self.fabButton.isHidden = true
-            }
-        }
+        self.style = .select
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_:)))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "创建"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightBarButtonItemTap(_:)))
     }
     
     func unselectModeAction(){
-        let tab = retrieveTabbarController()
-        if tab == nil{
-            return
-        }
-        if (tab?.tabBarHidden)! {
-            tab?.setTabBarHidden(false, animated: true)
-        }
-        if self.fabButton.isHidden {
-            self.fabButton.isHidden = false
-            self.fabButton.expand(true) {
-            }
-        }
+       self.style = .whiteWithoutShadow
+       self.navigationItem.leftBarButtonItem = nil
+
+    }
+    
+    @objc func leftBarButtonItemTap(_ sender:UIBarButtonItem){
+        self.isSelectMode = false
+        self.photoCollcectionViewController.isSelectMode = self.isSelectMode
+        self.photoCollcectionViewController.collectionView?.reloadData()
+    }
+    
+    @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){
+       
     }
     
     @objc func menuButtonTap(_ sender:IconButton){
@@ -142,18 +137,18 @@ class PhotoRootViewController: BaseViewController {
 //        })
     }
     
-    @objc func fabButtonDidTap(_ sender:MDCFloatingButton){
-        self.fabButton.collapse(true) { [weak self] in
-            let fabBottomVC = FilesFABBottomSheetDisplayViewController()
-            fabBottomVC.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
-            fabBottomVC.transitioningDelegate = self?.transitionController
-            fabBottomVC.delegate =  self
-            let bottomSheet = AppBottomSheetController.init(contentViewController: fabBottomVC)
-            bottomSheet.delegate = self
-            self?.present(bottomSheet, animated: true, completion: {
-            })
-        }
-    }
+//    @objc func fabButtonDidTap(_ sender:MDCFloatingButton){
+//        self.fabButton.collapse(true) { [weak self] in
+//            let fabBottomVC = FilesFABBottomSheetDisplayViewController()
+//            fabBottomVC.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
+//            fabBottomVC.transitioningDelegate = self?.transitionController
+//            fabBottomVC.delegate =  self
+//            let bottomSheet = AppBottomSheetController.init(contentViewController: fabBottomVC)
+//            bottomSheet.delegate = self
+//            self?.present(bottomSheet, animated: true, completion: {
+//            })
+//        }
+//    }
 
     func setNotification(){
         defaultNotificationCenter().addObserver(forName: Notification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: nil, queue: nil) {  [weak self] (noti) in
@@ -259,6 +254,7 @@ class PhotoRootViewController: BaseViewController {
 //        DispatchQueue.global(qos: .default).async {
            self.netAssetDataSource = assetsArr
             self.sort(self.merge())
+            ActivityIndicator.stopActivityIndicatorAnimation()
 //            DispatchQueue.main.async {
         
 //            }
@@ -268,6 +264,7 @@ class PhotoRootViewController: BaseViewController {
     
     func localDataSouceSort() {
         self.sort(self.merge())
+        ActivityIndicator.stopActivityIndicatorAnimation()
     }
     
     func prepareCollectionView(){
@@ -330,22 +327,22 @@ class PhotoRootViewController: BaseViewController {
         return array
     }()
     
-    lazy var fabButton: MDCFloatingButton = {
-        let plusImage = #imageLiteral(resourceName: "Plus")
-        let buttonWidth:CGFloat = 56
-        let defaultFloatingButton = MDCFloatingButton.init(frame: CGRect.init(x: __kWidth - 30 - buttonWidth, y: __kHeight - TabBarHeight - 16 - buttonWidth, width: buttonWidth, height: buttonWidth))
-        
-        let plusImage36 = UIImage(named: "plus_white_36", in: Bundle(for: type(of: self)),
-                                  compatibleWith: traitCollection)
-        
-        //        defaultFloatingButton.sizeToFit()
-        //        defaultFloatingButton.translatesAutoresizingMaskIntoConstraints = false
-        defaultFloatingButton.setImage(plusImage, for: .normal)
-        let mdcColorScheme = MDCButtonScheme.init()
-        MDCButtonColorThemer.apply(appDelegate.colorScheme, to: defaultFloatingButton)
-        defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
-        return defaultFloatingButton
-    }()
+//    lazy var fabButton: MDCFloatingButton = {
+//        let plusImage = #imageLiteral(resourceName: "Plus")
+//        let buttonWidth:CGFloat = 56
+//        let defaultFloatingButton = MDCFloatingButton.init(frame: CGRect.init(x: __kWidth - 30 - buttonWidth, y: __kHeight - TabBarHeight - 16 - buttonWidth, width: buttonWidth, height: buttonWidth))
+//
+//        let plusImage36 = UIImage(named: "plus_white_36", in: Bundle(for: type(of: self)),
+//                                  compatibleWith: traitCollection)
+//
+//        //        defaultFloatingButton.sizeToFit()
+//        //        defaultFloatingButton.translatesAutoresizingMaskIntoConstraints = false
+//        defaultFloatingButton.setImage(plusImage, for: .normal)
+//        let mdcColorScheme = MDCButtonScheme.init()
+//        MDCButtonColorThemer.apply(appDelegate.colorScheme, to: defaultFloatingButton)
+//        defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
+//        return defaultFloatingButton
+//    }()
     
     lazy var transitionController: MDCDialogTransitionController = {
         let controller = MDCDialogTransitionController.init()

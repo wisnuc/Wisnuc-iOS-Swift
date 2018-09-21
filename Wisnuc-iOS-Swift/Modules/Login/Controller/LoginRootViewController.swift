@@ -186,8 +186,7 @@
         
         self.present(materialAlertController, animated: true, completion: nil)
     }
-    
-    func weChatCallBackRespCode(code:String){
+    func oldWechatLogin(code:String){
         ActivityIndicator.startActivityIndicatorAnimation()
         CloudLoginAPI.init(code: code).startRequestDataCompletionHandler { [weak self] (responseData) in
             if responseData.error == nil{
@@ -197,9 +196,9 @@
                     if (cloudLoginModel.data?.token != nil) && (cloudLoginModel.data?.token?.count)!>0 {
                         let image = UIImage.init(named: "logo")
                         self?.wisnucImageView.was_setCircleImage(withUrlString:cloudLoginModel.data?.user?.avatarUrl ?? "" , placeholder: image!)
-//                        DispatchQueue.main.async {
-//                            self?.wisnucLabel.text = cloudLoginModel.data?.user?.nickName ?? "WISNUC"
-//                        }
+                        //                        DispatchQueue.main.async {
+                        //                            self?.wisnucLabel.text = cloudLoginModel.data?.user?.nickName ?? "WISNUC"
+                        //                        }
                         let user = AppUserService.createUser(uuid: (cloudLoginModel.data?.user?.id)!)
                         user.cloudToken = cloudLoginModel.data?.token!
                         if cloudLoginModel.data?.user?.avatarUrl != nil{
@@ -224,6 +223,39 @@
                 ActivityIndicator.stopActivityIndicatorAnimation()
             }
         }
+    }
+    
+    func wechatSighInAction(code:String){
+        SighInWechatTokenAPI.init(code: code).startRequestDataCompletionHandler { [weak self] (responseData) in
+            if responseData.error == nil{
+                do {
+                    let wechatSighInModel = try JSONDecoder().decode(WechatSighInModel.self, from: responseData.data!)
+                    print(String(data: responseData.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
+                    if let user = wechatSighInModel.data?.user{
+                        if !user{
+                            if (wechatSighInModel.data?.token != nil) && !isNilString(wechatSighInModel.data?.token) {
+                                self?.next(requestToken: wechatSighInModel.data?.token)
+                            }
+                        }else{
+                            #warning ("find station")
+                            Message.message(text: "下一步，搜寻设备")
+                        }
+                    }
+                    
+                } catch {
+                    // 异常处理
+                    Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
+                }
+            }else{
+                Message.message(text: "error code :\(String(describing: responseData.response?.statusCode ?? -0)) error:\(String(describing: responseData.error?.localizedDescription ?? "未知错误"))")
+            }
+            ActivityIndicator.stopActivityIndicatorAnimation()
+        }
+    }
+    
+    func weChatCallBackRespCode(code:String){
+        oldWechatLogin(code:code)
+//        wechatSighInAction(code:code)
     }
     
     func findStation(uuid:String?,token:String?, closure: @escaping (Error?,NSArray?) -> Void){
@@ -448,8 +480,12 @@
         self.navigationController?.pushViewController(logoutVC, animated: true)
     }
 
-    @objc func creatNewAccoutButton(_ sender:MDBaseButton){
-        let creatNewAccoutVC = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "绑定手机号"), detailTitleString: LocalizedString(forKey: "手机号码是您忘记密码时，找回面的唯一途径 请慎重填写"), state: .bindPhoneNumber)
+    @objc func creatNewAccoutButton(_ sender:MDBaseButton?){
+       next()
+    }
+    
+    func next(requestToken:String? = nil){
+        let creatNewAccoutVC = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "绑定手机号"), detailTitleString: LocalizedString(forKey: "手机号码是您忘记密码时，找回面的唯一途径 请慎重填写"), state: .bindPhoneNumber,requestToken:requestToken)
         let navigationController = UINavigationController.init(rootViewController: creatNewAccoutVC)
         navigationController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         self.present(navigationController, animated: true, completion: nil)

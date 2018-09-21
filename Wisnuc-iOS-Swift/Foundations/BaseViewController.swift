@@ -13,6 +13,7 @@ enum NavigationStyle:Int{
     case white
     case whiteWithoutShadow
     case imagery
+    case select
 }
 class BaseViewController: UIViewController {
     
@@ -27,6 +28,8 @@ class BaseViewController: UIViewController {
                 whiteWithoutShadowStyleAction()
             case .imagery?:
                 imageryStyleAction()
+            case .select?:
+                selectStyleAction()
             default:
                 break
             }
@@ -63,6 +66,9 @@ class BaseViewController: UIViewController {
         appBar.navigationBar.titleView?.backgroundColor = .white
         appBar.navigationBar.tintColor = UIColor.white
         appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white] as [NSAttributedStringKey : Any]
+        appBar.headerViewController.inferPreferredStatusBarStyle = false
+        appBar.headerViewController.preferredStatusBarStyle = .lightContent
+        appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
     
     func whiteStyleAction(){
@@ -82,6 +88,9 @@ class BaseViewController: UIViewController {
         self.appBar.navigationBar.tintColor = LightGrayColor
         self.appBar.headerViewController.headerView.tintColor = LightGrayColor
         self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
+        appBar.headerViewController.inferPreferredStatusBarStyle = false
+        appBar.headerViewController.preferredStatusBarStyle = .default
+        appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
     
     func whiteWithoutShadowStyleAction(){
@@ -91,6 +100,9 @@ class BaseViewController: UIViewController {
         self.appBar.navigationBar.tintColor = LightGrayColor
         self.appBar.headerViewController.headerView.tintColor = LightGrayColor
         self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
+        appBar.headerViewController.inferPreferredStatusBarStyle = false
+        appBar.headerViewController.preferredStatusBarStyle = .default
+        appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
     
     func imageryStyleAction(){
@@ -120,6 +132,17 @@ class BaseViewController: UIViewController {
         // Allow the header to show more of the image.
         headerView.maximumHeight = 160
         appBar.navigationBar.titleTextColor = UIColor.white
+    }
+    
+    func selectStyleAction(){
+        appBar.navigationBar.backgroundColor = COR3
+        appBar.headerViewController.headerView.backgroundColor = COR3
+        appBar.navigationBar.titleView?.backgroundColor = .white
+        appBar.navigationBar.tintColor = UIColor.white
+        appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white] as [NSAttributedStringKey : Any]
+        appBar.headerViewController.inferPreferredStatusBarStyle = false
+        appBar.headerViewController.preferredStatusBarStyle = .lightContent
+        appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewDidLoad() {

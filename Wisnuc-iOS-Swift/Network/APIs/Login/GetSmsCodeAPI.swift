@@ -10,8 +10,10 @@ import UIKit
 
 class GetSmsCodeAPI: BaseRequest {
     var phoneNumber:String?
-    init(phoneNumber:String) {
+    var wechatToken:String?
+    init(phoneNumber:String,wechatToken:String? = nil) {
         self.phoneNumber = phoneNumber
+        self.wechatToken = wechatToken
     }
     
     override init() {
@@ -41,5 +43,13 @@ class GetSmsCodeAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         let requestParameters:RequestParameters = ["phone":self.phoneNumber!]
         return requestParameters
+    }
+    
+    override func requestHTTPHeaders() -> RequestHTTPHeaders? {
+        if self.wechatToken != nil && !isNilString(wechatToken){
+            return [kRequestWechatKey:wechatToken!]
+        }else{
+            return nil
+        }
     }
 }

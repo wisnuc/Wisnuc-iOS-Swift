@@ -19,10 +19,10 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     var btnSelect:UIButton?
     var image:UIImage?
     var imageView:UIView?
-    var isSelectMode:Bool?
     var isSelect:Bool?
     var selectedBlock:((Bool)->())?
     var longPressBlock:(()->())?
+    var isSelectMode:Bool?
     var model:WSAsset?{
         didSet{
             switch model?.type {
@@ -91,14 +91,16 @@ class PhotoCollectionViewCell: UICollectionViewCell {
             if model?.asset != nil{
                 //                DispatchQueue.global(qos: .default).async {
                 self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: PHImageContentMode.aspectFill, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
-                    let downloadFinined =  !(info![PHImageResultIsDegradedKey] as! Bool)
-                    if downloadFinined {
+            
+                   if let downloadFinined = (info![PHImageResultIsDegradedKey] as? Bool){
+                    if !downloadFinined {
                         //                            DispatchQueue.main.async {
                         if  self?.imageView?.layer.contents != nil{
                             self?.imageView?.layer.contents = nil
                         }
                         self?.imageView?.layer.contents = image?.cgImage
                     }
+                }
                     //                        }
                 })
             }else if model is NetAsset{
@@ -192,7 +194,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
             }
         } else {
             self.btnSelect = UIButton.init()
-            self.btnSelect?.frame = CGRect.init(x: self.contentView.width - 26, y: 5, width: btnFrame, height: btnFrame)
+            self.btnSelect?.frame = CGRect.init(x: 5, y: 5, width: btnFrame, height: btnFrame)
             self.btnSelect?.setBackgroundImage(UIImage.init(named: "select.png"), for: UIControlState.normal)
             self.btnSelect?.addTarget(self, action: #selector(btnSelectClick(_ :)), for: UIControlEvents.touchUpInside)
         }

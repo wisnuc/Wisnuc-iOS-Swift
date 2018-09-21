@@ -252,9 +252,6 @@
 		1F3C244A20A5AE6300E6B953 /* files_share_folder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C244920A5AE6200E6B953 /* files_share_folder@3x.png */; };
 		1F3C244E20A5AF9E00E6B953 /* TransferTaskTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C244D20A5AF9E00E6B953 /* TransferTaskTableViewController.swift */; };
 		1F42429D20F335F00085E2F0 /* JYConst.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F42429C20F335F00085E2F0 /* JYConst.h */; };
-		1F4242A220F338C20085E2F0 /* select@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F42429F20F338C10085E2F0 /* select@3x.png */; };
-		1F4242A320F338C20085E2F0 /* select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242A020F338C10085E2F0 /* select@2x.png */; };
-		1F4242A420F338C20085E2F0 /* select.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F4242A120F338C10085E2F0 /* select.png */; };
 		1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242A520F33BAB0085E2F0 /* PhotoCollectionViewCell.swift */; };
 		1F4242AA20F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242A920F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift */; };
 		1F4242AF20F5CBF60085E2F0 /* JYProcessView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4242AB20F5CBF40085E2F0 /* JYProcessView.m */; };
@@ -620,6 +617,26 @@
 		1FD1F2D92150FBA100C3E429 /* GetSmsCodeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2D82150FBA100C3E429 /* GetSmsCodeAPI.swift */; };
 		1FD1F2DB2150FF3900C3E429 /* RequestDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2DA2150FF3900C3E429 /* RequestDefine.swift */; };
 		1FD1F2DD2151092800C3E429 /* SighUpAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2DC2151092800C3E429 /* SighUpAPI.swift */; };
+		1FD1F2DF2151FA7100C3E429 /* SighInTokenAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2DE2151FA7100C3E429 /* SighInTokenAPI.swift */; };
+		1FD1F2E42151FC7900C3E429 /* SighInTokenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2E32151FC7900C3E429 /* SighInTokenModel.swift */; };
+		1FD1F2E62152231F00C3E429 /* SighInWechatTokenAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2E52152231F00C3E429 /* SighInWechatTokenAPI.swift */; };
+		1FD1F2E82152472B00C3E429 /* SighInWechatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2E72152472B00C3E429 /* SighInWechatUser.swift */; };
+		1FD1F2EA2153414200C3E429 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2E92153414200C3E429 /* PhotoAlbumViewController.swift */; };
+		1FD1F2EC2153434400C3E429 /* add_album@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F2EB2153434300C3E429 /* add_album@3x.png */; };
+		1FD1F2EE2153434B00C3E429 /* add_album@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F2ED2153434B00C3E429 /* add_album@2x.png */; };
+		1FD1F2F02153435400C3E429 /* add_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F2EF2153435300C3E429 /* add_album.png */; };
+		1FD1F2F72153824A00C3E429 /* PhotoAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2F52153824A00C3E429 /* PhotoAlbumCollectionViewCell.swift */; };
+		1FD1F2F82153824A00C3E429 /* PhotoAlbumCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F2F62153824A00C3E429 /* PhotoAlbumCollectionViewCell.xib */; };
+		1FD1F2FA2153A45D00C3E429 /* photo_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F2F92153A45C00C3E429 /* photo_placeholder.png */; };
+		1FD1F2FC2153A46900C3E429 /* photo_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F2FB2153A46900C3E429 /* photo_placeholder@2x.png */; };
+		1FD1F2FE2153A47500C3E429 /* photo_placeholder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F2FD2153A47500C3E429 /* photo_placeholder@3x.png */; };
+		1FD1F3002153A71200C3E429 /* PhotoAlbumCollectionViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F2FF2153A71200C3E429 /* PhotoAlbumCollectionViewHeaderView.swift */; };
+		1FD1F3022154DE1A00C3E429 /* select.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3012154DE1800C3E429 /* select.png */; };
+		1FD1F3042154DE3C00C3E429 /* select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3032154DE3B00C3E429 /* select@2x.png */; };
+		1FD1F3062154DE6100C3E429 /* select@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3052154DE5F00C3E429 /* select@3x.png */; };
+		1FD1F3082154E24000C3E429 /* unselect_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3072154E24000C3E429 /* unselect_white.png */; };
+		1FD1F30A2154E24E00C3E429 /* unselect_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3092154E24D00C3E429 /* unselect_white@2x.png */; };
+		1FD1F30C2154E25C00C3E429 /* unselect_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F30B2154E25B00C3E429 /* unselect_white@3x.png */; };
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
 		1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B751207CBE8700906D80 /* ViewController.swift */; };
 		1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B753207CBE8700906D80 /* Main.storyboard */; };
@@ -981,9 +998,6 @@
 		1F3C244920A5AE6200E6B953 /* files_share_folder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_share_folder@3x.png"; sourceTree = "<group>"; };
 		1F3C244D20A5AF9E00E6B953 /* TransferTaskTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTaskTableViewController.swift; sourceTree = "<group>"; };
 		1F42429C20F335F00085E2F0 /* JYConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JYConst.h; sourceTree = "<group>"; };
-		1F42429F20F338C10085E2F0 /* select@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select@3x.png"; sourceTree = "<group>"; };
-		1F4242A020F338C10085E2F0 /* select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select@2x.png"; sourceTree = "<group>"; };
-		1F4242A120F338C10085E2F0 /* select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select.png; sourceTree = "<group>"; };
 		1F4242A520F33BAB0085E2F0 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		1F4242A920F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSForceTouchPreviewViewController.swift; sourceTree = "<group>"; };
 		1F4242AB20F5CBF40085E2F0 /* JYProcessView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JYProcessView.m; sourceTree = "<group>"; };
@@ -1350,6 +1364,26 @@
 		1FD1F2D82150FBA100C3E429 /* GetSmsCodeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSmsCodeAPI.swift; sourceTree = "<group>"; };
 		1FD1F2DA2150FF3900C3E429 /* RequestDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestDefine.swift; sourceTree = "<group>"; };
 		1FD1F2DC2151092800C3E429 /* SighUpAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SighUpAPI.swift; sourceTree = "<group>"; };
+		1FD1F2DE2151FA7100C3E429 /* SighInTokenAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SighInTokenAPI.swift; sourceTree = "<group>"; };
+		1FD1F2E32151FC7900C3E429 /* SighInTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SighInTokenModel.swift; sourceTree = "<group>"; };
+		1FD1F2E52152231F00C3E429 /* SighInWechatTokenAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SighInWechatTokenAPI.swift; sourceTree = "<group>"; };
+		1FD1F2E72152472B00C3E429 /* SighInWechatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SighInWechatUser.swift; sourceTree = "<group>"; };
+		1FD1F2E92153414200C3E429 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
+		1FD1F2EB2153434300C3E429 /* add_album@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_album@3x.png"; sourceTree = "<group>"; };
+		1FD1F2ED2153434B00C3E429 /* add_album@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_album@2x.png"; sourceTree = "<group>"; };
+		1FD1F2EF2153435300C3E429 /* add_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_album.png; sourceTree = "<group>"; };
+		1FD1F2F52153824A00C3E429 /* PhotoAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
+		1FD1F2F62153824A00C3E429 /* PhotoAlbumCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoAlbumCollectionViewCell.xib; sourceTree = "<group>"; };
+		1FD1F2F92153A45C00C3E429 /* photo_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo_placeholder.png; sourceTree = "<group>"; };
+		1FD1F2FB2153A46900C3E429 /* photo_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_placeholder@2x.png"; sourceTree = "<group>"; };
+		1FD1F2FD2153A47500C3E429 /* photo_placeholder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_placeholder@3x.png"; sourceTree = "<group>"; };
+		1FD1F2FF2153A71200C3E429 /* PhotoAlbumCollectionViewHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewHeaderView.swift; sourceTree = "<group>"; };
+		1FD1F3012154DE1800C3E429 /* select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select.png; sourceTree = "<group>"; };
+		1FD1F3032154DE3B00C3E429 /* select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select@2x.png"; sourceTree = "<group>"; };
+		1FD1F3052154DE5F00C3E429 /* select@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select@3x.png"; sourceTree = "<group>"; };
+		1FD1F3072154E24000C3E429 /* unselect_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unselect_white.png; sourceTree = "<group>"; };
+		1FD1F3092154E24D00C3E429 /* unselect_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselect_white@2x.png"; sourceTree = "<group>"; };
+		1FD1F30B2154E25B00C3E429 /* unselect_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselect_white@3x.png"; sourceTree = "<group>"; };
 		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1FD9B751207CBE8700906D80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -1767,6 +1801,7 @@
 			children = (
 				1F2CE39B20B6D1B600D9E5BD /* UserModel.swift */,
 				1F2CE3A320B7F3F200D9E5BD /* CloudLoginModel.swift */,
+				1FD1F2E32151FC7900C3E429 /* SighInTokenModel.swift */,
 			);
 			name = Model;
 			path = Controller/Model;
@@ -1784,6 +1819,9 @@
 				1F2A380920DCD90F0035EED5 /* LocalLoginTokenAPI.swift */,
 				1FD1F2D82150FBA100C3E429 /* GetSmsCodeAPI.swift */,
 				1FD1F2DC2151092800C3E429 /* SighUpAPI.swift */,
+				1FD1F2DE2151FA7100C3E429 /* SighInTokenAPI.swift */,
+				1FD1F2E52152231F00C3E429 /* SighInWechatTokenAPI.swift */,
+				1FD1F2E72152472B00C3E429 /* SighInWechatUser.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -1921,15 +1959,24 @@
 		1F42429E20F338B40085E2F0 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1FD1F3072154E24000C3E429 /* unselect_white.png */,
+				1FD1F3092154E24D00C3E429 /* unselect_white@2x.png */,
+				1FD1F30B2154E25B00C3E429 /* unselect_white@3x.png */,
+				1FD1F2FD2153A47500C3E429 /* photo_placeholder@3x.png */,
+				1FD1F2FB2153A46900C3E429 /* photo_placeholder@2x.png */,
+				1FD1F2F92153A45C00C3E429 /* photo_placeholder.png */,
+				1FD1F2EF2153435300C3E429 /* add_album.png */,
+				1FD1F2ED2153434B00C3E429 /* add_album@2x.png */,
+				1FD1F2EB2153434300C3E429 /* add_album@3x.png */,
 				1F4242C220FF34EB0085E2F0 /* unselected.png */,
 				1F4242C320FF34EB0085E2F0 /* unselected@2x.png */,
 				1F4242C120FF34EA0085E2F0 /* unselected@3x.png */,
 				1F4242BB20FDF7550085E2F0 /* handrail.png */,
 				1F4242BC20FDF7560085E2F0 /* handrail@2x.png */,
 				1F4242BD20FDF7560085E2F0 /* handrail@3x.png */,
-				1F4242A120F338C10085E2F0 /* select.png */,
-				1F4242A020F338C10085E2F0 /* select@2x.png */,
-				1F42429F20F338C10085E2F0 /* select@3x.png */,
+				1FD1F3012154DE1800C3E429 /* select.png */,
+				1FD1F3032154DE3B00C3E429 /* select@2x.png */,
+				1FD1F3052154DE5F00C3E429 /* select@3x.png */,
 			);
 			path = Photo;
 			sourceTree = "<group>";
@@ -3073,6 +3120,7 @@
 				1FFD12D220EE119D0053A3F7 /* PhotoRootViewController.swift */,
 				1FFD130F20EE21620053A3F7 /* PhotoCollectionViewController.swift */,
 				1F4242B720F5CEC10085E2F0 /* WSShowBigimgViewController.swift */,
+				1FD1F2E92153414200C3E429 /* PhotoAlbumViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -3090,6 +3138,9 @@
 				1F4242A520F33BAB0085E2F0 /* PhotoCollectionViewCell.swift */,
 				1F4242A920F5B0820085E2F0 /* WSForceTouchPreviewViewController.swift */,
 				1F4242B920F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift */,
+				1FD1F2F52153824A00C3E429 /* PhotoAlbumCollectionViewCell.swift */,
+				1FD1F2F62153824A00C3E429 /* PhotoAlbumCollectionViewCell.xib */,
+				1FD1F2FF2153A71200C3E429 /* PhotoAlbumCollectionViewHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3440,11 +3491,13 @@
 				1F4E93812089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib in Resources */,
 				1F1BAC4B20CA72D600D32C5A /* files_down@3x.png in Resources */,
 				1F83AE7D20886BDA007CCCFD /* change@3x.png in Resources */,
+				1FD1F30C2154E25C00C3E429 /* unselect_white@3x.png in Resources */,
 				1FFD12B920E9C72F0053A3F7 /* files_move_to@2x.png in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
 				1F0FD0F7214A6DD1003D7936 /* next_button_arrow_white@3x.png in Resources */,
 				1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */,
 				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
+				1FD1F30A2154E24E00C3E429 /* unselect_white@2x.png in Resources */,
 				1F050E2520A990CD0037F00A /* FilesOfflineTableViewCell.xib in Resources */,
 				1FBB6F552137F6DB0090FA57 /* x_gray.png in Resources */,
 				1F2B45A6208F290200C8971F /* close@2x.png in Resources */,
@@ -3522,7 +3575,9 @@
 				1FA6A1A920CFA065007A0AB2 /* search.png in Resources */,
 				1F050E0E20A9674D0037F00A /* files_pdf_small.png in Resources */,
 				1F4E9395208DBB7600DD1EA7 /* radio_button@2x.png in Resources */,
+				1FD1F2F82153824A00C3E429 /* PhotoAlbumCollectionViewCell.xib in Resources */,
 				1F52095B214A0DA10058A8D3 /* plus_gray@2x.png in Resources */,
+				1FD1F3022154DE1A00C3E429 /* select.png in Resources */,
 				1F4E938A2089D64D00DD1EA7 /* disk.png in Resources */,
 				1F58822D208591A100394BD6 /* add_station@2x.png in Resources */,
 				1FBB6F75213930060090FA57 /* eye_close@3x.png in Resources */,
@@ -3541,7 +3596,6 @@
 				1FA6A1B120CFA6A9007A0AB2 /* files_video_normal@2x.png in Resources */,
 				1F2B45A4208F290200C8971F /* close@3x.png in Resources */,
 				1F3C243820A5AC1F00E6B953 /* transfer@3x.png in Resources */,
-				1F4242A420F338C20085E2F0 /* select.png in Resources */,
 				1FBD1DF620AEE02B0067BE3E /* close_white.png in Resources */,
 				1FC5CC1920D3C3E100499E63 /* files_download_transfer@3x.png in Resources */,
 				1FEABB6320A14C1900824448 /* files_ppt_normal@3x.png in Resources */,
@@ -3557,6 +3611,7 @@
 				1FA6A1B520CFA6D4007A0AB2 /* files_audio_normal.png in Resources */,
 				1FBD1E0420B3EF8C0067BE3E /* files_new_folder_gray@2x.png in Resources */,
 				1F5AD92C20AD524E0065DAD3 /* back_gray@3x.png in Resources */,
+				1FD1F3042154DE3C00C3E429 /* select@2x.png in Resources */,
 				1F359FAF2090819000E2FF36 /* ok@2x.png in Resources */,
 				1F3C241E20A5428300E6B953 /* files_move@2x.png in Resources */,
 				1F537A0A2122816400A555C5 /* FilesDownloadAlertViewController.storyboard in Resources */,
@@ -3580,6 +3635,7 @@
 				1F3C242C20A59BBF00E6B953 /* transfer.png in Resources */,
 				1FBB6F6321392C7B0090FA57 /* lock@3x.png in Resources */,
 				1F0FD0E5214A6404003D7936 /* up_arrow_gray@3x.png in Resources */,
+				1FD1F2EC2153434400C3E429 /* add_album@3x.png in Resources */,
 				1FBD1DFE20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.xib in Resources */,
 				1F0FD0C6214A467B003D7936 /* config_finish@3x.png in Resources */,
 				1FEABB6920A14C7000824448 /* files_ppt_small@3x.png in Resources */,
@@ -3587,6 +3643,7 @@
 				1F58821520848F9400394BD6 /* touxiang.jpg in Resources */,
 				1F58823B2085DCAF00394BD6 /* device@3x.png in Resources */,
 				1F050E4320AAB5E90037F00A /* files_upload_big.png in Resources */,
+				1FD1F2FA2153A45D00C3E429 /* photo_placeholder.png in Resources */,
 				1FBB6F6F21392FA40090FA57 /* eye_open.png in Resources */,
 				1F3C243C20A5ACF800E6B953 /* files_offline_file@2x.png in Resources */,
 				1F83AE7E20886BDA007CCCFD /* change2x.png in Resources */,
@@ -3635,7 +3692,6 @@
 				1F4242BF20FDF7570085E2F0 /* handrail@2x.png in Resources */,
 				1F5AD93520AD7FC00065DAD3 /* files_excel_small@3x.png in Resources */,
 				1F0FD0DB214A6355003D7936 /* eye_open_gray.png in Resources */,
-				1F4242A220F338C20085E2F0 /* select@3x.png in Resources */,
 				1F5882542085F0F800394BD6 /* station_review@3x.png in Resources */,
 				1F83AE5F208830B8007CCCFD /* local_area_white@2x.png in Resources */,
 				1F8EBB5820A0239700E8AB83 /* files_folder@2x.png in Resources */,
@@ -3740,7 +3796,7 @@
 				1F1BAC5E20CE709100D32C5A /* files_png_small.png in Resources */,
 				1F588269208719BB00394BD6 /* refresh@2x.png in Resources */,
 				1F8EBB5620A0239000E8AB83 /* files_folder.png in Resources */,
-				1F4242A320F338C20085E2F0 /* select@2x.png in Resources */,
+				1FD1F2EE2153434B00C3E429 /* add_album@2x.png in Resources */,
 				1FA6A1AB20CFA074007A0AB2 /* search@2x.png in Resources */,
 				1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */,
 				1FE674D020D20CED006F97DB /* file_icon.png in Resources */,
@@ -3750,6 +3806,7 @@
 				1F1BAC6220CE709100D32C5A /* files_png_small@2x.png in Resources */,
 				1FC5CC1320D3BDC800499E63 /* file_finish@3x.png in Resources */,
 				1FEABB5F20A14C0900824448 /* files_ppt_normal.png in Resources */,
+				1FD1F3062154DE6100C3E429 /* select@3x.png in Resources */,
 				1F050E3520AA7BBD0037F00A /* files_share_all@2x.png in Resources */,
 				1F0FD0DD214A6361003D7936 /* eye_open_gray@2x.png in Resources */,
 				1F3C240D20A42CB400E6B953 /* files_unselect.png in Resources */,
@@ -3761,13 +3818,17 @@
 				1F3C242620A547DB00E6B953 /* files_download@3x.png in Resources */,
 				1F5882422085F07000394BD6 /* offline.png in Resources */,
 				1F5AD92A20AD52410065DAD3 /* back_gray@2x.png in Resources */,
+				1FD1F2FC2153A46900C3E429 /* photo_placeholder@2x.png in Resources */,
 				1F4E93882089D64D00DD1EA7 /* disk@2x.png in Resources */,
 				1F565A0120D10F5100D86FDB /* logo_gray@2x.png in Resources */,
 				1F050E1420A967EB0037F00A /* files_cloud.png in Resources */,
+				1FD1F2F02153435400C3E429 /* add_album.png in Resources */,
 				1F050E1820A968060037F00A /* files_cloud@3x.png in Resources */,
 				1F0FD0F5214A6DC6003D7936 /* next_button_arrow_white@2x.png in Resources */,
+				1FD1F3082154E24000C3E429 /* unselect_white.png in Resources */,
 				1FEABB5720A14B7700824448 /* files_word_small@3x.png in Resources */,
 				1F3C243E20A5AD0700E6B953 /* files_offline_file@3x.png in Resources */,
+				1FD1F2FE2153A47500C3E429 /* photo_placeholder@3x.png in Resources */,
 				1FA6A1BD20CFA727007A0AB2 /* files_pdf_normal@2x.png in Resources */,
 				1F1BAC6320CE709100D32C5A /* files_png_small@3x.png in Resources */,
 				1FBB6F5D2139232D0090FA57 /* 86@2x.png in Resources */,
@@ -3969,6 +4030,7 @@
 				1F4242BA20F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift in Sources */,
 				1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */,
 				1FFD132B20EF3B220053A3F7 /* AssetService.swift in Sources */,
+				1FD1F2E82152472B00C3E429 /* SighInWechatUser.swift in Sources */,
 				1F1BABAC20C62EC300D32C5A /* UsersInfoAPI.swift in Sources */,
 				1F1BAC5120CE637000D32C5A /* Enum.swift in Sources */,
 				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
@@ -3989,6 +4051,7 @@
 				1F359FEA2092C87900E2FF36 /* UIImage+extension.m in Sources */,
 				1FFD12C920ECA7B60053A3F7 /* FilesControllerExtension.swift in Sources */,
 				1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */,
+				1FD1F2DF2151FA7100C3E429 /* SighInTokenAPI.swift in Sources */,
 				1FFD133220EF3E140053A3F7 /* NetAsset.swift in Sources */,
 				1FE9EF8020EF5A9C00732728 /* FileDefine.swift in Sources */,
 				1F5209452147B57C0058A8D3 /* LoginTransition.swift in Sources */,
@@ -4001,6 +4064,7 @@
 				1F1BABA820C51F5100D32C5A /* DirectoriesModel.swift in Sources */,
 				1FE674E320D21B11006F97DB /* TRCache.swift in Sources */,
 				1FA9C3DE210585FE00E8411E /* GetMediaAPI.swift in Sources */,
+				1FD1F2E62152231F00C3E429 /* SighInWechatTokenAPI.swift in Sources */,
 				1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */,
 				1F1BAC4D20CA80F000D32C5A /* CollectionExtension.swift in Sources */,
 				1FC8FF8720AE887800F65194 /* searchTableViewCell.swift in Sources */,
@@ -4037,6 +4101,7 @@
 				1F362F8621351FAC000B3384 /* LoginViewController.swift in Sources */,
 				1F307C7A20BFEBC900AE105C /* LocalUserAPI.swift in Sources */,
 				1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */,
+				1FD1F2F72153824A00C3E429 /* PhotoAlbumCollectionViewCell.swift in Sources */,
 				1F050E2D20A99F280037F00A /* FileShareFolderViewController.swift in Sources */,
 				1F3C240720A3E55500E6B953 /* FilesListCollectionViewCell.swift in Sources */,
 				1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */,
@@ -4087,6 +4152,7 @@
 				1F2CE30720B50FFE00D9E5BD /* ServiceProtocol.swift in Sources */,
 				1F2CE31020B559CC00D9E5BD /* CoreDataOperation.swift in Sources */,
 				1FE9EF9120EF6AC700732728 /* PHAssetExtension.swift in Sources */,
+				1FD1F2EA2153414200C3E429 /* PhotoAlbumViewController.swift in Sources */,
 				1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */,
 				1F8EBB48209C512300E8AB83 /* FilesFileCollectionViewCell.swift in Sources */,
 				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
@@ -4105,6 +4171,7 @@
 				1FE9EF8C20EF5DEA00732728 /* Base64.m in Sources */,
 				1F2A380A20DCD90F0035EED5 /* LocalLoginTokenAPI.swift in Sources */,
 				1F53789A21106FA200A555C5 /* ArrayExtension.swift in Sources */,
+				1FD1F3002153A71200C3E429 /* PhotoAlbumCollectionViewHeaderView.swift in Sources */,
 				1F1BAC2D20C92A1A00D32C5A /* UIScrollExtension.swift in Sources */,
 				1FBB6F61213923C30090FA57 /* TextFiledExtension.swift in Sources */,
 				1FFD12B020E3662D0053A3F7 /* MDCFreshHeader.swift in Sources */,
@@ -4155,6 +4222,7 @@
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
 				1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */,
 				1FFD12B220E3979F0053A3F7 /* TasksAPI.swift in Sources */,
+				1FD1F2E42151FC7900C3E429 /* SighInTokenModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

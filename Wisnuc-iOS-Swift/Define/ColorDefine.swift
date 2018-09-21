@@ -12,6 +12,8 @@ import UIKit
 
 public let COR1 = UIColor.colorFromRGB(rgbValue: 0x000695C)
 public let COR2 = UIColor.init(red: 13/225.0, green: 112/225.0, blue: 100/225.0, alpha: 1)
+public let COR3 = UIColor.colorFromRGB(rgbValue: 0x04527a0)
+
 
 public let LineColor:UIColor = UIColor.init(white: 0.3, alpha: 1)
 public let LightLineColor:UIColor = UIColor.init(white: 0.85, alpha: 1)

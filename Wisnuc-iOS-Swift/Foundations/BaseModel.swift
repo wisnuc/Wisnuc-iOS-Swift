@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BaseModel: NSObject {
-    var code:String?
+class BaseModel: Decodable {
+    var code:Int?
     var message:String?
 }

@@ -72,6 +72,7 @@ class LoginViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.delegate = self
+        self.phoneNumberTextFiled.becomeFirstResponder()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -247,11 +248,36 @@ class LoginViewController: BaseViewController {
         if isNilString(self.phoneNumberTextFiled.text)  {
             self.alertError(errorText: LocalizedString(forKey: "手机号不能为空"))
             return
-        }else if !checkIsPhoneNumber(number: self.passwordTextFiled.text!){
+        }else if !checkIsPhoneNumber(number: self.phoneNumberTextFiled.text!){
             self.alertError(errorText: LocalizedString(forKey:"请输入正确的手机号"))
             return
         }
-        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let request = SighInTokenAPI.init(phoneNumber: self.phoneNumberTextFiled.text!, password: self.passwordTextFiled.text!)
+        request.startRequestDataCompletionHandler{ (response) in
+            if  response.error == nil{
+                do {
+                    let model = try JSONDecoder().decode(SighInTokenModel.self, from: response.value!)
+                    if model.code == 1 {
+                        if let token = model.data?.token {
+                            print(token)
+                            Message.message(text: "登录成功")
+                        }
+                    }else{
+                        //error
+                    }
+                    
+                } catch {
+                    // 异常处理
+                    Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
+                }
+                
+            }else{
+                // error
+                  Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+            }
+            ActivityIndicator.stopActivityIndicatorAnimation()
+        }
     }
     
     lazy var titleLabel: UILabel = {
@@ -340,6 +366,7 @@ class LoginViewController: BaseViewController {
         button.isEnabled = false
         button.layer.masksToBounds = true
         button.layer.cornerRadius = width/2
+        button.addTarget(self, action: #selector(nextButtontTap(_:)), for: UIControlEvents.touchUpInside)
         return button
     }()
     

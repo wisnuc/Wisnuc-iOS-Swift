@@ -121,20 +121,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let filesVC = FilesRootViewController()
         filesVC.selfState = .root
         filesVC.title = LocalizedString(forKey: "Files")
-        let photosVC = PhotoRootViewController.init(style: NavigationStyle.white)
-        photosVC.localAssetDataSources.append(contentsOf:AppAssetService.allAssets!)
-        AppAssetService.getNetAssets { (error, netAssets) in
-            if error == nil{
-                DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.0){
-                    DispatchQueue.main.async {
-                        photosVC.addNetAssets(assetsArr: netAssets!)
-                    }
-                }
-            }else{
-                photosVC.localDataSouceSort()
-            }
-        }
-        photosVC.title = LocalizedString(forKey: "Photos")
+        let photosVC = PhotoAlbumViewController.init(style: NavigationStyle.whiteWithoutShadow)
+//        photosVC.localAssetDataSources.append(contentsOf:AppAssetService.allAssets!)
+//        AppAssetService.getNetAssets { (error, netAssets) in
+//            if error == nil{
+//                DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.0){
+//                    DispatchQueue.main.async {
+//                        photosVC.addNetAssets(assetsArr: netAssets!)
+//                    }
+//                }
+//            }else{
+//                photosVC.localDataSouceSort()
+//            }
+//        }
+        photosVC.title = LocalizedString(forKey: "相簿")
         let functionVC = FunctionViewController.init(style: NavigationStyle.white)
         functionVC.title = LocalizedString(forKey: "功能")
         let settingVC = SettingRootViewController.init(style: NavigationStyle.white)
@@ -143,7 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let functionNavi = BaseNavigationController.init(rootViewController: functionVC)
         let settingNavi = BaseNavigationController.init(rootViewController: settingVC)
         filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Files"), image: UIImage.init(named: "Home")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 0)
-        photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Photos"), image: UIImage.init(named: "photos.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 1)
+        photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "相簿"), image: UIImage.init(named: "photos.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 1)
         functionNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Share"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 2)
         settingNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Settings"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 3)
         filesNavi.tabBarItem.selectedImage = UIImage.init(named: "tab_files_selected.png")

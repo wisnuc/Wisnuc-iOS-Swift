@@ -13,6 +13,8 @@ import UIKit
 public let __kWidth = UIScreen.main.bounds.size.width
 public let __kHeight = UIScreen.main.bounds.size.height
 
+public let kScrollViewTopMargin:CGFloat = 8
+
 public let MarginsWidth:CGFloat = 16
 public let MarginsCloseWidth:CGFloat = 8
 public let MarginsFarWidth:CGFloat = 20
