@@ -376,7 +376,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
         
         cell.longPressBlock = { [weak self] in
-            if (self?.isSelectMode)! { return}
+            if (self?.isSelectMode ?? false) { return}
              self?.isSelectMode = true
             
             self?.choosePhotos.append(model)
@@ -428,7 +428,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         cell.setImagView(indexPath:indexPath)
         cell.setSelectButton(indexPath: indexPath)
         cell.isSelectMode = self.isSelectMode
-        cell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
+        cell.setSelectAnimation(isSelect: self.isSelectMode ?? false ? self.choosePhotos.contains(model) : false, animation: false)
         cell.model = model
         let tagString = "\(indexPath.section)\(indexPath.item)"
         cell.tag = (NSNumber.init(string: tagString)?.intValue)!
@@ -445,7 +445,7 @@ class PhotoCollectionViewController: UICollectionViewController {
       
         headView.headTitle =  self.getDateString(date: dataSource![indexPath.section][indexPath.row].createDate!)
         headView.fmIndexPath = indexPath
-        headView.isSelectMode = isSelectMode!
+        headView.isSelectMode = isSelectMode ?? false
         headView.isChoose =  self.choosePhotos.contains(array:self.dataSource![indexPath.section])
 //        let listSet = Set(self.dataSource![indexPath.section])
 //        let findSet = Set(self.choosePhotos)

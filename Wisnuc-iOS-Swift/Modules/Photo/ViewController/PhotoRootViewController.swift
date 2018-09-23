@@ -13,10 +13,33 @@ import MaterialComponents.MaterialButtons
 
 private var menuButton: IconButton!
 
+@objc protocol PhotoRootViewControllerDelegate {
+    func creatNewAblum(assets:Array<WSAsset>)
+}
+
+enum PhotoRootViewControllerState{
+    case normal
+    case select
+}
+
 class PhotoRootViewController: BaseViewController {
 //    override func willDealloc() -> Bool {
 //        return false
 //    }
+    weak var delegate:PhotoRootViewControllerDelegate?
+    var state:PhotoRootViewControllerState?{
+        didSet{
+            switch state {
+            case .normal?:
+                normalStateAction()
+            case .select?:
+                selectStateAction()
+            default:
+                break
+            }
+        }
+    }
+    
     var isSelectMode:Bool?{
         didSet{
             if isSelectMode!{
@@ -33,8 +56,9 @@ class PhotoRootViewController: BaseViewController {
         setNotification()
     }
     
-    init(localDataSource:Array<WSAsset>?) {
+    init(state:PhotoRootViewControllerState,localDataSource:Array<WSAsset>?) {
         super.init()
+        self.state = state
         setNotification()
         if localDataSource != nil {
             localAssetDataSources.append(contentsOf: localDataSource!)
@@ -51,6 +75,11 @@ class PhotoRootViewController: BaseViewController {
     
     override init(style: NavigationStyle) {
         super.init(style: style)
+    }
+    
+    init(style: NavigationStyle ,state:PhotoRootViewControllerState) {
+        super.init(style: style)
+        self.setState(state: state)
     }
     
     override func viewDidLoad() {
@@ -104,10 +133,26 @@ class PhotoRootViewController: BaseViewController {
         }
     }
     
+    func setState(state:PhotoRootViewControllerState){
+        self.state = state
+    }
+    
+    func selectStateAction(){
+        self.style = .select
+         self.isSelectMode = true
+         photoCollcectionViewController.isSelectMode = true
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_:)))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "创建"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightCreatBarButtonItemTap(_:)))
+    }
+    
+    func normalStateAction(){
+         self.isSelectMode = false
+        photoCollcectionViewController.isSelectMode = false
+    }
+    
     func selectModeAction(){
         self.style = .select
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_:)))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "创建"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightBarButtonItemTap(_:)))
     }
     
     func unselectModeAction(){
@@ -117,13 +162,25 @@ class PhotoRootViewController: BaseViewController {
     }
     
     @objc func leftBarButtonItemTap(_ sender:UIBarButtonItem){
+        if self.state == .select{
+            self.presentingViewController?.dismiss(animated: true, completion: {
+                
+            })
+            return
+        }
         self.isSelectMode = false
         self.photoCollcectionViewController.isSelectMode = self.isSelectMode
         self.photoCollcectionViewController.collectionView?.reloadData()
+        
     }
     
-    @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){
-       
+    @objc func rightCreatBarButtonItemTap(_ sender:UIBarButtonItem){
+        if self.photoCollcectionViewController.choosePhotos.count == 0 {
+            return
+        }
+        self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
+            self?.delegate?.creatNewAblum(assets: (self?.photoCollcectionViewController.choosePhotos)!)
+        })
     }
     
     @objc func menuButtonTap(_ sender:IconButton){
@@ -268,7 +325,7 @@ class PhotoRootViewController: BaseViewController {
     }
     
     func prepareCollectionView(){
-        photoCollcectionViewController.isSelectMode = false
+     
         self.addChildViewController(photoCollcectionViewController)
         photoCollcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height)
         self.view.addSubview(photoCollcectionViewController.view)

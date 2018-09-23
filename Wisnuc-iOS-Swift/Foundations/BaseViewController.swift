@@ -145,6 +145,12 @@ class BaseViewController: UIViewController {
         appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
     
+    func setStatusBar(_ statusBarStyle:UIStatusBarStyle){
+        appBar.headerViewController.inferPreferredStatusBarStyle = false
+        appBar.headerViewController.preferredStatusBarStyle = statusBarStyle
+        appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         appBar.addSubviewsToParent()

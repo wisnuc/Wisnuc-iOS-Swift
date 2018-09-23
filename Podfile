@@ -19,7 +19,7 @@ pod 'Material'
 pod 'SugarRecord/CoreData'
 pod 'MagicalRecord'
 
-pod 'HandyJSON',   '~> 4.2.0-beta1'
+pod 'HandyJSON',   '~> 4.2.0'
 pod 'DZNEmptyDataSet'
 pod 'MDRadialProgress'
 pod 'MJRefresh'
