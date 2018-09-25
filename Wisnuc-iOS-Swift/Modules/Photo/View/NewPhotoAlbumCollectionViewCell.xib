@@ -19,23 +19,24 @@
                 <rect key="frame" x="0.0" y="0.0" width="127" height="190"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zx9-wg-Gev">
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="61m-Rk-e67">
                         <rect key="frame" x="0.0" y="0.0" width="127" height="190"/>
-                    </imageView>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="Zx9-wg-Gev" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="HPN-2t-l7o"/>
-                <constraint firstAttribute="bottom" secondItem="Zx9-wg-Gev" secondAttribute="bottom" id="IwF-al-pMW"/>
-                <constraint firstItem="Zx9-wg-Gev" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Umn-e4-jTG"/>
-                <constraint firstAttribute="trailing" secondItem="Zx9-wg-Gev" secondAttribute="trailing" id="WIy-mF-sr0"/>
+                <constraint firstItem="61m-Rk-e67" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="DHn-WF-2ah"/>
+                <constraint firstItem="61m-Rk-e67" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="PKR-Lt-j1t"/>
+                <constraint firstAttribute="trailing" secondItem="61m-Rk-e67" secondAttribute="trailing" id="Syo-md-eDu"/>
+                <constraint firstAttribute="bottom" secondItem="61m-Rk-e67" secondAttribute="bottom" id="W6R-Pq-Xj6"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="127" height="190"/>
             <connections>
-                <outlet property="imageView" destination="Zx9-wg-Gev" id="4Bp-L2-18J"/>
+                <outlet property="imageView" destination="61m-Rk-e67" id="6LS-hO-fQd"/>
             </connections>
-            <point key="canvasLocation" x="-40.799999999999997" y="137.6311844077961"/>
+            <point key="canvasLocation" x="-40.799999999999997" y="136.73163418290855"/>
         </collectionViewCell>
     </objects>
 </document>

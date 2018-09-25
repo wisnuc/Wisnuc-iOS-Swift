@@ -406,6 +406,13 @@
 		1F8EBB5620A0239000E8AB83 /* files_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5520A0238F00E8AB83 /* files_folder.png */; };
 		1F8EBB5820A0239700E8AB83 /* files_folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */; };
 		1F8EBB5A20A0239F00E8AB83 /* files_folder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */; };
+		1FA5D7552159FECA0025F870 /* eye_open.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D7542159FECA0025F870 /* eye_open.png */; };
+		1FA5D7572159FED20025F870 /* eye_open@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D7562159FED20025F870 /* eye_open@2x.png */; };
+		1FA5D7592159FED90025F870 /* eye_open@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D7582159FED90025F870 /* eye_open@3x.png */; };
+		1FA5D75B215A14590025F870 /* TimeTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5D75A215A14590025F870 /* TimeTools.swift */; };
+		1FA5D75D215A4DF90025F870 /* delete_photo_new_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D75C215A4DF80025F870 /* delete_photo_new_album.png */; };
+		1FA5D75F215A4E0A0025F870 /* delete_photo_new_album@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D75E215A4E0A0025F870 /* delete_photo_new_album@2x.png */; };
+		1FA5D761215A4E190025F870 /* delete_photo_new_album@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D760215A4E190025F870 /* delete_photo_new_album@3x.png */; };
 		1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */; };
 		1FA669DB208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */; };
 		1FA6A1A920CFA065007A0AB2 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA6A1A820CFA064007A0AB2 /* search.png */; };
@@ -1167,6 +1174,13 @@
 		1F8EBB5520A0238F00E8AB83 /* files_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_folder.png; sourceTree = "<group>"; };
 		1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@2x.png"; sourceTree = "<group>"; };
 		1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@3x.png"; sourceTree = "<group>"; };
+		1FA5D7542159FECA0025F870 /* eye_open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eye_open.png; sourceTree = "<group>"; };
+		1FA5D7562159FED20025F870 /* eye_open@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_open@2x.png"; sourceTree = "<group>"; };
+		1FA5D7582159FED90025F870 /* eye_open@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_open@3x.png"; sourceTree = "<group>"; };
+		1FA5D75A215A14590025F870 /* TimeTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeTools.swift; sourceTree = "<group>"; };
+		1FA5D75C215A4DF80025F870 /* delete_photo_new_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete_photo_new_album.png; sourceTree = "<group>"; };
+		1FA5D75E215A4E0A0025F870 /* delete_photo_new_album@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete_photo_new_album@2x.png"; sourceTree = "<group>"; };
+		1FA5D760215A4E190025F870 /* delete_photo_new_album@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete_photo_new_album@3x.png"; sourceTree = "<group>"; };
 		1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetDummyStaticViewController.swift; sourceTree = "<group>"; };
 		1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomSheetDummyStaticViewController.xib; sourceTree = "<group>"; };
 		1FA6A1A820CFA064007A0AB2 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search.png; sourceTree = "<group>"; };
@@ -1987,6 +2001,9 @@
 		1F42429E20F338B40085E2F0 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1FA5D75C215A4DF80025F870 /* delete_photo_new_album.png */,
+				1FA5D75E215A4E0A0025F870 /* delete_photo_new_album@2x.png */,
+				1FA5D760215A4E190025F870 /* delete_photo_new_album@3x.png */,
 				1FD1F31F2159D7E500C3E429 /* add_text_photo_new_album.png */,
 				1FD1F3212159D7F500C3E429 /* add_text_photo_new_album@2x.png */,
 				1FD1F3232159D80000C3E429 /* add_text_photo_new_album@3x.png */,
@@ -2028,6 +2045,7 @@
 				1F2B4598208F236F00C8971F /* ViewTools.swift */,
 				1F8EBB2F209AB6AA00E8AB83 /* BaseTools.swift */,
 				1FC695F420D26F2400C62E76 /* FileTools.swift */,
+				1FA5D75A215A14590025F870 /* TimeTools.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -2169,6 +2187,9 @@
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1FA5D7542159FECA0025F870 /* eye_open.png */,
+				1FA5D7562159FED20025F870 /* eye_open@2x.png */,
+				1FA5D7582159FED90025F870 /* eye_open@3x.png */,
 				1FBB6F78213930180090FA57 /* eye_close.png */,
 				1FBB6F76213930100090FA57 /* eye_close@2x.png */,
 				1FBB6F74213930060090FA57 /* eye_close@3x.png */,
@@ -3620,6 +3641,7 @@
 				1F050E0E20A9674D0037F00A /* files_pdf_small.png in Resources */,
 				1F4E9395208DBB7600DD1EA7 /* radio_button@2x.png in Resources */,
 				1FD1F2F82153824A00C3E429 /* PhotoAlbumCollectionViewCell.xib in Resources */,
+				1FA5D75F215A4E0A0025F870 /* delete_photo_new_album@2x.png in Resources */,
 				1F52095B214A0DA10058A8D3 /* plus_gray@2x.png in Resources */,
 				1FD1F3022154DE1A00C3E429 /* select.png in Resources */,
 				1F4E938A2089D64D00DD1EA7 /* disk.png in Resources */,
@@ -3641,6 +3663,7 @@
 				1FD1F3222159D7F600C3E429 /* add_text_photo_new_album@2x.png in Resources */,
 				1FA6A1B120CFA6A9007A0AB2 /* files_video_normal@2x.png in Resources */,
 				1F2B45A4208F290200C8971F /* close@3x.png in Resources */,
+				1FA5D7552159FECA0025F870 /* eye_open.png in Resources */,
 				1F3C243820A5AC1F00E6B953 /* transfer@3x.png in Resources */,
 				1FBD1DF620AEE02B0067BE3E /* close_white.png in Resources */,
 				1FC5CC1920D3C3E100499E63 /* files_download_transfer@3x.png in Resources */,
@@ -3667,6 +3690,7 @@
 				1FAADEEF20ABFFF700739220 /* files_remove@3x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
 				1F050E7720ABCE6E0037F00A /* files_edit@3x.png in Resources */,
+				1FA5D761215A4E190025F870 /* delete_photo_new_album@3x.png in Resources */,
 				1F359FD22091A95D00E2FF36 /* disk_new_add@2x.png in Resources */,
 				1F3C242420A547D000E6B953 /* files_download@2x.png in Resources */,
 				1F0FD103214B7D95003D7936 /* close_gray.png in Resources */,
@@ -3728,6 +3752,7 @@
 				1F0FD0F3214A6DBB003D7936 /* next_button_arrow_white.png in Resources */,
 				1FD1F3162159D75500C3E429 /* add_new_photo_new_album@2x.png in Resources */,
 				1FC5CC1520D3C3C900499E63 /* files_download_transfer.png in Resources */,
+				1FA5D7592159FED90025F870 /* eye_open@3x.png in Resources */,
 				1F83AE60208830B8007CCCFD /* local_area_white@3x.png in Resources */,
 				1F0FD107214B7DB4003D7936 /* close_gray@3x.png in Resources */,
 				1F58825A2085F4C900394BD6 /* local_area.png in Resources */,
@@ -3838,6 +3863,7 @@
 				1F307C6E20BEAB6100AE105C /* setting_gray.png in Resources */,
 				1F359FCF2091A95D00E2FF36 /* disk_main_color.png in Resources */,
 				1F3C244220A5AD3D00E6B953 /* files_tag@2x.png in Resources */,
+				1FA5D7572159FED20025F870 /* eye_open@2x.png in Resources */,
 				1F050E0C20A9640D0037F00A /* TransferTaskTableViewCell.xib in Resources */,
 				1F5882552085F0F800394BD6 /* station_review.png in Resources */,
 				1F4242C520FF34EC0085E2F0 /* unselected.png in Resources */,
@@ -3860,6 +3886,7 @@
 				1F050E3520AA7BBD0037F00A /* files_share_all@2x.png in Resources */,
 				1F0FD0DD214A6361003D7936 /* eye_open_gray@2x.png in Resources */,
 				1F3C240D20A42CB400E6B953 /* files_unselect.png in Resources */,
+				1FA5D75D215A4DF90025F870 /* delete_photo_new_album.png in Resources */,
 				1F58823D2085DCAF00394BD6 /* device.png in Resources */,
 				1FD1F3182159D76100C3E429 /* add_new_photo_new_album@3x.png in Resources */,
 				1F52095D214A0DAC0058A8D3 /* plus_gray@3x.png in Resources */,
@@ -4166,6 +4193,7 @@
 				1F050E0520A933CA0037F00A /* BaseNavigationController.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
 				1F050E0B20A9640D0037F00A /* TransferTaskTableViewCell.swift in Sources */,
+				1FA5D75B215A14590025F870 /* TimeTools.swift in Sources */,
 				1F8EBB33209ABF4700E8AB83 /* FilesRootViewController.swift in Sources */,
 				1F050E2420A990CD0037F00A /* FilesOfflineTableViewCell.swift in Sources */,
 				1F2A380820DBAD750035EED5 /* SearchAPI.swift in Sources */,

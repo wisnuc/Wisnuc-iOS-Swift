@@ -9,11 +9,137 @@
 import UIKit
 
 class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
-    @IBOutlet weak var imageView: UIImageView!
+  
+    @IBOutlet weak var imageView: UIView!
+    var btnSelect:UIButton?
+    var btnDelete:UIButton?
+    var imageRequestID:PHImageRequestID?
+    var identifier:String?
+    var isEditing:Bool = false
+    var deleteCallbck:(()->())?
+    var model:WSAsset?{
+        didSet{
+            if model?.asset != nil {
+                self.identifier = model?.asset?.localIdentifier
+            }else if model is NetAsset{
+                self.identifier =  (model as! NetAsset).fmhash
+            }
+            
+            let size = CGSize.init(width: self.width  , height: self.height )
+            
+            if model?.asset != nil{
+                //                DispatchQueue.global(qos: .default).async {
+                self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: PHImageContentMode.aspectFill, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
+                    
+                    if let downloadFinined = (info![PHImageResultIsDegradedKey] as? Bool){
+                        if !downloadFinined {
+                            //                            DispatchQueue.main.async {
+                            if  self?.imageView?.layer.contents != nil{
+                                self?.imageView?.layer.contents = nil
+                            }
+                            self?.imageView?.layer.contents = image?.cgImage
+                        }
+                    }
+                    //                        }
+                })
+            }else if model is NetAsset{
+                let netAsset = model as! NetAsset
+                _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image) in
+                    if error == nil {
+                        self?.model?.image = image
+                        self?.imageView?.layer.contents = image?.cgImage
+                    }
+                }
+            }
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.imageView?.layer.contents =  nil
+        self.imageView?.layer.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5).cgColor
+        //        self.contentView.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5)
+    }
+    
+    @objc func btnSelectClick(_ sender:UIButton){
+        
+    }
+    
+    @objc func btnDeleteClick(_ sender:UIButton){
+        if deleteCallbck != nil{
+         self.deleteCallbck!()
+        }
+    }
+    
+    func setImagView(indexPath:IndexPath){
+        var imageView = self.contentView.subviews.first
+        if imageView == nil && imageView?.tag != Int(NSIntegerMax) {
+            imageView = UIView.init(frame: self.bounds)
+            imageView?.contentMode = UIViewContentMode.scaleAspectFill
+            imageView?.clipsToBounds = true
+            imageView?.tag = Int(NSIntegerMax)
+            self.contentView.addSubview(imageView!)
+        }
+        self.imageView = imageView
+        self.imageView?.layer.contents =  nil
+    }
+    
+    func setDeleteButton(indexPath:IndexPath){
+        if self.contentView.subviews.count>1 {//如果是重用cell，则不用再添加button
+            if self.contentView.subviews[1] is UIButton{
+                self.btnDelete = self.contentView.subviews[1] as? UIButton
+            }
+        } else {
+            self.btnDelete = UIButton.init()
+            let btnFrame:CGFloat = 24
+            self.btnDelete?.frame = CGRect.init(x: 5, y: 5, width: btnFrame, height: btnFrame)
+            self.btnDelete?.setBackgroundImage(UIImage.init(named: "delete_photo_new_album.png"), for: UIControlState.normal)
+            self.btnDelete?.addTarget(self, action: #selector(btnDeleteClick(_ :)), for: UIControlEvents.touchUpInside)
+        }
+        self.contentView.addSubview(self.btnDelete!)
+        
+    }
+    
+    
+    func setEditingAnimation(isEditing:Bool,animation:Bool){
+        self.isEditing = isEditing
+        self.btnSelect?.isHidden = !isEditing
+        if (isEditing) {
+            if(animation) {
+                self.btnDelete?.layer.add(GetBtnStatusChangedAnimation(), forKey: nil)
+            }
+            self.imageView?.transform = CGAffineTransform.init(scaleX: 0.8, y: 0.8)
+        }else{
+            self.imageView?.transform = CGAffineTransform.identity
+        }
+    }
+    
+    func setSelectAnimation(isSelect:Bool,animation:Bool){
+//        self.isSelect = isSelect
+//        self.btnSelect?.isHidden = !isSelect
+//        if (isSelect) {
+//            if(animation) {
+//                self.btnSelect?.layer.add(GetBtnStatusChangedAnimation(), forKey: nil)
+//            }
+//            self.imageView?.transform = CGAffineTransform.init(scaleX: 0.8, y: 0.8)
+//        }else{
+//            self.imageView?.transform = CGAffineTransform.identity
+//        }
+    }
+    
+    lazy var imageManager = PHCachingImageManager.init()
+    lazy var imageRequestOptions: PHImageRequestOptions = {
+        let option = PHImageRequestOptions.init()
+        
+        option.resizeMode = PHImageRequestOptionsResizeMode.fast//控制照片尺寸
+        //        option.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;//控制照片质量
+        option.isNetworkAccessAllowed = true
+        
+        return option
+    }()
 }
