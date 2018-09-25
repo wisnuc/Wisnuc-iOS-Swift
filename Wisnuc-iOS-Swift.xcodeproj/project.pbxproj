@@ -636,6 +636,21 @@
 		1FD1F3082154E24000C3E429 /* unselect_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3072154E24000C3E429 /* unselect_white.png */; };
 		1FD1F30A2154E24E00C3E429 /* unselect_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3092154E24D00C3E429 /* unselect_white@2x.png */; };
 		1FD1F30C2154E25C00C3E429 /* unselect_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F30B2154E25B00C3E429 /* unselect_white@3x.png */; };
+		1FD1F30E2159D6D600C3E429 /* location_new_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F30D2159D6D500C3E429 /* location_new_album.png */; };
+		1FD1F3102159D6E400C3E429 /* location_new_album@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F30F2159D6E300C3E429 /* location_new_album@2x.png */; };
+		1FD1F3122159D6FA00C3E429 /* location_new_album@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3112159D6F900C3E429 /* location_new_album@3x.png */; };
+		1FD1F3142159D74500C3E429 /* add_new_photo_new_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3132159D74500C3E429 /* add_new_photo_new_album.png */; };
+		1FD1F3162159D75500C3E429 /* add_new_photo_new_album@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3152159D75500C3E429 /* add_new_photo_new_album@2x.png */; };
+		1FD1F3182159D76100C3E429 /* add_new_photo_new_album@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3172159D76100C3E429 /* add_new_photo_new_album@3x.png */; };
+		1FD1F31A2159D79C00C3E429 /* sort_photo_new_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3192159D79B00C3E429 /* sort_photo_new_album.png */; };
+		1FD1F31C2159D7A700C3E429 /* sort_photo_new_album@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F31B2159D7A700C3E429 /* sort_photo_new_album@2x.png */; };
+		1FD1F31E2159D7B100C3E429 /* sort_photo_new_album@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F31D2159D7B100C3E429 /* sort_photo_new_album@3x.png */; };
+		1FD1F3202159D7E600C3E429 /* add_text_photo_new_album.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F31F2159D7E500C3E429 /* add_text_photo_new_album.png */; };
+		1FD1F3222159D7F600C3E429 /* add_text_photo_new_album@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3212159D7F500C3E429 /* add_text_photo_new_album@2x.png */; };
+		1FD1F3242159D80000C3E429 /* add_text_photo_new_album@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3232159D80000C3E429 /* add_text_photo_new_album@3x.png */; };
+		1FD1F3262159DEFA00C3E429 /* NewPhotoAlbumCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F3252159DEFA00C3E429 /* NewPhotoAlbumCollectionReusableView.swift */; };
+		1FD1F3292159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD1F3272159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.swift */; };
+		1FD1F32A2159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD1F3282159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.xib */; };
 		1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B74F207CBE8700906D80 /* AppDelegate.swift */; };
 		1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9B751207CBE8700906D80 /* ViewController.swift */; };
 		1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B753207CBE8700906D80 /* Main.storyboard */; };
@@ -1382,6 +1397,21 @@
 		1FD1F3072154E24000C3E429 /* unselect_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unselect_white.png; sourceTree = "<group>"; };
 		1FD1F3092154E24D00C3E429 /* unselect_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselect_white@2x.png"; sourceTree = "<group>"; };
 		1FD1F30B2154E25B00C3E429 /* unselect_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unselect_white@3x.png"; sourceTree = "<group>"; };
+		1FD1F30D2159D6D500C3E429 /* location_new_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location_new_album.png; sourceTree = "<group>"; };
+		1FD1F30F2159D6E300C3E429 /* location_new_album@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location_new_album@2x.png"; sourceTree = "<group>"; };
+		1FD1F3112159D6F900C3E429 /* location_new_album@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location_new_album@3x.png"; sourceTree = "<group>"; };
+		1FD1F3132159D74500C3E429 /* add_new_photo_new_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_new_photo_new_album.png; sourceTree = "<group>"; };
+		1FD1F3152159D75500C3E429 /* add_new_photo_new_album@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_new_photo_new_album@2x.png"; sourceTree = "<group>"; };
+		1FD1F3172159D76100C3E429 /* add_new_photo_new_album@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_new_photo_new_album@3x.png"; sourceTree = "<group>"; };
+		1FD1F3192159D79B00C3E429 /* sort_photo_new_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sort_photo_new_album.png; sourceTree = "<group>"; };
+		1FD1F31B2159D7A700C3E429 /* sort_photo_new_album@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sort_photo_new_album@2x.png"; sourceTree = "<group>"; };
+		1FD1F31D2159D7B100C3E429 /* sort_photo_new_album@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sort_photo_new_album@3x.png"; sourceTree = "<group>"; };
+		1FD1F31F2159D7E500C3E429 /* add_text_photo_new_album.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_text_photo_new_album.png; sourceTree = "<group>"; };
+		1FD1F3212159D7F500C3E429 /* add_text_photo_new_album@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_text_photo_new_album@2x.png"; sourceTree = "<group>"; };
+		1FD1F3232159D80000C3E429 /* add_text_photo_new_album@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_text_photo_new_album@3x.png"; sourceTree = "<group>"; };
+		1FD1F3252159DEFA00C3E429 /* NewPhotoAlbumCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPhotoAlbumCollectionReusableView.swift; sourceTree = "<group>"; };
+		1FD1F3272159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPhotoAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
+		1FD1F3282159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewPhotoAlbumCollectionViewCell.xib; sourceTree = "<group>"; };
 		1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wisnuc-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD9B74F207CBE8700906D80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1FD9B751207CBE8700906D80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -1957,6 +1987,18 @@
 		1F42429E20F338B40085E2F0 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1FD1F31F2159D7E500C3E429 /* add_text_photo_new_album.png */,
+				1FD1F3212159D7F500C3E429 /* add_text_photo_new_album@2x.png */,
+				1FD1F3232159D80000C3E429 /* add_text_photo_new_album@3x.png */,
+				1FD1F3192159D79B00C3E429 /* sort_photo_new_album.png */,
+				1FD1F31B2159D7A700C3E429 /* sort_photo_new_album@2x.png */,
+				1FD1F31D2159D7B100C3E429 /* sort_photo_new_album@3x.png */,
+				1FD1F3132159D74500C3E429 /* add_new_photo_new_album.png */,
+				1FD1F3152159D75500C3E429 /* add_new_photo_new_album@2x.png */,
+				1FD1F3172159D76100C3E429 /* add_new_photo_new_album@3x.png */,
+				1FD1F30D2159D6D500C3E429 /* location_new_album.png */,
+				1FD1F30F2159D6E300C3E429 /* location_new_album@2x.png */,
+				1FD1F3112159D6F900C3E429 /* location_new_album@3x.png */,
 				1FD1F3072154E24000C3E429 /* unselect_white.png */,
 				1FD1F3092154E24D00C3E429 /* unselect_white@2x.png */,
 				1FD1F30B2154E25B00C3E429 /* unselect_white@3x.png */,
@@ -3137,6 +3179,9 @@
 				1FD1F2F52153824A00C3E429 /* PhotoAlbumCollectionViewCell.swift */,
 				1FD1F2F62153824A00C3E429 /* PhotoAlbumCollectionViewCell.xib */,
 				1FD1F2FF2153A71200C3E429 /* PhotoAlbumCollectionViewHeaderView.swift */,
+				1FD1F3252159DEFA00C3E429 /* NewPhotoAlbumCollectionReusableView.swift */,
+				1FD1F3272159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.swift */,
+				1FD1F3282159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3482,6 +3527,7 @@
 				1F307C7220BEAB7800AE105C /* setting_gray@3x.png in Resources */,
 				1F1BAC2F20CA61D800D32C5A /* files_arrow_down.png in Resources */,
 				1F4242C420FF34EC0085E2F0 /* unselected@3x.png in Resources */,
+				1FD1F3202159D7E600C3E429 /* add_text_photo_new_album.png in Resources */,
 				1FFD12CF20EDC46E0053A3F7 /* task_copy.png in Resources */,
 				1FA6A1BB20CFA70B007A0AB2 /* files_pdf_normal.png in Resources */,
 				1FAADECB20ABFE1100739220 /* files_offline_normal@3x.png in Resources */,
@@ -3499,6 +3545,7 @@
 				1FBB6F552137F6DB0090FA57 /* x_gray.png in Resources */,
 				1F2B45A6208F290200C8971F /* close@2x.png in Resources */,
 				1F3C244020A5AD2000E6B953 /* files_tag.png in Resources */,
+				1FD1F32A2159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.xib in Resources */,
 				1F4E9399208DBB7600DD1EA7 /* radio_button_unchecked@3x.png in Resources */,
 				1F359FE32091B2A900E2FF36 /* warning@3x.png in Resources */,
 				1F5AD94120AD80AC0065DAD3 /* files_audio_small@3x.png in Resources */,
@@ -3576,6 +3623,7 @@
 				1F52095B214A0DA10058A8D3 /* plus_gray@2x.png in Resources */,
 				1FD1F3022154DE1A00C3E429 /* select.png in Resources */,
 				1F4E938A2089D64D00DD1EA7 /* disk.png in Resources */,
+				1FD1F3242159D80000C3E429 /* add_text_photo_new_album@3x.png in Resources */,
 				1F58822D208591A100394BD6 /* add_station@2x.png in Resources */,
 				1FBB6F75213930060090FA57 /* eye_close@3x.png in Resources */,
 				1F4242C620FF34EC0085E2F0 /* unselected@2x.png in Resources */,
@@ -3590,6 +3638,7 @@
 				1F3C241120A42CD300E6B953 /* files_unselect@3x.png in Resources */,
 				1FAADEED20ABFFF000739220 /* files_remove@2x.png in Resources */,
 				1FEABB5320A14B6300824448 /* files_word_small.png in Resources */,
+				1FD1F3222159D7F600C3E429 /* add_text_photo_new_album@2x.png in Resources */,
 				1FA6A1B120CFA6A9007A0AB2 /* files_video_normal@2x.png in Resources */,
 				1F2B45A4208F290200C8971F /* close@3x.png in Resources */,
 				1F3C243820A5AC1F00E6B953 /* transfer@3x.png in Resources */,
@@ -3599,6 +3648,7 @@
 				1F58822C208591A100394BD6 /* add_station.png in Resources */,
 				1F1BAC6020CE709100D32C5A /* files_jpg_small@2x.png in Resources */,
 				1F5AD94720AD80F00065DAD3 /* files_photo_small@3x.png in Resources */,
+				1FD1F31E2159D7B100C3E429 /* sort_photo_new_album@3x.png in Resources */,
 				1FBB6F6721392C8D0090FA57 /* lock.png in Resources */,
 				1F362F8321351782000B3384 /* LoginNextStepViewController.xib in Resources */,
 				1F5882482085F07E00394BD6 /* disk_warning@2x.png in Resources */,
@@ -3607,6 +3657,7 @@
 				1F0FD0DF214A636D003D7936 /* eye_open_gray@3x.png in Resources */,
 				1FA6A1B520CFA6D4007A0AB2 /* files_audio_normal.png in Resources */,
 				1FBD1E0420B3EF8C0067BE3E /* files_new_folder_gray@2x.png in Resources */,
+				1FD1F31A2159D79C00C3E429 /* sort_photo_new_album.png in Resources */,
 				1F5AD92C20AD524E0065DAD3 /* back_gray@3x.png in Resources */,
 				1FD1F3042154DE3C00C3E429 /* select@2x.png in Resources */,
 				1F359FAF2090819000E2FF36 /* ok@2x.png in Resources */,
@@ -3658,6 +3709,7 @@
 				1F0FD0FD214A712F003D7936 /* wifi_config@3x.png in Resources */,
 				1FBD1DF820AEE0360067BE3E /* close_white@2x.png in Resources */,
 				1F050E3720AA7BCB0037F00A /* files_share_all@3x.png in Resources */,
+				1FD1F3102159D6E400C3E429 /* location_new_album@2x.png in Resources */,
 				1FFD12BB20E9C73C0053A3F7 /* files_move_to@3x.png in Resources */,
 				1F4E93892089D64D00DD1EA7 /* disk@3x.png in Resources */,
 				1FBB6F592137F6EE0090FA57 /* x_gray@3x.png in Resources */,
@@ -3674,6 +3726,7 @@
 				1FBD1E0220B3EF720067BE3E /* files_new_folder_gray.png in Resources */,
 				1F83AE8320887936007CCCFD /* more@3x.png in Resources */,
 				1F0FD0F3214A6DBB003D7936 /* next_button_arrow_white.png in Resources */,
+				1FD1F3162159D75500C3E429 /* add_new_photo_new_album@2x.png in Resources */,
 				1FC5CC1520D3C3C900499E63 /* files_download_transfer.png in Resources */,
 				1F83AE60208830B8007CCCFD /* local_area_white@3x.png in Resources */,
 				1F0FD107214B7DB4003D7936 /* close_gray@3x.png in Resources */,
@@ -3692,6 +3745,7 @@
 				1F83AE5F208830B8007CCCFD /* local_area_white@2x.png in Resources */,
 				1F8EBB5820A0239700E8AB83 /* files_folder@2x.png in Resources */,
 				1F1BAC5520CE703300D32C5A /* files_gif_small@3x.png in Resources */,
+				1FD1F3142159D74500C3E429 /* add_new_photo_new_album.png in Resources */,
 				1FAADED320ABFEB300739220 /* files_creat_copy.png in Resources */,
 				1FAADEE120ABFF5400739220 /* files_share@2x.png in Resources */,
 				1F050E4120AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.xib in Resources */,
@@ -3703,6 +3757,7 @@
 				1FBB6F6521392C840090FA57 /* lock@2x.png in Resources */,
 				1F050E1C20A985C20037F00A /* files_error@2x.png in Resources */,
 				1F0FD0CE214A4A34003D7936 /* disclosureIndicator.png in Resources */,
+				1FD1F30E2159D6D600C3E429 /* location_new_album.png in Resources */,
 				1FBB6F6921392D940090FA57 /* text_right.png in Resources */,
 				1F58823E2085DCAF00394BD6 /* device_circle@2x.png in Resources */,
 				1FE674D220D20CED006F97DB /* file_icon@3x.png in Resources */,
@@ -3732,6 +3787,7 @@
 				1F050E4B20AAB6B50037F00A /* files_cl_big@2x.png in Resources */,
 				1F050E7520ABCE610037F00A /* files_edit@2x.png in Resources */,
 				1F359FB12090819000E2FF36 /* no@3x.png in Resources */,
+				1FD1F31C2159D7A700C3E429 /* sort_photo_new_album@2x.png in Resources */,
 				1F362F8C21355E2F000B3384 /* next_button_arrow@2x.png in Resources */,
 				1FBB6F5F213923350090FA57 /* 86.png in Resources */,
 				1F0FD0D2214A4A4D003D7936 /* disclosureIndicator@3x.png in Resources */,
@@ -3805,6 +3861,7 @@
 				1F0FD0DD214A6361003D7936 /* eye_open_gray@2x.png in Resources */,
 				1F3C240D20A42CB400E6B953 /* files_unselect.png in Resources */,
 				1F58823D2085DCAF00394BD6 /* device.png in Resources */,
+				1FD1F3182159D76100C3E429 /* add_new_photo_new_album@3x.png in Resources */,
 				1F52095D214A0DAC0058A8D3 /* plus_gray@3x.png in Resources */,
 				1F520965214A14F30058A8D3 /* SeekNewDeviceTableViewCell.xib in Resources */,
 				1F359FD82091A97C00E2FF36 /* disk_error@3x.png in Resources */,
@@ -3829,6 +3886,7 @@
 				1F050E5320AAB71D0037F00A /* files_file_big@3x.png in Resources */,
 				1FBD1E0620B3EF9F0067BE3E /* files_new_folder_gray@3x.png in Resources */,
 				1F5AD93320AD7FAB0065DAD3 /* files_excel_small@2x.png in Resources */,
+				1FD1F3122159D6FA00C3E429 /* location_new_album@3x.png in Resources */,
 				1F362F8E21355E36000B3384 /* next_button_arrow.png in Resources */,
 				1F58823A2085DCAF00394BD6 /* device_circle@3x.png in Resources */,
 				1F359FAE2090819000E2FF36 /* ok.png in Resources */,
@@ -4033,6 +4091,7 @@
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
 				1F83AE7420885FD5007CCCFD /* MDBaseButton.swift in Sources */,
 				1FEABB6C20A14CBA00824448 /* FilesModel.swift in Sources */,
+				1FD1F3292159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.swift in Sources */,
 				1F83AE572087463F007CCCFD /* LocalNetworkLoginViewController.swift in Sources */,
 				1F359FA720907CD700E2FF36 /* InitLastView.swift in Sources */,
 				1FE9EF8D20EF5DEA00732728 /* CocoaSecurity.m in Sources */,
@@ -4213,6 +4272,7 @@
 				1FC695F520D26F2400C62E76 /* FileTools.swift in Sources */,
 				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,
 				1FFD131020EE21620053A3F7 /* PhotoCollectionViewController.swift in Sources */,
+				1FD1F3262159DEFA00C3E429 /* NewPhotoAlbumCollectionReusableView.swift in Sources */,
 				1F4242B820F5CEC10085E2F0 /* WSShowBigimgViewController.swift in Sources */,
 				1F58821F2084A7F900394BD6 /* StationModel.swift in Sources */,
 				1FD9B750207CBE8700906D80 /* AppDelegate.swift in Sources */,
