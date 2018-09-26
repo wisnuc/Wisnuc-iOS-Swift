@@ -12,11 +12,11 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
   
     @IBOutlet weak var imageView: UIView!
     var btnSelect:UIButton?
-    var btnDelete:UIButton?
+    var btnDelete:DeleteButton?
     var imageRequestID:PHImageRequestID?
     var identifier:String?
     var isEditing:Bool = false
-    var deleteCallbck:(()->())?
+    var deleteCallbck:((_ indexPath:IndexPath)->())?
     var model:WSAsset?{
         didSet{
             if model?.asset != nil {
@@ -70,9 +70,9 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
         
     }
     
-    @objc func btnDeleteClick(_ sender:UIButton){
+    @objc func btnDeleteClick(_ sender:DeleteButton){
         if deleteCallbck != nil{
-         self.deleteCallbck!()
+            self.deleteCallbck!(sender.indexPath!)
         }
     }
     
@@ -92,23 +92,23 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
     func setDeleteButton(indexPath:IndexPath){
         if self.contentView.subviews.count>1 {//如果是重用cell，则不用再添加button
             if self.contentView.subviews[1] is UIButton{
-                self.btnDelete = self.contentView.subviews[1] as? UIButton
+                self.btnDelete = self.contentView.subviews[1] as? DeleteButton
+                btnDelete?.indexPath = indexPath
             }
         } else {
-            self.btnDelete = UIButton.init()
             let btnFrame:CGFloat = 24
-            self.btnDelete?.frame = CGRect.init(x: 5, y: 5, width: btnFrame, height: btnFrame)
+            self.btnDelete = DeleteButton.init(frame: CGRect.init(x: 5, y: 5, width: btnFrame, height: btnFrame))
             self.btnDelete?.setBackgroundImage(UIImage.init(named: "delete_photo_new_album.png"), for: UIControlState.normal)
             self.btnDelete?.addTarget(self, action: #selector(btnDeleteClick(_ :)), for: UIControlEvents.touchUpInside)
+            btnDelete?.indexPath = indexPath
         }
         self.contentView.addSubview(self.btnDelete!)
-        
     }
     
     
     func setEditingAnimation(isEditing:Bool,animation:Bool){
         self.isEditing = isEditing
-        self.btnSelect?.isHidden = !isEditing
+        self.btnDelete?.isHidden = !isEditing
         if (isEditing) {
             if(animation) {
                 self.btnDelete?.layer.add(GetBtnStatusChangedAnimation(), forKey: nil)
@@ -142,4 +142,15 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
         
         return option
     }()
+}
+
+class DeleteButton: UIButton {
+    var indexPath:IndexPath?
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

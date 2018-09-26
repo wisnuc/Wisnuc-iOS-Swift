@@ -415,6 +415,35 @@ class WSShowBigimgViewController: UIViewController {
         firstY = viewHalfHeight
         
         let translatedPoint = gesture.translation(in: self.view)
+        
+        let absX = CGFloat(fabs(translatedPoint.x))
+        let absY = CGFloat(fabs(translatedPoint.y)) // 设置滑动有效距离
+        if max(absX, absY) < 10 {
+            return
+        }
+        if absX > absY {
+            if translatedPoint.x < 0 {
+                //向左滑动
+            } else {
+                //向右滑动
+            }
+        } else if absY > absX {
+            if translatedPoint.y < 0 {
+                
+                isdraggingPhoto = true
+                self.setNeedsStatusBarAppearanceUpdate()
+                let newTranslatedPoint = CGPoint(x: firstX+translatedPoint.x, y: firstY+translatedPoint.y)
+                if gesture.state == UIGestureRecognizerState.changed {
+                    scrollView.center = CGPoint(x: scrollView.center.x, y: firstY+translatedPoint.y)
+                }
+                return
+            } else {
+                //向下滑动
+            }
+        }
+
+            
+  
         isdraggingPhoto = true
         self.setNeedsStatusBarAppearanceUpdate()
         let newTranslatedPoint = CGPoint(x: firstX+translatedPoint.x, y: firstY+translatedPoint.y)
@@ -431,6 +460,7 @@ class WSShowBigimgViewController: UIViewController {
         
         scrollView.isScrollEnabled = false
 
+      
         // Gesture Ended
         if (gesture.state == UIGestureRecognizerState.ended) {
             scrollView.isScrollEnabled = true
@@ -581,7 +611,7 @@ class WSShowBigimgViewController: UIViewController {
 
 extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDataSource{
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

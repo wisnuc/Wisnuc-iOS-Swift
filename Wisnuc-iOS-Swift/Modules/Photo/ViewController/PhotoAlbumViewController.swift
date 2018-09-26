@@ -14,6 +14,7 @@ class PhotoAlbumViewController: BaseViewController {
     private let cellContentSizeWidth = (__kWidth - MarginsWidth*3)/2
     private let cellContentSizeHeight = (__kWidth - MarginsWidth*3)/2 + 56
     var dataSource:Array<Array<PhotoAlbumModel>>?
+    var index:Int = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareNavigationBar()
@@ -25,18 +26,24 @@ class PhotoAlbumViewController: BaseViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-   
-        appBar.headerViewController.headerView.trackingScrollView = albumCollectionView
-      
-        if let tabbar = retrieveTabbarController(){
-            tabbar.setTabBarHidden(false, animated: false)
-        }
-        
-         self.setStatusBar(.default)
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setStatusBar(.default)
+        if let tabbar = retrieveTabbarController(){
+            if tabbar.tabBarHidden {
+               tabbar.tabBarHidden = false
+//            tabbar.setTabBarHidden(false, animated: false)
+            }
+        }
+        appBar.headerViewController.headerView.trackingScrollView = albumCollectionView
+        appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
+    }
+
     func prepareNavigationBar(){
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "add_album.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightButtonItemTap(_:)))
     }
@@ -44,10 +51,21 @@ class PhotoAlbumViewController: BaseViewController {
     func setData(){
         dataSource = Array.init()
         var collectionAlbumArray = Array<PhotoAlbumModel>.init()
-        let photoAlbumModel1 = PhotoAlbumModel.init(type: PhotoAlbumType.collecion, name: "所有相片")
-        let photoAlbumModel2 = PhotoAlbumModel.init(type: PhotoAlbumType.collecion, name: "来自iPhone XR")
-        let photoAlbumModel3 = PhotoAlbumModel.init(type: PhotoAlbumType.collecion, name: "视频")
-            
+        let photoAlbumModel1 = PhotoAlbumModel.init()
+        photoAlbumModel1.type = PhotoAlbumType.collecion
+        photoAlbumModel1.name = "所有相片"
+        photoAlbumModel1.describe = nil
+        photoAlbumModel1.dataSource = nil
+        let photoAlbumModel2 = PhotoAlbumModel.init()
+        photoAlbumModel2.type = PhotoAlbumType.collecion
+        photoAlbumModel2.name = "来自iPhone XR"
+        photoAlbumModel2.describe = nil
+        photoAlbumModel2.dataSource = nil
+        let photoAlbumModel3 = PhotoAlbumModel.init()
+        photoAlbumModel3.type  = PhotoAlbumType.collecion
+        photoAlbumModel3.name = "视频"
+        photoAlbumModel3.describe = nil
+        photoAlbumModel3.dataSource = nil
         collectionAlbumArray.append(photoAlbumModel1)
         collectionAlbumArray.append(photoAlbumModel2)
         collectionAlbumArray.append(photoAlbumModel3)
@@ -59,7 +77,7 @@ class PhotoAlbumViewController: BaseViewController {
     }
 
     @objc func rightButtonItemTap(_ sender:UIBarButtonItem){
-        let photosVC = PhotoRootViewController.init(style: NavigationStyle.select, state: PhotoRootViewControllerState.select)
+        let photosVC = PhotoRootViewController.init(style: NavigationStyle.select, state: PhotoRootViewControllerState.creat)
         photosVC.delegate = self
         DispatchQueue.global(qos: .default).async {
             let assets = AppAssetService.allAssets!
@@ -112,7 +130,12 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
         let model = dataSource![indexPath.section][indexPath.row]
         cell.imageView.image =  UIImage.init(color: .red)
         cell.nameLabel.text = model.name
-        cell.countLabel.text = "100"
+        if  let photoData = model.dataSource{
+            cell.countLabel.text = String(describing: photoData.count)
+        }else{
+            cell.countLabel.text = "0"
+        }
+       
         return cell
     }
     
@@ -120,34 +143,43 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
         if let tabbar = retrieveTabbarController(){
             tabbar.setTabBarHidden(true, animated: true)
         }
-        
-        switch indexPath.item {
-        case 0:
-            let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal)
-            if let cell = collectionView.cellForItem(at: indexPath) as? PhotoAlbumCollectionViewCell{
-              photosVC.title = cell.nameLabel.text
-            }
-            DispatchQueue.global(qos: .default).async {
-                let assets = AppAssetService.allAssets!
-                DispatchQueue.main.async {
-                    photosVC.localAssetDataSources.append(contentsOf:assets)
-                    photosVC.localDataSouceSort()
+        if indexPath.section == 0{
+            switch indexPath.item {
+            case 0:
+                let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal)
+                if let cell = collectionView.cellForItem(at: indexPath) as? PhotoAlbumCollectionViewCell{
+                    photosVC.title = cell.nameLabel.text
                 }
-                AppAssetService.getNetAssets { (error, netAssets) in
-                    if error == nil{
-                        DispatchQueue.main.async {
-                            photosVC.addNetAssets(assetsArr: netAssets!)
-                        }
-                    }else{
-                        DispatchQueue.main.async {
-                            photosVC.localDataSouceSort()
+                DispatchQueue.global(qos: .default).async {
+                    let assets = AppAssetService.allAssets!
+                    DispatchQueue.main.async {
+                        photosVC.localAssetDataSources.append(contentsOf:assets)
+                        photosVC.localDataSouceSort()
+                    }
+                    AppAssetService.getNetAssets { (error, netAssets) in
+                        if error == nil{
+                            DispatchQueue.main.async {
+                                photosVC.addNetAssets(assetsArr: netAssets!)
+                            }
+                        }else{
+                            DispatchQueue.main.async {
+                                photosVC.localDataSouceSort()
+                            }
                         }
                     }
                 }
+                self.navigationController?.pushViewController(photosVC, animated: true)
+            default:
+                break
             }
-            self.navigationController?.pushViewController(photosVC, animated: true)
-        default:
-            break
+        }else{
+            let model = dataSource?[indexPath.section][indexPath.row]
+            let newAlbumVC = NewAlbumViewController.init(style: NavigationStyle.whiteWithoutShadow, photos: model?.dataSource)
+            newAlbumVC.delegate = self
+            newAlbumVC.setState(NewAlbumViewControllerState.normal)
+            newAlbumVC.setContent(title: model?.name, describe: model?.describe)
+            self.navigationController?.pushViewController(newAlbumVC, animated: true)
+            self.index = indexPath.row
         }
     }
     
@@ -190,21 +222,40 @@ extension PhotoAlbumViewController :UICollectionViewDelegateFlowLayout{
 }
 
 extension PhotoAlbumViewController:PhotoRootViewControllerDelegate{
-    func creatNewAblum(assets: Array<WSAsset>) {
-        if let tabbar = retrieveTabbarController(){
-            tabbar.setTabBarHidden(true, animated: true)
-        }
+    func selectPhotoComplete(assets: Array<WSAsset>) {
         let newAlbumVC = NewAlbumViewController.init(style: .whiteWithoutShadow,photos:assets)
         newAlbumVC.delegate = self
         newAlbumVC.setState(.editing)
+        self.index = (self.dataSource?[1].count ?? 1) == 0 ? 0 : (self.dataSource?[1].count ?? 1) - 1
         self.navigationController?.pushViewController(newAlbumVC, animated: true)
     }
 }
 
 extension PhotoAlbumViewController:NewAlbumViewControllerDelegate{
-    func creatNewAlbumFinish(name: String) {
+    func updateNewAlbumFinish(data: Dictionary<String, Any>) {
         var array = self.dataSource?[1]
-        let albumModel = PhotoAlbumModel.init(type: PhotoAlbumType.my, name: name)
+        let albumModel = PhotoAlbumModel.init()
+        albumModel.type = PhotoAlbumType.my
+        albumModel.name = data["name"] as? String
+        albumModel.describe = data["describe"] as? String
+        albumModel.dataSource = data["photoData"] as? [WSAsset]
+        if (array?.count)! == 0{
+            array?.append(albumModel)
+        }else{
+            array?[self.index] = albumModel
+        }
+      
+        self.dataSource?[1] = array!
+        self.albumCollectionView.reloadData()
+    }
+    
+    func creatNewAlbumFinish(data: Dictionary<String, Any>) {
+        var array = self.dataSource?[1]
+        let albumModel = PhotoAlbumModel.init()
+        albumModel.type = PhotoAlbumType.my
+        albumModel.name = data["name"] as? String
+        albumModel.describe = data["describe"] as? String
+        albumModel.dataSource = data["photoData"] as? [WSAsset]
         array?.append(albumModel)
         self.dataSource?[1] = array!
         self.albumCollectionView.reloadData()

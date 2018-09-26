@@ -15,13 +15,16 @@ import MaterialComponents
 }
 
 extension UIViewController: BackButtonHandlerProtocol{
-    class func currentViewController() -> UIViewController {
+    class func currentViewController() -> UIViewController? {
         let window = UIApplication.shared.keyWindow
         var controller = window?.rootViewController
         while true {
             if((controller?.presentedViewController) != nil){
                 controller = controller?.presentedViewController
             }else{
+                if controller == nil{
+                return nil
+                }
                 if (controller?.isKind(of: UINavigationController.self))!{
                     controller = controller?.childViewControllers.last
                 }else if (controller?.isKind(of: UITabBarController.self))!{

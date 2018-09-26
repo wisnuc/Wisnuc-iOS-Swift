@@ -12,8 +12,9 @@ import MaterialComponents.MDCAlertController
 class Alert: NSObject {
     class func alert(title:String , message:String) {
         let materialAlertController = MDCAlertController.init(title: title, message: message)
-        let controller = UIViewController.currentViewController()
+        if let controller = UIViewController.currentViewController(){
         controller.present(materialAlertController, animated: true, completion: nil)
+        }
     }
 //    NSString *titleString = @"Using Material alert controller?";
 //    NSString *messageString = @"Be careful with modal alerts as they can be annoying if over-used.";

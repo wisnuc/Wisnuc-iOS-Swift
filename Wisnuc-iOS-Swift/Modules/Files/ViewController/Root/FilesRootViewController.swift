@@ -493,8 +493,13 @@ class FilesRootViewController: BaseViewController{
         self.navigationDrawerController?.isLeftPanGestureEnabled = true
         navigationController?.delegate = self
 //        if (self.navigationDrawerController?.rootViewController) != nil {
-            let tab = retrieveTabbarController()
-            tab?.setTabBarHidden(false, animated: true)
+        if let controller = UIViewController.currentViewController(){
+            if  controller.isKind(of: LoginRootViewController.self){
+                let tab = retrieveTabbarController()
+                tab?.setTabBarHidden(false, animated: true)
+            }
+        }
+        
 //            let drawerController:FilesDrawerTableViewController = self.navigationDrawerController?.leftViewController as! FilesDrawerTableViewController
 //            drawerController.delegate = self
 //        }

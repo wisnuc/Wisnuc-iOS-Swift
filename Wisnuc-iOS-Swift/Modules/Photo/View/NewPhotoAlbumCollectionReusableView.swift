@@ -10,7 +10,7 @@ import UIKit
 import MaterialComponents.MaterialTextFields
 import Material
 
-private let textFieldTopMargin:CGFloat = 56
+private let textFieldTopMargin:CGFloat = 36
 private let textFieldLeftMargin:CGFloat = 66
 enum NewPhotoAlbumCollectionReusableViewState{
     case normal
@@ -101,7 +101,7 @@ class NewPhotoAlbumCollectionReusableView: UICollectionReusableView {
         self.inputTextFieldController?.isFloatingEnabled = false
         self.inputTextFieldController?.placeholderText = "相簿标题"
         self.inputTextFieldController?.activeColor = COR3
-         textView.clipsToBounds = false
+        textView.clipsToBounds = false
         textView.layer.shadowOffset = CGSize(width: 0.5, height: 0.5)
         textView.layer.shadowRadius = 1
         textView.layer.shadowOpacity = 0.5

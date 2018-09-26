@@ -14,12 +14,13 @@ import MaterialComponents.MaterialButtons
 private var menuButton: IconButton!
 
 @objc protocol PhotoRootViewControllerDelegate {
-    func creatNewAblum(assets:Array<WSAsset>)
+    func selectPhotoComplete(assets:Array<WSAsset>)
 }
 
 enum PhotoRootViewControllerState{
     case normal
     case select
+    case creat
 }
 
 class PhotoRootViewController: BaseViewController {
@@ -34,6 +35,8 @@ class PhotoRootViewController: BaseViewController {
                 normalStateAction()
             case .select?:
                 selectStateAction()
+            case .creat?:
+                creatStateAction()
             default:
                 break
             }
@@ -141,12 +144,23 @@ class PhotoRootViewController: BaseViewController {
         self.style = .select
          self.isSelectMode = true
          photoCollcectionViewController.isSelectMode = true
+         photoCollcectionViewController.state = self.state
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_:)))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "完成"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightCreatBarButtonItemTap(_:)))
+    }
+    
+    func creatStateAction(){
+        self.style = .select
+        self.isSelectMode = true
+        photoCollcectionViewController.isSelectMode = true
+        photoCollcectionViewController.state = self.state
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_:)))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "创建"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightCreatBarButtonItemTap(_:)))
     }
     
     func normalStateAction(){
          self.isSelectMode = false
+        photoCollcectionViewController.state = self.state
         photoCollcectionViewController.isSelectMode = false
     }
     
@@ -179,7 +193,7 @@ class PhotoRootViewController: BaseViewController {
             return
         }
         self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
-            self?.delegate?.creatNewAblum(assets: (self?.photoCollcectionViewController.choosePhotos)!)
+            self?.delegate?.selectPhotoComplete(assets: (self?.photoCollcectionViewController.choosePhotos)!)
         })
     }
     

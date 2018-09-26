@@ -36,6 +36,11 @@ class PhotoCollectionViewController: UICollectionViewController {
     var showIndicator:Bool = true
     var sortedAssetsBackupArray:Array<WSAsset>?
     var dispose = DisposeBag()
+    var state:PhotoRootViewControllerState?{
+        didSet{
+            
+        }
+    }
     var dataSource:Array<Array<WSAsset>>?{
         didSet{
             mainThreadSafe {
@@ -359,20 +364,21 @@ class PhotoCollectionViewController: UICollectionViewController {
                     (header as! FMHeadView).isChoose =  (self?.choosePhotos.contains(array:(self?.dataSource![indexPath.section])!))!
                 }
             }
-            
-            if self?.choosePhotos.count == 0 {
-                self?.isSelectMode = false
-                let headers = self?.collectionView?.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionHeader)
-                if let headers = headers {
-                    for header in headers {
-                        (header as! FMHeadView).isChoose = false
-                        (header as! FMHeadView).isSelectMode = (self?.isSelectMode)!
-                     
+            if self?.state == .normal{
+                if self?.choosePhotos.count == 0{
+                    self?.isSelectMode = false
+                    let headers = self?.collectionView?.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionHeader)
+                    if let headers = headers {
+                        for header in headers {
+                            (header as! FMHeadView).isChoose = false
+                            (header as! FMHeadView).isSelectMode = (self?.isSelectMode)!
+                            
+                        }
                     }
+                    //                [weakSelf leftBtnClick:_leftBtn];
                 }
-//                [weakSelf leftBtnClick:_leftBtn];
             }
-//            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
+            //            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
         }
         
         cell.longPressBlock = { [weak self] in
@@ -603,7 +609,7 @@ extension PhotoCollectionViewController:FMHeadViewDelegate{
             }
         }
         
-        if self.choosePhotos.count == 0 {
+        if self.choosePhotos.count == 0{
             self.isSelectMode = false
             let headers = self.collectionView?.visibleSupplementaryViews(ofKind: UICollectionElementKindSectionHeader)
             if let headers = headers {

@@ -7,12 +7,18 @@
 //
 
 import UIKit
-enum PhotoAlbumType:String,Codable{
+import HandyJSON
+enum PhotoAlbumType:String,HandyJSONEnum{
     case collecion
     case my
 }
 
-struct PhotoAlbumModel: Codable {
+class PhotoAlbumModel:HandyJSON{
     var type:PhotoAlbumType?
     var name:String?
+    var describe:String?
+    var dataSource:[WSAsset]?
+    required init() {
+        
+    }
 }
