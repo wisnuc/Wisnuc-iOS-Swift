@@ -90,14 +90,7 @@ func sizeString(_ size :Int64) ->String{
     return sizeText ?? ""
 }
 
-func timeString(_ timeSecond:TimeInterval) ->String{
-    let date = Date.init(timeIntervalSince1970: timeSecond)
-    let formater = DateFormatter.init()
-    formater.dateFormat = "yyyy年MM月dd日"
-//    "yyyy年MM月dd日 hh:mm:ss"
-    let dateString = formater.string(from: date)
-    return dateString
-}
+
 
 func saveToUserDefault(value:Any,key:String){
     userDefaults.set(value, forKey: key)

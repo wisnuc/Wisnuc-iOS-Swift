@@ -291,7 +291,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 cell.moreButton.isEnabled = isSelectModel! ? false : true
                 cell.moreButton.isHidden = self.state == .movecopy ? true : false
                 cell.titleLabel.text = model.name
-                let time = model.mtime != nil ? timeString(TimeInterval(model.mtime!/1000)) : LocalizedString(forKey: "No time")
+                let time = model.mtime != nil ? TimeTools.timeString(TimeInterval(model.mtime!/1000)) : LocalizedString(forKey: "No time")
                 let size = model.size != nil ? sizeString(Int64(model.size!)) : ""
                 cell.detailLabel.text = "\(time) \(size)"
                 cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in

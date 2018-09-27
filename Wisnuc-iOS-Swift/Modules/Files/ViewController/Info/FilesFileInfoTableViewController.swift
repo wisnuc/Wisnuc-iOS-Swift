@@ -125,7 +125,7 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
 //            cell.rightLabel.text = "2"
         case 3:
             cell.leftLabel.text = LocalizedString(forKey: "创建时间")
-            cell.rightLabel.text =  model?.mtime != nil ? timeString(TimeInterval((model?.mtime!)!/1000)) : LocalizedString(forKey: "No time")
+            cell.rightLabel.text =  model?.mtime != nil ? TimeTools.timeString(TimeInterval((model?.mtime!)!/1000)) : LocalizedString(forKey: "No time")
 //        case 6:
 //            cell.leftLabel.text = LocalizedString(forKey: "Modify")
 //            cell.rightLabel.text = "30/12/2016 by Leo An"

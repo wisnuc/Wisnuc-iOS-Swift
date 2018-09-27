@@ -71,6 +71,39 @@ extension PHAsset{
         return isInLocalAblum;
     }
     
+    func getName() -> String? {
+       let name = (PHAssetResource.assetResources(for:self ))[0].originalFilename
+        return name
+    }
+    
+    func getSizeString() -> String? {
+        let option = PHImageRequestOptions.init()
+        option.isNetworkAccessAllowed = false
+        option.isSynchronous = true
+        var size = ""
+        PHImageManager.default().requestImageData(for: self, options: option, resultHandler: { imageData, dataUTI, orientation, info in
+        
+//            var imageSize = Float((imageData?.count ?? 0)) //convert to Megabytes
+//            imageSize = imageSize / (1024 * 1024.0)
+             size =  sizeString(Int64(imageData?.count ?? 0))
+        })
+        return size
+    }
+    
+    func getAssetPath() -> URL? {
+        let option = PHImageRequestOptions.init()
+        option.isNetworkAccessAllowed = false
+        option.isSynchronous = true
+        var path:URL?
+        PHImageManager.default().requestImageData(for: self, options: option, resultHandler: { imageData, dataUTI, orientation, info in
+            path =  info!["PHImageFileURLKey"] as? URL
+        })
+        return path
+    }
+    
+//    : "PHImageFileURLKey"
+//    - value : file:///var/mobile/Media/DCIM/104APPLE/IMG_4887.PNG
+    
     func getTmpPath() -> String {
         let  mgr = FileManager.default
         let tmp = JY_TMP_Folder

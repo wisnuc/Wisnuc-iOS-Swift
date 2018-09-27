@@ -13,6 +13,11 @@ import AVKit
 import SnapKit
 import RxSwift
 
+enum  WSShowBigimgViewControllerState{
+    case imageBrowser
+    case info
+}
+
 @objc protocol WSShowBigImgViewControllerDelegate {
     func photoBrowser(browser:WSShowBigimgViewController, indexPath:IndexPath)
     func photoBrowser(browser:WSShowBigimgViewController, willDismiss indexPath:IndexPath) ->UIView?
@@ -30,7 +35,20 @@ class WSShowBigimgViewController: UIViewController {
     var isFirstAppear:Bool = true
     var currentModelForRecord:WSAsset?
     var disposeBag = DisposeBag()
+    var state:WSShowBigimgViewControllerState?{
+        didSet{
+            switch state {
+            case .imageBrowser?:
+                imageBrowserStateAction()
+            case .info?:
+                infoStateAction()
+            default:
+                break
+            }
+        }
+    }
     private let cellReuseIdentifier = "WSBigimgCollectionViewCell"
+    private let infoCellReuseIdentifier = "infoCellReuseIdentifierCell"
     init() {
         super.init(nibName: nil, bundle: nil)
         if self.responds(to: #selector(getter: self.automaticallyAdjustsScrollViewInsets) ){
@@ -55,6 +73,7 @@ class WSShowBigimgViewController: UIViewController {
         self.view.addSubview(self.collectionView)
         collectionView.setContentOffset(CGPoint(x: __kWidth + CGFloat(kItemMargin)*CGFloat(indexBeforeRotation), y: 0), animated: false)
         initNavBtns()
+        self.view.addSubview(self.infoTableView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -155,6 +174,17 @@ class WSShowBigimgViewController: UIViewController {
             .disposed(by:disposeBag )
     }
     
+    func imageBrowserStateAction(){
+        self.collectionView.isScrollEnabled = true
+        self.infoTableView.alpha = 0
+        self.view.backgroundColor = .black
+    }
+
+    func infoStateAction(){
+        self.collectionView.isScrollEnabled = false
+        self.view.backgroundColor = .white
+    }
+    
     func gestureSetting(){
         self.view.addGestureRecognizer(panGesture)
         let longGesture = UILongPressGestureRecognizer.init(target: self, action:#selector(longGestureRecognized(_ :)))
@@ -233,6 +263,7 @@ class WSShowBigimgViewController: UIViewController {
             let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
             cell?.reloadGifLivePhoto()
         }
+        self.infoTableView.reloadData()
     }
 
     
@@ -404,6 +435,10 @@ class WSShowBigimgViewController: UIViewController {
         }
     }
     
+    func infoBrowser(translatedPoint:CGPoint,gesture:UIPanGestureRecognizer){
+       
+    }
+    
     @objc func panGestureRecognized(_ gesture:UIPanGestureRecognizer){
         
         let scrollView = self.collectionView
@@ -415,35 +450,109 @@ class WSShowBigimgViewController: UIViewController {
         firstY = viewHalfHeight
         
         let translatedPoint = gesture.translation(in: self.view)
-        
+//        self.infoBrowser(translatedPoint: translatedPoint,gesture)
         let absX = CGFloat(fabs(translatedPoint.x))
         let absY = CGFloat(fabs(translatedPoint.y)) // 设置滑动有效距离
         if max(absX, absY) < 10 {
             return
         }
+        
+        
         if absX > absY {
             if translatedPoint.x < 0 {
+                if self.state ==  .info{
+                    return
+                }
                 //向左滑动
             } else {
                 //向右滑动
+                if self.state ==  .info{
+                    return
+                }
             }
         } else if absY > absX {
             if translatedPoint.y < 0 {
-                
                 isdraggingPhoto = true
                 self.setNeedsStatusBarAppearanceUpdate()
-                let newTranslatedPoint = CGPoint(x: firstX+translatedPoint.x, y: firstY+translatedPoint.y)
+                //                let newTranslatedPoint = CGPoint(x: firstX+translatedPoint.x, y: firstY+translatedPoint.y)
+                print(translatedPoint.y)
+                if scrollView.center.y <= scrollView.height/4 - scrollView.height/2{
+                    if gesture.state == UIGestureRecognizerState.changed {
+                        var point :CGFloat = -35
+                        if translatedPoint.y > -35{
+                            point = translatedPoint.y
+                        }
+                        print("😁\(point)")
+                        UIView.animate(withDuration: 0.05, animations: {
+                            scrollView.center = CGPoint(x: scrollView.center.x, y: scrollView.center.y+point)
+                            self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom  - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
+                        }) { (finish) in
+                            UIView.animate(withDuration: 0.2, delay: 0.1, options: UIView.AnimationOptions.curveEaseIn, animations: {
+                                scrollView.center = CGPoint(x: scrollView.center.x, y: scrollView.center.y-point)
+                                self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
+                            }, completion: { (finish) in
+                                
+                            })
+                        }
+                    }
+                    return
+                }
+                
                 if gesture.state == UIGestureRecognizerState.changed {
-                    scrollView.center = CGPoint(x: scrollView.center.x, y: firstY+translatedPoint.y)
+                    gesture.isEnabled = false
+                    let rect = self.getCurrentPageRect()
+                    if rect.height < __kHeight - 2{
+                        self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom - (__kHeight - rect.height)/2 - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
+                    }else{
+                        self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
+                    }
+                    UIView.animate(withDuration: 0.3, delay: 0.1, options: UIView.AnimationOptions.curveEaseIn, animations: {
+                        if rect.height < __kHeight - 2{
+                            scrollView.center = CGPoint(x: scrollView.center.x, y: scrollView.height/4 - scrollView.height/2 + (__kHeight - rect.height)/2)
+                            self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom - (__kHeight - rect.height)/2 - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
+                        }else{
+                            scrollView.center = CGPoint(x: scrollView.center.x, y: scrollView.height/4 - scrollView.height/2)
+                            self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
+                        }
+                        self.infoTableView.alpha = 1
+                    }, completion: { (finish) in
+                        gesture.isEnabled = true
+                        self.state = .info
+                    })
+//                    UIView.animate(withDuration: 0.5, animations: {
+//                        self.infoTableView.alpha = 1
+//                        scrollView.center = CGPoint(x: scrollView.center.x, y: scrollView.height/4 - scrollView.height/2)
+//                        if rect.height < __kHeight - 2{
+//                             self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom - rect.height - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
+//                        }else{
+//                            self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
+//
+//                        }
+//
+//                    }) { (finsih) in
+//                        gesture.isEnabled = true
+//                        self.state = .info
+//                    }
                 }
                 return
             } else {
+                if scrollView.top <  -(__kHeight/4){
+                    if gesture.state == UIGestureRecognizerState.changed {
+                        gesture.isEnabled = false
+                        UIView.animate(withDuration: 0.3, animations: {
+                            scrollView.center = CGPoint(x: scrollView.center.x, y: __kHeight/2)
+                            self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom, width: __kWidth, height: __kHeight - scrollView.height/4)
+                            self.infoTableView.alpha = 0
+                        }) { (finsih) in
+                            gesture.isEnabled = true
+                            self.state = .imageBrowser
+                        }
+                    }
+                    return
+                }
                 //向下滑动
             }
         }
-
-            
-  
         isdraggingPhoto = true
         self.setNeedsStatusBarAppearanceUpdate()
         let newTranslatedPoint = CGPoint(x: firstX+translatedPoint.x, y: firstY+translatedPoint.y)
@@ -458,7 +567,6 @@ class WSShowBigimgViewController: UIViewController {
 
         self.view.backgroundColor = UIColor.init(white: 0, alpha: CGFloat(newAlpha))
         
-        scrollView.isScrollEnabled = false
 
       
         // Gesture Ended
@@ -567,6 +675,18 @@ class WSShowBigimgViewController: UIViewController {
         return collection
     }()
     
+    lazy var infoTableView: UITableView = {
+        let tableView = UITableView.init(frame: CGRect.init(x: 0, y: __kHeight, width: __kWidth, height: __kHeight), style: UITableViewStyle.grouped)
+        tableView.register(UINib.init(nibName: StringExtension.classNameAsString(targetClass: BigPhotoInfoTableViewCell.self), bundle: nil), forCellReuseIdentifier: infoCellReuseIdentifier)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.isPagingEnabled = true
+//        tableView.backgroundColor = UIColor.clear
+        tableView.bounces = false
+        tableView.alpha = 0
+        return tableView
+    }()
+    
     lazy var panGesture: UIPanGestureRecognizer = {
         let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(panGestureRecognized(_ :)))
         gesture.minimumNumberOfTouches = 1
@@ -607,11 +727,13 @@ class WSShowBigimgViewController: UIViewController {
         let imageView = UIImageView.init(image: UIImage.init(named: "ic_cloud_white"))
         return imageView
     }()
+    
+    lazy var describeTextField = UITextField.init()
 }
 
 extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDataSource{
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -646,6 +768,9 @@ extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDa
 extension WSShowBigimgViewController:UIScrollViewDelegate{
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == collectionView  {
+            if scrollView.center.y <= scrollView.height/4 - scrollView.height/2{
+                return
+            }
             let m =  self.getCurrentPageModel()
             if (m == nil || currentModelForRecord == m){
                 return
@@ -682,3 +807,78 @@ extension WSShowBigimgViewController:SWPreviewVideoPlayerDelegate{
         }
     }
 }
+
+extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 4
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:BigPhotoInfoTableViewCell = tableView.dequeueReusableCell(withIdentifier: infoCellReuseIdentifier, for: indexPath) as! BigPhotoInfoTableViewCell
+        tableView.separatorStyle = .none
+        let model = getCurrentPageModel()
+        let fileUrl:URL = model?.asset?.getAssetPath() ?? URL.init(fileURLWithPath: "")
+        let imageSource = CGImageSourceCreateWithURL(fileUrl as CFURL, nil)
+        if imageSource != nil{
+            let imageInfo = CGImageSourceCopyPropertiesAtIndex(imageSource!, 0, nil)
+            if let dict = imageInfo as? [AnyHashable : Any] {
+                print(dict[kCGImagePropertyExifDictionary] as Any)
+                print("EXIF:\(dict)")
+            }
+//            var exifDic = CFDictionaryGetValue(imageInfo, kCGImagePropertyExifDictionary) as? [AnyHashable : Any]
+            print("All Exif Info:\(String(describing: imageInfo))")
+        }
+       
+    
+        switch indexPath.row {
+        case 0:
+            cell.leftImageView.image = UIImage.init(named: "calendar_gray.png")
+            cell.titleLabel.text =  model is NetAsset ? TimeTools.timeString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.timeString(model?.asset?.creationDate ?? Date.init())
+            cell.detailLabel.text = model is NetAsset ? "\(TimeTools.weekDay(TimeInterval((model as! NetAsset).mtime ?? 0)/1000)) \(TimeTools.timeHourMinuteString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000))" : "\(TimeTools.weekDay(model?.asset?.creationDate ?? Date.init())) \(TimeTools.timeHourMinuteString(model?.asset?.creationDate ?? Date.init()))"
+            
+        case 1:
+            cell.leftImageView.image = UIImage.init(named: "photo_gray_info.png")
+            if model is NetAsset{
+              cell.titleLabel.text = (model as! NetAsset).name  ?? ""
+            }else{
+                if let asset = model?.asset{
+                   cell.titleLabel.text = asset.getName()
+                }
+            }
+            
+            cell.detailLabel.text = model is NetAsset ? sizeString((model as! NetAsset).size ?? 0) : model?.asset?.getSizeString()
+        case 2:
+            cell.leftImageView.image = UIImage.init(named: "lens_gary.png")
+            cell.titleLabel.text =  model is NetAsset ? TimeTools.timeString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.timeString(model?.asset?.creationDate ?? Date.init())
+            cell.detailLabel.text = model is NetAsset ? TimeTools.weekDay(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.weekDay(model?.asset?.creationDate ?? Date.init())
+        case 3:
+            cell.leftImageView.image = UIImage.init(named: "location_gary.png")
+            cell.titleLabel.text =  model is NetAsset ? TimeTools.timeString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.timeString(model?.asset?.creationDate ?? Date.init())
+            cell.detailLabel.text = model is NetAsset ? TimeTools.weekDay(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.weekDay(model?.asset?.creationDate ?? Date.init())
+        default:
+            break
+        }
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 56
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView.init(frame: CGRect.zero)
+        self.describeTextField.frame = CGRect(x: MarginsWidth, y: 0, width: __kWidth - MarginsWidth*2, height: 56 - 1)
+        self.describeTextField.placeholder = LocalizedString(forKey: "添加说明")
+        let view = UIView.init(frame: CGRect(x: 0, y: 56 - 1, width: __kWidth, height: 1))
+        view.backgroundColor = Gray12Color
+        headerView.backgroundColor = .white
+        headerView.addSubview(self.describeTextField)
+        headerView.addSubview(view)
+        return headerView
+    }
+}
+
