@@ -12,6 +12,7 @@ import Photos
 import AVKit
 import SnapKit
 import RxSwift
+import MapKit
 
 enum  WSShowBigimgViewControllerState{
     case imageBrowser
@@ -64,16 +65,21 @@ class WSShowBigimgViewController: UIViewController {
     }
     
     deinit {
+        self.mapView?.removeFromSuperview()
+        self.mapView = nil
         print("show big image deinit")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setState(.imageBrowser)
         basicSetting()
         self.view.addSubview(self.collectionView)
         collectionView.setContentOffset(CGPoint(x: __kWidth + CGFloat(kItemMargin)*CGFloat(indexBeforeRotation), y: 0), animated: false)
         initNavBtns()
         self.view.addSubview(self.infoTableView)
+        self.view.addSubview(self.shareView)
+        shareView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -104,15 +110,19 @@ class WSShowBigimgViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if (self.getCurrentPageModel()!.type == .Image && self.getCurrentPageModel()?.type != .NetImage) {
-            rightImageView.isHidden = true
-        }else if self.getCurrentPageModel()?.type == .NetImage {
-            rightImageView.isHidden = false
-        }
+//        if (self.getCurrentPageModel()!.type == .Image && self.getCurrentPageModel()?.type != .NetImage) {
+//            rightImageView.isHidden = true
+//        }else if self.getCurrentPageModel()?.type == .NetImage {
+//            rightImageView.isHidden = false
+//        }
+    }
+    
+    
+    func setState(_ state:WSShowBigimgViewControllerState){
+        self.state = state
     }
     
     func basicSetting(){
-        self.view.backgroundColor = UIColor.black
         ViewTools.automaticallyAdjustsScrollView(scrollView: collectionView, viewController: self)
         self.view.clipsToBounds = true
         self.view.alpha = 0
@@ -139,27 +149,37 @@ class WSShowBigimgViewController: UIViewController {
             make.centerY.equalTo((self?.naviView.snp.centerY)!).offset(10)
         }
         
-        naviView.addSubview(rightNaviButton)
+        naviView.addSubview(moreNaviButton)
         
-        rightNaviButton.snp.makeConstraints { [weak self] (make) in
+        moreNaviButton.snp.makeConstraints { [weak self] (make) in
             make.centerY.equalTo((self?.titleLabel.snp.centerY)!)
-            make.right.equalTo((self?.naviView.snp.right)!).offset(-10)
+            make.right.equalTo((self?.naviView.snp.right)!).offset(-16)
             make.size.equalTo(CGSize(width: 24, height: 24))
         }
         
-        rightNaviButton.setEnlargeEdgeWithTop(5, right: 5, bottom: 5, left: 5)
+        moreNaviButton.setEnlargeEdgeWithTop(5, right: 5, bottom: 5, left: 5)
+        
+        naviView.addSubview(shareNaviButton)
+        shareNaviButton.snp.makeConstraints { [weak self] (make) in
+            make.centerY.equalTo((self?.titleLabel.snp.centerY)!)
+            make.right.equalTo((self?.moreNaviButton.snp.left)!).offset(-MarginsWidth)
+            make.size.equalTo(CGSize(width: 24, height: 24))
+        }
+        
+       
    
-        naviView.addSubview(rightImageView)
-        
-        rightImageView.snp.makeConstraints { [weak self] (make) in
-            make.centerY.equalTo((self?.titleLabel.snp.centerY)!)
-            make.right.equalTo((self?.rightNaviButton.snp.left)!).offset(-16)
-            make.size.equalTo(CGSize(width: 24, height: 24))
-        }
+//        naviView.addSubview(rightImageView)
+//
+//        rightImageView.snp.makeConstraints { [weak self] (make) in
+//            make.centerY.equalTo((self?.titleLabel.snp.centerY)!)
+//            make.right.equalTo((self?.rightNaviButton.snp.left)!).offset(-16)
+//            make.size.equalTo(CGSize(width: 24, height: 24))
+//        }
         
         if (self.getCurrentPageModel()?.type != .NetImage ) {
-            rightImageView.isHidden = true
+//            rightImageView.isHidden = true
         }
+        
         
         self.view.addSubview(naviView)
     }
@@ -175,6 +195,7 @@ class WSShowBigimgViewController: UIViewController {
     }
     
     func imageBrowserStateAction(){
+        setImageBrowserStateNavigationBar()
         self.collectionView.isScrollEnabled = true
         self.infoTableView.alpha = 0
         self.view.backgroundColor = .black
@@ -183,6 +204,14 @@ class WSShowBigimgViewController: UIViewController {
     func infoStateAction(){
         self.collectionView.isScrollEnabled = false
         self.view.backgroundColor = .white
+    }
+    
+    func setImageBrowserStateNavigationBar(){
+    
+    }
+    
+    func setInfoStateStateNavigationBar(){
+    
     }
     
     func gestureSetting(){
@@ -435,8 +464,36 @@ class WSShowBigimgViewController: UIViewController {
         }
     }
     
+    func shareViewAction(){
+        backView.backgroundColor = .black
+        backView.alpha = 0
+        self.view.addSubview(backView)
+        self.view.bringSubview(toFront:shareView)
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: UIViewAnimationOptions.curveEaseIn, animations: {
+            self.backView.alpha = 0.54
+            self.shareView.frame = CGRect(x: 0, y: __kHeight - self.shareView.height, width: self.shareView.width, height: self.shareView.height)
+        }) { (finish) in
+           self.panGesture.isEnabled = false
+        }
+    }
+    
+    
     func infoBrowser(translatedPoint:CGPoint,gesture:UIPanGestureRecognizer){
        
+    }
+    
+    func fetchAssetEXIFInfo(model:WSAsset?) ->[AnyHashable : Any]? {
+        let fileUrl:URL = model?.asset?.getAssetPath() ?? URL.init(fileURLWithPath: "")
+        let imageSource = CGImageSourceCreateWithURL(fileUrl as CFURL, nil)
+        if imageSource != nil{
+            let imageInfo = CGImageSourceCopyPropertiesAtIndex(imageSource!, 0, nil)
+            if let dict = imageInfo as? [AnyHashable : Any] {
+//                print("EXIF:\(dict)")
+                return dict
+            }
+        }
+        
+        return nil
     }
     
     @objc func panGestureRecognized(_ gesture:UIPanGestureRecognizer){
@@ -638,11 +695,29 @@ class WSShowBigimgViewController: UIViewController {
     }
     
     @objc func readyToShare(){
-        
+        self.shareViewAction()
     }
     
     @objc func doneButtonPressed(){
        self.performDismissAnimation()
+    }
+    
+    @objc func shareItemTap(_ sender:UIBarButtonItem){
+        
+    }
+    
+    @objc func moreItemTap(_ sender:UIButton){
+        
+    }
+    
+    @objc func backViewTap(_ sender:UITapGestureRecognizer?){
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: UIViewAnimationOptions.curveEaseOut, animations: {
+             self.shareView.frame = CGRect(x: 0, y: __kHeight, width: __kWidth, height: 266)
+             self.backView.alpha = 0
+        }) { (finish) in
+             self.backView.removeFromSuperview()
+             self.panGesture.isEnabled = true
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -716,19 +791,41 @@ class WSShowBigimgViewController: UIViewController {
         return button
     }()
     
-    lazy var rightNaviButton: UIButton = {
+    lazy var moreNaviButton: UIButton = {
         let button  = UIButton.init()
-        button.setImage(UIImage.init(named: "more_white"), for: UIControlState.normal)
+        button.setImage(MDCIcons.imageFor_ic_more_horiz()?.byTintColor(.white), for: UIControlState.normal)
+        button.addTarget(self, action: #selector(moreItemTap(_:)), for: UIControlEvents.touchUpInside)
+        return button
+    }()
+    
+    lazy var shareNaviButton: UIButton = {
+        let button  = UIButton.init()
+        button.setImage(UIImage.init(named: "share_white.png"), for: UIControlState.normal)
         button.addTarget(self, action: #selector(readyToShare), for: UIControlEvents.touchUpInside)
         return button
     }()
     
-    lazy var rightImageView: UIImageView = {
-        let imageView = UIImageView.init(image: UIImage.init(named: "ic_cloud_white"))
-        return imageView
+    lazy var backView: UIView = {
+        let view  = UIView.init(frame: CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight))
+        view.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer.init(target: self, action: #selector(backViewTap(_ :)))
+        view.addGestureRecognizer(tap)
+        return view
     }()
+
+    lazy var shareView = PhotoShareView.init(frame: CGRect(x: 0, y: __kHeight, width: __kWidth, height: 266))
     
+    
+//    lazy var rightImageView: UIImageView = {
+//        let imageView = UIImageView.init(image: UIImage.init(named: "ic_cloud_white"))
+//        return imageView
+//    }()
+
+
     lazy var describeTextField = UITextField.init()
+    
+    lazy var mapView:MKMapView? = MKMapView.init()
+ 
 }
 
 extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDataSource{
@@ -817,19 +914,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
         let cell:BigPhotoInfoTableViewCell = tableView.dequeueReusableCell(withIdentifier: infoCellReuseIdentifier, for: indexPath) as! BigPhotoInfoTableViewCell
         tableView.separatorStyle = .none
         let model = getCurrentPageModel()
-        let fileUrl:URL = model?.asset?.getAssetPath() ?? URL.init(fileURLWithPath: "")
-        let imageSource = CGImageSourceCreateWithURL(fileUrl as CFURL, nil)
-        if imageSource != nil{
-            let imageInfo = CGImageSourceCopyPropertiesAtIndex(imageSource!, 0, nil)
-            if let dict = imageInfo as? [AnyHashable : Any] {
-                print(dict[kCGImagePropertyExifDictionary] as Any)
-                print("EXIF:\(dict)")
-            }
-//            var exifDic = CFDictionaryGetValue(imageInfo, kCGImagePropertyExifDictionary) as? [AnyHashable : Any]
-            print("All Exif Info:\(String(describing: imageInfo))")
-        }
-       
-    
+
         switch indexPath.row {
         case 0:
             cell.leftImageView.image = UIImage.init(named: "calendar_gray.png")
@@ -846,15 +931,120 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                 }
             }
             
-            cell.detailLabel.text = model is NetAsset ? sizeString((model as! NetAsset).size ?? 0) : model?.asset?.getSizeString()
+            var infoArray:Array<String> = Array.init()
+            if let exifDic = self.fetchAssetEXIFInfo(model: model){
+                if  let compressedBitsPerPixel = exifDic[kCGImagePropertyExifCompressedBitsPerPixel] as? NSNumber{
+                    print(compressedBitsPerPixel)
+                }
+                if  let pixelWidthNumber = exifDic[kCGImagePropertyPixelWidth] as? NSNumber,let pixelHeightNumber = exifDic[kCGImagePropertyPixelHeight] as? NSNumber{
+                    let pixelWidth = pixelWidthNumber.stringValue
+                    let pixelHeight = pixelHeightNumber.stringValue
+                    let pixel = "\(pixelWidth)x\(pixelHeight)"
+//                    print(pixel)
+                    infoArray.append(pixel)
+                }else if let pixelWidthNumber = exifDic["PixelWidth"] as? NSNumber,let pixelHeightNumber = exifDic["PixelHeight"] as? NSNumber{
+                    let pixelWidth = pixelWidthNumber.stringValue
+                    let pixelHeight = pixelHeightNumber.stringValue
+                    let pixel = "\(pixelWidth)x\(pixelHeight)"
+//                    print(pixel)
+                    infoArray.append(pixel)
+                }
+           }
+            
+            if let size = model is NetAsset ? sizeString((model as! NetAsset).size ?? 0) : model?.asset?.getSizeString(){
+                infoArray.append(size)
+            }
+            cell.detailLabel.text = infoArray.joined(separator: "  ")
         case 2:
             cell.leftImageView.image = UIImage.init(named: "lens_gary.png")
-            cell.titleLabel.text =  model is NetAsset ? TimeTools.timeString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.timeString(model?.asset?.creationDate ?? Date.init())
-            cell.detailLabel.text = model is NetAsset ? TimeTools.weekDay(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.weekDay(model?.asset?.creationDate ?? Date.init())
+            var infoArray:Array<String> = Array.init()
+            if let exifDic = self.fetchAssetEXIFInfo(model: model){
+                if  let imageTIFFDictionary = exifDic[kCGImagePropertyTIFFDictionary] as? [AnyHashable : Any]{
+                    if let imageTIFFModel = imageTIFFDictionary[kCGImagePropertyTIFFModel] as? String{
+                    cell.titleLabel.text = imageTIFFModel
+//                    print(imageTIFFModel)
+                    }
+                    if  let imageExifDictionary = exifDic[kCGImagePropertyExifDictionary] as? [AnyHashable : Any]{
+                        if  let imageFNumber = imageExifDictionary[kCGImagePropertyExifFNumber] as? NSNumber{
+                            let imageFNumberString = "f/\(imageFNumber.stringValue)"
+                            infoArray.append(imageFNumberString)
+                        }
+                        
+                        if  let imageExposureTime = imageExifDictionary[kCGImagePropertyExifExposureTime] as? NSNumber{
+                            var exposureTimeString = ""
+                            if imageExposureTime.floatValue < 1.00000{
+                               exposureTimeString = "1/\(String.init(format: "%.2f", imageExposureTime.floatValue*100))"
+                            }else{
+                               exposureTimeString = "\(String.init(format: "%.f", imageExposureTime.floatValue))s"
+                            }
+                            infoArray.append(exposureTimeString)
+                        }
+                        
+                        if  let imageFocalLength = imageExifDictionary[kCGImagePropertyExifFocalLength] as? NSNumber{
+                            infoArray.append("\(imageFocalLength.stringValue)mm")
+                        }
+                        
+                        if  let imageISOSpeedRatings = imageExifDictionary[kCGImagePropertyExifISOSpeedRatings] as? [NSNumber]{
+                            print(imageISOSpeedRatings)
+                            if imageISOSpeedRatings.count > 0{
+                                infoArray.append("ISO \(imageISOSpeedRatings[0].stringValue)")
+                            }
+                        }
+                    }
+                }
+            }
+           cell.detailLabel.text = infoArray.joined(separator: "  ")
         case 3:
             cell.leftImageView.image = UIImage.init(named: "location_gary.png")
-            cell.titleLabel.text =  model is NetAsset ? TimeTools.timeString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.timeString(model?.asset?.creationDate ?? Date.init())
-            cell.detailLabel.text = model is NetAsset ? TimeTools.weekDay(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.weekDay(model?.asset?.creationDate ?? Date.init())
+            var infoArray:Array<String> = Array.init()
+            if let exifDic = self.fetchAssetEXIFInfo(model: model){
+                if  let imageGPSDictionary = exifDic[kCGImagePropertyGPSDictionary] as? [AnyHashable : Any]{
+                    print(imageGPSDictionary)
+                    if let imageLatitude = imageGPSDictionary[kCGImagePropertyGPSLatitude] as? NSNumber,let imageLongitude = imageGPSDictionary[kCGImagePropertyGPSLongitude] as? NSNumber{
+                        // 创建经纬度
+                        let location = CLLocation(latitude: imageLatitude.doubleValue, longitude: imageLongitude.doubleValue)
+                        let cLGeocoder = CLGeocoder.init()
+                        cLGeocoder.reverseGeocodeLocation(location) {(placemarks, error) in
+                            if let  placemarks = placemarks{
+                                if  placemarks.count > 0{
+                                    var locationArray:Array<String> = Array.init()
+                                    let place = placemarks[0]
+                                    if  let country = place.country{
+                                        locationArray.append(country)
+                                    }
+                                    
+                                    if  let locality = place.locality{
+                                        locationArray.append(locality)
+                                    }
+                                    
+                                    if  let subLocality = place.subLocality{
+                                        locationArray.append(subLocality)
+                                    }
+                                    
+                                    cell.titleLabel.text = locationArray.joined(separator: "")
+                                }
+                            }
+                        }
+                        
+                        let centerCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2DMake(imageLatitude.doubleValue, imageLongitude.doubleValue)
+                        let span: MKCoordinateSpan = MKCoordinateSpanMake(0.1, 0.1)
+                        let region: MKCoordinateRegion = MKCoordinateRegionMake(centerCoordinate, span)
+                        mapView?.region = region
+                        mapView?.showsTraffic = true
+                        let pin = MapPin.init(coordinate: centerCoordinate)
+                        mapView?.addAnnotation(pin)
+                        let latitude = String.init(format: "%.3f", imageLatitude.floatValue)
+                        let longitude = String.init(format: "%.3f", imageLongitude.floatValue)
+                        let coordinate = "\(latitude),\(longitude)"
+                        print(coordinate)
+                        infoArray.append(coordinate)
+                    }
+                }
+            }
+            
+            cell.detailLabel.text = infoArray.joined(separator: "  ")
+//            cell.titleLabel.text =  model is NetAsset ? TimeTools.timeString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.timeString(model?.asset?.creationDate ?? Date.init())
+          
         default:
             break
         }
@@ -869,6 +1059,10 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
         return 56
     }
     
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 154
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView.init(frame: CGRect.zero)
         self.describeTextField.frame = CGRect(x: MarginsWidth, y: 0, width: __kWidth - MarginsWidth*2, height: 56 - 1)
@@ -880,5 +1074,53 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
         headerView.addSubview(view)
         return headerView
     }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        self.mapView?.isZoomEnabled = false
+        self.mapView?.isScrollEnabled = false
+        self.mapView?.isRotateEnabled = false
+        self.mapView?.delegate = self
+       return self.mapView
+    }
+    
 }
 
+extension WSShowBigimgViewController:MKMapViewDelegate{
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//        let identifier = "annotationView"
+//        var annotationView: MKAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+//        if annotationView == nil {
+//            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+//        }
+//        annotationView?.backgroundColor = COR3
+//        annotationView?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+//        annotationView?.layer.cornerRadius = 20/2
+//        annotationView?.canShowCallout = true
+        return nil
+    }
+    func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
+        print("AnnotationViews were added.")
+    }
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        print("AnnotationView's calloutView was tapped.")
+    }
+}
+
+extension WSShowBigimgViewController:PhotoShareViewDelegate{
+    func didEndShare(){
+        self.backViewTap(nil)
+    }
+}
+
+class MapPin : NSObject, MKAnnotation {
+    var coordinate: CLLocationCoordinate2D
+    var title: String?
+    var subtitle: String?
+    
+    init(coordinate: CLLocationCoordinate2D, title: String? = nil, subtitle: String? = nil) {
+        self.coordinate = coordinate
+        self.title = title
+        self.subtitle = subtitle
+    }
+}

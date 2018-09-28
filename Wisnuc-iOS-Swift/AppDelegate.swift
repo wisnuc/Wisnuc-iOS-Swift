@@ -254,11 +254,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         switch  errorCodeInt {
         case Int((WXSuccess).rawValue): //用户同意
             Message.message(text: "授权成功")
-            let aresp = resp as! SendAuthResp
-            if let controller = UIViewController.currentViewController(){
-                if  controller.isKind(of: LoginRootViewController.self){
-                    let loginVC = UIViewController.currentViewController() as! LoginRootViewController
-                    loginVC.weChatCallBackRespCode(code: aresp.code)
+            if resp is SendAuthResp{
+                let aresp = resp as! SendAuthResp
+                if let controller = UIViewController.currentViewController(){
+                    if  controller.isKind(of: LoginRootViewController.self){
+                        let loginVC = UIViewController.currentViewController() as! LoginRootViewController
+                        loginVC.weChatCallBackRespCode(code: aresp.code)
+                    }
                 }
             }
 //            SendAuthResp *aresp = (SendAuthResp *)resp;

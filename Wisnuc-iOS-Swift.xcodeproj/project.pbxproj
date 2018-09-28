@@ -430,6 +430,13 @@
 		1FA5D77F215CC41F0025F870 /* location_gary.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D77E215CC41E0025F870 /* location_gary.png */; };
 		1FA5D781215CC42E0025F870 /* location_gary@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D780215CC42D0025F870 /* location_gary@2x.png */; };
 		1FA5D783215CC4380025F870 /* location_gary@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D782215CC4370025F870 /* location_gary@3x.png */; };
+		1FA5D785215E289D0025F870 /* share_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D784215E289B0025F870 /* share_white.png */; };
+		1FA5D787215E28A90025F870 /* share_white@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D786215E28A80025F870 /* share_white@2x.png */; };
+		1FA5D789215E28B40025F870 /* share_white@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D788215E28B30025F870 /* share_white@3x.png */; };
+		1FA5D78B215E2F8B0025F870 /* PhotoShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA5D78A215E2F8B0025F870 /* PhotoShareView.swift */; };
+		1FA5D78D215E3F830025F870 /* wechat_friend_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D78C215E3F810025F870 /* wechat_friend_icon.png */; };
+		1FA5D78F215E3F8E0025F870 /* wechat_friend_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D78E215E3F8D0025F870 /* wechat_friend_icon@2x.png */; };
+		1FA5D791215E3F9B0025F870 /* wechat_friend_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D790215E3F9A0025F870 /* wechat_friend_icon@3x.png */; };
 		1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */; };
 		1FA669DB208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */; };
 		1FA6A1A920CFA065007A0AB2 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA6A1A820CFA064007A0AB2 /* search.png */; };
@@ -1215,6 +1222,13 @@
 		1FA5D77E215CC41E0025F870 /* location_gary.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location_gary.png; sourceTree = "<group>"; };
 		1FA5D780215CC42D0025F870 /* location_gary@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location_gary@2x.png"; sourceTree = "<group>"; };
 		1FA5D782215CC4370025F870 /* location_gary@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location_gary@3x.png"; sourceTree = "<group>"; };
+		1FA5D784215E289B0025F870 /* share_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share_white.png; sourceTree = "<group>"; };
+		1FA5D786215E28A80025F870 /* share_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share_white@2x.png"; sourceTree = "<group>"; };
+		1FA5D788215E28B30025F870 /* share_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share_white@3x.png"; sourceTree = "<group>"; };
+		1FA5D78A215E2F8B0025F870 /* PhotoShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoShareView.swift; sourceTree = "<group>"; };
+		1FA5D78C215E3F810025F870 /* wechat_friend_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat_friend_icon.png; sourceTree = "<group>"; };
+		1FA5D78E215E3F8D0025F870 /* wechat_friend_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wechat_friend_icon@2x.png"; sourceTree = "<group>"; };
+		1FA5D790215E3F9A0025F870 /* wechat_friend_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wechat_friend_icon@3x.png"; sourceTree = "<group>"; };
 		1FA669D8208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetDummyStaticViewController.swift; sourceTree = "<group>"; };
 		1FA669D9208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomSheetDummyStaticViewController.xib; sourceTree = "<group>"; };
 		1FA6A1A820CFA064007A0AB2 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search.png; sourceTree = "<group>"; };
@@ -2035,6 +2049,12 @@
 		1F42429E20F338B40085E2F0 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1FA5D790215E3F9A0025F870 /* wechat_friend_icon@3x.png */,
+				1FA5D78C215E3F810025F870 /* wechat_friend_icon.png */,
+				1FA5D78E215E3F8D0025F870 /* wechat_friend_icon@2x.png */,
+				1FA5D784215E289B0025F870 /* share_white.png */,
+				1FA5D786215E28A80025F870 /* share_white@2x.png */,
+				1FA5D788215E28B30025F870 /* share_white@3x.png */,
 				1FA5D77E215CC41E0025F870 /* location_gary.png */,
 				1FA5D780215CC42D0025F870 /* location_gary@2x.png */,
 				1FA5D782215CC4370025F870 /* location_gary@3x.png */,
@@ -3254,6 +3274,7 @@
 				1FD1F3282159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.xib */,
 				1FA5D768215C77E50025F870 /* BigPhotoInfoTableViewCell.swift */,
 				1FA5D769215C77E50025F870 /* BigPhotoInfoTableViewCell.xib */,
+				1FA5D78A215E2F8B0025F870 /* PhotoShareView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3618,6 +3639,7 @@
 				1FBB6F552137F6DB0090FA57 /* x_gray.png in Resources */,
 				1F2B45A6208F290200C8971F /* close@2x.png in Resources */,
 				1F3C244020A5AD2000E6B953 /* files_tag.png in Resources */,
+				1FA5D78F215E3F8E0025F870 /* wechat_friend_icon@2x.png in Resources */,
 				1FD1F32A2159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.xib in Resources */,
 				1F4E9399208DBB7600DD1EA7 /* radio_button_unchecked@3x.png in Resources */,
 				1F359FE32091B2A900E2FF36 /* warning@3x.png in Resources */,
@@ -3811,6 +3833,7 @@
 				1FC5CC1520D3C3C900499E63 /* files_download_transfer.png in Resources */,
 				1FA5D7592159FED90025F870 /* eye_open@3x.png in Resources */,
 				1F83AE60208830B8007CCCFD /* local_area_white@3x.png in Resources */,
+				1FA5D787215E28A90025F870 /* share_white@2x.png in Resources */,
 				1F0FD107214B7DB4003D7936 /* close_gray@3x.png in Resources */,
 				1F58825A2085F4C900394BD6 /* local_area.png in Resources */,
 				1FA5D763215B59350025F870 /* add_new_photo_new_album_gray.png in Resources */,
@@ -3822,7 +3845,9 @@
 				1FEABB7220A1AA1400824448 /* files_up@3x.png in Resources */,
 				1F359FBD2091761500E2FF36 /* account@3x.png in Resources */,
 				1F4242BF20FDF7570085E2F0 /* handrail@2x.png in Resources */,
+				1FA5D789215E28B40025F870 /* share_white@3x.png in Resources */,
 				1F5AD93520AD7FC00065DAD3 /* files_excel_small@3x.png in Resources */,
+				1FA5D78D215E3F830025F870 /* wechat_friend_icon.png in Resources */,
 				1F0FD0DB214A6355003D7936 /* eye_open_gray.png in Resources */,
 				1F5882542085F0F800394BD6 /* station_review@3x.png in Resources */,
 				1F83AE5F208830B8007CCCFD /* local_area_white@2x.png in Resources */,
@@ -3887,6 +3912,7 @@
 				1F0FD0F9214A7119003D7936 /* wifi_config.png in Resources */,
 				1F1BAC5720CE703300D32C5A /* files_gif_small.png in Resources */,
 				1F3C241720A42D1D00E6B953 /* files_select@3x.png in Resources */,
+				1FA5D791215E3F9B0025F870 /* wechat_friend_icon@3x.png in Resources */,
 				1F1BAC5F20CE709100D32C5A /* files_jpg_small.png in Resources */,
 				1F050E6120AAC8400037F00A /* FilesSequenceTableViewCell.xib in Resources */,
 				1F520957214A0BA40058A8D3 /* plus_white@3x.png in Resources */,
@@ -3898,6 +3924,7 @@
 				1F1BAC5620CE703300D32C5A /* files_gif_small@2x.png in Resources */,
 				1F4242BE20FDF7570085E2F0 /* handrail.png in Resources */,
 				1F359FB720916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.xib in Resources */,
+				1FA5D785215E289D0025F870 /* share_white.png in Resources */,
 				1F0FD0D0214A4A40003D7936 /* disclosureIndicator@2x.png in Resources */,
 				1F5AD92820AD52360065DAD3 /* back_gray.png in Resources */,
 				1F52095021491DDF0058A8D3 /* FirstConfigViewController.xib in Resources */,
@@ -4311,6 +4338,7 @@
 				1F520968214A19BF0058A8D3 /* DeviceBLEModel.swift in Sources */,
 				1F5882632085FDB400394BD6 /* UIViewControllerExtension.swift in Sources */,
 				1F3C244E20A5AF9E00E6B953 /* TransferTaskTableViewController.swift in Sources */,
+				1FA5D78B215E2F8B0025F870 /* PhotoShareView.swift in Sources */,
 				1FDBC50E20932171004DE6B8 /* DiskPopUpViewManager.swift in Sources */,
 				1F5882612085FBDF00394BD6 /* Alert.swift in Sources */,
 				1F3C240920A4214600E6B953 /* AppNavigationDrawerController.swift in Sources */,
