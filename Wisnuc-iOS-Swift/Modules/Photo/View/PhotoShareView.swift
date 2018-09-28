@@ -43,6 +43,7 @@ class PhotoShareView: UIView {
     }
     
     @objc func shareToFriends(_ sender:UIButton){
+        self.shared()
         let req = SendMessageToWXReq()
         req.text = "这是测试发送的内容。"
         req.bText = true
