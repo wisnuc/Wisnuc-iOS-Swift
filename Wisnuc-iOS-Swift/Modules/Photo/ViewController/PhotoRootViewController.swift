@@ -69,6 +69,7 @@ class PhotoRootViewController: BaseViewController {
     }
     
     deinit {
+      self.appBar.appBarViewController.headerView.trackingScrollView = nil
       print("\(className()) deinit")
     }
     
@@ -102,9 +103,8 @@ class PhotoRootViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-
-//        self.appBar.headerViewController.headerView.isHidden = true
+        appBar.appBarViewController.headerView.trackingScrollView = self.photoCollcectionViewController.collectionView
+        appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
         
     }
     
@@ -176,7 +176,7 @@ class PhotoRootViewController: BaseViewController {
     }
     
     @objc func leftBarButtonItemTap(_ sender:UIBarButtonItem){
-        if self.state == .select{
+        if self.state == .select || self.state == .creat{
             self.presentingViewController?.dismiss(animated: true, completion: {
                 
             })

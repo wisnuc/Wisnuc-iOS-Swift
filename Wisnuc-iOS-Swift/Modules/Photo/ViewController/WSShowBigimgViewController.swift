@@ -1108,6 +1108,18 @@ extension WSShowBigimgViewController:MKMapViewDelegate{
 }
 
 extension WSShowBigimgViewController:PhotoShareViewDelegate{
+    func shareImages() -> [UIImage]? {
+        return nil
+    }
+    
+    func shareImage() -> UIImage? {
+     
+        let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+        let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
+
+        return  cell?.previewView.image()
+    }
+    
     func didEndShare(){
         self.backViewTap(nil)
     }

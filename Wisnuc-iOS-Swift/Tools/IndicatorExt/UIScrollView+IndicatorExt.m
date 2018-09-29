@@ -15,6 +15,7 @@
 {
     CGPoint _startCenter;
     UIImageView * _timeBgView;
+    
 }
 @end
 
@@ -38,16 +39,26 @@
         
         //jy
         _timeBgView = [[UIImageView alloc]initWithFrame:CGRectMake(-124-24, kILSDefaultSliderHeight/2-39/2, 124, 39)];
-        _timeBgView.image = [UIImage imageNamed:@"date_bg"];
+//        _timeBgView.image = [UIImage imageNamed:@"date_bg"];
+        _timeBgView.backgroundColor = [UIColor clearColor];
         _timeLabel = [[UILabel alloc]initWithFrame:_timeBgView.bounds];
         _timeLabel.font = [UIFont systemFontOfSize:17];
         _timeLabel.text =  WBLocalizedString(@"今天", nil);
-        _timeLabel.textColor = [UIColor whiteColor];
+        _timeLabel.textColor = [[UIColor blackColor] colorWithAlphaComponent:0.87];
         _timeLabel.textAlignment = NSTextAlignmentCenter;
         _timeBgView.hidden = YES;
-        _timeLabel.backgroundColor = [UIColor clearColor];
+        _timeLabel.backgroundColor = [UIColor whiteColor];
+        _timeLabel.layer.masksToBounds = true;
+        _timeLabel.layer.cornerRadius = 39/2;
+        _timeBgView.layer.shadowOffset = CGSizeMake(0.5, 0.5);
+        _timeBgView.layer.shadowRadius = 1;
+        _timeBgView.layer.shadowOpacity = 0.5;
+        _timeBgView.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.87].CGColor;
+        _timeBgView.layer.masksToBounds = false;
+//        _timeBgView.clipsToBounds = false;
         [_timeBgView addSubview:_timeLabel];
         [self addSubview:_timeBgView];
+        
     }
     return self;
 }
@@ -202,7 +213,7 @@ const char kIndicatorKey;
     
     self.showsVerticalScrollIndicator = FALSE;
     
-    ILSIndicatorView *indicator = [[ILSIndicatorView alloc] initWithFrame:CGRectMake(self.frame.origin.x + self.frame.size.width - kILSDefaultSliderWidth, self.frame.origin.y + MDCAppNavigationBarHeight, 1, CGRectGetHeight(self.bounds) - 2 * MDCAppNavigationBarHeight)];
+    ILSIndicatorView *indicator = [[ILSIndicatorView alloc] initWithFrame:CGRectMake(self.frame.origin.x + self.frame.size.width - kILSDefaultSliderWidth, self.frame.origin.y + MDCAppNavigationBarHeight, 1, CGRectGetHeight(self.bounds) - 2 * kILSDefaultSliderSize)];
     [indicator addTarget:self action:@selector(indicatorValueChanged:) forControlEvents:UIControlEventValueChanged];
     indicator.scrollView = self;
     self.indicator = indicator;

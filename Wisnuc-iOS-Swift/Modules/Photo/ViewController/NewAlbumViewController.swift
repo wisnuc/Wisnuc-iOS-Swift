@@ -27,7 +27,7 @@ class NewAlbumViewController: BaseViewController {
     private let cellContentSizeWidth = (__kWidth - 4)/2
     private let cellContentSizeHeight = (__kWidth - 4)/2
     
-    var dataDic:Dictionary<String,Any> = [String:Any]()
+    var dataDic:Dictionary<String,Any>?
     lazy var dataSource = Array<WSAsset>.init()
     lazy var headerExtensionArray:Array<HeaderExtensionType> =  Array.init()
     weak var delegate:NewAlbumViewControllerDelegate?
@@ -318,7 +318,8 @@ extension NewAlbumViewController :PhotoRootViewControllerDelegate{
         self.photoCollectionView.performBatchUpdates({ [weak self] in
            let resultsSize = self?.dataSource.count
             self?.dataSource.append(contentsOf: assets)
-            self?.dataDic["photoData"] = self?.dataSource
+           
+            self?.dataDic!["photoData"] = self?.dataSource
             self?.delegate?.updateNewAlbumFinish(data: (self?.dataDic)!)
            var arrayWithIndexPaths = [IndexPath]()
           

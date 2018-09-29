@@ -14,6 +14,8 @@ private let reuseIdentifier = "PhotoCell"
 private let headerReuseIdentifier = "headView"
 private var currentScale:CGFloat = 0
 private let keyPath:String = "sliderState"
+private let headerHeight:CGFloat = 42
+
 
 @objc protocol PhotoCollectionViewControllerDelegate{
     func collectionView(_ collectionView: UICollectionView, isSelectMode:Bool)
@@ -33,6 +35,7 @@ class PhotoCollectionViewController: UICollectionViewController {
             }
         }
     }
+    var currentItemSize:CGSize = CGSize.zore
     var showIndicator:Bool = true
     var sortedAssetsBackupArray:Array<WSAsset>?
     var dispose = DisposeBag()
@@ -41,10 +44,12 @@ class PhotoCollectionViewController: UICollectionViewController {
             
         }
     }
+    var timeViewArray:[UIView]?
     var dataSource:Array<Array<WSAsset>>?{
         didSet{
             mainThreadSafe {
-                 self.collectionView?.reloadData()
+                self.collectionView?.reloadData()
+                self.dataSourceHasValue()
             }
         }
     }
@@ -56,13 +61,47 @@ class PhotoCollectionViewController: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-   
+    deinit {
+//         appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
       dataSource = Array.init()
       initCollectionViewLayout()
       initGuestrue()
+    }
+    
+    func dataSourceHasValue(){
+        if  let array = self.timeViewArray{
+            if array.count != 0{
+                for view in array{
+                    view.removeFromSuperview()
+                }
+                timeViewArray?.removeAll()
+            }
+        }
+        timeViewArray = Array.init()
+        for (i,_)in dataSource!.enumerated(){
+            let photos = dataSource![i]
+            var photoScale:CGFloat = 1
+            if photos.count > 3{
+                photoScale = CGFloat(photos.count)/currentScale
+            }
+            
+            if self.currentItemSize.height == 0 {
+               self.currentItemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: (__kWidth - 2 * (currentScale - 1))/currentScale)
+            }
+            let margin = photoScale * (self.currentItemSize.height + headerHeight)/(self.collectionView?.contentSize.height ?? 0) * (__kWidth - MDCAppNavigationBarHeight)
+//             imageView.frame = CGRectMake(index * (imageWithHeight + Width_Space) + Start_X,page * (imageWithHeight + Height_Space)+Start_Y, imageWithHeight, imageWithHeight);
+            print(margin)
+            print(self.collectionView?.contentSize.height ?? 0)
+            let xview = UIView.init(frame: CGRect(x: __kWidth - 100 - 74, y: CGFloat(i) * (30 + margin ) + MDCAppNavigationBarHeight, width: 100, height: 30))
+           
+            xview.backgroundColor = .cyan
+            self.view.addSubview(xview)
+            self.timeViewArray?.append(xview)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -80,7 +119,6 @@ class PhotoCollectionViewController: UICollectionViewController {
         let  pin = UIPinchGestureRecognizer.init(target: self, action: #selector(handlePinch(_ :)))
         self.collectionView?.addGestureRecognizer(pin)
     }
-    
 //    func setSelectMode(mode:Bool){
 //        self.isSelectMode = mode
 //        self.collectionView?.reloadData()
@@ -111,17 +149,19 @@ class PhotoCollectionViewController: UICollectionViewController {
         if ((!isSmall && currentScale == 1) || (isSmall && currentScale == 6)){
             return
         }
-   
-     let layout = self.collectionView?.collectionViewLayout as! TYDecorationSectionLayout
-  
-    layout.sectionHeadersPinToVisibleBounds = false
-    currentScale = isSmall ? currentScale + 1 : currentScale - 1;
-    
+        
+        let layout = self.collectionView?.collectionViewLayout as! TYDecorationSectionLayout
+        
+        layout.sectionHeadersPinToVisibleBounds = false
+        currentScale = isSmall ? currentScale + 1 : currentScale - 1;
+        
         layout.itemSize = CGSize(width: (__kWidth - 2*(currentScale-1))/currentScale, height: (__kWidth - 2*(currentScale-1))/currentScale)
+        currentItemSize = layout.itemSize
         self.collectionView?.setCollectionViewLayout(layout, animated: true)
-
+        
         self.collectionView?.reloadData()
-}
+    }
+    
     func initCollectionViewLayout() {
         showIndicator = true
         currentScale = 3
@@ -156,7 +196,6 @@ class PhotoCollectionViewController: UICollectionViewController {
             initIndicator()
         }
     }
-    
     
     func updateIndicatorFrame() {
         if self.collectionView?.indicator != nil {
@@ -464,6 +503,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let frame = (__kWidth - 2 * (currentScale - 1))/currentScale
         let itemSize = CGSize(width: frame, height: frame)
+        currentItemSize = itemSize
         return itemSize
     }
     
@@ -630,7 +670,7 @@ extension PhotoCollectionViewController:FMHeadViewDelegate{
 
 extension PhotoCollectionViewController :UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let size = CGSize(width: __kWidth, height: 42)
+        let size = CGSize(width: __kWidth, height: headerHeight)
         return size
     }
     
