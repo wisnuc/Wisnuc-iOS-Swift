@@ -1555,7 +1555,7 @@
 		1FFD12CE20EDC46E0053A3F7 /* task_copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = task_copy.png; sourceTree = "<group>"; };
 		1FFD12D220EE119D0053A3F7 /* PhotoRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRootViewController.swift; sourceTree = "<group>"; };
 		1FFD130D20EE1AFA0053A3F7 /* Wisnuc-iOS-Swift-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Wisnuc-iOS-Swift-Bridging-Header.h"; sourceTree = "<group>"; };
-		1FFD130F20EE21620053A3F7 /* PhotoCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewController.swift; sourceTree = "<group>"; };
+		1FFD130F20EE21620053A3F7 /* PhotoCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1FFD131220EE29460053A3F7 /* WSAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSAsset.swift; sourceTree = "<group>"; };
 		1FFD131420EF0ABA0053A3F7 /* TYDecorationSectionLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYDecorationSectionLayout.h; sourceTree = "<group>"; };
 		1FFD131520EF0ABA0053A3F7 /* TYDecorationSectionLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYDecorationSectionLayout.m; sourceTree = "<group>"; };

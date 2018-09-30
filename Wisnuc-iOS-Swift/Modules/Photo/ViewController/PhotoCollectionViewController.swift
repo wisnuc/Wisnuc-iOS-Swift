@@ -35,7 +35,7 @@ class PhotoCollectionViewController: UICollectionViewController {
             }
         }
     }
-    var currentItemSize:CGSize = CGSize.zore
+    var currentItemSize:CGSize = CGSize.zero
     var showIndicator:Bool = true
     var sortedAssetsBackupArray:Array<WSAsset>?
     var dispose = DisposeBag()
@@ -73,6 +73,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     
     func dataSourceHasValue(){
+        
         if  let array = self.timeViewArray{
             if array.count != 0{
                 for view in array{
@@ -82,26 +83,107 @@ class PhotoCollectionViewController: UICollectionViewController {
             }
         }
         timeViewArray = Array.init()
-        for (i,_)in dataSource!.enumerated(){
-            let photos = dataSource![i]
-            var photoScale:CGFloat = 1
-            if photos.count > 3{
-                photoScale = CGFloat(photos.count)/currentScale
-            }
+        
+        if let allAssetArray = sortedAssetsBackupArray{
+           let yearArray = sort(allAssetArray)
+//            dataSource?.filter({$0.first?.createDate }})
+
+//            var limitCount = 1
+//            if yearArray.count > 7{
+//               limitCount  = Int(allAssetArray.count/7)
+//            }else{
+//                limitCount  = Int(allAssetArray.count/yearArray.count)
+//            }
             
-            if self.currentItemSize.height == 0 {
-               self.currentItemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: (__kWidth - 2 * (currentScale - 1))/currentScale)
+            var originMargin:CGFloat = 0
+            for (i,value) in yearArray.enumerated(){
+                let photos = value
+                let yearsAsset = dataSource?.filter({Calendar.current.isDate(($0.first?.createDate)!, equalTo:  (photos.first?.createDate)!, toGranularity: Calendar.Component.year)})
+                if let yearsAsset = yearsAsset{
+                    var sum = 0
+                    for (_,assets) in yearsAsset.enumerated(){
+                       sum += assets.count
+                    }
+//                    print("😆\(sum)")
+                var photoScale:CGFloat = 1
+                if sum > 3{
+                    photoScale = CGFloat(ceilf(Float(sum)/Float(currentScale)))
+                }
+                  print("😆\(photoScale)")
+                if self.currentItemSize.height == 0 {
+                    self.currentItemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: (__kWidth - 2 * (currentScale - 1))/currentScale)
+                }
+                
+                if let height = self.collectionView?.contentSize.height {
+                    if height>0{
+                        let margin = ((photoScale * self.currentItemSize.height) + CGFloat(yearsAsset.count*Int(headerHeight)) + (photoScale - 1) * 2 )/(height - MDCAppNavigationBarHeight) * (__kHeight - MDCAppNavigationBarHeight)
+                        //             imageView.frame = CGRectMake(index * (imageWithHeight + Width_Space) + Start_X,page * (imageWithHeight + Height_Space)+Start_Y, imageWithHeight, imageWithHeight);
+                        print("😈\(margin)")
+                        originMargin += margin
+//                        print(self.collectionView?.contentSize.height ?? 0)
+                        let xview = UIView.init(frame: CGRect(x: __kWidth - 100 - 74, y: MDCAppNavigationBarHeight + originMargin, width: 100, height: 30))
+                       let label = UILabel.init(frame: xview.bounds)
+                        if let date = value.first?.createDate{
+                        label.text = TimeTools.getYear(date:date)
+                        }
+                        print("🐔\(originMargin)")
+                        xview.addSubview(label)
+                        xview.backgroundColor = .cyan
+                        self.view.addSubview(xview)
+                        self.timeViewArray?.append(xview)
+                    }
+                  }
+                }
             }
-            let margin = photoScale * (self.currentItemSize.height + headerHeight)/(self.collectionView?.contentSize.height ?? 0) * (__kWidth - MDCAppNavigationBarHeight)
-//             imageView.frame = CGRectMake(index * (imageWithHeight + Width_Space) + Start_X,page * (imageWithHeight + Height_Space)+Start_Y, imageWithHeight, imageWithHeight);
-            print(margin)
-            print(self.collectionView?.contentSize.height ?? 0)
-            let xview = UIView.init(frame: CGRect(x: __kWidth - 100 - 74, y: CGFloat(i) * (30 + margin ) + MDCAppNavigationBarHeight, width: 100, height: 30))
-           
-            xview.backgroundColor = .cyan
-            self.view.addSubview(xview)
-            self.timeViewArray?.append(xview)
         }
+       
+    }
+    
+    func sort(_ assetsArray:Array<WSAsset>) -> Array<Array<WSAsset>>{
+        var finishArray:Array<Array<WSAsset>> = Array.init()
+        autoreleasepool {
+            var array:Array<WSAsset>  = Array.init()
+            array.append(contentsOf: assetsArray)
+            array.sort { $0.createDate! > $1.createDate! }
+            sortedAssetsBackupArray = array
+            let timeArray:NSMutableArray = NSMutableArray.init()
+            let photoGroupArray:NSMutableArray = NSMutableArray.init()
+            if array.count>0 {
+                let firstAsset = array.first
+                firstAsset?.indexPath = IndexPath.init(row: 0, section: 0)
+                let photoDateGroup1:NSMutableArray = NSMutableArray.init() //第一组照片
+                photoDateGroup1.add(firstAsset!)
+                photoGroupArray.add(photoDateGroup1)
+                if firstAsset?.createDate != nil{
+                    timeArray.add(firstAsset!.createDate!)
+                }
+                if array.count == 1{
+                    finishArray = photoGroupArray as! Array<Array<WSAsset>>
+                }
+                var photoDateGroup2:NSMutableArray? = photoDateGroup1 //最近的一组
+                
+                for i in 1..<array.count {
+                    let photo1 =  array[i]
+                    let photo2 = array[i-1]
+                  
+                    if   Calendar.current.isDate(photo1.createDate!, equalTo:  photo2.createDate!, toGranularity: Calendar.Component.year){
+                        photo1.indexPath = IndexPath.init(row: ((photoGroupArray[photoGroupArray.count - 1]) as! NSMutableArray).count, section: photoGroupArray.count - 1)
+                        photoDateGroup2!.add(photo1)
+                    }else{
+                        photo1.indexPath = IndexPath.init(row: 0, section: photoGroupArray.count)
+                        if photo1.createDate != nil{
+                            timeArray.add(photo1.createDate!)
+                        }
+                        photoDateGroup2 = nil
+                        photoDateGroup2 = NSMutableArray.init()
+                        photoDateGroup2!.add(photo1)
+                        photoGroupArray.add(photoDateGroup2!)
+                    }
+                }
+            }
+            finishArray =  photoGroupArray as! Array<Array<WSAsset>>
+        }
+        return finishArray
     }
     
     override func viewDidAppear(_ animated: Bool) {

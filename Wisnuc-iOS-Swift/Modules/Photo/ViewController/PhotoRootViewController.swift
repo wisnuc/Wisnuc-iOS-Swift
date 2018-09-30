@@ -345,8 +345,8 @@ class PhotoRootViewController: BaseViewController {
         self.view.addSubview(photoCollcectionViewController.view)
         photoCollcectionViewController.didMove(toParentViewController: self)
         // self.view.top + searchBar.bottom + MarginsCloseWidth/2
-        let topEdgeInsets:CGFloat = kCurrentSystemVersion >= 11.0 ? MDCAppNavigationBarHeight + MarginsCloseWidth/2-20 : MDCAppNavigationBarHeight + MarginsCloseWidth/2
-        photoCollcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(topEdgeInsets, 0, 0 , 0)
+//        let topEdgeInsets:CGFloat = kCurrentSystemVersion >= 11.0 ? MDCAppNavigationBarHeight + MarginsCloseWidth/2-20 : MDCAppNavigationBarHeight + MarginsCloseWidth/2
+//        photoCollcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(topEdgeInsets, 0, 0 , 0)
     }
     
     private func prepareSearchBar() {

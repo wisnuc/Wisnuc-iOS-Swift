@@ -19,6 +19,15 @@ class TimeTools: NSObject {
         return dateString
     }
     
+    class func getYear(date:Date)->String{
+        let interval: Int = NSTimeZone.system.secondsFromGMT(for: date)
+        let localeDate = date.addingTimeInterval(TimeInterval(interval))
+        let formater = DateFormatter.init()
+        formater.dateFormat = "yyyy"
+        let dateString = formater.string(from: localeDate)
+        return dateString
+    }
+    
     class func timeHourMinuteString(_ timeSecond:TimeInterval)->String{
         let date = Date.init(timeIntervalSince1970: timeSecond)
         let formater = DateFormatter.init()
