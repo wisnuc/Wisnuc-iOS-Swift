@@ -12,6 +12,7 @@ enum NavigationStyle:Int{
     case mainTheme = 0
     case white
     case whiteWithoutShadow
+    case black
     case imagery
     case select
 }
@@ -30,6 +31,8 @@ class BaseViewController: UIViewController {
                 imageryStyleAction()
             case .select?:
                 selectStyleAction()
+            case .black?:
+                blackStyleAction()
             default:
                 break
             }
@@ -102,6 +105,18 @@ class BaseViewController: UIViewController {
         self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
         appBar.headerViewController.inferPreferredStatusBarStyle = false
         appBar.headerViewController.preferredStatusBarStyle = .default
+        appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    func blackStyleAction(){
+        appBar.headerViewController.headerView.backgroundColor = .black
+        appBar.navigationBar.backgroundColor = .black
+        appBar.headerStackView.backgroundColor = .black
+        self.appBar.navigationBar.tintColor = .white
+        self.appBar.headerViewController.headerView.tintColor = .white
+        self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:UIColor.white]
+        appBar.headerViewController.inferPreferredStatusBarStyle = false
+        appBar.headerViewController.preferredStatusBarStyle = .lightContent
         appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
     

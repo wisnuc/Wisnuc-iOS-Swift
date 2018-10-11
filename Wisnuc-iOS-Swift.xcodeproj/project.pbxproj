@@ -702,6 +702,19 @@
 		1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7AF207E1A0400906D80 /* wechat_icon@2x.png */; };
 		1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7BA207E1B6600906D80 /* Localizable.strings */; };
 		1FDBC50E20932171004DE6B8 /* DiskPopUpViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDBC50D20932171004DE6B8 /* DiskPopUpViewManager.swift */; };
+		1FE08923216DEADF0049F44B /* NewAlbumViewCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE08922216DEADF0049F44B /* NewAlbumViewCollectionLayout.swift */; };
+		1FE08926216F16FA0049F44B /* avatar_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08925216F16F90049F44B /* avatar_placeholder.png */; };
+		1FE08928216F17080049F44B /* avatar_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08927216F17070049F44B /* avatar_placeholder@2x.png */; };
+		1FE0892A216F17160049F44B /* avatar_placeholder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08929216F17150049F44B /* avatar_placeholder@3x.png */; };
+		1FE0892C216F1E510049F44B /* MyInfoCenterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0892B216F1E510049F44B /* MyInfoCenterViewController.swift */; };
+		1FE0892E216F38690049F44B /* MyAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0892D216F38690049F44B /* MyAboutViewController.swift */; };
+		1FE08930216F38B40049F44B /* MyAccountSecurityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0892F216F38B40049F44B /* MyAccountSecurityViewController.swift */; };
+		1FE08932216F4EC80049F44B /* AvatarChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE08931216F4EC80049F44B /* AvatarChangeViewController.swift */; };
+		1FE08934216F527E0049F44B /* avatar_placeholder_big@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08933216F527D0049F44B /* avatar_placeholder_big@3x.png */; };
+		1FE08936216F52880049F44B /* avatar_placeholder_big@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08935216F52880049F44B /* avatar_placeholder_big@2x.png */; };
+		1FE08938216F52940049F44B /* avatar_placeholder_big.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08937216F52930049F44B /* avatar_placeholder_big.png */; };
+		1FE0893A216F58A80049F44B /* MyNicknameChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE08939216F58A80049F44B /* MyNicknameChangeViewController.swift */; };
+		1FE0893C216F5ACB0049F44B /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0893B216F5ACB0049F44B /* UILabelExtension.swift */; };
 		1FE674D020D20CED006F97DB /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CD20D20CEB006F97DB /* file_icon.png */; };
 		1FE674D120D20CED006F97DB /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CE20D20CEB006F97DB /* file_icon@2x.png */; };
 		1FE674D220D20CED006F97DB /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CF20D20CEC006F97DB /* file_icon@3x.png */; };
@@ -1503,6 +1516,19 @@
 		1FD9B7B9207E1B6600906D80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1FD9B7BB207E1B6B00906D80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1FDBC50D20932171004DE6B8 /* DiskPopUpViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskPopUpViewManager.swift; sourceTree = "<group>"; };
+		1FE08922216DEADF0049F44B /* NewAlbumViewCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAlbumViewCollectionLayout.swift; sourceTree = "<group>"; };
+		1FE08925216F16F90049F44B /* avatar_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_placeholder.png; sourceTree = "<group>"; };
+		1FE08927216F17070049F44B /* avatar_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_placeholder@2x.png"; sourceTree = "<group>"; };
+		1FE08929216F17150049F44B /* avatar_placeholder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_placeholder@3x.png"; sourceTree = "<group>"; };
+		1FE0892B216F1E510049F44B /* MyInfoCenterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoCenterViewController.swift; sourceTree = "<group>"; };
+		1FE0892D216F38690049F44B /* MyAboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAboutViewController.swift; sourceTree = "<group>"; };
+		1FE0892F216F38B40049F44B /* MyAccountSecurityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountSecurityViewController.swift; sourceTree = "<group>"; };
+		1FE08931216F4EC80049F44B /* AvatarChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarChangeViewController.swift; sourceTree = "<group>"; };
+		1FE08933216F527D0049F44B /* avatar_placeholder_big@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_placeholder_big@3x.png"; sourceTree = "<group>"; };
+		1FE08935216F52880049F44B /* avatar_placeholder_big@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_placeholder_big@2x.png"; sourceTree = "<group>"; };
+		1FE08937216F52930049F44B /* avatar_placeholder_big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_placeholder_big.png; sourceTree = "<group>"; };
+		1FE08939216F58A80049F44B /* MyNicknameChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNicknameChangeViewController.swift; sourceTree = "<group>"; };
+		1FE0893B216F5ACB0049F44B /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 		1FE674CD20D20CEB006F97DB /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
 		1FE674CE20D20CEB006F97DB /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		1FE674CF20D20CEC006F97DB /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
@@ -1555,7 +1581,7 @@
 		1FFD12CE20EDC46E0053A3F7 /* task_copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = task_copy.png; sourceTree = "<group>"; };
 		1FFD12D220EE119D0053A3F7 /* PhotoRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRootViewController.swift; sourceTree = "<group>"; };
 		1FFD130D20EE1AFA0053A3F7 /* Wisnuc-iOS-Swift-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Wisnuc-iOS-Swift-Bridging-Header.h"; sourceTree = "<group>"; };
-		1FFD130F20EE21620053A3F7 /* PhotoCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
+		1FFD130F20EE21620053A3F7 /* PhotoCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewController.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		1FFD131220EE29460053A3F7 /* WSAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSAsset.swift; sourceTree = "<group>"; };
 		1FFD131420EF0ABA0053A3F7 /* TYDecorationSectionLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYDecorationSectionLayout.h; sourceTree = "<group>"; };
 		1FFD131520EF0ABA0053A3F7 /* TYDecorationSectionLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYDecorationSectionLayout.m; sourceTree = "<group>"; };
@@ -2241,6 +2267,11 @@
 			isa = PBXGroup;
 			children = (
 				1F537A0C212412A500A555C5 /* SettingRootViewController.swift */,
+				1FE0892B216F1E510049F44B /* MyInfoCenterViewController.swift */,
+				1FE0892D216F38690049F44B /* MyAboutViewController.swift */,
+				1FE0892F216F38B40049F44B /* MyAccountSecurityViewController.swift */,
+				1FE08931216F4EC80049F44B /* AvatarChangeViewController.swift */,
+				1FE08939216F58A80049F44B /* MyNicknameChangeViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -3037,6 +3068,7 @@
 				1FA9C3DF2105B76A00E8411E /* DictionaryExtension.swift */,
 				1F53789921106FA200A555C5 /* ArrayExtension.swift */,
 				1FBB6F60213923C30090FA57 /* TextFiledExtension.swift */,
+				1FE0893B216F5ACB0049F44B /* UILabelExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -3137,6 +3169,7 @@
 		1FD9B7AC207E19F900906D80 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				1FE08924216F16EA0049F44B /* My */,
 				1F520951214A0B750058A8D3 /* Config */,
 				1F42429E20F338B40085E2F0 /* Photo */,
 				1F2A37FF20DA57B80035EED5 /* Task */,
@@ -3155,6 +3188,27 @@
 				1FD9B7BA207E1B6600906D80 /* Localizable.strings */,
 			);
 			path = Localizable;
+			sourceTree = "<group>";
+		};
+		1FE08921216DEA770049F44B /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				1FE08922216DEADF0049F44B /* NewAlbumViewCollectionLayout.swift */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		1FE08924216F16EA0049F44B /* My */ = {
+			isa = PBXGroup;
+			children = (
+				1FE08937216F52930049F44B /* avatar_placeholder_big.png */,
+				1FE08935216F52880049F44B /* avatar_placeholder_big@2x.png */,
+				1FE08933216F527D0049F44B /* avatar_placeholder_big@3x.png */,
+				1FE08925216F16F90049F44B /* avatar_placeholder.png */,
+				1FE08927216F17070049F44B /* avatar_placeholder@2x.png */,
+				1FE08929216F17150049F44B /* avatar_placeholder@3x.png */,
+			);
+			path = My;
 			sourceTree = "<group>";
 		};
 		1FE674D320D21B11006F97DB /* Tiercel */ = {
@@ -3234,6 +3288,7 @@
 		1FFD12D020EE11540053A3F7 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1FE08921216DEA770049F44B /* Layout */,
 				1FFD133020EF3E010053A3F7 /* Model */,
 				1FFD12E220EE19950053A3F7 /* View */,
 				1FFD12D120EE11670053A3F7 /* ViewController */,
@@ -3683,6 +3738,7 @@
 				1F83AE8420887936007CCCFD /* more.png in Resources */,
 				1F359FBB2091761500E2FF36 /* account@2x.png in Resources */,
 				1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */,
+				1FE08928216F17080049F44B /* avatar_placeholder@2x.png in Resources */,
 				1F0FD0C4214A4670003D7936 /* config_finish@2x.png in Resources */,
 				1F050E7320ABCE560037F00A /* files_edit.png in Resources */,
 				1FEABB5920A14BB900824448 /* files_word_normal.png in Resources */,
@@ -3690,8 +3746,10 @@
 				1FEABB7020A1AA0300824448 /* files_up@2x.png in Resources */,
 				1F58824E2085F09F00394BD6 /* station_normal@3x.png in Resources */,
 				1F0FD0C2214A4665003D7936 /* config_finish.png in Resources */,
+				1FE08934216F527E0049F44B /* avatar_placeholder_big@3x.png in Resources */,
 				1FC5CC1120D3BDBB00499E63 /* file_finish@2x.png in Resources */,
 				1F359FB02090819000E2FF36 /* no@2x.png in Resources */,
+				1FE08926216F16FA0049F44B /* avatar_placeholder.png in Resources */,
 				1F362F7B2133FFA6000B3384 /* wechat_icon_mian_color@2x.png in Resources */,
 				1FEABB5520A14B6C00824448 /* files_word_small@2x.png in Resources */,
 				1F83AE8220887936007CCCFD /* more@2x.png in Resources */,
@@ -3758,6 +3816,7 @@
 				1F0FD0DF214A636D003D7936 /* eye_open_gray@3x.png in Resources */,
 				1FA6A1B520CFA6D4007A0AB2 /* files_audio_normal.png in Resources */,
 				1FBD1E0420B3EF8C0067BE3E /* files_new_folder_gray@2x.png in Resources */,
+				1FE08936216F52880049F44B /* avatar_placeholder_big@2x.png in Resources */,
 				1FD1F31A2159D79C00C3E429 /* sort_photo_new_album.png in Resources */,
 				1F5AD92C20AD524E0065DAD3 /* back_gray@3x.png in Resources */,
 				1FD1F3042154DE3C00C3E429 /* select@2x.png in Resources */,
@@ -3792,6 +3851,7 @@
 				1FEABB6920A14C7000824448 /* files_ppt_small@3x.png in Resources */,
 				1F359FDC2091A99600E2FF36 /* disk_add.png in Resources */,
 				1F58821520848F9400394BD6 /* touxiang.jpg in Resources */,
+				1FE0892A216F17160049F44B /* avatar_placeholder@3x.png in Resources */,
 				1F58823B2085DCAF00394BD6 /* device@3x.png in Resources */,
 				1F050E4320AAB5E90037F00A /* files_upload_big.png in Resources */,
 				1FD1F2FA2153A45D00C3E429 /* photo_placeholder.png in Resources */,
@@ -3954,6 +4014,7 @@
 				1F307C6E20BEAB6100AE105C /* setting_gray.png in Resources */,
 				1F359FCF2091A95D00E2FF36 /* disk_main_color.png in Resources */,
 				1F3C244220A5AD3D00E6B953 /* files_tag@2x.png in Resources */,
+				1FE08938216F52940049F44B /* avatar_placeholder_big.png in Resources */,
 				1FA5D767215B59460025F870 /* add_new_photo_new_album_gray@3x.png in Resources */,
 				1FA5D7572159FED20025F870 /* eye_open@2x.png in Resources */,
 				1F050E0C20A9640D0037F00A /* TransferTaskTableViewCell.xib in Resources */,
@@ -4207,7 +4268,9 @@
 				1F1BABAC20C62EC300D32C5A /* UsersInfoAPI.swift in Sources */,
 				1F1BAC5120CE637000D32C5A /* Enum.swift in Sources */,
 				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
+				1FE0892C216F1E510049F44B /* MyInfoCenterViewController.swift in Sources */,
 				1F4242AF20F5CBF60085E2F0 /* JYProcessView.m in Sources */,
+				1FE0893A216F58A80049F44B /* MyNicknameChangeViewController.swift in Sources */,
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
 				1F83AE7420885FD5007CCCFD /* MDBaseButton.swift in Sources */,
@@ -4226,6 +4289,7 @@
 				1F359FEA2092C87900E2FF36 /* UIImage+extension.m in Sources */,
 				1FFD12C920ECA7B60053A3F7 /* FilesControllerExtension.swift in Sources */,
 				1FC5702D20C144B500D4499D /* DriveModel.swift in Sources */,
+				1FE0892E216F38690049F44B /* MyAboutViewController.swift in Sources */,
 				1FD1F2DF2151FA7100C3E429 /* SighInTokenAPI.swift in Sources */,
 				1FFD133220EF3E140053A3F7 /* NetAsset.swift in Sources */,
 				1FE9EF8020EF5A9C00732728 /* FileDefine.swift in Sources */,
@@ -4359,6 +4423,7 @@
 				1F362F73212FF6B6000B3384 /* FunctionViewController.swift in Sources */,
 				1F1BAC4F20CE4EC700D32C5A /* UINavigationControllerExtension.swift in Sources */,
 				1FE674DE20D21B11006F97DB /* TRTask.swift in Sources */,
+				1FE08932216F4EC80049F44B /* AvatarChangeViewController.swift in Sources */,
 				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,
 				1FFD12AD20E3412E0053A3F7 /* FilesMoveToRootViewController.swift in Sources */,
 				1F5378792108754F00A555C5 /* AnyEncodable.swift in Sources */,
@@ -4371,6 +4436,7 @@
 				1FAADEF820AC149500739220 /* FilesFileInfoTableViewCell.swift in Sources */,
 				1F537A0D212412A600A555C5 /* SettingRootViewController.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
+				1FE08930216F38B40049F44B /* MyAccountSecurityViewController.swift in Sources */,
 				1F8EBB35209AD91200E8AB83 /* WSTabBarController.swift in Sources */,
 				1FFD12C120EB0F310053A3F7 /* NewFolderViewController.swift in Sources */,
 				1FE9EF8F20EF61A200732728 /* PHPhotoLibraryExtension.swift in Sources */,
@@ -4383,6 +4449,7 @@
 				1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */,
 				1F362F11212672F2000B3384 /* DBService.swift in Sources */,
 				1FFD12C620EB80E80053A3F7 /* DirOprationAPI.swift in Sources */,
+				1FE08923216DEADF0049F44B /* NewAlbumViewCollectionLayout.swift in Sources */,
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
 				1FFD132620EF36A50053A3F7 /* UIScrollView+IndicatorExt.m in Sources */,
 				1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */,
@@ -4393,6 +4460,7 @@
 				1FBB6F532137D83E0090FA57 /* TipsAlertView.swift in Sources */,
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
+				1FE0893C216F5ACB0049F44B /* UILabelExtension.swift in Sources */,
 				1FC695F520D26F2400C62E76 /* FileTools.swift in Sources */,
 				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,
 				1FFD131020EE21620053A3F7 /* PhotoCollectionViewController.swift in Sources */,

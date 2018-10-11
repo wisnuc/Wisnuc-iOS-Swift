@@ -97,6 +97,7 @@ class PhotoCollectionViewController: UICollectionViewController {
             
             var originMargin:CGFloat = 0
             for (i,value) in yearArray.enumerated(){
+               
                 let photos = value
                 let yearsAsset = dataSource?.filter({Calendar.current.isDate(($0.first?.createDate)!, equalTo:  (photos.first?.createDate)!, toGranularity: Calendar.Component.year)})
                 if let yearsAsset = yearsAsset{
@@ -105,6 +106,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                        sum += assets.count
                     }
 //                    print("😆\(sum)")
+
                 var photoScale:CGFloat = 1
                 if sum > 3{
                     photoScale = CGFloat(ceilf(Float(sum)/Float(currentScale)))
@@ -113,24 +115,38 @@ class PhotoCollectionViewController: UICollectionViewController {
                 if self.currentItemSize.height == 0 {
                     self.currentItemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: (__kWidth - 2 * (currentScale - 1))/currentScale)
                 }
-                
                 if let height = self.collectionView?.contentSize.height {
-                    if height>0{
-                        let margin = ((photoScale * self.currentItemSize.height) + CGFloat(yearsAsset.count*Int(headerHeight)) + (photoScale - 1) * 2 )/(height - MDCAppNavigationBarHeight) * (__kHeight - MDCAppNavigationBarHeight)
+                    if height>0 {
+                        let margin = ((photoScale * self.currentItemSize.height) + CGFloat(yearsAsset.count*Int(headerHeight)) - (photoScale*2) * 2 )/(height - MDCAppNavigationBarHeight) * (__kHeight - MDCAppNavigationBarHeight)
                         //             imageView.frame = CGRectMake(index * (imageWithHeight + Width_Space) + Start_X,page * (imageWithHeight + Height_Space)+Start_Y, imageWithHeight, imageWithHeight);
-                        print("😈\(margin)")
+                        print("😈\(i)")
                         originMargin += margin
 //                        print(self.collectionView?.contentSize.height ?? 0)
-                        let xview = UIView.init(frame: CGRect(x: __kWidth - 100 - 74, y: MDCAppNavigationBarHeight + originMargin, width: 100, height: 30))
-                       let label = UILabel.init(frame: xview.bounds)
+                       let timelineView = UIView.init(frame: CGRect(x: __kWidth - 35 - 58 - 40 , y: MDCAppNavigationBarHeight + originMargin, width: 58, height: 24))
+                       let label = UILabel.init(frame: timelineView.bounds)
+                        label.font = UIFont.boldSystemFont(ofSize: 12)
+                        label.textColor = LightGrayColor
+                        label.textAlignment = .center
+                        label.layer.cornerRadius = 24/2
                         if let date = value.first?.createDate{
-                        label.text = TimeTools.getYear(date:date)
+                        label.text = "\(TimeTools.getYear(date:date))年"
                         }
-                        print("🐔\(originMargin)")
-                        xview.addSubview(label)
-                        xview.backgroundColor = .cyan
-                        self.view.addSubview(xview)
-                        self.timeViewArray?.append(xview)
+//                        print("🐔\(originMargin)")
+                        timelineView.addSubview(label)
+                        timelineView.backgroundColor = .white
+                        timelineView.alpha = 0.87
+                        timelineView.layer.cornerRadius = 24/2
+                        if i == 0 || value == yearArray.last{
+                            self.view.addSubview(timelineView)
+                            self.timeViewArray?.append(timelineView)
+                            print("🌶\(i)")
+                           
+                        }else{
+                            if photoScale >= CGFloat(floorf(Float(allAssetArray.count/yearsAsset.count))){
+                                self.view.addSubview(timelineView)
+                                self.timeViewArray?.append(timelineView)
+                            }
+                        }
                     }
                   }
                 }

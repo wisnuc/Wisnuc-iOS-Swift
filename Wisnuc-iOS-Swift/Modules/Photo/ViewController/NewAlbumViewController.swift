@@ -26,6 +26,7 @@ class NewAlbumViewController: BaseViewController {
     private let reuseHeaderIdentifier = "reuseIdentifierHeader"
     private let cellContentSizeWidth = (__kWidth - 4)/2
     private let cellContentSizeHeight = (__kWidth - 4)/2
+    private let estimateDefaultHeight:CGFloat = 100
     
     var dataDic:Dictionary<String,Any>?
     lazy var dataSource = Array<WSAsset>.init()
@@ -193,6 +194,57 @@ class NewAlbumViewController: BaseViewController {
 //
     }
     
+    func imageHeight(asset:WSAsset, layoutWidth: CGFloat, estimateHeight: CGFloat) -> CGFloat {
+        var showHeight = estimateDefaultHeight
+        if estimateHeight != 0.0 {
+            showHeight = estimateHeight
+        }
+        if  layoutWidth == 0.0 {
+            return showHeight
+        }
+        
+        var size: CGSize = CGSize.zero
+        
+        if asset is NetAsset{
+            let  netAsset = asset as! NetAsset
+            let width = netAsset.metadata?.w ?? 0
+            let height = netAsset.metadata?.h ?? 0
+            size = CGSize(width: CGFloat(width), height: CGFloat(height))
+        }else{
+            if asset.asset != nil{
+                size = CGSize.init(width: asset.asset?.pixelWidth ?? 0, height: asset.asset?.pixelHeight ?? 0)
+            }
+        }
+        
+        let imgWidth: CGFloat = size.width
+        let imgHeight: CGFloat = size.height
+        if imgWidth > 0 && imgHeight > 0 {
+            showHeight = layoutWidth / imgWidth * imgHeight
+        }
+        return showHeight
+    }
+    
+    
+    func itemHeight(at indexPath: IndexPath) -> CGFloat {
+        let asset = dataSource[indexPath.row]
+        /**
+         *  参数1:图片URL
+         *  参数2:imageView 宽度
+         *  参数3:预估高度,(此高度仅在图片尚未加载出来前起作用,不影响真实高度)
+         */
+        return self.imageHeight(asset:asset, layoutWidth: self.layout.itemWidth, estimateHeight: 200)
+    }
+    
+   
+    
+    lazy var layout: NewAlbumViewCollectionLayout = { [weak self] in
+        var layoutNew:NewAlbumViewCollectionLayout?
+        layoutNew = NewAlbumViewCollectionLayout.init(itemsHeightBlock: { [weak self] (index) -> CGFloat in
+            return (self?.itemHeight(at: index!))!
+        })
+        return layoutNew!
+    }()
+    
     lazy var photoCollectionView: UICollectionView = { [weak self] in
         let collectionViewLayout = UICollectionViewFlowLayout.init()
         //        collectionViewLayout.itemSize
@@ -212,6 +264,7 @@ extension NewAlbumViewController:UICollectionViewDelegate,UICollectionViewDataSo
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.dataSource.count
     }
@@ -275,7 +328,6 @@ extension NewAlbumViewController:UICollectionViewDelegate,UICollectionViewDataSo
             albumDescribeText =  header.textView.text ?? ""
         }
     }
-
 }
 
 extension NewAlbumViewController :UICollectionViewDelegateFlowLayout{
@@ -289,7 +341,7 @@ extension NewAlbumViewController :UICollectionViewDelegateFlowLayout{
 //        var size = CGSize(width: <#T##CGFloat#>, height: <#T##CGFloat#>)
         return CGSize(width:cellContentSizeWidth , height: cellContentSizeHeight)
     }
-    
+
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 4

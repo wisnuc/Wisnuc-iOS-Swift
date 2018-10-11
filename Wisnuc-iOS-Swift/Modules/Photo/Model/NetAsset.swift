@@ -55,8 +55,8 @@ class NetAsset: WSAsset,HandyJSON {
 
 class HJMetadata: HandyJSON {
     var date:String?
-    var h:Int?
-    var w:Int?
+    var h:Float?
+    var w:Float?
     var make:String?
     var model:String?
     var orient:Int?

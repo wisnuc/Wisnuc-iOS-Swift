@@ -213,7 +213,7 @@ const char kIndicatorKey;
     
     self.showsVerticalScrollIndicator = FALSE;
     
-    ILSIndicatorView *indicator = [[ILSIndicatorView alloc] initWithFrame:CGRectMake(self.frame.origin.x + self.frame.size.width - kILSDefaultSliderWidth, self.frame.origin.y + MDCAppNavigationBarHeight, 1, CGRectGetHeight(self.bounds) - 2 * kILSDefaultSliderSize)];
+    ILSIndicatorView *indicator = [[ILSIndicatorView alloc] initWithFrame:CGRectMake(self.frame.origin.x + self.frame.size.width - kILSDefaultSliderWidth, self.frame.origin.y + MDCAppNavigationBarHeight, 1, CGRectGetHeight(self.bounds) - 2 * kILSDefaultSliderSize + 8)];
     [indicator addTarget:self action:@selector(indicatorValueChanged:) forControlEvents:UIControlEventValueChanged];
     indicator.scrollView = self;
     self.indicator = indicator;
