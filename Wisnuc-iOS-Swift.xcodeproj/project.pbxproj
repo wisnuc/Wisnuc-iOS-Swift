@@ -715,6 +715,15 @@
 		1FE08938216F52940049F44B /* avatar_placeholder_big.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08937216F52930049F44B /* avatar_placeholder_big.png */; };
 		1FE0893A216F58A80049F44B /* MyNicknameChangeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE08939216F58A80049F44B /* MyNicknameChangeViewController.swift */; };
 		1FE0893C216F5ACB0049F44B /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0893B216F5ACB0049F44B /* UILabelExtension.swift */; };
+		1FE0893E21704C660049F44B /* MyBindWechatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0893D21704C650049F44B /* MyBindWechatViewController.swift */; };
+		1FE089402170740E0049F44B /* radioButton_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE0893F2170740E0049F44B /* radioButton_right.png */; };
+		1FE089422170741C0049F44B /* radioButton_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089412170741C0049F44B /* radioButton_right@2x.png */; };
+		1FE08944217074330049F44B /* radioButton_right@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08943217074330049F44B /* radioButton_right@3x.png */; };
+		1FE08946217075FD0049F44B /* MyChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE08945217075FD0049F44B /* MyChangePasswordViewController.swift */; };
+		1FE08948217077220049F44B /* MyBindEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE08947217077220049F44B /* MyBindEmailViewController.swift */; };
+		1FE0894A21707BE10049F44B /* MyVerificationCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0894921707BE10049F44B /* MyVerificationCodeViewController.swift */; };
+		1FE0894D21709EA40049F44B /* MyBindPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0894C21709EA40049F44B /* MyBindPhoneViewController.swift */; };
+		1FE0894F2170AD530049F44B /* MyChangePhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0894E2170AD530049F44B /* MyChangePhoneNumberViewController.swift */; };
 		1FE674D020D20CED006F97DB /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CD20D20CEB006F97DB /* file_icon.png */; };
 		1FE674D120D20CED006F97DB /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CE20D20CEB006F97DB /* file_icon@2x.png */; };
 		1FE674D220D20CED006F97DB /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CF20D20CEC006F97DB /* file_icon@3x.png */; };
@@ -1529,6 +1538,15 @@
 		1FE08937216F52930049F44B /* avatar_placeholder_big.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_placeholder_big.png; sourceTree = "<group>"; };
 		1FE08939216F58A80049F44B /* MyNicknameChangeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNicknameChangeViewController.swift; sourceTree = "<group>"; };
 		1FE0893B216F5ACB0049F44B /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
+		1FE0893D21704C650049F44B /* MyBindWechatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBindWechatViewController.swift; sourceTree = "<group>"; };
+		1FE0893F2170740E0049F44B /* radioButton_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radioButton_right.png; sourceTree = "<group>"; };
+		1FE089412170741C0049F44B /* radioButton_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radioButton_right@2x.png"; sourceTree = "<group>"; };
+		1FE08943217074330049F44B /* radioButton_right@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radioButton_right@3x.png"; sourceTree = "<group>"; };
+		1FE08945217075FD0049F44B /* MyChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyChangePasswordViewController.swift; sourceTree = "<group>"; };
+		1FE08947217077220049F44B /* MyBindEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBindEmailViewController.swift; sourceTree = "<group>"; };
+		1FE0894921707BE10049F44B /* MyVerificationCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyVerificationCodeViewController.swift; sourceTree = "<group>"; };
+		1FE0894C21709EA40049F44B /* MyBindPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBindPhoneViewController.swift; sourceTree = "<group>"; };
+		1FE0894E2170AD530049F44B /* MyChangePhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyChangePhoneNumberViewController.swift; sourceTree = "<group>"; };
 		1FE674CD20D20CEB006F97DB /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
 		1FE674CE20D20CEB006F97DB /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		1FE674CF20D20CEC006F97DB /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
@@ -2266,12 +2284,7 @@
 		1F537A0B2124128600A555C5 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
-				1F537A0C212412A500A555C5 /* SettingRootViewController.swift */,
-				1FE0892B216F1E510049F44B /* MyInfoCenterViewController.swift */,
-				1FE0892D216F38690049F44B /* MyAboutViewController.swift */,
-				1FE0892F216F38B40049F44B /* MyAccountSecurityViewController.swift */,
-				1FE08931216F4EC80049F44B /* AvatarChangeViewController.swift */,
-				1FE08939216F58A80049F44B /* MyNicknameChangeViewController.swift */,
+				1FE0894B21709E590049F44B /* ViewController */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -3201,6 +3214,9 @@
 		1FE08924216F16EA0049F44B /* My */ = {
 			isa = PBXGroup;
 			children = (
+				1FE0893F2170740E0049F44B /* radioButton_right.png */,
+				1FE089412170741C0049F44B /* radioButton_right@2x.png */,
+				1FE08943217074330049F44B /* radioButton_right@3x.png */,
 				1FE08937216F52930049F44B /* avatar_placeholder_big.png */,
 				1FE08935216F52880049F44B /* avatar_placeholder_big@2x.png */,
 				1FE08933216F527D0049F44B /* avatar_placeholder_big@3x.png */,
@@ -3209,6 +3225,25 @@
 				1FE08929216F17150049F44B /* avatar_placeholder@3x.png */,
 			);
 			path = My;
+			sourceTree = "<group>";
+		};
+		1FE0894B21709E590049F44B /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				1F537A0C212412A500A555C5 /* SettingRootViewController.swift */,
+				1FE0892B216F1E510049F44B /* MyInfoCenterViewController.swift */,
+				1FE0892D216F38690049F44B /* MyAboutViewController.swift */,
+				1FE0892F216F38B40049F44B /* MyAccountSecurityViewController.swift */,
+				1FE08931216F4EC80049F44B /* AvatarChangeViewController.swift */,
+				1FE08939216F58A80049F44B /* MyNicknameChangeViewController.swift */,
+				1FE0893D21704C650049F44B /* MyBindWechatViewController.swift */,
+				1FE08945217075FD0049F44B /* MyChangePasswordViewController.swift */,
+				1FE08947217077220049F44B /* MyBindEmailViewController.swift */,
+				1FE0894921707BE10049F44B /* MyVerificationCodeViewController.swift */,
+				1FE0894C21709EA40049F44B /* MyBindPhoneViewController.swift */,
+				1FE0894E2170AD530049F44B /* MyChangePhoneNumberViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		1FE674D320D21B11006F97DB /* Tiercel */ = {
@@ -3764,6 +3799,7 @@
 				1F5659FD20D0E3A200D86FDB /* photos@3x.png in Resources */,
 				1F83AE7C20886BDA007CCCFD /* change.png in Resources */,
 				1F83AE67208838DD007CCCFD /* eye_off.png in Resources */,
+				1FE089402170740E0049F44B /* radioButton_right.png in Resources */,
 				1FC5CC0F20D3BD9F00499E63 /* file_finish.png in Resources */,
 				1FAADEE320ABFF6100739220 /* files_share@3x.png in Resources */,
 				1FA669DB208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib in Resources */,
@@ -3989,6 +4025,7 @@
 				1F5AD92820AD52360065DAD3 /* back_gray.png in Resources */,
 				1F52095021491DDF0058A8D3 /* FirstConfigViewController.xib in Resources */,
 				1FA5D781215CC42E0025F870 /* location_gary@2x.png in Resources */,
+				1FE089422170741C0049F44B /* radioButton_right@2x.png in Resources */,
 				1F5882242085885C00394BD6 /* logo@2x.png in Resources */,
 				1F3C23FB20A2D6D100E6B953 /* menu@3x.png in Resources */,
 				1F0FD0E3214A63F5003D7936 /* up_arrow_gray@2x.png in Resources */,
@@ -4031,6 +4068,7 @@
 				1FE674D020D20CED006F97DB /* file_icon.png in Resources */,
 				1F2B45A5208F290200C8971F /* close.png in Resources */,
 				1F2B459E208F255800C8971F /* IPAddDeviceViewController.xib in Resources */,
+				1FE08944217074330049F44B /* radioButton_right@3x.png in Resources */,
 				1FA6A1C520CFA796007A0AB2 /* files_photo_normal@3x.png in Resources */,
 				1F1BAC6220CE709100D32C5A /* files_png_small@2x.png in Resources */,
 				1FC5CC1320D3BDC800499E63 /* file_finish@3x.png in Resources */,
@@ -4259,6 +4297,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FD1F2DB2150FF3900C3E429 /* RequestDefine.swift in Sources */,
+				1FE0894A21707BE10049F44B /* MyVerificationCodeViewController.swift in Sources */,
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
 				1F4242BA20F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift in Sources */,
@@ -4305,6 +4344,7 @@
 				1FA9C3DE210585FE00E8411E /* GetMediaAPI.swift in Sources */,
 				1FD1F2E62152231F00C3E429 /* SighInWechatTokenAPI.swift in Sources */,
 				1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */,
+				1FE08946217075FD0049F44B /* MyChangePasswordViewController.swift in Sources */,
 				1F1BAC4D20CA80F000D32C5A /* CollectionExtension.swift in Sources */,
 				1FC8FF8720AE887800F65194 /* searchTableViewCell.swift in Sources */,
 				1FBD1E0020B2A0170067BE3E /* NotificationExtension.swift in Sources */,
@@ -4364,6 +4404,7 @@
 				1F52094F21491DDF0058A8D3 /* FirstConfigViewController.swift in Sources */,
 				1F52095F214A0FF20058A8D3 /* SeekNewDeviceViewController.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
+				1FE0894D21709EA40049F44B /* MyBindPhoneViewController.swift in Sources */,
 				1F8EBB5420A01EF100E8AB83 /* FilesRootCollectionViewController.swift in Sources */,
 				1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */,
 				1F307C7820BFC7D700AE105C /* DriveAPI.swift in Sources */,
@@ -4389,6 +4430,7 @@
 				1FFD131720EF0ABB0053A3F7 /* TYDecorationSectionLayout.m in Sources */,
 				06EE1ED320A70D52000E739D /* BaseTableViewController.swift in Sources */,
 				1F359FC6209182BB00E2FF36 /* DiskErrorViewController.swift in Sources */,
+				1FE08948217077220049F44B /* MyBindEmailViewController.swift in Sources */,
 				1F2B4597208ECAAE00C8971F /* BottomSheetCollectionViewCell.swift in Sources */,
 				1F2CE30720B50FFE00D9E5BD /* ServiceProtocol.swift in Sources */,
 				1F2CE31020B559CC00D9E5BD /* CoreDataOperation.swift in Sources */,
@@ -4406,6 +4448,7 @@
 				1FDBC50E20932171004DE6B8 /* DiskPopUpViewManager.swift in Sources */,
 				1F5882612085FBDF00394BD6 /* Alert.swift in Sources */,
 				1F3C240920A4214600E6B953 /* AppNavigationDrawerController.swift in Sources */,
+				1FE0893E21704C660049F44B /* MyBindWechatViewController.swift in Sources */,
 				1F520964214A14F30058A8D3 /* SeekNewDeviceTableViewCell.swift in Sources */,
 				1F58825F2085FA7600394BD6 /* MyStationTapGestureRecognizer.swift in Sources */,
 				1FBD1DF420AEDE640067BE3E /* FilesShareAuthorityChangeViewController.swift in Sources */,
@@ -4460,6 +4503,7 @@
 				1FBB6F532137D83E0090FA57 /* TipsAlertView.swift in Sources */,
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
+				1FE0894F2170AD530049F44B /* MyChangePhoneNumberViewController.swift in Sources */,
 				1FE0893C216F5ACB0049F44B /* UILabelExtension.swift in Sources */,
 				1FC695F520D26F2400C62E76 /* FileTools.swift in Sources */,
 				1F2CE30920B5156C00D9E5BD /* UserService.swift in Sources */,

@@ -15,6 +15,26 @@ import MaterialComponents
 }
 
 extension UIViewController: BackButtonHandlerProtocol{
+    
+    func alertController(title: String? = nil, message: String? = nil,cancelActionTitle:String? = nil,okActionTitle:String? = nil,okActionHandler:((UIAlertAction) -> Void)? = nil,cancelActionHandler:((UIAlertAction) -> Void)? = nil){
+        
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        if cancelActionTitle != nil{
+            let cancelAction = UIAlertAction(title: cancelActionTitle, style: UIAlertActionStyle.cancel, handler: cancelActionHandler)
+            cancelAction.setValue(COR1, forKey: "titleTextColor")
+            alertController.addAction(cancelAction)
+        }
+        
+        if okActionTitle != nil{
+            let okAction = UIAlertAction (title: okActionTitle!, style: UIAlertActionStyle.default, handler: okActionHandler)
+//            if okAction.value(forKey: "titleTextColor") != nil {
+                okAction.setValue(COR1, forKey: "titleTextColor")
+//            }
+            alertController.addAction(okAction)
+        }
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     class func currentViewController() -> UIViewController? {
         let window = UIApplication.shared.keyWindow
         var controller = window?.rootViewController

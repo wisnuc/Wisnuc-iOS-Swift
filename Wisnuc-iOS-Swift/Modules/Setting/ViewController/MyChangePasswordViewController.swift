@@ -1,14 +1,14 @@
 //
-//  MyAccountSecurityViewController.swift
+//  MyChangePasswordViewController.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/10/11.
+//  Created by wisnuc-imac on 2018/10/12.
 //  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
 
-class MyAccountSecurityViewController: BaseViewController {
+class MyChangePasswordViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

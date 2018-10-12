@@ -15,4 +15,12 @@ extension UILabel{
         label.font = UIFont.boldSystemFont(ofSize: 21)
         return label
     }
+    
+    class func initDetailTitleLabel(text:String) -> UILabel{
+        let label = UILabel.init()
+        label.text = text
+        label.textColor = LightGrayColor
+        label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }
 }

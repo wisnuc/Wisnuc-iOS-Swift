@@ -56,11 +56,13 @@ extension MyInfoCenterViewController:UITableViewDelegate{
             let avatarChangeVC = AvatarChangeViewController.init(style: .black)
             self.navigationController?.pushViewController(avatarChangeVC, animated: true)
         case 1:
-           break
+            let nicknameVC = MyNicknameChangeViewController.init(style: .whiteWithoutShadow)
+            self.navigationController?.pushViewController(nicknameVC, animated: true)
         case 2:
             break
         case 3:
-             break
+            let bindWechatVC = MyBindWechatViewController.init(style: .whiteWithoutShadow)
+            self.navigationController?.pushViewController(bindWechatVC, animated: true)
         default: break
             
         }
