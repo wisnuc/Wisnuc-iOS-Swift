@@ -135,24 +135,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
 //            }
 //        }
         photosVC.title = LocalizedString(forKey: "相簿")
-        let functionVC = FunctionViewController.init(style: NavigationStyle.white)
-        functionVC.title = LocalizedString(forKey: "功能")
+        let devieceVC = DeviceViewController.init(style: NavigationStyle.white)
+        devieceVC.title = LocalizedString(forKey: "设备")
         let settingVC = SettingRootViewController.init(style: NavigationStyle.white)
         let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
         let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
-        let functionNavi = BaseNavigationController.init(rootViewController: functionVC)
+        let deviceNavi = BaseNavigationController.init(rootViewController: devieceVC)
         let settingNavi = BaseNavigationController.init(rootViewController: settingVC)
         filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Files"), image: UIImage.init(named: "Home")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 0)
         photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "相簿"), image: UIImage.init(named: "photos.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 1)
-        functionNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Share"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 2)
+        deviceNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Share"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 2)
         settingNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Settings"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 3)
         filesNavi.tabBarItem.selectedImage = UIImage.init(named: "tab_files_selected.png")
-        let controllers = [filesNavi,photosNavi,functionNavi,settingNavi]
+        let controllers = [filesNavi,photosNavi,deviceNavi,settingNavi]
         tabBarController.viewControllers = controllers
         tabBarController.selectedViewController = controllers[0]
         tabBarController.tabBar?.items = [filesNavi.tabBarItem,
                                           photosNavi.tabBarItem,
-                                          functionNavi.tabBarItem,
+                                          deviceNavi.tabBarItem,
                                           settingNavi.tabBarItem]
         tabBarController.tabBar?.setImageTintColor(COR1, for: MDCTabBarItemState.normal)
         tabBarController.tabBar?.setImageTintColor(LightGrayColor, for: MDCTabBarItemState.selected)

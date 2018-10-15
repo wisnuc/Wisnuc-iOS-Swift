@@ -1,25 +1,22 @@
 //
-//  MyChangePasswordViewController.swift
+//  MyResetPasswordViewController.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/10/12.
+//  Created by wisnuc-imac on 2018/10/15.
 //  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
 
-class MyChangePasswordViewController: BaseViewController {
-    var oldPasswordTextFieldController:MDCTextInputControllerUnderline?
+class MyResetPasswordViewController: BaseViewController {
     var newPasswordTextFieldController:MDCTextInputControllerUnderline?
     var confirmPasswordTextFieldController:MDCTextInputControllerUnderline?
     override func viewDidLoad() {
         super.viewDidLoad()
         setContentFrame()
-        preparerNavigation()
         self.view.addSubview(titleLabel)
         self.view.addSubview(detailLabel)
         
-        self.view.addSubview(oldPasswordInputTextField)
         self.view.addSubview(newPasswordInputTextField)
         self.view.addSubview(confirmPasswordInputTextField)
         preparerTextFieldController()
@@ -29,18 +26,9 @@ class MyChangePasswordViewController: BaseViewController {
         // Do any additional setup after loading the view.
     }
     
-    func preparerNavigation() {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "忘记密码"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_ :)))
-    }
     
     func preparerTextFieldController() {
-        self.oldPasswordTextFieldController = MDCTextInputControllerUnderline.init(textInput: oldPasswordInputTextField)
-        self.oldPasswordTextFieldController?.isFloatingEnabled = true
-        self.oldPasswordTextFieldController?.normalColor = Gray6Color
-        self.oldPasswordTextFieldController?.activeColor =  COR1
-        self.oldPasswordTextFieldController?.placeholderText = LocalizedString(forKey: "旧密码")
-        self.oldPasswordTextFieldController?.floatingPlaceholderActiveColor = COR1
-        
+   
         self.newPasswordTextFieldController = MDCTextInputControllerUnderline.init(textInput: newPasswordInputTextField)
         self.newPasswordTextFieldController?.isFloatingEnabled = true
         self.newPasswordTextFieldController?.normalColor = Gray6Color
@@ -63,35 +51,17 @@ class MyChangePasswordViewController: BaseViewController {
         
     }
     
-    @objc func leftBarButtonItemTap(_ sender:UIBarButtonItem){
-        let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.resetPassword)
-        self.navigationController?.pushViewController(verificationCodeVC, animated: true)
-    }
-    
     @objc func confirmButtonTap(_ sender:UIButton){
         self.alertController(title: "密码修改 成功", message: "可用 139****2222加密码直接登录", okActionTitle: "重新登录") { (alertAction) in
             
         }
     }
     
-    lazy var titleLabel = UILabel.initTitleLabel(color: DarkGrayColor, text: LocalizedString(forKey: "修改密码"))
+    lazy var titleLabel = UILabel.initTitleLabel(color: DarkGrayColor, text: LocalizedString(forKey: "设置新密码"))
     lazy var detailLabel = UILabel.initDetailTitleLabel(text:LocalizedString(forKey: "为了账号安全，建议您设置安全性较强的密码  \n 如多字符的数字与字母，符号的组合"))
     
-    lazy var oldPasswordInputTextField: MDCTextField = { [weak self] in
-        let textInput = MDCTextField.init(frame: CGRect(x: MarginsWidth, y: (self?.detailLabel.bottom)! + 32, width: __kWidth - MarginsWidth*2, height: 60))
-        textInput.font = UIFont.systemFont(ofSize: 16)
-        textInput.clearButtonMode = .never
-        if #available(iOS 10.0, *) {
-            textInput.adjustsFontForContentSizeCategory = true
-        } else {
-            textInput.mdc_adjustsFontForContentSizeCategory = true
-        }
-        textInput.delegate = self
-        return textInput
-        }()
-    
     lazy var newPasswordInputTextField: MDCTextField = { [weak self] in
-        let textInput = MDCTextField.init(frame: CGRect(x: MarginsWidth, y: (self?.oldPasswordInputTextField.bottom)! + 32, width: __kWidth - MarginsWidth*2, height: 60))
+        let textInput = MDCTextField.init(frame: CGRect(x: MarginsWidth, y: (self?.detailLabel.bottom)! + 32, width: __kWidth - MarginsWidth*2, height: 60))
         textInput.font = UIFont.systemFont(ofSize: 16)
         textInput.clearButtonMode = .never
         if #available(iOS 10.0, *) {
@@ -129,10 +99,10 @@ class MyChangePasswordViewController: BaseViewController {
         button.addTarget(self, action: #selector(confirmButtonTap(_ :)), for: UIControlEvents.touchUpInside)
         return button
         }()
-
+    
 }
 
-extension MyChangePasswordViewController:UITextFieldDelegate{
+extension MyResetPasswordViewController:UITextFieldDelegate{
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let rawText = textField.text else {
             return true
@@ -140,12 +110,11 @@ extension MyChangePasswordViewController:UITextFieldDelegate{
         
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
         if fullString.count > 0 && checkIsPhoneNumber(number: fullString){
-//            nextButtonEnableStyle()
+            //            nextButtonEnableStyle()
         }else{
-//            nextButtonDisableStyle()
+            //            nextButtonDisableStyle()
         }
         return true
     }
     
 }
-

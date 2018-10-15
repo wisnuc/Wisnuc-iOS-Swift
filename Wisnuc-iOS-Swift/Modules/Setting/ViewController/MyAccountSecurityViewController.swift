@@ -76,7 +76,8 @@ extension MyAccountSecurityViewController:UITableViewDelegate{
             case 0:
                 break
             case 1:
-                break
+                let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
+                self.navigationController?.pushViewController(verificationCodeVC, animated: true)
             case 2:
                 let bindPhoneViewController = MyBindPhoneViewController.init(style: .whiteWithoutShadow)
                 self.navigationController?.pushViewController(bindPhoneViewController, animated: true)

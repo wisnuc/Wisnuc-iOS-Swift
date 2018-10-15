@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="177" id="KGk-i7-Jjw" customClass="DeviceChangeDeviceTableViewCell" customModule="Wisnuc_iOS_Swift" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="177"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="176.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1nZ-VT-NAO">
+                        <rect key="frame" x="32" y="8" width="256" height="160.5"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPc-wU-7Xi">
+                                <rect key="frame" x="16" y="48" width="42" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cjC-21-Jiu">
+                                <rect key="frame" x="16" y="104.5" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="I8n-G3-NfV">
+                                <rect key="frame" x="16" y="84.5" width="224" height="2"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="Rjj-bW-0el"/>
+                                </constraints>
+                            </progressView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="HPc-wU-7Xi" firstAttribute="leading" secondItem="1nZ-VT-NAO" secondAttribute="leading" constant="16" id="D0d-BL-4LR"/>
+                            <constraint firstItem="HPc-wU-7Xi" firstAttribute="top" secondItem="1nZ-VT-NAO" secondAttribute="top" constant="48" id="Etp-g8-BJp"/>
+                            <constraint firstItem="I8n-G3-NfV" firstAttribute="top" secondItem="HPc-wU-7Xi" secondAttribute="bottom" constant="16" id="VRt-dX-MTc"/>
+                            <constraint firstItem="cjC-21-Jiu" firstAttribute="leading" secondItem="HPc-wU-7Xi" secondAttribute="leading" id="YuL-CE-g85"/>
+                            <constraint firstAttribute="trailing" secondItem="I8n-G3-NfV" secondAttribute="trailing" constant="16" id="i1K-L0-Ck3"/>
+                            <constraint firstItem="cjC-21-Jiu" firstAttribute="top" secondItem="I8n-G3-NfV" secondAttribute="bottom" constant="18" id="nOO-dD-xqb"/>
+                            <constraint firstItem="I8n-G3-NfV" firstAttribute="leading" secondItem="HPc-wU-7Xi" secondAttribute="leading" id="sF7-5i-lcc"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="1nZ-VT-NAO" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="MHE-PB-Tin"/>
+                    <constraint firstItem="1nZ-VT-NAO" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="32" id="c5L-4D-U4D"/>
+                    <constraint firstAttribute="bottom" secondItem="1nZ-VT-NAO" secondAttribute="bottom" constant="8" id="jNm-Tm-tAb"/>
+                    <constraint firstAttribute="trailing" secondItem="1nZ-VT-NAO" secondAttribute="trailing" constant="32" id="tWa-2v-eXX"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="capacityLabel" destination="cjC-21-Jiu" id="LYF-JS-FKg"/>
+                <outlet property="capacityProgressView" destination="I8n-G3-NfV" id="7oh-Nj-Tia"/>
+                <outlet property="cardBackgroudView" destination="1nZ-VT-NAO" id="HvJ-LM-iJ4"/>
+                <outlet property="titleLabel" destination="HPc-wU-7Xi" id="bbK-ic-LQA"/>
+            </connections>
+            <point key="canvasLocation" x="137.59999999999999" y="214.54272863568218"/>
+        </tableViewCell>
+    </objects>
+</document>

@@ -75,6 +75,15 @@ class SettingRootViewController: BaseViewController {
         self.navigationController?.pushViewController(myInfoVC, animated: true)
     }
     
+    
+    @objc func headerTipsViewTap(_ sender:UIGestureRecognizer){
+        if let tab = retrieveTabbarController(){
+            tab.setTabBarHidden(true, animated: true)
+        }
+        let secureStepVC = MySecureStepViewController.init(style: NavigationStyle.whiteWithoutShadow)
+        self.navigationController?.pushViewController(secureStepVC, animated: true)
+    }
+    
     func logoutAction(){
         AppUserService.logoutUser()
         AppService.sharedInstance().abort()
@@ -195,7 +204,9 @@ extension SettingRootViewController:UITableViewDataSource{
 //        headerTipsView.backgroundColor = .red
         headerTipsView.addSubview(headerTipsLabel)
         headerTipsView.addSubview(secureProgressView)
-        
+        headerTipsView.isUserInteractionEnabled = true
+        let tapGestrue = UITapGestureRecognizer.init(target: self, action: #selector(headerTipsViewTap(_ :)))
+        headerTipsView.addGestureRecognizer(tapGestrue)
         secureProgressView.layer.cornerRadius = 2
         secureProgressView.transform = CGAffineTransform.init(scaleX: 1.0, y: 8.0)
         

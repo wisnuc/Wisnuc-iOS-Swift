@@ -17,6 +17,8 @@ enum MyVerificationCodeViewControllerState {
 enum MyVerificationCodeViewControllerNextState {
     case bindEmail
     case bindPhone
+    case changePassword
+    case resetPassword
 }
 
 class MyVerificationCodeViewController: BaseViewController {
@@ -146,6 +148,14 @@ class MyVerificationCodeViewController: BaseViewController {
         case .bindPhone?:
             let changePhoneNumberViewController =  MyChangePhoneNumberViewController.init(style: NavigationStyle.whiteWithoutShadow)
             self.navigationController?.pushViewController(changePhoneNumberViewController, animated: true)
+        case .changePassword?:
+            let changePasswordViewController =  MyChangePasswordViewController.init(style: NavigationStyle.whiteWithoutShadow)
+            self.navigationController?.pushViewController(changePasswordViewController, animated: true)
+            
+        case .resetPassword?:
+            let resetPasswordViewController =  MyResetPasswordViewController.init(style: NavigationStyle.whiteWithoutShadow)
+            self.navigationController?.pushViewController(resetPasswordViewController, animated: true)
+        
         default:
             break
         }
