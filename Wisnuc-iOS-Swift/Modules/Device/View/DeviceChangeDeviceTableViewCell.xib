@@ -23,33 +23,51 @@
                         <rect key="frame" x="32" y="8" width="256" height="160.5"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPc-wU-7Xi">
-                                <rect key="frame" x="16" y="48" width="42" height="20.5"/>
+                                <rect key="frame" x="16" y="48" width="42" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cjC-21-Jiu">
-                                <rect key="frame" x="16" y="104.5" width="42" height="21"/>
+                                <rect key="frame" x="16" y="111" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="I8n-G3-NfV">
-                                <rect key="frame" x="16" y="84.5" width="224" height="2"/>
+                                <rect key="frame" x="16" y="91" width="224" height="2"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="2" id="Rjj-bW-0el"/>
                                 </constraints>
                             </progressView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8LQ-4L-Xid">
+                                <rect key="frame" x="188" y="18" width="70" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="X7M-1L-My1"/>
+                                    <constraint firstAttribute="height" constant="32" id="ZGa-oZ-jbW"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="saY-42-BnL">
+                                <rect key="frame" x="226.5" y="28" width="26.5" height="12"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="saY-42-BnL" firstAttribute="centerY" secondItem="8LQ-4L-Xid" secondAttribute="centerY" id="0jt-TU-VFB"/>
                             <constraint firstItem="HPc-wU-7Xi" firstAttribute="leading" secondItem="1nZ-VT-NAO" secondAttribute="leading" constant="16" id="D0d-BL-4LR"/>
                             <constraint firstItem="HPc-wU-7Xi" firstAttribute="top" secondItem="1nZ-VT-NAO" secondAttribute="top" constant="48" id="Etp-g8-BJp"/>
+                            <constraint firstAttribute="trailing" secondItem="8LQ-4L-Xid" secondAttribute="trailing" constant="-2" id="IRJ-j3-0HP"/>
+                            <constraint firstItem="I8n-G3-NfV" firstAttribute="top" secondItem="8LQ-4L-Xid" secondAttribute="bottom" constant="41" id="KV7-nb-do7"/>
                             <constraint firstItem="I8n-G3-NfV" firstAttribute="top" secondItem="HPc-wU-7Xi" secondAttribute="bottom" constant="16" id="VRt-dX-MTc"/>
                             <constraint firstItem="cjC-21-Jiu" firstAttribute="leading" secondItem="HPc-wU-7Xi" secondAttribute="leading" id="YuL-CE-g85"/>
                             <constraint firstAttribute="trailing" secondItem="I8n-G3-NfV" secondAttribute="trailing" constant="16" id="i1K-L0-Ck3"/>
+                            <constraint firstAttribute="trailing" secondItem="saY-42-BnL" secondAttribute="trailing" constant="3" id="jdz-Oq-6CW"/>
                             <constraint firstItem="cjC-21-Jiu" firstAttribute="top" secondItem="I8n-G3-NfV" secondAttribute="bottom" constant="18" id="nOO-dD-xqb"/>
                             <constraint firstItem="I8n-G3-NfV" firstAttribute="leading" secondItem="HPc-wU-7Xi" secondAttribute="leading" id="sF7-5i-lcc"/>
+                            <constraint firstItem="8LQ-4L-Xid" firstAttribute="top" secondItem="1nZ-VT-NAO" secondAttribute="top" constant="18" id="vSi-as-tJL"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -65,6 +83,8 @@
                 <outlet property="capacityLabel" destination="cjC-21-Jiu" id="LYF-JS-FKg"/>
                 <outlet property="capacityProgressView" destination="I8n-G3-NfV" id="7oh-Nj-Tia"/>
                 <outlet property="cardBackgroudView" destination="1nZ-VT-NAO" id="HvJ-LM-iJ4"/>
+                <outlet property="tipImageView" destination="8LQ-4L-Xid" id="i58-xO-Voj"/>
+                <outlet property="tipsLabel" destination="saY-42-BnL" id="2kX-Kf-AFp"/>
                 <outlet property="titleLabel" destination="HPc-wU-7Xi" id="bbK-ic-LQA"/>
             </connections>
             <point key="canvasLocation" x="137.59999999999999" y="214.54272863568218"/>

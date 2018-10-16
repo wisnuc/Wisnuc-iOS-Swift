@@ -9,12 +9,22 @@
 import UIKit
 
 class DeviceChangeDeviceTableViewCell: UITableViewCell {
-    var disable:Bool = false{
+    var isDisable:Bool = false{
         didSet{
-            if disable{
+            if isDisable{
                 disableStyle()
             }else{
                 ableStyle()
+            }
+        }
+    }
+    
+    var isCurrentDevice:Bool = false{
+        didSet{
+            if isCurrentDevice{
+                currentDeviceStyle()
+            }else{
+                isNotCurrentDeviceStyle()
             }
         }
     }
@@ -22,9 +32,14 @@ class DeviceChangeDeviceTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var capacityLabel: UILabel!
     @IBOutlet weak var capacityProgressView: UIProgressView!
+    @IBOutlet weak var tipImageView: UIImageView!
+    @IBOutlet weak var tipsLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        tipImageView.image =  UIImage.init(named: "current_device_tip.png")
+        tipsLabel.text = LocalizedString(forKey: "当前设备")
+        tipsLabel.textColor = COR1
         cardBackgroudView.layer.cornerRadius = 4
         cardBackgroudView.clipsToBounds = false
         // shadowColor阴影颜色
@@ -35,9 +50,18 @@ class DeviceChangeDeviceTableViewCell: UITableViewCell {
         cardBackgroudView.layer.shadowRadius = 2
         // 阴影透明度，默认0
         cardBackgroudView.layer.shadowOpacity = 0.5
-        
     }
     
+    
+    func currentDeviceStyle(){
+        tipImageView.isHidden = false
+        tipsLabel.isHidden = false
+    }
+    
+    func isNotCurrentDeviceStyle(){
+        tipImageView.isHidden = true
+        tipsLabel.isHidden = true
+    }
     
     func ableStyle(){
         cardBackgroudView.backgroundColor = COR1

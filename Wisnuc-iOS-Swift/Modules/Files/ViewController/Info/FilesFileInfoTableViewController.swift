@@ -137,12 +137,12 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
 
 }
 
-extension FilesFileInfoTableViewController:MDCFlexibleHeaderViewDelegate{
-    func flexibleHeaderViewNeedsStatusBarAppearanceUpdate(_ headerView: MDCFlexibleHeaderView) {
+extension FilesFileInfoTableViewController{
+    override func flexibleHeaderViewNeedsStatusBarAppearanceUpdate(_ headerView: MDCFlexibleHeaderView) {
         
     }
     
-    func flexibleHeaderViewFrameDidChange(_ headerView: MDCFlexibleHeaderView) {
+    override func flexibleHeaderViewFrameDidChange(_ headerView: MDCFlexibleHeaderView) {
 //       print(headerView.bottom)
         let viewOriginY:CGFloat = 120.0
         if headerView.maximumHeight != headerView.bottom{

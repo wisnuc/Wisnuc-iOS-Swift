@@ -46,6 +46,16 @@ extension DeviceChangeDeviceViewController:UITableViewDelegate{
         switch indexPath.row {
         case 0:
             break
+        case 1:
+            //初始化提示框
+            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            //按钮：从相册选择，类型：UIAlertActionStyleDefault
+            alert.addAction(UIAlertAction(title: LocalizedString(forKey: "切换到当前设备") , style: .default, handler: { action in
+        
+            }))
+    
+            alert.addAction(UIAlertAction(title:  LocalizedString(forKey: "取消"), style: .cancel, handler: nil))
+            present(alert, animated: true)
         default: break
             
         }
@@ -68,21 +78,25 @@ extension DeviceChangeDeviceViewController:UITableViewDataSource{
         let cell:DeviceChangeDeviceTableViewCell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! DeviceChangeDeviceTableViewCell
         tableView.separatorStyle = .none
         cell.selectionStyle = .none
+//         cell.isCurrentDevice = false
         switch indexPath.row {
         case 0:
             cell.titleLabel.text = "Wisnuc Office"
             cell.capacityLabel.text = "4M / 1T"
-            cell.disable = false
+            cell.isDisable = false
+            cell.isCurrentDevice = true
         case 1:
             cell.titleLabel.text = "Wisnuc New"
             cell.capacityLabel.text = "256G / 2T"
-            cell.disable = false
+            cell.isDisable = false
+            cell.isCurrentDevice = false
         case 2:
             cell.titleLabel.text = "Wisnuc Disable"
             cell.capacityLabel.text = "10G / 1T"
-            cell.disable = true
-        default: break
-            
+            cell.isDisable = true
+            cell.isCurrentDevice = false
+        default:
+            cell.isCurrentDevice = false
         }
         return cell
     }

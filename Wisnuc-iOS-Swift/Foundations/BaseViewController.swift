@@ -15,9 +15,10 @@ enum NavigationStyle:Int{
     case black
     case imagery
     case select
+    case highHeight
 }
 class BaseViewController: UIViewController {
-    
+    let barMaximumHeight:CGFloat =  136
     var style:NavigationStyle?{
         didSet{
             switch style {
@@ -33,9 +34,17 @@ class BaseViewController: UIViewController {
                 selectStyleAction()
             case .black?:
                 blackStyleAction()
+            case .highHeight?:
+                whiteHighHeightStyleAction()
             default:
                 break
             }
+        }
+    }
+    
+    var largeTitle:String?{
+        didSet{
+            largeTitleLabel.text = largeTitle
         }
     }
     
@@ -108,6 +117,22 @@ class BaseViewController: UIViewController {
         appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
     
+    func whiteHighHeightStyleAction(){
+        appBar.headerViewController.headerView.backgroundColor = .white
+        appBar.navigationBar.backgroundColor = .white
+        appBar.headerStackView.backgroundColor = .white
+        self.appBar.navigationBar.tintColor = LightGrayColor
+        self.appBar.headerViewController.headerView.tintColor = LightGrayColor
+        self.appBar.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor:DarkGrayColor]
+        appBar.headerViewController.inferPreferredStatusBarStyle = false
+        appBar.headerViewController.preferredStatusBarStyle = .default
+        appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
+        appBar.headerViewController.headerView.minimumHeight = MDCAppNavigationBarHeight
+        appBar.headerViewController.headerView.maximumHeight = barMaximumHeight
+        appBar.headerStackView.addSubview(self.largeTitleLabel)
+        self.appBar.headerViewController.headerView.delegate = self
+    }
+    
     func blackStyleAction(){
         appBar.headerViewController.headerView.backgroundColor = .black
         appBar.navigationBar.backgroundColor = .black
@@ -124,7 +149,7 @@ class BaseViewController: UIViewController {
         let headerView = appBar.headerViewController.headerView
         appBar.navigationBar.tintColor = UIColor.white
         // Create our custom image view and add it to the header view.
-        let imageView = UIImageView(image: self.headerBackgroundImage())
+        
         imageView.frame = headerView.bounds
         
         // Ensure that the image view resizes in reaction to the header view bounds changing.
@@ -179,9 +204,9 @@ class BaseViewController: UIViewController {
         appBar.navigationBar.backItem?.action = sel
     }
     
-    func headerBackgroundImage() -> UIImage {
-        let image = UIImage.init(named: "mdc_theme.png")
-        return image!
+    func headerBackgroundImage(image:UIImage) -> UIImage?{
+        let image = image
+        return image
     }
     
     override var childViewControllerForStatusBarHidden: UIViewController? {
@@ -209,6 +234,18 @@ class BaseViewController: UIViewController {
         let mdcAppBar = MDCAppBar()
         return mdcAppBar
     }()
+    
+    lazy var imageView:UIImageView = {
+       let innerImageView = UIImageView(image: UIImage.init(named: "mdc_theme.png"))
+        return innerImageView
+    }()
+    
+   private lazy var largeTitleLabel: UILabel = {
+        let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: barMaximumHeight - 20 - 20 - 20, width: __kWidth - MarginsWidth*2, height: 20))
+        label.textColor = DarkGrayColor
+        label.font = UIFont.boldSystemFont(ofSize: 21)
+        return label
+    }()
 
     /*
     // MARK: - Navigation
@@ -220,3 +257,23 @@ class BaseViewController: UIViewController {
     }
     */
 }
+
+extension BaseViewController:MDCFlexibleHeaderViewDelegate{
+    func flexibleHeaderViewNeedsStatusBarAppearanceUpdate(_ headerView: MDCFlexibleHeaderView) {
+        
+    }
+    
+    func flexibleHeaderViewFrameDidChange(_ headerView: MDCFlexibleHeaderView) {
+        //       print(headerView.bottom)
+        let viewOriginY:CGFloat = barMaximumHeight - 20 - 20 - 20
+        let viewOriginX:CGFloat = MarginsWidth
+//        print(headerView.bottom - headerView.maximumHeight)
+        if headerView.maximumHeight > headerView.bottom{
+            self.largeTitleLabel.origin.y = viewOriginY + (headerView.bottom - headerView.maximumHeight)
+            self.largeTitleLabel.origin.x = viewOriginX - (0.8*(headerView.bottom - headerView.maximumHeight))
+        }else{
+            self.largeTitleLabel.origin.y = viewOriginY + (headerView.bottom - headerView.maximumHeight)
+        }
+    }
+}
+

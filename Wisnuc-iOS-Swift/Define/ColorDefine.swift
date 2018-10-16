@@ -16,6 +16,7 @@ public let COR3 = UIColor.colorFromRGB(rgbValue: 0x04527a0)
 
 
 public let LineColor:UIColor = UIColor.init(white: 0.3, alpha: 1)
+public let SeparateLineColor:UIColor = UIColor.colorFromRGB(rgbValue: 0xeeeeee)
 public let LightLineColor:UIColor = UIColor.init(white: 0.85, alpha: 1)
 public let lightGrayBackgroudColor = UIColor.colorFromRGB(rgbValue: 0x0f5f5f5)
 public let WechatLoginButtonColor = UIColor.colorFromRGB(rgbValue: 0x00786a)

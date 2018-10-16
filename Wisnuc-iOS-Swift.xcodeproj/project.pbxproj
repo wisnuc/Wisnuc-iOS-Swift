@@ -743,6 +743,19 @@
 		1FE08978217494D30049F44B /* DeviceChangeDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE08976217494D30049F44B /* DeviceChangeDeviceTableViewCell.swift */; };
 		1FE08979217494D30049F44B /* DeviceChangeDeviceTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08977217494D30049F44B /* DeviceChangeDeviceTableViewCell.xib */; };
 		1FE0897B21749E8C0049F44B /* UIProgressViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0897A21749E8C0049F44B /* UIProgressViewExtension.swift */; };
+		1FE0897D2175800B0049F44B /* current_device_tip.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE0897C2175800B0049F44B /* current_device_tip.png */; };
+		1FE0897F2175801D0049F44B /* current_device_tip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE0897E2175801D0049F44B /* current_device_tip@2x.png */; };
+		1FE089812175802D0049F44B /* current_device_tip@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089802175802D0049F44B /* current_device_tip@3x.png */; };
+		1FE0898321758A260049F44B /* DeviceBackupRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0898221758A260049F44B /* DeviceBackupRootViewController.swift */; };
+		1FE089862175D6370049F44B /* DeviceBackupRootTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089842175D6370049F44B /* DeviceBackupRootTableViewCell.swift */; };
+		1FE089872175D6370049F44B /* DeviceBackupRootTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089852175D6370049F44B /* DeviceBackupRootTableViewCell.xib */; };
+		1FE089892175E3B80049F44B /* phone_icon_device.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089882175E3B70049F44B /* phone_icon_device.png */; };
+		1FE0898B2175E3CA0049F44B /* phone_icon_device@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE0898A2175E3CA0049F44B /* phone_icon_device@2x.png */; };
+		1FE0898D2175E3D60049F44B /* phone_icon_device@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE0898C2175E3D60049F44B /* phone_icon_device@3x.png */; };
+		1FE0898F2175EB7F0049F44B /* pc_icon_device.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE0898E2175EB7E0049F44B /* pc_icon_device.png */; };
+		1FE089912175EB8D0049F44B /* pc_icon_device@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089902175EB8B0049F44B /* pc_icon_device@2x.png */; };
+		1FE089932175EB9B0049F44B /* pc_icon_device@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089922175EB9B0049F44B /* pc_icon_device@3x.png */; };
+		1FE089952175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089942175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift */; };
 		1FE674D020D20CED006F97DB /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CD20D20CEB006F97DB /* file_icon.png */; };
 		1FE674D120D20CED006F97DB /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CE20D20CEB006F97DB /* file_icon@2x.png */; };
 		1FE674D220D20CED006F97DB /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CF20D20CEC006F97DB /* file_icon@3x.png */; };
@@ -1585,6 +1598,19 @@
 		1FE08976217494D30049F44B /* DeviceChangeDeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceChangeDeviceTableViewCell.swift; sourceTree = "<group>"; };
 		1FE08977217494D30049F44B /* DeviceChangeDeviceTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceChangeDeviceTableViewCell.xib; sourceTree = "<group>"; };
 		1FE0897A21749E8C0049F44B /* UIProgressViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIProgressViewExtension.swift; sourceTree = "<group>"; };
+		1FE0897C2175800B0049F44B /* current_device_tip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = current_device_tip.png; sourceTree = "<group>"; };
+		1FE0897E2175801D0049F44B /* current_device_tip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "current_device_tip@2x.png"; sourceTree = "<group>"; };
+		1FE089802175802D0049F44B /* current_device_tip@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "current_device_tip@3x.png"; sourceTree = "<group>"; };
+		1FE0898221758A260049F44B /* DeviceBackupRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceBackupRootViewController.swift; sourceTree = "<group>"; };
+		1FE089842175D6370049F44B /* DeviceBackupRootTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceBackupRootTableViewCell.swift; sourceTree = "<group>"; };
+		1FE089852175D6370049F44B /* DeviceBackupRootTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceBackupRootTableViewCell.xib; sourceTree = "<group>"; };
+		1FE089882175E3B70049F44B /* phone_icon_device.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phone_icon_device.png; sourceTree = "<group>"; };
+		1FE0898A2175E3CA0049F44B /* phone_icon_device@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "phone_icon_device@2x.png"; sourceTree = "<group>"; };
+		1FE0898C2175E3D60049F44B /* phone_icon_device@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "phone_icon_device@3x.png"; sourceTree = "<group>"; };
+		1FE0898E2175EB7E0049F44B /* pc_icon_device.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pc_icon_device.png; sourceTree = "<group>"; };
+		1FE089902175EB8B0049F44B /* pc_icon_device@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pc_icon_device@2x.png"; sourceTree = "<group>"; };
+		1FE089922175EB9B0049F44B /* pc_icon_device@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pc_icon_device@3x.png"; sourceTree = "<group>"; };
+		1FE089942175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceBackupPhoneDtailsViewController.swift; sourceTree = "<group>"; };
 		1FE674CD20D20CEB006F97DB /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
 		1FE674CE20D20CEB006F97DB /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		1FE674CF20D20CEC006F97DB /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
@@ -3296,6 +3322,15 @@
 		1FE0895F217478F40049F44B /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				1FE0898E2175EB7E0049F44B /* pc_icon_device.png */,
+				1FE089902175EB8B0049F44B /* pc_icon_device@2x.png */,
+				1FE089922175EB9B0049F44B /* pc_icon_device@3x.png */,
+				1FE089882175E3B70049F44B /* phone_icon_device.png */,
+				1FE0898A2175E3CA0049F44B /* phone_icon_device@2x.png */,
+				1FE0898C2175E3D60049F44B /* phone_icon_device@3x.png */,
+				1FE089802175802D0049F44B /* current_device_tip@3x.png */,
+				1FE0897C2175800B0049F44B /* current_device_tip.png */,
+				1FE0897E2175801D0049F44B /* current_device_tip@2x.png */,
 				1FE0896C21747C080049F44B /* exchange_gray.png */,
 				1FE0896E21747C160049F44B /* exchange_gray@2x.png */,
 				1FE0897021747C320049F44B /* exchange_gray@3x.png */,
@@ -3314,6 +3349,8 @@
 			children = (
 				1FE0895D21746A3B0049F44B /* DeviceViewController.swift */,
 				1FE0897321748FDB0049F44B /* DeviceChangeDeviceViewController.swift */,
+				1FE0898221758A260049F44B /* DeviceBackupRootViewController.swift */,
+				1FE089942175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -3323,6 +3360,8 @@
 			children = (
 				1FE08976217494D30049F44B /* DeviceChangeDeviceTableViewCell.swift */,
 				1FE08977217494D30049F44B /* DeviceChangeDeviceTableViewCell.xib */,
+				1FE089842175D6370049F44B /* DeviceBackupRootTableViewCell.swift */,
+				1FE089852175D6370049F44B /* DeviceBackupRootTableViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3852,6 +3891,7 @@
 				1F83AE5E208830B8007CCCFD /* local_area_white.png in Resources */,
 				1F5AD93B20AD80590065DAD3 /* files_video_small@3x.png in Resources */,
 				1F0FD0EF214A6D5C003D7936 /* lock_config@2x.png in Resources */,
+				1FE089812175802D0049F44B /* current_device_tip@3x.png in Resources */,
 				1F2A380320DA57DC0035EED5 /* task_suspend@2x.png in Resources */,
 				1FA5D77D215CC3F50025F870 /* lens_gary@3x.png in Resources */,
 				1F050E2720A995410037F00A /* files_offline_file_small.png in Resources */,
@@ -3871,12 +3911,14 @@
 				1F359FB02090819000E2FF36 /* no@2x.png in Resources */,
 				1FE08926216F16FA0049F44B /* avatar_placeholder.png in Resources */,
 				1F362F7B2133FFA6000B3384 /* wechat_icon_mian_color@2x.png in Resources */,
+				1FE089872175D6370049F44B /* DeviceBackupRootTableViewCell.xib in Resources */,
 				1FEABB5520A14B6C00824448 /* files_word_small@2x.png in Resources */,
 				1FE08957217445CC0049F44B /* logo_main_theme@3x.png in Resources */,
 				1F83AE8220887936007CCCFD /* more@2x.png in Resources */,
 				1FAADEC320ABFD8700739220 /* files_move_gray@2x.png in Resources */,
 				1FA6A1C720CFBD57007A0AB2 /* gridstyle.png in Resources */,
 				1F359FDD2091A99600E2FF36 /* disk_add@2x.png in Resources */,
+				1FE089912175EB8D0049F44B /* pc_icon_device@2x.png in Resources */,
 				1F050E4720AAB6020037F00A /* files_upload_big@3x.png in Resources */,
 				1F520955214A0B920058A8D3 /* plus_white@2x.png in Resources */,
 				1F83AE7120883AA2007CCCFD /* help.png in Resources */,
@@ -3916,6 +3958,7 @@
 				1F565A0320D10F5D00D86FDB /* logo_gray@3x.png in Resources */,
 				1F4E937D2089B23E00DD1EA7 /* InitializationDiskViewController.xib in Resources */,
 				1F3C241120A42CD300E6B953 /* files_unselect@3x.png in Resources */,
+				1FE0898F2175EB7F0049F44B /* pc_icon_device.png in Resources */,
 				1FE08979217494D30049F44B /* DeviceChangeDeviceTableViewCell.xib in Resources */,
 				1FAADEED20ABFFF000739220 /* files_remove@2x.png in Resources */,
 				1FEABB5320A14B6300824448 /* files_word_small.png in Resources */,
@@ -3971,6 +4014,7 @@
 				1FD1F2EC2153434400C3E429 /* add_album@3x.png in Resources */,
 				1FBD1DFE20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.xib in Resources */,
 				1FA5D77B215CC3E90025F870 /* lens_gary@2x.png in Resources */,
+				1FE0898D2175E3D60049F44B /* phone_icon_device@3x.png in Resources */,
 				1F0FD0C6214A467B003D7936 /* config_finish@3x.png in Resources */,
 				1FEABB6920A14C7000824448 /* files_ppt_small@3x.png in Resources */,
 				1F359FDC2091A99600E2FF36 /* disk_add.png in Resources */,
@@ -4101,6 +4145,7 @@
 				1F1BAC5720CE703300D32C5A /* files_gif_small.png in Resources */,
 				1F3C241720A42D1D00E6B953 /* files_select@3x.png in Resources */,
 				1FA5D791215E3F9B0025F870 /* wechat_friend_icon@3x.png in Resources */,
+				1FE0898B2175E3CA0049F44B /* phone_icon_device@2x.png in Resources */,
 				1F1BAC5F20CE709100D32C5A /* files_jpg_small.png in Resources */,
 				1F050E6120AAC8400037F00A /* FilesSequenceTableViewCell.xib in Resources */,
 				1F520957214A0BA40058A8D3 /* plus_white@3x.png in Resources */,
@@ -4108,6 +4153,7 @@
 				1F359FD02091A95D00E2FF36 /* disk_main_color@3x.png in Resources */,
 				1F0FD0E7214A65A6003D7936 /* down_arrow_gray.png in Resources */,
 				1F0FD0E9214A65B2003D7936 /* down_arrow_gray@2x.png in Resources */,
+				1FE089932175EB9B0049F44B /* pc_icon_device@3x.png in Resources */,
 				1F3C242E20A59BCE00E6B953 /* transfer@2x.png in Resources */,
 				1F1BAC5620CE703300D32C5A /* files_gif_small@2x.png in Resources */,
 				1F4242BE20FDF7570085E2F0 /* handrail.png in Resources */,
@@ -4184,6 +4230,7 @@
 				1F4E93882089D64D00DD1EA7 /* disk@2x.png in Resources */,
 				1F565A0120D10F5100D86FDB /* logo_gray@2x.png in Resources */,
 				1F050E1420A967EB0037F00A /* files_cloud.png in Resources */,
+				1FE089892175E3B80049F44B /* phone_icon_device.png in Resources */,
 				1FD1F2F02153435400C3E429 /* add_album.png in Resources */,
 				1F050E1820A968060037F00A /* files_cloud@3x.png in Resources */,
 				1F0FD0F5214A6DC6003D7936 /* next_button_arrow_white@2x.png in Resources */,
@@ -4205,6 +4252,7 @@
 				1F0FD0ED214A6D4E003D7936 /* lock_config.png in Resources */,
 				1F307C7020BEAB6D00AE105C /* setting_gray@2x.png in Resources */,
 				1FAADEEB20ABFFE800739220 /* files_remove.png in Resources */,
+				1FE0897F2175801D0049F44B /* current_device_tip@2x.png in Resources */,
 				1FAADEDB20ABFF0E00739220 /* files_edit_tag@2x.png in Resources */,
 				1F359FB32090819000E2FF36 /* ok@3x.png in Resources */,
 				1F5882502085F09F00394BD6 /* station_normal@2x.png in Resources */,
@@ -4233,6 +4281,7 @@
 				1FEABB6520A14C6000824448 /* files_ppt_small.png in Resources */,
 				1F1BAC3320CA621000D32C5A /* files_arrow_down@3x.png in Resources */,
 				1F359FCE2091A95D00E2FF36 /* disk_new_add@3x.png in Resources */,
+				1FE0897D2175800B0049F44B /* current_device_tip.png in Resources */,
 				1F5882492085F07E00394BD6 /* disk_warning@3x.png in Resources */,
 				1F83AE69208838DD007CCCFD /* eye_off@3x.png in Resources */,
 			);
@@ -4392,6 +4441,7 @@
 			files = (
 				1FD1F2DB2150FF3900C3E429 /* RequestDefine.swift in Sources */,
 				1FE0894A21707BE10049F44B /* MyVerificationCodeViewController.swift in Sources */,
+				1FE0898321758A260049F44B /* DeviceBackupRootViewController.swift in Sources */,
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1FE0897B21749E8C0049F44B /* UIProgressViewExtension.swift in Sources */,
 				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
@@ -4539,6 +4589,7 @@
 				1F5882302085D39D00394BD6 /* UIViewExtension.swift in Sources */,
 				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
 				1F520968214A19BF0058A8D3 /* DeviceBLEModel.swift in Sources */,
+				1FE089952175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift in Sources */,
 				1F5882632085FDB400394BD6 /* UIViewControllerExtension.swift in Sources */,
 				1F3C244E20A5AF9E00E6B953 /* TransferTaskTableViewController.swift in Sources */,
 				1FA5D78B215E2F8B0025F870 /* PhotoShareView.swift in Sources */,
@@ -4555,6 +4606,7 @@
 				1FE9EF8C20EF5DEA00732728 /* Base64.m in Sources */,
 				1F2A380A20DCD90F0035EED5 /* LocalLoginTokenAPI.swift in Sources */,
 				1F53789A21106FA200A555C5 /* ArrayExtension.swift in Sources */,
+				1FE089862175D6370049F44B /* DeviceBackupRootTableViewCell.swift in Sources */,
 				1FD1F3002153A71200C3E429 /* PhotoAlbumCollectionViewHeaderView.swift in Sources */,
 				1F1BAC2D20C92A1A00D32C5A /* UIScrollExtension.swift in Sources */,
 				1FBB6F61213923C30090FA57 /* TextFiledExtension.swift in Sources */,
