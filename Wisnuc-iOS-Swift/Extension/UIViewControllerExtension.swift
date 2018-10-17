@@ -35,6 +35,27 @@ extension UIViewController: BackButtonHandlerProtocol{
         self.present(alertController, animated: true, completion: nil)
     }
     
+    func alertControllerActionSheet(title: String? = nil, message: String? = nil,cancelActionTitle:String? = nil,cancelActionHandler:((UIAlertAction) -> Void)? = nil,action1Title:String ,action1Handler:((UIAlertAction) -> Void)? = nil,action2Title:String? = nil ,action2Handler:((UIAlertAction) -> Void)? = nil,action3Title:String?          = nil,action3Handler:((UIAlertAction) -> Void)? = nil){
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: action1Title, style: .default, handler:action1Handler))
+        if action2Title != nil{
+            alert.addAction(UIAlertAction(title: action2Title, style: .default, handler:action2Handler))
+        }
+        
+        if action3Title != nil{
+            alert.addAction(UIAlertAction(title: action3Title, style: .default, handler:action3Handler))
+        }
+        
+        var cancelTitle = cancelActionTitle
+        if  cancelActionTitle == nil{
+            cancelTitle = LocalizedString(forKey: "取消")
+        }
+        alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel, handler: cancelActionHandler))
+        present(alert, animated: true)
+    }
+  
+    
     
     class func currentViewController() -> UIViewController? {
         let window = UIApplication.shared.keyWindow

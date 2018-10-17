@@ -135,13 +135,22 @@ extension DeviceBackupRootViewController:UITableViewDataSource,UITableViewDelega
             case 0:
                 let deviceBackupPhoneDtailsViewController = DeviceBackupPhoneDtailsViewController.init(style:.highHeight)
                 let tab = retrieveTabbarController()
+                deviceBackupPhoneDtailsViewController.largeTitle = "iphone X"
                 tab?.setTabBarHidden(true, animated: true)
                 self.navigationController?.pushViewController(deviceBackupPhoneDtailsViewController, animated: true)
             default:
-                break
+                let deviceBackupPhoneDtailsViewController = DeviceBackupPhoneDtailsViewController.init(style:.highHeight)
+                let tab = retrieveTabbarController()
+                deviceBackupPhoneDtailsViewController.largeTitle = "iphone XR"
+                tab?.setTabBarHidden(true, animated: true)
+                self.navigationController?.pushViewController(deviceBackupPhoneDtailsViewController, animated: true)
             }
         }else{
-            
+            let deviceBackupPCDtailsViewController = DeviceBackupPhoneDtailsViewController.init(style:.highHeight)
+            deviceBackupPCDtailsViewController.largeTitle = "MAC"
+            let tab = retrieveTabbarController()
+            tab?.setTabBarHidden(true, animated: true)
+            self.navigationController?.pushViewController(deviceBackupPCDtailsViewController, animated: true)
         }
     }
 }

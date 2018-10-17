@@ -8,16 +8,32 @@
 
 import UIKit
 import SystemConfiguration.CaptiveNetwork
+enum ConfigNetworkViewControllerState {
+    case initialization
+    case change
+}
 
 class ConfigNetworkViewController: BaseViewController {
     var textFieldControllerNetworkName:MDCTextInputControllerUnderline?
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
     var isNetworkNameTrue = false
+    var state:ConfigNetworkViewControllerState?{
+        didSet{
+            switch state {
+            case .change?:
+                changeStateAction()
+            case .initialization?:
+                initializationStateAction()
+            default:
+                break
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.prepareNotification()
         self.view.addSubview(titleLabel)
-        self.titleLabel.text = LocalizedString(forKey: "配置Wi-Fi")
         self.view.addSubview(networkNameTitleLabel)
         self.view.addSubview(networkNameTextFiled)
         self.view.addSubview(passwordTitleLabel)
@@ -27,6 +43,15 @@ class ConfigNetworkViewController: BaseViewController {
         self.view.addSubview(errorLabel)
        
         // Do any additional setup after loading the view.
+    }
+    
+    init(style:NavigationStyle,state:ConfigNetworkViewControllerState) {
+        super.init(style: style)
+        setState(state)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,6 +82,18 @@ class ConfigNetworkViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow(note:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         //键盘即将隐藏
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHidden(note:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func setState(_ state:ConfigNetworkViewControllerState){
+        self.state = state
+    }
+    
+    func changeStateAction(){
+        self.titleLabel.text = LocalizedString(forKey: "切换Wi-Fi")
+    }
+    
+    func initializationStateAction(){
+        self.titleLabel.text = LocalizedString(forKey: "设置Wi-Fi")
     }
     
     func getWifiInfo() -> (ssid: String?, mac: String?) {

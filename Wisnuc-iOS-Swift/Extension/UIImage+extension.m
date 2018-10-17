@@ -150,9 +150,15 @@
             //2.使用sd的方法缓存异步下载的图片
             [weakSelf setImageWithURL:url placeholder:radiusPlaceHolder options:YYWebImageOptionIgnoreFailedURL completion:^(UIImage * _Nullable img, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
 //                3.如果下载成功那么讲下载成功的图进行圆角化
+                if (img == nil || error){
+//                    [image was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusImage) {
+                        weakSelf.image = image;
+//                    }];
+                }else{
                     [img was_roundImageWithSize:size fillColor:color opaque:opaque completion:^(UIImage *radiusImage) {
                         weakSelf.image = radiusImage;
                     }];
+                }
             }];
             
             //2.使用sd的方法缓存异步下载的图片

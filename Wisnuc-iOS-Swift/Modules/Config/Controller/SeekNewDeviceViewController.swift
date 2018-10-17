@@ -96,7 +96,7 @@ class SeekNewDeviceViewController: BaseViewController {
     }
     
     @objc func confirmFinish(_ noti:Notification){
-        let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow)
+        let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
         self.navigationController?.pushViewController(configNetVC, animated: true)
     }
     
@@ -161,7 +161,7 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
         let model = dataSource[indexPath.row]
         switch model.type {
         case .config?:
-            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow)
+            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
             self.navigationController?.pushViewController(configNetVC, animated: true)
         case .configFinish?:
            break

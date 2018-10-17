@@ -149,6 +149,22 @@ extension DeviceViewController:UITableViewDataSource,UITableViewDelegate{
          let tab = retrieveTabbarController()
          tab?.setTabBarHidden(true, animated: true)
          self.navigationController?.pushViewController(deviceBackupRootViewController, animated: true)
+      case 1:
+         let peripheralDeviceViewController = DevicePeripheralDeviceViewController.init(style:.highHeight)
+         let tab = retrieveTabbarController()
+         tab?.setTabBarHidden(true, animated: true)
+         self.navigationController?.pushViewController(peripheralDeviceViewController, animated: true)
+      case 2:
+         let networkSettingViewController = DeviceNetworkSettingViewController.init(style:.highHeight)
+         let tab = retrieveTabbarController()
+         tab?.setTabBarHidden(true, animated: true)
+         self.navigationController?.pushViewController(networkSettingViewController, animated: true)
+      case 3:
+         let advancedSettingViewController = DeviceAdvancedSettingViewController.init(style:.highHeight)
+         let tab = retrieveTabbarController()
+         tab?.setTabBarHidden(true, animated: true)
+         self.navigationController?.pushViewController(advancedSettingViewController, animated: true)
+      
       default:
          break
       }

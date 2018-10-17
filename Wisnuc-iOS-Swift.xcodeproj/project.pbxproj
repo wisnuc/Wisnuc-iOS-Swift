@@ -756,6 +756,29 @@
 		1FE089912175EB8D0049F44B /* pc_icon_device@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089902175EB8B0049F44B /* pc_icon_device@2x.png */; };
 		1FE089932175EB9B0049F44B /* pc_icon_device@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089922175EB9B0049F44B /* pc_icon_device@3x.png */; };
 		1FE089952175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089942175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift */; };
+		1FE089972175F8800049F44B /* DeviceBackupPCDtailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089962175F8800049F44B /* DeviceBackupPCDtailsViewController.swift */; };
+		1FE089992176D9470049F44B /* DevicePeripheralDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089982176D9470049F44B /* DevicePeripheralDeviceViewController.swift */; };
+		1FE0899B2176E7EF0049F44B /* DeviceAdvancedSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0899A2176E7EF0049F44B /* DeviceAdvancedSettingViewController.swift */; };
+		1FE0899D217701760049F44B /* DeviceCurrentDeviceInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0899C217701760049F44B /* DeviceCurrentDeviceInfoViewController.swift */; };
+		1FE0899F217706460049F44B /* DeviceIdentityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE0899E217706460049F44B /* DeviceIdentityViewController.swift */; };
+		1FE089A1217709850049F44B /* DeviceReductionSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089A0217709850049F44B /* DeviceReductionSettingViewController.swift */; };
+		1FE089A321770B560049F44B /* DeviceUsersManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089A221770B560049F44B /* DeviceUsersManageViewController.swift */; };
+		1FE089A521770CD40049F44B /* user_avatar_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089A421770CD30049F44B /* user_avatar_placeholder.png */; };
+		1FE089A721770CE00049F44B /* user_avatar_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089A621770CDF0049F44B /* user_avatar_placeholder@2x.png */; };
+		1FE089A921770CEE0049F44B /* user_avatar_placeholder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089A821770CEE0049F44B /* user_avatar_placeholder@3x.png */; };
+		1FE089AB2177148C0049F44B /* add_user.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089AA2177148B0049F44B /* add_user.png */; };
+		1FE089AD2177149D0049F44B /* add_user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089AC2177149D0049F44B /* add_user@2x.png */; };
+		1FE089AF217714AD0049F44B /* add_user@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089AE217714AD0049F44B /* add_user@3x.png */; };
+		1FE089B12177183B0049F44B /* DeviceAddUserSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089B02177183B0049F44B /* DeviceAddUserSettingViewController.swift */; };
+		1FE089B321771F540049F44B /* DeviceAaddUserPhoneNumberViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089B221771F540049F44B /* DeviceAaddUserPhoneNumberViewController.swift */; };
+		1FE089B5217726570049F44B /* phone_icon_textFiled.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089B4217726560049F44B /* phone_icon_textFiled.png */; };
+		1FE089B72177266B0049F44B /* phone_icon_textFiled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089B62177266B0049F44B /* phone_icon_textFiled@2x.png */; };
+		1FE089B92177267E0049F44B /* phone_icon_textFiled@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089B82177267E0049F44B /* phone_icon_textFiled@3x.png */; };
+		1FE089BB21772A510049F44B /* finished.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089BA21772A500049F44B /* finished.png */; };
+		1FE089BD21772A5D0049F44B /* finished@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089BC21772A5D0049F44B /* finished@2x.png */; };
+		1FE089BF21772A6C0049F44B /* finished@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE089BE21772A6C0049F44B /* finished@3x.png */; };
+		1FE089C1217731530049F44B /* DeviceAddDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089C0217731530049F44B /* DeviceAddDeviceViewController.swift */; };
+		1FE089C3217737660049F44B /* DeviceNetworkSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE089C2217737660049F44B /* DeviceNetworkSettingViewController.swift */; };
 		1FE674D020D20CED006F97DB /* file_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CD20D20CEB006F97DB /* file_icon.png */; };
 		1FE674D120D20CED006F97DB /* file_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CE20D20CEB006F97DB /* file_icon@2x.png */; };
 		1FE674D220D20CED006F97DB /* file_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE674CF20D20CEC006F97DB /* file_icon@3x.png */; };
@@ -1611,6 +1634,29 @@
 		1FE089902175EB8B0049F44B /* pc_icon_device@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pc_icon_device@2x.png"; sourceTree = "<group>"; };
 		1FE089922175EB9B0049F44B /* pc_icon_device@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pc_icon_device@3x.png"; sourceTree = "<group>"; };
 		1FE089942175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceBackupPhoneDtailsViewController.swift; sourceTree = "<group>"; };
+		1FE089962175F8800049F44B /* DeviceBackupPCDtailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceBackupPCDtailsViewController.swift; sourceTree = "<group>"; };
+		1FE089982176D9470049F44B /* DevicePeripheralDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePeripheralDeviceViewController.swift; sourceTree = "<group>"; };
+		1FE0899A2176E7EF0049F44B /* DeviceAdvancedSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAdvancedSettingViewController.swift; sourceTree = "<group>"; };
+		1FE0899C217701760049F44B /* DeviceCurrentDeviceInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCurrentDeviceInfoViewController.swift; sourceTree = "<group>"; };
+		1FE0899E217706460049F44B /* DeviceIdentityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceIdentityViewController.swift; sourceTree = "<group>"; };
+		1FE089A0217709850049F44B /* DeviceReductionSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceReductionSettingViewController.swift; sourceTree = "<group>"; };
+		1FE089A221770B560049F44B /* DeviceUsersManageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceUsersManageViewController.swift; sourceTree = "<group>"; };
+		1FE089A421770CD30049F44B /* user_avatar_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_avatar_placeholder.png; sourceTree = "<group>"; };
+		1FE089A621770CDF0049F44B /* user_avatar_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_avatar_placeholder@2x.png"; sourceTree = "<group>"; };
+		1FE089A821770CEE0049F44B /* user_avatar_placeholder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_avatar_placeholder@3x.png"; sourceTree = "<group>"; };
+		1FE089AA2177148B0049F44B /* add_user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_user.png; sourceTree = "<group>"; };
+		1FE089AC2177149D0049F44B /* add_user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_user@2x.png"; sourceTree = "<group>"; };
+		1FE089AE217714AD0049F44B /* add_user@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_user@3x.png"; sourceTree = "<group>"; };
+		1FE089B02177183B0049F44B /* DeviceAddUserSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAddUserSettingViewController.swift; sourceTree = "<group>"; };
+		1FE089B221771F540049F44B /* DeviceAaddUserPhoneNumberViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAaddUserPhoneNumberViewController.swift; sourceTree = "<group>"; };
+		1FE089B4217726560049F44B /* phone_icon_textFiled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = phone_icon_textFiled.png; sourceTree = "<group>"; };
+		1FE089B62177266B0049F44B /* phone_icon_textFiled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "phone_icon_textFiled@2x.png"; sourceTree = "<group>"; };
+		1FE089B82177267E0049F44B /* phone_icon_textFiled@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "phone_icon_textFiled@3x.png"; sourceTree = "<group>"; };
+		1FE089BA21772A500049F44B /* finished.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = finished.png; sourceTree = "<group>"; };
+		1FE089BC21772A5D0049F44B /* finished@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finished@2x.png"; sourceTree = "<group>"; };
+		1FE089BE21772A6C0049F44B /* finished@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finished@3x.png"; sourceTree = "<group>"; };
+		1FE089C0217731530049F44B /* DeviceAddDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAddDeviceViewController.swift; sourceTree = "<group>"; };
+		1FE089C2217737660049F44B /* DeviceNetworkSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceNetworkSettingViewController.swift; sourceTree = "<group>"; };
 		1FE674CD20D20CEB006F97DB /* file_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_icon.png; sourceTree = "<group>"; };
 		1FE674CE20D20CEB006F97DB /* file_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@2x.png"; sourceTree = "<group>"; };
 		1FE674CF20D20CEC006F97DB /* file_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "file_icon@3x.png"; sourceTree = "<group>"; };
@@ -3322,6 +3368,18 @@
 		1FE0895F217478F40049F44B /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				1FE089BA21772A500049F44B /* finished.png */,
+				1FE089BC21772A5D0049F44B /* finished@2x.png */,
+				1FE089BE21772A6C0049F44B /* finished@3x.png */,
+				1FE089B4217726560049F44B /* phone_icon_textFiled.png */,
+				1FE089B62177266B0049F44B /* phone_icon_textFiled@2x.png */,
+				1FE089B82177267E0049F44B /* phone_icon_textFiled@3x.png */,
+				1FE089AA2177148B0049F44B /* add_user.png */,
+				1FE089AC2177149D0049F44B /* add_user@2x.png */,
+				1FE089AE217714AD0049F44B /* add_user@3x.png */,
+				1FE089A421770CD30049F44B /* user_avatar_placeholder.png */,
+				1FE089A621770CDF0049F44B /* user_avatar_placeholder@2x.png */,
+				1FE089A821770CEE0049F44B /* user_avatar_placeholder@3x.png */,
 				1FE0898E2175EB7E0049F44B /* pc_icon_device.png */,
 				1FE089902175EB8B0049F44B /* pc_icon_device@2x.png */,
 				1FE089922175EB9B0049F44B /* pc_icon_device@3x.png */,
@@ -3351,6 +3409,17 @@
 				1FE0897321748FDB0049F44B /* DeviceChangeDeviceViewController.swift */,
 				1FE0898221758A260049F44B /* DeviceBackupRootViewController.swift */,
 				1FE089942175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift */,
+				1FE089962175F8800049F44B /* DeviceBackupPCDtailsViewController.swift */,
+				1FE089982176D9470049F44B /* DevicePeripheralDeviceViewController.swift */,
+				1FE0899A2176E7EF0049F44B /* DeviceAdvancedSettingViewController.swift */,
+				1FE0899C217701760049F44B /* DeviceCurrentDeviceInfoViewController.swift */,
+				1FE0899E217706460049F44B /* DeviceIdentityViewController.swift */,
+				1FE089A0217709850049F44B /* DeviceReductionSettingViewController.swift */,
+				1FE089A221770B560049F44B /* DeviceUsersManageViewController.swift */,
+				1FE089B02177183B0049F44B /* DeviceAddUserSettingViewController.swift */,
+				1FE089B221771F540049F44B /* DeviceAaddUserPhoneNumberViewController.swift */,
+				1FE089C0217731530049F44B /* DeviceAddDeviceViewController.swift */,
+				1FE089C2217737660049F44B /* DeviceNetworkSettingViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -3838,6 +3907,7 @@
 				1F4E93812089B2CE00DD1EA7 /* InitializationCreatUserViewController.xib in Resources */,
 				1F1BAC4B20CA72D600D32C5A /* files_down@3x.png in Resources */,
 				1F83AE7D20886BDA007CCCFD /* change@3x.png in Resources */,
+				1FE089B72177266B0049F44B /* phone_icon_textFiled@2x.png in Resources */,
 				1FD1F30C2154E25C00C3E429 /* unselect_white@3x.png in Resources */,
 				1FFD12B920E9C72F0053A3F7 /* files_move_to@2x.png in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
@@ -3902,7 +3972,9 @@
 				1F0FD0C4214A4670003D7936 /* config_finish@2x.png in Resources */,
 				1F050E7320ABCE560037F00A /* files_edit.png in Resources */,
 				1FEABB5920A14BB900824448 /* files_word_normal.png in Resources */,
+				1FE089A721770CE00049F44B /* user_avatar_placeholder@2x.png in Resources */,
 				1FA6A1AD20CFA084007A0AB2 /* search@3x.png in Resources */,
+				1FE089BB21772A510049F44B /* finished.png in Resources */,
 				1FEABB7020A1AA0300824448 /* files_up@2x.png in Resources */,
 				1F58824E2085F09F00394BD6 /* station_normal@3x.png in Resources */,
 				1F0FD0C2214A4665003D7936 /* config_finish.png in Resources */,
@@ -3981,6 +4053,7 @@
 				1F359FB22090819000E2FF36 /* no.png in Resources */,
 				1FA6A1B920CFA6EE007A0AB2 /* files_audio_normal@3x.png in Resources */,
 				1F0FD0DF214A636D003D7936 /* eye_open_gray@3x.png in Resources */,
+				1FE089A921770CEE0049F44B /* user_avatar_placeholder@3x.png in Resources */,
 				1FA6A1B520CFA6D4007A0AB2 /* files_audio_normal.png in Resources */,
 				1FBD1E0420B3EF8C0067BE3E /* files_new_folder_gray@2x.png in Resources */,
 				1FE08936216F52880049F44B /* avatar_placeholder_big@2x.png in Resources */,
@@ -3993,6 +4066,7 @@
 				1F3C23FF20A2DACD00E6B953 /* liststyle@3x.png in Resources */,
 				1FAADEEF20ABFFF700739220 /* files_remove@3x.png in Resources */,
 				1FD9B7B1207E1A0500906D80 /* wechat_icon.png in Resources */,
+				1FE089AD2177149D0049F44B /* add_user@2x.png in Resources */,
 				1F050E7720ABCE6E0037F00A /* files_edit@3x.png in Resources */,
 				1FA5D761215A4E190025F870 /* delete_photo_new_album@3x.png in Resources */,
 				1F359FD22091A95D00E2FF36 /* disk_new_add@2x.png in Resources */,
@@ -4122,6 +4196,7 @@
 				1F5882252085885C00394BD6 /* logo.png in Resources */,
 				1F359FD62091A97C00E2FF36 /* disk_error.png in Resources */,
 				1F4E9397208DBB7600DD1EA7 /* radio_button_unchecked@2x.png in Resources */,
+				1FE089BF21772A6C0049F44B /* finished@3x.png in Resources */,
 				1FFD12CB20EDC4620053A3F7 /* task_copy@3x.png in Resources */,
 				1F3C241C20A5426C00E6B953 /* files_move.png in Resources */,
 				1FE08955217445BF0049F44B /* logo_main_theme@2x.png in Resources */,
@@ -4188,18 +4263,22 @@
 				1FEABB6720A14C6700824448 /* files_ppt_small@2x.png in Resources */,
 				1F307C6E20BEAB6100AE105C /* setting_gray.png in Resources */,
 				1F359FCF2091A95D00E2FF36 /* disk_main_color.png in Resources */,
+				1FE089AB2177148C0049F44B /* add_user.png in Resources */,
 				1F3C244220A5AD3D00E6B953 /* files_tag@2x.png in Resources */,
+				1FE089B5217726570049F44B /* phone_icon_textFiled.png in Resources */,
 				1FE08938216F52940049F44B /* avatar_placeholder_big.png in Resources */,
 				1FA5D767215B59460025F870 /* add_new_photo_new_album_gray@3x.png in Resources */,
 				1FA5D7572159FED20025F870 /* eye_open@2x.png in Resources */,
 				1F050E0C20A9640D0037F00A /* TransferTaskTableViewCell.xib in Resources */,
 				1F5882552085F0F800394BD6 /* station_review.png in Resources */,
+				1FE089B92177267E0049F44B /* phone_icon_textFiled@3x.png in Resources */,
 				1F4242C520FF34EC0085E2F0 /* unselected.png in Resources */,
 				1FA6A1C120CFA780007A0AB2 /* files_photo_normal.png in Resources */,
 				1FAADEBD20ABE39700739220 /* files_info@2x.png in Resources */,
 				1F1BAC5E20CE709100D32C5A /* files_png_small.png in Resources */,
 				1F588269208719BB00394BD6 /* refresh@2x.png in Resources */,
 				1F8EBB5620A0239000E8AB83 /* files_folder.png in Resources */,
+				1FE089AF217714AD0049F44B /* add_user@3x.png in Resources */,
 				1FD1F2EE2153434B00C3E429 /* add_album@2x.png in Resources */,
 				1FA6A1AB20CFA074007A0AB2 /* search@2x.png in Resources */,
 				1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */,
@@ -4208,6 +4287,7 @@
 				1F2B459E208F255800C8971F /* IPAddDeviceViewController.xib in Resources */,
 				1FE08944217074330049F44B /* radioButton_right@3x.png in Resources */,
 				1FA6A1C520CFA796007A0AB2 /* files_photo_normal@3x.png in Resources */,
+				1FE089A521770CD40049F44B /* user_avatar_placeholder.png in Resources */,
 				1F1BAC6220CE709100D32C5A /* files_png_small@2x.png in Resources */,
 				1FC5CC1320D3BDC800499E63 /* file_finish@3x.png in Resources */,
 				1FEABB5F20A14C0900824448 /* files_ppt_normal.png in Resources */,
@@ -4276,6 +4356,7 @@
 				1F5AD93F20AD80980065DAD3 /* files_audio_small@2x.png in Resources */,
 				1FAADEC120ABFD6A00739220 /* files_move_gray.png in Resources */,
 				1FE08965217479870049F44B /* add_gray@3x.png in Resources */,
+				1FE089BD21772A5D0049F44B /* finished@2x.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
 				1FFD12B720E9C7270053A3F7 /* files_move_to.png in Resources */,
 				1FEABB6520A14C6000824448 /* files_ppt_small.png in Resources */,
@@ -4451,6 +4532,7 @@
 				1FD1F2E82152472B00C3E429 /* SighInWechatUser.swift in Sources */,
 				1F1BABAC20C62EC300D32C5A /* UsersInfoAPI.swift in Sources */,
 				1F1BAC5120CE637000D32C5A /* Enum.swift in Sources */,
+				1FE0899B2176E7EF0049F44B /* DeviceAdvancedSettingViewController.swift in Sources */,
 				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
 				1FE0892C216F1E510049F44B /* MyInfoCenterViewController.swift in Sources */,
 				1F4242AF20F5CBF60085E2F0 /* JYProcessView.m in Sources */,
@@ -4458,11 +4540,13 @@
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
 				1F83AE7420885FD5007CCCFD /* MDBaseButton.swift in Sources */,
+				1FE089B12177183B0049F44B /* DeviceAddUserSettingViewController.swift in Sources */,
 				1FEABB6C20A14CBA00824448 /* FilesModel.swift in Sources */,
 				1FD1F3292159E18C00C3E429 /* NewPhotoAlbumCollectionViewCell.swift in Sources */,
 				1F83AE572087463F007CCCFD /* LocalNetworkLoginViewController.swift in Sources */,
 				1F359FA720907CD700E2FF36 /* InitLastView.swift in Sources */,
 				1FE9EF8D20EF5DEA00732728 /* CocoaSecurity.m in Sources */,
+				1FE089A1217709850049F44B /* DeviceReductionSettingViewController.swift in Sources */,
 				1F307C7520BEB18700AE105C /* SettingViewController.swift in Sources */,
 				1F0FD0FF214A77AB003D7936 /* IdentifyingFromDeviceViewController.swift in Sources */,
 				060F918821575B3400AD9F26 /* PhotoAlbumModel.swift in Sources */,
@@ -4479,6 +4563,7 @@
 				1FE9EF8020EF5A9C00732728 /* FileDefine.swift in Sources */,
 				1F5209452147B57C0058A8D3 /* LoginTransition.swift in Sources */,
 				1F362F3B212BECDA000B3384 /* TRUploadTask.swift in Sources */,
+				1FE089C3217737660049F44B /* DeviceNetworkSettingViewController.swift in Sources */,
 				1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93802089B2CE00DD1EA7 /* InitializationCreatUserViewController.swift in Sources */,
 				1F2CE3A420B7F3F200D9E5BD /* CloudLoginModel.swift in Sources */,
@@ -4529,6 +4614,7 @@
 				1FE08959217448450049F44B /* MyUserAgreementViewController.swift in Sources */,
 				1FD1F2F72153824A00C3E429 /* PhotoAlbumCollectionViewCell.swift in Sources */,
 				1FA5D76A215C77E50025F870 /* BigPhotoInfoTableViewCell.swift in Sources */,
+				1FE089B321771F540049F44B /* DeviceAaddUserPhoneNumberViewController.swift in Sources */,
 				1F050E2D20A99F280037F00A /* FileShareFolderViewController.swift in Sources */,
 				1F3C240720A3E55500E6B953 /* FilesListCollectionViewCell.swift in Sources */,
 				1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */,
@@ -4567,6 +4653,7 @@
 				1FFD131A20EF0FF00053A3F7 /* FMHeadView.m in Sources */,
 				1FA9C3E02105B76A00E8411E /* DictionaryExtension.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
+				1FE089C1217731530049F44B /* DeviceAddDeviceViewController.swift in Sources */,
 				1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */,
 				1F1BABA420C50C7100D32C5A /* DriveDirAPI.swift in Sources */,
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
@@ -4587,6 +4674,7 @@
 				1F8EBB48209C512300E8AB83 /* FilesFileCollectionViewCell.swift in Sources */,
 				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
 				1F5882302085D39D00394BD6 /* UIViewExtension.swift in Sources */,
+				1FE089A321770B560049F44B /* DeviceUsersManageViewController.swift in Sources */,
 				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
 				1F520968214A19BF0058A8D3 /* DeviceBLEModel.swift in Sources */,
 				1FE089952175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift in Sources */,
@@ -4597,6 +4685,7 @@
 				1F5882612085FBDF00394BD6 /* Alert.swift in Sources */,
 				1F3C240920A4214600E6B953 /* AppNavigationDrawerController.swift in Sources */,
 				1FE0893E21704C660049F44B /* MyBindWechatViewController.swift in Sources */,
+				1FE0899F217706460049F44B /* DeviceIdentityViewController.swift in Sources */,
 				1FE0895121743AE50049F44B /* MyResetPasswordViewController.swift in Sources */,
 				1FE0895E21746A3B0049F44B /* DeviceViewController.swift in Sources */,
 				1F520964214A14F30058A8D3 /* SeekNewDeviceTableViewCell.swift in Sources */,
@@ -4618,6 +4707,7 @@
 				1FE674DE20D21B11006F97DB /* TRTask.swift in Sources */,
 				1FE08932216F4EC80049F44B /* AvatarChangeViewController.swift in Sources */,
 				1F58821D2084A56D00394BD6 /* UIColorExtension.swift in Sources */,
+				1FE089972175F8800049F44B /* DeviceBackupPCDtailsViewController.swift in Sources */,
 				1FFD12AD20E3412E0053A3F7 /* FilesMoveToRootViewController.swift in Sources */,
 				1F5378792108754F00A555C5 /* AnyEncodable.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
@@ -4649,11 +4739,13 @@
 				1FFD132620EF36A50053A3F7 /* UIScrollView+IndicatorExt.m in Sources */,
 				1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */,
 				1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */,
+				1FE0899D217701760049F44B /* DeviceCurrentDeviceInfoViewController.swift in Sources */,
 				1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */,
 				1FAADEF120AC031100739220 /* FilesSearchMoreBottomSheetContentTableViewController.swift in Sources */,
 				1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */,
 				1FBB6F532137D83E0090FA57 /* TipsAlertView.swift in Sources */,
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
+				1FE089992176D9470049F44B /* DevicePeripheralDeviceViewController.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
 				1FE0894F2170AD530049F44B /* MyChangePhoneNumberViewController.swift in Sources */,
 				1FE0893C216F5ACB0049F44B /* UILabelExtension.swift in Sources */,

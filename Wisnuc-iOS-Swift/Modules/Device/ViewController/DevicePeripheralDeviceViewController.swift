@@ -1,43 +1,46 @@
 //
-//  DeviceBackupPhoneDtailsViewController.swift
+//  DevicePeripheralDeviceViewController.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/10/16.
+//  Created by wisnuc-imac on 2018/10/17.
 //  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
 
-class DeviceBackupPhoneDtailsViewController: BaseViewController {
+class DevicePeripheralDeviceViewController: BaseViewController {
     let identifier = "celled"
     let headerHeight:CGFloat = 8
-    var autoBackupSwitchOn = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(backupTableView)
+        prepareNavigation()
+        self.largeTitle = LocalizedString(forKey: "USB设备")
+        self.view.addSubview(peripheralTableView)
         self.view.bringSubview(toFront: appBar.appBarViewController.headerView)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appBar.headerViewController.headerView.trackingScrollView = self.backupTableView
+        appBar.headerViewController.headerView.trackingScrollView = self.peripheralTableView
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
-        ViewTools.automaticallyAdjustsScrollView(scrollView: self.backupTableView, viewController: self)
+        ViewTools.automaticallyAdjustsScrollView(scrollView: self.peripheralTableView, viewController: self)
     }
     
-    @objc func switchBtnHandleForSync(_ sender:UISwitch){
-        AppUserService.currentUser?.autoBackUp = NSNumber.init(value: sender.isOn)
-        AppUserService.synchronizedCurrentUser()
-        autoBackupSwitchOn = sender.isOn
-        if autoBackupSwitchOn {
-            AppService.sharedInstance().startAutoBackup {
-            }
-        } else{
-            AppService.sharedInstance().autoBackupManager.stop()
+    @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){
+        self.alertControllerActionSheet( action1Title: "Kingston", action1Handler: { (alertAction1) in
+            
+        }, action2Title: "Kingston_2") { (alertAction2) in
+            
         }
     }
     
-    lazy var backupTableView: UITableView = {
+    func prepareNavigation(){
+        let rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "弹出"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightBarButtonItemTap(_:)))
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
+    }
+    
+    lazy var peripheralTableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)
         tableView.dataSource = self
         tableView.delegate = self
@@ -49,20 +52,20 @@ class DeviceBackupPhoneDtailsViewController: BaseViewController {
     }()
 }
 
-extension DeviceBackupPhoneDtailsViewController:UITableViewDataSource,UITableViewDelegate{
+extension DevicePeripheralDeviceViewController:UITableViewDataSource,UITableViewDelegate{
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
-            return 1
+            return 2
         }else{
             return 3
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 56
+        return 48
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -77,7 +80,6 @@ extension DeviceBackupPhoneDtailsViewController:UITableViewDataSource,UITableVie
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView.init(frame: CGRect.zero)
-    
         return headerView
     }
     
@@ -86,37 +88,37 @@ extension DeviceBackupPhoneDtailsViewController:UITableViewDataSource,UITableVie
         if indexPath.section == 0{
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = LocalizedString(forKey: "备份")
-                
-                let switchBtn = UISwitch.init()
-                switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
-                switchBtn.isOn = autoBackupSwitchOn
-                switchBtn.addTarget(self, action: #selector(switchBtnHandleForSync(_ :)), for: UIControlEvents.valueChanged)
-                if(!AppUserService.isUserLogin){
-                    switchBtn.isEnabled = false
-                }
-                cell.contentView.addSubview(switchBtn)
-                cell.textLabel?.textColor = DarkGrayColor
+                cell.textLabel?.text = LocalizedString(forKey: "设备1：Kingston")
+                cell.detailTextLabel?.text = "总容量2TB"
+            case 1:
+                cell.textLabel?.text =  "Kingston"
+                cell.detailTextLabel?.text = "已用5.4GB"
             default:
                 break
             }
+            
+             cell.textLabel?.textColor = DarkGrayColor
         }else{
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = LocalizedString(forKey: "最后一次备份时间")
-                cell.detailTextLabel?.text = "2018-09-30 18:55:12"
+                cell.textLabel?.text = "设备2：Kingston_2"
+                cell.detailTextLabel?.text = "总容量4TB"
             case 1:
-                cell.textLabel?.text = LocalizedString(forKey: "是否备份完成")
-                cell.detailTextLabel?.text = "300/2254"
+                cell.textLabel?.text =  "Kingston(A)"
+                cell.detailTextLabel?.text = "已用45.4GB"
             case 2:
-                cell.textLabel?.text = LocalizedString(forKey: "在相簿中打开")
+                cell.textLabel?.text = "Kingston(B)"
+                cell.detailTextLabel?.text = "已用45.4GB"
+                
             default:
                 break
             }
-            
-            cell.textLabel?.textColor = DarkGrayColor
-            
         }
+        
+        cell.textLabel?.textColor = DarkGrayColor
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        cell.detailTextLabel?.textColor = LightGrayColor
+        cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         return cell
     }
     
@@ -125,14 +127,15 @@ extension DeviceBackupPhoneDtailsViewController:UITableViewDataSource,UITableVie
         if indexPath.section == 0{
             switch indexPath.row {
             case 0:
-             break
+                break
             default:
-             break
+                break
             }
         }else{
-          
+            
         }
     }
 }
+
 
 
