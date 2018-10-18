@@ -23,6 +23,8 @@ class DeviceUsersManageViewController: BaseViewController {
         appBar.headerViewController.headerView.trackingScrollView = self.infoSettingTableView
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.infoSettingTableView, viewController: self)
+//        let tabbar = retrieveTabbarController()
+//        tabbar?.setTabBarHidden(true, animated: true)
     }
     
     @objc func addUserBarButtonItemTap(_ sender:UIBarButtonItem){
@@ -99,14 +101,9 @@ extension DeviceUsersManageViewController:UITableViewDataSource,UITableViewDeleg
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0{
-            switch indexPath.row {
-            case 0:
-                break
-            default:
-                break
-            }
-        }else{
+        let userInfoViewController = DeviceUserInfoViewController.init(style: .highHeight)
+        let navigationController = UINavigationController.init(rootViewController: userInfoViewController)
+        self.present(navigationController, animated: true) {
             
         }
     }

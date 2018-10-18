@@ -76,7 +76,8 @@ extension DeviceAdvancedSettingViewController:UITableViewDataSource,UITableViewD
                 let deviceUsersManageViewController = DeviceUsersManageViewController.init(style:.highHeight)
                 self.navigationController?.pushViewController(deviceUsersManageViewController, animated: true)
             case 1:
-                break
+                let sambaSettingViewController = DeviceSambaSettingViewController.init(style:.highHeight)
+                self.navigationController?.pushViewController(sambaSettingViewController, animated: true)
             case 2:
                 let reductionSettingViewController = DeviceReductionSettingViewController.init(style:.highHeight)
                 self.navigationController?.pushViewController(reductionSettingViewController, animated: true)

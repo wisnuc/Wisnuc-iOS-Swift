@@ -1,117 +1,129 @@
 //
-//  DeviceAddUserSettingViewController.swift
+//  DeviceUserInfoViewController.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/10/17.
+//  Created by wisnuc-imac on 2018/10/18.
 //  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
 
-class DeviceAddUserSettingViewController: BaseViewController {
-
+class DeviceUserInfoViewController: BaseViewController {
     let identifier = "celled"
+    let cellHeight:CGFloat = 48
     let headerHeight:CGFloat = 48
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.largeTitle = LocalizedString(forKey: "备份空间")
-        self.view.addSubview(backupTableView)
+        prepareNavigationBar()
+        self.largeTitle = LocalizedString(forKey: "13911232222")
+        self.view.addSubview(infoSettingTableView)
         self.view.bringSubview(toFront: appBar.appBarViewController.headerView)
-        self.view.addSubview(nextButton)
+        headerContentLayout()
+    }
+    
+    @objc func dismiss(_ sender:UIBarButtonItem){
+        self.presentingViewController?.dismiss(animated: true, completion: {
+            
+        })
+    }
+    
+    func prepareNavigationBar(){
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_gray.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(dismiss(_ :)))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        appBar.headerViewController.headerView.trackingScrollView = self.backupTableView
+        appBar.headerViewController.headerView.trackingScrollView = self.infoSettingTableView
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
-        ViewTools.automaticallyAdjustsScrollView(scrollView: self.backupTableView, viewController: self)
+        ViewTools.automaticallyAdjustsScrollView(scrollView: self.infoSettingTableView, viewController: self)
     }
+    
+    func headerContentLayout(){
+        appBar.headerStackView.addSubview(self.avatarImageView)
+        largeTitleLabel.frame = CGRect(x: self.avatarImageView.right + 10, y: barMaximumHeight - 20 - 20 - 20, width: __kWidth - MarginsWidth*2, height: 20)
+    }
+    
+    @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){
+        let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow ,state:.change )
+        self.navigationController?.pushViewController(configNetVC, animated: true)
+    }
+    
     
     @objc func switchBtnHandleForUSB(_ sender:UISwitch){
         
     }
     
     @objc func switchBtnHandleForShare(_ sender:UISwitch){
-       
+        
     }
     
-    @objc func nextButtonTap(_ sender:UIButton){
-        let aaddUserPhoneNumberViewController = DeviceAaddUserPhoneNumberViewController.init(style: .whiteWithoutShadow)
-        self.navigationController?.pushViewController(aaddUserPhoneNumberViewController, animated: true)
-    }
-
-    lazy var backupTableView: UITableView = {
+    
+    lazy var infoSettingTableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.grouped)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = lightGrayBackgroudColor
-        tableView.register(UINib.init(nibName: StringExtension.classNameAsString(targetClass: DeviceBackupRootTableViewCell.self), bundle: nil), forCellReuseIdentifier: identifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
         tableView.tableFooterView = UIView.init(frame: CGRect.zero)
-        tableView.sectionFooterHeight = 0.01
+        tableView.sectionFooterHeight = 0.001
+        tableView.backgroundColor = .white
         return tableView
     }()
     
-    lazy var nextButton: UIButton = {
-        let button = UIButton.init(type: .custom)
+    lazy var avatarImageView: UIImageView = { [weak self] in
         let width:CGFloat = 40
-        button.frame = CGRect(x: __kWidth - MarginsWidth - width , y: __kHeight - MarginsWidth - width, width: width, height: width)
-        button.setImage(UIImage.init(named: "next_button_arrow_white.png"), for: UIControlState.normal)
-        button.backgroundColor =  COR1
-        button.layer.masksToBounds = true
-        button.layer.cornerRadius = width/2
-        button.addTarget(self, action: #selector(nextButtonTap(_ :)), for: UIControlEvents.touchUpInside)
-        return button
-    }()
+        let imageView = UIImageView.init(frame: CGRect(x: MarginsWidth, y: (self?.barMaximumHeight)! - 8 - width - 20 , width: width, height: width))
+       imageView.image =  UIImage.init(named: "user_avatar_placeholder.png")
+        return imageView
+        }()
 }
 
-extension DeviceAddUserSettingViewController:UITableViewDataSource,UITableViewDelegate{
+extension DeviceUserInfoViewController:UITableViewDataSource,UITableViewDelegate{
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
-             return 4
+            return 4
         }else{
-             return 1
+            return 1
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 48
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        
-        return headerHeight
-        
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 1
+        return cellHeight
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView.init(frame: CGRect.zero)
+        headerView.backgroundColor = lightGrayBackgroudColor
+        let lineView = UIView.init(frame: CGRect(x: MarginsWidth + 2, y: headerHeight - 1, width: __kWidth - ((MarginsWidth + 4)*2), height: 1))
+        lineView.backgroundColor = Gray6Color
         let headerBackgroudView = UIView.init(frame: CGRect(x: 0, y: 8, width: __kWidth, height: headerHeight - 8))
         headerBackgroudView.backgroundColor = .white
         headerView.addSubview(headerBackgroudView)
         
-        let leftLabel = UILabel.init(frame: CGRect(x: MarginsWidth, y: headerBackgroudView.height/2 - 14/2, width: __kWidth/2 - MarginsWidth, height: 14))
+        let leftLabel = UILabel.init(frame: CGRect(x: MarginsWidth + 2, y: headerBackgroudView.height/2 - 14/2, width: __kWidth/2 - MarginsWidth, height: 14))
         leftLabel.textColor = LightGrayColor
         leftLabel.font = UIFont.systemFont(ofSize: 14)
         headerBackgroudView.addSubview(leftLabel)
         
         if section == 0{
-            leftLabel.text = LocalizedString(forKey: "设置权限")
+            leftLabel.text = LocalizedString(forKey: "共享空间")
         }else{
-            leftLabel.text = LocalizedString(forKey: "共用空间(总共: 2TB)")
+            leftLabel.text = LocalizedString(forKey: "Samba密码")
         }
+//        headerView.addSubview(lineView)
         return headerView
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return headerHeight
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-         let cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: identifier)
+        let cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: identifier)
         if indexPath.section == 0{
             switch indexPath.row {
             case 0:
@@ -156,18 +168,25 @@ extension DeviceAddUserSettingViewController:UITableViewDataSource,UITableViewDe
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0{
-            switch indexPath.row {
-            case 0:
-                break
-            default:
-              break
-            }
-        }else{
-           
-        }
+       
     }
 }
 
-
-
+extension DeviceUserInfoViewController{
+    
+    override func flexibleHeaderViewFrameDidChange(_ headerView: MDCFlexibleHeaderView) {
+        //        //       print(headerView.bottom)
+        let viewOriginY:CGFloat = self.barMaximumHeight - 20 - 20 - 20
+        let viewOriginX:CGFloat = self.avatarImageView.right + 10
+        //        print(headerView.bottom - headerView.maximumHeight)
+        if headerView.maximumHeight > headerView.bottom{
+            self.largeTitleLabel.origin.y = viewOriginY + (headerView.bottom - headerView.maximumHeight)
+//            self.largeTitleLabel.origin.x = viewOriginX + (0.55*(headerView.bottom - headerView.maximumHeight))
+            
+            self.avatarImageView.alpha = 0
+        }else{
+            self.largeTitleLabel.origin.y = viewOriginY + (headerView.bottom - headerView.maximumHeight)
+            self.avatarImageView.alpha = 1
+        }
+    }
+}

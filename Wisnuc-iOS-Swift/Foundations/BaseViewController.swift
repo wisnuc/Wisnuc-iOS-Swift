@@ -18,7 +18,7 @@ enum NavigationStyle:Int{
     case highHeight
 }
 class BaseViewController: UIViewController {
-    let barMaximumHeight:CGFloat =  136
+    var barMaximumHeight:CGFloat =  136
     var style:NavigationStyle?{
         didSet{
             switch style {
@@ -67,6 +67,7 @@ class BaseViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
     func setNaviStyle(style:NavigationStyle){
         self.style = style
@@ -200,10 +201,6 @@ class BaseViewController: UIViewController {
         
     }
     
-    func didBackAction(sel:Selector){
-        appBar.navigationBar.backItem?.action = sel
-    }
-    
     func headerBackgroundImage(image:UIImage) -> UIImage?{
         let image = image
         return image
@@ -240,7 +237,7 @@ class BaseViewController: UIViewController {
         return innerImageView
     }()
     
-   private lazy var largeTitleLabel: UILabel = {
+    lazy var largeTitleLabel: UILabel = {
         let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: barMaximumHeight - 20 - 20 - 20, width: __kWidth - MarginsWidth*2, height: 20))
         label.textColor = DarkGrayColor
         label.font = UIFont.boldSystemFont(ofSize: 21)

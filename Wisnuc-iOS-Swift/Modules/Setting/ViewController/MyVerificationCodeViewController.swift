@@ -19,6 +19,7 @@ enum MyVerificationCodeViewControllerNextState {
     case bindPhone
     case changePassword
     case resetPassword
+    case setSamba
 }
 
 class MyVerificationCodeViewController: BaseViewController {
@@ -155,6 +156,9 @@ class MyVerificationCodeViewController: BaseViewController {
         case .resetPassword?:
             let resetPasswordViewController =  MyResetPasswordViewController.init(style: NavigationStyle.whiteWithoutShadow)
             self.navigationController?.pushViewController(resetPasswordViewController, animated: true)
+        case .setSamba?:
+            let sambaSetPasswordViewController =  DeviceSambaSetPasswordViewController.init(style: NavigationStyle.whiteWithoutShadow)
+            self.navigationController?.pushViewController(sambaSetPasswordViewController, animated: true)
         
         default:
             break
