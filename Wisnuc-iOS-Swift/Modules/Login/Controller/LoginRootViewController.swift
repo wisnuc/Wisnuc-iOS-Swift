@@ -186,6 +186,7 @@
         
         self.present(materialAlertController, animated: true, completion: nil)
     }
+    
     func oldWechatLogin(code:String){
         ActivityIndicator.startActivityIndicatorAnimation()
         CloudLoginAPI.init(code: code).startRequestDataCompletionHandler { [weak self] (responseData) in
@@ -254,7 +255,7 @@
     }
     
     func weChatCallBackRespCode(code:String){
-        oldWechatLogin(code:code)
+            oldWechatLogin(code:code)
 //        wechatSighInAction(code:code)
     }
     

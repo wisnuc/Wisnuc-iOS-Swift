@@ -20,6 +20,7 @@ private let reuseIdentifierHeader = "HeaderView"
 private let reuseIdentifierFooter = "FooterView"
 private let CellWidth:CGFloat = CGFloat((__kWidth - 4)/2)
 private let CellSmallHeight:CGFloat = 48.0
+private let HeaderSectionHeight:CGFloat = CellSmallHeight + 80 + 8
 
 enum FilesStatus:Int{
     case normal = 0
@@ -44,6 +45,11 @@ enum SortType:Int64{
     func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath ,isSelectModel:Bool)
     func sequenceButtonTap(_ sender:UIButton?)
     func cellButtonCallBack(_ cell:MDCCollectionViewCell, _ button:UIButton, _ indexPath:IndexPath)
+    
+    func shareBoxTap()
+    func backupBoxTap()
+    func usbDeviceTap()
+    func transferTaskTap()
 }
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
@@ -340,7 +346,13 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-            return CGSize(width: __kWidth, height: CellSmallHeight)
+        if section == 0{
+             return CGSize(width: __kWidth, height: HeaderSectionHeight)
+        }else{
+             return CGSize(width: __kWidth, height: CellSmallHeight)
+           
+        }
+        
     }
   
     override func collectionView(_ collectionView: UICollectionView, shouldHideFooterSeparatorForSection section: Int) -> Bool {
@@ -356,14 +368,33 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             let header:CommonCollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifierHeader, for: indexPath) as! CommonCollectionReusableView
             reusableView = header
             let reusableHeaderView:CommonCollectionReusableView = (reusableView as? CommonCollectionReusableView)!
-            let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
-            let model  = sectionArray[indexPath.row]
+            let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as? Array ?? Array.init()
+            
+            var model:EntriesModel?
+            if sectionArray.count>0{
+                model  = sectionArray[indexPath.row]
+            }
+            
             if indexPath.section == 0 {
+                header.shareBoxCallback = { () in
+                    self.delegate?.shareBoxTap()
+                }
+                header.backupBoxCallback = { () in
+                    self.delegate?.backupBoxTap()
+                }
+                header.usbDeviceCallback = { () in
+                    self.delegate?.usbDeviceTap()
+                }
+                header.transferTaskCallback = { () in
+                    self.delegate?.transferTaskTap()
+                }
                 var titleText = LocalizedString(forKey: "Folders")
-                if model.type == FilesType.file.rawValue {
+                if model?.type == FilesType.file.rawValue {
                     titleText = LocalizedString(forKey: "Files")
                 }
                 reusableHeaderView.titleLabel.text = titleText
+                reusableHeaderView.titleLabel.center = CGPoint(x: reusableHeaderView.titleLabel.center.x, y: (HeaderSectionHeight - CellSmallHeight) + CellSmallHeight/2)
+                 reusableHeaderView.rightButton.center = CGPoint(x: reusableHeaderView.rightButton.center.x, y: reusableHeaderView.titleLabel.center.y)
                 var imageName = "files_down.png"
                 var buttonTitleText = "NAME"
                 switch sortType?.rawValue {
@@ -386,9 +417,12 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 let frame = CGRect(origin: CGPoint(x: reusableHeaderView.width - MarginsWidth - size.width, y: reusableHeaderView.rightButton.origin.y), size: size)
                 reusableHeaderView.rightButton.frame = frame
                 reusableHeaderView.rightButton.isHidden = false
+                reusableHeaderView.convenientEntranceView.isHidden = false
             }else{
                 reusableHeaderView.titleLabel.text = LocalizedString(forKey: "Files")
                 reusableHeaderView.rightButton.isHidden = true
+                reusableHeaderView.convenientEntranceView.isHidden = true
+                reusableHeaderView.titleLabel.center = CGPoint(x: reusableHeaderView.titleLabel.center.x, y: CellSmallHeight/2)
             }
                 reusableHeaderView.rightButton.addTarget(self, action: #selector(sequenceButtonTap(_ :)), for: UIControlEvents.touchUpInside)
         }else
@@ -404,7 +438,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         return reusableView
         
        }
-    
     
     //    extension FilesRootCollectionViewController:UIScrollViewDelegate{
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -474,8 +507,14 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
 }
 
 class CommonCollectionReusableView: UICollectionReusableView {
+    var shareBoxCallback:(()->())?
+    var backupBoxCallback:(()->())?
+    var usbDeviceCallback:(()->())?
+    var transferTaskCallback:(()->())?
     override init(frame: CGRect) {
         super.init(frame: frame)
+        convenientEntranceView.viewDelegate = self
+        self.addSubview(convenientEntranceView)
         self.addSubview(titleLabel)
         self.addSubview(rightButton)
     }
@@ -486,7 +525,6 @@ class CommonCollectionReusableView: UICollectionReusableView {
         label.font = SmallTitleFont
         return label
     }()
-    
 
     lazy var rightButton: SortButton = {
         let text = LocalizedString(forKey: "NAME")
@@ -498,6 +536,34 @@ class CommonCollectionReusableView: UICollectionReusableView {
     }()
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    lazy var convenientEntranceView: FilesConvenientEntranceView = FilesConvenientEntranceView.init(frame: CGRect(x: 0, y: 4, width: __kWidth, height: 80))
+}
+
+extension CommonCollectionReusableView:FilesConvenientEntranceViewDelegate{
+    func shareBoxTap() {
+        if shareBoxCallback != nil{
+            self.shareBoxCallback!()
+        }
+    }
+    
+    func backupBoxTap() {
+        if backupBoxCallback != nil{
+            self.backupBoxCallback!()
+        }
+    }
+    
+    func usbDeviceTap() {
+        if usbDeviceCallback != nil{
+            self.usbDeviceCallback!()
+        }
+    }
+    
+    func transferTaskTap() {
+        if transferTaskCallback != nil{
+            self.transferTaskCallback!()
+        }
     }
 }
 

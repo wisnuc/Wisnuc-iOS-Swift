@@ -142,7 +142,7 @@ class FilesRootViewController: BaseViewController{
         case .root?:
             prepareRootAppNavigtionBar()
             prepareSearchBar()
-            self.view.addSubview(fabButton)
+//            self.view.addSubview(fabButton)
         case .movecopy?:
             prepareMoveCopyAppNavigtionBar()
             setMoveToCollectionViewFrame()
@@ -151,7 +151,7 @@ class FilesRootViewController: BaseViewController{
             moveFilesBottomBar.addSubview(cancelMovetoButton)
         case .next?:
             preparenNextAppNavigtionBar()
-            self.view.addSubview(fabButton)
+//            self.view.addSubview(fabButton)
         default:
             break
         }
@@ -367,10 +367,10 @@ class FilesRootViewController: BaseViewController{
             }
         case 3:
             if sortIsDown{
-                folderArray?.sort { $0.size! < $1.size! }
+//                folderArray?.sort { $0.size! < $1.size! }
                 filesArray?.sort { $0.size! < $1.size! }
             }else{
-                folderArray?.sort { $0.size! > $1.size! }
+//                folderArray?.sort { $0.size! > $1.size! }
                 filesArray?.sort { $0.size! > $1.size! }
             }
         default:
@@ -423,9 +423,9 @@ class FilesRootViewController: BaseViewController{
         self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
         self.appBar.headerViewController.preferredStatusBarStyle = .lightContent
         self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
-        fabButton.collapse(true) {
-
-        }
+//        fabButton.collapse(true) {
+//
+//        }
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
         
@@ -453,8 +453,8 @@ class FilesRootViewController: BaseViewController{
         self.appBar.headerViewController.preferredStatusBarStyle = .default
         self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
         collcectionViewController.isSelectModel = isSelectModel
-        fabButton.expand(true) {
-        }
+//        fabButton.expand(true) {
+//        }
         
         if selfState == .root{
             let tab = retrieveTabbarController()
@@ -494,7 +494,7 @@ class FilesRootViewController: BaseViewController{
         navigationController?.delegate = self
 //        if (self.navigationDrawerController?.rootViewController) != nil {
         if let controller = UIViewController.currentViewController(){
-            if  controller.isKind(of: LoginRootViewController.self){
+            if  controller.isKind(of: FilesRootCollectionViewController.self) || controller.isKind(of: FilesRootViewController.self) {
                 let tab = retrieveTabbarController()
                 tab?.setTabBarHidden(false, animated: true)
             }
@@ -673,7 +673,7 @@ class FilesRootViewController: BaseViewController{
         }
         let view = IconButton.init(image: Icon.search?.byTintColor(LightGrayColor))
         searchBar.leftViews = [view]
-        searchBar.rightViews = [listStyleButton,moreButton]
+        searchBar.rightViews = [newCreatButton,moreButton,listStyleButton]
         searchBar.textField.delegate = self
     }
     
@@ -732,15 +732,15 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func fabButtonDidTap(_ sender:MDCFloatingButton){
-        self.fabButton.collapse(true) { [weak self] in
+//        self.fabButton.collapse(true) { [weak self] in
             let fabBottomVC = FilesFABBottomSheetDisplayViewController()
             fabBottomVC.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
-            fabBottomVC.transitioningDelegate = self?.transitionController
+            fabBottomVC.transitioningDelegate = self.transitionController
             fabBottomVC.delegate =  self
             let bottomSheet = AppBottomSheetController.init(contentViewController: fabBottomVC)
             bottomSheet.delegate = self
-            self?.present(bottomSheet, animated: true, completion: {})
-        }
+            self.present(bottomSheet, animated: true, completion: {})
+//        }
     }
     
     @objc func listStyleButtonTap(_ sender:IconButton){
@@ -868,22 +868,22 @@ class FilesRootViewController: BaseViewController{
         return barButtonItem
     }()
 
-    lazy var fabButton: MDCFloatingButton = {
-        let plusImage = #imageLiteral(resourceName: "Plus")
-        let buttonWidth:CGFloat = 56
-        let defaultFloatingButton = MDCFloatingButton.init(frame: CGRect.init(x: __kWidth - 30 - buttonWidth, y: __kHeight - TabBarHeight - 16 - buttonWidth, width: buttonWidth, height: buttonWidth))
-        
-        let plusImage36 = UIImage(named: "plus_white_36", in: Bundle(for: type(of: self)),
-                                  compatibleWith: traitCollection)
-        
-//        defaultFloatingButton.sizeToFit()
-//        defaultFloatingButton.translatesAutoresizingMaskIntoConstraints = false
-        defaultFloatingButton.setImage(plusImage, for: .normal)
-        let mdcColorScheme = MDCButtonScheme.init()
-        MDCButtonColorThemer.apply(appDelegate.colorScheme, to: defaultFloatingButton)
-        defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
-        return defaultFloatingButton
-    }()
+//    lazy var fabButton: MDCFloatingButton = {
+//        let plusImage = #imageLiteral(resourceName: "Plus")
+//        let buttonWidth:CGFloat = 56
+//        let defaultFloatingButton = MDCFloatingButton.init(frame: CGRect.init(x: __kWidth - 30 - buttonWidth, y: __kHeight - TabBarHeight - 16 - buttonWidth, width: buttonWidth, height: buttonWidth))
+//
+//        let plusImage36 = UIImage(named: "plus_white_36", in: Bundle(for: type(of: self)),
+//                                  compatibleWith: traitCollection)
+//
+////        defaultFloatingButton.sizeToFit()
+////        defaultFloatingButton.translatesAutoresizingMaskIntoConstraints = false
+//        defaultFloatingButton.setImage(plusImage, for: .normal)
+//        let mdcColorScheme = MDCButtonScheme.init()
+//        MDCButtonColorThemer.apply(appDelegate.colorScheme, to: defaultFloatingButton)
+//        defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
+//        return defaultFloatingButton
+//    }()
     
     lazy var moveFilesBottomBar: UIView = {
         let height:CGFloat = 56.0
@@ -910,6 +910,12 @@ class FilesRootViewController: BaseViewController{
     lazy var moreButton: IconButton = {
         let button = IconButton(image: Icon.cm.moreHorizontal?.byTintColor(LightGrayColor))
         button.addTarget(self, action: #selector(moreButtonTap(_:)), for: UIControlEvents.touchUpInside)
+        return button
+    }()
+    
+    lazy var newCreatButton: IconButton = {
+        let button = IconButton(image: UIImage.init(named: "add_gray.png"))
+        button.addTarget(self, action: #selector(fabButtonDidTap(_:)), for: UIControlEvents.touchUpInside)
         return button
     }()
     

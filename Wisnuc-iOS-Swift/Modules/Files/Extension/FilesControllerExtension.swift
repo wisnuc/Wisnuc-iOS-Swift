@@ -12,6 +12,34 @@ import Material
 //private let SearchBarBottom:CGFloat = 77.0
 var downloadTask:TRTask?
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
+    func shareBoxTap() {
+        let shareVC = FileShareFolderViewController.init(style:.white)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
+        self.navigationController?.pushViewController(shareVC, animated: true)
+    }
+    
+    func backupBoxTap() {
+        let deviceBackupRootViewController = DeviceBackupRootViewController.init(style:.highHeight)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
+        self.navigationController?.pushViewController(deviceBackupRootViewController, animated: true)
+    }
+    
+    func usbDeviceTap() {
+        let peripheralDeviceViewController = DevicePeripheralDeviceViewController.init(style:.highHeight)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
+        self.navigationController?.pushViewController(peripheralDeviceViewController, animated: true)
+    }
+    
+    func transferTaskTap() {
+        let transferTaskTableViewController = TransferTaskTableViewController.init(style:NavigationStyle.white)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
+        self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
+    }
+    
     func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath, isSelectModel: Bool) {
         if isSelectModel == NSNumber.init(value: FilesStatus.select.rawValue).boolValue{
             self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
@@ -236,21 +264,21 @@ extension FilesRootViewController:FilesDrawerViewControllerDelegate{
 
 extension FilesRootViewController:MDCBottomSheetControllerDelegate{
     func bottomSheetControllerDidDismissBottomSheet(_ controller: MDCBottomSheetController) {
-        self.fabButton.expand(true, completion: {
-        })
+//        self.fabButton.expand(true, completion: {
+//        })
     }
 }
 
 extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
     func folderButtonTap(_ sender: UIButton) {
-        self.fabButton.expand(true, completion: { [weak self] in
+//        self.fabButton.expand(true, completion: { [weak self] in
             let bundle = Bundle.init(for: NewFolderViewController.self)
             let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
             let identifier = "inputNewFolderDialogID"
             
             let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
             viewController.modalPresentationStyle = UIModalPresentationStyle.custom
-            viewController.transitioningDelegate = self?.transitionController
+        viewController.transitioningDelegate = self.transitionController
             
             let vc =  viewController as! NewFolderViewController
             vc.type = InputAlertType.creatNewFolder
@@ -259,7 +287,7 @@ extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
             vc.inputPlaceholder =  LocalizedString(forKey: "Folder name")
             vc.confirmButtonName =  LocalizedString(forKey: "Create")
             vc.delegate = self
-            self?.present(viewController, animated: true, completion: {
+            self.present(viewController, animated: true, completion: {
                 vc.inputTextField.becomeFirstResponder()
             })
             let presentationController =
@@ -267,17 +295,17 @@ extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
             if presentationController != nil{
                 presentationController?.dismissOnBackgroundTap = false
             }
-        })
+//        })
     }
     
     func uploadButtonTap(_ sender: UIButton) {
-        self.fabButton.expand(true, completion: { [weak self] in
-            
-            //            } else {
-            //                Message.message(text: LocalizedString(forKey: "系统在iOS 11以下版本不支持该功能"))
-            //                // Fallback on earlier versions
-            //            }
-        })
+//        self.fabButton.expand(true, completion: { [weak self] in
+//
+//            //            } else {
+//            //                Message.message(text: LocalizedString(forKey: "系统在iOS 11以下版本不支持该功能"))
+//            //                // Fallback on earlier versions
+//            //            }
+//        })
         
         //       let i = UIDocumentBrowserViewController.init()
         //        i.browserUserInterfaceStyle =
@@ -297,8 +325,8 @@ extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
     }
     
     func cllButtonTap(_ sender: UIButton) {
-        self.fabButton.expand(true, completion: {
-        })
+//        self.fabButton.expand(true, completion: {
+//        })
     }
 }
 
