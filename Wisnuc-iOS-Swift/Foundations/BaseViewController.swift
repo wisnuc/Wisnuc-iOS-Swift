@@ -18,7 +18,7 @@ enum NavigationStyle:Int{
     case highHeight
 }
 class BaseViewController: UIViewController {
-    var barMaximumHeight:CGFloat =  136
+    var barMaximumHeight:CGFloat = kStatusBarHeight + 116
     var style:NavigationStyle?{
         didSet{
             switch style {
@@ -238,7 +238,7 @@ class BaseViewController: UIViewController {
     }()
     
     lazy var largeTitleLabel: UILabel = {
-        let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: barMaximumHeight - 20 - 20 - 20, width: __kWidth - MarginsWidth*2, height: 20))
+        let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: barMaximumHeight - 20 - kStatusBarHeight - 20, width: __kWidth - MarginsWidth*2, height: 20))
         label.textColor = DarkGrayColor
         label.font = UIFont.boldSystemFont(ofSize: 21)
         return label
@@ -262,7 +262,8 @@ extension BaseViewController:MDCFlexibleHeaderViewDelegate{
     
     func flexibleHeaderViewFrameDidChange(_ headerView: MDCFlexibleHeaderView) {
         //       print(headerView.bottom)
-        let viewOriginY:CGFloat = barMaximumHeight - 20 - 20 - 20
+
+        let viewOriginY:CGFloat = barMaximumHeight - 20 - kStatusBarHeight - 20
         let viewOriginX:CGFloat = MarginsWidth
 //        print(headerView.bottom - headerView.maximumHeight)
         if headerView.maximumHeight > headerView.bottom{

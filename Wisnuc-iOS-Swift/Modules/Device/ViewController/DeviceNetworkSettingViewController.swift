@@ -38,6 +38,8 @@ class DeviceNetworkSettingViewController: BaseViewController {
         appBar.headerViewController.headerView.trackingScrollView = self.infoSettingTableView
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.infoSettingTableView, viewController: self)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
     }
     
     @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){

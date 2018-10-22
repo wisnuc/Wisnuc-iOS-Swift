@@ -8,12 +8,15 @@
 
 import UIKit
 import MaterialComponents
-private let FilesNormalImage = UIImage.init(named: "Home")
-private let PhotoNormalImage = UIImage.init(named: "photos.png")
-private let ShareNormalImage = UIImage.init(named: "share.png")
+private let FilesNormalImage = UIImage.init(named: "tab_files")
+private let PhotoNormalImage = UIImage.init(named: "tab_photos.png")
+private let DeviceNormalImage = UIImage.init(named: "tab_device.png")
+private let MyNormalImage = UIImage.init(named: "tab_my.png")
+
 private let FilesSelectImage = UIImage.init(named: "tab_files_selected.png")
-private let PhotoSelectImage = UIImage.init(named: "Email")
-private let ShareSelectImage = UIImage.init(named: "Favorite")
+private let PhotoSelectImage = UIImage.init(named: "tab_photos_selected.png")
+private let DeviceSelectImage = UIImage.init(named: "tab_device_selected.png")
+private let MySelectImage = UIImage.init(named: "tab_my_selected.png")
 
 class WSTabBarController: MDCTabBarViewController  {
     let bottomNavBar = MDCBottomNavigationBar()
@@ -69,15 +72,18 @@ extension WSTabBarController:MDCTabBarControllerDelegate{
         guard let index = tabBarController.tabBar?.items.index(of:item) else {
             fatalError("MDCTabBarDelegate given selected item not found in tabBar.items")
         }
-        
+//        item.setBadgeTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.black], for: UIControlState.selected)
         print(index)
         switch index {
         case 0:
             item.image = FilesSelectImage
         case 1:
-            item.image = ShareSelectImage
-        case 2:
             item.image = PhotoSelectImage
+        case 2:
+            item.image = DeviceSelectImage
+           
+        case 3:
+            item.image = MySelectImage
         default:
             break
         }
@@ -88,9 +94,11 @@ extension WSTabBarController:MDCTabBarControllerDelegate{
                 case 0:
                     value.image = FilesNormalImage
                 case 1:
-                    value.image = ShareNormalImage
-                case 2:
                     value.image = PhotoNormalImage
+                case 2:
+                    value.image = DeviceNormalImage
+                case 3:
+                    value.image = MyNormalImage
                 default:
                     break
                 }

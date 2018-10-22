@@ -142,14 +142,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
         let deviceNavi = BaseNavigationController.init(rootViewController: devieceVC)
         let settingNavi = BaseNavigationController.init(rootViewController: settingVC)
-        filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Files"), image: UIImage.init(named: "Home")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 0)
-        photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "相簿"), image: UIImage.init(named: "photos.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 1)
-        deviceNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Share"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 2)
-        settingNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "Settings"), image: UIImage.init(named: "share.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 3)
+        filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "云盘"), image: UIImage.init(named: "tab_files_selected.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 0)
+        photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "相簿"), image: UIImage.init(named: "tab_photos.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 1)
+        deviceNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "设备"), image: UIImage.init(named: "tab_device.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 2)
+        settingNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "我的"), image: UIImage.init(named: "tab_my.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 3)
         filesNavi.tabBarItem.selectedImage = UIImage.init(named: "tab_files_selected.png")
+       
         let controllers = [filesNavi,photosNavi,deviceNavi,settingNavi]
         tabBarController.viewControllers = controllers
         tabBarController.selectedViewController = controllers[0]
+        
+        
         tabBarController.tabBar?.items = [filesNavi.tabBarItem,
                                           photosNavi.tabBarItem,
                                           deviceNavi.tabBarItem,

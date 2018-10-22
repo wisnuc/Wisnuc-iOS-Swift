@@ -347,7 +347,11 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if section == 0{
-             return CGSize(width: __kWidth, height: HeaderSectionHeight)
+            if self.state == .root{
+                return CGSize(width: __kWidth, height: HeaderSectionHeight)
+            }else{
+                return CGSize(width: __kWidth, height: CellSmallHeight)
+            }
         }else{
              return CGSize(width: __kWidth, height: CellSmallHeight)
            
@@ -361,6 +365,21 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return CGSize(width: __kWidth, height: 0)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        if (elementKind == UICollectionElementKindSectionHeader) {
+            let reusableHeaderView:CommonCollectionReusableView = (view as? CommonCollectionReusableView)!
+            if indexPath.section == 0 {
+                if self.state != .root{
+                    reusableHeaderView.state = .normal
+                }else{
+                    reusableHeaderView.state = .convenientHeader
+                }
+            }else{
+                reusableHeaderView.state = .normal
+            }
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -392,9 +411,10 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 if model?.type == FilesType.file.rawValue {
                     titleText = LocalizedString(forKey: "Files")
                 }
+                
                 reusableHeaderView.titleLabel.text = titleText
-                reusableHeaderView.titleLabel.center = CGPoint(x: reusableHeaderView.titleLabel.center.x, y: (HeaderSectionHeight - CellSmallHeight) + CellSmallHeight/2)
-                 reusableHeaderView.rightButton.center = CGPoint(x: reusableHeaderView.rightButton.center.x, y: reusableHeaderView.titleLabel.center.y)
+              
+                
                 var imageName = "files_down.png"
                 var buttonTitleText = "NAME"
                 switch sortType?.rawValue {
@@ -422,7 +442,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 reusableHeaderView.titleLabel.text = LocalizedString(forKey: "Files")
                 reusableHeaderView.rightButton.isHidden = true
                 reusableHeaderView.convenientEntranceView.isHidden = true
-                reusableHeaderView.titleLabel.center = CGPoint(x: reusableHeaderView.titleLabel.center.x, y: CellSmallHeight/2)
             }
                 reusableHeaderView.rightButton.addTarget(self, action: #selector(sequenceButtonTap(_ :)), for: UIControlEvents.touchUpInside)
         }else
@@ -506,17 +525,51 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     }
 }
 
+enum CommonCollectionReusableViewState {
+    case convenientHeader
+    case normal
+}
+
 class CommonCollectionReusableView: UICollectionReusableView {
     var shareBoxCallback:(()->())?
     var backupBoxCallback:(()->())?
     var usbDeviceCallback:(()->())?
     var transferTaskCallback:(()->())?
+    var state:CommonCollectionReusableViewState?{
+        didSet{
+            switch state {
+            case .convenientHeader?:
+                convenientHeaderStateAction()
+            case .normal?:
+                normalStateAction()
+            default: break
+                
+            }
+        }
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         convenientEntranceView.viewDelegate = self
-        self.addSubview(convenientEntranceView)
+    
         self.addSubview(titleLabel)
         self.addSubview(rightButton)
+    }
+    
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+       
+    }
+    
+    func convenientHeaderStateAction(){
+        self.addSubview(convenientEntranceView)
+        self.titleLabel.center = CGPoint(x: self.titleLabel.center.x, y: (HeaderSectionHeight - CellSmallHeight) + CellSmallHeight/2)
+        self.rightButton.center = CGPoint(x: self.rightButton.center.x, y: self.titleLabel.center.y)
+    }
+    
+    func normalStateAction(){
+        convenientEntranceView.removeFromSuperview()
+        self.titleLabel.center = CGPoint(x: self.titleLabel.center.x, y: CellSmallHeight/2)
     }
     
     lazy var titleLabel: UILabel = {

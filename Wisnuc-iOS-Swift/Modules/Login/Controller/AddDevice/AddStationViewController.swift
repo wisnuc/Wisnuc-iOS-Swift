@@ -351,6 +351,7 @@ class AddStationViewController: BaseViewController {
             self.deviceBrowserScrollView.addSubview(label)
         }
         let model = deviceArray?.first
+        
         let titleString = nextButtonString(state: DeviceForSearchState(rawValue: (model?.type)!)!)
         nextStepForSearchEndButton.setTitle(titleString, for: UIControlState.normal)
       

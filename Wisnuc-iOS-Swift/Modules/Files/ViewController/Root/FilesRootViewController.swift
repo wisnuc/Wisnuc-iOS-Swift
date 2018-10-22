@@ -839,7 +839,8 @@ class FilesRootViewController: BaseViewController{
     }()
     
     lazy var searchBar: BaseSearchBar = {
-        let searchBar = BaseSearchBar.init(frame: CGRect(x: MarginsCloseWidth, y: 20 + MarginsCloseWidth, width: __kWidth - MarginsWidth, height: searchBarHeight))
+//        let statusBarHeight:CGFloat = isX ? 44 : 20
+        let searchBar = BaseSearchBar.init(frame: CGRect(x: MarginsCloseWidth, y: kStatusBarHeight + MarginsCloseWidth, width: __kWidth - MarginsWidth, height: searchBarHeight))
         searchBar.delegate = self
         return searchBar
     }()

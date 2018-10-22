@@ -21,14 +21,15 @@ class DeviceBackupRootViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.headerViewController.headerView.trackingScrollView = self.backupTableView
-//        appBar.appBarViewController.inferTopSafeAreaInsetFromViewController = true
-//        appBar.appBarViewController.headerView.minMaxHeightIncludesSafeArea = false
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
-//        appBar.headerViewController.headerView.changeContentInsets { [weak self] in
-//            self?.appBar.headerViewController.headerView.trackingScrollView?.contentInset = UIEdgeInsets(top: (self?.appBar.headerViewController.headerView.trackingScrollView?.contentInset.top)! + kScrollViewTopMargin, left: 0, bottom: 0, right: 0)
-//        }
-        
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.backupTableView, viewController: self)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
+        //        appBar.appBarViewController.inferTopSafeAreaInsetFromViewController = true
+        //        appBar.appBarViewController.headerView.minMaxHeightIncludesSafeArea = false
+        //        appBar.headerViewController.headerView.changeContentInsets { [weak self] in
+        //            self?.appBar.headerViewController.headerView.trackingScrollView?.contentInset = UIEdgeInsets(top: (self?.appBar.headerViewController.headerView.trackingScrollView?.contentInset.top)! + kScrollViewTopMargin, left: 0, bottom: 0, right: 0)
+        //        }
     }
     
     lazy var backupTableView: UITableView = {

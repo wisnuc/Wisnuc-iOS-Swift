@@ -18,7 +18,7 @@ enum HeaderExtensionType {
 
 @objc protocol NewAlbumViewControllerDelegate {
     func creatNewAlbumFinish(data:Dictionary<String,Any>)
-    func updateNewAlbumFinish(data:Dictionary<String,Any>)
+//    func updateNewAlbumFinish(data:Dictionary<String,Any>)
 }
 
 class NewAlbumViewController: BaseViewController {
@@ -91,11 +91,11 @@ class NewAlbumViewController: BaseViewController {
        
       
         
-        if  self.dataDic == nil {
+//        if  self.dataDic == nil {
             self.delegate?.creatNewAlbumFinish(data: dic)
-        }else{
-            self.delegate?.updateNewAlbumFinish(data: dic)
-        }
+//        }else{
+//            self.delegate?.updateNewAlbumFinish(data: dic)
+//        }
         
         self.dataDic = dic
     }
@@ -372,7 +372,7 @@ extension NewAlbumViewController :PhotoRootViewControllerDelegate{
             self?.dataSource.append(contentsOf: assets)
            
             self?.dataDic!["photoData"] = self?.dataSource
-            self?.delegate?.updateNewAlbumFinish(data: (self?.dataDic)!)
+//            self?.delegate?.updateNewAlbumFinish(data: (self?.dataDic)!)
            var arrayWithIndexPaths = [IndexPath]()
           
             for i in resultsSize!..<resultsSize! + assets.count {

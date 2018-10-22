@@ -232,22 +232,22 @@ extension PhotoAlbumViewController:PhotoRootViewControllerDelegate{
 }
 
 extension PhotoAlbumViewController:NewAlbumViewControllerDelegate{
-    func updateNewAlbumFinish(data: Dictionary<String, Any>) {
-        var array = self.dataSource?[1]
-        let albumModel = PhotoAlbumModel.init()
-        albumModel.type = PhotoAlbumType.my
-        albumModel.name = data["name"] as? String
-        albumModel.describe = data["describe"] as? String
-        albumModel.dataSource = data["photoData"] as? [WSAsset]
-        if (array?.count)! == 0{
-            array?.append(albumModel)
-        }else{
-            array?[self.index] = albumModel
-        }
-      
-        self.dataSource?[1] = array!
-        self.albumCollectionView.reloadData()
-    }
+//    func updateNewAlbumFinish(data: Dictionary<String, Any>) {
+//        var array = self.dataSource?[1]
+//        let albumModel = PhotoAlbumModel.init()
+//        albumModel.type = PhotoAlbumType.my
+//        albumModel.name = data["name"] as? String
+//        albumModel.describe = data["describe"] as? String
+//        albumModel.dataSource = data["photoData"] as? [WSAsset]
+//        if (array?.count)! == 0{
+//            array?.append(albumModel)
+//        }else{
+//            array?[self.index] = albumModel
+//        }
+//      
+//        self.dataSource?[1] = array!
+//        self.albumCollectionView.reloadData()
+//    }
     
     func creatNewAlbumFinish(data: Dictionary<String, Any>) {
         var array = self.dataSource?[1]

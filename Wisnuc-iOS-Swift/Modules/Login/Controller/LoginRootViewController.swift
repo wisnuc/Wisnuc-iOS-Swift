@@ -222,6 +222,8 @@
                 ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 ActivityIndicator.stopActivityIndicatorAnimation()
+//                let errorString = String.init(data: d, encoding: <#T##String.Encoding#>)
+//                String
             }
         }
     }
@@ -506,14 +508,18 @@
     }
     
     func checkWechat() {
-        if (WXApi.isWXAppInstalled()) {
-            let req = SendAuthReq.init()
-            req.scope = "snsapi_userinfo"
-            req.state = "App"
-            WXApi.send(req)
-        }else{
-            Message.message(text: "请先安装微信")
+        DispatchQueue.main.async {
+            self.oldWechatLogin(code: "061POMKL00dda52jb1JL01fKKL0POMKq")
         }
+       
+//        if (WXApi.isWXAppInstalled()) {
+//            let req = SendAuthReq.init()
+//            req.scope = "snsapi_userinfo"
+//            req.state = "App"
+//            WXApi.send(req)
+//        }else{
+//            Message.message(text: "请先安装微信")
+//        }
         
         //       ActivityIndicator.startActivityIndicatorAnimation()
         //        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 4.0) {

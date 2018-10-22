@@ -22,6 +22,8 @@ class DeviceAdvancedSettingViewController: BaseViewController {
         appBar.headerViewController.headerView.trackingScrollView = self.advancedSettingTableView
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.advancedSettingTableView, viewController: self)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
     }
 
     lazy var advancedSettingTableView: UITableView = {

@@ -25,6 +25,8 @@ class DevicePeripheralDeviceViewController: BaseViewController {
         appBar.headerViewController.headerView.trackingScrollView = self.peripheralTableView
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.peripheralTableView, viewController: self)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
     }
     
     @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){

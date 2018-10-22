@@ -16,6 +16,7 @@ let infoDictionary = Bundle.main.infoDictionary
 let kCurrentAppVersion = infoDictionary!["CFBundleShortVersionString"] as! String
 let kCurrentSystemVersion = (UIDevice.current.systemVersion as NSString).doubleValue
 let kWindow = UIApplication.shared.keyWindow
+var kStatusBarHeight = UIApplication.shared.statusBarFrame.size.height
 
 public func LocalizedString(forKey key:String) -> String {
   return Bundle.main.localizedString(forKey: key, value:"", table: nil)

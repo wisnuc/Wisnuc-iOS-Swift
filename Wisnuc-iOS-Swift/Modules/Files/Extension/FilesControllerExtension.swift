@@ -163,6 +163,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //        print(scrollView.contentOffset.y)
+    
         if isSelectModel == nil || !isSelectModel!{
             //            if scrollView.contentOffset.y > -(SearchBarBottom + MarginsCloseWidth/2) {
             //            }else{
@@ -170,7 +171,8 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
             let translatedPoint = scrollView.panGestureRecognizer.translation(in: scrollView)
             if translatedPoint.y < 0 {
                 //                if searchBar.bottom > 0{
-                self.searchBar.origin.y = -(scrollView.contentOffset.y)-(SearchBarBottom + MarginsCloseWidth/2)+20
+                
+                self.searchBar.origin.y = -(scrollView.contentOffset.y)-(SearchBarBottom + MarginsCloseWidth/2)+kStatusBarHeight
                 //            }else{
                 //                self.searchBar.origin.y = -(scrollView.contentOffset.y)
                 //            }
@@ -179,7 +181,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
             if(translatedPoint.y > 0){
                 //                print("mimimi")
                 UIView.animate(withDuration: 0.3) {
-                    self.searchBar.origin.y = 20 + MarginsCloseWidth
+                    self.searchBar.origin.y = kStatusBarHeight + MarginsCloseWidth
                 }
             }
         }

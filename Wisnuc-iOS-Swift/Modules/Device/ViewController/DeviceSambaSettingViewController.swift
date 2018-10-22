@@ -148,7 +148,7 @@ extension DeviceSambaSettingViewController{
   
     override func flexibleHeaderViewFrameDidChange(_ headerView: MDCFlexibleHeaderView) {
 //        //       print(headerView.bottom)
-        let viewOriginY:CGFloat = self.barMaximumHeight - 14 - 20 - 32 - 20 - MarginsWidth
+        let viewOriginY:CGFloat = self.barMaximumHeight - 14 - kStatusBarHeight - 32 - 20 - MarginsWidth
         let viewOriginX:CGFloat = MarginsWidth
         //        print(headerView.bottom - headerView.maximumHeight)
         if headerView.maximumHeight > headerView.bottom{
