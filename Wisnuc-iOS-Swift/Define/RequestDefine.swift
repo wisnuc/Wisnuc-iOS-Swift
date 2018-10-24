@@ -10,9 +10,10 @@ import Foundation
 public let KWxAppID = "wx99b54eb728323fe8"
 public let kCloudAddr = "http://www.siyouqun.com"
 public let kCloudBaseURL = "http://www.siyouqun.com/c/v1"
+
 //#define kCloudAddr    @"http://10.10.9.87:4000/"
 //#define WX_BASE_URL   @"http://10.10.9.87:4000/c/v1/"
-public let kDevelopAddr = "http://10.10.9.228:4000/client/v1"
+public let kDevelopAddr = "http://10.10.9.65:4000/c/v1"
 
 public let kCloudCommonJsonUrl = "/stations/\(String(describing: AppUserService.currentUser?.stationId ?? ""))/json"
 public let kCloudCommonPipeUrl = "/stations/\(String(describing: AppUserService.currentUser?.stationId ?? ""))/pipe"
@@ -56,3 +57,5 @@ public let kRequestContentTypeJsonValue = "application/json"
 public let kHTTPTCPSearchBrowerType = "_http._tcp"
 
 public let kRequestWechatKey = "wechat"
+
+public let kRequestResponseMessageKey = "message"

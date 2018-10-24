@@ -72,6 +72,11 @@ class PhotoCollectionViewController: UICollectionViewController {
       initGuestrue()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    
     func dataSourceHasValue(){
         
         if  let array = self.timeViewArray{
@@ -136,6 +141,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                         timelineView.backgroundColor = .white
                         timelineView.alpha = 0.87
                         timelineView.layer.cornerRadius = 24/2
+                        timelineView.isHidden = true
                         if i == 0 || value == yearArray.last{
                             self.view.addSubview(timelineView)
                             self.timeViewArray?.append(timelineView)
@@ -161,7 +167,6 @@ class PhotoCollectionViewController: UICollectionViewController {
             var array:Array<WSAsset>  = Array.init()
             array.append(contentsOf: assetsArray)
             array.sort { $0.createDate! > $1.createDate! }
-            sortedAssetsBackupArray = array
             let timeArray:NSMutableArray = NSMutableArray.init()
             let photoGroupArray:NSMutableArray = NSMutableArray.init()
             if array.count>0 {
@@ -405,7 +410,8 @@ class PhotoCollectionViewController: UICollectionViewController {
         vc.selectIndex = index
         let cell:PhotoCollectionViewCell = self.collectionView?.cellForItem(at: (self.collectionView?.indexPathsForSelectedItems?.first)!) as! PhotoCollectionViewCell
         vc.senderViewForAnimation = cell
-        vc.scaleImage = cell.imageView?.layer.contents as? UIImage
+       
+        vc.scaleImage = cell.image
         //    weakify(self);
         //    [vc setBtnBackBlock:^(NSArray<JYAsset *> *selectedModels, BOOL isOriginal) {
         //        strongify(weakSelf);
@@ -444,6 +450,24 @@ class PhotoCollectionViewController: UICollectionViewController {
                 }
             }
         }
+    }
+    
+    func displayTimeViews(){
+        if let timeViewArray = self.timeViewArray{
+            for timeView in timeViewArray {
+                timeView.isHidden = false
+            }
+        }
+       
+    }
+    
+    func hiddenTimeViews(){
+        if let timeViewArray = self.timeViewArray{
+            for timeView in timeViewArray {
+                timeView.isHidden = true
+            }
+        }
+        
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -611,6 +635,7 @@ class PhotoCollectionViewController: UICollectionViewController {
             cell.btnSelectClick(nil)
         }else{
             let model = self.dataSource![indexPath.section][indexPath.row]
+            model.indexPath = IndexPath(row: indexPath.row, section: indexPath.section)
             let vc = self.getMatchVC(model: model)
             if vc != nil {
                 self.present(vc!, animated: true) {
@@ -673,7 +698,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-       self.hiddenIndicator()
+        self.hiddenIndicator()
     }
 
     lazy var choosePhotos:Array<WSAsset> = {

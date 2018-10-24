@@ -493,12 +493,12 @@ class FilesRootViewController: BaseViewController{
         self.navigationDrawerController?.isLeftPanGestureEnabled = true
         navigationController?.delegate = self
 //        if (self.navigationDrawerController?.rootViewController) != nil {
-        if let controller = UIViewController.currentViewController(){
-            if  controller.isKind(of: FilesRootCollectionViewController.self) || controller.isKind(of: FilesRootViewController.self) {
+//        if let controller = UIViewController.currentViewController(){
+//            if  controller.isKind(of: FilesRootCollectionViewController.self) || controller.isKind(of: FilesRootViewController.self) {
                 let tab = retrieveTabbarController()
                 tab?.setTabBarHidden(false, animated: true)
-            }
-        }
+//            }
+//        }
         
 //            let drawerController:FilesDrawerTableViewController = self.navigationDrawerController?.leftViewController as! FilesDrawerTableViewController
 //            drawerController.delegate = self
@@ -672,8 +672,9 @@ class FilesRootViewController: BaseViewController{
              listStyleButton.isSelected = false
         }
         let view = IconButton.init(image: Icon.search?.byTintColor(LightGrayColor))
+        view.addTarget(self, action: #selector(enterSearch), for: UIControlEvents.touchUpInside)
         searchBar.leftViews = [view]
-        searchBar.rightViews = [newCreatButton,moreButton,listStyleButton]
+        searchBar.rightViews = [newCreatButton,listStyleButton,moreButton]
         searchBar.textField.delegate = self
     }
     

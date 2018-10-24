@@ -25,6 +25,7 @@ enum  WSShowBigimgViewControllerState{
 }
 
 class WSShowBigimgViewController: UIViewController {
+    
     weak var delegate:WSShowBigImgViewControllerDelegate?
     var indexBeforeRotation:Int = 0
     var selectIndex:Int = 0
@@ -36,6 +37,8 @@ class WSShowBigimgViewController: UIViewController {
     var isFirstAppear:Bool = true
     var currentModelForRecord:WSAsset?
     var disposeBag = DisposeBag()
+    var appearResizableImageView:UIImageView?
+    var mapView:MKMapView?
     var state:WSShowBigimgViewControllerState?{
         didSet{
             switch state {
@@ -224,8 +227,9 @@ class WSShowBigimgViewController: UIViewController {
             if view is UIImageView {
                 return (view as! UIImageView).image
             }
+            view.contentMode = .scaleAspectFill
             UIGraphicsBeginImageContextWithOptions(view.bounds.size, true, 2);
-        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+            view.layer.render(in: UIGraphicsGetCurrentContext()!)
             let image = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
             return image
@@ -314,10 +318,15 @@ class WSShowBigimgViewController: UIViewController {
     func performPresentAnimation(){
         self.view.alpha = 0
         collectionView.alpha = 0
+        let cell = senderViewForAnimation as! PhotoCollectionViewCell
+      
+//        let cgImage = cell.imageView.layer.contents
         
+//        let image =
         let imageFromView = scaleImage != nil ? scaleImage : self.getImageFromView(view: senderViewForAnimation!)
+    
         
-        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)!, to: nil)
+        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)!, to: self.view)
         
         let fadeView = UIView.init(frame: self.view.bounds)
         fadeView.backgroundColor = UIColor.clear
@@ -326,8 +335,11 @@ class WSShowBigimgViewController: UIViewController {
         let resizableImageView = UIImageView.init(image: imageFromView)
         resizableImageView.frame = senderViewOriginalFrame!
         resizableImageView.clipsToBounds = true
-        resizableImageView.contentMode = senderViewForAnimation != nil ? (senderViewForAnimation?.contentMode)! : UIViewContentMode.scaleAspectFill
+        resizableImageView.contentMode =  UIViewContentMode.scaleAspectFill
         resizableImageView.backgroundColor = UIColor.clear
+        if (cell.model is NetAsset){
+            appearResizableImageView = resizableImageView
+        }
         mainWindow?.addSubview(resizableImageView)
         //
         //    //jy
@@ -338,8 +350,9 @@ class WSShowBigimgViewController: UIViewController {
             self.collectionView.alpha = 1.0
             resizableImageView.backgroundColor = UIColor.init(white: 1, alpha: 1)
             fadeView.removeFromSuperview()
-            resizableImageView.removeFromSuperview()
-
+            if !(cell.model is NetAsset){
+               resizableImageView.removeFromSuperview()
+            }
         }
         // FIXME: net video animation error!
         if self.getCurrentPageModel()?.type == .Video{
@@ -363,7 +376,8 @@ class WSShowBigimgViewController: UIViewController {
     }
   
     func performDismissAnimation(){
-        
+        appearResizableImageView?.removeFromSuperview()
+   
         let fadeAlpha = 1 - fabs(collectionView.top)/collectionView.frame.size.height
         
         //    JYBigImgCell * cell = _collectionView.visibleCells[0];
@@ -374,18 +388,24 @@ class WSShowBigimgViewController: UIViewController {
             return
         }
         let mainWindow = UIApplication.shared.keyWindow
-        
-        let rect = cell?.previewView.convert((cell?.previewView.imageViewFrame())!, to: self.view)
-        
-        if let delegateOK = self.delegate{
-            senderViewForAnimation =  delegateOK.photoBrowser(browser: self, willDismiss: (cell?.model?.indexPath!)!)
+        var frame = cell?.previewView.imageViewFrame() ?? CGRect.zero
+        if cell?.previewView.imageViewFrame() == CGRect.zero{
+            if appearResizableImageView != nil {
+                frame = (appearResizableImageView?.frame)!
+            }
         }
+        let rect = cell?.previewView.convert(frame, to: self.view)
+//        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)!, to: self.view)
         
+//        if let delegateOK = self.delegate{
+//            senderViewForAnimation =  delegateOK.photoBrowser(browser: self, willDismiss: (cell?.model?.indexPath!)!)
+//        }
+//
         if senderViewForAnimation == nil {
             return
         }
 
-        let image = self.getImageFromView(view: senderViewForAnimation!)
+        let image = (senderViewForAnimation as! PhotoCollectionViewCell).image ?? self.getImageFromView(view: senderViewForAnimation!)
         
         
         let fadeView = UIView.init(frame: (mainWindow?.bounds)!)
@@ -393,11 +413,13 @@ class WSShowBigimgViewController: UIViewController {
         fadeView.alpha = fadeAlpha
         mainWindow?.addSubview(fadeView)
         
+        appearResizableImageView = nil
+        
         let resizableImageView = UIImageView.init(image: image)
         resizableImageView.frame = rect!
-        resizableImageView.contentMode = senderViewForAnimation != nil ? (senderViewForAnimation?.contentMode)! : UIViewContentMode.scaleAspectFill
+        resizableImageView.contentMode =  UIViewContentMode.scaleAspectFill
         resizableImageView.backgroundColor = UIColor.clear
-        resizableImageView.layer.masksToBounds = true
+        resizableImageView.clipsToBounds = true
         mainWindow?.addSubview(resizableImageView)
         self.view.isHidden = true
         
@@ -416,8 +438,8 @@ class WSShowBigimgViewController: UIViewController {
             self?.dismiss(animated: false, completion: nil)
         }
         
-        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: self.view)
-        UIView.animate(withDuration: 0.4, animations: {
+        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: nil)
+        UIView.animate(withDuration: 0.3, animations: {
             resizableImageView.frame = senderViewOriginalFrame!
             fadeView.alpha = 0
             self.view.backgroundColor = UIColor.clear
@@ -614,7 +636,10 @@ class WSShowBigimgViewController: UIViewController {
         self.setNeedsStatusBarAppearanceUpdate()
         let newTranslatedPoint = CGPoint(x: firstX+translatedPoint.x, y: firstY+translatedPoint.y)
         if gesture.state == UIGestureRecognizerState.changed {
-        scrollView.center = newTranslatedPoint
+            scrollView.center = newTranslatedPoint
+            if appearResizableImageView != nil{
+                appearResizableImageView!.center = newTranslatedPoint
+            }
         }
         
         let newY = scrollView.center.y - viewHalfHeight
@@ -823,8 +848,6 @@ class WSShowBigimgViewController: UIViewController {
 
 
     lazy var describeTextField = UITextField.init()
-    
-    lazy var mapView:MKMapView? = MKMapView.init()
  
 }
 
@@ -846,6 +869,10 @@ extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDa
         cell.showLivePhoto = true
         cell.model = model
    
+        cell.loadImageCompleteCallback = { [weak self] in
+            self?.appearResizableImageView?.removeFromSuperview()
+            self?.appearResizableImageView = nil
+        }
         cell.singleTapCallBack = { [weak self] in
             self?.handlerSingleTap()
         };
@@ -911,6 +938,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell:BigPhotoInfoTableViewCell = tableView.dequeueReusableCell(withIdentifier: infoCellReuseIdentifier, for: indexPath) as! BigPhotoInfoTableViewCell
         tableView.separatorStyle = .none
         let model = getCurrentPageModel()
@@ -964,6 +992,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                     cell.titleLabel.text = imageTIFFModel
 //                    print(imageTIFFModel)
                     }
+                    
                     if  let imageExifDictionary = exifDic[kCGImagePropertyExifDictionary] as? [AnyHashable : Any]{
                         if  let imageFNumber = imageExifDictionary[kCGImagePropertyExifFNumber] as? NSNumber{
                             let imageFNumberString = "f/\(imageFNumber.stringValue)"
@@ -1029,6 +1058,9 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                         let centerCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2DMake(imageLatitude.doubleValue, imageLongitude.doubleValue)
                         let span: MKCoordinateSpan = MKCoordinateSpanMake(0.1, 0.1)
                         let region: MKCoordinateRegion = MKCoordinateRegionMake(centerCoordinate, span)
+                        if self.mapView == nil{
+                            self.mapView = MKMapView.init()
+                        }
                         mapView?.region = region
                         mapView?.showsTraffic = true
                         let pin = MapPin.init(coordinate: centerCoordinate)
@@ -1076,11 +1108,21 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        self.mapView?.isZoomEnabled = false
-        self.mapView?.isScrollEnabled = false
-        self.mapView?.isRotateEnabled = false
-        self.mapView?.delegate = self
-       return self.mapView
+        let model = getCurrentPageModel()
+        if let exifDic = self.fetchAssetEXIFInfo(model: model){
+            if  exifDic[kCGImagePropertyGPSDictionary] != nil {
+                if self.mapView == nil{
+                    self.mapView = MKMapView.init()
+                }
+                self.mapView?.isZoomEnabled = false
+                self.mapView?.isScrollEnabled = false
+                self.mapView?.isRotateEnabled = false
+                self.mapView?.delegate = self
+            }else{
+                self.mapView = nil
+            }
+        }
+        return self.mapView
     }
     
 }

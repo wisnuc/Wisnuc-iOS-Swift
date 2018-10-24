@@ -260,6 +260,8 @@
 		1F38E28F217DBC8D003FCAEE /* tab_my_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E28E217DBC8D003FCAEE /* tab_my_selected.png */; };
 		1F38E291217DBC9D003FCAEE /* tab_my_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E290217DBC9D003FCAEE /* tab_my_selected@2x.png */; };
 		1F38E293217DBCAF003FCAEE /* tab_my_selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E292217DBCAE003FCAEE /* tab_my_selected@3x.png */; };
+		1F38E295217F01FD003FCAEE /* GetStationsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E294217F01FB003FCAEE /* GetStationsAPI.swift */; };
+		1F38E297217F0A94003FCAEE /* StationsInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E296217F0A94003FCAEE /* StationsInfoModel.swift */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -1176,6 +1178,8 @@
 		1F38E28E217DBC8D003FCAEE /* tab_my_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_my_selected.png; sourceTree = "<group>"; };
 		1F38E290217DBC9D003FCAEE /* tab_my_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_my_selected@2x.png"; sourceTree = "<group>"; };
 		1F38E292217DBCAE003FCAEE /* tab_my_selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_my_selected@3x.png"; sourceTree = "<group>"; };
+		1F38E294217F01FB003FCAEE /* GetStationsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetStationsAPI.swift; sourceTree = "<group>"; };
+		1F38E296217F0A94003FCAEE /* StationsInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsInfoModel.swift; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -2143,6 +2147,7 @@
 				1F2CE39B20B6D1B600D9E5BD /* UserModel.swift */,
 				1F2CE3A320B7F3F200D9E5BD /* CloudLoginModel.swift */,
 				1FD1F2E32151FC7900C3E429 /* SighInTokenModel.swift */,
+				1F38E296217F0A94003FCAEE /* StationsInfoModel.swift */,
 			);
 			name = Model;
 			path = Controller/Model;
@@ -2163,6 +2168,7 @@
 				1FD1F2DE2151FA7100C3E429 /* SighInTokenAPI.swift */,
 				1FD1F2E52152231F00C3E429 /* SighInWechatTokenAPI.swift */,
 				1FD1F2E72152472B00C3E429 /* SighInWechatUser.swift */,
+				1F38E294217F01FB003FCAEE /* GetStationsAPI.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -4713,6 +4719,7 @@
 				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
 				1FE0892C216F1E510049F44B /* MyInfoCenterViewController.swift in Sources */,
 				1F4242AF20F5CBF60085E2F0 /* JYProcessView.m in Sources */,
+				1F38E297217F0A94003FCAEE /* StationsInfoModel.swift in Sources */,
 				1FE0893A216F58A80049F44B /* MyNicknameChangeViewController.swift in Sources */,
 				1F169DD1207F528800860F31 /* MyStationView.swift in Sources */,
 				1F5882322085D72600394BD6 /* UIButttonExtension.swift in Sources */,
@@ -4754,6 +4761,7 @@
 				1FD1F2E62152231F00C3E429 /* SighInWechatTokenAPI.swift in Sources */,
 				1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */,
 				1FE08946217075FD0049F44B /* MyChangePasswordViewController.swift in Sources */,
+				1F38E295217F01FD003FCAEE /* GetStationsAPI.swift in Sources */,
 				1F1BAC4D20CA80F000D32C5A /* CollectionExtension.swift in Sources */,
 				1FC8FF8720AE887800F65194 /* searchTableViewCell.swift in Sources */,
 				1FBD1E0020B2A0170067BE3E /* NotificationExtension.swift in Sources */,

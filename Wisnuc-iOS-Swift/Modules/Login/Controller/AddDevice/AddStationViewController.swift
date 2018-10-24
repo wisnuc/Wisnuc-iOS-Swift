@@ -352,7 +352,7 @@ class AddStationViewController: BaseViewController {
         }
         let model = deviceArray?.first
         
-        let titleString = nextButtonString(state: DeviceForSearchState(rawValue: (model?.type)!)!)
+        let titleString = nextButtonString(state: DeviceForSearchState(rawValue: model?.type ?? DeviceForSearchState.applyToUse.rawValue) ?? DeviceForSearchState.applyToUse)
         nextStepForSearchEndButton.setTitle(titleString, for: UIControlState.normal)
       
         self.nextStepForSearchEndButton.tag = currentIndex

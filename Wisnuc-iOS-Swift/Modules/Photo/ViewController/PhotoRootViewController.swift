@@ -105,7 +105,8 @@ class PhotoRootViewController: BaseViewController {
         super.viewWillAppear(animated)
         appBar.appBarViewController.headerView.trackingScrollView = self.photoCollcectionViewController.collectionView
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
-        
+        appBar.headerViewController.preferredStatusBarStyle = .default
+        appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewDidDisappear(_ animated: Bool) {

@@ -11,6 +11,7 @@ import MaterialComponents.MaterialCollections
 import MaterialComponents.MaterialCollectionCells
 import MaterialComponents.MDCCollectionViewController
 import MaterialComponents.MDCCollectionViewCell
+import RxSwift
 
 private let reuseIdentifier = "Cell"
 private let reuseListIdentifier = "CellLsit"
@@ -61,6 +62,12 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     var sortType:SortType?
     var sortIsDown:Bool?
     var state:RootControllerState?
+    var showIndicator:Bool = true
+    private let keyPath:String = "sliderState"
+    var dispose = DisposeBag()
+    var isAnimation = false
+    var isDecelerating = false
+    
     var dataSource:Array<Any>?{
         didSet{
            self.collectionView?.reloadData()
@@ -191,7 +198,89 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         FilesHelper.sharedInstance().removeAllSelectFiles()
         self.collectionView?.reloadData()
     }
+
+    func indictorObserve(){
+        isDecelerating = true
+        if self.showIndicator {
+            if self.collectionView?.indicator == nil {
+                //导航按钮
+                self.collectionView?.registerILSIndicator()
+                if self.collectionView?.indicator == nil{
+                    return
+                }
+                //
+                self.collectionView?.indicator.slider.timeLabel.isHidden = true
+                self.collectionView?.indicator.slider.rx.observe(String.self, keyPath)
+                    .subscribe(onNext: { [weak self] (newValue) in
+                        if (self?.showIndicator)! {
+                            if (self?.collectionView?.indicator.slider.sliderState == UIControlState.normal && (self?.collectionView?.indicator.transform)!.isIdentity) {
+                                self?.isDecelerating = false
+                                DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.5) {
+                                    if let isDecelerating = self?.isDecelerating{
+                                        if isDecelerating {
+                                            self?.isAnimation = false
+                                            DispatchQueue.main.async {
+                                                UIView.animate(withDuration: 0.5, animations: {
+                                                    self?.collectionView?.indicator.transform = CGAffineTransform(translationX: 40, y: 0)
+                                                }, completion: { (finished) in
+                                                    self?.isAnimation = false
+                                                    self?.isDecelerating = false
+                                                })
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{
+                                self?.isDecelerating = true
+                            }
+                        }
+                    })
+                    .disposed(by: dispose)
+            }else {
+                if (!isAnimation) {
+                    self.collectionView?.indicator.transform = CGAffineTransform.identity
+                }else{
+                    DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 0.3) {
+                        DispatchQueue.main.async {
+                            self.collectionView?.indicator.transform = CGAffineTransform.identity
+                        }
+                    }
+                }
+            }
+        }
+    }
     
+    func hiddenIndicator(){
+        if self.showIndicator {
+            if self.collectionView?.indicator == nil {
+                //导航按钮
+                self.collectionView?.registerILSIndicator()
+                if self.collectionView?.indicator == nil{
+                    return
+                }
+            }
+            if (self.collectionView?.indicator.slider.sliderState == UIControlState.normal)  {
+                if let isIdentity = self.collectionView?.indicator.transform.isIdentity{
+                    if isIdentity{
+                        isDecelerating = false
+                        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1) {
+                            if !self.isDecelerating{
+                                self.isAnimation = false
+                                DispatchQueue.main.async {
+                                    UIView.animate(withDuration: 0.5, animations: {
+                                        self.collectionView?.indicator.transform = CGAffineTransform(translationX: 40, y: 0)
+                                    }, completion: { (finished) in
+                                        self.isAnimation = false
+                                        self.isDecelerating = false
+                                    })
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // MARK: UICollectionViewDataSource
 
@@ -439,7 +528,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 reusableHeaderView.rightButton.isHidden = false
                 reusableHeaderView.convenientEntranceView.isHidden = false
             }else{
-                reusableHeaderView.titleLabel.text = LocalizedString(forKey: "Files")
+                reusableHeaderView.titleLabel.text = LocalizedString(forKey: "文件")
                 reusableHeaderView.rightButton.isHidden = true
                 reusableHeaderView.convenientEntranceView.isHidden = true
             }
@@ -463,12 +552,14 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         if let delegateOK = delegate {
             delegateOK.scrollViewDidScroll(scrollView)
         }
+        indictorObserve()
     }
     
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if let delegateOK = delegate {
             delegateOK.scrollViewDidEndDecelerating(scrollView)
         }
+        hiddenIndicator()
     }
     
     override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -573,7 +664,7 @@ class CommonCollectionReusableView: UICollectionReusableView {
     }
     
     lazy var titleLabel: UILabel = {
-        let label = UILabel.init(frame: CGRect.init(x: MarginsWidth, y: 0, width: __kWidth/2, height: self.height))
+        let label = UILabel.init(frame: CGRect.init(x: MarginsWidth, y: 0, width: __kWidth/2, height: CellSmallHeight))
         label.textColor = LightGrayColor
         label.font = SmallTitleFont
         return label

@@ -23,7 +23,7 @@ class DeviceUserInfoViewController: BaseViewController {
     }
     
     @objc func dismiss(_ sender:UIBarButtonItem){
-        self.presentingViewController?.dismiss(animated: true, completion: {
+        self.navigationController?.presentingViewController?.dismiss(animated: true, completion: {
             
         })
     }

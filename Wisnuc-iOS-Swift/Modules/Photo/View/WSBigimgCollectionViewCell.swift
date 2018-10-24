@@ -72,6 +72,7 @@ class WSBasePreviewView: UIView {
 
 class WSPreviewImageAndGif: WSBasePreviewView {
     private var loadOK:Bool = false
+    var loadCompleteCallback:(()->())?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -180,6 +181,9 @@ class WSPreviewImageAndGif: WSBasePreviewView {
 
         self.imageDownloadTask = AppNetworkService.getHighWebImage(hash: (asset as! NetAsset).fmhash!, callback: { [weak self] (error, img) in
             self?.indicator.stopAnimating()
+            if let completeCallback = self?.loadCompleteCallback{
+                completeCallback()
+            }
             if error != nil {
                 // TODO: Load Error Image
             } else {
@@ -191,6 +195,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                 self?.resetSubviewSize(img)
             }
             self?.imageDownloadTask = nil
+         
         })
     }
 
@@ -748,7 +753,7 @@ class WSPreviewView: UIView {
     
     func imageViewFrame() -> CGRect{
         switch self.model?.type {
-        case .Image?,.GIF?:
+        case .Image?,.GIF?,.NetImage?:
            return self.imageGifView.containerView.frame
         case .LivePhoto?:
             if !self.showLivePhoto {
@@ -844,6 +849,7 @@ class WSPreviewView: UIView {
 
 class WSBigimgCollectionViewCell: UICollectionViewCell {
     var singleTapCallBack:(()->())?
+    var loadImageCompleteCallback:(()->())?
     var showGif:Bool = false
     var showLivePhoto:Bool = false
     var willDisplaying:Bool = false
@@ -861,6 +867,12 @@ class WSBigimgCollectionViewCell: UICollectionViewCell {
         previewView.singleTapCallBack = { [weak self] in
             if let singleTapCallBack = self?.singleTapCallBack {
                 singleTapCallBack()
+            }
+        }
+        
+        previewView.imageGifView.loadCompleteCallback = { [weak self] in
+            if let loadImageCompleteCallback = self?.loadImageCompleteCallback{
+                loadImageCompleteCallback()
             }
         }
     }

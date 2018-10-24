@@ -34,6 +34,7 @@
     var userName:String?
     var disposeBag = DisposeBag()
     var cloudLoginArray:Array<CloadLoginUserRemotModel>?
+    var stationArray:Array<StationsInfoModel>?
     var loginModel:CloudLoginModel?
     var logintype:LoginState?{
         didSet{
@@ -222,13 +223,20 @@
                 ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 ActivityIndicator.stopActivityIndicatorAnimation()
-//                let errorString = String.init(data: d, encoding: <#T##String.Encoding#>)
+                let responseErrorDic = dataToNSDictionary(data: responseData.data!)
+                print(responseErrorDic as Any)
+                if let message = responseErrorDic?[kRequestResponseMessageKey] as? String{
+                    Message.message(text: message)
+                }
+            
+//                let errorString = String.init(data: responseData, encoding: <#T##String.Encoding#>)
 //                String
             }
         }
     }
     
     func wechatSighInAction(code:String){
+        ActivityIndicator.startActivityIndicatorAnimation()
         SighInWechatTokenAPI.init(code: code).startRequestDataCompletionHandler { [weak self] (responseData) in
             if responseData.error == nil{
                 do {
@@ -237,11 +245,32 @@
                     if let user = wechatSighInModel.data?.user{
                         if !user{
                             if (wechatSighInModel.data?.token != nil) && !isNilString(wechatSighInModel.data?.token) {
+                                ActivityIndicator.stopActivityIndicatorAnimation()
                                 self?.next(requestToken: wechatSighInModel.data?.token)
                             }
                         }else{
-                            #warning ("find station")
-                            Message.message(text: "下一步，搜寻设备")
+                            self?.getStations(token: wechatSighInModel.data?.token, closure: { (error, stationsArray) in
+                                if error == nil{
+                                    if let stationsArray =  stationsArray{
+                                        if stationsArray.count == 0{
+                                            Message.message(text: "无绑定设备")
+                                        }else{
+                                            self?.stationArray = stationsArray
+//                                            self?.cloudLoginArray?.sort(by: {$0.isOnline! && !$1.isOnline!})
+//
+//                                            self?.stationView.stationArray = self?.cloudLoginArray
+                                        }
+                                    }
+//
+                                }else{
+                                        Message.message(text: error?.localizedDescription ?? "请求错误")
+//                                    let responseErrorDic = dataToNSDictionary(data: responseData.data!)
+//                                    print(responseErrorDic as Any)
+//                                    if let message = responseErrorDic?[kRequestResponseMessageKey] as? String{
+//                                        Message.message(text: message)
+//                                    }
+                                }
+                            })
                         }
                     }
                     
@@ -256,6 +285,36 @@
         }
     }
     
+    func getStations(token:String?,closure: @escaping (Error?,[StationsInfoModel]?) -> Void){
+//        if token == nil{
+//            return
+//        }
+        let requset = GetStationsAPI.init(token: token ?? "")
+        requset.startRequestJSONCompletionHandler({ (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if response.error == nil{
+                if response.result.value != nil {
+                    let rootDic = response.result.value as! NSDictionary
+                    //                    print(rootDic)
+                    let code = rootDic["code"] as! NSNumber
+                    let message = rootDic["message"] as! NSString
+                    if code.intValue != 1 && code.intValue > 200 {
+                        return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil)
+                    }
+                    if let dataDic = rootDic["data"] as? NSDictionary{
+
+                        if let ownStations = dataDic["ownStations"] as? [StationsInfoModel]{
+                            return closure(nil,ownStations)
+                        }
+                    }
+                }
+            }else{
+                 return closure(response.error,nil)
+            }
+        })
+
+    }
+//
     func weChatCallBackRespCode(code:String){
             oldWechatLogin(code:code)
 //        wechatSighInAction(code:code)
@@ -508,18 +567,18 @@
     }
     
     func checkWechat() {
-        DispatchQueue.main.async {
-            self.oldWechatLogin(code: "061POMKL00dda52jb1JL01fKKL0POMKq")
-        }
-       
-//        if (WXApi.isWXAppInstalled()) {
-//            let req = SendAuthReq.init()
-//            req.scope = "snsapi_userinfo"
-//            req.state = "App"
-//            WXApi.send(req)
-//        }else{
-//            Message.message(text: "请先安装微信")
+//        DispatchQueue.main.async {
+//            self.oldWechatLogin(code: "061POMKL00dda52jb1JL01fKKL0POMKq")
 //        }
+       
+        if (WXApi.isWXAppInstalled()) {
+            let req = SendAuthReq.init()
+            req.scope = "snsapi_userinfo"
+            req.state = "App"
+            WXApi.send(req)
+        }else{
+            Message.message(text: "请先安装微信")
+        }
         
         //       ActivityIndicator.startActivityIndicatorAnimation()
         //        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 4.0) {

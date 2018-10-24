@@ -90,8 +90,8 @@ class PhotoCollectionViewCell: UICollectionViewCell {
 
             if model?.asset != nil{
                 //                DispatchQueue.global(qos: .default).async {
-                self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: PHImageContentMode.aspectFill, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
-            
+                self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: PHImageContentMode.default, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
+//            .aspectFill
                    if let downloadFinined = (info![PHImageResultIsDegradedKey] as? Bool){
                     if !downloadFinined {
                         //                            DispatchQueue.main.async {
@@ -99,6 +99,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                             self?.imageView?.layer.contents = nil
                         }
                         self?.imageView?.layer.contents = image?.cgImage
+                        self?.image = image
                     }
                 }
                     //                        }
@@ -109,6 +110,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                     if error == nil {
                         self?.model?.image = image
                         self?.imageView?.layer.contents = image?.cgImage
+                        self?.image = image
                     }
                 }
             }
