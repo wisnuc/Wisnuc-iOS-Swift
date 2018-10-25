@@ -25,7 +25,6 @@ class NetAsset: WSAsset,HandyJSON {
         self.type = WSAssetType.NetImage
     }
     
-    
     func mapping(mapper: HelpingMapper) {
         mapper <<<
             self.fmhash <-- "hash"

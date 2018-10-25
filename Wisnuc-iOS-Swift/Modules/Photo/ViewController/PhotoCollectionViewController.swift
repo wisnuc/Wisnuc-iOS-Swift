@@ -88,8 +88,12 @@ class PhotoCollectionViewController: UICollectionViewController {
             }
         }
         timeViewArray = Array.init()
+        if sortedAssetsBackupArray == nil {
+            return
+        }
+        let copyArray = NSArray.init(array: sortedAssetsBackupArray!, copyItems: true)
         
-        if let allAssetArray = sortedAssetsBackupArray{
+        if let allAssetArray = copyArray as? Array<WSAsset>{
            let yearArray = sort(allAssetArray)
 //            dataSource?.filter({$0.first?.createDate }})
 
@@ -393,10 +397,13 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     
     func getMatchVC(model:WSAsset) -> UIViewController?{
+//        let arrayFlatMap = dataSource.flatMap { $0 }
+//        let numbers = [[1,2,3],[4],[5,6,7,8,9]]
+//        let arr = dataSource?.reduce([], +)
         let arr = self.sortedAssetsBackupArray
         let index = arr?.index(of: model)
         if index != nil {
-             return self.getBigImageVC(data: arr!, index:index!)
+            return self.getBigImageVC(data: arr!, index:index!)
         }else{
             return nil
         }

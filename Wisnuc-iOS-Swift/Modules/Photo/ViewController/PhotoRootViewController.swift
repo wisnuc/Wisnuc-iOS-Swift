@@ -293,6 +293,7 @@ class PhotoRootViewController: BaseViewController {
                     }
                 }
             }
+            
             self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
             self.photoCollcectionViewController.dataSource = self.assetDataSources
             self.photoCollcectionViewController.sortedAssetsBackupArray = self.sortedAssetsBackupArray

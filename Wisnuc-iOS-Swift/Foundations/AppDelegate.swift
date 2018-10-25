@@ -137,7 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         photosVC.title = LocalizedString(forKey: "相簿")
         let devieceVC = DeviceViewController.init(style: NavigationStyle.whiteWithoutShadow)
         devieceVC.title = LocalizedString(forKey: "设备")
-        let settingVC = SettingRootViewController.init(style: NavigationStyle.white)
+        let settingVC = SettingRootViewController.init(style: NavigationStyle.whiteWithoutShadow)
         let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
         let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
         let deviceNavi = BaseNavigationController.init(rootViewController: devieceVC)

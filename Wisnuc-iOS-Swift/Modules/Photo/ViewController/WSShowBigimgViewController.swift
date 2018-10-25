@@ -83,6 +83,7 @@ class WSShowBigimgViewController: UIViewController {
         self.view.addSubview(self.infoTableView)
         self.view.addSubview(self.shareView)
         shareView.delegate = self
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -318,7 +319,7 @@ class WSShowBigimgViewController: UIViewController {
     func performPresentAnimation(){
         self.view.alpha = 0
         collectionView.alpha = 0
-        let cell = senderViewForAnimation as! PhotoCollectionViewCell
+//        let cell = senderViewForAnimation as! PhotoCollectionViewCell
       
 //        let cgImage = cell.imageView.layer.contents
         
@@ -337,9 +338,9 @@ class WSShowBigimgViewController: UIViewController {
         resizableImageView.clipsToBounds = true
         resizableImageView.contentMode =  UIViewContentMode.scaleAspectFill
         resizableImageView.backgroundColor = UIColor.clear
-        if (cell.model is NetAsset){
-            appearResizableImageView = resizableImageView
-        }
+//        if (cell.model is NetAsset){
+//            appearResizableImageView = resizableImageView
+//        }
         mainWindow?.addSubview(resizableImageView)
         //
         //    //jy
@@ -350,9 +351,9 @@ class WSShowBigimgViewController: UIViewController {
             self.collectionView.alpha = 1.0
             resizableImageView.backgroundColor = UIColor.init(white: 1, alpha: 1)
             fadeView.removeFromSuperview()
-            if !(cell.model is NetAsset){
+//            if !(cell.model is NetAsset){
                resizableImageView.removeFromSuperview()
-            }
+//            }
         }
         // FIXME: net video animation error!
         if self.getCurrentPageModel()?.type == .Video{
@@ -390,17 +391,18 @@ class WSShowBigimgViewController: UIViewController {
         let mainWindow = UIApplication.shared.keyWindow
         var frame = cell?.previewView.imageViewFrame() ?? CGRect.zero
         if cell?.previewView.imageViewFrame() == CGRect.zero{
-            if appearResizableImageView != nil {
-                frame = (appearResizableImageView?.frame)!
-            }
+//            if appearResizableImageView != nil {
+                frame = CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight)
+//            }
         }
         let rect = cell?.previewView.convert(frame, to: self.view)
-//        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)!, to: self.view)
+      
         
-//        if let delegateOK = self.delegate{
-//            senderViewForAnimation =  delegateOK.photoBrowser(browser: self, willDismiss: (cell?.model?.indexPath!)!)
-//        }
-//
+        if let delegateOK = self.delegate{
+            senderViewForAnimation =  delegateOK.photoBrowser(browser: self, willDismiss: (cell?.model?.indexPath!)!)
+        }
+        
+        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: self.view)
         if senderViewForAnimation == nil {
             return
         }
@@ -438,7 +440,7 @@ class WSShowBigimgViewController: UIViewController {
             self?.dismiss(animated: false, completion: nil)
         }
         
-        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: nil)
+//        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: nil)
         UIView.animate(withDuration: 0.3, animations: {
             resizableImageView.frame = senderViewOriginalFrame!
             fadeView.alpha = 0
@@ -561,7 +563,7 @@ class WSShowBigimgViewController: UIViewController {
                         if translatedPoint.y > -35{
                             point = translatedPoint.y
                         }
-                        print("😁\(point)")
+//                        print("😁\(point)")
                         UIView.animate(withDuration: 0.05, animations: {
                             scrollView.center = CGPoint(x: scrollView.center.x, y: scrollView.center.y+point)
                             self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom  - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
@@ -934,6 +936,7 @@ extension WSShowBigimgViewController:SWPreviewVideoPlayerDelegate{
 
 extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     
         return 4
     }
     
@@ -961,9 +964,9 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
             
             var infoArray:Array<String> = Array.init()
             if let exifDic = self.fetchAssetEXIFInfo(model: model){
-                if  let compressedBitsPerPixel = exifDic[kCGImagePropertyExifCompressedBitsPerPixel] as? NSNumber{
-                    print(compressedBitsPerPixel)
-                }
+//                if  let compressedBitsPerPixel = exifDic[kCGImagePropertyExifCompressedBitsPerPixel] as? NSNumber{
+////                    print(compressedBitsPerPixel)
+//                }
                 if  let pixelWidthNumber = exifDic[kCGImagePropertyPixelWidth] as? NSNumber,let pixelHeightNumber = exifDic[kCGImagePropertyPixelHeight] as? NSNumber{
                     let pixelWidth = pixelWidthNumber.stringValue
                     let pixelHeight = pixelHeightNumber.stringValue
@@ -1014,7 +1017,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                         }
                         
                         if  let imageISOSpeedRatings = imageExifDictionary[kCGImagePropertyExifISOSpeedRatings] as? [NSNumber]{
-                            print(imageISOSpeedRatings)
+//                            print(imageISOSpeedRatings)
                             if imageISOSpeedRatings.count > 0{
                                 infoArray.append("ISO \(imageISOSpeedRatings[0].stringValue)")
                             }
@@ -1022,13 +1025,14 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                     }
                 }
             }
+
            cell.detailLabel.text = infoArray.joined(separator: "  ")
         case 3:
             cell.leftImageView.image = UIImage.init(named: "location_gary.png")
             var infoArray:Array<String> = Array.init()
             if let exifDic = self.fetchAssetEXIFInfo(model: model){
                 if  let imageGPSDictionary = exifDic[kCGImagePropertyGPSDictionary] as? [AnyHashable : Any]{
-                    print(imageGPSDictionary)
+//                    print(imageGPSDictionary)
                     if let imageLatitude = imageGPSDictionary[kCGImagePropertyGPSLatitude] as? NSNumber,let imageLongitude = imageGPSDictionary[kCGImagePropertyGPSLongitude] as? NSNumber{
                         // 创建经纬度
                         let location = CLLocation(latitude: imageLatitude.doubleValue, longitude: imageLongitude.doubleValue)
@@ -1068,15 +1072,13 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                         let latitude = String.init(format: "%.3f", imageLatitude.floatValue)
                         let longitude = String.init(format: "%.3f", imageLongitude.floatValue)
                         let coordinate = "\(latitude),\(longitude)"
-                        print(coordinate)
+//                        print(coordinate)
                         infoArray.append(coordinate)
                     }
                 }
             }
-            
+    
             cell.detailLabel.text = infoArray.joined(separator: "  ")
-//            cell.titleLabel.text =  model is NetAsset ? TimeTools.timeString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.timeString(model?.asset?.creationDate ?? Date.init())
-          
         default:
             break
         }

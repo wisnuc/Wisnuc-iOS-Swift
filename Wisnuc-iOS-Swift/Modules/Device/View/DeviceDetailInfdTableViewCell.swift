@@ -12,6 +12,7 @@ class DeviceDetailInfdTableViewCell: UITableViewCell {
     @IBOutlet weak var rightLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
+    @IBOutlet weak var leftImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

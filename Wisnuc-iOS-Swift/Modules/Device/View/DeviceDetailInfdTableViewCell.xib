@@ -20,13 +20,13 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pez-QL-wbc">
-                        <rect key="frame" x="16" y="41.5" width="31" height="14.5"/>
+                        <rect key="frame" x="72" y="41.5" width="31" height="14.5"/>
                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zRJ-DF-DDa">
-                        <rect key="frame" x="16" y="14" width="268" height="19.5"/>
+                        <rect key="frame" x="72" y="14" width="40.5" height="20"/>
                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -37,24 +37,33 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xQg-gw-5gY">
+                        <rect key="frame" x="16" y="16" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="ULE-Uu-n6I"/>
+                            <constraint firstAttribute="width" constant="40" id="b4D-1H-r3N"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="zRJ-DF-DDa" firstAttribute="leading" secondItem="Pez-QL-wbc" secondAttribute="leading" id="1T1-JQ-PDb"/>
                     <constraint firstItem="Pez-QL-wbc" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="13" id="9Yy-d9-9NW"/>
-                    <constraint firstItem="zRJ-DF-DDa" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" constant="-10" id="S7a-De-ToR"/>
+                    <constraint firstItem="Pez-QL-wbc" firstAttribute="leading" secondItem="zRJ-DF-DDa" secondAttribute="leading" id="HQ6-Hz-1o2"/>
                     <constraint firstItem="ozA-o2-zGn" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="e72-fP-D47"/>
                     <constraint firstItem="zRJ-DF-DDa" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-12" id="exj-eV-qse"/>
+                    <constraint firstItem="xQg-gw-5gY" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="fQF-FR-iK9"/>
                     <constraint firstAttribute="trailing" secondItem="ozA-o2-zGn" secondAttribute="trailing" constant="16" id="oIx-eU-LJ1"/>
-                    <constraint firstItem="Pez-QL-wbc" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="s2Z-5k-k3l"/>
+                    <constraint firstItem="xQg-gw-5gY" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="s79-g2-oYW"/>
+                    <constraint firstItem="zRJ-DF-DDa" firstAttribute="leading" secondItem="xQg-gw-5gY" secondAttribute="trailing" constant="16" id="uaQ-7O-2Y7"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="detailLabel" destination="Pez-QL-wbc" id="MwB-Zz-88m"/>
+                <outlet property="leftImageView" destination="xQg-gw-5gY" id="sz6-Rm-u3o"/>
                 <outlet property="rightLabel" destination="ozA-o2-zGn" id="OCf-dF-7Lf"/>
                 <outlet property="titleLabel" destination="zRJ-DF-DDa" id="GHg-7h-kKK"/>
             </connections>
-            <point key="canvasLocation" x="137.59999999999999" y="167.31634182908547"/>
+            <point key="canvasLocation" x="-102.40000000000001" y="98.950524737631198"/>
         </tableViewCell>
     </objects>
 </document>

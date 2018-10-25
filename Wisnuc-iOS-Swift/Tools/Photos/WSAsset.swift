@@ -20,7 +20,8 @@ enum WSAssetType{
     case Unknown
 }
 
-class WSAsset: NSObject {
+class WSAsset: NSObject,NSCopying{
+   
     //asset对象
     var asset:PHAsset?
     
@@ -60,6 +61,13 @@ class WSAsset: NSObject {
             self.assetLocalIdentifier = asset?.localIdentifier
         }
     }
+    
+    func copy(with zone: NSZone? = nil) -> Any {
+
+        let theCopyObj = Swift.type(of: self).assetModel(asset: asset, type: type, duration: duration)
+       return theCopyObj
+    }
+    
     
     class func assetModel(asset:PHAsset?,type:WSAssetType?,duration:String?)->WSAsset{
         let model = WSAsset.init()

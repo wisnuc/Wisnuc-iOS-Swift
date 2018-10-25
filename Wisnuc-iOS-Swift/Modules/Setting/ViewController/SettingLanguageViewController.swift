@@ -1,14 +1,19 @@
 //
-//  DeviceDetailInfoViewController.swift
+//  SettingLanguageViewController.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/10/18.
+//  Created by wisnuc-imac on 2018/10/25.
 //  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
+enum LanguageType:Int64{
+    case Chinese = 0
+    case English
+}
 
-class DeviceDetailInfoViewController: BaseViewController {
+class SettingLanguageViewController: BaseViewController {
+    var lastPath:IndexPath?
     let identifier = "cellIdentifier"
     let headerHeight:CGFloat = 64
     override func viewDidLoad() {
@@ -16,17 +21,23 @@ class DeviceDetailInfoViewController: BaseViewController {
         
         prepareNavigationBar()
         
+        if AppUserService.currentUser?.language != nil {
+            lastPath = IndexPath.init(row: (AppUserService.currentUser?.language?.intValue)!, section: 0)
+        }else{
+            lastPath = IndexPath.init(row: 0, section: 0)
+        }
+        
         self.view.addSubview(infoTableView)
         
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
-
-      
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.headerViewController.headerView.trackingScrollView = self.infoTableView
-       
+        
     }
     
     @objc func dismiss(_ sender:UIBarButtonItem){
@@ -52,12 +63,12 @@ class DeviceDetailInfoViewController: BaseViewController {
     
     lazy var headerView: UIView = {
         let view = UIView.init(frame: CGRect.zero)
-    
+        
         return view
     }()
     
     lazy var deviecNameLabel: UILabel = {
-        let text = LocalizedString(forKey: "存储详情")
+        let text = LocalizedString(forKey: "语言")
         let font = UIFont.boldSystemFont(ofSize: 21)
         let height = headerHeight
         let label = UILabel.init(frame: CGRect(x:MarginsWidth , y:0 , width: __kWidth - MarginsWidth*2, height: height))
@@ -66,16 +77,16 @@ class DeviceDetailInfoViewController: BaseViewController {
         label.text = text
         return label
     }()
-
+    
 }
 
-extension DeviceDetailInfoViewController:UITableViewDataSource,UITableViewDelegate{
+extension SettingLanguageViewController:UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 72
+        return 64
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -88,38 +99,48 @@ extension DeviceDetailInfoViewController:UITableViewDataSource,UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:DeviceDetailInfdTableViewCell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! DeviceDetailInfdTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         
         switch indexPath.row {
         case 0:
-            cell.titleLabel.text = LocalizedString(forKey: "文件")
-            cell.leftImageView.image = UIImage.init(named: "files_icon_device_detail.png")
-            cell.detailLabel.text = "12233个"
-            cell.rightLabel.text = "201G"
+            cell.textLabel?.text = "中文"
         case 1:
-            cell.titleLabel.text = LocalizedString(forKey: "照片")
-            cell.leftImageView.image = UIImage.init(named: "photo_icon_device_detail.png")
-            cell.detailLabel.text = "12233个"
-            cell.rightLabel.text = "201G"
-        case 2:
-            cell.titleLabel.text = LocalizedString(forKey: "视频")
-            cell.leftImageView.image = UIImage.init(named: "video_icon_device_detail.png")
-            cell.detailLabel.text = "12233个"
-            cell.rightLabel.text = "2G"
-        case 3:
-            cell.titleLabel.text = LocalizedString(forKey: "其他")
-            cell.leftImageView.image = UIImage.init(named: "other_icon_device_detail.png")
-            cell.detailLabel.text = "12233个"
-            cell.rightLabel.text = "21G"
+            cell.textLabel?.text = "English"
         default:
             break
         }
+        let row = indexPath.row
+        
+        let oldRow = lastPath?.row
+        
+        if (row == oldRow && lastPath != nil) {
+            
+            //这个是系统中对勾的那种选择框
+            
+            cell.accessoryType = UITableViewCellAccessoryType.checkmark
+            
+        }else{
+            cell.accessoryType = UITableViewCellAccessoryType.none
+
+        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+//
+        let newRow = indexPath.row
+        let oldRow = self.lastPath != nil ? self.lastPath?.row:-1
+        if (newRow != oldRow) {
+            let newCell = tableView.cellForRow(at: indexPath)
+            newCell?.accessoryType = UITableViewCellAccessoryType.checkmark
+            let oldCell = tableView.cellForRow(at: self.lastPath!)
+            oldCell?.accessoryType = UITableViewCellAccessoryType.none
+            self .lastPath = indexPath
+        }
+         tableView.deselectRow(at: indexPath, animated: true)
+         AppUserService.currentUser?.language =  NSNumber.init(value: Int64(indexPath.row))
+         AppUserService.synchronizedCurrentUser()
+         self.infoTableView.reloadData()
     }
 }
-
-

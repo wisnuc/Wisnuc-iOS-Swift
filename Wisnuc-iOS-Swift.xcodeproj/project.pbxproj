@@ -262,6 +262,23 @@
 		1F38E293217DBCAF003FCAEE /* tab_my_selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E292217DBCAE003FCAEE /* tab_my_selected@3x.png */; };
 		1F38E295217F01FD003FCAEE /* GetStationsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E294217F01FB003FCAEE /* GetStationsAPI.swift */; };
 		1F38E297217F0A94003FCAEE /* StationsInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E296217F0A94003FCAEE /* StationsInfoModel.swift */; };
+		1F38E29921816CB2003FCAEE /* ArrayDeppCopy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E29821816CB0003FCAEE /* ArrayDeppCopy.swift */; };
+		1F38E29C2181C5A3003FCAEE /* cell_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E29B2181C5A0003FCAEE /* cell_arrow.png */; };
+		1F38E29E2181C5B3003FCAEE /* cell_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E29D2181C5B2003FCAEE /* cell_arrow@2x.png */; };
+		1F38E2A02181C5C2003FCAEE /* cell_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E29F2181C5C1003FCAEE /* cell_arrow@3x.png */; };
+		1F38E2A22181C9C7003FCAEE /* files_icon_device_detail.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2A12181C9C5003FCAEE /* files_icon_device_detail.png */; };
+		1F38E2A42181C9DD003FCAEE /* files_icon_device_detail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2A32181C9DD003FCAEE /* files_icon_device_detail@2x.png */; };
+		1F38E2A62181C9E9003FCAEE /* files_icon_device_detail@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2A52181C9E9003FCAEE /* files_icon_device_detail@3x.png */; };
+		1F38E2A82181CA19003FCAEE /* photo_icon_device_detail.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2A72181CA18003FCAEE /* photo_icon_device_detail.png */; };
+		1F38E2AA2181CA27003FCAEE /* photo_icon_device_detail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2A92181CA26003FCAEE /* photo_icon_device_detail@2x.png */; };
+		1F38E2AC2181CA3C003FCAEE /* photo_icon_device_detail@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2AB2181CA3B003FCAEE /* photo_icon_device_detail@3x.png */; };
+		1F38E2AE2181CA8F003FCAEE /* video_icon_device_detail.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2AD2181CA8E003FCAEE /* video_icon_device_detail.png */; };
+		1F38E2B02181CA9D003FCAEE /* video_icon_device_detail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2AF2181CA9D003FCAEE /* video_icon_device_detail@2x.png */; };
+		1F38E2B22181CAAA003FCAEE /* video_icon_device_detail@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2B12181CAA9003FCAEE /* video_icon_device_detail@3x.png */; };
+		1F38E2B42181CADB003FCAEE /* other_icon_device_detail.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2B32181CADA003FCAEE /* other_icon_device_detail.png */; };
+		1F38E2B62181CAED003FCAEE /* other_icon_device_detail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2B52181CAEC003FCAEE /* other_icon_device_detail@2x.png */; };
+		1F38E2B82181CAFE003FCAEE /* other_icon_device_detail@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2B72181CAFE003FCAEE /* other_icon_device_detail@3x.png */; };
+		1F38E2BA2181D0BF003FCAEE /* SettingLanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E2B92181D0BE003FCAEE /* SettingLanguageViewController.swift */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -1180,6 +1197,23 @@
 		1F38E292217DBCAE003FCAEE /* tab_my_selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_my_selected@3x.png"; sourceTree = "<group>"; };
 		1F38E294217F01FB003FCAEE /* GetStationsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetStationsAPI.swift; sourceTree = "<group>"; };
 		1F38E296217F0A94003FCAEE /* StationsInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsInfoModel.swift; sourceTree = "<group>"; };
+		1F38E29821816CB0003FCAEE /* ArrayDeppCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayDeppCopy.swift; sourceTree = "<group>"; };
+		1F38E29B2181C5A0003FCAEE /* cell_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell_arrow.png; sourceTree = "<group>"; };
+		1F38E29D2181C5B2003FCAEE /* cell_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cell_arrow@2x.png"; sourceTree = "<group>"; };
+		1F38E29F2181C5C1003FCAEE /* cell_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cell_arrow@3x.png"; sourceTree = "<group>"; };
+		1F38E2A12181C9C5003FCAEE /* files_icon_device_detail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_icon_device_detail.png; sourceTree = "<group>"; };
+		1F38E2A32181C9DD003FCAEE /* files_icon_device_detail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_icon_device_detail@2x.png"; sourceTree = "<group>"; };
+		1F38E2A52181C9E9003FCAEE /* files_icon_device_detail@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_icon_device_detail@3x.png"; sourceTree = "<group>"; };
+		1F38E2A72181CA18003FCAEE /* photo_icon_device_detail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo_icon_device_detail.png; sourceTree = "<group>"; };
+		1F38E2A92181CA26003FCAEE /* photo_icon_device_detail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_icon_device_detail@2x.png"; sourceTree = "<group>"; };
+		1F38E2AB2181CA3B003FCAEE /* photo_icon_device_detail@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_icon_device_detail@3x.png"; sourceTree = "<group>"; };
+		1F38E2AD2181CA8E003FCAEE /* video_icon_device_detail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_icon_device_detail.png; sourceTree = "<group>"; };
+		1F38E2AF2181CA9D003FCAEE /* video_icon_device_detail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_icon_device_detail@2x.png"; sourceTree = "<group>"; };
+		1F38E2B12181CAA9003FCAEE /* video_icon_device_detail@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_icon_device_detail@3x.png"; sourceTree = "<group>"; };
+		1F38E2B32181CADA003FCAEE /* other_icon_device_detail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = other_icon_device_detail.png; sourceTree = "<group>"; };
+		1F38E2B52181CAEC003FCAEE /* other_icon_device_detail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "other_icon_device_detail@2x.png"; sourceTree = "<group>"; };
+		1F38E2B72181CAFE003FCAEE /* other_icon_device_detail@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "other_icon_device_detail@3x.png"; sourceTree = "<group>"; };
+		1F38E2B92181D0BE003FCAEE /* SettingLanguageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingLanguageViewController.swift; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -2262,6 +2296,14 @@
 			path = LoginNextStepViewController;
 			sourceTree = "<group>";
 		};
+		1F38E29A21816CBB003FCAEE /* Copy */ = {
+			isa = PBXGroup;
+			children = (
+				1F38E29821816CB0003FCAEE /* ArrayDeppCopy.swift */,
+			);
+			path = Copy;
+			sourceTree = "<group>";
+		};
 		1F3C241820A4499900E6B953 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -2651,6 +2693,9 @@
 		1F8EBB36209ADC5A00E8AB83 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				1F38E29B2181C5A0003FCAEE /* cell_arrow.png */,
+				1F38E29D2181C5B2003FCAEE /* cell_arrow@2x.png */,
+				1F38E29F2181C5C1003FCAEE /* cell_arrow@3x.png */,
 				1F38E28E217DBC8D003FCAEE /* tab_my_selected.png */,
 				1F38E290217DBC9D003FCAEE /* tab_my_selected@2x.png */,
 				1F38E292217DBCAE003FCAEE /* tab_my_selected@3x.png */,
@@ -3266,6 +3311,7 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1F38E29A21816CBB003FCAEE /* Copy */,
 				1F0FD0D3214A4B93003D7936 /* BLE */,
 				1FBB6FAE213FC4E50090FA57 /* OpenSSL */,
 				1F5378732108754E00A555C5 /* AnyCodable */,
@@ -3480,6 +3526,7 @@
 				1FE0895021743AE50049F44B /* MyResetPasswordViewController.swift */,
 				1FE08958217448450049F44B /* MyUserAgreementViewController.swift */,
 				1FE0895A217462AB0049F44B /* MySecureStepViewController.swift */,
+				1F38E2B92181D0BE003FCAEE /* SettingLanguageViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -3496,6 +3543,18 @@
 		1FE0895F217478F40049F44B /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				1F38E2B32181CADA003FCAEE /* other_icon_device_detail.png */,
+				1F38E2B52181CAEC003FCAEE /* other_icon_device_detail@2x.png */,
+				1F38E2B72181CAFE003FCAEE /* other_icon_device_detail@3x.png */,
+				1F38E2AD2181CA8E003FCAEE /* video_icon_device_detail.png */,
+				1F38E2AF2181CA9D003FCAEE /* video_icon_device_detail@2x.png */,
+				1F38E2B12181CAA9003FCAEE /* video_icon_device_detail@3x.png */,
+				1F38E2A72181CA18003FCAEE /* photo_icon_device_detail.png */,
+				1F38E2A92181CA26003FCAEE /* photo_icon_device_detail@2x.png */,
+				1F38E2AB2181CA3B003FCAEE /* photo_icon_device_detail@3x.png */,
+				1F38E2A12181C9C5003FCAEE /* files_icon_device_detail.png */,
+				1F38E2A32181C9DD003FCAEE /* files_icon_device_detail@2x.png */,
+				1F38E2A52181C9E9003FCAEE /* files_icon_device_detail@3x.png */,
 				1F38E23821782E7D003FCAEE /* select_device_main_theme.png */,
 				1F38E23A21782E8A003FCAEE /* select_device_main_theme@2x.png */,
 				1F38E23C21782E95003FCAEE /* select_device_main_theme@3x.png */,
@@ -4055,10 +4114,12 @@
 				1F38E2672179D6AD003FCAEE /* transfer_taks_icon@2x.png in Resources */,
 				1FFD12B920E9C72F0053A3F7 /* files_move_to@2x.png in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
+				1F38E2B02181CA9D003FCAEE /* video_icon_device_detail@2x.png in Resources */,
 				1FE089632174797B0049F44B /* add_gray@2x.png in Resources */,
 				1F0FD0F7214A6DD1003D7936 /* next_button_arrow_white@3x.png in Resources */,
 				1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */,
 				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
+				1F38E29E2181C5B3003FCAEE /* cell_arrow@2x.png in Resources */,
 				1FD1F30A2154E24E00C3E429 /* unselect_white@2x.png in Resources */,
 				1F050E2520A990CD0037F00A /* FilesOfflineTableViewCell.xib in Resources */,
 				1FBB6F552137F6DB0090FA57 /* x_gray.png in Resources */,
@@ -4092,9 +4153,11 @@
 				1F050E2B20A9956E0037F00A /* files_offline_file_small@3x.png in Resources */,
 				1F38E283217DBAE2003FCAEE /* tab_device_selected.png in Resources */,
 				1F5AD93D20AD80880065DAD3 /* files_audio_small.png in Resources */,
+				1F38E2A42181C9DD003FCAEE /* files_icon_device_detail@2x.png in Resources */,
 				1F3C240F20A42CC400E6B953 /* files_unselect@2x.png in Resources */,
 				1F359FC12091764000E2FF36 /* diskinit@2x.png in Resources */,
 				1FAADED920ABFF0200739220 /* files_edit_tag.png in Resources */,
+				1F38E2A62181C9E9003FCAEE /* files_icon_device_detail@3x.png in Resources */,
 				1FAADEC520ABFD9200739220 /* files_move_gray@3x.png in Resources */,
 				1FE0896F21747C170049F44B /* exchange_gray@2x.png in Resources */,
 				1F38E289217DBC24003FCAEE /* tab_my.png in Resources */,
@@ -4135,6 +4198,7 @@
 				1F362F7B2133FFA6000B3384 /* wechat_icon_mian_color@2x.png in Resources */,
 				1FE089872175D6370049F44B /* DeviceBackupRootTableViewCell.xib in Resources */,
 				1FEABB5520A14B6C00824448 /* files_word_small@2x.png in Resources */,
+				1F38E2B42181CADB003FCAEE /* other_icon_device_detail.png in Resources */,
 				1F38E273217DB04A003FCAEE /* tab_photos@2x.png in Resources */,
 				1FE08957217445CC0049F44B /* logo_main_theme@3x.png in Resources */,
 				1F83AE8220887936007CCCFD /* more@2x.png in Resources */,
@@ -4162,6 +4226,7 @@
 				1F38E2652179D6A2003FCAEE /* transfer_taks_icon.png in Resources */,
 				1FAADEC720ABFDDC00739220 /* files_offline_normal.png in Resources */,
 				1FA6A1A920CFA065007A0AB2 /* search.png in Resources */,
+				1F38E2AE2181CA8F003FCAEE /* video_icon_device_detail.png in Resources */,
 				1F38E2612179D66A003FCAEE /* usb_icon@2x.png in Resources */,
 				1F050E0E20A9674D0037F00A /* files_pdf_small.png in Resources */,
 				1F4E9395208DBB7600DD1EA7 /* radio_button@2x.png in Resources */,
@@ -4206,6 +4271,7 @@
 				1FBB6F6721392C8D0090FA57 /* lock.png in Resources */,
 				1FE0896B21747BAD0049F44B /* edit_gray@3x.png in Resources */,
 				1F362F8321351782000B3384 /* LoginNextStepViewController.xib in Resources */,
+				1F38E2AC2181CA3C003FCAEE /* photo_icon_device_detail@3x.png in Resources */,
 				1F5882482085F07E00394BD6 /* disk_warning@2x.png in Resources */,
 				1F359FB22090819000E2FF36 /* no.png in Resources */,
 				1FA6A1B920CFA6EE007A0AB2 /* files_audio_normal@3x.png in Resources */,
@@ -4260,6 +4326,7 @@
 				1F83AE7E20886BDA007CCCFD /* change2x.png in Resources */,
 				1F8EBB3A209ADC7100E8AB83 /* tab_files_selected@2x.png in Resources */,
 				1F83AE7820886A13007CCCFD /* LogOutViewController.xib in Resources */,
+				1F38E2B82181CAFE003FCAEE /* other_icon_device_detail@3x.png in Resources */,
 				1F5659F920D0E38200D86FDB /* photos.png in Resources */,
 				1F0FD0EB214A65BF003D7936 /* down_arrow_gray@3x.png in Resources */,
 				1F3C244A20A5AE6300E6B953 /* files_share_folder@3x.png in Resources */,
@@ -4363,6 +4430,7 @@
 				1F4E9397208DBB7600DD1EA7 /* radio_button_unchecked@2x.png in Resources */,
 				1F38E25D2179D638003FCAEE /* backup_box_icon@3x.png in Resources */,
 				1FE089BF21772A6C0049F44B /* finished@3x.png in Resources */,
+				1F38E2B22181CAAA003FCAEE /* video_icon_device_detail@3x.png in Resources */,
 				1FFD12CB20EDC4620053A3F7 /* task_copy@3x.png in Resources */,
 				1F3C241C20A5426C00E6B953 /* files_move.png in Resources */,
 				1FE08955217445BF0049F44B /* logo_main_theme@2x.png in Resources */,
@@ -4502,6 +4570,7 @@
 				1FBB6F5D2139232D0090FA57 /* 86@2x.png in Resources */,
 				1F050E5320AAB71D0037F00A /* files_file_big@3x.png in Resources */,
 				1FA5D775215CC3840025F870 /* photo_gray_info@2x.png in Resources */,
+				1F38E2A22181C9C7003FCAEE /* files_icon_device_detail.png in Resources */,
 				1F38E27F217DBAA6003FCAEE /* tab_device@2x.png in Resources */,
 				1FBD1E0620B3EF9F0067BE3E /* files_new_folder_gray@3x.png in Resources */,
 				1F5AD93320AD7FAB0065DAD3 /* files_excel_small@2x.png in Resources */,
@@ -4520,11 +4589,14 @@
 				1F0FD0CC214A46A6003D7936 /* config_error@3x.png in Resources */,
 				1FAADEDD20ABFF1F00739220 /* files_edit_tag@3x.png in Resources */,
 				1F8EBB5A20A0239F00E8AB83 /* files_folder@3x.png in Resources */,
+				1F38E2AA2181CA27003FCAEE /* photo_icon_device_detail@2x.png in Resources */,
 				1F83AE7020883AA2007CCCFD /* help@3x.png in Resources */,
 				1F3C242220A547A800E6B953 /* files_download.png in Resources */,
+				1F38E29C2181C5A3003FCAEE /* cell_arrow.png in Resources */,
 				1F58826B208719BB00394BD6 /* refresh@3x.png in Resources */,
 				1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */,
 				1F8EBB38209ADC6700E8AB83 /* tab_files_selected.png in Resources */,
+				1F38E2B62181CAED003FCAEE /* other_icon_device_detail@2x.png in Resources */,
 				1F38E24321782EDB003FCAEE /* unselect_device_disabled@3x.png in Resources */,
 				1F8EBB4E209FF07C00E8AB83 /* more_gray_horizontal@2x.png in Resources */,
 				1F362F7D2133FFAF000B3384 /* wechat_icon_mian_color@3x.png in Resources */,
@@ -4536,12 +4608,14 @@
 				1FFD12C420EB175E0053A3F7 /* NewFolderViewController.storyboard in Resources */,
 				1F5AD93F20AD80980065DAD3 /* files_audio_small@2x.png in Resources */,
 				1FAADEC120ABFD6A00739220 /* files_move_gray.png in Resources */,
+				1F38E2A82181CA19003FCAEE /* photo_icon_device_detail.png in Resources */,
 				1FE08965217479870049F44B /* add_gray@3x.png in Resources */,
 				1F38E2532179B5EE003FCAEE /* share_box_icon.png in Resources */,
 				1FE089BD21772A5D0049F44B /* finished@2x.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
 				1FFD12B720E9C7270053A3F7 /* files_move_to.png in Resources */,
 				1FEABB6520A14C6000824448 /* files_ppt_small.png in Resources */,
+				1F38E2A02181C5C2003FCAEE /* cell_arrow@3x.png in Resources */,
 				1F38E2692179D6B8003FCAEE /* transfer_taks_icon@3x.png in Resources */,
 				1F1BAC3320CA621000D32C5A /* files_arrow_down@3x.png in Resources */,
 				1F359FCE2091A95D00E2FF36 /* disk_new_add@3x.png in Resources */,
@@ -4866,6 +4940,7 @@
 				1F5882302085D39D00394BD6 /* UIViewExtension.swift in Sources */,
 				1FE089A321770B560049F44B /* DeviceUsersManageViewController.swift in Sources */,
 				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
+				1F38E2BA2181D0BF003FCAEE /* SettingLanguageViewController.swift in Sources */,
 				1F520968214A19BF0058A8D3 /* DeviceBLEModel.swift in Sources */,
 				1FE089952175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift in Sources */,
 				1F5882632085FDB400394BD6 /* UIViewControllerExtension.swift in Sources */,
@@ -4935,6 +5010,7 @@
 				1FAADEF120AC031100739220 /* FilesSearchMoreBottomSheetContentTableViewController.swift in Sources */,
 				1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */,
 				1FBB6F532137D83E0090FA57 /* TipsAlertView.swift in Sources */,
+				1F38E29921816CB2003FCAEE /* ArrayDeppCopy.swift in Sources */,
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
 				1FE089992176D9470049F44B /* DevicePeripheralDeviceViewController.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,

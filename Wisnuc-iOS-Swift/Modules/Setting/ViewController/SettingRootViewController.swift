@@ -12,16 +12,16 @@ import Kingfisher
 class SettingRootViewController: BaseViewController {
     let identifier = "Cellidentifier"
     let cellHeight:CGFloat = 52
-    let headerHeight:CGFloat = 126 + 62 + 32 + 36
+    let headerHeight:CGFloat = 126 + 32 + 36
     var autoBackupSwitchOn = false
     var wifiSwitchOn = true
     override func viewDidLoad() {
         super.viewDidLoad()
    
        
-//        appBar.headerViewController.headerView.trackingScrollView = settingTabelView
+        appBar.headerViewController.headerView.trackingScrollView = settingTabelView
         self.view.addSubview(settingTabelView)
-//        self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+        self.view.bringSubview(toFront: appBar.headerViewController.headerView)
     }
 
     override func didReceiveMemoryWarning() {
@@ -108,7 +108,7 @@ class SettingRootViewController: BaseViewController {
     }()
     
     lazy var myInfoView: UIView = {
-        let view = UIView.init(frame: CGRect(x: 0, y: 64, width: __kWidth, height: 56))
+        let view = UIView.init(frame: CGRect(x: 0, y: 5, width: __kWidth, height: 56))
         view.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(myInfoViewTap(_ :)))
         view.addGestureRecognizer(tap)
@@ -150,6 +150,12 @@ extension SettingRootViewController:UITableViewDelegate{
                 tab.setTabBarHidden(true, animated: true)
             }
         case 1:
+            let settingLanguageViewController = SettingLanguageViewController.init(style:NavigationStyle.whiteWithoutShadow)
+            self.navigationController?.pushViewController(settingLanguageViewController, animated: true)
+            if let tab = retrieveTabbarController(){
+                tab.setTabBarHidden(true, animated: true)
+            }
+        case 2:
             YYImageCache.shared().diskCache.removeAllObjects {
                
             }
@@ -157,13 +163,13 @@ extension SettingRootViewController:UITableViewDelegate{
             KingfisherManager.shared.cache.clearDiskCache()
             self.settingTabelView.reloadData()
 
-        case 2:
+        case 3:
             let myAboutViewController = MyAboutViewController.init(style:NavigationStyle.whiteWithoutShadow)
             self.navigationController?.pushViewController(myAboutViewController, animated: true)
             if let tab = retrieveTabbarController(){
                 tab.setTabBarHidden(true, animated: true)
             }
-        case 3:
+        case 4:
           self.logoutAction()
         default: break
             
@@ -176,7 +182,7 @@ extension SettingRootViewController:UITableViewDataSource{
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return 5
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -233,6 +239,11 @@ extension SettingRootViewController:UITableViewDataSource{
             cell.textLabel?.textColor = DarkGrayColor
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         case 1:
+            cell.textLabel?.text = LocalizedString(forKey: "语言")
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+            cell.textLabel?.textColor = DarkGrayColor
+            cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+        case 2:
             cell.textLabel?.text = LocalizedString(forKey: "清除缓存")
             cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
             cell.textLabel?.textColor = DarkGrayColor
@@ -257,7 +268,7 @@ extension SettingRootViewController:UITableViewDataSource{
 //            cell.contentView.addSubview(switchBtn)
             
             
-        case 2:
+        case 3:
             cell.textLabel?.text = LocalizedString(forKey: "关于")
             cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
             cell.textLabel?.textColor = DarkGrayColor
@@ -269,7 +280,7 @@ extension SettingRootViewController:UITableViewDataSource{
 //            if(!AppUserService.isUserLogin)
 //            {switchBtn.isEnabled = false}
 //            cell.contentView.addSubview(switchBtn)
-        case 3:
+        case 4:
             cell.textLabel?.text = LocalizedString(forKey: "Log out")
         default: break
             
