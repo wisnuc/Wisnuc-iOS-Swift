@@ -256,7 +256,11 @@ class PhotoRootViewController: BaseViewController {
         autoreleasepool {
             var array:Array<WSAsset>  = Array.init()
             array.append(contentsOf: assetsArray)
-            array.sort { $0.createDate! > $1.createDate! }
+            array.sort { (item1, item2) -> Bool in
+                let t1 = item1.createDate ?? Date.distantPast
+                let t2 = item2.createDate ?? Date.distantPast
+                return t1 > t2
+            }
             sortedAssetsBackupArray = array
             let timeArray:NSMutableArray = NSMutableArray.init()
             let photoGroupArray:NSMutableArray = NSMutableArray.init()

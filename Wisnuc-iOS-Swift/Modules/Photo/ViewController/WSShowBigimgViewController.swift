@@ -39,6 +39,11 @@ class WSShowBigimgViewController: UIViewController {
     var disposeBag = DisposeBag()
     var appearResizableImageView:UIImageView?
     var mapView:MKMapView?
+    var isHiddenNavigationBar = false{
+        didSet{
+            hiddenNavigationBarAction()
+        }
+    }
     var state:WSShowBigimgViewControllerState?{
         didSet{
             switch state {
@@ -83,7 +88,6 @@ class WSShowBigimgViewController: UIViewController {
         self.view.addSubview(self.infoTableView)
         self.view.addSubview(self.shareView)
         shareView.delegate = self
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -121,6 +125,9 @@ class WSShowBigimgViewController: UIViewController {
 //        }
     }
     
+    override var prefersStatusBarHidden: Bool{
+        return isHiddenNavigationBar
+    }
     
     func setState(_ state:WSShowBigimgViewControllerState){
         self.state = state
@@ -186,6 +193,19 @@ class WSShowBigimgViewController: UIViewController {
         
         
         self.view.addSubview(naviView)
+    }
+    
+    
+    func displayNavigationBarAction(){
+      
+    }
+    
+    func hiddenNavigationBarAction(){
+        setNeedsStatusBarAppearanceUpdate()
+        let frame = isHiddenNavigationBar ? CGRect(x: 0, y: -naviView.height, width: naviView.width, height: naviView.height) : CGRect(x: 0, y: 0, width: naviView.width, height:naviView.height)
+        UIView.animate(withDuration: 0.3, animations: {
+            self.naviView.frame = frame
+        })
     }
     
     func notificationSetting(){
@@ -306,14 +326,8 @@ class WSShowBigimgViewController: UIViewController {
 //    [self dismissShareView];
 //    return;
 //    }
-//    _hideNavBar = !_hideNavBar;
-//
-//    [self setNeedsStatusBarAppearanceUpdate];
-//
-//    CGRect frame = _hideNavBar?CGRectMake(0, -64, __kWidth, 64):CGRectMake(0, 0, __kWidth, 64);
-//    [UIView animateWithDuration:0.3 animations:^{
-//    _navView.frame = frame;
-//    }];
+        
+        isHiddenNavigationBar = !isHiddenNavigationBar
     }
     
     func performPresentAnimation(){
@@ -518,6 +532,10 @@ class WSShowBigimgViewController: UIViewController {
         }
         
         return nil
+    }
+    
+    @objc func viewTap(_ sender:UIGestureRecognizer){
+        isHiddenNavigationBar = !isHiddenNavigationBar
     }
     
     @objc func panGestureRecognized(_ gesture:UIPanGestureRecognizer){

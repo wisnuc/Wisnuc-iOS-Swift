@@ -9,18 +9,35 @@
 import UIKit
 import Material
 
+enum RetrievePasswordState:Int {
+    case phone = 0
+    case email
+    case doubleVerification
+}
+
 class MyAccountSecurityViewController: BaseViewController {
     let identifier = "Cellidentifier"
+    let identifierSection2 = "Cellidentifier2"
     let headerHeight:CGFloat = 48
     let cellHeight:CGFloat = 72
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setData()
 
         self.view.addSubview(infoTabelView)
         
         appBar.headerViewController.headerView.trackingScrollView = infoTabelView
         
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+    }
+    
+    func setData(){
+        if  AppUserService.currentUser?.retrievePasswordState == nil{
+            AppUserService.currentUser?.retrievePasswordState = NSNumber.init(value:
+                RetrievePasswordState.phone.rawValue)
+            AppUserService.synchronizedCurrentUser()
+        }
     }
     
     func rightLabel(_ text:String) ->UILabel{
@@ -36,6 +53,18 @@ class MyAccountSecurityViewController: BaseViewController {
         label.textAlignment = .right
         
         return label
+    }
+    
+    func cells(for tableView: UITableView , section:Int) -> [MyAccountSecurityVerificationTableViewCell]? {
+        var cells: [MyAccountSecurityVerificationTableViewCell] = []
+        let rows: Int = tableView.numberOfRows(inSection: section)
+        for row in 0..<rows {
+            let indexPath = IndexPath(row: row, section: section)
+            if let aPath = tableView.cellForRow(at: indexPath){
+                cells.append(aPath as! MyAccountSecurityVerificationTableViewCell)
+            }
+        }
+        return cells
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -54,7 +83,6 @@ class MyAccountSecurityViewController: BaseViewController {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
         tableView.tableFooterView = UIView.init()
         tableView.backgroundColor = .white
         tableView.isScrollEnabled = false
@@ -76,21 +104,43 @@ extension MyAccountSecurityViewController:UITableViewDelegate{
             case 0:
                 break
             case 1:
-                let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
-                self.navigationController?.pushViewController(verificationCodeVC, animated: true)
+                let verificationState = RetrievePasswordState(rawValue: AppUserService.currentUser?.retrievePasswordState?.intValue ?? 0)
+                var verificationCodeViewController:MyVerificationCodeViewController?
+                switch verificationState {
+                case .phone?:
+                   verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
+                case .email?:
+                    verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.changePassword)
+                case .doubleVerification?:
+                    verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
+                default:
+                    break
+                }
+                
+                if let verificationCodeVC = verificationCodeViewController{
+                    self.navigationController?.pushViewController(verificationCodeVC, animated: true)
+                }
+              
             case 2:
                 let bindPhoneViewController = MyBindPhoneViewController.init(style: .whiteWithoutShadow)
                 self.navigationController?.pushViewController(bindPhoneViewController, animated: true)
             case 3:
                 let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.bindEmail)
                 self.navigationController?.pushViewController(verificationCodeVC, animated: true)
-            default: break
-                
+            default:
+                break
             }
         }else{
-            
+            for (i,value) in (cells(for: tableView,section: indexPath.section)?.enumerated())! {
+                if i != indexPath.row {
+                    value.isSelected = false
+                } else if i == indexPath.row {
+                    value.isSelected = true
+                    AppUserService.currentUser?.retrievePasswordState = NSNumber.init(value: RetrievePasswordState.init(rawValue: indexPath.row)!.rawValue)
+                    AppUserService.synchronizedCurrentUser()
+                }
+            }
         }
-       
     }
 }
 
@@ -138,8 +188,10 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let  cell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: identifier)
         if indexPath.section == 0{
+            tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
+            let  cell = UITableViewCell(style: UITableViewCellStyle.subtitle, reuseIdentifier: identifier)
+            cell.selectionStyle = .none
             switch indexPath.row {
             case 0:
                 cell.textLabel?.text = LocalizedString(forKey: "账号")
@@ -174,30 +226,37 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
                 let label = self.rightLabel(LocalizedString(forKey: "去绑定"))
                 cell.contentView.addSubview(label)
             default: break
-                
             }
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+            cell.textLabel?.textColor = DarkGrayColor
+            cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 12)
+            cell.detailTextLabel?.textColor = LightGrayColor
+            return cell
         }else{
-            let radioButtonHeight:CGFloat = 20
+            tableView.register(UINib.init(nibName: StringExtension.classNameAsString(targetClass: MyAccountSecurityVerificationTableViewCell.self), bundle: nil), forCellReuseIdentifier: identifierSection2)
+            let  cell = tableView.dequeueReusableCell(withIdentifier: identifierSection2, for: indexPath) as! MyAccountSecurityVerificationTableViewCell
+            cell.selectionStyle = .none
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = LocalizedString(forKey: "仅通过绑定手机找回密码")
-                let button = UIButton.init(frame: CGRect(x: __kWidth - radioButtonHeight - MarginsWidth, y: cellHeight/2  - radioButtonHeight/2, width: radioButtonHeight, height: radioButtonHeight))
-                button.setImage(UIImage.init(named: "radioButton_right.png"), for: UIControlState.normal)
-                cell.contentView.addSubview(button)
+                cell.titleLabel.text = LocalizedString(forKey: "仅通过绑定手机找回密码")
+                cell.isSelected = AppUserService.currentUser?.retrievePasswordState?.intValue  == RetrievePasswordState.phone.rawValue ? true : false
             case 1:
-               cell.textLabel?.text = LocalizedString(forKey: "仅使用邮箱找回密码")
+               cell.titleLabel.text = LocalizedString(forKey: "仅使用邮箱找回密码")
+               cell.isSelected = AppUserService.currentUser?.retrievePasswordState?.intValue  == RetrievePasswordState.email.rawValue ? true : false
             case 2:
-                cell.textLabel?.text = LocalizedString(forKey: "双重身份验证")
+                cell.titleLabel.text = LocalizedString(forKey: "双重身份验证")
+                cell.isSelected = AppUserService.currentUser?.retrievePasswordState?.intValue  == RetrievePasswordState.doubleVerification.rawValue ? true : false
             default: break
                 
             }
+        
+//            if cell.isSelected {
+//                cell.selectButton.isSelected = true
+//            }else{
+//                cell.selectButton.isSelected = true
+//            }
+            return cell
         }
-    
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-        cell.textLabel?.textColor = DarkGrayColor
-        cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 12)
-        cell.detailTextLabel?.textColor = LightGrayColor
-        return cell
     }
     
 }

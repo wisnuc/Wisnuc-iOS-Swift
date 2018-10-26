@@ -108,7 +108,7 @@ class PhotoCollectionViewController: UICollectionViewController {
             for (i,value) in yearArray.enumerated(){
                
                 let photos = value
-                let yearsAsset = dataSource?.filter({Calendar.current.isDate(($0.first?.createDate)!, equalTo:  (photos.first?.createDate)!, toGranularity: Calendar.Component.year)})
+                let yearsAsset = dataSource?.filter({Calendar.current.isDate($0.first?.createDate ?? Date.distantPast, equalTo:  photos.first?.createDate ?? Date.distantPast, toGranularity: Calendar.Component.year)})
                 if let yearsAsset = yearsAsset{
                     var sum = 0
                     for (_,assets) in yearsAsset.enumerated(){
@@ -170,7 +170,13 @@ class PhotoCollectionViewController: UICollectionViewController {
         autoreleasepool {
             var array:Array<WSAsset>  = Array.init()
             array.append(contentsOf: assetsArray)
-            array.sort { $0.createDate! > $1.createDate! }
+//            array.sort { $0.createDate > $1.createDate }
+            array.sort { (item1, item2) -> Bool in
+                let t1 = item1.createDate ?? Date.distantPast
+                let t2 = item2.createDate ?? Date.distantPast
+                return t1 > t2
+            }
+            
             let timeArray:NSMutableArray = NSMutableArray.init()
             let photoGroupArray:NSMutableArray = NSMutableArray.init()
             if array.count>0 {
@@ -191,7 +197,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                     let photo1 =  array[i]
                     let photo2 = array[i-1]
                   
-                    if   Calendar.current.isDate(photo1.createDate!, equalTo:  photo2.createDate!, toGranularity: Calendar.Component.year){
+                    if   Calendar.current.isDate(photo1.createDate ?? Date.distantPast, equalTo:  photo2.createDate ?? Date.distantPast, toGranularity: Calendar.Component.year){
                         photo1.indexPath = IndexPath.init(row: ((photoGroupArray[photoGroupArray.count - 1]) as! NSMutableArray).count, section: photoGroupArray.count - 1)
                         photoDateGroup2!.add(photo1)
                     }else{
@@ -497,6 +503,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:PhotoCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell
          let model = self.dataSource![indexPath.section][indexPath.row]
+        weak var weakCell = cell
         cell.selectedBlock = { [weak self] (selected) in
             if !(self?.isSelectMode)! { return}
             var needReload = false
@@ -544,6 +551,10 @@ class PhotoCollectionViewController: UICollectionViewController {
                         }
                     }
                     //                [weakSelf leftBtnClick:_leftBtn];
+                    weakCell?.isSelectMode = self?.isSelectMode
+                    if let cellsIndexPath = self?.collectionView?.indexPathsForVisibleItems{
+                         self?.collectionView?.reloadItems(at: cellsIndexPath)
+                    }
                 }
             }
             //            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];

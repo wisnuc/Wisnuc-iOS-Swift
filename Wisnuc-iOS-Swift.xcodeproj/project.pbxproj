@@ -279,6 +279,11 @@
 		1F38E2B62181CAED003FCAEE /* other_icon_device_detail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2B52181CAEC003FCAEE /* other_icon_device_detail@2x.png */; };
 		1F38E2B82181CAFE003FCAEE /* other_icon_device_detail@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2B72181CAFE003FCAEE /* other_icon_device_detail@3x.png */; };
 		1F38E2BA2181D0BF003FCAEE /* SettingLanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E2B92181D0BE003FCAEE /* SettingLanguageViewController.swift */; };
+		1F38E2BE2182FD33003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E2BC2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift */; };
+		1F38E2BF2182FD33003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2BD2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib */; };
+		1F38E2C72183289E003FCAEE /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E2C62183289E003FCAEE /* KeyboardViewController.swift */; };
+		1F38E2CB2183289F003FCAEE /* EmailVerificationKeyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1F38E2C42183289B003FCAEE /* EmailVerificationKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1F38E2D12183293A003FCAEE /* KeyboardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2D02183293A003FCAEE /* KeyboardViewController.xib */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -922,6 +927,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1F38E2C92183289F003FCAEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FD9B744207CBE8700906D80 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F38E2C32183289B003FCAEE;
+			remoteInfo = EmailVerificationKeyboard;
+		};
 		1FD9B764207CBE8900906D80 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1FD9B744207CBE8700906D80 /* Project object */;
@@ -937,6 +949,20 @@
 			remoteInfo = "Wisnuc-iOS-Swift";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1F38E2CF218328A0003FCAEE /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1F38E2CB2183289F003FCAEE /* EmailVerificationKeyboard.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		060F918721575B3400AD9F26 /* PhotoAlbumModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumModel.swift; sourceTree = "<group>"; };
@@ -1214,6 +1240,12 @@
 		1F38E2B52181CAEC003FCAEE /* other_icon_device_detail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "other_icon_device_detail@2x.png"; sourceTree = "<group>"; };
 		1F38E2B72181CAFE003FCAEE /* other_icon_device_detail@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "other_icon_device_detail@3x.png"; sourceTree = "<group>"; };
 		1F38E2B92181D0BE003FCAEE /* SettingLanguageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingLanguageViewController.swift; sourceTree = "<group>"; };
+		1F38E2BC2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountSecurityVerificationTableViewCell.swift; sourceTree = "<group>"; };
+		1F38E2BD2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyAccountSecurityVerificationTableViewCell.xib; sourceTree = "<group>"; };
+		1F38E2C42183289B003FCAEE /* EmailVerificationKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EmailVerificationKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F38E2C62183289E003FCAEE /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
+		1F38E2C82183289E003FCAEE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F38E2D02183293A003FCAEE /* KeyboardViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KeyboardViewController.xib; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -1871,6 +1903,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1F38E2C12183289B003FCAEE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1FD9B749207CBE8700906D80 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2304,6 +2343,25 @@
 			path = Copy;
 			sourceTree = "<group>";
 		};
+		1F38E2BB2182FCBD003FCAEE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1F38E2BC2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift */,
+				1F38E2BD2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1F38E2C52183289D003FCAEE /* EmailVerificationKeyboard */ = {
+			isa = PBXGroup;
+			children = (
+				1F38E2C62183289E003FCAEE /* KeyboardViewController.swift */,
+				1F38E2C82183289E003FCAEE /* Info.plist */,
+				1F38E2D02183293A003FCAEE /* KeyboardViewController.xib */,
+			);
+			path = EmailVerificationKeyboard;
+			sourceTree = "<group>";
+		};
 		1F3C241820A4499900E6B953 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -2524,6 +2582,7 @@
 		1F537A0B2124128600A555C5 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				1F38E2BB2182FCBD003FCAEE /* View */,
 				1FE0894B21709E590049F44B /* ViewController */,
 			);
 			path = Setting;
@@ -3166,6 +3225,7 @@
 				1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */,
 				1FD9B766207CBE8900906D80 /* Wisnuc-iOS-SwiftTests */,
 				1FD9B771207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests */,
+				1F38E2C52183289D003FCAEE /* EmailVerificationKeyboard */,
 				1FD9B74D207CBE8700906D80 /* Products */,
 				5E5BF15A5A246403982C3175 /* Pods */,
 				8F207FC9B9AE44C14EAC998A /* Frameworks */,
@@ -3178,6 +3238,7 @@
 				1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */,
 				1FD9B763207CBE8900906D80 /* Wisnuc-iOS-SwiftTests.xctest */,
 				1FD9B76E207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests.xctest */,
+				1F38E2C42183289B003FCAEE /* EmailVerificationKeyboard.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3965,6 +4026,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		1F38E2C32183289B003FCAEE /* EmailVerificationKeyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F38E2CC218328A0003FCAEE /* Build configuration list for PBXNativeTarget "EmailVerificationKeyboard" */;
+			buildPhases = (
+				1F38E2C02183289B003FCAEE /* Sources */,
+				1F38E2C12183289B003FCAEE /* Frameworks */,
+				1F38E2C22183289B003FCAEE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EmailVerificationKeyboard;
+			productName = EmailVerificationKeyboard;
+			productReference = 1F38E2C42183289B003FCAEE /* EmailVerificationKeyboard.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1FD9B777207CBE8900906D80 /* Build configuration list for PBXNativeTarget "Wisnuc-iOS-Swift" */;
@@ -3975,10 +4053,12 @@
 				1FD9B74A207CBE8700906D80 /* Resources */,
 				86DDF45F5CCB6C594636B31F /* [CP] Embed Pods Frameworks */,
 				1FC5702520C0E77200D4499D /* Headers */,
+				1F38E2CF218328A0003FCAEE /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1F38E2CA2183289F003FCAEE /* PBXTargetDependency */,
 			);
 			name = "Wisnuc-iOS-Swift";
 			productName = "Wisnuc-iOS-Swift";
@@ -4029,10 +4109,13 @@
 		1FD9B744207CBE8700906D80 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0930;
+				LastSwiftUpdateCheck = 1000;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "wisnuc-imac";
 				TargetAttributes = {
+					1F38E2C32183289B003FCAEE = {
+						CreatedOnToolsVersion = 10.0;
+					};
 					1FD9B74B207CBE8700906D80 = {
 						CreatedOnToolsVersion = 9.3;
 						LastSwiftMigration = 0930;
@@ -4077,11 +4160,20 @@
 				1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */,
 				1FD9B762207CBE8900906D80 /* Wisnuc-iOS-SwiftTests */,
 				1FD9B76D207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests */,
+				1F38E2C32183289B003FCAEE /* EmailVerificationKeyboard */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1F38E2C22183289B003FCAEE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F38E2D12183293A003FCAEE /* KeyboardViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1FD9B74A207CBE8700906D80 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4608,6 +4700,7 @@
 				1FFD12C420EB175E0053A3F7 /* NewFolderViewController.storyboard in Resources */,
 				1F5AD93F20AD80980065DAD3 /* files_audio_small@2x.png in Resources */,
 				1FAADEC120ABFD6A00739220 /* files_move_gray.png in Resources */,
+				1F38E2BF2182FD33003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib in Resources */,
 				1F38E2A82181CA19003FCAEE /* photo_icon_device_detail.png in Resources */,
 				1FE08965217479870049F44B /* add_gray@3x.png in Resources */,
 				1F38E2532179B5EE003FCAEE /* share_box_icon.png in Resources */,
@@ -4773,6 +4866,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1F38E2C02183289B003FCAEE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F38E2C72183289E003FCAEE /* KeyboardViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1FD9B748207CBE8700906D80 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4990,6 +5091,7 @@
 				1FFD12C120EB0F310053A3F7 /* NewFolderViewController.swift in Sources */,
 				1FE9EF8F20EF61A200732728 /* PHPhotoLibraryExtension.swift in Sources */,
 				1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */,
+				1F38E2BE2182FD33003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift in Sources */,
 				1F83AE7720886A13007CCCFD /* LogOutViewController.swift in Sources */,
 				1FFD131320EE29460053A3F7 /* WSAsset.swift in Sources */,
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
@@ -5049,6 +5151,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1F38E2CA2183289F003FCAEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F38E2C32183289B003FCAEE /* EmailVerificationKeyboard */;
+			targetProxy = 1F38E2C92183289F003FCAEE /* PBXContainerItemProxy */;
+		};
 		1FD9B765207CBE8900906D80 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */;
@@ -5092,6 +5199,49 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1F38E2CD218328A0003FCAEE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				INFOPLIST_FILE = EmailVerificationKeyboard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift.EmailVerificationKeyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1F38E2CE218328A0003FCAEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8SC32MU7TG;
+				INFOPLIST_FILE = EmailVerificationKeyboard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift.EmailVerificationKeyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		1FD9B775207CBE8900906D80 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -5216,6 +5366,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A2E46DED0606DFD7C36C1714 /* Pods-Wisnuc-iOS-Swift.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
@@ -5254,6 +5405,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 72D3A0839AD7C3FBFBBADDD6 /* Pods-Wisnuc-iOS-Swift.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
@@ -5373,6 +5525,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1F38E2CC218328A0003FCAEE /* Build configuration list for PBXNativeTarget "EmailVerificationKeyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F38E2CD218328A0003FCAEE /* Debug */,
+				1F38E2CE218328A0003FCAEE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1FD9B747207CBE8700906D80 /* Build configuration list for PBXProject "Wisnuc-iOS-Swift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

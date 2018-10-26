@@ -18,9 +18,6 @@ class SettingLanguageViewController: BaseViewController {
     let headerHeight:CGFloat = 64
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        prepareNavigationBar()
-        
         if AppUserService.currentUser?.language != nil {
             lastPath = IndexPath.init(row: (AppUserService.currentUser?.language?.intValue)!, section: 0)
         }else{
@@ -40,22 +37,11 @@ class SettingLanguageViewController: BaseViewController {
         
     }
     
-    @objc func dismiss(_ sender:UIBarButtonItem){
-        self.presentingViewController?.dismiss(animated: true, completion: {
-            
-        })
-    }
-    
-    
-    func prepareNavigationBar(){
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_gray.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(dismiss(_ :)))
-    }
-    
     lazy var infoTableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UINib.init(nibName: StringExtension.classNameAsString(targetClass: DeviceDetailInfdTableViewCell.self), bundle: nil), forCellReuseIdentifier: identifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
         tableView.tableFooterView = UIView.init(frame: CGRect.zero)
         tableView.isScrollEnabled = false
         return tableView
@@ -82,7 +68,7 @@ class SettingLanguageViewController: BaseViewController {
 
 extension SettingLanguageViewController:UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return 2
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -123,6 +109,7 @@ extension SettingLanguageViewController:UITableViewDataSource,UITableViewDelegat
             cell.accessoryType = UITableViewCellAccessoryType.none
 
         }
+        cell.tintColor = COR1
         
         return cell
     }

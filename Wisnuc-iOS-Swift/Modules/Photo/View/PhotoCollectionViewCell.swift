@@ -22,7 +22,17 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     var isSelect:Bool?
     var selectedBlock:((Bool)->())?
     var longPressBlock:(()->())?
-    var isSelectMode:Bool?
+    var isSelectMode:Bool?{
+        didSet{
+            if isSelectMode!{
+                self.btnSelect?.setImage(UIImage.init(named: "select.png"), for: UIControlState.selected)
+                self.btnSelect?.setImage(UIImage.init(named: "unselect_white.png"), for: UIControlState.normal)
+            }else{
+                self.btnSelect?.setImage(UIImage.init(named: ""), for: UIControlState.selected)
+                self.btnSelect?.setImage(UIImage.init(named: ""), for: UIControlState.normal)
+            }
+        }
+    }
     var model:WSAsset?{
         didSet{
             switch model?.type {
@@ -197,7 +207,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         } else {
             self.btnSelect = UIButton.init()
             self.btnSelect?.frame = CGRect.init(x: 5, y: 5, width: btnFrame, height: btnFrame)
-            self.btnSelect?.setBackgroundImage(UIImage.init(named: "select.png"), for: UIControlState.normal)
             self.btnSelect?.addTarget(self, action: #selector(btnSelectClick(_ :)), for: UIControlEvents.touchUpInside)
         }
         self.contentView.addSubview(self.btnSelect!)
@@ -206,7 +215,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     func setSelectAnimation(isSelect:Bool,animation:Bool){
         self.isSelect = isSelect
-        self.btnSelect?.isHidden = !isSelect
+        self.btnSelect?.isSelected = isSelect
         if (isSelect) {
             if(animation) {
                 self.btnSelect?.layer.add(GetBtnStatusChangedAnimation(), forKey: nil)

@@ -77,12 +77,12 @@ extension DeviceBackupRootViewController:UITableViewDataSource,UITableViewDelega
         leftLabel.font = UIFont.systemFont(ofSize: 14)
         headerBackgroudView.addSubview(leftLabel)
         
-        let rightLabel = UILabel.init(frame: CGRect(x: __kWidth - MarginsWidth - (__kWidth/2 - MarginsWidth), y: headerBackgroudView.height/2 - 14/2, width: __kWidth/2 - MarginsWidth, height: 14))
-        rightLabel.textColor = LightGrayColor
-        rightLabel.font = UIFont.systemFont(ofSize: 14)
-        rightLabel.textAlignment = .right
-        rightLabel.text = LocalizedString(forKey: "已备容量")
-        headerBackgroudView.addSubview(rightLabel)
+//        let rightLabel = UILabel.init(frame: CGRect(x: __kWidth - MarginsWidth - (__kWidth/2 - MarginsWidth), y: headerBackgroudView.height/2 - 14/2, width: __kWidth/2 - MarginsWidth, height: 14))
+//        rightLabel.textColor = LightGrayColor
+//        rightLabel.font = UIFont.systemFont(ofSize: 14)
+//        rightLabel.textAlignment = .right
+//        rightLabel.text = LocalizedString(forKey: "已备容量")
+//        headerBackgroudView.addSubview(rightLabel)
         
         if section == 0{
             leftLabel.text = LocalizedString(forKey: "来自手机的备份")
@@ -101,11 +101,11 @@ extension DeviceBackupRootViewController:UITableViewDataSource,UITableViewDelega
                 cell.accessoryType = .disclosureIndicator
                 cell.titleLabel.text = "iphone X"
                 cell.detailLabel.text = "当前手机"
-                cell.rightLabel.text = "1.3G"
+//                cell.rightLabel.text = "1.3G"
             case 1:
                 cell.accessoryType = .disclosureIndicator
                 cell.titleLabel.text = "iphone Xs"
-                cell.rightLabel.text = "3G"
+//                cell.rightLabel.text = "3G"
             default:
                 break
             }
@@ -115,11 +115,9 @@ extension DeviceBackupRootViewController:UITableViewDataSource,UITableViewDelega
             case 0:
                 cell.accessoryType = .disclosureIndicator
                 cell.titleLabel.text = "MAC"
-                cell.rightLabel.text = "1.3G"
             case 1:
                 cell.accessoryType = .disclosureIndicator
                 cell.titleLabel.text = "PC"
-                cell.rightLabel.text = "3G"
             default:
                 break
             }
