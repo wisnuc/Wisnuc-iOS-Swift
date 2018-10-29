@@ -403,9 +403,6 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     
     func getMatchVC(model:WSAsset) -> UIViewController?{
-//        let arrayFlatMap = dataSource.flatMap { $0 }
-//        let numbers = [[1,2,3],[4],[5,6,7,8,9]]
-//        let arr = dataSource?.reduce([], +)
         let arr = self.sortedAssetsBackupArray
         let index = arr?.index(of: model)
         if index != nil {

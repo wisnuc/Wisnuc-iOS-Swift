@@ -136,46 +136,17 @@ class MyVerificationCodeViewController: BaseViewController {
     func emailStateAction(){
         detailLabel.text = "6位验证码已发送至：\n wenshang@163.com(绑定邮箱)"
         detailLabel.frame = CGRect(x: MarginsWidth, y: titleLabel.bottom + MarginsWidth, width: __kWidth - MarginsWidth*2, height: 14*3)
-//        let keyboard = em.
-//        nicknameTextField.inputViewController = .numberPad
+        let keyboard = KeyBoardView.init()
+        keyboard.delegate = self
+        nicknameTextField.inputView = keyboard
+
     }
     
     func phoneStateAction(){
         detailLabel.text = "验证码已发送至您的手机号：139****2222"
         detailLabel.frame = CGRect(x: MarginsWidth, y: titleLabel.bottom + MarginsWidth, width: __kWidth - MarginsWidth*2, height: 14)
-    }
-    
-    func emailKeyboardChangeAction(noti:Notification){
-        //移除掉原先添加的按钮
-        self.extrakeyButton?.removeFromSuperview()
-        self.extrakeyButton = nil
-        //这几行代码相信看了之前系列博客的读者应该很熟悉了
-        var userInfo = noti.userInfo
-        let animationDuration = userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? TimeInterval ?? 0
-        let kbEndFrame: CGRect = userInfo?[UIKeyboardFrameEndUserInfoKey] as? CGRect ?? CGRect.zero
-        let kbHeight: CGFloat = kbEndFrame.size.height
-        //以下是对添加的X按钮Frame的设置
-        let extrakeyButtonX: CGFloat = 6
-        let extrakeyButtonW: CGFloat = (__kWidth - 6*4) / 3
-        let extrakeyButtonH: CGFloat = (kbHeight - (6 * 4) - 2) / 4
-        let extrakeyButtonY: CGFloat = __kHeight - kbHeight - extrakeyButtonH + 2
-        //创建“X”按钮，并设置相应的属性
-        extrakeyButton = UIButton(frame: CGRect(x: extrakeyButtonX, y: extrakeyButtonY, width: extrakeyButtonW, height: extrakeyButtonH))
-        self.extrakeyButton?.addTarget(self, action: #selector(buttonDidClicked(_ :)), for: .touchUpInside)
-        self.extrakeyButton?.titleLabel?.font = UIFont.systemFont(ofSize: 27)
-        self.extrakeyButton?.setTitle("X", for: .normal)
-        self.extrakeyButton?.setTitleColor(UIColor.black, for: .normal)
-        self.extrakeyButton?.setBackgroundImage(UIImage.init(color: UIColor.white), for: UIControlState.normal)
-        self.extrakeyButton?.setBackgroundImage(UIImage.init(color: UIColor.colorFromRGB(rgbValue: 0x0b8c6d3)), for: UIControlState.highlighted)
-        //获取键盘对应的Window(这段代码只在iOS 11上做过测试，还不够严谨)
-        let tempWindow: UIWindow? = UIApplication.shared.windows.last
-        tempWindow?.addSubview(self.extrakeyButton!)
-        //设置动画
-        UIView.animate(withDuration: animationDuration, animations: {
-            var frame: CGRect = self.extrakeyButton?.frame ?? CGRect.zero
-            frame.origin.y = frame.origin.y - kbHeight
-            self.extrakeyButton?.frame = frame
-        })
+        nicknameTextField.inputView = nil
+        nicknameTextField.keyboardType = .numberPad
     }
     
     @objc func buttonDidClicked(_ sender:UIButton){
@@ -219,7 +190,6 @@ class MyVerificationCodeViewController: BaseViewController {
     //键盘弹出监听
     @objc func keyboardShow(noti: Notification)  {
         if self.state == .email{
-            self.emailKeyboardChangeAction(noti:noti)
         }
         guard let userInfo = noti.userInfo else {return}
         guard let keyboardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else{return}
@@ -324,5 +294,18 @@ extension MyVerificationCodeViewController:UITextFieldDelegate{
             nextButtonDisableStyle()
         }
         return true
+    }
+}
+
+extension MyVerificationCodeViewController:KeyBoardViewDelegate{
+    func keyboard(_ keyboard: KeyBoardView!, didClickTextButton textBtn: UIButton!, string: NSMutableString!) {
+        if let textString = string as String?{
+            self.nicknameTextField.text = textString
+            if self.nicknameTextField.text?.count ?? 0 >= 6{
+                nextButtonEnableStyle()
+            }else{
+                nextButtonDisableStyle()
+            }
+        }
     }
 }

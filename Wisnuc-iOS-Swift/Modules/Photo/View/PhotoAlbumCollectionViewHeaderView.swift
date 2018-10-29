@@ -12,6 +12,7 @@ class PhotoAlbumCollectionViewHeaderView: UICollectionReusableView {
     lazy var contentView:UIView = UIView.init(frame: CGRect.zero)
     lazy var titleLabel:UILabel = UILabel.init(frame: CGRect(x: MarginsWidth, y: 24, width: __kWidth - MarginsWidth*2, height: 18))
     override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
+        super.apply(layoutAttributes)
         titleLabel.textColor = DarkGrayColor
         titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
         contentView.addSubview(titleLabel)

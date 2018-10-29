@@ -12,13 +12,11 @@ import Kingfisher
 class SettingRootViewController: BaseViewController {
     let identifier = "Cellidentifier"
     let cellHeight:CGFloat = 52
-    let headerHeight:CGFloat = 126 + 32 + 36
+    let headerHeight:CGFloat = 126 + 32 + 36 + 8
     var autoBackupSwitchOn = false
     var wifiSwitchOn = true
     override func viewDidLoad() {
         super.viewDidLoad()
-   
-       
         appBar.headerViewController.headerView.trackingScrollView = settingTabelView
         self.view.addSubview(settingTabelView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
@@ -76,7 +74,7 @@ class SettingRootViewController: BaseViewController {
     }
     
     
-    @objc func headerTipsViewTap(_ sender:UIGestureRecognizer){
+    @objc func secureHighViewTap(_ sender:UIGestureRecognizer){
         if let tab = retrieveTabbarController(){
             tab.setTabBarHidden(true, animated: true)
         }
@@ -88,6 +86,38 @@ class SettingRootViewController: BaseViewController {
         AppUserService.logoutUser()
         AppService.sharedInstance().abort()
         appDelegate.initRootVC()
+    }
+    
+    func setHeaderContent(){
+        headerDetailLabel.text = LocalizedString(forKey: "查看并编辑个人资料")
+        headerDetailLabel.font = UIFont.systemFont(ofSize: 14)
+        headerDetailLabel.textColor = DarkGrayColor
+        myInfoView.addSubview(headerDetailLabel)
+        
+        headerTitleLabel.text = LocalizedString(forKey: "13929900902")
+        headerTitleLabel.font = UIFont.boldSystemFont(ofSize: 28)
+        headerTitleLabel.textColor = DarkGrayColor
+        myInfoView.addSubview(headerTitleLabel)
+        
+        avatarImageView.image = UIImage.init(named: "avatar_placeholder.png")
+        myInfoView.addSubview(avatarImageView)
+        
+        headerTipsLabel.text = LocalizedString(forKey: "提高安全性还有1步")
+        headerTipsLabel.font = UIFont.systemFont(ofSize: 18)
+        headerTipsLabel.textColor = DarkGrayColor
+        
+        //        headerTipsView.backgroundColor = .red
+        headerTipsView.addSubview(headerTipsLabel)
+        headerTipsView.addSubview(secureProgressView)
+        headerTipsView.isUserInteractionEnabled = true
+
+        secureProgressView.transform = CGAffineTransform.init(scaleX: 1.0, y: 10.0)
+        secureProgressView.progressTintColor = UIColor.colorFromRGB(rgbValue: 0x0f9a825)
+        secureProgressView.trackTintColor = Gray12Color
+        secureProgressView.progress = 0.5
+        headerView.addSubview(myInfoView)
+        headerView.addSubview(headerTipsView)
+        headerView.addSubview(secureHighView)
     }
     
     lazy var settingTabelView: UITableView = {
@@ -136,6 +166,26 @@ class SettingRootViewController: BaseViewController {
         label.font = UIFont.systemFont(ofSize: 14)
         label.textAlignment = .right
         return label
+    }()
+    
+    lazy var secureHighView: UIView = { [weak self] in
+        let view = UIView.init(frame: CGRect(x: 0, y: (self?.headerTipsView.bottom)! + 1, width: __kWidth, height: 32))
+        
+        let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: 0, width: __kWidth - MarginsWidth*2 - 40, height: 32))
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.text = LocalizedString(forKey: "去提高安全性")
+        label.textColor = DarkGrayColor
+        view.addSubview(label)
+        
+        let imageView = UIImageView.init(frame: CGRect(x: __kWidth - 24 - MarginsWidth + 4, y: view.height/2 - 24/2, width: 24, height: 24))
+        imageView.image = UIImage.init(named: "cell_arrow.png")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        imageView.tintColor = LightGrayColor
+        view.addSubview(imageView)
+        
+        view.isUserInteractionEnabled = true
+        let tapGestrue = UITapGestureRecognizer.init(target: self, action: #selector(secureHighViewTap(_ :)))
+        view.addGestureRecognizer(tapGestrue)
+        return view
     }()
 }
 
@@ -190,39 +240,7 @@ extension SettingRootViewController:UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        headerDetailLabel.text = LocalizedString(forKey: "查看并编辑个人资料")
-        headerDetailLabel.font = UIFont.systemFont(ofSize: 14)
-        headerDetailLabel.textColor = DarkGrayColor
-        myInfoView.addSubview(headerDetailLabel)
-        
-        headerTitleLabel.text = LocalizedString(forKey: "13929900902")
-        headerTitleLabel.font = UIFont.boldSystemFont(ofSize: 28)
-        headerTitleLabel.textColor = DarkGrayColor
-        myInfoView.addSubview(headerTitleLabel)
-       
-        avatarImageView.image = UIImage.init(named: "avatar_placeholder.png")
-        myInfoView.addSubview(avatarImageView)
-        
-        headerTipsLabel.text = LocalizedString(forKey: "提高安全性还有1步")
-        headerTipsLabel.font = UIFont.systemFont(ofSize: 18)
-        headerTipsLabel.textColor = DarkGrayColor
-        
-//        headerTipsView.backgroundColor = .red
-        headerTipsView.addSubview(headerTipsLabel)
-        headerTipsView.addSubview(secureProgressView)
-        headerTipsView.isUserInteractionEnabled = true
-        let tapGestrue = UITapGestureRecognizer.init(target: self, action: #selector(headerTipsViewTap(_ :)))
-        headerTipsView.addGestureRecognizer(tapGestrue)
-        secureProgressView.layer.cornerRadius = 2
-        secureProgressView.transform = CGAffineTransform.init(scaleX: 1.0, y: 8.0)
-        
-        secureProgressView.progressTintColor = UIColor.colorFromRGB(rgbValue: 0x0f9a825)
-        secureProgressView.trackTintColor = Gray12Color
-        secureProgressView.clipsToBounds = true
-        secureProgressView.progress = 0.5
-        headerView.addSubview(myInfoView)
-        headerView.addSubview(headerTipsView)
-    
+        setHeaderContent()
         return headerView
     }
     

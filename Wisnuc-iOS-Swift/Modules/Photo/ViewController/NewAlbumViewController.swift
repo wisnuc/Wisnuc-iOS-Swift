@@ -21,12 +21,18 @@ enum HeaderExtensionType {
 //    func updateNewAlbumFinish(data:Dictionary<String,Any>)
 }
 
+
+let ChangePageDalay = 8
+let Distance = 2
+let NN:CGFloat = 3
+
 class NewAlbumViewController: BaseViewController {
     private let reuseIdentifier = "reuseIdentifierCell"
     private let reuseHeaderIdentifier = "reuseIdentifierHeader"
     private let cellContentSizeWidth = (__kWidth - 4)/2
     private let cellContentSizeHeight = (__kWidth - 4)/2
     private let estimateDefaultHeight:CGFloat = 100
+    private var idealHeight:CGFloat = 0.0
     
     var dataDic:Dictionary<String,Any>?
     lazy var dataSource = Array<WSAsset>.init()
@@ -64,6 +70,7 @@ class NewAlbumViewController: BaseViewController {
         self.view.addSubview(photoCollectionView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
     }
+    
     deinit {
         // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
         appBar.appBarViewController.headerView.trackingScrollView = nil
@@ -82,11 +89,41 @@ class NewAlbumViewController: BaseViewController {
        
     }
     
+    //图片算法
+    private func CGSizeResizeToHeight(size: CGSize, height: CGFloat) -> CGSize {
+        var size = size
+        size.width *= height / size.height
+        size.height = height
+        return size
+    }
+
+    func getMatchVC(model:WSAsset) -> UIViewController?{
+        let arr = self.dataSource
+        let index = arr.index(of: model)
+        if index != nil {
+            return self.getBigImageVC(data: arr, index:index!)
+        }else{
+            return nil
+        }
+        
+    }
+    
+    func getBigImageVC(data:Array<WSAsset>,index:Int) -> UIViewController{
+        let vc = WSShowBigimgViewController.init()
+        vc.delegate = self
+        vc.models = data
+        vc.selectIndex = index
+        let cell:NewPhotoAlbumCollectionViewCell = self.photoCollectionView.cellForItem(at: (self.photoCollectionView.indexPathsForSelectedItems?.first)!) as! NewPhotoAlbumCollectionViewCell
+        vc.senderViewForAnimation = cell
+        vc.scaleImage = cell.image
+        return vc
+    }
+    
     @objc func finishEditing(_ sender:UIBarButtonItem){
         self.state = .normal
         var dic:Dictionary<String,Any> = Dictionary.init()
         dic["name"] = albumTitleText ?? LocalizedString(forKey: "未命名相册")
-        dic["describe"] = albumDescribeText!
+        dic["describe"] = albumDescribeText ?? ""
         dic["photoData"] = dataSource
        
       
@@ -194,60 +231,9 @@ class NewAlbumViewController: BaseViewController {
 //
     }
     
-    func imageHeight(asset:WSAsset, layoutWidth: CGFloat, estimateHeight: CGFloat) -> CGFloat {
-        var showHeight = estimateDefaultHeight
-        if estimateHeight != 0.0 {
-            showHeight = estimateHeight
-        }
-        if  layoutWidth == 0.0 {
-            return showHeight
-        }
-        
-        var size: CGSize = CGSize.zero
-        
-        if asset is NetAsset{
-            let  netAsset = asset as! NetAsset
-            let width = netAsset.metadata?.w ?? 0
-            let height = netAsset.metadata?.h ?? 0
-            size = CGSize(width: CGFloat(width), height: CGFloat(height))
-        }else{
-            if asset.asset != nil{
-                size = CGSize.init(width: asset.asset?.pixelWidth ?? 0, height: asset.asset?.pixelHeight ?? 0)
-            }
-        }
-        
-        let imgWidth: CGFloat = size.width
-        let imgHeight: CGFloat = size.height
-        if imgWidth > 0 && imgHeight > 0 {
-            showHeight = layoutWidth / imgWidth * imgHeight
-        }
-        return showHeight
-    }
-    
-    
-    func itemHeight(at indexPath: IndexPath) -> CGFloat {
-        let asset = dataSource[indexPath.row]
-        /**
-         *  参数1:图片URL
-         *  参数2:imageView 宽度
-         *  参数3:预估高度,(此高度仅在图片尚未加载出来前起作用,不影响真实高度)
-         */
-        return self.imageHeight(asset:asset, layoutWidth: self.layout.itemWidth, estimateHeight: 200)
-    }
-    
-   
-    
-    lazy var layout: NewAlbumViewCollectionLayout = { [weak self] in
-        var layoutNew:NewAlbumViewCollectionLayout?
-        layoutNew = NewAlbumViewCollectionLayout.init(itemsHeightBlock: { [weak self] (index) -> CGFloat in
-            return (self?.itemHeight(at: index!))!
-        })
-        return layoutNew!
-    }()
-    
     lazy var photoCollectionView: UICollectionView = { [weak self] in
         let collectionViewLayout = UICollectionViewFlowLayout.init()
-        //        collectionViewLayout.itemSize
+        collectionViewLayout.sectionInset = UIEdgeInsetsMake(2, 2, 2, 2)
         let collectionView = UICollectionView.init(frame: CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight), collectionViewLayout: collectionViewLayout)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -297,7 +283,16 @@ extension NewAlbumViewController:UICollectionViewDelegate,UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+        let model = self.dataSource[indexPath.row]
+        let vc = self.getMatchVC(model: model)
+        if vc != nil {
+            self.present(vc!, animated: true) {
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -331,32 +326,119 @@ extension NewAlbumViewController:UICollectionViewDelegate,UICollectionViewDataSo
 }
 
 extension NewAlbumViewController :UICollectionViewDelegateFlowLayout{
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let asset = dataSource[indexPath.row]
-        if asset is NetAsset{
-          let  netAsset = asset as! NetAsset
-            netAsset.metadata?.w
-            netAsset.metadata?.h
+        
+        
+        let N = Int(dataSource.count)
+        var newFrames = [CGRect](repeating: CGRect.zero, count: N)
+        
+        
+        idealHeight = max(collectionView.frame.size.height, collectionView.frame.size.width) / NN
+        var seq = [Float](repeating: 0.0, count: N)
+        
+        var totalWidth: Float = 0
+
+        for i in 0..<dataSource.count {
+            let asset = dataSource[i]
+            var imageSize = CGSize(width: CGFloat(asset.asset?.pixelWidth ?? Int(cellContentSizeWidth)), height: CGFloat(asset.asset?.pixelHeight ?? Int(cellContentSizeWidth)))
+            
+            if asset is NetAsset{
+                let  netAsset = asset as! NetAsset
+                imageSize =  CGSize(width: CGFloat(netAsset.metadata?.w ?? Float(cellContentSizeWidth)), height:   CGFloat(netAsset.metadata?.h ?? Float(cellContentSizeWidth)))
+            }
+            let newSize: CGSize = CGSizeResizeToHeight(size: imageSize, height: idealHeight)
+            newFrames[i] = CGRect.init(origin: CGPoint(x: 0, y: 0), size: newSize)
+            seq[i] = Float(newSize.width)
+            totalWidth += seq[i]
         }
-//        var size = CGSize(width: <#T##CGFloat#>, height: <#T##CGFloat#>)
-        return CGSize(width:cellContentSizeWidth , height: cellContentSizeHeight)
+        
+        let K = Int(roundf(totalWidth / Float(collectionView.frame.size.width)))
+        
+        var M = Array.init(repeating: Array<Float>.init(repeating: 0, count: K), count: N)
+        var D = Array.init(repeating: Array<Float>.init(repeating: 0, count: K), count: N) 
+        
+        for i in 0..<N {
+            for j in 0..<K {
+                D[i][j] = 0
+            }
+        }
+        for i in 0..<K {
+            M[0][i] = seq[0]
+        }
+        for i in 0..<N {
+            M[i][0] = seq[i] + (i == 0 ? 0 : M[i - 1][0] )
+        }
+        var cost: Float = 0.0
+        for i in 1..<N {
+            for j in 1..<K {
+                M[i][j] = Float(INT_MAX)
+                for k in 0..<i {
+                    cost = max(M[k][j - 1], M[i][0] - M[k][0])
+                    if M[i][j] > cost {
+                        M[i][j] = cost
+                        D[i][j] = Float(k)
+                    }
+                }
+            }
+        }
+        
+        /**
+         Ranges & Resizes
+         */
+        var k1: Int = K - 1
+        var n1: Int = N - 1
+        var ranges = Array.init(repeating: Array<Int>.init(repeating: 0, count: 2), count: N)
+        while k1 >= 0 {
+            ranges[k1][0] = Int(D[n1][k1] + 1)
+            ranges[k1][1] = n1
+            n1 = Int(D[n1][k1])
+            k1 -= 1
+        }
+        ranges[0][0] = 0
+        
+        let cellDistance = CGFloat(Distance)
+        var heightOffset: CGFloat = cellDistance
+        var widthOffset: CGFloat = 0.0
+        var frameWidth: CGFloat = 0.0
+        
+        for i in 0..<K {
+            var rowWidth: CGFloat = 0
+            frameWidth = collectionView.frame.size.width - CGFloat(((ranges[i][1] - ranges[i][0]) + 2)) * CGFloat(cellDistance)
+            for j in ranges[i][0]...ranges[i][1] {
+                rowWidth += newFrames[j].size.width
+            }
+            let ratio: CGFloat = frameWidth / rowWidth
+            widthOffset = 0
+            for j in ranges[i][0]...ranges[i][1] {
+                newFrames[j].size.width *= ratio
+                newFrames[j].size.height *= ratio
+                newFrames[j].origin.x = widthOffset + CGFloat(j - ranges[i][0] + 1) * cellDistance
+                newFrames[j].origin.y = heightOffset
+                widthOffset += newFrames[j].size.width
+            }
+            heightOffset += newFrames[ranges[i][0]].size.height + cellDistance
+        }
+        
+        let frame: CGRect = newFrames[indexPath.row]
+        return CGSize(width: frame.size.width - 1, height:  frame.size.height - 1)
     }
 
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 4
+        return 3
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 4
+        return 3
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return   UIEdgeInsets.init(top: 8, left: 0, bottom: 0, right: 0)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return   UIEdgeInsets.init(top: 8, left: 0, bottom: 0, right: 0)
+//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return  CGSize(width: __kWidth, height: headerExtensionArray.contains(HeaderExtensionType.textView) ? 155 + MarginsWidth + 88 + MarginsWidth : 155 )
+        return  CGSize(width: __kWidth, height: headerExtensionArray.contains(HeaderExtensionType.textView) ? 165 + MarginsWidth + 88 + MarginsWidth : 165 )
     }
     
     //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
@@ -371,7 +453,7 @@ extension NewAlbumViewController :PhotoRootViewControllerDelegate{
            let resultsSize = self?.dataSource.count
             self?.dataSource.append(contentsOf: assets)
            
-            self?.dataDic!["photoData"] = self?.dataSource
+//            self?.dataDic!["photoData"] = self?.dataSource
 //            self?.delegate?.updateNewAlbumFinish(data: (self?.dataDic)!)
            var arrayWithIndexPaths = [IndexPath]()
           
@@ -386,5 +468,17 @@ extension NewAlbumViewController :PhotoRootViewControllerDelegate{
                 self?.photoCollectionView.reloadItems(at: (self?.photoCollectionView.indexPathsForVisibleItems)!)
             }
         }
+    }
+}
+
+extension NewAlbumViewController:WSShowBigImgViewControllerDelegate{
+    func photoBrowser(browser: WSShowBigimgViewController, indexPath: IndexPath) {
+        self.photoCollectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.centeredVertically, animated: false)
+        self.photoCollectionView.layoutIfNeeded()
+    }
+    
+    func photoBrowser(browser: WSShowBigimgViewController, willDismiss indexPath: IndexPath) -> UIView? {
+        let cell = self.photoCollectionView.cellForItem(at: indexPath)
+        return cell
     }
 }

@@ -126,6 +126,17 @@
 		1F1BAC6120CE709100D32C5A /* files_jpg_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC5B20CE709000D32C5A /* files_jpg_small@3x.png */; };
 		1F1BAC6220CE709100D32C5A /* files_png_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC5C20CE709100D32C5A /* files_png_small@2x.png */; };
 		1F1BAC6320CE709100D32C5A /* files_png_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1BAC5D20CE709100D32C5A /* files_png_small@3x.png */; };
+		1F1C2FCB2186D314002B13F8 /* LetterKeyBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C2FC32186D312002B13F8 /* LetterKeyBoardView.m */; };
+		1F1C2FCC2186D314002B13F8 /* KeyBoradTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1C2FC42186D312002B13F8 /* KeyBoradTool.h */; };
+		1F1C2FCD2186D314002B13F8 /* LetterKeyBoardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1C2FC52186D312002B13F8 /* LetterKeyBoardView.h */; };
+		1F1C2FCE2186D314002B13F8 /* KeyBoradTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C2FC62186D312002B13F8 /* KeyBoradTool.m */; };
+		1F1C2FCF2186D314002B13F8 /* NumberKeyBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C2FC72186D313002B13F8 /* NumberKeyBoardView.m */; };
+		1F1C2FD02186D314002B13F8 /* KeyBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F1C2FC82186D313002B13F8 /* KeyBoardView.m */; };
+		1F1C2FD12186D314002B13F8 /* KeyBoardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1C2FC92186D313002B13F8 /* KeyBoardView.h */; };
+		1F1C2FD22186D314002B13F8 /* NumberKeyBoardView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1C2FCA2186D314002B13F8 /* NumberKeyBoardView.h */; };
+		1F1C2FD62186D654002B13F8 /* delete_keyboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1C2FD32186D654002B13F8 /* delete_keyboard@2x.png */; };
+		1F1C2FD72186D654002B13F8 /* delete_keyboard@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1C2FD42186D654002B13F8 /* delete_keyboard@3x.png */; };
+		1F1C2FD82186D654002B13F8 /* delete_keyboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F1C2FD52186D654002B13F8 /* delete_keyboard.png */; };
 		1F2A380120DA57CE0035EED5 /* task_suspend.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2A380020DA57CE0035EED5 /* task_suspend.png */; };
 		1F2A380320DA57DC0035EED5 /* task_suspend@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2A380220DA57DB0035EED5 /* task_suspend@2x.png */; };
 		1F2A380520DA57EA0035EED5 /* task_suspend@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F2A380420DA57EA0035EED5 /* task_suspend@3x.png */; };
@@ -281,9 +292,6 @@
 		1F38E2BA2181D0BF003FCAEE /* SettingLanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E2B92181D0BE003FCAEE /* SettingLanguageViewController.swift */; };
 		1F38E2BE2182FD33003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E2BC2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift */; };
 		1F38E2BF2182FD33003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2BD2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib */; };
-		1F38E2C72183289E003FCAEE /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F38E2C62183289E003FCAEE /* KeyboardViewController.swift */; };
-		1F38E2CB2183289F003FCAEE /* EmailVerificationKeyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1F38E2C42183289B003FCAEE /* EmailVerificationKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		1F38E2D12183293A003FCAEE /* KeyboardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E2D02183293A003FCAEE /* KeyboardViewController.xib */; };
 		1F3C23F120A2A0C500E6B953 /* BaseSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */; };
 		1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */; };
 		1F3C23F720A2D6AE00E6B953 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3C23F620A2D6AE00E6B953 /* menu.png */; };
@@ -475,6 +483,8 @@
 		1F8EBB5620A0239000E8AB83 /* files_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5520A0238F00E8AB83 /* files_folder.png */; };
 		1F8EBB5820A0239700E8AB83 /* files_folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */; };
 		1F8EBB5A20A0239F00E8AB83 /* files_folder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */; };
+		1FA3B1D22186FB6900B68AA7 /* NewPhotoAlbumLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D02186FB6900B68AA7 /* NewPhotoAlbumLayout.m */; };
+		1FA3B1D32186FB6900B68AA7 /* NewPhotoAlbumLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FA3B1D12186FB6900B68AA7 /* NewPhotoAlbumLayout.h */; };
 		1FA5D7552159FECA0025F870 /* eye_open.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D7542159FECA0025F870 /* eye_open.png */; };
 		1FA5D7572159FED20025F870 /* eye_open@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D7562159FED20025F870 /* eye_open@2x.png */; };
 		1FA5D7592159FED90025F870 /* eye_open@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA5D7582159FED90025F870 /* eye_open@3x.png */; };
@@ -927,13 +937,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1F38E2C92183289F003FCAEE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1FD9B744207CBE8700906D80 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1F38E2C32183289B003FCAEE;
-			remoteInfo = EmailVerificationKeyboard;
-		};
 		1FD9B764207CBE8900906D80 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1FD9B744207CBE8700906D80 /* Project object */;
@@ -957,7 +960,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				1F38E2CB2183289F003FCAEE /* EmailVerificationKeyboard.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1084,6 +1086,17 @@
 		1F1BAC5B20CE709000D32C5A /* files_jpg_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_jpg_small@3x.png"; sourceTree = "<group>"; };
 		1F1BAC5C20CE709100D32C5A /* files_png_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_png_small@2x.png"; sourceTree = "<group>"; };
 		1F1BAC5D20CE709100D32C5A /* files_png_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_png_small@3x.png"; sourceTree = "<group>"; };
+		1F1C2FC32186D312002B13F8 /* LetterKeyBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LetterKeyBoardView.m; sourceTree = "<group>"; };
+		1F1C2FC42186D312002B13F8 /* KeyBoradTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyBoradTool.h; sourceTree = "<group>"; };
+		1F1C2FC52186D312002B13F8 /* LetterKeyBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LetterKeyBoardView.h; sourceTree = "<group>"; };
+		1F1C2FC62186D312002B13F8 /* KeyBoradTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyBoradTool.m; sourceTree = "<group>"; };
+		1F1C2FC72186D313002B13F8 /* NumberKeyBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NumberKeyBoardView.m; sourceTree = "<group>"; };
+		1F1C2FC82186D313002B13F8 /* KeyBoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyBoardView.m; sourceTree = "<group>"; };
+		1F1C2FC92186D313002B13F8 /* KeyBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyBoardView.h; sourceTree = "<group>"; };
+		1F1C2FCA2186D314002B13F8 /* NumberKeyBoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberKeyBoardView.h; sourceTree = "<group>"; };
+		1F1C2FD32186D654002B13F8 /* delete_keyboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete_keyboard@2x.png"; sourceTree = "<group>"; };
+		1F1C2FD42186D654002B13F8 /* delete_keyboard@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete_keyboard@3x.png"; sourceTree = "<group>"; };
+		1F1C2FD52186D654002B13F8 /* delete_keyboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete_keyboard.png; sourceTree = "<group>"; };
 		1F2A380020DA57CE0035EED5 /* task_suspend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = task_suspend.png; sourceTree = "<group>"; };
 		1F2A380220DA57DB0035EED5 /* task_suspend@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "task_suspend@2x.png"; sourceTree = "<group>"; };
 		1F2A380420DA57EA0035EED5 /* task_suspend@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "task_suspend@3x.png"; sourceTree = "<group>"; };
@@ -1242,10 +1255,6 @@
 		1F38E2B92181D0BE003FCAEE /* SettingLanguageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingLanguageViewController.swift; sourceTree = "<group>"; };
 		1F38E2BC2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountSecurityVerificationTableViewCell.swift; sourceTree = "<group>"; };
 		1F38E2BD2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyAccountSecurityVerificationTableViewCell.xib; sourceTree = "<group>"; };
-		1F38E2C42183289B003FCAEE /* EmailVerificationKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EmailVerificationKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F38E2C62183289E003FCAEE /* KeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardViewController.swift; sourceTree = "<group>"; };
-		1F38E2C82183289E003FCAEE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1F38E2D02183293A003FCAEE /* KeyboardViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KeyboardViewController.xib; sourceTree = "<group>"; };
 		1F3C23F020A2A0C500E6B953 /* BaseSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSearchBar.swift; sourceTree = "<group>"; };
 		1F3C23F420A2CF3E00E6B953 /* AppSearchBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSearchBarController.swift; sourceTree = "<group>"; };
 		1F3C23F620A2D6AE00E6B953 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
@@ -1438,6 +1447,8 @@
 		1F8EBB5520A0238F00E8AB83 /* files_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_folder.png; sourceTree = "<group>"; };
 		1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@2x.png"; sourceTree = "<group>"; };
 		1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@3x.png"; sourceTree = "<group>"; };
+		1FA3B1D02186FB6900B68AA7 /* NewPhotoAlbumLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewPhotoAlbumLayout.m; sourceTree = "<group>"; };
+		1FA3B1D12186FB6900B68AA7 /* NewPhotoAlbumLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPhotoAlbumLayout.h; sourceTree = "<group>"; };
 		1FA5D7542159FECA0025F870 /* eye_open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eye_open.png; sourceTree = "<group>"; };
 		1FA5D7562159FED20025F870 /* eye_open@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_open@2x.png"; sourceTree = "<group>"; };
 		1FA5D7582159FED90025F870 /* eye_open@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_open@3x.png"; sourceTree = "<group>"; };
@@ -1903,13 +1914,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1F38E2C12183289B003FCAEE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1FD9B749207CBE8700906D80 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2106,6 +2110,21 @@
 				1F17698120AD379B003D955F /* SearchFilesViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		1F1C2FBE2186D1E7002B13F8 /* Keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				1F1C2FC92186D313002B13F8 /* KeyBoardView.h */,
+				1F1C2FC82186D313002B13F8 /* KeyBoardView.m */,
+				1F1C2FC42186D312002B13F8 /* KeyBoradTool.h */,
+				1F1C2FC62186D312002B13F8 /* KeyBoradTool.m */,
+				1F1C2FC52186D312002B13F8 /* LetterKeyBoardView.h */,
+				1F1C2FC32186D312002B13F8 /* LetterKeyBoardView.m */,
+				1F1C2FCA2186D314002B13F8 /* NumberKeyBoardView.h */,
+				1F1C2FC72186D313002B13F8 /* NumberKeyBoardView.m */,
+			);
+			path = Keyboard;
 			sourceTree = "<group>";
 		};
 		1F2A37FF20DA57B80035EED5 /* Task */ = {
@@ -2350,16 +2369,6 @@
 				1F38E2BD2182FD32003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		1F38E2C52183289D003FCAEE /* EmailVerificationKeyboard */ = {
-			isa = PBXGroup;
-			children = (
-				1F38E2C62183289E003FCAEE /* KeyboardViewController.swift */,
-				1F38E2C82183289E003FCAEE /* Info.plist */,
-				1F38E2D02183293A003FCAEE /* KeyboardViewController.xib */,
-			);
-			path = EmailVerificationKeyboard;
 			sourceTree = "<group>";
 		};
 		1F3C241820A4499900E6B953 /* Helper */ = {
@@ -3225,7 +3234,6 @@
 				1FD9B74E207CBE8700906D80 /* Wisnuc-iOS-Swift */,
 				1FD9B766207CBE8900906D80 /* Wisnuc-iOS-SwiftTests */,
 				1FD9B771207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests */,
-				1F38E2C52183289D003FCAEE /* EmailVerificationKeyboard */,
 				1FD9B74D207CBE8700906D80 /* Products */,
 				5E5BF15A5A246403982C3175 /* Pods */,
 				8F207FC9B9AE44C14EAC998A /* Frameworks */,
@@ -3238,7 +3246,6 @@
 				1FD9B74C207CBE8700906D80 /* Wisnuc-iOS-Swift.app */,
 				1FD9B763207CBE8900906D80 /* Wisnuc-iOS-SwiftTests.xctest */,
 				1FD9B76E207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests.xctest */,
-				1F38E2C42183289B003FCAEE /* EmailVerificationKeyboard.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3372,6 +3379,7 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1F1C2FBE2186D1E7002B13F8 /* Keyboard */,
 				1F38E29A21816CBB003FCAEE /* Copy */,
 				1F0FD0D3214A4B93003D7936 /* BLE */,
 				1FBB6FAE213FC4E50090FA57 /* OpenSSL */,
@@ -3553,6 +3561,9 @@
 		1FE08924216F16EA0049F44B /* My */ = {
 			isa = PBXGroup;
 			children = (
+				1F1C2FD52186D654002B13F8 /* delete_keyboard.png */,
+				1F1C2FD32186D654002B13F8 /* delete_keyboard@2x.png */,
+				1F1C2FD42186D654002B13F8 /* delete_keyboard@3x.png */,
 				1FE08952217445AF0049F44B /* logo_main_theme.png */,
 				1FE08954217445BF0049F44B /* logo_main_theme@2x.png */,
 				1FE08956217445CB0049F44B /* logo_main_theme@3x.png */,
@@ -3823,7 +3834,8 @@
 		1FFD131120EE28F30053A3F7 /* Photos */ = {
 			isa = PBXGroup;
 			children = (
-				1FFD131220EE29460053A3F7 /* WSAsset.swift */,
+				1FA3B1D12186FB6900B68AA7 /* NewPhotoAlbumLayout.h */,
+				1FA3B1D02186FB6900B68AA7 /* NewPhotoAlbumLayout.m */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
@@ -3850,6 +3862,7 @@
 		1FFD133020EF3E010053A3F7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1FFD131220EE29460053A3F7 /* WSAsset.swift */,
 				1FFD133120EF3E140053A3F7 /* NetAsset.swift */,
 				060F918721575B3400AD9F26 /* PhotoAlbumModel.swift */,
 			);
@@ -3908,6 +3921,7 @@
 				1FBB7031213FC5240090FA57 /* sha.h in Headers */,
 				1FBB704A213FC5240090FA57 /* crypto.h in Headers */,
 				1FBB7032213FC5240090FA57 /* symhacks.h in Headers */,
+				1F1C2FCC2186D314002B13F8 /* KeyBoradTool.h in Headers */,
 				1FBB7049213FC5240090FA57 /* pkcs12.h in Headers */,
 				1FBB702B213FC5240090FA57 /* conf_api.h in Headers */,
 				1FBB702A213FC5240090FA57 /* engine.h in Headers */,
@@ -3933,6 +3947,7 @@
 				1FBB702F213FC5240090FA57 /* cmserr.h in Headers */,
 				1FBB7062213FC5240090FA57 /* ocsp.h in Headers */,
 				1FBB703B213FC5240090FA57 /* rand_drbg.h in Headers */,
+				1F1C2FD12186D314002B13F8 /* KeyBoardView.h in Headers */,
 				1FBB7054213FC5240090FA57 /* camellia.h in Headers */,
 				1FBB7043213FC5240090FA57 /* ecdsa.h in Headers */,
 				1FE9EF8920EF5DEA00732728 /* Base64.h in Headers */,
@@ -3945,6 +3960,7 @@
 				1FBB7055213FC5240090FA57 /* dherr.h in Headers */,
 				1FBB7024213FC5240090FA57 /* ossl_typ.h in Headers */,
 				1FBB7042213FC5240090FA57 /* safestack.h in Headers */,
+				1FA3B1D32186FB6900B68AA7 /* NewPhotoAlbumLayout.h in Headers */,
 				1FBB7033213FC5240090FA57 /* asn1.h in Headers */,
 				1FFD130E20EE1AFD0053A3F7 /* Wisnuc-iOS-Swift-Bridging-Header.h in Headers */,
 				1FBB7023213FC5240090FA57 /* ssl3.h in Headers */,
@@ -3959,6 +3975,7 @@
 				1FBB7071213FC5240090FA57 /* whrlpool.h in Headers */,
 				1FBB7065213FC5240090FA57 /* rand.h in Headers */,
 				1FBB704B213FC5240090FA57 /* opensslv.h in Headers */,
+				1F1C2FD22186D314002B13F8 /* NumberKeyBoardView.h in Headers */,
 				1FBB7053213FC5240090FA57 /* srp.h in Headers */,
 				1FBB7052213FC5240090FA57 /* ssl.h in Headers */,
 				1FBB705E213FC5240090FA57 /* cast.h in Headers */,
@@ -4003,6 +4020,7 @@
 				1FBB7040213FC5240090FA57 /* comperr.h in Headers */,
 				1FBB7067213FC5240090FA57 /* ts.h in Headers */,
 				1FBB7030213FC5240090FA57 /* ui.h in Headers */,
+				1F1C2FCD2186D314002B13F8 /* LetterKeyBoardView.h in Headers */,
 				1FBB7059213FC5240090FA57 /* hmac.h in Headers */,
 				1FBB7020213FC5240090FA57 /* pem.h in Headers */,
 				1F42429D20F335F00085E2F0 /* JYConst.h in Headers */,
@@ -4026,23 +4044,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		1F38E2C32183289B003FCAEE /* EmailVerificationKeyboard */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1F38E2CC218328A0003FCAEE /* Build configuration list for PBXNativeTarget "EmailVerificationKeyboard" */;
-			buildPhases = (
-				1F38E2C02183289B003FCAEE /* Sources */,
-				1F38E2C12183289B003FCAEE /* Frameworks */,
-				1F38E2C22183289B003FCAEE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = EmailVerificationKeyboard;
-			productName = EmailVerificationKeyboard;
-			productReference = 1F38E2C42183289B003FCAEE /* EmailVerificationKeyboard.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1FD9B777207CBE8900906D80 /* Build configuration list for PBXNativeTarget "Wisnuc-iOS-Swift" */;
@@ -4058,7 +4059,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				1F38E2CA2183289F003FCAEE /* PBXTargetDependency */,
 			);
 			name = "Wisnuc-iOS-Swift";
 			productName = "Wisnuc-iOS-Swift";
@@ -4113,9 +4113,6 @@
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "wisnuc-imac";
 				TargetAttributes = {
-					1F38E2C32183289B003FCAEE = {
-						CreatedOnToolsVersion = 10.0;
-					};
 					1FD9B74B207CBE8700906D80 = {
 						CreatedOnToolsVersion = 9.3;
 						LastSwiftMigration = 0930;
@@ -4160,20 +4157,11 @@
 				1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */,
 				1FD9B762207CBE8900906D80 /* Wisnuc-iOS-SwiftTests */,
 				1FD9B76D207CBE8900906D80 /* Wisnuc-iOS-SwiftUITests */,
-				1F38E2C32183289B003FCAEE /* EmailVerificationKeyboard */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1F38E2C22183289B003FCAEE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F38E2D12183293A003FCAEE /* KeyboardViewController.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1FD9B74A207CBE8700906D80 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4231,6 +4219,7 @@
 				1FE0896721747B8A0049F44B /* edit_gray.png in Resources */,
 				1FA5D771215CBA1C0025F870 /* calendar_gray@3x.png in Resources */,
 				1F38E2592179D614003FCAEE /* backup_box_icon.png in Resources */,
+				1F1C2FD72186D654002B13F8 /* delete_keyboard@3x.png in Resources */,
 				1F1BAC6120CE709100D32C5A /* files_jpg_small@3x.png in Resources */,
 				1F5659F320D0E35B00D86FDB /* share@3x.png in Resources */,
 				1F050E6320AAC91E0037F00A /* files_arrow_up.png in Resources */,
@@ -4514,6 +4503,7 @@
 				1FD9B755207CBE8700906D80 /* Main.storyboard in Resources */,
 				1F0FD0FB214A7123003D7936 /* wifi_config@2x.png in Resources */,
 				1FA6A1CB20CFBD72007A0AB2 /* gridstyle@3x.png in Resources */,
+				1F1C2FD82186D654002B13F8 /* delete_keyboard.png in Resources */,
 				1F050E1620A967FA0037F00A /* files_cloud@2x.png in Resources */,
 				1F4242C020FDF7570085E2F0 /* handrail@3x.png in Resources */,
 				1FBB6F512137C4940090FA57 /* success_white@3x.png in Resources */,
@@ -4626,6 +4616,7 @@
 				1FC5CC1320D3BDC800499E63 /* file_finish@3x.png in Resources */,
 				1FEABB5F20A14C0900824448 /* files_ppt_normal.png in Resources */,
 				1FD1F3062154DE6100C3E429 /* select@3x.png in Resources */,
+				1F1C2FD62186D654002B13F8 /* delete_keyboard@2x.png in Resources */,
 				1F050E3520AA7BBD0037F00A /* files_share_all@2x.png in Resources */,
 				1F0FD0DD214A6361003D7936 /* eye_open_gray@2x.png in Resources */,
 				1FE0897121747C320049F44B /* exchange_gray@3x.png in Resources */,
@@ -4866,14 +4857,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1F38E2C02183289B003FCAEE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1F38E2C72183289E003FCAEE /* KeyboardViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1FD9B748207CBE8700906D80 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4912,6 +4895,7 @@
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
 				1F38E2472178711B003FCAEE /* DeviceSambaSetPasswordViewController.swift in Sources */,
 				1FD1F2DD2151092800C3E429 /* SighUpAPI.swift in Sources */,
+				1F1C2FD02186D314002B13F8 /* KeyBoardView.m in Sources */,
 				1F050E4020AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.swift in Sources */,
 				1FE674E020D21B11006F97DB /* TRSessionDelegate.swift in Sources */,
 				1F359FEA2092C87900E2FF36 /* UIImage+extension.m in Sources */,
@@ -4960,6 +4944,7 @@
 				1F0FD0D9214A5298003D7936 /* AttributeTouchLabel.swift in Sources */,
 				1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */,
 				1FFD131E20EF1A340053A3F7 /* UIButton+EnlargeEdge.m in Sources */,
+				1FA3B1D22186FB6900B68AA7 /* NewPhotoAlbumLayout.m in Sources */,
 				1F050E6920AAEA2C0037F00A /* FilesFilesBottomSheetContentTableViewController.swift in Sources */,
 				1F4E93792089B1EF00DD1EA7 /* BaseViewController.swift in Sources */,
 				1F3C23F520A2CF3E00E6B953 /* AppSearchBarController.swift in Sources */,
@@ -5042,6 +5027,7 @@
 				1FE089A321770B560049F44B /* DeviceUsersManageViewController.swift in Sources */,
 				1FD9B79F207CC78B00906D80 /* NetEngine.swift in Sources */,
 				1F38E2BA2181D0BF003FCAEE /* SettingLanguageViewController.swift in Sources */,
+				1F1C2FCE2186D314002B13F8 /* KeyBoradTool.m in Sources */,
 				1F520968214A19BF0058A8D3 /* DeviceBLEModel.swift in Sources */,
 				1FE089952175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift in Sources */,
 				1F5882632085FDB400394BD6 /* UIViewControllerExtension.swift in Sources */,
@@ -5049,6 +5035,7 @@
 				1FA5D78B215E2F8B0025F870 /* PhotoShareView.swift in Sources */,
 				1FDBC50E20932171004DE6B8 /* DiskPopUpViewManager.swift in Sources */,
 				1F5882612085FBDF00394BD6 /* Alert.swift in Sources */,
+				1F1C2FCF2186D314002B13F8 /* NumberKeyBoardView.m in Sources */,
 				1F3C240920A4214600E6B953 /* AppNavigationDrawerController.swift in Sources */,
 				1FE0893E21704C660049F44B /* MyBindWechatViewController.swift in Sources */,
 				1FE0899F217706460049F44B /* DeviceIdentityViewController.swift in Sources */,
@@ -5077,6 +5064,7 @@
 				1FFD12AD20E3412E0053A3F7 /* FilesMoveToRootViewController.swift in Sources */,
 				1F5378792108754F00A555C5 /* AnyEncodable.swift in Sources */,
 				1FD9B790207CC75500906D80 /* StringExtension.swift in Sources */,
+				1F1C2FCB2186D314002B13F8 /* LetterKeyBoardView.m in Sources */,
 				1F2CE30220B4311000D9E5BD /* User+CoreDataProperties.swift in Sources */,
 				1F0FD101214B698C003D7936 /* DiskFormatViewController.swift in Sources */,
 				1F8EBB52209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift in Sources */,
@@ -5151,11 +5139,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1F38E2CA2183289F003FCAEE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1F38E2C32183289B003FCAEE /* EmailVerificationKeyboard */;
-			targetProxy = 1F38E2C92183289F003FCAEE /* PBXContainerItemProxy */;
-		};
 		1FD9B765207CBE8900906D80 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FD9B74B207CBE8700906D80 /* Wisnuc-iOS-Swift */;
@@ -5199,49 +5182,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1F38E2CD218328A0003FCAEE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8SC32MU7TG;
-				INFOPLIST_FILE = EmailVerificationKeyboard/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift.EmailVerificationKeyboard";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		1F38E2CE218328A0003FCAEE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8SC32MU7TG;
-				INFOPLIST_FILE = EmailVerificationKeyboard/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "Wisnuc.Wisnuc-iOS-Swift.EmailVerificationKeyboard";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		1FD9B775207CBE8900906D80 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -5525,15 +5465,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1F38E2CC218328A0003FCAEE /* Build configuration list for PBXNativeTarget "EmailVerificationKeyboard" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1F38E2CD218328A0003FCAEE /* Debug */,
-				1F38E2CE218328A0003FCAEE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		1FD9B747207CBE8700906D80 /* Build configuration list for PBXProject "Wisnuc-iOS-Swift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

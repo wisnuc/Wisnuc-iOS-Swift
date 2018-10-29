@@ -17,6 +17,7 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
     var identifier:String?
     var isEditing:Bool = false
     var deleteCallbck:((_ indexPath:IndexPath)->())?
+    var image:UIImage?
     var model:WSAsset?{
         didSet{
             if model?.asset != nil {
@@ -38,6 +39,7 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
                                 self?.imageView?.layer.contents = nil
                             }
                             self?.imageView?.layer.contents = image?.cgImage
+                            self?.image = image
                         }
                     }
                     //                        }
@@ -48,6 +50,7 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
                     if error == nil {
                         self?.model?.image = image
                         self?.imageView?.layer.contents = image?.cgImage
+                        self?.image = image
                     }
                 }
             }
