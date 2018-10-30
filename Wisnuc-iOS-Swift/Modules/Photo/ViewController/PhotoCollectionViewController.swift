@@ -49,7 +49,11 @@ class PhotoCollectionViewController: UICollectionViewController {
         didSet{
             mainThreadSafe {
                 self.collectionView?.reloadData()
-                self.dataSourceHasValue()
+                if let isSelectMode = self.isSelectMode{
+                    if !isSelectMode{
+                        self.dataSourceHasValue()
+                    }
+                }
             }
         }
     }
@@ -349,58 +353,6 @@ class PhotoCollectionViewController: UICollectionViewController {
 //        self.collectionView?.indicator.slider.addObserver(self, forKeyPath: "sliderState", options: NSKeyValueObservingOptions.init(rawValue: 0x01), context: nil)
         self.collectionView?.indicator.frame = CGRect(x: self.collectionView!.indicator.frame.origin.x, y:  self.collectionView!.indicator.frame.origin.y, width: 1, height: self.collectionView!.height - CGFloat(2 * kILSDefaultSliderMargin))
     }
-        
-    func forceTouchAvailable() -> Bool{
-         if #available(iOS 9.1, *) {
-            return self.traitCollection.forceTouchCapability == UIForceTouchCapability.available
-        } else {
-            return false
-        }
-    }
-    
-    
-    func getMouthDateString(date:Date) -> String{
-        let formatter = DateFormatter.init()
-        formatter.dateFormat = "yyyy年MM月"
-        var dateString = formatter.string(from: date)
-        if dateString == "1970年01月" {
-            dateString = "未知时间"
-        }
-        return dateString
-    }
-    
-    func getDateString(date:Date) -> String{
-        let formatter = DateFormatter.init()
-        formatter.dateFormat = "yyyy-MM-dd"
-        let dateString = formatter.string(from: date)
-        return dateString
-    }
-  
-    func getSize(model:WSAsset) -> CGSize{
-        
-        var w:CGFloat = 0
-        var h:CGFloat = 0
-    
-        if((model.asset) != nil){
-            w = MIN(x: CGFloat(model.asset!.pixelWidth), y: __kWidth)
-            h = w * CGFloat((model.asset?.pixelHeight)!) / CGFloat((model.asset?.pixelWidth)!)
-        }else{
-            w = MIN(x: CGFloat(((model as! NetAsset).metadata?.w!)!), y: __kWidth)
-            h = w * CGFloat(((model as! NetAsset).metadata?.h)!) / CGFloat(((model as! NetAsset).metadata?.w!)!)
-        }
-    
-        if h.isNaN{
-            return CGSize.zero
-        }
-    
-        if h > __kHeight || h.isNaN {
-            h = __kHeight
-            w = (model.asset != nil) ? h * CGFloat(model.asset!.pixelWidth) / CGFloat(model.asset!.pixelHeight)
-                : h * CGFloat(((model as! NetAsset).metadata?.w!)!)  / CGFloat(((model as! NetAsset).metadata?.w!)!)
-        }
-        
-        return CGSize(width: w, height: h)
-    }
     
     func getMatchVC(model:WSAsset) -> UIViewController?{
         let arr = self.sortedAssetsBackupArray
@@ -410,7 +362,6 @@ class PhotoCollectionViewController: UICollectionViewController {
         }else{
             return nil
         }
-       
     }
     
     func getBigImageVC(data:Array<WSAsset>,index:Int) -> UIViewController{
@@ -604,7 +555,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
 
         if (self.collectionView!.indicator != nil) {
-            self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
+            self.collectionView?.indicator.slider.timeLabel.text = PhotoTools.getMouthDateString(date: model.createDate!)
         }
         
         cell.setImagView(indexPath:indexPath)
@@ -625,7 +576,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headView:FMHeadView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! FMHeadView
       
-        headView.headTitle =  self.getDateString(date: dataSource![indexPath.section][indexPath.row].createDate!)
+        headView.headTitle =  PhotoTools.getDateString(date: dataSource![indexPath.section][indexPath.row].createDate!)
         headView.fmIndexPath = indexPath
         headView.isSelectMode = isSelectMode ?? false
         headView.isChoose =  self.choosePhotos.contains(array:self.dataSource![indexPath.section])
@@ -737,7 +688,7 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
             let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
                 let model = self.dataSource![indexPath.section][indexPath.row]
                 if (self.collectionView!.indicator != nil) {
-                    self.collectionView?.indicator.slider.timeLabel.text = self.getMouthDateString(date: model.createDate!)
+                    self.collectionView?.indicator.slider.timeLabel.text = PhotoTools.getMouthDateString(date: model.createDate!)
                 }
                 photoCell.isSelectMode = self.isSelectMode
                 photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
@@ -839,7 +790,7 @@ extension PhotoCollectionViewController : UIViewControllerPreviewingDelegate {
         vc.placeHolder = cell.imageView?.layer.contents as? UIImage
         vc.allowSelectGif = true
         vc.allowSelectLivePhoto = true
-        vc.preferredContentSize = self.getSize(model:model)
+        vc.preferredContentSize = PhotoTools.getSize(model:model)
         
         return vc;
     }

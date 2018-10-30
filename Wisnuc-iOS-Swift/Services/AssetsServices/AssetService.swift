@@ -35,6 +35,24 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         }
     }
     
+    var allVideoAssets:Array<WSAsset>?
+    {
+        get{
+            var all:Array<WSAsset> = Array.init()
+            let assets = PHPhotoLibrary.getAllVideoAssets()
+            for (_,value) in assets.enumerated(){
+                let type = value.getWSAssetType()
+                let duration = value.getDurationString()
+                let asset = WSAsset.init(asset: value, type: type, duration: duration)
+                all.append(asset)
+            }
+            return  all
+        }
+        set{
+            
+        }
+    }
+    
     override init() {
         super.init()
         self.checkAuth { (userAuth) in

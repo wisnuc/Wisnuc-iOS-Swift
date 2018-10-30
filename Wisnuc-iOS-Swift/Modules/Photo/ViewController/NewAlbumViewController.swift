@@ -35,7 +35,14 @@ class NewAlbumViewController: BaseViewController {
     private var idealHeight:CGFloat = 0.0
     
     var dataDic:Dictionary<String,Any>?
-    lazy var dataSource = Array<WSAsset>.init()
+    private var dataSource:Array<WSAsset>?{
+        willSet{
+            print("😁🌶")
+        }
+        didSet{
+           print("😁 set")
+        }
+    }
     lazy var headerExtensionArray:Array<HeaderExtensionType> =  Array.init()
     weak var delegate:NewAlbumViewControllerDelegate?
     var albumTitleText:String?
@@ -64,8 +71,17 @@ class NewAlbumViewController: BaseViewController {
     
     init(style: NavigationStyle,photos:Array<WSAsset>?) {
         super.init(style: style)
+        var array = Array<WSAsset>.init()
+        
         if photos != nil{
-            self.dataSource.append(contentsOf: photos!)
+            for (i,value) in photos!.enumerated(){
+                value.indexPath = IndexPath(item: i, section: 0)
+                array.append(value)
+            }
+            let copyArray = NSArray.init(array: array, copyItems: true)
+            if let allAssetArray = copyArray as? Array<WSAsset>{
+                self.dataSource = allAssetArray
+            }
         }
         self.view.addSubview(photoCollectionView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
@@ -99,9 +115,9 @@ class NewAlbumViewController: BaseViewController {
 
     func getMatchVC(model:WSAsset) -> UIViewController?{
         let arr = self.dataSource
-        let index = arr.index(of: model)
+        let index = arr?.index(of: model)
         if index != nil {
-            return self.getBigImageVC(data: arr, index:index!)
+            return self.getBigImageVC(data: arr!, index:index!)
         }else{
             return nil
         }
@@ -209,7 +225,7 @@ class NewAlbumViewController: BaseViewController {
 //        let addLocationBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "location_new_album.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(addLocationBarButtonItemTap(_:)))
         let sortPhotoBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "sort_photo_new_album.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(sortPhotoBarButtonItemTap(_:)))
         self.navigationItem.rightBarButtonItems = [sortPhotoBarButtonItem,addTextBarButtonItem,addNewPhotoBarButtonItem]
-        if let header = self.photoCollectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: IndexPath.init(row: 0, section: 0)){
+        if let header = self.photoCollectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: IndexPath.init(item: 0, section: 0)){
             let headerView = header as! NewPhotoAlbumCollectionReusableView
             headerView.state = .editing
         }
@@ -228,7 +244,6 @@ class NewAlbumViewController: BaseViewController {
         self.navigationItem.leftBarButtonItem = nil
         self.navigationItem.rightBarButtonItems = [moreBarButtonItem,addNewPhotoBarButtonItem]
         self.photoCollectionView.reloadData()
-//
     }
     
     lazy var photoCollectionView: UICollectionView = { [weak self] in
@@ -252,24 +267,20 @@ extension NewAlbumViewController:UICollectionViewDelegate,UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.dataSource.count
+        return self.dataSource?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:NewPhotoAlbumCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! NewPhotoAlbumCollectionViewCell
-        let asset = dataSource[indexPath.row]
-        
+        let asset = dataSource?[indexPath.item]
+        cell.model = asset
         cell.setImagView(indexPath:indexPath)
         cell.setDeleteButton(indexPath: indexPath)
         cell.setEditingAnimation(isEditing: self.state == .editing ? true : false, animation: true)
-//        setSelectAnimation(isSelect: self.isSelectMode ?? false ? self.choosePhotos.contains(model) : false, animation: false)
-        cell.model = asset
-//        cell.nameLabel.text = model.name
-//        cell.countLabel.text = "100"
         cell.deleteCallbck = { [weak self] (cellIndexPath) in
             self?.photoCollectionView.performBatchUpdates({
-                if cellIndexPath.row < (self?.dataSource.count)!{
-                    self?.dataSource.remove(at: cellIndexPath.row)
+                if cellIndexPath.item < (self?.dataSource?.count)!{
+                    self?.dataSource?.remove(at: cellIndexPath.item)
                     self?.photoCollectionView.deleteItems(at: [cellIndexPath])
                 }
 
@@ -279,20 +290,29 @@ extension NewAlbumViewController:UICollectionViewDelegate,UICollectionViewDataSo
                 }
             })
         }
+     
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let model = self.dataSource[indexPath.row]
-        let vc = self.getMatchVC(model: model)
-        if vc != nil {
-            self.present(vc!, animated: true) {
+        if self.state != .editing{
+            let model = self.dataSource?[indexPath.item]
+            let vc = self.getMatchVC(model: model!)
+            if vc != nil {
+                self.present(vc!, animated: true) {
+                }
             }
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//        let asset = dataSource[indexPath.row]
+//        asset.indexPath = indexPath
+//         dataSource[indexPath.row] = asset
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -330,7 +350,7 @@ extension NewAlbumViewController :UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         
-        let N = Int(dataSource.count)
+        let N = Int(dataSource?.count ?? 0)
         var newFrames = [CGRect](repeating: CGRect.zero, count: N)
         
         
@@ -339,8 +359,10 @@ extension NewAlbumViewController :UICollectionViewDelegateFlowLayout{
         
         var totalWidth: Float = 0
 
-        for i in 0..<dataSource.count {
-            let asset = dataSource[i]
+        for i in 0..<(dataSource?.count ?? 0) {
+            let asset = dataSource![i]
+            let indexPath = IndexPath(item: i, section: 0)
+            asset.indexPath = indexPath
             var imageSize = CGSize(width: CGFloat(asset.asset?.pixelWidth ?? Int(cellContentSizeWidth)), height: CGFloat(asset.asset?.pixelHeight ?? Int(cellContentSizeWidth)))
             
             if asset is NetAsset{
@@ -420,7 +442,7 @@ extension NewAlbumViewController :UICollectionViewDelegateFlowLayout{
             heightOffset += newFrames[ranges[i][0]].size.height + cellDistance
         }
         
-        let frame: CGRect = newFrames[indexPath.row]
+        let frame: CGRect = newFrames[indexPath.item]
         return CGSize(width: frame.size.width - 1, height:  frame.size.height - 1)
     }
 
@@ -450,8 +472,12 @@ extension NewAlbumViewController :UICollectionViewDelegateFlowLayout{
 extension NewAlbumViewController :PhotoRootViewControllerDelegate{
     func selectPhotoComplete(assets: Array<WSAsset>) {
         self.photoCollectionView.performBatchUpdates({ [weak self] in
-           let resultsSize = self?.dataSource.count
-            self?.dataSource.append(contentsOf: assets)
+            let resultsSize = self?.dataSource?.count
+            let copyArray = NSArray.init(array: assets, copyItems: true)
+            if let allAssetArray = copyArray as? Array<WSAsset>{
+                 self?.dataSource?.append(contentsOf: allAssetArray)
+            }
+           
            
 //            self?.dataDic!["photoData"] = self?.dataSource
 //            self?.delegate?.updateNewAlbumFinish(data: (self?.dataDic)!)
@@ -459,7 +485,13 @@ extension NewAlbumViewController :PhotoRootViewControllerDelegate{
           
             for i in resultsSize!..<resultsSize! + assets.count {
                 print(i)
-                arrayWithIndexPaths.append(IndexPath(row: i, section: 0))
+                let indexPath = IndexPath(item: i, section: 0)
+                arrayWithIndexPaths.append(indexPath)
+//                let asset = self?.dataSource?[i]
+//                asset?.indexPath = indexPath
+//                if let asset = asset{
+//                    self?.dataSource![i] = asset
+//                }
             }
             self?.photoCollectionView.insertItems(at:arrayWithIndexPaths)
           

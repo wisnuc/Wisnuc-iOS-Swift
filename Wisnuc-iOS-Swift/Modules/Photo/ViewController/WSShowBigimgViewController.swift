@@ -313,7 +313,7 @@ class WSShowBigimgViewController: UIViewController {
         let m = self.getCurrentPageModel()
         if (m?.type == .GIF ||
             m?.type == .LivePhoto) {
-            let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+            let indexP = IndexPath.init(item: currentPage - 1, section: 0)
             let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
             cell?.reloadGifLivePhoto()
         }
@@ -396,7 +396,7 @@ class WSShowBigimgViewController: UIViewController {
         let fadeAlpha = 1 - fabs(collectionView.top)/collectionView.frame.size.height
         
         //    JYBigImgCell * cell = _collectionView.visibleCells[0];
-        let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+        let indexP = IndexPath.init(item: currentPage - 1, section: 0)
         let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
         
         if cell == nil{
@@ -420,9 +420,17 @@ class WSShowBigimgViewController: UIViewController {
         if senderViewForAnimation == nil {
             return
         }
-
-        let image = (senderViewForAnimation as! PhotoCollectionViewCell).image ?? self.getImageFromView(view: senderViewForAnimation!)
         
+
+//        let image = (senderViewForAnimation as! PhotoCollectionViewCell).image ?? self.getImageFromView(view: senderViewForAnimation!)
+        var image:UIImage?
+        if senderViewForAnimation is PhotoCollectionViewCell{
+            image = (senderViewForAnimation as! PhotoCollectionViewCell).image
+        }else if senderViewForAnimation is NewPhotoAlbumCollectionViewCell{
+            image = (senderViewForAnimation as! NewPhotoAlbumCollectionViewCell).image
+        }else{
+            image = self.getImageFromView(view: senderViewForAnimation!)
+        }
         
         let fadeView = UIView.init(frame: (mainWindow?.bounds)!)
         fadeView.backgroundColor = UIColor.black
@@ -477,7 +485,7 @@ class WSShowBigimgViewController: UIViewController {
 //        self.presentViewController:a animated:true completion:nil];
         var array = Array<Any>.init()
         
-        let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+        let indexP = IndexPath.init(item: currentPage - 1, section: 0)
         let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
         
         if cell?.previewView.image() != nil{
@@ -882,7 +890,7 @@ extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:WSBigimgCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! WSBigimgCollectionViewCell
-        let model = self.models![indexPath.row]
+        let model = self.models![indexPath.item]
         cell.previewView.videoView.delegate = self
         
         cell.showGif = true
@@ -929,7 +937,7 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
             if (m!.type == .GIF ||
                 m!.type == .LivePhoto ||
                 m!.type == .Video || m?.type == .NetVideo) {
-                let cell = collectionView.cellForItem(at: IndexPath.init(row: currentPage-1 , section: 0))
+                let cell = collectionView.cellForItem(at: IndexPath.init(item: currentPage-1 , section: 0))
                 if  cell != nil{
                       (cell as! WSBigimgCollectionViewCell).pausePlay()
                 }
@@ -944,7 +952,7 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
 
 extension WSShowBigimgViewController:SWPreviewVideoPlayerDelegate{
     func playVideo(viewController: AVPlayerViewController) {
-        let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+        let indexP = IndexPath.init(item: currentPage - 1, section: 0)
         let  cell =  collectionView.cellForItem(at: indexP)
         if cell != nil {
             (cell as! WSBigimgCollectionViewCell).previewView.videoView.stopPlayVideo()
@@ -1176,7 +1184,7 @@ extension WSShowBigimgViewController:PhotoShareViewDelegate{
     
     func shareImage() -> UIImage? {
      
-        let indexP = IndexPath.init(row: currentPage - 1, section: 0)
+        let indexP = IndexPath.init(item: currentPage - 1, section: 0)
         let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
 
         return  cell?.previewView.image()

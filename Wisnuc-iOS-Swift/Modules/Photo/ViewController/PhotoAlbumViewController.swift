@@ -169,6 +169,33 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                     }
                 }
                 self.navigationController?.pushViewController(photosVC, animated: true)
+                
+            case 2:
+                let photosVC = PhotoMediaContainerViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal)
+                if let cell = collectionView.cellForItem(at: indexPath) as? PhotoAlbumCollectionViewCell{
+                    photosVC.title = cell.nameLabel.text
+                }
+                DispatchQueue.global(qos: .default).async {
+                    if let assets = AppAssetService.allVideoAssets{
+                        DispatchQueue.main.async {
+                            photosVC.localAssetDataSources.append(contentsOf:assets)
+                            photosVC.localDataSouceSort()
+                        }
+                    }
+                   
+//                    AppAssetService.getNetAssets { (error, netAssets) in
+//                        if error == nil{
+//                            DispatchQueue.main.async {
+//                                photosVC.addNetAssets(assetsArr: netAssets!)
+//                            }
+//                        }else{
+//                            DispatchQueue.main.async {
+//                                photosVC.localDataSouceSort()
+//                            }
+//                        }
+//                    }
+                }
+                 self.navigationController?.pushViewController(photosVC, animated: true)
             default:
                 break
             }

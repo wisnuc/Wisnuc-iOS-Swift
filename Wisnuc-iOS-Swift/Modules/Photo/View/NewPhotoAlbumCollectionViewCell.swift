@@ -90,6 +90,9 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
         }
         self.imageView = imageView
         self.imageView?.layer.contents =  nil
+        if model?.indexPath == nil{
+            model?.indexPath = indexPath
+        }
     }
     
     func setDeleteButton(indexPath:IndexPath){

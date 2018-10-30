@@ -9,6 +9,30 @@
 import Foundation
 import Photos
 extension PHPhotoLibrary{
+    class func getAllVideoAssets() ->Array<PHAsset>{
+        let options = PHFetchOptions.init()
+        options.includeHiddenAssets = true
+        var tempDic = Dictionary<String, PHAsset>.init()
+        let assetResult: PHFetchResult? = PHAsset.fetchAssets(with: PHAssetMediaType.video, options: options)
+        autoreleasepool {
+            assetResult?.enumerateObjects({ (obj, idx, stop) in
+                tempDic[obj.localIdentifier] = obj
+            })
+        }
+        return tempDic.map({$0.value})
+//        re
+//        var options2 = PHVideoRequestOptions()
+//        options2.deliveryMode = .automatic
+//        for a: PHAsset? in assetsResult! {
+//            if let anA = a {
+//                PHImageManager.default().requestAVAsset(forVideo: anA, options: options2, resultHandler: { asset, audioMix, info in
+//                    if let anInfo = info {
+//                        print("\(anInfo)")
+//                    }
+//                })
+//            }
+//        }
+    }
     
     class func getCameraRollAlbumList(allowSelectVideo:Bool,allowSelectImage:Bool) -> WSAssetList?{
         let option = PHFetchOptions.init()
@@ -119,6 +143,8 @@ extension PHPhotoLibrary{
             }
         }
     }
+    
+    
     
     class func getAllAsset(complete:@escaping (_ result:PHFetchResult<PHAsset>,_ assets:Array<PHAsset>)->()){
         var tempDic = Dictionary<String, PHAsset>.init()

@@ -15,6 +15,13 @@ import MaterialComponents
 }
 
 extension UIViewController: BackButtonHandlerProtocol{
+    func forceTouchAvailable() -> Bool{
+        if #available(iOS 9.1, *) {
+            return self.traitCollection.forceTouchCapability == UIForceTouchCapability.available
+        } else {
+            return false
+        }
+    }
     
     func alertController(title: String? = nil, message: String? = nil,cancelActionTitle:String? = nil,okActionTitle:String? = nil,okActionHandler:((UIAlertAction) -> Void)? = nil,cancelActionHandler:((UIAlertAction) -> Void)? = nil){
         

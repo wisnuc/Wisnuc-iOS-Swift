@@ -674,7 +674,7 @@ class WSPreviewVideo: WSBasePreviewView {
     
     lazy var playBtn: UIButton = {
         let button = UIButton.init(frame: CGRect(origin: self.center, size: CGSize(width:80, height: 80)))
-        button.setBackgroundImage(UIImage.init(named: "play2.png"), for: UIControlState.normal)
+        button.setImage(UIImage.init(named: "play_video.png"), for: UIControlState.normal)
         button.addTarget(self, action: #selector(playBtnClick(_ :)), for: UIControlEvents.touchUpInside)
         self.bringSubview(toFront: button)
         return button
