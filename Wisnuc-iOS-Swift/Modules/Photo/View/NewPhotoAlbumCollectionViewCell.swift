@@ -16,6 +16,7 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
     var imageRequestID:PHImageRequestID?
     var identifier:String?
     var isEditing:Bool = false
+    let btnFrame:CGFloat = 24
     var deleteCallbck:((_ indexPath:IndexPath)->())?
     var image:UIImage?
     var model:WSAsset?{
@@ -102,24 +103,25 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
                 btnDelete?.indexPath = indexPath
             }
         } else {
-            let btnFrame:CGFloat = 24
-            self.btnDelete = DeleteButton.init(frame: CGRect.init(x: 5, y: 5, width: btnFrame, height: btnFrame))
-            self.btnDelete?.setBackgroundImage(UIImage.init(named: "delete_photo_new_album.png"), for: UIControlState.normal)
+            self.btnDelete = DeleteButton.init(frame: CGRect(origin: imageView.newTopLeft, size: CGSize(width: btnFrame, height: btnFrame)))
+            self.btnDelete?.setImage(UIImage.init(named: "delete_photo_new_album.png"), for: UIControlState.normal)
             self.btnDelete?.addTarget(self, action: #selector(btnDeleteClick(_ :)), for: UIControlEvents.touchUpInside)
             btnDelete?.indexPath = indexPath
         }
         self.contentView.addSubview(self.btnDelete!)
     }
     
-    
     func setEditingAnimation(isEditing:Bool,animation:Bool){
         self.isEditing = isEditing
         self.btnDelete?.isHidden = !isEditing
         if (isEditing) {
+            self.imageView?.transform = CGAffineTransform.init(scaleX: 0.8, y: 0.8)
             if(animation) {
                 self.btnDelete?.layer.add(GetBtnStatusChangedAnimation(), forKey: nil)
+                let center =  CGPoint(x: (self.frame.width - self.frame.width * 0.8)/2, y: (self.frame.height - self.frame.height * 0.8)/2)
+                self.btnDelete?.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: btnFrame, height: btnFrame))
+                self.btnDelete?.center = center
             }
-            self.imageView?.transform = CGAffineTransform.init(scaleX: 0.8, y: 0.8)
         }else{
             self.imageView?.transform = CGAffineTransform.identity
         }

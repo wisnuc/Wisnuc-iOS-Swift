@@ -43,6 +43,7 @@ class FilesRootViewController: BaseViewController{
 //    }
     static let downloadManager =  TRManager.init("Downloads", MaximumRunning: LONG_MAX, isStoreInfo: true)
     private var menuButton: IconButton!
+    var isLoadingViewController = false
     var dataSource:Array<Any>?
     var originDataSource:Array<EntriesModel>?
     var driveUUID:String?
@@ -167,6 +168,12 @@ class FilesRootViewController: BaseViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let controller = UIViewController.currentViewController(){
+            if !(controller is FilesRootViewController){
+               return
+            }
+        }
+    
         switch selfState {
         case .root?:
             selfStateRootWillAppearAction()

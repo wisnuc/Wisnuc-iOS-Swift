@@ -677,12 +677,10 @@ class WSShowBigimgViewController: UIViewController {
 
         self.view.backgroundColor = UIColor.init(white: 0, alpha: CGFloat(newAlpha))
         
-
-      
         // Gesture Ended
         if (gesture.state == UIGestureRecognizerState.ended) {
             scrollView.isScrollEnabled = true
-            let moveDismissDistance:CGFloat = 80
+            let moveDismissDistance:CGFloat = 30
             if (scrollView.center.y > viewHalfHeight+moveDismissDistance || scrollView.center.y < viewHalfHeight-moveDismissDistance) {
                 if ((senderViewForAnimation) != nil) {
                     self.performDismissAnimation()
@@ -695,9 +693,9 @@ class WSShowBigimgViewController: UIViewController {
                 let windowsHeigt:CGFloat  = self.view.height
                 
                 if(scrollView.center.y > viewHalfHeight+30){ // swipe down
-                finalY = windowsHeigt*2
+                    finalY = windowsHeigt*2
                 }else{ // swipe up
-                finalY = -viewHalfHeight
+                    finalY = -viewHalfHeight
                 }
                 
                 let animationDuration:CGFloat = 0.35

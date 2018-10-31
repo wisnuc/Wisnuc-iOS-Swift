@@ -28,6 +28,7 @@ class PhotoRootViewController: BaseViewController {
 //        return false
 //    }
     weak var delegate:PhotoRootViewControllerDelegate?
+    var requset:BaseRequest?
     var state:PhotoRootViewControllerState?{
         didSet{
             switch state {
@@ -112,6 +113,7 @@ class PhotoRootViewController: BaseViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: nil)
+        self.requset?.cancel()
     }
     
     override func didReceiveMemoryWarning() {
@@ -178,9 +180,20 @@ class PhotoRootViewController: BaseViewController {
     
     @objc func leftBarButtonItemTap(_ sender:UIBarButtonItem){
         if self.state == .select || self.state == .creat{
-            self.presentingViewController?.dismiss(animated: true, completion: {
+            if let presentingViewController  = self.presentingViewController{
                 
-            })
+                
+                var dismissViewController = presentingViewController.childViewControllers.last
+                dismissViewController = dismissViewController?.childViewControllers.last
+                
+                dismissViewController?.dismiss(animated: true, completion: {
+                    
+                })
+            }
+//            while presentingViewController.presentingViewController {
+//                presentingViewController = presentingViewController.presentingViewController
+//            }
+
             return
         }
         self.isSelectMode = false

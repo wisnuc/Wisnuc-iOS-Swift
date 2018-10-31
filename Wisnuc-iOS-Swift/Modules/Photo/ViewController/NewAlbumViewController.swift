@@ -200,7 +200,12 @@ class NewAlbumViewController: BaseViewController {
     }
     
     @objc func moreBarButtonItemTap(_ sender:UIBarButtonItem){
-        
+        let newAlbumMoreBottomSheetVC = NewAlbumMoreBottomSheetTableViewController.init(style: UITableViewStyle.plain)
+        newAlbumMoreBottomSheetVC.delegate = self
+        let bottomSheet = AppBottomSheetController.init(contentViewController: newAlbumMoreBottomSheetVC)
+        bottomSheet.trackingScrollView = newAlbumMoreBottomSheetVC.tableView
+        self.present(bottomSheet, animated: true, completion: {
+        })
     }
     
     func setState(_ state:NewAlbumViewControllerState){
@@ -346,9 +351,7 @@ extension NewAlbumViewController:UICollectionViewDelegate,UICollectionViewDataSo
 }
 
 extension NewAlbumViewController :UICollectionViewDelegateFlowLayout{
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         
         let N = Int(dataSource?.count ?? 0)
         var newFrames = [CGRect](repeating: CGRect.zero, count: N)
@@ -512,5 +515,22 @@ extension NewAlbumViewController:WSShowBigImgViewControllerDelegate{
     func photoBrowser(browser: WSShowBigimgViewController, willDismiss indexPath: IndexPath) -> UIView? {
         let cell = self.photoCollectionView.cellForItem(at: indexPath)
         return cell
+    }
+}
+
+extension NewAlbumViewController:NewAlbumMoreBottomSheetTableViewControllerDelegate{
+    func newAlbumMoreBottomSheetTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.row {
+        case 0:
+            break
+        case 1:
+           self.state = .editing
+        case 2:
+            break
+        case 3:
+            break
+        default:
+            break
+        }
     }
 }

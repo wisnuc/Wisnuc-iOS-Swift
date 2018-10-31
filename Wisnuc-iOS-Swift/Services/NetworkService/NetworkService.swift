@@ -325,7 +325,7 @@ class NetworkService: NSObject {
                                             }
                                         }
                                     }
-                                    print(array)
+//                                    print(array)
                                 }else if json is NSDictionary{
                                     let dic = json as! NSDictionary
                                     if dic["code"] != nil{

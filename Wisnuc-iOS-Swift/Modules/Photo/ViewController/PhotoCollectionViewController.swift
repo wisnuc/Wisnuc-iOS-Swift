@@ -124,7 +124,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                 if sum > 3{
                     photoScale = CGFloat(ceilf(Float(sum)/Float(currentScale)))
                 }
-                  print("😆\(photoScale)")
+//                  print("😆\(photoScale)")
                 if self.currentItemSize.height == 0 {
                     self.currentItemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: (__kWidth - 2 * (currentScale - 1))/currentScale)
                 }
@@ -132,7 +132,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                     if height>0 {
                         let margin = ((photoScale * self.currentItemSize.height) + CGFloat(yearsAsset.count*Int(headerHeight)) - (photoScale*2) * 2 )/(height - MDCAppNavigationBarHeight) * (__kHeight - MDCAppNavigationBarHeight)
                         //             imageView.frame = CGRectMake(index * (imageWithHeight + Width_Space) + Start_X,page * (imageWithHeight + Height_Space)+Start_Y, imageWithHeight, imageWithHeight);
-                        print("😈\(i)")
+//                        print("😈\(i)")
                         originMargin += margin
 //                        print(self.collectionView?.contentSize.height ?? 0)
                        let timelineView = UIView.init(frame: CGRect(x: __kWidth - 35 - 58 - 40 , y: MDCAppNavigationBarHeight + originMargin, width: 58, height: 24))
@@ -153,7 +153,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                         if i == 0 || value == yearArray.last{
                             self.view.addSubview(timelineView)
                             self.timeViewArray?.append(timelineView)
-                            print("🌶\(i)")
+//                            print("🌶\(i)")
                            
                         }else{
                             if photoScale >= CGFloat(floorf(Float(allAssetArray.count/yearsAsset.count))){

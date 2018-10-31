@@ -70,16 +70,28 @@ extension UIViewController: BackButtonHandlerProtocol{
         while true {
             if((controller?.presentedViewController) != nil){
                 controller = controller?.presentedViewController
-            }else{
+            }
+//            else
+//            if((controller?.presentingViewController) != nil){
+//                controller = controller?.presentingViewController
+//            }
+            else{
                 if controller == nil{
                 return nil
                 }
                 if (controller?.isKind(of: UINavigationController.self))!{
                     controller = controller?.childViewControllers.last
+                }else if (controller?.isKind(of: WSTabBarController.self))!{
+                    let tabBarController = controller as! WSTabBarController
+                    controller = tabBarController.selectedViewController
                 }else if (controller?.isKind(of: UITabBarController.self))!{
                     let tabBarController = controller as! UITabBarController
                     controller = tabBarController.selectedViewController
+               
                 }else{
+                    if controller!.isKind(of: BaseViewController.self){
+                        return controller!
+                    }else
                     if (controller?.childViewControllers.count)!>0{
                         if (controller?.childViewControllers.last?.isKind(of: MDCAppBarViewController.self))!{
                              return controller!

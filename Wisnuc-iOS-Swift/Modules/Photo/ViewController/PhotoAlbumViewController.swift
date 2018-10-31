@@ -85,7 +85,7 @@ class PhotoAlbumViewController: BaseViewController {
                 photosVC.localAssetDataSources.append(contentsOf:assets)
                 photosVC.localDataSouceSort()
             }
-            AppAssetService.getNetAssets { (error, netAssets) in
+            let requset = AppAssetService.getNetAssets { (error, netAssets) in
                 if error == nil{
                     DispatchQueue.main.async {
                         photosVC.addNetAssets(assetsArr: netAssets!)
@@ -96,6 +96,7 @@ class PhotoAlbumViewController: BaseViewController {
                     }
                 }
             }
+            photosVC.requset = requset
         }
         let navigationVC = UINavigationController.init(rootViewController: photosVC)
         self.present(navigationVC, animated: true) {
@@ -128,7 +129,7 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:PhotoAlbumCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoAlbumCollectionViewCell
         let model = dataSource![indexPath.section][indexPath.row]
-        cell.imageView.image =  UIImage.init(color: .red)
+        cell.imageView.image =  UIImage.init(color: UIColor.black.withAlphaComponent(0.04))
         cell.nameLabel.text = model.name
         if  let photoData = model.dataSource{
             cell.countLabel.text = String(describing: photoData.count)
@@ -156,7 +157,7 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                         photosVC.localAssetDataSources.append(contentsOf:assets)
                         photosVC.localDataSouceSort()
                     }
-                    AppAssetService.getNetAssets { (error, netAssets) in
+                    let requset = AppAssetService.getNetAssets { (error, netAssets) in
                         if error == nil{
                             DispatchQueue.main.async {
                                 photosVC.addNetAssets(assetsArr: netAssets!)
@@ -167,6 +168,7 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                             }
                         }
                     }
+                    photosVC.requset = requset
                 }
                 self.navigationController?.pushViewController(photosVC, animated: true)
                 
@@ -212,7 +214,7 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headView:PhotoAlbumCollectionViewHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: reuseHeaderIdentifier, for: indexPath) as! PhotoAlbumCollectionViewHeaderView
-        headView.setTitleLabelText(string: LocalizedString(forKey: "我的相册"))
+//        headView.setTitleLabelText(string: LocalizedString(forKey: "我的相册"))
         return headView
     }
     
@@ -238,9 +240,9 @@ extension PhotoAlbumViewController :UICollectionViewDelegateFlowLayout{
         return  section == 0 ? UIEdgeInsets.init(top: 0, left: 16, bottom: 0, right: 16) : UIEdgeInsets.init(top: 16, left: 16, bottom: 0, right: 16)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return section == 1 ? CGSize(width: __kWidth, height: 30 + MarginsWidth) : CGSize.zero
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        return section == 1 ? CGSize(width: __kWidth, height: 30 + MarginsWidth) : CGSize.zero
+//    }
     
 //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
 //        return CGSize(width: cellContentSize, height: 8 + 14 + 8)

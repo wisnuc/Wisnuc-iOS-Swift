@@ -296,6 +296,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         }
     }
     
+    
+    
     // MARK: - Core Data stack
     
 

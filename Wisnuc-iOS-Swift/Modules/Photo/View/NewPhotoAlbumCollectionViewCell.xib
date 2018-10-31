@@ -26,10 +26,10 @@
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="61m-Rk-e67" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="DHn-WF-2ah"/>
-                <constraint firstItem="61m-Rk-e67" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="PKR-Lt-j1t"/>
-                <constraint firstAttribute="trailing" secondItem="61m-Rk-e67" secondAttribute="trailing" id="Syo-md-eDu"/>
-                <constraint firstAttribute="bottom" secondItem="61m-Rk-e67" secondAttribute="bottom" id="W6R-Pq-Xj6"/>
+                <constraint firstItem="61m-Rk-e67" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="5Fu-oh-6Ff"/>
+                <constraint firstItem="61m-Rk-e67" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="HqK-Jw-Pc1"/>
+                <constraint firstItem="61m-Rk-e67" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="LKD-An-16N"/>
+                <constraint firstItem="61m-Rk-e67" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="abQ-bn-duj"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="127" height="190"/>

@@ -67,11 +67,13 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         print("\(className()) deinit")
     }
     
-    func getNetAssets(callback:@escaping (_ error:Error?,_ assets:Array<NetAsset>?)->()){
+    func getNetAssets(callback:@escaping (_ error:Error?,_ assets:Array<NetAsset>?)->()) -> BaseRequest? {
         if AppUserService.currentUser?.userHome == nil{
-            return
+            return nil
         }
-        GetMediaAPI.init(classType: RequestMediaClassValue.Image, placesUUID: (AppUserService.currentUser?.userHome!)!).startRequestJSONCompletionHandler { [weak self] (response) in
+       let request = GetMediaAPI.init(classType: RequestMediaClassValue.Image, placesUUID: (AppUserService.currentUser?.userHome!)!)
+        
+       request.startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
 //                print("😆\(String(describing: response.value))")
                 let isLocalRequest = AppNetworkService.networkState == .local
@@ -97,12 +99,13 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
                         Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
                     }else{
                         let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-                        print(backToString ?? "error")
+//                        print(backToString ?? "error")
                     }
                 }
                 callback(response.error,nil)
             }
         }
+        return request
     }
     
     func checkAuth(callback:@escaping ((_ userAuth:Bool)->())){
