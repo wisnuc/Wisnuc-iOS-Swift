@@ -343,6 +343,10 @@ class AppService: NSObject,ServiceProtocol{
     
     lazy var assetService: AssetService = {
         let service = AssetService.init()
+        service.assetChangeBlock = { [weak self](removeObjs, insertObjs) in
+            self?.autoBackupManager.addTasks(insertObjs)
+            self?.autoBackupManager.removeTasks(removeObjs)
+        }
         return service
     }()
     

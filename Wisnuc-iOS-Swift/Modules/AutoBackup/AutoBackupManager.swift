@@ -306,15 +306,85 @@ class AutoBackupManager: NSObject {
     }
     
 
-//
-//
-//    func addTask:(WSAsset)asset?
-//
-//    func addTasks:(NSArray<WSAsset>)assets?
-//
-//    func removeTask:(WSAsset)rmAsset?
-//
-//    func removeTasks:(NSArray<WSAsset>)assets?
+    func addTask(_ asset: WSAsset?) {
+        managerQueue.async(execute: { [weak self] in
+            if asset != nil {
+                self?.shouldNotify = true
+                self?.needRetry = true
+                if let anAsset = asset {
+                    self?.hashwaitingQueue.append(anAsset)
+                }
+                self?.schedule()
+            }
+        })
+    }
+    
+    func addTasks(_ assets: [WSAsset]?) {
+        managerQueue.async(execute: { [weak self] in
+            if assets?.count != nil {
+                self?.shouldNotify = true
+                self?.needRetry = true
+                if let anAssets = assets {
+                    self?.hashwaitingQueue.append(contentsOf: anAssets)
+                }
+                NotificationCenter.default.post(name: Notification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
+                self?.schedule()
+            }
+        })
+    }
+
+    func removeTask(_ rmAsset: WSAsset?){
+        managerQueue.async(execute: { [weak self] in
+            let assetId = rmAsset?.asset?.localIdentifier
+            var asset: WSAsset?
+            
+            if let hashwaitingAsset = self?.hashwaitingQueue.first(where: {$0.asset?.localIdentifier == assetId}){
+                asset = hashwaitingAsset
+                self?.hashwaitingQueue.removeAll(where: { element in element == asset })
+            }
+            
+            asset = nil
+
+            if let uploadPaddingAsset = self?.uploadPaddingQueue.first(where: {$0.asset?.localIdentifier == assetId}){
+                asset = uploadPaddingAsset
+                self?.uploadPaddingQueue.removeAll(where: { element in element == asset })
+            }
+
+            var uploadModel: WSUploadModel?
+            if let uploadingAsset = self?.uploadingQueue.first(where: {$0.asset?.asset?.localIdentifier == assetId}){
+                uploadingAsset.isRemoved = true // remove
+                uploadingAsset.cancel() //  not to uploadErrorQueue or uploadedQueue if removed
+                uploadModel = uploadingAsset
+                self?.uploadingQueue.removeAll(where: { element in element == uploadModel })
+                self?.uploadErrorQueue.removeAll(where: { element in element == uploadModel })
+            }
+            
+            uploadModel = nil
+            
+            if let uploadErrorAsset = self?.uploadErrorQueue.first(where: {$0.asset?.asset?.localIdentifier == assetId}){
+                uploadModel = uploadErrorAsset
+                self?.uploadErrorQueue.removeAll(where: { element in element == uploadModel })
+            }
+            
+            uploadModel = nil
+            
+            if let uploadedAsset = self?.uploadedQueue.first(where: {$0.asset?.asset?.localIdentifier == assetId}){
+                uploadModel = uploadedAsset
+                self?.uploadedQueue.removeAll(where: { element in element == uploadModel })
+            }
+            
+            NotificationCenter.default.post(name: Notification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
+            uploadModel = nil
+        })
+    }
+    
+    func removeTasks(_ assets: [WSAsset]?) {
+        if let assets = assets{
+            for asset in assets{
+                self.removeTask(asset)
+            }
+        }
+    }
     
     func  getAssetSha256(asset:WSAsset,callback:@escaping (_ error:Error?, _ sha256String:String?)->()){
         if asset.asset == nil {

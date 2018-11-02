@@ -19,6 +19,7 @@ private let headerHeight:CGFloat = 42
 
 @objc protocol PhotoCollectionViewControllerDelegate{
     func collectionView(_ collectionView: UICollectionView, isSelectMode:Bool)
+    func collectionView(_ collectionView: UICollectionView, selectArray:Array<WSAsset>)
 }
 
 class PhotoCollectionViewController: UICollectionViewController {
@@ -480,6 +481,7 @@ class PhotoCollectionViewController: UICollectionViewController {
             }
             let header = self?.collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at:IndexPath.init(item: 0, section: indexPath.section))
             if(needReload){
+                self?.delegate?.collectionView(collectionView, selectArray: self?.choosePhotos ?? Array.init())
                 self?.collectionView?.reloadItems(at: [indexPath])
 //                let listSet = Set((self?.dataSource![indexPath.section])!)
 //                let findSet = Set((self?.choosePhotos)!)
@@ -500,12 +502,14 @@ class PhotoCollectionViewController: UICollectionViewController {
                     }
                     //                [weakSelf leftBtnClick:_leftBtn];
                     weakCell?.isSelectMode = self?.isSelectMode
+                  
                     if let cellsIndexPath = self?.collectionView?.indexPathsForVisibleItems{
                          self?.collectionView?.reloadItems(at: cellsIndexPath)
                     }
                 }
             }
-            //            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
+
+//            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
         }
         
         cell.longPressBlock = { [weak self] in
@@ -524,8 +528,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                 self?.chooseSection.append(IndexPath.init(row: 0, section: indexPath.section))
             }
             
-            //            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
-            //
+            
             var indexPaths =  self?.collectionView?.indexPathsForVisibleItems
             if indexPaths != nil {
                 indexPaths = indexPaths?.filter{$0 != indexPath}
@@ -552,12 +555,13 @@ class PhotoCollectionViewController: UICollectionViewController {
             if nowHeader != nil {
                 (nowHeader as! FMHeadView).isChoose =  (self?.choosePhotos.contains(array:(self?.dataSource![indexPath.section])!))!
             }
+            self?.delegate?.collectionView(collectionView, selectArray: self?.choosePhotos ?? Array.init())
         }
 
         if (self.collectionView!.indicator != nil) {
             self.collectionView?.indicator.slider.timeLabel.text = PhotoTools.getMouthDateString(date: model.createDate!)
         }
-        
+        model.cellIndexPath = indexPath
         cell.setImagView(indexPath:indexPath)
         cell.setSelectButton(indexPath: indexPath)
         cell.isSelectMode = self.isSelectMode
@@ -603,8 +607,8 @@ class PhotoCollectionViewController: UICollectionViewController {
             let model = self.dataSource![indexPath.section][indexPath.row]
             model.indexPath = IndexPath(row: indexPath.row, section: indexPath.section)
             let vc = self.getMatchVC(model: model)
-            if vc != nil {
-                self.present(vc!, animated: true) {
+            if let presentVC = vc{
+                self.present(presentVC, animated: true) {
                 }
             }
         }

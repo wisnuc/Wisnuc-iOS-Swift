@@ -9,6 +9,7 @@
 import UIKit
 import MaterialComponents
 import Material
+import Kingfisher
 
 typealias CellCallBack = (_ cell: MDCCollectionViewCell,_ button:UIButton) -> Void
 typealias CellLongPressCallBack = ((_ cell:MDCCollectionViewCell) -> ())
@@ -33,6 +34,12 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
             }
         }
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.leftImageView.image = nil
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.white
@@ -71,7 +78,7 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
         mainImageView.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.contentView.snp.centerX)
             make.centerY.equalTo(self.contentView.snp.centerY).offset(-20)
-            make.size.equalTo(CGSize(width: 64, height: 64))
+            make.size.equalTo(CGSize(width: self.width, height: self.height - lineView.height - 40))
         }
         
         self.contentView.addSubview(selectBackgroudImageView)
@@ -91,6 +98,58 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setImage(indexPath:IndexPath,type:FilesFormatType?,hash:String?,size:CGSize? = nil){
+        let detailImageName = FileTools.switchFilesFormatType(type: FilesType.file, format: type)
+        self.leftImageView.image = UIImage.init(named: detailImageName)
+        if let type = type, let hash = hash{
+            var imageSize = size
+            if size == nil || size == CGSize.zero{
+                imageSize = CGSize(width: self.mainImageView.width, height: self.mainImageView.height)
+            }
+            if !kImageTypes.contains(type.rawValue){
+                return
+            }
+            if let requestUrl =  self.requestImageUrl(size: imageSize!,hash: hash){
+                ImageCache.default.retrieveImage(forKey: requestUrl.absoluteString, options: nil) { [weak self]
+                    image, cacheType in
+                    if let image = image {
+//                        self?.model?.image = image
+                        self?.mainImageView.image = image
+//                        self?.image = image
+                        print("Get image \(image), cacheType: \(cacheType).")
+                        //In this code snippet, the `cacheType` is .disk
+                    } else {
+                        print("Not exist in cache.")
+                        _ = AppNetworkService.getThumbnail(hash: hash,size:imageSize!) { [weak self]  (error, image) in
+                            if error == nil {
+//                                self?.model?.image = image
+                               self?.mainImageView.image = image
+//                                self?.image = image
+                            }else{
+                                let normalImageName = FileTools.switchFilesFormatTypeNormalImage(type: FilesType.file, format:type)
+                                self?.mainImageView.image = UIImage.init(named: normalImageName)
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            let normalImageName = FileTools.switchFilesFormatTypeNormalImage(type: FilesType.file, format:type)
+            self.mainImageView.image = UIImage.init(named: normalImageName)
+        }
+    }
+    
+    func requestImageUrl(size:CGSize,hash:String)->URL?{
+        let detailURL = "media"
+        let frameWidth = size.width
+        let frameHeight = size.height
+        let resource = "media/\(hash)".toBase64()
+        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+        //        SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
+        let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
+        return url
     }
     
     func selectAction(){

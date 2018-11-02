@@ -316,7 +316,7 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
         if let cell = cell as?  FilesOfflineTableViewCell {
             let model = dataSouce![indexPath.row]
             let exestr = (model.name! as NSString).pathExtension
-            cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr)))
+            cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: model.metadata?.type ?? FilesFormatType.DEFAULT.rawValue)))
             cell.detailImageView.isHidden = true
             if cell.detailImageView.isHidden {
                 cell.reloadLayout()

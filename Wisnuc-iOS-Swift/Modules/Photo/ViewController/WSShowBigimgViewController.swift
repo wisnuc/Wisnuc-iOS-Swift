@@ -27,6 +27,7 @@ enum  WSShowBigimgViewControllerState{
 class WSShowBigimgViewController: UIViewController {
     
     weak var delegate:WSShowBigImgViewControllerDelegate?
+    var isLightContent = true
     var indexBeforeRotation:Int = 0
     var selectIndex:Int = 0
     var models:Array<WSAsset>?
@@ -92,6 +93,7 @@ class WSShowBigimgViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         if (!isFirstAppear) {
             return
         }
@@ -100,11 +102,13 @@ class WSShowBigimgViewController: UIViewController {
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
-        return .lightContent
+        return isLightContent ? .lightContent :.default
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        isLightContent = false
+        self.setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -459,7 +463,9 @@ class WSShowBigimgViewController: UIViewController {
             NSObject.cancelPreviousPerformRequests(withTarget: self!)
             
             self?.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-            self?.dismiss(animated: false, completion: nil)
+            self?.presentingViewController?.dismiss(animated: false, completion: {
+                
+            })
         }
         
 //        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: nil)

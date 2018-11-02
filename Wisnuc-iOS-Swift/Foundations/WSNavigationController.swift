@@ -36,7 +36,6 @@ class WSNavigationController: UINavigationController {
         fatalError("init(coder:) has not been implemented")
     }
 
-
     override var childViewControllerForStatusBarHidden: UIViewController? {
         return appBar.headerViewController
     }

@@ -199,8 +199,9 @@ class NetEngine: NSObject {
         if request.task != nil{
             let key = requestHashKey(task: request.task!)
             synced(self) {
-                let index = requestsRecordDic.index(forKey: key)
-                requestsRecordDic.remove(at: index!)
+                if let index = requestsRecordDic.index(forKey: key){
+                    requestsRecordDic.remove(at: index)
+                }
             }
         }
     }

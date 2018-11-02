@@ -56,6 +56,5 @@ struct Metadata: Codable {
     var h: Int?
     var type: String?
     var orient: Int?
-    
 //    required init() {}
 }

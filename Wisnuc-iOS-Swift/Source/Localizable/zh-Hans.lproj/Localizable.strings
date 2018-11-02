@@ -6,7 +6,10 @@
   Copyright © 2018年 wisnuc-imac. All rights reserved.
 */
 "wechat_login" = "微信登录";
-"login" = "登录";
+"Log out" = "注销";
+"Sort by..." = "排序";
+"Select..." = "选择";
+"Select all" = "选择全部";
 "my_station" = "我的设备";
 "add_Device" = "添加设备";
 "station_checking" = "等待审核";
@@ -18,3 +21,6 @@
 
 "Rename" = "重命名";
 "Files" = "文件";
+
+"New" = "新建";
+

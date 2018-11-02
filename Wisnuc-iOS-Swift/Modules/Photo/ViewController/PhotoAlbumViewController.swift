@@ -17,7 +17,7 @@ class PhotoAlbumViewController: BaseViewController {
     var index:Int = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        prepareNavigationBar()
+//        prepareNavigationBar()
         setData()
         self.view.addSubview(albumCollectionView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
@@ -33,10 +33,15 @@ class PhotoAlbumViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let controller = UIViewController.currentViewController(){
+            if !(controller is PhotoAlbumViewController){
+                return
+            }
+        }
         self.setStatusBar(.default)
         if let tabbar = retrieveTabbarController(){
             if tabbar.tabBarHidden {
-               tabbar.tabBarHidden = false
+               tabbar.setTabBarHidden(false, animated: true)
 //            tabbar.setTabBarHidden(false, animated: false)
             }
         }

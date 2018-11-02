@@ -16,6 +16,8 @@ enum FilesType:String{
 
 public let kVideoTypes = [FilesFormatType.MP4.rawValue,FilesFormatType.RMVB.rawValue,FilesFormatType.RM.rawValue,FilesFormatType.AVI.rawValue,FilesFormatType.MKV.rawValue,FilesFormatType.WMV.rawValue,FilesFormatType.SWF.rawValue,FilesFormatType.FLV.rawValue,FilesFormatType.MOV.rawValue]
 
+public let kImageTypes = [FilesFormatType.PNG.rawValue,FilesFormatType.JPG.rawValue,FilesFormatType.JPEG.rawValue,FilesFormatType.GIF.rawValue]
+
 enum FilesFormatType:String {
 
     case EXE = "exe"
@@ -45,4 +47,5 @@ enum FilesFormatType:String {
     case DOCX = "docx"
     case XLS = "xls"
     case XLSX = "xlsx"
+    case DEFAULT
 }

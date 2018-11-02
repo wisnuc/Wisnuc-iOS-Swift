@@ -43,6 +43,8 @@ class WSAsset: NSObject,NSCopying{
     
     var indexPath:IndexPath?
     
+    var cellIndexPath:IndexPath?
+    
     var createDate:Date?
     
     override init() {

@@ -9,6 +9,7 @@
 import UIKit
 //import MaterialComponents.MaterialCollections
 import SnapKit
+import Kingfisher
 //import SDWebImage
 
 private let btnFrame:CGFloat = 23
@@ -22,6 +23,8 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     var isSelect:Bool?
     var selectedBlock:((Bool)->())?
     var longPressBlock:(()->())?
+    var task:RetrieveImageDownloadTask?
+    var indexPath:IndexPath?
     var isSelectMode:Bool?{
         didSet{
             if isSelectMode!{
@@ -96,31 +99,45 @@ class PhotoCollectionViewCell: UICollectionViewCell {
               self.identifier =  (model as! NetAsset).fmhash
             }
 
-            let size = CGSize.init(width: self.width  , height: self.height )
-
-            if model?.asset != nil{
-                //                DispatchQueue.global(qos: .default).async {
-                self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: PHImageContentMode.default, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
-//            .aspectFill
-                   if let downloadFinined = (info![PHImageResultIsDegradedKey] as? Bool){
-                    if !downloadFinined {
-                        //                            DispatchQueue.main.async {
-                        if  self?.imageView?.layer.contents != nil{
-                            self?.imageView?.layer.contents = nil
-                        }
-                        self?.imageView?.layer.contents = image?.cgImage
-                        self?.image = image
-                    }
+            let size = CGSize.init(width: self.width + 50 , height: self.height + 50 )
+            if let cellIndexPath = model?.cellIndexPath , let indexPath = self.indexPath{
+                if cellIndexPath != indexPath{
+                    return
                 }
-                    //                        }
+            }
+            if model?.asset != nil {
+                let asset = self.model?.asset
+                let contentMode = PHImageContentMode.default
+                self.imageManager.startCachingImages(for: [asset!], targetSize: size, contentMode: contentMode, options:self.imageRequestOptions)
+                self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: contentMode, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
+                    if  self?.imageView?.layer.contents != nil{
+                        self?.imageView?.layer.contents = nil
+                    }
+                    self?.imageView?.layer.contents = image?.cgImage
+                    self?.image = image
                 })
             }else if model is NetAsset{
                 let netAsset = model as! NetAsset
-                _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image) in
-                    if error == nil {
-                        self?.model?.image = image
-                        self?.imageView?.layer.contents = image?.cgImage
-                        self?.image = image
+                if let requestUrl =  self.requestImageUrl(size: size,hash: netAsset.fmhash!){
+                    ImageCache.default.retrieveImage(forKey: requestUrl.absoluteString, options: nil) { [weak self]
+                        image, cacheType in
+                        if let image = image {
+                            self?.model?.image = image
+                            self?.imageView?.layer.contents = image.cgImage
+                            self?.image = image
+                            print("Get image \(image), cacheType: \(cacheType).")
+                            //In this code snippet, the `cacheType` is .disk
+                            return
+                        } else {
+                            print("Not exist in cache.")
+                            _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image) in
+                                if error == nil {
+                                    self?.model?.image = image
+                                    self?.imageView?.layer.contents = image?.cgImage
+                                    self?.image = image
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -187,6 +204,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     }
     
     func setImagView(indexPath:IndexPath){
+        self.indexPath = indexPath
         var imageView = self.contentView.subviews.first
         if imageView == nil && imageView?.tag != Int(NSIntegerMax) {
             imageView = UIView.init(frame: self.bounds)
@@ -225,6 +243,17 @@ class PhotoCollectionViewCell: UICollectionViewCell {
             self.imageView?.transform = CGAffineTransform.identity
         }
     }
+    
+    func requestImageUrl(size:CGSize,hash:String)->URL?{
+        let detailURL = "media"
+        let frameWidth = size.width
+        let frameHeight = size.height
+        let resource = "media/\(hash)".toBase64()
+        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+        //        SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
+        let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
+        return url
+    }
 
     @objc func btnSelectClick(_ sender:UIButton?){
         if self.isSelectMode == nil { return }
@@ -247,9 +276,9 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         let option = PHImageRequestOptions.init()
         
         option.resizeMode = PHImageRequestOptionsResizeMode.fast//控制照片尺寸
-        //        option.deliveryMode = PHImageRequestOptionsDeliveryModeOpportunistic;//控制照片质量
+        option.deliveryMode = PHImageRequestOptionsDeliveryMode.opportunistic //控制照片质量
         option.isNetworkAccessAllowed = true
-        
+        option.version = PHImageRequestOptionsVersion.current
         return option
     }()
     

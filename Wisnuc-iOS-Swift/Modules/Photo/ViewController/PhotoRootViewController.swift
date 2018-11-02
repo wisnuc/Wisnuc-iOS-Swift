@@ -71,6 +71,7 @@ class PhotoRootViewController: BaseViewController {
     
     deinit {
       self.appBar.appBarViewController.headerView.trackingScrollView = nil
+    defaultNotificationCenter().removeObserver(self)
       print("\(className()) deinit")
     }
     
@@ -100,6 +101,7 @@ class PhotoRootViewController: BaseViewController {
             self?.reloadAssetData()
         })
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
+        NotificationCenter.default.addObserver(self, selector: #selector(assetDidChangeHandle(_:)), name: NSNotification.Name.Change.AssetChangeNotiKey, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -109,6 +111,7 @@ class PhotoRootViewController: BaseViewController {
         appBar.headerViewController.preferredStatusBarStyle = .default
         appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
     }
+    
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -125,7 +128,7 @@ class PhotoRootViewController: BaseViewController {
     }
     
     func reloadAssetData() {
-        AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
+      let request = AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
             if error == nil{
                 self?.localAssetDataSources = AppAssetService.allAssets!
                 self?.addNetAssets(assetsArr: assetDataSource!)
@@ -137,6 +140,8 @@ class PhotoRootViewController: BaseViewController {
             self?.photoCollcectionViewController.collectionView?.reloadData()
             self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
         }
+        
+        self.requset = request
     }
     
     func setState(state:PhotoRootViewControllerState){
@@ -165,24 +170,90 @@ class PhotoRootViewController: BaseViewController {
          self.isSelectMode = false
         photoCollcectionViewController.state = self.state
         photoCollcectionViewController.isSelectMode = false
+        self.navigationItem.rightBarButtonItems = nil
+        self.navigationItem.rightBarButtonItem = nil
     }
     
     func selectModeAction(){
         self.style = .select
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_:)))
+        let shareButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "share_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightShareBarButtonItemTap(_:)))
+        let addButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "plus_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightAddBarButtonItemTap(_:)))
+        let deleteButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "delete_photo.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightDeleteBarButtonItemTap(_:)))
+        self.navigationItem.rightBarButtonItems = [deleteButtonItem,addButtonItem,shareButtonItem]
     }
     
     func unselectModeAction(){
-       self.style = .whiteWithoutShadow
-       self.navigationItem.leftBarButtonItem = nil
-
+        self.style = .whiteWithoutShadow
+        self.navigationItem.leftBarButtonItem = nil
+        self.navigationItem.rightBarButtonItems = nil
+        self.navigationItem.rightBarButtonItem = nil
+        self.title = LocalizedString(forKey: "所有相片")
+        self.photoCollcectionViewController.choosePhotos.removeAll()
+        self.photoCollcectionViewController.chooseSection.removeAll()
+    }
+    
+    //!!!!: ASSETS_UPDATE_NOTIFY Handler
+    @objc func assetDidChangeHandle(_ notify: Notification?) {
+        if let anObject = notify?.object {
+            print("changeDic -> \(anObject)")
+        }
+        if let changeDic = notify?.object as? [String:Array<WSAsset>]{
+            let removeArr = changeDic[kAssetsRemovedKey]
+            let insertArr = changeDic[kAssetsInsertedKey]
+            if removeArr != nil && removeArr?.count != nil {
+                localAssetDataSources = localAssetDataSources.filter({ (localAsset) -> Bool in
+                    return  !((removeArr?.contains(where: {$0.asset?.localIdentifier == localAsset.asset?.localIdentifier}))!)
+                })
+            }
+            if insertArr != nil && insertArr?.count != nil {
+                if let anArr = insertArr {
+                    localAssetDataSources.append(contentsOf: anArr)
+                }
+            }
+            sort(merge())
+            DispatchQueue.main.async(execute: {
+                self.photoCollcectionViewController.collectionView?.reloadData()
+            })
+        }
+    }
+    
+    @objc func rightShareBarButtonItemTap(_ sender:UIBarButtonItem){
+        
+    }
+    
+    @objc func rightAddBarButtonItemTap(_ sender:UIBarButtonItem){
+        
+    }
+    
+    @objc func rightDeleteBarButtonItemTap(_ sender:UIBarButtonItem){
+        if self.photoCollcectionViewController.choosePhotos.count > 0{
+            var localAssets:Array<PHAsset> = Array.init()
+            for asset in self.photoCollcectionViewController.choosePhotos{
+                if asset is NetAsset{
+                    
+                }else{
+                    if let localAsset = asset.asset{
+                        localAssets.append(localAsset)
+                    }
+                }
+            }
+            PHPhotoLibrary.shared().performChanges({
+               PHAssetChangeRequest.deleteAssets(localAssets as NSFastEnumeration)
+            }) { (finish, error) in
+                if error != nil{
+                    print(error as Any)
+                }
+            }
+        }
+        self.isSelectMode = false
+        self.photoCollcectionViewController.isSelectMode = false
+        self.photoCollcectionViewController.collectionView?.reloadData()
     }
     
     @objc func leftBarButtonItemTap(_ sender:UIBarButtonItem){
         if self.state == .select || self.state == .creat{
             if let presentingViewController  = self.presentingViewController{
-                
-                
                 var dismissViewController = presentingViewController.childViewControllers.last
                 dismissViewController = dismissViewController?.childViewControllers.last
                 
@@ -441,6 +512,10 @@ class PhotoRootViewController: BaseViewController {
 }
 
 extension PhotoRootViewController:PhotoCollectionViewControllerDelegate{
+    func collectionView(_ collectionView: UICollectionView, selectArray: Array<WSAsset>) {
+        self.title = "已选择\(selectArray.count)张照片"
+    }
+    
     func collectionView(_ collectionView: UICollectionView, isSelectMode: Bool) {
          self.isSelectMode = isSelectMode
     }

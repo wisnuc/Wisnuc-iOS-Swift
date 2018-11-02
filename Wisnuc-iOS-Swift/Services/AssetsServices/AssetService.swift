@@ -14,6 +14,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     var userAuth:Bool?
     var lastResult:PHFetchResult<PHAsset>?
     lazy var allNetAssets:Array<NetAsset>? = Array.init()
+    var assetChangeBlock: ((_ removeObjs: [WSAsset]?, _ insertObjs: [WSAsset]?) -> Void)?
     var allAssets:Array<WSAsset>?
     {
         get{
@@ -157,54 +158,55 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     }
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
-//        autoreleasepool {
-//            let currentAssets = lastResult
-//
-//            var tmpDic = Dictionary<String,WSAsset>.init()
-//            for  asset in allAssets ?? [] {
-//                tmpDic[asset.asset!.localIdentifier] = asset
-//            }
-//
-//            var changeDic = Dictionary<String,Array<WSAsset>>.init()
-//
-//            if lastResult != nil {
-//                let detail = changeInstance.changeDetails(for: currentAssets!)
-//                if detail == nil || (detail!.removedObjects.count == 0 && detail!.insertedObjects.count == 0){
-//                    return
+        autoreleasepool {
+            if let currentAssets = lastResult{
+//                var tmpDic = Dictionary<String,WSAsset>.init()
+//                for  asset in allAssets ?? [] {
+//                    tmpDic[asset.asset!.localIdentifier] = asset
 //                }
-//                var removes = Array<WSAsset>.init()
-//                var inserts = Array<WSAsset>.init()
-//                if detail != nil && detail?.removedObjects != nil{
-//                    for asset in  (detail?.removedObjects)!{
-//                        if Array(tmpDic.keys).contains(asset.localIdentifier){
-//                            removes.append(tmpDic[asset.localIdentifier]!)
-//                            tmpDic.removeValue(forKey: asset.localIdentifier)
-//                        }
-//                    }
-//                }
-//                changeDic[kAssetsRemovedKey] = removes
-//                if detail != nil && detail?.insertedObjects != nil{
-//                    for asset in  (detail?.insertedObjects)!{
-//                        let type = asset.getWSAssetType()
-//                        let duration = asset.getDurationString()
-//                        let localAsset = WSAsset.init(asset: asset, type: type, duration: duration)
-//                        tmpDic[asset.localIdentifier] = localAsset
-//                        inserts.append(localAsset)
-//                    }
-//                }
-//
-//                changeDic[kAssetsInsertedKey] = inserts
-//
-//                if detail?.fetchResultAfterChanges.count != nil {// record new fetchResult
-//                    lastResult = detail?.fetchResultAfterChanges
-//                }
-//                self.allAssets = tmpDic.map({$0.value})
-                defaultNotificationCenter().post(name: NSNotification.Name.Change.AssetChangeNotiKey, object: allAssets)
-//            }
-//        }
-
-//        if(_AssetChangeBlock)
-//        _AssetChangeBlock(changeDic[ASSETS_REMOVEED_KEY], changeDic[ASSETS_INSERTSED_KEY]);
+                
+                var changeDic = Dictionary<String,Array<WSAsset>>.init()
+                
+                if lastResult != nil {
+                    let detail = changeInstance.changeDetails(for: currentAssets)
+                    if detail == nil || (detail!.removedObjects.count == 0 && detail!.insertedObjects.count == 0){
+                        return
+                    }
+                    var removes = Array<WSAsset>.init()
+                    var inserts = Array<WSAsset>.init()
+                    if detail != nil && detail?.removedObjects != nil{
+                        for asset in  (detail?.removedObjects)!{
+//                            if Array(tmpDic.keys).contains(asset.localIdentifier){
+                            let type = asset.getWSAssetType()
+                            let duration = asset.getDurationString()
+                            let localAsset = WSAsset.init(asset: asset, type: type, duration: duration)
+                            removes.append(localAsset)
+//                                tmpDic.removeValue(forKey: asset.localIdentifier)
+//                            }
+                        }
+                    }
+                    changeDic[kAssetsRemovedKey] = removes
+                    if detail != nil && detail?.insertedObjects != nil{
+                        for asset in  (detail?.insertedObjects)!{
+                            let type = asset.getWSAssetType()
+                            let duration = asset.getDurationString()
+                            let localAsset = WSAsset.init(asset: asset, type: type, duration: duration)
+                            inserts.append(localAsset)
+                        }
+                    }
+                    
+                    changeDic[kAssetsInsertedKey] = inserts
+                    
+                    if detail?.fetchResultAfterChanges.count != nil {// record new fetchResult
+                        lastResult = detail?.fetchResultAfterChanges
+                    }
+                    defaultNotificationCenter().post(name: NSNotification.Name.Change.AssetChangeNotiKey, object: changeDic)
+                }
+                if assetChangeBlock != nil{
+                    assetChangeBlock!(changeDic[kAssetsRemovedKey], changeDic[kAssetsInsertedKey])
+                }
+            }
+        }
     }
     
     func abort() {

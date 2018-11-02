@@ -399,7 +399,7 @@ class NetworkService: NSObject {
         let detailURL = "media"
         var frameWidth = size?.width
         var frameHeight = size?.height
-        if size == nil {
+        if size == nil ||  size == CGSize.zero{
             frameWidth = 200
             frameHeight = 200
         }
@@ -408,8 +408,14 @@ class NetworkService: NSObject {
         //        SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
         let url = self.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
         ImageDownloader.default.downloadTimeout = 20000
-        return  ImageDownloader.default.downloadImage(with: url!, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
+        return  ImageDownloader.default.downloadImage(with: url!, retrieveImageTask: nil, options: [.requestModifier(modifier),.targetCache(ImageCache.default)], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
+                if let image =  image, let url = reqUrl {
+                    ImageCache.default.store(image,
+                                             original: nil,
+                                             forKey: url.absoluteString,
+                                             toDisk: true)
+                }
                 callback(nil, image)
             }else{
                 callback(error, nil)

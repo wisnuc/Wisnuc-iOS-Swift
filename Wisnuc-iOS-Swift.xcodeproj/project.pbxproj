@@ -784,6 +784,9 @@
 		1FD9B7B2207E1A0500906D80 /* wechat_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7AF207E1A0400906D80 /* wechat_icon@2x.png */; };
 		1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9B7BA207E1B6600906D80 /* Localizable.strings */; };
 		1FDBC50E20932171004DE6B8 /* DiskPopUpViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FDBC50D20932171004DE6B8 /* DiskPopUpViewManager.swift */; };
+		1FDF46E4218ADC0B00521DDE /* delete_photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FDF46E3218ADC0A00521DDE /* delete_photo.png */; };
+		1FDF46E6218ADC1800521DDE /* delete_photo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FDF46E5218ADC1800521DDE /* delete_photo@2x.png */; };
+		1FDF46E8218ADC2400521DDE /* delete_photo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FDF46E7218ADC2400521DDE /* delete_photo@3x.png */; };
 		1FE08923216DEADF0049F44B /* NewAlbumViewCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE08922216DEADF0049F44B /* NewAlbumViewCollectionLayout.swift */; };
 		1FE08926216F16FA0049F44B /* avatar_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08925216F16F90049F44B /* avatar_placeholder.png */; };
 		1FE08928216F17080049F44B /* avatar_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FE08927216F17070049F44B /* avatar_placeholder@2x.png */; };
@@ -1761,6 +1764,9 @@
 		1FD9B7B9207E1B6600906D80 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1FD9B7BB207E1B6B00906D80 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1FDBC50D20932171004DE6B8 /* DiskPopUpViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskPopUpViewManager.swift; sourceTree = "<group>"; };
+		1FDF46E3218ADC0A00521DDE /* delete_photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete_photo.png; sourceTree = "<group>"; };
+		1FDF46E5218ADC1800521DDE /* delete_photo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete_photo@2x.png"; sourceTree = "<group>"; };
+		1FDF46E7218ADC2400521DDE /* delete_photo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete_photo@3x.png"; sourceTree = "<group>"; };
 		1FE08922216DEADF0049F44B /* NewAlbumViewCollectionLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAlbumViewCollectionLayout.swift; sourceTree = "<group>"; };
 		1FE08925216F16F90049F44B /* avatar_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatar_placeholder.png; sourceTree = "<group>"; };
 		1FE08927216F17070049F44B /* avatar_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatar_placeholder@2x.png"; sourceTree = "<group>"; };
@@ -2408,6 +2414,9 @@
 		1F42429E20F338B40085E2F0 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1FDF46E3218ADC0A00521DDE /* delete_photo.png */,
+				1FDF46E5218ADC1800521DDE /* delete_photo@2x.png */,
+				1FDF46E7218ADC2400521DDE /* delete_photo@3x.png */,
 				1FA3B1DA218869BB00B68AA7 /* play_video.png */,
 				1FA3B1D8218869BA00B68AA7 /* play_video@2x.png */,
 				1FA3B1D9218869BA00B68AA7 /* play_video@3x.png */,
@@ -4446,6 +4455,7 @@
 				1FBD1DF820AEE0360067BE3E /* close_white@2x.png in Resources */,
 				1F050E3720AA7BCB0037F00A /* files_share_all@3x.png in Resources */,
 				1FE089612174796D0049F44B /* add_gray.png in Resources */,
+				1FDF46E8218ADC2400521DDE /* delete_photo@3x.png in Resources */,
 				1FD1F3102159D6E400C3E429 /* location_new_album@2x.png in Resources */,
 				1FFD12BB20E9C73C0053A3F7 /* files_move_to@3x.png in Resources */,
 				1F4E93892089D64D00DD1EA7 /* disk@3x.png in Resources */,
@@ -4536,6 +4546,7 @@
 				1F38E2B22181CAAA003FCAEE /* video_icon_device_detail@3x.png in Resources */,
 				1FFD12CB20EDC4620053A3F7 /* task_copy@3x.png in Resources */,
 				1F3C241C20A5426C00E6B953 /* files_move.png in Resources */,
+				1FDF46E4218ADC0B00521DDE /* delete_photo.png in Resources */,
 				1FE08955217445BF0049F44B /* logo_main_theme@2x.png in Resources */,
 				1FE0896921747B9D0049F44B /* edit_gray@2x.png in Resources */,
 				1FA5D76D215CBA020025F870 /* calendar_gray.png in Resources */,
@@ -4626,6 +4637,7 @@
 				1FD1F2EE2153434B00C3E429 /* add_album@2x.png in Resources */,
 				1FA6A1AB20CFA074007A0AB2 /* search@2x.png in Resources */,
 				1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */,
+				1FDF46E6218ADC1800521DDE /* delete_photo@2x.png in Resources */,
 				1FE674D020D20CED006F97DB /* file_icon.png in Resources */,
 				1F2B45A5208F290200C8971F /* close.png in Resources */,
 				1F2B459E208F255800C8971F /* IPAddDeviceViewController.xib in Resources */,

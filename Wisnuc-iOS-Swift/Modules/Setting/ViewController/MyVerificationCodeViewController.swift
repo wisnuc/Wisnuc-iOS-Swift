@@ -94,7 +94,7 @@ class MyVerificationCodeViewController: BaseViewController {
         self.view.addSubview(nicknameTextField)
         nicknameTextField.addSubview(sendButton)
         self.view.addSubview(nextButton)
-     
+        nicknameTextField.becomeFirstResponder()
         // Do any additional setup after loading the view.
     }
     
@@ -139,7 +139,6 @@ class MyVerificationCodeViewController: BaseViewController {
         let keyboard = KeyBoardView.init()
         keyboard.delegate = self
         nicknameTextField.inputView = keyboard
-
     }
     
     func phoneStateAction(){

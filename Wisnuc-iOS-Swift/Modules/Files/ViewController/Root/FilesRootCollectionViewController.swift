@@ -189,6 +189,13 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             delegateOK.collectionView(self, isSelectModel: isSelectModel!)
         }
     }
+    
+    func metadataType(metadata:Metadata?)->FilesFormatType?{
+       if let type = metadata?.type{
+        return FilesFormatType(rawValue:type.lowercased())
+       }
+       return nil
+    }
 
     func isSelectModelAction(){
         self.collectionView?.reloadData()
@@ -369,13 +376,10 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             
                     }
                     
-                    if !isNilString(model.name){
-                        let exestr = (model.name! as NSString).pathExtension
-                        let detailImageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type!), format: FilesFormatType(rawValue: exestr.lowercased()))
-                        cell.leftImageView.image = UIImage.init(named: detailImageName)
-                        let normalImageName = FileTools.switchFilesFormatTypeNormalImage(type: FilesType(rawValue: model.type!), format: FilesFormatType(rawValue: exestr.lowercased()))
-                        cell.mainImageView.image = UIImage.init(named: normalImageName)
-                    }
+                    cell.setImage(indexPath: indexPath, type: self.metadataType(metadata: model.metadata),hash:model.hash)
+//                    if !isNilString(model.name){
+//                        let exestr = (model.name! as NSString).pathExtension
+//                     
                 }
                 return cell
             }

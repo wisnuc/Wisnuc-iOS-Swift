@@ -9,8 +9,8 @@
 import UIKit
 @objc protocol  PhotoShareViewDelegate{
     func didEndShare()
-    func shareImage()->UIImage?
-    func shareImages()->[UIImage]?
+    @objc optional func shareImage()->UIImage?
+    @objc optional func shareImages()->[UIImage]?
 }
 
 class PhotoShareView: UIView {
@@ -52,7 +52,7 @@ class PhotoShareView: UIView {
         req.bText = false
         req.scene = Int32(WXSceneTimeline.rawValue)
         let wximageObjc = WXImageObject.init()
-        if let image = self.delegate?.shareImage(){
+        if let image = self.delegate?.shareImage!(){
             wximageObjc.imageData = UIImagePNGRepresentation(image)
         }
         message.mediaObject = wximageObjc

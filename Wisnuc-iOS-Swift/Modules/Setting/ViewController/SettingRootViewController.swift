@@ -30,6 +30,11 @@ class SettingRootViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 //        appBar.headerViewController.headerView.isHidden = true
+        if let controller = UIViewController.currentViewController(){
+            if !(controller is SettingRootViewController){
+                return
+            }
+        }
         if let tab = retrieveTabbarController(){
            if tab.tabBarHidden{
                 tab.setTabBarHidden(false, animated: true)
