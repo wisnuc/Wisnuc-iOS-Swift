@@ -8,6 +8,7 @@
 
 import UIKit
 import SystemConfiguration.CaptiveNetwork
+import NetworkExtension
 enum ConfigNetworkViewControllerState {
     case initialization
     case change
@@ -97,6 +98,14 @@ class ConfigNetworkViewController: BaseViewController {
     }
     
     func getWifiInfo() -> (ssid: String?, mac: String?) {
+        if #available(iOS 11.0, *) {
+            NEHotspotConfigurationManager.shared.getConfiguredSSIDs { (strings) in
+                print("😆\(strings)")
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+        
         if let cfas: NSArray = CNCopySupportedInterfaces() {
             for cfa in cfas {
                 if let dict = CFBridgingRetain(

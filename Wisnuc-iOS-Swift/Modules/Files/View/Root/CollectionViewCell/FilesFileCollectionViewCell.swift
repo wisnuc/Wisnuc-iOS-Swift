@@ -16,6 +16,7 @@ typealias CellLongPressCallBack = ((_ cell:MDCCollectionViewCell) -> ())
 class FilesFileCollectionViewCell: MDCCollectionViewCell {
     var longPressCallBack: CellLongPressCallBack?
     var cellCallBack:CellCallBack?
+    var image:UIImage?
     var isSelectModel: Bool?{
         didSet{
             if isSelectModel!{
@@ -37,7 +38,11 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.leftImageView.image = nil
+        self.mainImageViewContentSize(isImage: false)
+        self.mainImageView.image = nil
+//        let normalImageName = FileTools.switchFilesFormatTypeNormalImage(type: FilesType.file, format:type)
+//        self.mainImageView.image = UIImage.init(named: normalImageName)
+        
     }
     
     override init(frame: CGRect) {
@@ -96,17 +101,39 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
         }
     }
     
+    func mainImageViewContentSize(isImage:Bool){
+        if isImage{
+             mainImageView.snp.removeConstraints()
+            mainImageView.snp.makeConstraints { (make) in
+                make.centerX.equalTo(self.contentView.snp.centerX)
+                make.centerY.equalTo(self.contentView.snp.centerY).offset(-20)
+                make.size.equalTo(CGSize(width: self.width, height: self.height - lineView.height - 40))
+            }
+        }else{
+             mainImageView.snp.removeConstraints()
+            mainImageView.snp.makeConstraints { (make) in
+                make.centerX.equalTo(self.contentView.snp.centerX)
+                make.centerY.equalTo(self.contentView.snp.centerY).offset(-20)
+                make.size.equalTo(CGSize(width: 64, height: 64))
+            }
+        }
+    }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setImage(indexPath:IndexPath,type:FilesFormatType?,hash:String?,size:CGSize? = nil){
+    func setImage(collectionView:UICollectionView,indexPath:IndexPath,type:FilesFormatType?,hash:String?,size:CGSize? = nil){
         let detailImageName = FileTools.switchFilesFormatType(type: FilesType.file, format: type)
         self.leftImageView.image = UIImage.init(named: detailImageName)
+        self.mainImageViewContentSize(isImage: false)
+        self.mainImageView.image = nil
+        let normalImageName = FileTools.switchFilesFormatTypeNormalImage(type: FilesType.file, format:type)
+        self.mainImageView.image = UIImage.init(named: normalImageName)
+
         if let type = type, let hash = hash{
             var imageSize = size
             if size == nil || size == CGSize.zero{
-                imageSize = CGSize(width: self.mainImageView.width, height: self.mainImageView.height)
+                imageSize = CGSize(width: self.contentView.width, height: self.contentView.height - lineView.height - 40)
             }
             if !kImageTypes.contains(type.rawValue){
                 return
@@ -115,18 +142,26 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
                 ImageCache.default.retrieveImage(forKey: requestUrl.absoluteString, options: nil) { [weak self]
                     image, cacheType in
                     if let image = image {
+
+//                        self?.mainImageView.image = nil
+                        self?.mainImageViewContentSize(isImage: true)
 //                        self?.model?.image = image
                         self?.mainImageView.image = image
-//                        self?.image = image
+                        self?.image = image
                         print("Get image \(image), cacheType: \(cacheType).")
                         //In this code snippet, the `cacheType` is .disk
                     } else {
                         print("Not exist in cache.")
-                        _ = AppNetworkService.getThumbnail(hash: hash,size:imageSize!) { [weak self]  (error, image) in
+                        _ = AppNetworkService.getThumbnail(hash: hash,size:imageSize!) { [weak self]  (error, image,reqUrl) in
                             if error == nil {
+                                if reqUrl?.absoluteString != requestUrl.absoluteString{
+                                    return
+                                }
+//                                 self?.mainImageView.image = nil
+                                self?.mainImageViewContentSize(isImage: true)
 //                                self?.model?.image = image
                                self?.mainImageView.image = image
-//                                self?.image = image
+                                self?.image = image
                             }else{
                                 let normalImageName = FileTools.switchFilesFormatTypeNormalImage(type: FilesType.file, format:type)
                                 self?.mainImageView.image = UIImage.init(named: normalImageName)
@@ -136,6 +171,8 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
                 }
             }
         }else{
+            self.mainImageViewContentSize(isImage: false)
+            self.mainImageView.image = nil
             let normalImageName = FileTools.switchFilesFormatTypeNormalImage(type: FilesType.file, format:type)
             self.mainImageView.image = UIImage.init(named: normalImageName)
         }
@@ -229,6 +266,8 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
     
     lazy var mainImageView: UIImageView = {
         let imageViewx = UIImageView.init()
+        imageViewx.contentMode = UIViewContentMode.scaleAspectFill
+        imageViewx.clipsToBounds = true
         return imageViewx
     }()
 }

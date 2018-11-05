@@ -15,13 +15,14 @@ public struct EntriesModel:Codable {
     var uuid:String?
     var hash:String?
     var magic:AnyCodable?
-    var mtime:UInt64?
+    var mtime:Double?
     var size:Int64?
     var driveUUID:String?
     var parentUUID:String?
     var metadata:Metadata?
     var pdir:String?
     var place:Int?
+    var indexPath:IndexPath?
     
     enum CodingKeys : String, CodingKey {
         case name
@@ -56,5 +57,8 @@ struct Metadata: Codable {
     var h: Int?
     var type: String?
     var orient: Int?
+    var make: String?
+    var model: String?
+    var date: String?
 //    required init() {}
 }

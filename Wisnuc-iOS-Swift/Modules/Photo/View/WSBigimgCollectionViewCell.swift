@@ -16,7 +16,17 @@ import AVKit
 //---------------base preview---------------
 class WSBasePreviewView: UIView {
     
-    var wsAsset:WSAsset?
+    var wsAsset:WSAsset?{
+        didSet{
+            
+        }
+    }
+    
+    var filesModel:EntriesModel?{
+        didSet{
+            
+        }
+    }
     
     var imageRequestID:PHImageRequestID?
     
@@ -87,8 +97,13 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         super.layoutSubviews()
         self.scrollView.frame = self.bounds
         self.scrollView.setZoomScale(1.0, animated: true)
+
         if (loadOK) {
-            self.resetSubviewSize(self.wsAsset!.asset != nil ? self.wsAsset : self.imageView.image ?? nil)
+            if wsAsset != nil {
+                self.resetSubviewSize(self.wsAsset!.asset != nil ? self.wsAsset : self.imageView.image ?? nil)
+            }else if filesModel != nil{
+                self.resetSubviewSize(self.imageView.image ?? nil)
+            }
         }
     }
     
@@ -196,6 +211,35 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             }
             self?.imageDownloadTask = nil
          
+        })
+    }
+    
+    func loadImage(filesModel:EntriesModel){
+        self.imageView.image = nil
+
+        if(self.imageDownloadTask != nil){
+            imageDownloadTask?.cancel()
+            self.imageDownloadTask = nil
+        }
+        self.filesModel = filesModel
+        self.indicator.startAnimating()
+        self.imageDownloadTask = AppNetworkService.getHighWebImage(hash: filesModel.hash ?? "", callback: { [weak self] (error, img) in
+            self?.indicator.stopAnimating()
+            if let completeCallback = self?.loadCompleteCallback{
+                completeCallback()
+            }
+            if error != nil {
+                // TODO: Load Error Image
+            } else {
+                self?.loadOK = true
+                self?.imageView.image = img
+                if filesModel.metadata?.type?.lowercased() == FilesFormatType.GIF.rawValue{
+                    self?.resumeGif()
+                }
+                self?.resetSubviewSize(img)
+            }
+            self?.imageDownloadTask = nil
+            
         })
     }
 
@@ -696,124 +740,161 @@ class WSPreviewView: UIView {
     var showGif:Bool?
     var singleTapCallBack:(()->())?
     var showLivePhoto = false
-    var model:WSAsset?{
+    var model:Any?{
         didSet{
             for view in self.subviews{
                view.removeFromSuperview()
             }
-            switch model?.type {
-            case .Image?,.GIF?:
-                self.addSubview(self.imageGifView)
-                if model is NetAsset {
-                    return self.imageGifView.loadImage(asset:model!)
-                }
-                self.imageGifView.loadNormalImage(asset: model!)
-            case .LivePhoto?:
-                if (self.showLivePhoto) {
-                    self.addSubview(self.livePhotoView)
-                    self.livePhotoView.loadNormalImage(asset:model!)
-                } else {
+            if model is WSAsset{
+                let assetModel = model as! WSAsset
+                switch assetModel.type {
+                case .Image?,.GIF?:
                     self.addSubview(self.imageGifView)
-                    self.imageGifView.loadNormalImage(asset: model!)
+                    
+                    if assetModel is NetAsset {
+                        return self.imageGifView.loadImage(asset:assetModel)
+                    }
+                    self.imageGifView.loadNormalImage(asset: assetModel)
+                case .LivePhoto?:
+                    if (self.showLivePhoto) {
+                        self.addSubview(self.livePhotoView)
+                        self.livePhotoView.loadNormalImage(asset:assetModel)
+                    } else {
+                        self.addSubview(self.imageGifView)
+                        self.imageGifView.loadNormalImage(asset: assetModel)
+                    }
+                case .Video?:
+                    self.addSubview(self.videoView)
+                    self.videoView.loadNormalImage(asset: assetModel)
+                    
+                case .NetImage?:
+                    self.addSubview(self.imageGifView)
+                    self.imageGifView.loadImage(asset: assetModel)
+                    
+                case .NetVideo? :
+                    self.addSubview(self.videoView)
+                    self.videoView.loadNetNormalImage(asset: assetModel)
+                default:
+                    break
                 }
-               case .Video?:
-                self.addSubview(self.videoView)
-                self.videoView.loadNormalImage(asset: model!)
-
-            case .NetImage?:
+            }else{
                 self.addSubview(self.imageGifView)
-                self.imageGifView.loadImage(asset: model!)
-
-            case .NetVideo? :
-                self.addSubview(self.videoView)
-                self.videoView.loadNetNormalImage(asset: model!)
-            default:
-                break
+                let filesModel = model as! EntriesModel
+                self.imageGifView.loadImage(filesModel: filesModel)
             }
         }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        switch self.model?.type {
-        case .Image?,.GIF?:
-            self.imageGifView.frame = self.bounds
-        case .LivePhoto?:
-            if !self.showLivePhoto {
-                 self.imageGifView.frame = self.bounds
-            }else{
-                self.livePhotoView.frame = self.bounds
+        if model is WSAsset{
+            let assetModel = model as! WSAsset
+            switch assetModel.type {
+            case .Image?,.GIF?:
+                self.imageGifView.frame = self.bounds
+            case .LivePhoto?:
+                if !self.showLivePhoto {
+                    self.imageGifView.frame = self.bounds
+                }else{
+                    self.livePhotoView.frame = self.bounds
+                }
+            case .Video?,.NetVideo?:
+                self.videoView.frame = self.bounds
+            default:
+                break
             }
-        case .Video?,.NetVideo?:
-            self.videoView.frame = self.bounds
-        default:
-            break
+        }else{
+             self.imageGifView.frame = self.bounds
         }
     }
     
     func imageViewFrame() -> CGRect{
-        switch self.model?.type {
-        case .Image?,.GIF?,.NetImage?:
-           return self.imageGifView.containerView.frame
-        case .LivePhoto?:
-            if !self.showLivePhoto {
+        if model is WSAsset{
+            let assetModel = model as! WSAsset
+            switch assetModel.type {
+            case .Image?,.GIF?,.NetImage?:
                 return self.imageGifView.containerView.frame
-            }else{
-                return self.livePhotoView.lpView.frame
+            case .LivePhoto?:
+                if !self.showLivePhoto {
+                    return self.imageGifView.containerView.frame
+                }else{
+                    return self.livePhotoView.lpView.frame
+                }
+            case .Video?,.NetVideo?:
+                return self.videoView.playLayer?.frame ?? CGRect.zero
+            default:
+                break
             }
-        case .Video?,.NetVideo?:
-            return self.videoView.playLayer?.frame ?? CGRect.zero
-        default:
-            break
+        }else{
+             return self.imageGifView.containerView.frame
         }
         return CGRect.zero
     }
     
     func reload(){
-        if self.showGif! &&
-            self.model?.type == .GIF {
-            if self.model is NetAsset {
-                self.imageGifView.loadImage(asset: self.model!)
-                return
+        if model is WSAsset{
+            let assetModel = model as! WSAsset
+            if self.showGif! &&
+                assetModel.type == .GIF {
+                if assetModel is NetAsset {
+                    self.imageGifView.loadImage(asset: assetModel)
+                    return
+                }
+                self.imageGifView.loadGifImage(asset: assetModel)
+            } else if self.showLivePhoto &&
+                assetModel.type == .LivePhoto {
+                self.livePhotoView.loadLivePhoto(asset: assetModel)
             }
-            self.imageGifView.loadGifImage(asset: self.model!)
-        } else if self.showLivePhoto &&
-            self.model?.type == .LivePhoto {
-            self.livePhotoView.loadLivePhoto(asset: self.model!)
+        }else{
+            let filesModel = model as! EntriesModel
+            self.imageGifView.loadImage(filesModel: filesModel)
         }
     }
 
     func resumePlay(){
-        if self.model?.type == .GIF {
-            self.imageGifView.resumeGif()
+        if model is WSAsset{
+            let assetModel = model as! WSAsset
+            if assetModel.type == .GIF {
+                self.imageGifView.resumeGif()
+            }
         }
     }
     
     func pausePlay(){
-        switch self.model?.type{
-        case .GIF? :
-            self.imageGifView.pauseGif()
-        case .LivePhoto? :
-            self.livePhotoView.stopPlayLivePhoto()
-        case .Video?,.NetVideo?:
-            self.videoView.stopPlayVideo()
-        default: break
+        if model is WSAsset{
+             let assetModel = model as! WSAsset
+            switch assetModel.type{
+            case .GIF? :
+                self.imageGifView.pauseGif()
+            case .LivePhoto? :
+                self.livePhotoView.stopPlayLivePhoto()
+            case .Video?,.NetVideo?:
+                self.videoView.stopPlayVideo()
+            default: break
+                
+            }
+        }else{
             
         }
     }
     
     func handlerEndDisplaying(){
-        switch self.model?.type {
-        case .GIF?:
-            if  (self.imageGifView.imageView.image?.isKind(of: NSClassFromString("_UIAnimatedImage")!))!{
-                self.imageGifView.loadNormalImage(asset: self.model!)
+        if model is WSAsset{
+            let assetModel = model as! WSAsset
+            switch assetModel.type {
+            case .GIF?:
+                if  (self.imageGifView.imageView.image?.isKind(of: NSClassFromString("_UIAnimatedImage")!))!{
+                    self.imageGifView.loadNormalImage(asset: assetModel)
+                }
+            case .Video?:
+                if self.videoView.haveLoadVideo() {
+                    self.videoView.loadNormalImage(asset: assetModel)
+                }
+            default:
+                break
             }
-        case .Video?:
-            if self.videoView.haveLoadVideo() {
-                self.videoView.loadNormalImage(asset: self.model!)
-            }
-        default:
-            break
+        }else{
+            
         }
     }
     
@@ -822,8 +903,13 @@ class WSPreviewView: UIView {
     }
     
     func image() ->UIImage?{
-        if  self.model?.type == .Image {
-            return self.imageGifView.imageView.image
+        if model is WSAsset{
+            let assetModel = model as! WSAsset
+            if  assetModel.type == .Image {
+                return self.imageGifView.imageView.image
+            }
+        }else{
+             return self.imageGifView.imageView.image
         }
         return nil
     }
@@ -853,7 +939,7 @@ class WSBigimgCollectionViewCell: UICollectionViewCell {
     var showGif:Bool = false
     var showLivePhoto:Bool = false
     var willDisplaying:Bool = false
-    var model:WSAsset?{
+    var model:Any?{
         didSet{
             self.previewView.showGif = self.showGif
             self.previewView.showLivePhoto = self.showLivePhoto

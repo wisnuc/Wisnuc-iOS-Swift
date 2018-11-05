@@ -38,26 +38,26 @@ class FileTools: NSObject {
         if type == nil {
             return "file_icon.png"
         }
-        var name:String!
+
         if type == .directory {
-            name = "files_folder.png"
+            return "files_folder.png"
         }else{
             switch format {
             case .PDF?:
-                name = "files_pdf_normal.png"
+                return  "files_pdf_normal.png"
             case .PNG?,.JPG?,.JPEG?:
-                name = "files_photo_normal.png"
+              return  "files_photo_normal.png"
             case .DOC?,.DOCX?:
-                name = "files_word_normal.png"
+               return  "files_word_normal.png"
             case .PPT?,.PPTX?:
-                name = "files_ppt_normal.png"
+               return"files_ppt_normal.png"
             case .XLS?,.XLSX?:
-                name = "files_excel_normal.png"
+               return "files_excel_normal.png"
             default:
-                name = "file_icon.png"
+               return  "file_icon.png"
             }
         }
-        return name
+        return  "file_icon.png"
     }
     
     

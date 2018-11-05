@@ -176,6 +176,27 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func getMatchVC(model:EntriesModel,array:Array<EntriesModel>,indexPath:IndexPath) -> UIViewController?{
+        let arr = array
+        if let index = arr.firstIndex(where: {$0.hash == model.hash}) {
+            return self.getBigImageVC(data: arr, index:index, indexPath: indexPath)
+        }else{
+           return nil
+        }
+    }
+    
+    func getBigImageVC(data:Array<EntriesModel>,index:Int,indexPath:IndexPath) -> UIViewController{
+        let vc = WSShowBigimgViewController.init()
+        vc.delegate = self
+        vc.models = data
+        vc.selectIndex = index
+        let cell:FilesFileCollectionViewCell = self.collectionView?.cellForItem(at: indexPath) as! FilesFileCollectionViewCell
+        vc.senderViewForAnimation = cell
+        
+        vc.scaleImage = cell.image
+        return vc
+    }
+    
     @objc func sequenceButtonTap(_ sender: UIButton){
         if let delegateOK = self.delegate {
             delegateOK.sequenceButtonTap(sender)
@@ -305,7 +326,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
-        let model  = sectionArray[indexPath.item]
+        var model  = sectionArray[indexPath.item]
+        model.indexPath = indexPath
         if cellStyle == .card{
 //            if indexPath.section == 0 {
                 if  model.type == FilesType.directory.rawValue{
@@ -375,8 +397,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                        cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))! ? true : false
             
                     }
-                    
-                    cell.setImage(indexPath: indexPath, type: self.metadataType(metadata: model.metadata),hash:model.hash)
+             
+                    cell.setImage(collectionView:collectionView,indexPath: indexPath, type: self.metadataType(metadata: model.metadata),hash:model.hash)
 //                    if !isNilString(model.name){
 //                        let exestr = (model.name! as NSString).pathExtension
 //                     
@@ -599,7 +621,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
         let sectionArray:Array<EntriesModel> = dataSource![indexPath.section] as! Array
-        let model  = sectionArray[indexPath.item]
+        var model  = sectionArray[indexPath.item]
         var exitSelectModel = false
           if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
             if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))!{
@@ -612,12 +634,54 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             }
              self.collectionView?.reloadData()
           }
+        if let metadata = metadataType(metadata: model.metadata){
+            if kImageTypes.contains(metadata.rawValue) {
+                
+               let array = sectionArray.map { (model) -> EntriesModel in
+                    var result = model
+                    let modelIndexPath = IndexPath(item: sectionArray.firstIndex(where: {$0.hash == model.hash}) ?? 0, section: indexPath.section)
+                    result.indexPath = modelIndexPath
+                    return result
+                }
+                
+                let resultArray = array.filter { (model) -> Bool in
+                    return kImageTypes.contains(model.metadata?.type?.lowercased() ?? "")
+                }
+//                for (i,value) in sectionArray.enumerated(){
+//                    let modelIndexPath = IndexPath(item: i, section: indexPath.section)
+//                    value.indexPath = modelIndexPath
+//                }
+                model.indexPath = IndexPath(row: indexPath.row, section: indexPath.section)
+                let vc = self.getMatchVC(model: model,array: resultArray,indexPath:indexPath)
+                
+                if let presentVC = vc{
+                    self.present(presentVC, animated: true) {
+                    }
+                }
+            }
+            return
+        }
+       
         if let delegateOK = self.delegate{
             if !exitSelectModel{
              delegateOK.rootCollectionView(collectionView, didSelectItemAt: indexPath, isSelectModel: self.isSelectModel!)
             }
         }
     }
+}
+
+extension FilesRootCollectionViewController:WSShowBigImgViewControllerDelegate{
+    func photoBrowser(browser: WSShowBigimgViewController, indexPath: IndexPath) {
+        self.collectionView?.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.centeredVertically, animated: false)
+        self.collectionView?.layoutIfNeeded()
+    }
+    
+    func photoBrowser(browser: WSShowBigimgViewController, willDismiss indexPath: IndexPath) -> UIView? {
+        let cell = self.collectionView?.cellForItem(at: indexPath)
+        return cell
+    }
+    
+    
 }
 
 enum CommonCollectionReusableViewState {

@@ -30,13 +30,13 @@ class WSShowBigimgViewController: UIViewController {
     var isLightContent = true
     var indexBeforeRotation:Int = 0
     var selectIndex:Int = 0
-    var models:Array<WSAsset>?
+    var models:Array<Any>?
     var scaleImage:UIImage?
     var senderViewForAnimation:UIView?
     var isdraggingPhoto:Bool = false
     var currentPage:Int = 0
     var isFirstAppear:Bool = true
-    var currentModelForRecord:WSAsset?
+    var currentModelForRecord:Any?
     var disposeBag = DisposeBag()
     var appearResizableImageView:UIImageView?
     var mapView:MKMapView?
@@ -191,9 +191,9 @@ class WSShowBigimgViewController: UIViewController {
 //            make.size.equalTo(CGSize(width: 24, height: 24))
 //        }
         
-        if (self.getCurrentPageModel()?.type != .NetImage ) {
+//        if (self.getCurrentPageModel()?.type != .NetImage ) {
 //            rightImageView.isHidden = true
-        }
+//        }
         
         
         self.view.addSubview(naviView)
@@ -260,7 +260,7 @@ class WSShowBigimgViewController: UIViewController {
             return image
     }
     
-    func getCurrentPageModel() -> WSAsset?{
+    func getCurrentPageModel() -> Any?{
         let offset = self.collectionView.contentOffset
         
         let page = offset.x/(__kWidth+CGFloat(kItemMargin))
@@ -276,19 +276,32 @@ class WSShowBigimgViewController: UIViewController {
     func getCurrentPageRect()->CGRect{
         var frame = CGRect.zero
         let model = self.getCurrentPageModel()
-        
-        var w:CGFloat? = 0, h:CGFloat? = 0
-        if (model?.asset != nil) {
-            w = CGFloat((model?.asset?.pixelWidth)!)
-            h = CGFloat((model?.asset?.pixelHeight)!)
-        } else if model is NetAsset {
-            w = CGFloat(((model as! NetAsset).metadata?.w!)!)
-            h = CGFloat(((model as! NetAsset).metadata?.h!)!)
-        } else {
+         var w:CGFloat? = 0, h:CGFloat? = 0
+        if model is WSAsset{
+            let assetModel = model as! WSAsset
+            if (assetModel.asset != nil) {
+                w = CGFloat((assetModel.asset?.pixelWidth)!)
+                h = CGFloat((assetModel.asset?.pixelHeight)!)
+            } else if assetModel is NetAsset {
+                w = CGFloat(((assetModel as! NetAsset).metadata?.w!)!)
+                h = CGFloat(((assetModel as! NetAsset).metadata?.h!)!)
+            } else {
+                w = __kWidth
+                h = __kHeight
+            }
+        }else if model is EntriesModel{
+             let filesModel = model as! EntriesModel
+            if let metadata = filesModel.metadata{
+                w = metadata.w != nil ? CGFloat(metadata.w!) : __kWidth
+                h = metadata.h != nil ? CGFloat(metadata.h!) : __kHeight
+            }else{
+                w = __kWidth
+                h = __kHeight
+            }
+        }else{
             w = __kWidth
             h = __kHeight
         }
-        
         let width = MIN(x: __kWidth, y: w!)
         frame.origin = CGPoint.zero
         frame.size.width = width
@@ -314,13 +327,24 @@ class WSShowBigimgViewController: UIViewController {
     }
     
     func reloadCurrentCell(){
-        let m = self.getCurrentPageModel()
-        if (m?.type == .GIF ||
-            m?.type == .LivePhoto) {
-            let indexP = IndexPath.init(item: currentPage - 1, section: 0)
-            let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
-            cell?.reloadGifLivePhoto()
+        let model = self.getCurrentPageModel()
+        if model is WSAsset{
+            let assetModel = model as! WSAsset
+            if (assetModel.type == .GIF ||
+                assetModel.type == .LivePhoto) {
+                let indexP = IndexPath.init(item: currentPage - 1, section: 0)
+                let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
+                cell?.reloadGifLivePhoto()
+            }
+        }else{
+            let fileModel = model as! EntriesModel
+            if (fileModel.metadata?.type == "GIF") {
+                let indexP = IndexPath.init(item: currentPage - 1, section: 0)
+                let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
+                cell?.reloadGifLivePhoto()
+            }
         }
+      
         self.infoTableView.reloadData()
     }
 
@@ -374,10 +398,21 @@ class WSShowBigimgViewController: UIViewController {
 //            }
         }
         // FIXME: net video animation error!
-        if self.getCurrentPageModel()?.type == .Video{
-        return completion()
+        let model = self.getCurrentPageModel()
+        if model is EntriesModel{
+            let filesModel = model as! EntriesModel
+            if filesModel.metadata?.type != nil{
+                if kVideoTypes.contains((filesModel.metadata?.type)!.lowercased()){
+                   return completion()
+                }
+            }
+        }else if model is WSAsset{
+            let assetModel = model as! WSAsset
+            if assetModel.type == .Video{
+                return completion()
+            }
         }
-        
+       
         UIView.animate(withDuration: 0.3, animations: {
             fadeView.backgroundColor =  UIColor.black
         }) { (finished) in
@@ -417,7 +452,7 @@ class WSShowBigimgViewController: UIViewController {
       
         
         if let delegateOK = self.delegate{
-            senderViewForAnimation =  delegateOK.photoBrowser(browser: self, willDismiss: (cell?.model?.indexPath!)!)
+            senderViewForAnimation =  delegateOK.photoBrowser(browser: self, willDismiss: cell?.model is WSAsset ? ((cell?.model as! WSAsset).indexPath!) : ((cell?.model as! EntriesModel).indexPath!))
         }
         
         let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: self.view)
@@ -899,8 +934,9 @@ extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDa
         
         cell.showGif = true
         cell.showLivePhoto = true
+        
         cell.model = model
-   
+        
         cell.loadImageCompleteCallback = { [weak self] in
             self?.appearResizableImageView?.removeFromSuperview()
             self?.appearResizableImageView = nil
@@ -928,22 +964,49 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
                 return
             }
             let m =  self.getCurrentPageModel()
-            if (m == nil || currentModelForRecord == m){
-                return
+            if m == nil{
+                 return
             }
+            if m is WSAsset{
+                if currentModelForRecord is WSAsset{
+                    if m as! WSAsset == currentModelForRecord as! WSAsset{
+                      return
+                    }
+                }
+            }else{
+                if currentModelForRecord is EntriesModel{
+                    if (m as! EntriesModel).hash == (currentModelForRecord as! EntriesModel).hash{
+                        return
+                    }
+                }
+            }
+//             || currentModelForRecord == m){
+//                return
+//            }
             currentModelForRecord = m
             //改变导航标题
+            
+            
             if self.delegate != nil && !isFirstAppear{
-                self.delegate?.photoBrowser(browser: self, indexPath: (m?.indexPath!)!)
+                var indexPath:IndexPath?
+                if m is WSAsset{
+                    indexPath = (m as! WSAsset).indexPath
+                }else if m is EntriesModel{
+                    indexPath = (m as! EntriesModel).indexPath
+                }
+                self.delegate?.photoBrowser(browser: self, indexPath: indexPath!)
             }
             //!!!!!: change Title
             titleLabel.text = "\(currentPage)/\(String(describing: (self.models?.count)!))"
-            if (m!.type == .GIF ||
-                m!.type == .LivePhoto ||
-                m!.type == .Video || m?.type == .NetVideo) {
-                let cell = collectionView.cellForItem(at: IndexPath.init(item: currentPage-1 , section: 0))
-                if  cell != nil{
-                      (cell as! WSBigimgCollectionViewCell).pausePlay()
+            if m is WSAsset{
+                let assetModel = m as! WSAsset
+                if (assetModel.type == .GIF ||
+                    assetModel.type == .LivePhoto ||
+                    assetModel.type == .Video || assetModel.type == .NetVideo) {
+                    let cell = collectionView.cellForItem(at: IndexPath.init(item: currentPage-1 , section: 0))
+                    if  cell != nil{
+                        (cell as! WSBigimgCollectionViewCell).pausePlay()
+                    }
                 }
             }
         }
@@ -979,135 +1042,162 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
         switch indexPath.row {
         case 0:
             cell.leftImageView.image = UIImage.init(named: "calendar_gray.png")
-            cell.titleLabel.text =  model is NetAsset ? TimeTools.timeString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000) : TimeTools.timeString(model?.asset?.creationDate ?? Date.init())
-            cell.detailLabel.text = model is NetAsset ? "\(TimeTools.weekDay(TimeInterval((model as! NetAsset).mtime ?? 0)/1000)) \(TimeTools.timeHourMinuteString(TimeInterval((model as! NetAsset).mtime ?? 0)/1000))" : "\(TimeTools.weekDay(model?.asset?.creationDate ?? Date.init())) \(TimeTools.timeHourMinuteString(model?.asset?.creationDate ?? Date.init()))"
-            
-        case 1:
-            cell.leftImageView.image = UIImage.init(named: "photo_gray_info.png")
-            if model is NetAsset{
-              cell.titleLabel.text = (model as! NetAsset).name  ?? ""
-            }else{
-                if let asset = model?.asset{
-                   cell.titleLabel.text = asset.getName()
+            var mtime:TimeInterval = 0
+            if model is WSAsset{
+            let assetModel = model as! WSAsset
+                mtime = model is NetAsset ? (model as! NetAsset).mtime ?? 0 : (assetModel.asset?.creationDate?.timeIntervalSince1970 ?? 0)
+            }else if model is EntriesModel{
+               let filesModel = model as! EntriesModel
+                if let date = filesModel.metadata?.date{
+                    mtime = (TimeTools.dateTimeInterval(date) ?? 0)*1000
+                }else
+                if let time = filesModel.mtime{
+                    mtime = time
                 }
             }
             
-            var infoArray:Array<String> = Array.init()
-            if let exifDic = self.fetchAssetEXIFInfo(model: model){
-//                if  let compressedBitsPerPixel = exifDic[kCGImagePropertyExifCompressedBitsPerPixel] as? NSNumber{
-////                    print(compressedBitsPerPixel)
-//                }
-                if  let pixelWidthNumber = exifDic[kCGImagePropertyPixelWidth] as? NSNumber,let pixelHeightNumber = exifDic[kCGImagePropertyPixelHeight] as? NSNumber{
-                    let pixelWidth = pixelWidthNumber.stringValue
-                    let pixelHeight = pixelHeightNumber.stringValue
-                    let pixel = "\(pixelWidth)x\(pixelHeight)"
-//                    print(pixel)
-                    infoArray.append(pixel)
-                }else if let pixelWidthNumber = exifDic["PixelWidth"] as? NSNumber,let pixelHeightNumber = exifDic["PixelHeight"] as? NSNumber{
-                    let pixelWidth = pixelWidthNumber.stringValue
-                    let pixelHeight = pixelHeightNumber.stringValue
-                    let pixel = "\(pixelWidth)x\(pixelHeight)"
-//                    print(pixel)
-                    infoArray.append(pixel)
+            cell.titleLabel.text =  TimeTools.timeString(TimeInterval(mtime)/1000)
+            cell.detailLabel.text = "\(TimeTools.weekDay(TimeInterval(mtime)/1000)) \(TimeTools.timeHourMinuteString(TimeInterval(mtime)/1000))"
+        case 1:
+            cell.leftImageView.image = UIImage.init(named: "photo_gray_info.png")
+            if model is WSAsset{
+                if model is NetAsset{
+                    cell.titleLabel.text = (model as! NetAsset).name  ?? ""
+                }else{
+                    if let asset = (model as! WSAsset).asset{
+                        cell.titleLabel.text = asset.getName()
+                    }
                 }
-           }
-            
-            if let size = model is NetAsset ? sizeString((model as! NetAsset).size ?? 0) : model?.asset?.getSizeString(){
+            }else{
+                if let fileName = (model as! EntriesModel).name{
+                    cell.titleLabel.text = fileName
+                }
+            }
+            var infoArray:Array<String> = Array.init()
+            if model is WSAsset{
+                if let exifDic = self.fetchAssetEXIFInfo(model: model as? WSAsset){
+                    //                if  let compressedBitsPerPixel = exifDic[kCGImagePropertyExifCompressedBitsPerPixel] as? NSNumber{
+                    ////                    print(compressedBitsPerPixel)
+                    //                }
+                    if  let pixelWidthNumber = exifDic[kCGImagePropertyPixelWidth] as? NSNumber,let pixelHeightNumber = exifDic[kCGImagePropertyPixelHeight] as? NSNumber{
+                        let pixelWidth = pixelWidthNumber.stringValue
+                        let pixelHeight = pixelHeightNumber.stringValue
+                        let pixel = "\(pixelWidth)x\(pixelHeight)"
+                        //                    print(pixel)
+                        infoArray.append(pixel)
+                    }else if let pixelWidthNumber = exifDic["PixelWidth"] as? NSNumber,let pixelHeightNumber = exifDic["PixelHeight"] as? NSNumber{
+                        let pixelWidth = pixelWidthNumber.stringValue
+                        let pixelHeight = pixelHeightNumber.stringValue
+                        let pixel = "\(pixelWidth)x\(pixelHeight)"
+                        //                    print(pixel)
+                        infoArray.append(pixel)
+                    }
+                }
+                
+                
+                if let size = model is NetAsset ? sizeString((model as! NetAsset).size ?? 0) : (model as! WSAsset).asset?.getSizeString(){
+                    infoArray.append(size)
+                }
+            }else{
+                let filesSize = (model as! EntriesModel).size
+                let size = sizeString(filesSize ?? 0)
                 infoArray.append(size)
             }
             cell.detailLabel.text = infoArray.joined(separator: "  ")
         case 2:
             cell.leftImageView.image = UIImage.init(named: "lens_gary.png")
             var infoArray:Array<String> = Array.init()
-            if let exifDic = self.fetchAssetEXIFInfo(model: model){
-                if  let imageTIFFDictionary = exifDic[kCGImagePropertyTIFFDictionary] as? [AnyHashable : Any]{
-                    if let imageTIFFModel = imageTIFFDictionary[kCGImagePropertyTIFFModel] as? String{
-                    cell.titleLabel.text = imageTIFFModel
-//                    print(imageTIFFModel)
-                    }
-                    
-                    if  let imageExifDictionary = exifDic[kCGImagePropertyExifDictionary] as? [AnyHashable : Any]{
-                        if  let imageFNumber = imageExifDictionary[kCGImagePropertyExifFNumber] as? NSNumber{
-                            let imageFNumberString = "f/\(imageFNumber.stringValue)"
-                            infoArray.append(imageFNumberString)
+            if model is WSAsset{
+                if let exifDic = self.fetchAssetEXIFInfo(model: model as? WSAsset){
+                    if  let imageTIFFDictionary = exifDic[kCGImagePropertyTIFFDictionary] as? [AnyHashable : Any]{
+                        if let imageTIFFModel = imageTIFFDictionary[kCGImagePropertyTIFFModel] as? String{
+                            cell.titleLabel.text = imageTIFFModel
+                            //                    print(imageTIFFModel)
                         }
                         
-                        if  let imageExposureTime = imageExifDictionary[kCGImagePropertyExifExposureTime] as? NSNumber{
-                            var exposureTimeString = ""
-                            if imageExposureTime.floatValue < 1.00000{
-                               exposureTimeString = "1/\(String.init(format: "%.2f", imageExposureTime.floatValue*100))"
-                            }else{
-                               exposureTimeString = "\(String.init(format: "%.f", imageExposureTime.floatValue))s"
+                        if  let imageExifDictionary = exifDic[kCGImagePropertyExifDictionary] as? [AnyHashable : Any]{
+                            if  let imageFNumber = imageExifDictionary[kCGImagePropertyExifFNumber] as? NSNumber{
+                                let imageFNumberString = "f/\(imageFNumber.stringValue)"
+                                infoArray.append(imageFNumberString)
                             }
-                            infoArray.append(exposureTimeString)
-                        }
-                        
-                        if  let imageFocalLength = imageExifDictionary[kCGImagePropertyExifFocalLength] as? NSNumber{
-                            infoArray.append("\(imageFocalLength.stringValue)mm")
-                        }
-                        
-                        if  let imageISOSpeedRatings = imageExifDictionary[kCGImagePropertyExifISOSpeedRatings] as? [NSNumber]{
-//                            print(imageISOSpeedRatings)
-                            if imageISOSpeedRatings.count > 0{
-                                infoArray.append("ISO \(imageISOSpeedRatings[0].stringValue)")
+                            
+                            if  let imageExposureTime = imageExifDictionary[kCGImagePropertyExifExposureTime] as? NSNumber{
+                                var exposureTimeString = ""
+                                if imageExposureTime.floatValue < 1.00000{
+                                    exposureTimeString = "1/\(String.init(format: "%.2f", imageExposureTime.floatValue*100))"
+                                }else{
+                                    exposureTimeString = "\(String.init(format: "%.f", imageExposureTime.floatValue))s"
+                                }
+                                infoArray.append(exposureTimeString)
+                            }
+                            
+                            if  let imageFocalLength = imageExifDictionary[kCGImagePropertyExifFocalLength] as? NSNumber{
+                                infoArray.append("\(imageFocalLength.stringValue)mm")
+                            }
+                            
+                            if  let imageISOSpeedRatings = imageExifDictionary[kCGImagePropertyExifISOSpeedRatings] as? [NSNumber]{
+                                //                            print(imageISOSpeedRatings)
+                                if imageISOSpeedRatings.count > 0{
+                                    infoArray.append("ISO \(imageISOSpeedRatings[0].stringValue)")
+                                }
                             }
                         }
                     }
                 }
             }
-
            cell.detailLabel.text = infoArray.joined(separator: "  ")
         case 3:
             cell.leftImageView.image = UIImage.init(named: "location_gary.png")
             var infoArray:Array<String> = Array.init()
-            if let exifDic = self.fetchAssetEXIFInfo(model: model){
-                if  let imageGPSDictionary = exifDic[kCGImagePropertyGPSDictionary] as? [AnyHashable : Any]{
-//                    print(imageGPSDictionary)
-                    if let imageLatitude = imageGPSDictionary[kCGImagePropertyGPSLatitude] as? NSNumber,let imageLongitude = imageGPSDictionary[kCGImagePropertyGPSLongitude] as? NSNumber{
-                        // 创建经纬度
-                        let location = CLLocation(latitude: imageLatitude.doubleValue, longitude: imageLongitude.doubleValue)
-                        let cLGeocoder = CLGeocoder.init()
-                        cLGeocoder.reverseGeocodeLocation(location) {(placemarks, error) in
-                            if let  placemarks = placemarks{
-                                if  placemarks.count > 0{
-                                    var locationArray:Array<String> = Array.init()
-                                    let place = placemarks[0]
-                                    if  let country = place.country{
-                                        locationArray.append(country)
+            if model is WSAsset{
+                if let exifDic = self.fetchAssetEXIFInfo(model: model as? WSAsset){
+                    if  let imageGPSDictionary = exifDic[kCGImagePropertyGPSDictionary] as? [AnyHashable : Any]{
+                        //                    print(imageGPSDictionary)
+                        if let imageLatitude = imageGPSDictionary[kCGImagePropertyGPSLatitude] as? NSNumber,let imageLongitude = imageGPSDictionary[kCGImagePropertyGPSLongitude] as? NSNumber{
+                            // 创建经纬度
+                            let location = CLLocation(latitude: imageLatitude.doubleValue, longitude: imageLongitude.doubleValue)
+                            let cLGeocoder = CLGeocoder.init()
+                            cLGeocoder.reverseGeocodeLocation(location) {(placemarks, error) in
+                                if let  placemarks = placemarks{
+                                    if  placemarks.count > 0{
+                                        var locationArray:Array<String> = Array.init()
+                                        let place = placemarks[0]
+                                        if  let country = place.country{
+                                            locationArray.append(country)
+                                        }
+                                        
+                                        if  let locality = place.locality{
+                                            locationArray.append(locality)
+                                        }
+                                        
+                                        if  let subLocality = place.subLocality{
+                                            locationArray.append(subLocality)
+                                        }
+                                        
+                                        cell.titleLabel.text = locationArray.joined(separator: "")
                                     }
-                                    
-                                    if  let locality = place.locality{
-                                        locationArray.append(locality)
-                                    }
-                                    
-                                    if  let subLocality = place.subLocality{
-                                        locationArray.append(subLocality)
-                                    }
-                                    
-                                    cell.titleLabel.text = locationArray.joined(separator: "")
                                 }
                             }
+                            
+                            let centerCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2DMake(imageLatitude.doubleValue, imageLongitude.doubleValue)
+                            let span: MKCoordinateSpan = MKCoordinateSpanMake(0.1, 0.1)
+                            let region: MKCoordinateRegion = MKCoordinateRegionMake(centerCoordinate, span)
+                            if self.mapView == nil{
+                                self.mapView = MKMapView.init()
+                            }
+                            mapView?.region = region
+                            mapView?.showsTraffic = true
+                            let pin = MapPin.init(coordinate: centerCoordinate)
+                            mapView?.addAnnotation(pin)
+                            let latitude = String.init(format: "%.3f", imageLatitude.floatValue)
+                            let longitude = String.init(format: "%.3f", imageLongitude.floatValue)
+                            let coordinate = "\(latitude),\(longitude)"
+                            //                        print(coordinate)
+                            infoArray.append(coordinate)
                         }
-                        
-                        let centerCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2DMake(imageLatitude.doubleValue, imageLongitude.doubleValue)
-                        let span: MKCoordinateSpan = MKCoordinateSpanMake(0.1, 0.1)
-                        let region: MKCoordinateRegion = MKCoordinateRegionMake(centerCoordinate, span)
-                        if self.mapView == nil{
-                            self.mapView = MKMapView.init()
-                        }
-                        mapView?.region = region
-                        mapView?.showsTraffic = true
-                        let pin = MapPin.init(coordinate: centerCoordinate)
-                        mapView?.addAnnotation(pin)
-                        let latitude = String.init(format: "%.3f", imageLatitude.floatValue)
-                        let longitude = String.init(format: "%.3f", imageLongitude.floatValue)
-                        let coordinate = "\(latitude),\(longitude)"
-//                        print(coordinate)
-                        infoArray.append(coordinate)
                     }
                 }
             }
-    
             cell.detailLabel.text = infoArray.joined(separator: "  ")
         default:
             break
@@ -1141,17 +1231,19 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let model = getCurrentPageModel()
-        if let exifDic = self.fetchAssetEXIFInfo(model: model){
-            if  exifDic[kCGImagePropertyGPSDictionary] != nil {
-                if self.mapView == nil{
-                    self.mapView = MKMapView.init()
+        if model is WSAsset{
+            if let exifDic = self.fetchAssetEXIFInfo(model: model as? WSAsset){
+                if  exifDic[kCGImagePropertyGPSDictionary] != nil {
+                    if self.mapView == nil{
+                        self.mapView = MKMapView.init()
+                    }
+                    self.mapView?.isZoomEnabled = false
+                    self.mapView?.isScrollEnabled = false
+                    self.mapView?.isRotateEnabled = false
+                    self.mapView?.delegate = self
+                }else{
+                    self.mapView = nil
                 }
-                self.mapView?.isZoomEnabled = false
-                self.mapView?.isScrollEnabled = false
-                self.mapView?.isRotateEnabled = false
-                self.mapView?.delegate = self
-            }else{
-                self.mapView = nil
             }
         }
         return self.mapView

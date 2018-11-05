@@ -47,7 +47,7 @@ class NewPhotoAlbumCollectionViewCell: UICollectionViewCell {
                 })
             }else if model is NetAsset{
                 let netAsset = model as! NetAsset
-                _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image) in
+                _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image,reqUrl) in
                     if error == nil {
                         self?.model?.image = image
                         self?.imageView?.layer.contents = image?.cgImage

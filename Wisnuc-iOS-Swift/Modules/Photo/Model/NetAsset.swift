@@ -12,7 +12,7 @@ import HandyJSON
 class NetAsset: WSAsset,HandyJSON {
     
     var name:String?
-    var mtime:Int64?
+    var mtime:Double?
     var size:Int64?
     var uuid:String?
     var fmhash:String?

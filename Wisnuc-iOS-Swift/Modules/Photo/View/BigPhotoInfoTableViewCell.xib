@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,13 +20,13 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bpl-ZV-U59">
-                        <rect key="frame" x="72" y="22" width="0.0" height="0.0"/>
+                        <rect key="frame" x="72" y="22" width="232" height="0.0"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6dM-Wf-p1U">
-                        <rect key="frame" x="72" y="30" width="0.0" height="0.0"/>
+                        <rect key="frame" x="72" y="30" width="232" height="0.0"/>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -42,7 +42,9 @@
                 <constraints>
                     <constraint firstItem="6dM-Wf-p1U" firstAttribute="top" secondItem="bpl-ZV-U59" secondAttribute="bottom" constant="8" id="T0h-9D-Cxv"/>
                     <constraint firstItem="dMD-R8-dEe" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Y7E-k3-pYI"/>
+                    <constraint firstAttribute="trailing" secondItem="bpl-ZV-U59" secondAttribute="trailing" constant="16" id="YkQ-Zn-TGy"/>
                     <constraint firstItem="bpl-ZV-U59" firstAttribute="leading" secondItem="dMD-R8-dEe" secondAttribute="trailing" constant="32" id="eEc-VV-xjQ"/>
+                    <constraint firstAttribute="trailing" secondItem="6dM-Wf-p1U" secondAttribute="trailing" constant="16" id="ijP-5b-8Ll"/>
                     <constraint firstItem="dMD-R8-dEe" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="mId-lj-1Yb"/>
                     <constraint firstItem="6dM-Wf-p1U" firstAttribute="leading" secondItem="bpl-ZV-U59" secondAttribute="leading" id="moQ-b1-dpn"/>
                     <constraint firstItem="bpl-ZV-U59" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-14" id="og8-kk-z2z"/>

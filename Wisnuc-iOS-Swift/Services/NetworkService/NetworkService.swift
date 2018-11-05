@@ -382,7 +382,7 @@ class NetworkService: NSObject {
     }
     
     //Asset
-    func getThumbnail(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?)->())->RetrieveImageDownloadTask{
+    func getThumbnail(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->RetrieveImageDownloadTask{
         let modifier = AnyModifier { request in
             var req = request
             req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
@@ -416,9 +416,9 @@ class NetworkService: NSObject {
                                              forKey: url.absoluteString,
                                              toDisk: true)
                 }
-                callback(nil, image)
+                callback(nil, image,reqUrl)
             }else{
-                callback(error, nil)
+                callback(error, nil,reqUrl)
             }
             }!
         //        return SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.useNSURLCache, progress: nil, completed: { (image, data, error, finished) in

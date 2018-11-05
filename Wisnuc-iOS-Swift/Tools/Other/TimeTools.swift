@@ -48,7 +48,8 @@ class TimeTools: NSObject {
         let formater = DateFormatter.init()
         formater.dateFormat = "yyyy年MM月dd日"
         //    "yyyy年MM月dd日 hh:mm:ss"
-        let dateString = formater.string(from: date)
+        let timeZone = NSTimeZone.init(name:"Asia/Shanghai")
+        formater.timeZone = timeZone! as TimeZone
         return dateString
     }
     
@@ -56,8 +57,20 @@ class TimeTools: NSObject {
         let formater = DateFormatter.init()
         formater.dateFormat = "yyyy年MM月dd日"
         //    "yyyy年MM月dd日 hh:mm:ss"
+        let timeZone = NSTimeZone.init(name:"Asia/Shanghai")
+        formater.timeZone = timeZone! as TimeZone
         let dateString = formater.string(from: date)
         return dateString
+    }
+    
+    class func dateTimeInterval(_ string:String) ->TimeInterval?{
+        let formater = DateFormatter.init()
+        formater.dateFormat = "yyyy:MM:dd HH:mm:ss"
+        //    "yyyy年MM月dd日 hh:mm:ss"
+        let date = formater.date(from: string)
+        formater.timeZone = TimeZone.init(secondsFromGMT: 8)
+        let time = date?.timeIntervalSince1970
+        return time
     }
     
     class func weekDay(_ timeSecond:TimeInterval) ->String {
