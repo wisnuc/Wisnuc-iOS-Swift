@@ -132,6 +132,52 @@ class AppService: NSObject,ServiceProtocol{
         }
     }
     
+    func loginAction(stationModel:StationsInfoModel,orginTokenUser:User,complete:@escaping ((_ error:Error?,_ user:User?)->())){
+//        if model.uuid == nil || isNilString(model.uuid){
+//            complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
+//        }
+        
+        let callBackClosure = { (callBackError:Error? , callBackUser:User?)->() in
+            complete(callBackError,callBackUser)
+        }
+
+        orginTokenUser.stationId = stationModel.sn
+        if let isShare  = stationModel.isShareStation{
+            orginTokenUser.isAdmin = NSNumber.init(value: !isShare)
+        }
+        orginTokenUser.isLocalLogin = NSNumber.init(value: false)
+        
+        if let lanIP = stationModel.LANIP {
+            let urlString  = "http://\(String(describing: lanIP)):3000"
+            orginTokenUser.localAddr = urlString
+            orginTokenUser.lanIP = lanIP
+        }
+        self.userService.setCurrentUser(orginTokenUser)
+        self.userService.synchronizedCurrentUser()
+        if orginTokenUser.localAddr != nil{
+            networkService.checkIP(address: orginTokenUser.lanIP!) { [weak self] (success) in
+                if success{
+                    self?.networkService.getLocalInCloudLogin({ [weak self](localTokenError, localToken) in
+                        if localTokenError == nil{
+                            orginTokenUser.isLocalLogin = NSNumber.init(value: true)
+                            orginTokenUser.localToken = localToken
+                            self?.networkService.networkState = .local
+                            self?.userService.setCurrentUser(orginTokenUser)
+                            self?.userService.synchronizedCurrentUser()
+                            self?.nextStepForLogin(callback: callBackClosure)
+                        }else{
+                            self?.nextStepForLogin(callback: callBackClosure)
+                        }
+                    })
+                }else{
+                    self?.nextStepForLogin(callback: callBackClosure)
+                }
+            }
+        }else{
+            nextStepForLogin(callback: callBackClosure)
+        }
+    }
+    
     func nextStepForLogin(callback: @escaping (_ error:Error?,_ user:User?)->()) {
         let currentUser = self.userService.currentUser
         self.networkService.getUserHome { [weak self] (userHomeError, userHome) in

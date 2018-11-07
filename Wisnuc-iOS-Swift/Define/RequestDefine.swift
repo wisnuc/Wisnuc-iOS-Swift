@@ -8,12 +8,14 @@
 
 import Foundation
 public let KWxAppID = "wx99b54eb728323fe8"
-public let kCloudAddr = "http://www.siyouqun.com"
-public let kCloudBaseURL = "http://www.siyouqun.com/c/v1"
+//public let kCloudAddr = "http://www.siyouqun.com"
+public let kCloudAddr = "http://abel.nodetribe.com"
+public let kCloudBaseURL = "http://abel.nodetribe.com/c/v1"
+//public let kCloudBaseURL = "http://www.siyouqun.com/c/v1"
 
 //#define kCloudAddr    @"http://10.10.9.87:4000/"
 //#define WX_BASE_URL   @"http://10.10.9.87:4000/c/v1/"
-public let kDevelopAddr = "http://10.10.9.65:4000/c/v1"
+//public let kDevelopAddr = "http://abel.nodetribe.com/c/v1"
 
 public let kCloudCommonJsonUrl = "/stations/\(String(describing: AppUserService.currentUser?.stationId ?? ""))/json"
 public let kCloudCommonPipeUrl = "/stations/\(String(describing: AppUserService.currentUser?.stationId ?? ""))/pipe"
@@ -47,6 +49,7 @@ public let kRequestImageAutoOrientKey = "autoOrient"
 public let kRequestImageCaretValue = "caret"
 public let kRequestImageThumbnailValue = "thumbnail"
 public let kRequestImageDataValue = "data"
+public let kRequestImageRandomValue = "random"
 
 public let kRequestClassKey = "class"
 public let kRequestPlacesKey = "places"

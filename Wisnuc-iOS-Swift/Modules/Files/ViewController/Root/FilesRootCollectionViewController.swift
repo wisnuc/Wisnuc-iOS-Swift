@@ -635,7 +635,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
              self.collectionView?.reloadData()
           }
         if let metadata = metadataType(metadata: model.metadata){
-            if kImageTypes.contains(metadata.rawValue) {
+            if kMediaTypes.contains(metadata.rawValue) {
                 
                let array = sectionArray.map { (model) -> EntriesModel in
                     var result = model
@@ -645,7 +645,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 }
                 
                 let resultArray = array.filter { (model) -> Bool in
-                    return kImageTypes.contains(model.metadata?.type?.lowercased() ?? "")
+                    return kMediaTypes.contains(model.metadata?.type?.lowercased() ?? "")
                 }
 //                for (i,value) in sectionArray.enumerated(){
 //                    let modelIndexPath = IndexPath(item: i, section: indexPath.section)

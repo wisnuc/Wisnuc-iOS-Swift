@@ -9,7 +9,8 @@
 import Foundation
 import UIKit
 
-
+public let kKeyChainService = "com.wisnuc"
+public let kKeyChainAccount = "wisnuc"
 let appDelegate = UIApplication.shared.delegate as! AppDelegate
 public let userDefaults = UserDefaults.standard
 let infoDictionary = Bundle.main.infoDictionary

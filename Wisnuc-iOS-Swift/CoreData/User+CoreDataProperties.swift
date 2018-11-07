@@ -22,8 +22,10 @@ extension User {
     @NSManaged public var cloudToken: String?
     @NSManaged public var avaterURL: String?
     @NSManaged public var userName: String?
+    @NSManaged public var nickName: String?
     @NSManaged public var stationId: String?
     @NSManaged public var localAddr: String?
+    @NSManaged public var lanIP: String?
     @NSManaged public var isFirstUser: NSNumber?
     @NSManaged public var isAdmin: NSNumber?
     @NSManaged public var bonjour_name: String?

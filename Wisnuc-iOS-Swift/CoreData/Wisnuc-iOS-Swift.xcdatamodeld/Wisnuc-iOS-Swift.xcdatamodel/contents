@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.18" systemVersion="18A391" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18B75" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="LocalAsset" representedClassName="LocalAsset" syncable="YES">
         <attribute name="digest" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localId" optional="YES" attributeType="String" syncable="YES"/>
@@ -18,8 +18,10 @@
         <attribute name="isLocalLogin" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isWIFIAutoBackup" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="language" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="lanIP" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localAddr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localToken" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nickName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="retrievePasswordState" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="sortIsDown" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="sortType" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -30,6 +32,6 @@
     </entity>
     <elements>
         <element name="LocalAsset" positionX="-54" positionY="117" width="128" height="75"/>
-        <element name="User" positionX="-54" positionY="-9" width="128" height="375"/>
+        <element name="User" positionX="-54" positionY="-9" width="128" height="405"/>
     </elements>
 </model>

@@ -10,6 +10,11 @@ import UIKit
 import Alamofire
 import Kingfisher
 
+enum ChannelState:String {
+    case Connected
+    case Disconnected
+}
+
 class NetworkService: NSObject {
     var networkState:NetworkServiceState?{
         didSet{
@@ -38,7 +43,7 @@ class NetworkService: NSObject {
                 
                 getLocalInCloudLogin { [weak self] (error, localToken) in
                     if error == nil {
-                        self?.checkIP(address: (AppUserService.currentUser?.localAddr)!, { (isLocal) in
+                        self?.checkIP(address: (AppUserService.currentUser?.lanIP)!, { (isLocal) in
                             if isLocal{
                                 AppUserService.currentUser?.localToken = localToken
                                 AppUserService.synchronizedCurrentUser()
@@ -81,19 +86,37 @@ class NetworkService: NSObject {
     }
     
     func checkIP(address:String, _ closure:@escaping (_ success:Bool)->()) {
-        let requestURL = "\(address)/station/info"
+        let requestURL = "http://\(address):3001/info"
         do {
             var urlRequest = try URLRequest.init(url: URL.init(string: requestURL)!, method: HTTPMethod.get)
-            urlRequest.timeoutInterval = TimeInterval.init(3)
+            urlRequest.timeoutInterval = TimeInterval.init(10)
             Alamofire.request(urlRequest).validate().response { (response) in
                 if response.error == nil{
-                    closure(true)
+                    guard let data = response.data else{
+                        return closure(false)
+                    }
+            
+                    guard let dic = dataToNSDictionary(data:data) else{
+                        return closure(false)
+                    }
+                   
+                    guard let channel = dic["channel"] as? NSDictionary else{
+                        return closure(false)
+                    }
+                    
+                    guard let state = channel["state"] as? String else{
+                        return closure(false)
+                    }
+                    
+                    if state == ChannelState.Connected.rawValue{
+                        return closure(true)
+                    }
                 }else{
-                    closure(false)
+                   return closure(false)
                 }
             }
         } catch {
-            closure(false)
+           return closure(false)
         }
     }
     

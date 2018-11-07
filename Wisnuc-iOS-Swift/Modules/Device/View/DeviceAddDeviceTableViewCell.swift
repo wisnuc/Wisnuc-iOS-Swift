@@ -41,11 +41,13 @@ class DeviceAddDeviceTableViewCell: UITableViewCell {
     
     func disabledAction(){
         self.selectButton.isEnabled = false
+        self.nameLabel.textColor = LightGrayColor
         self.isUserInteractionEnabled = false
     }
     
     func abledAction(){
         self.selectButton.isEnabled = true
+        self.nameLabel.textColor = DarkGrayColor
         self.isUserInteractionEnabled = true
     }
 

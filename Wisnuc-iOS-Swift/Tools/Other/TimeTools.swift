@@ -50,6 +50,7 @@ class TimeTools: NSObject {
         //    "yyyy年MM月dd日 hh:mm:ss"
         let timeZone = NSTimeZone.init(name:"Asia/Shanghai")
         formater.timeZone = timeZone! as TimeZone
+        let dateString = formater.string(from: date)
         return dateString
     }
     
@@ -68,7 +69,7 @@ class TimeTools: NSObject {
         formater.dateFormat = "yyyy:MM:dd HH:mm:ss"
         //    "yyyy年MM月dd日 hh:mm:ss"
         let date = formater.date(from: string)
-        formater.timeZone = TimeZone.init(secondsFromGMT: 8)
+       
         let time = date?.timeIntervalSince1970
         return time
     }

@@ -1094,12 +1094,16 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                     }
                 }
                 
-                
                 if let size = model is NetAsset ? sizeString((model as! NetAsset).size ?? 0) : (model as! WSAsset).asset?.getSizeString(){
                     infoArray.append(size)
                 }
             }else{
-                let filesSize = (model as! EntriesModel).size
+                let filesModel = model as! EntriesModel
+                if let pixelWidth = filesModel.metadata?.w,let pixelHeight = filesModel.metadata?.h{
+                    let pixel = "\(pixelWidth)x\(pixelHeight)"
+                    infoArray.append(pixel)
+                }
+                let filesSize = filesModel.size
                 let size = sizeString(filesSize ?? 0)
                 infoArray.append(size)
             }

@@ -26,9 +26,9 @@ class SighUpAPI: BaseRequest {
         return "/user"
     }
     
-    override func baseURL() -> String {
-        return kDevelopAddr
-    }
+//    override func baseURL() -> String {
+//        return kDevelopAddr
+//    }
     
     override func requestMethod() -> RequestHTTPMethod {
         return RequestHTTPMethod.post

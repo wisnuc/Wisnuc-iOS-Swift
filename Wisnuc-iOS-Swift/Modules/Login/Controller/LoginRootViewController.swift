@@ -316,8 +316,8 @@
     }
 //
     func weChatCallBackRespCode(code:String){
-            oldWechatLogin(code:code)
-//        wechatSighInAction(code:code)
+//            oldWechatLogin(code:code)
+        wechatSighInAction(code:code)
     }
     
     func findStation(uuid:String?,token:String?, closure: @escaping (Error?,NSArray?) -> Void){
@@ -436,7 +436,7 @@
                     default:
                         Message.message(text: LocalizedString(forKey:"\(String(describing: (error?.localizedDescription)!))"),duration:2.0)
                     }
-                    ActivityIndicator.startActivityIndicatorAnimation()
+                    ActivityIndicator.stopActivityIndicatorAnimation()
                 }else {
                     let dispatchGroup = DispatchGroup.init()
                     devieceArray?.enumerateObjects({ (obj, idx, stop) in

@@ -28,3 +28,6 @@
 #import "FSOpenSSL.h"
 
 #import "KeyBoardView.h"
+
+#import <SGPlayer/SGPlayer.h>
+#import <SAMKeychain/SAMKeychain.h>

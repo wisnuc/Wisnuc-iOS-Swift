@@ -14,9 +14,16 @@ enum FilesType:String{
     case directory = "directory"
 }
 
-public let kVideoTypes = [FilesFormatType.MP4.rawValue,FilesFormatType.RMVB.rawValue,FilesFormatType.RM.rawValue,FilesFormatType.AVI.rawValue,FilesFormatType.MKV.rawValue,FilesFormatType.WMV.rawValue,FilesFormatType.SWF.rawValue,FilesFormatType.FLV.rawValue,FilesFormatType.MOV.rawValue]
+public let kVideoTypes:Array<String> = [FilesFormatType.MP4.rawValue,FilesFormatType.RMVB.rawValue,FilesFormatType.RM.rawValue,FilesFormatType.AVI.rawValue,FilesFormatType.MKV.rawValue,FilesFormatType.WMV.rawValue,FilesFormatType.SWF.rawValue,FilesFormatType.FLV.rawValue,FilesFormatType.MOV.rawValue]
 
-public let kImageTypes = [FilesFormatType.PNG.rawValue,FilesFormatType.JPG.rawValue,FilesFormatType.JPEG.rawValue,FilesFormatType.GIF.rawValue]
+public let kImageTypes:Array<String> = [FilesFormatType.PNG.rawValue,FilesFormatType.JPG.rawValue,FilesFormatType.JPEG.rawValue,FilesFormatType.GIF.rawValue]
+public let kMediaTypes:Array<String> = {
+   var array = Array<String>.init()
+    array.append(contentsOf: kImageTypes)
+    array.append(contentsOf: kVideoTypes)
+    return array
+}()
+//[FilesFormatType.PNG.rawValue,FilesFormatType.JPG.rawValue,FilesFormatType.JPEG.rawValue,FilesFormatType.GIF.rawValue]
 
 enum FilesFormatType:String {
 

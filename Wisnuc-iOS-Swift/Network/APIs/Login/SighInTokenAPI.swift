@@ -25,7 +25,7 @@ class SighInTokenAPI: BaseRequest {
     }
     
     override func baseURL() -> String {
-        return kDevelopAddr
+        return kCloudBaseURL
     }
     
     override func requestMethod() -> RequestHTTPMethod {
@@ -33,7 +33,8 @@ class SighInTokenAPI: BaseRequest {
     }
     
     override func requestParameters() -> RequestParameters? {
-        let requestParameters:RequestParameters = ["username":self.phoneNumber!,"password":self.password! ]
+        print(getUniqueDevice() as Any)
+        let requestParameters:RequestParameters = ["username":self.phoneNumber!,"password":self.password!,"clientId":getUniqueDevice() ?? "","type":"iOS"]
         return requestParameters
     }
 }

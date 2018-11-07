@@ -22,9 +22,9 @@ class SighInWechatTokenAPI: BaseRequest {
         return "/wechat/token"
     }
     
-    override func baseURL() -> String {
-        return kDevelopAddr
-    }
+//    override func baseURL() -> String {
+//        return kDevelopAddr
+//    }
     
     override func requestMethod() -> RequestHTTPMethod {
         return RequestHTTPMethod.get

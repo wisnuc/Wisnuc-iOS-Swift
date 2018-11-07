@@ -13,6 +13,7 @@ import Kingfisher
 import PhotosUI
 import RxSwift
 import AVKit
+import AVFoundation
 //---------------base preview---------------
 class WSBasePreviewView: UIView {
     
@@ -469,6 +470,8 @@ class WSPreviewLivePhoto: WSBasePreviewView {
 
 class WSPreviewVideo: WSBasePreviewView {
     var disposeBag = DisposeBag()
+    var player:SGPlayer?
+    var request:BaseRequest?
     weak var delegate:SWPreviewVideoPlayerDelegate?
     private var hasObserverStatus:Bool = false
     override init(frame: CGRect) {
@@ -481,7 +484,9 @@ class WSPreviewVideo: WSBasePreviewView {
     }
     
     deinit {
-     
+        if let request = request{
+            request.cancel()
+        }
     }
     
     override func layoutSubviews() {
@@ -555,8 +560,48 @@ class WSPreviewVideo: WSBasePreviewView {
         }
 //
         self.indicator.startAnimating()
+        if (asset as! NetAsset).fmhash == nil{
+            return
+        }
+        let request = MediaRandomAPI.init(hash: (asset as! NetAsset).fmhash!)
+        self.request = request
+        request.startRequestJSONCompletionHandler { [weak self](response) in
+            self?.indicator.stopAnimating()
+            if response.error == nil{
+                DispatchQueue.main.async {
+//                    if response.result == nil{
+//                        self?.initVideoLoadFailedFromiCloudUI()
+//                        return
+//                    }
+                    var url: URL? = nil
+                    if let anURL = RequestConfig.sharedInstance.baseURL {
+                        url = URL(string: "\(anURL)media/random/\(String(describing: (response.value as! NSDictionary)["key"]))")
+                        self?.player = SGPlayer()
+                        
+                        // register callback handle.
+                    
+                        self?.player?.registerNotificationTarget(self!, stateAction: #selector(self?.stateAction(_:)), progressAction: #selector(self?.progressAction(_:)), playableAction: #selector(self?.playableAction(_:)), errorAction: #selector(self?.errorAction(_:)))
+                        
+//                        // display view tap action.
+                        
+                        self?.player?.viewTapAction = { player, view in
+                                print("player display view did click!")
+                            }
+//                        // playback plane video.
+                        self?.player?.replaceVideo(with: url!)
+//                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeNormal]; // 方式2
 //
-//        jy_weakify(self);
+//                        // playback 360° panorama video.
+//                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeVR];
+//
+//                        // start playing
+                        self?.player?.play()
+                    }
+                }
+            }else{
+                print(response.error as Any)
+            }
+        }
 //        [[FMMediaRamdomKeyAPI apiWithHash:[(WBAsset *)self.jyAsset fmhash]] startWithCompletionBlockWithSuccess:^(__kindof JYBaseRequest *request) {
 //        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@media/random/%@", [JYRequestConfig sharedConfig].baseURL, request.responseJsonObject[@"key"]]];
 //        if(!weakSelf) return;
@@ -583,6 +628,93 @@ class WSPreviewVideo: WSBasePreviewView {
 //        }];
     }
     
+    func loadNetNormalImage(filesModel:EntriesModel){
+        if (self.wsAsset?.asset != nil && self.imageRequestID != nil) {
+            if self.imageRequestID! >= 0{
+                PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
+            }
+        }
+        self.filesModel = filesModel
+
+        self.imageView.image = nil
+        self.playBtn.isEnabled = true
+        self.playBtn.isHidden = false
+        self.icloudLoadFailedLabel.isHidden = true
+        self.imageView.isHidden = false
+        if AppNetworkService.networkState == .normal{
+            Message.message(text: LocalizedString(forKey: "Operation not support"))
+        }
+        //
+        self.indicator.startAnimating()
+        if filesModel.hash == nil{
+            return
+        }
+        let request = MediaRandomAPI.init(hash: filesModel.hash!)
+        self.request = request
+        request.startRequestJSONCompletionHandler { [weak self](response) in
+            self?.indicator.stopAnimating()
+            if response.error == nil{
+                DispatchQueue.main.async {
+                    //                    if response.result == nil{
+                    //                        self?.initVideoLoadFailedFromiCloudUI()
+                    //                        return
+                    //                    }
+                    var url: URL? = nil
+                    if let anURL = RequestConfig.sharedInstance.baseURL {
+                        guard let dic = response.value as? NSDictionary else{
+                            self?.initVideoLoadFailedFromiCloudUI()
+                            return
+                        }
+                        
+                        guard let randomKey = dic["random"] else {
+                            self?.initVideoLoadFailedFromiCloudUI()
+                            return
+                        }
+                        
+                        url = URL(string: "\(anURL)/media/random/\(String(describing: randomKey))")
+                        self?.player = SGPlayer.init()
+                        self?.player?.decoder = SGPlayerDecoder.byDefault()
+                        
+                        self?.player?.registerNotificationTarget(self!, stateAction: #selector(self?.stateAction(_:)), progressAction: #selector(self?.progressAction(_:)), playableAction: #selector(self?.playableAction(_:)), errorAction: #selector(self?.errorAction(_:)))
+                        
+                        //                        // display view tap action.
+                        
+                        self?.player?.viewTapAction = { player, view in
+                            print("player display view did click!")
+                        }
+                        //                        // playback plane video.
+                        self?.player?.replaceVideo(with: url, videoType: SGVideoType.normal)
+                        //                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeNormal]; // 方式2
+                        //
+                        //                        // playback 360° panorama video.
+                        //                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeVR];
+                        //
+                        //                        // start playing
+                        self?.player?.play()
+                    }
+                }
+            }else{
+                print(response.error as Any)
+            }
+        }
+    }
+    @objc func playableAction(_ notification:Notification){
+        
+    }
+    
+    @objc func errorAction(_ notification:Notification){
+        let error = SGError.error(fromUserInfo: notification.userInfo!)
+        print("player did error : \(error.error)")
+    }
+    
+    @objc func progressAction(_ notification:Notification){
+        
+    }
+    
+    @objc func stateAction(_ notification:Notification){
+        
+    }
+    
     func initUI(){
         hasObserverStatus = false
         self.addSubview(self.imageView)
@@ -607,8 +739,6 @@ class WSPreviewVideo: WSBasePreviewView {
         self.playBtn.isHidden = false
         
     }
-    
-    
     
     func singleTapAction(){
       super.singleTapAction(nil)
@@ -780,7 +910,13 @@ class WSPreviewView: UIView {
             }else{
                 self.addSubview(self.imageGifView)
                 let filesModel = model as! EntriesModel
-                self.imageGifView.loadImage(filesModel: filesModel)
+                if let type = filesModel.metadata?.type{
+                    if  kVideoTypes.contains(type.lowercased()) {
+                        self.videoView.loadNetNormalImage(filesModel: filesModel)
+                    }else if kImageTypes.contains(type.lowercased()){
+                        self.imageGifView.loadImage(filesModel: filesModel)
+                    }
+                }
             }
         }
     }

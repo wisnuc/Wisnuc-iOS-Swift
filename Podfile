@@ -32,6 +32,8 @@ pod 'SVProgressHUD'
 pod 'IQKeyboardManagerSwift'
 #pod 'AFNetworking'
 #pod 'FBMemoryProfiler'
+#pod 'HaishinKit'
+pod 'SAMKeychain'
 end
 
 

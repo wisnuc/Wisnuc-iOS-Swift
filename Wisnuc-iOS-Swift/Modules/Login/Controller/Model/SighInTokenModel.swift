@@ -16,4 +16,10 @@ struct SighInTokenModel: Decodable {
 
 struct SighInData:Decodable{
     var token:String?
+    var avatarUrl:String?
+    var id:String?
+    var createdAt:String?
+    var nickName:String?
+    var updatedAt:String?
+    var username:String?
 }

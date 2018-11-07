@@ -15,7 +15,7 @@ class GetStationsAPI: BaseRequest {
         self.token = token
     }
     override func requestURL() -> String {
-        return "\(kDevelopAddr)/station"
+        return "\(kCloudBaseURL)/station"
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {

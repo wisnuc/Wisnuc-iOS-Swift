@@ -12,7 +12,9 @@ struct StationsInfoModel: Decodable {
     var sn:String?
     var createdAt:String?
     var owner:String?
-    var online: Bool?
+    var online: Int?
     var onlineTime : String?
     var offlineTime : String?
+    var LANIP:String?
+    var isShareStation:Bool?
 }

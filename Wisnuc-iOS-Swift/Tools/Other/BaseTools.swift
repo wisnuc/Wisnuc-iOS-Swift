@@ -164,6 +164,29 @@ func retrieveTabbarController() -> WSTabBarController?{
     return nil
 }
 
+ func getUniqueDevice() -> String? {
+    var strApplicationUUID = SAMKeychain.password(forService: kKeyChainService, account: kKeyChainAccount)
+    if strApplicationUUID == nil {
+        strApplicationUUID = UIDevice.current.identifierForVendor?.uuidString ?? ""
+        let query = SAMKeychainQuery()
+        query.service = kKeyChainService
+        query.account = kKeyChainAccount
+        query.password = strApplicationUUID
+        query.synchronizationMode = SAMKeychainQuerySynchronizationMode.no
+        do {
+            try query.save()
+        }catch{
+          print(error)
+        }
+    }
+    return strApplicationUUID
+}
+
+func deleteUniqueDevice()->Bool{
+    return SAMKeychain.deletePassword(forService: kKeyChainService, account: kKeyChainAccount)
+}
+
+
 
 
 //- (void)changeControllerFromOldController:(UIViewController *)oldController toNewController:(UIViewController *)newController
