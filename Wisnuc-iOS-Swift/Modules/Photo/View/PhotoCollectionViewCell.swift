@@ -132,9 +132,17 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                             print("Not exist in cache.")
                             _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image,reqUrl)  in
                                 if error == nil {
+                                    if let image =  image, let url = reqUrl {
+                                        ImageCache.default.store(image,
+                                                                 original: nil,
+                                                                 forKey: url.absoluteString,
+                                                                 toDisk: true)
+                                    }
                                     self?.model?.image = image
                                     self?.imageView?.layer.contents = image?.cgImage
                                     self?.image = image
+                                }else{
+                                
                                 }
                             }
                         }
@@ -248,10 +256,30 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         let detailURL = "media"
         let frameWidth = size.width
         let frameHeight = size.height
-        let resource = "media/\(hash)".toBase64()
+        let resource = "/media/\(hash)"
         let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-        //        SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
-        let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
+        
+        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth),kRequestImageHeightKey:String(describing: frameHeight),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
+        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+            return nil
+        }
+        
+        guard let dataString = String.init(data: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+            return nil
+        }
+        
+        guard  let normalUrl = URL.init(string:urlString) else {
+            return nil
+        }
+        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+            return nil
+        }
         return url
     }
 

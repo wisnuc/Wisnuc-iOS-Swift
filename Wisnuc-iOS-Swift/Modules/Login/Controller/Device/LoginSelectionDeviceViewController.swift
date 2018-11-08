@@ -7,8 +7,12 @@
 //
 
 import UIKit
+@objc protocol LoginSelectionDeviceViewControllerDelegte {
+    func loginFinish(userId:String,stationModel:Any)
+}
 
 class LoginSelectionDeviceViewController: BaseViewController {
+    weak var delegate:LoginSelectionDeviceViewControllerDelegte?
     let identifier = "celled"
     let cellHeight:CGFloat = 64
     let headerHeight:CGFloat = 56 + 16 + 32
@@ -70,39 +74,12 @@ class LoginSelectionDeviceViewController: BaseViewController {
     }
     
     @objc func confirmButtonTap(_ sender:UIButton){
-        ActivityIndicator.startActivityIndicatorAnimation()
-        if let userId = self.userId {
-            if let model = self.selectedModel,let user = AppUserService.user(uuid: userId){
-                AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
-                    if error == nil && userData != nil{
-                        AppUserService.setCurrentUser(userData)
-                        AppUserService.synchronizedCurrentUser()
-                        appDelegate.initRootVC()
-                    }else{
-                        if error != nil{
-                            switch error {
-                            case is LoginError:
-                                let loginError = error as! LoginError
-                                Message.message(text: loginError.localizedDescription, duration: 2.0)
-                            case is BaseError:
-                                let baseError = error as! BaseError
-                                Message.message(text: baseError.localizedDescription, duration: 2.0)
-                            default:
-                                Message.message(text: (error?.localizedDescription)!, duration: 2.0)
-                            }
-                            AppUserService.logoutUser()
-                        }
-                    }
-                }
-                ActivityIndicator.stopActivityIndicatorAnimation()
-            }else{
-                AppUserService.logoutUser()
-                Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
-                ActivityIndicator.stopActivityIndicatorAnimation()
-            }
+        if let userId = self.userId ,let model = self.selectedModel{
+            self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
+                 self?.delegate?.loginFinish(userId: userId, stationModel: model)
+            }) 
         }else{
             Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
-            ActivityIndicator.stopActivityIndicatorAnimation()
             AppUserService.logoutUser()
         }
     }

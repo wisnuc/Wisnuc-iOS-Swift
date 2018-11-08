@@ -152,21 +152,28 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
                         //In this code snippet, the `cacheType` is .disk
                     } else {
                         print("Not exist in cache.")
-                        _ = AppNetworkService.getThumbnail(hash: hash,size:imageSize!) { [weak self]  (error, image,reqUrl) in
+                        let task = AppNetworkService.getThumbnail(hash: hash,size:imageSize!) { [weak self]  (error, image,reqUrl) in
                             if error == nil {
-                                if reqUrl?.absoluteString != requestUrl.absoluteString{
+                                guard let absoluteString = reqUrl?.absoluteString else{
                                     return
+                                }
+                                if let image =  image{
+                                    ImageCache.default.store(image,
+                                                             original: nil,
+                                                             forKey: absoluteString,
+                                                             toDisk: true)
                                 }
 //                                 self?.mainImageView.image = nil
                                 self?.mainImageViewContentSize(isImage: true)
 //                                self?.model?.image = image
-                               self?.mainImageView.image = image
+                                self?.mainImageView.image = image
                                 self?.image = image
                             }else{
                                 let normalImageName = FileTools.switchFilesFormatTypeNormalImage(type: FilesType.file, format:type)
                                 self?.mainImageView.image = UIImage.init(named: normalImageName)
                             }
                         }
+                        print(task as Any)
                     }
                 }
             }
@@ -182,10 +189,30 @@ class FilesFileCollectionViewCell: MDCCollectionViewCell {
         let detailURL = "media"
         let frameWidth = size.width
         let frameHeight = size.height
-        let resource = "media/\(hash)".toBase64()
+        let resource = "/media/\(hash)"
         let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-        //        SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
-        let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
+        
+        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth),kRequestImageHeightKey:String(describing: frameHeight),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
+        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+            return nil
+        }
+        
+        guard let dataString = String.init(data: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+            return nil
+        }
+        
+        guard  let normalUrl = URL.init(string:urlString) else {
+            return nil
+        }
+        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+            return nil
+        }
         return url
     }
     

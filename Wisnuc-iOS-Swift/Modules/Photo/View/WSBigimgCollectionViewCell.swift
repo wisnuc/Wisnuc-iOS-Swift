@@ -225,11 +225,12 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         self.filesModel = filesModel
         self.indicator.startAnimating()
         self.imageDownloadTask = AppNetworkService.getHighWebImage(hash: filesModel.hash ?? "", callback: { [weak self] (error, img) in
-            self?.indicator.stopAnimating()
+          
             if let completeCallback = self?.loadCompleteCallback{
                 completeCallback()
             }
             if error != nil {
+                Message.message(text: "图片加载失败", duration: 1.4)
                 // TODO: Load Error Image
             } else {
                 self?.loadOK = true
@@ -240,7 +241,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                 self?.resetSubviewSize(img)
             }
             self?.imageDownloadTask = nil
-            
+            self?.indicator.stopAnimating()
         })
     }
 
@@ -470,7 +471,7 @@ class WSPreviewLivePhoto: WSBasePreviewView {
 
 class WSPreviewVideo: WSBasePreviewView {
     var disposeBag = DisposeBag()
-    var player:SGPlayer?
+//    var player:SGPlayer?
     var request:BaseRequest?
     weak var delegate:SWPreviewVideoPlayerDelegate?
     private var hasObserverStatus:Bool = false
@@ -536,6 +537,17 @@ class WSPreviewVideo: WSBasePreviewView {
         })
     }
     
+    @objc func playFinished(_ item: AVPlayerItem) {
+        //    [super singleTapAction];
+        self.playBtn.isHidden = false
+        self.imageView.isHidden = false
+        let time = CMTime.init(seconds: 0, preferredTimescale: 600)
+        self.playLayer?.player?.seek(to: time)
+    }
+    
+    @objc func playEnd(_ notification: Notification) {
+    }
+    
     func loadNetNormalImage(asset:WSAsset){
         if (self.wsAsset?.asset != nil && self.imageRequestID != nil) {
             if self.imageRequestID! >= 0{
@@ -543,13 +555,13 @@ class WSPreviewVideo: WSBasePreviewView {
             }
         }
         self.wsAsset = asset
-//        if ((playLayer) != nil) {
-//            playLayer?.player = nil
-//            playLayer?.removeFromSuperlayer()
-////            [_playLayer removeObserver:self forKeyPath:@"status"];
-//            hasObserverStatus = false
-//            playLayer = nil
-//        }
+        if (playLayer != nil) {
+            playLayer?.player = nil
+            playLayer?.removeFromSuperlayer()
+            playLayer?.removeObserver(self, forKeyPath: "status")
+            hasObserverStatus = false
+            playLayer = nil
+        }
         self.imageView.image = nil
         self.playBtn.isEnabled = true
         self.playBtn.isHidden = false
@@ -576,26 +588,42 @@ class WSPreviewVideo: WSBasePreviewView {
                     var url: URL? = nil
                     if let anURL = RequestConfig.sharedInstance.baseURL {
                         url = URL(string: "\(anURL)media/random/\(String(describing: (response.value as! NSDictionary)["key"]))")
-                        self?.player = SGPlayer()
-                        
-                        // register callback handle.
-                    
-                        self?.player?.registerNotificationTarget(self!, stateAction: #selector(self?.stateAction(_:)), progressAction: #selector(self?.progressAction(_:)), playableAction: #selector(self?.playableAction(_:)), errorAction: #selector(self?.errorAction(_:)))
-                        
-//                        // display view tap action.
-                        
-                        self?.player?.viewTapAction = { player, view in
-                                print("player display view did click!")
+                        let player = AVPlayer(url: url!)
+                        self?.layer.addSublayer((self?.playLayer)!)
+                        self?.playLayer?.player = player
+                        self?.switchVideoStatus()
+                        self?.playLayer?.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
+                            do {
+                                try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+                            }catch{
+                                
                             }
-//                        // playback plane video.
-                        self?.player?.replaceVideo(with: url!)
-//                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeNormal]; // 方式2
+
+                        self?.hasObserverStatus = true
+                        NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+//                        NotificationCenter.default.addObserver(self, selector: #selector(playEnd(_:)), name: Notification.Name.mpmove, object: player)
+                        self?.indicator.stopAnimating()
+                        
+//                        self?.player = SGPlayer()
 //
-//                        // playback 360° panorama video.
-//                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeVR];
+//                        // register callback handle.
 //
-//                        // start playing
-                        self?.player?.play()
+//                        self?.player?.registerNotificationTarget(self!, stateAction: #selector(self?.stateAction(_:)), progressAction: #selector(self?.progressAction(_:)), playableAction: #selector(self?.playableAction(_:)), errorAction: #selector(self?.errorAction(_:)))
+//
+////                        // display view tap action.
+//
+//                        self?.player?.viewTapAction = { player, view in
+//                                print("player display view did click!")
+//                            }
+////                        // playback plane video.
+//                        self?.player?.replaceVideo(with: url!)
+////                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeNormal]; // 方式2
+////
+////                        // playback 360° panorama video.
+////                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeVR];
+////
+////                        // start playing
+//                        self?.player?.play()
                     }
                 }
             }else{
@@ -608,19 +636,19 @@ class WSPreviewVideo: WSBasePreviewView {
 //        dispatch_async(dispatch_get_main_queue(), ^{
 //        jy_strongify(weakSelf);
 //        if (!request.responseJsonObject) {
-//        [strongSelf initVideoLoadFailedFromiCloudUI];
+//        [self? initVideoLoadFailedFromiCloudUI];
 //        return;
 //        }
 //        AVPlayer *player = [AVPlayer playerWithURL:url];
-//        [strongSelf.layer addSublayer:strongSelf.playLayer];
-//        strongSelf.playLayer.player = player;
-//        [strongSelf switchVideoStatus];
-//        [strongSelf.playLayer addObserver:strongSelf forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+//        [self?.layer addSublayer:self?.playLayer];
+//        self?.playLayer.player = player;
+//        [self? switchVideoStatus];
+//        [self?.playLayer addObserver:self? forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
 //        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
 //        _hasObserverStatus = YES;
-//        [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(playFinished:) name:AVPlayerItemDidPlayToEndTimeNotification object:player.currentItem];
-//        [[NSNotificationCenter defaultCenter] addObserver:strongSelf selector:@selector(playEnd:) name:MPMoviePlayerPlaybackDidFinishNotification object:player];
-//        [strongSelf.indicator stopAnimating];
+//        [[NSNotificationCenter defaultCenter] addObserver:self? selector:@selector(playFinished:) name:AVPlayerItemDidPlayToEndTimeNotification object:player.currentItem];
+//        [[NSNotificationCenter defaultCenter] addObserver:self? selector:@selector(playEnd:) name:MPMoviePlayerPlaybackDidFinishNotification object:player];
+//        [self?.indicator stopAnimating];
 //        });
 //        } failure:^(__kindof JYBaseRequest *request) {
 //        [SXLoadingView showAlertHUD:WBLocalizedString(@"play_failed", nil) duration:1];
@@ -672,25 +700,25 @@ class WSPreviewVideo: WSBasePreviewView {
                         }
                         
                         url = URL(string: "\(anURL)/media/random/\(String(describing: randomKey))")
-                        self?.player = SGPlayer.init()
-                        self?.player?.decoder = SGPlayerDecoder.byDefault()
-                        
-                        self?.player?.registerNotificationTarget(self!, stateAction: #selector(self?.stateAction(_:)), progressAction: #selector(self?.progressAction(_:)), playableAction: #selector(self?.playableAction(_:)), errorAction: #selector(self?.errorAction(_:)))
-                        
-                        //                        // display view tap action.
-                        
-                        self?.player?.viewTapAction = { player, view in
-                            print("player display view did click!")
-                        }
-                        //                        // playback plane video.
-                        self?.player?.replaceVideo(with: url, videoType: SGVideoType.normal)
-                        //                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeNormal]; // 方式2
-                        //
-                        //                        // playback 360° panorama video.
-                        //                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeVR];
-                        //
-                        //                        // start playing
-                        self?.player?.play()
+//                        self?.player = SGPlayer.init()
+//                        self?.player?.decoder = SGPlayerDecoder.byDefault()
+//
+//                        self?.player?.registerNotificationTarget(self!, stateAction: #selector(self?.stateAction(_:)), progressAction: #selector(self?.progressAction(_:)), playableAction: #selector(self?.playableAction(_:)), errorAction: #selector(self?.errorAction(_:)))
+//
+//                        //                        // display view tap action.
+//
+//                        self?.player?.viewTapAction = { player, view in
+//                            print("player display view did click!")
+//                        }
+//                        //                        // playback plane video.
+//                        self?.player?.replaceVideo(with: url, videoType: SGVideoType.normal)
+//                        //                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeNormal]; // 方式2
+//                        //
+//                        //                        // playback 360° panorama video.
+//                        //                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeVR];
+//                        //
+//                        //                        // start playing
+//                        self?.player?.play()
                     }
                 }
             }else{
@@ -703,8 +731,8 @@ class WSPreviewVideo: WSBasePreviewView {
     }
     
     @objc func errorAction(_ notification:Notification){
-        let error = SGError.error(fromUserInfo: notification.userInfo!)
-        print("player did error : \(error.error)")
+//        let error = SGError.error(fromUserInfo: notification.userInfo!)
+//        print("player did error : \(error.error)")
     }
     
     @objc func progressAction(_ notification:Notification){

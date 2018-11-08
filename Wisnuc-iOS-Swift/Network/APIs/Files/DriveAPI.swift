@@ -20,11 +20,22 @@ class DriveAPI: BaseRequest {
         }
     }
     
+    override func requestMethod() -> RequestHTTPMethod {
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return .post
+        case .local?:
+            return .get
+        default:
+            return .get
+        }
+    }
+    
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            let resource = "/\(kRquestDrivesURL)".toBase64()
-            return [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource]
+            let urlPath = "/\(kRquestDrivesURL)"
+            return [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:urlPath]
         case .local?:
             return nil
         default:

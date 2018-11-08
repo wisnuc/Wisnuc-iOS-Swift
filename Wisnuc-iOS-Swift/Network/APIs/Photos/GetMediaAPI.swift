@@ -17,7 +17,14 @@ class GetMediaAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-        return .get
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return .post
+        case .local?:
+            return .get
+        default:
+            return .get
+        }
     }
     
     override func requestURL() -> String {
@@ -34,7 +41,7 @@ class GetMediaAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestResourceKey:"files".toBase64(),kRequestMethodKey:RequestMethodValue.GET]
+            return [kRequestUrlPathKey:"/files",kRequestVerbKey:RequestMethodValue.GET]
         case .local?:
             return [kRequestClassKey:self.classType!,kRequestPlacesKey:self.placesUUID!]
         default:

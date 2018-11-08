@@ -28,11 +28,22 @@ class DriveDirAPI: BaseRequest {
         }
     }
     
+    override func requestMethod() -> RequestHTTPMethod {
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return .post
+        case .local?:
+            return .get
+        default:
+            return .get
+        }
+    }
+    
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            let resource = "\(kRquestDrivesURL)/\(String(describing: self.driveUUID!))/dirs/\(String(describing: self.directoryUUID!))"
-            let dic = [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource.toBase64()]
+            let urlPath = "/\(kRquestDrivesURL)/\(String(describing: self.driveUUID!))/dirs/\(String(describing: self.directoryUUID!))"
+            let dic = [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:urlPath]
             return dic
         case .local?:
             return nil

@@ -58,7 +58,6 @@ func jsonToData(jsonDic:NSDictionary) ->Data?{
     print("Json Str:\(str!)")
     
     return data
-    
 }
 
 func dataToNSDictionary(data:Data) ->NSDictionary?{

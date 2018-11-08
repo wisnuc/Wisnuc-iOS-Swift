@@ -102,8 +102,6 @@
 		1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */; };
 		1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */; };
 		1F17698220AD379B003D955F /* SearchFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17698120AD379B003D955F /* SearchFilesViewController.swift */; };
-		1F1B641A2192842200499E8E /* SGPlatform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1B6417219283F100499E8E /* SGPlatform.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		1F1B641B2192842200499E8E /* SGPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F1B6416219283F000499E8E /* SGPlayer.framework */; };
 		1F1B64222192C56C00499E8E /* LoginSelectionDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1B64212192C56C00499E8E /* LoginSelectionDeviceViewController.swift */; };
 		1F1BABA420C50C7100D32C5A /* DriveDirAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA320C50C7100D32C5A /* DriveDirAPI.swift */; };
 		1F1BABA620C5195900D32C5A /* EntriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F1BABA520C5195900D32C5A /* EntriesModel.swift */; };
@@ -2605,8 +2603,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F1B641A2192842200499E8E /* SGPlatform.framework in Frameworks */,
-				1F1B641B2192842200499E8E /* SGPlayer.framework in Frameworks */,
 				1FDF4CFA21917C3E00521DDE /* libz.tbd in Frameworks */,
 				1FDF4CF821917C2800521DDE /* libbz2.tbd in Frameworks */,
 				1FDF4CF621917C1B00521DDE /* libiconv.tbd in Frameworks */,

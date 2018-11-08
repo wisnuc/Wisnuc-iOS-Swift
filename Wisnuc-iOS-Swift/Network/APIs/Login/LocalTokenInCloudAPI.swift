@@ -11,13 +11,16 @@ import UIKit
 class LocalTokenInCloudAPI: BaseRequest {
 
     override func requestURL() -> String {
-        return "\(kCloudBaseURL)/\(kCloudCommonJsonUrl)"
+        return "\(kCloudBaseURL)\(kCloudCommonJsonUrl)"
+    }
+    
+    override func requestMethod() -> RequestHTTPMethod {
+        return .post
     }
     
     override func requestParameters() -> RequestParameters? {
-        let token = "token"
-        let resource = token.toBase64()
-        let dic = [kRequestResourceKey:resource,kRequestMethodKey:RequestMethodValue.GET]
+        let token = "/token"
+        let dic = [kRequestUrlPathKey:token,kRequestVerbKey:RequestMethodValue.GET]
         return dic
     }
     

@@ -29,5 +29,5 @@
 
 #import "KeyBoardView.h"
 
-#import <SGPlayer/SGPlayer.h>
+//#import <SGPlayer/SGPlayer.h>
 #import <SAMKeychain/SAMKeychain.h>

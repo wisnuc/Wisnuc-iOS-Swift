@@ -133,9 +133,12 @@ class NetworkService: NSObject {
             if response.error == nil{
                 let isLocalRequest = self?.networkState == .local
                 let dic = isLocalRequest ? response.value as! NSDictionary : (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
-                if dic.value(forKey: "token") != nil{
-                    let token =  dic.value(forKey: "token") as! String
-                    closure(nil,token)
+                if let token = dic.value(forKey: "token") as? String,let type = dic.value(forKey: "type") as? String{
+                    if type == "JWT"{
+                       closure(nil,token)
+                    }else{
+                         closure(LoginError(code: ErrorCode.Login.NoToken, kind: LoginError.ErrorKind.LoginNoToken, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NoToken)),nil)
+                    }
                 }else{
                     closure(LoginError(code: ErrorCode.Login.NoToken, kind: LoginError.ErrorKind.LoginNoToken, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NoToken)),nil)
                 }
@@ -405,20 +408,16 @@ class NetworkService: NSObject {
     }
     
     //Asset
-    func getThumbnail(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->RetrieveImageDownloadTask{
-        let modifier = AnyModifier { request in
-            var req = request
-            req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
-            return req
-        }
+    func getThumbnail(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->RetrieveImageDownloadTask?{
+     
         
-        //        KingfisherManager.shared
-        //            .shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
-        //            var dic = Dictionary<String, String>.init()
-        //            dic.merge(with: headers!)
-        //            dic = [kRequestAuthorizationKey : self?.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!)]
-        //            return dic
-        //            }
+//                KingfisherManager.shared
+//                    .shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
+//                    var dic = Dictionary<String, String>.init()
+//                    dic.merge(with: headers!)
+//                    dic = [kRequestAuthorizationKey : self?.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!)]
+//                    return dic
+//                    }
         let detailURL = "media"
         var frameWidth = size?.width
         var frameHeight = size?.height
@@ -426,12 +425,47 @@ class NetworkService: NSObject {
             frameWidth = 200
             frameHeight = 200
         }
-        let resource = "media/\(hash)".toBase64()
+        let resource = "/media/\(hash)"
         let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-        //        SDWebImageManager.shared().imageDownloader?.downloadTimeout = 20000
-        let url = self.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
+     
+        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
+        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+          return nil
+        }
+        
+        guard let dataString = String.init(data: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+            return nil
+        }
+        
+        guard  let normalUrl = URL.init(string:urlString) else {
+            return nil
+        }
+//                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+       guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+            return nil
+        }
+      
+        let modifier = AnyModifier { request in
+            var req = request
+            
+            req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
+//            if self.networkState == .normal{
+//                if let data = jsonToData(jsonDic: dataDic as NSDictionary){
+//                    if let dataString = String.init(data: data, encoding: .utf8){
+//                        req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+//                    }
+//                }
+//            }
+            return req
+        }
         ImageDownloader.default.downloadTimeout = 20000
-        return  ImageDownloader.default.downloadImage(with: url!, retrieveImageTask: nil, options: [.requestModifier(modifier),.targetCache(ImageCache.default)], progressBlock: nil) { (image, error, reqUrl, data) in
+        
+        return  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier),.targetCache(ImageCache.default)], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl {
                     ImageCache.default.store(image,
@@ -471,11 +505,33 @@ class NetworkService: NSObject {
             return req
         }
         let detailURL = "media"
-        let resource = "media/\(hash)".toBase64()
+        let resource = "/media/\(hash)"
         let param = "\(kRequestImageAltKey)=\(kRequestImageDataValue)"
         ImageDownloader.default.downloadTimeout = 20000
-        let url = self.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : URL.init(string:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestResourceKey)=\(resource)&\(kRequestMethodKey)=\(RequestMethodValue.GET)&\(param)")
-        return  ImageDownloader.default.downloadImage(with: url!, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
+  
+        let params:[String:String] = [kRequestImageAltKey:kRequestImageDataValue]
+        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+            return nil
+        }
+        
+        guard let dataString = String.init(data: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+            return nil
+        }
+        
+        guard  let normalUrl = URL.init(string:urlString) else {
+            return nil
+        }
+        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+            return nil
+        }
+        
+        return  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 callback(nil, image)
             }else{

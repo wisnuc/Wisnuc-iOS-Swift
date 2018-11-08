@@ -62,6 +62,7 @@ class LoginViewController: BaseViewController {
         self.setTextFieldController()
         self.view.addSubview(nextButton)
         self.view.addSubview(weChatLoginButton)
+        self.phoneNumberTextFiled.becomeFirstResponder()
     }
 
     override func didReceiveMemoryWarning() {
@@ -72,7 +73,6 @@ class LoginViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.delegate = self
-        self.phoneNumberTextFiled.becomeFirstResponder()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -280,7 +280,7 @@ class LoginViewController: BaseViewController {
 
                             AppUserService.setCurrentUser(user)
                             AppUserService.synchronizedCurrentUser()
-                            Message.message(text: "登录成功")
+//                            Message.message(text: "登录成功")
                             self?.stationAction(token: token,userId:user.uuid!)
                         }
                     }else{
@@ -317,6 +317,7 @@ class LoginViewController: BaseViewController {
             if error == nil{
                 if let models = models{
                     let deviceViewController = LoginSelectionDeviceViewController.init(style: .whiteWithoutShadow,devices:models,userId:userId)
+                    deviceViewController.delegate = self
                     let navigationController =  UINavigationController.init(rootViewController: deviceViewController)
                     //                let tab = retrieveTabbarController()
                     //                tab?.setTabBarHidden(true, animated: true)
@@ -554,5 +555,40 @@ extension LoginViewController:UINavigationControllerDelegate{
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = LoginTransition()
         return transition
+    }
+}
+
+extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
+    func loginFinish(userId: String, stationModel: Any) {
+         ActivityIndicator.startActivityIndicatorAnimation()
+        if let user = AppUserService.user(uuid: userId){
+            let model = stationModel as! StationsInfoModel
+            AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
+                if error == nil && userData != nil{
+                    AppUserService.setCurrentUser(userData)
+                    AppUserService.synchronizedCurrentUser()
+                    appDelegate.initRootVC()
+                }else{
+                    if error != nil{
+                        switch error {
+                        case is LoginError:
+                            let loginError = error as! LoginError
+                            Message.message(text: loginError.localizedDescription, duration: 2.0)
+                        case is BaseError:
+                            let baseError = error as! BaseError
+                            Message.message(text: baseError.localizedDescription, duration: 2.0)
+                        default:
+                            Message.message(text: (error?.localizedDescription)!, duration: 2.0)
+                        }
+                        AppUserService.logoutUser()
+                    }
+                }
+            }
+//            ActivityIndicator.stopActivityIndicatorAnimation()
+        }else{
+            AppUserService.logoutUser()
+            Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
+            ActivityIndicator.stopActivityIndicatorAnimation()
+        }
     }
 }

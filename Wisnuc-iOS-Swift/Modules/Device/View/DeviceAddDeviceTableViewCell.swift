@@ -33,7 +33,7 @@ class DeviceAddDeviceTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        selectButton.isEnabled = false
         nameLabel.textColor = DarkGrayColor
         detailLabel.textColor = LightGrayColor
         nameLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
