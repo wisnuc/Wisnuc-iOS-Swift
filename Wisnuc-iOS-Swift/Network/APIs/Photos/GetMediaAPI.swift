@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class GetMediaAPI: BaseRequest {
     var classType:String?
@@ -41,7 +42,9 @@ class GetMediaAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestUrlPathKey:"/files",kRequestVerbKey:RequestMethodValue.GET]
+            let urlPath = "/files"
+            let params  = [kRequestClassKey:self.classType!,kRequestPlacesKey:self.placesUUID!]
+            return [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params as Dictionary<String,String>]
         case .local?:
             return [kRequestClassKey:self.classType!,kRequestPlacesKey:self.placesUUID!]
         default:
@@ -49,6 +52,9 @@ class GetMediaAPI: BaseRequest {
         }
     }
     
+    override func requestEncoding() -> RequestParameterEncoding {
+        return  requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
+    }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {

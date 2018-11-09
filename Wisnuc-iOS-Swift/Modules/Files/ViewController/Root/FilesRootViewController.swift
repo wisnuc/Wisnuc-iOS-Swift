@@ -34,7 +34,7 @@ private let cellFolderHeight:CGFloat = 48
 private let cellWidth:CGFloat = (__kWidth - 4)/2
 public let searchBarHeight:CGFloat = 137
 internal let SearchBarBottom:CGFloat = 77.0
-private let moveButtonWidth:CGFloat = 64.0
+private let moveButtonWidth:CGFloat = 40
 private let moveButtonHeight:CGFloat = 36.0
 
 class FilesRootViewController: BaseViewController{

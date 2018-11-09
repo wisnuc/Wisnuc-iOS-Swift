@@ -53,10 +53,12 @@ public let kRequestImageCaretValue = "caret"
 public let kRequestImageThumbnailValue = "thumbnail"
 public let kRequestImageDataValue = "data"
 public let kRequestImageRandomValue = "random"
-public let kRequestImageParamsValue = "params"
+public let kRequestImageParamsKey = "params"
 
 public let kRequestClassKey = "class"
 public let kRequestPlacesKey = "places"
+
+public let kRequestBodyKey = "body"
 
 public let kRequestContentTypeKey = "Content-Type"
 public let kRequestContentTypeJsonValue = "application/json"

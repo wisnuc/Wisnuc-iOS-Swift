@@ -581,10 +581,11 @@ extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
                             Message.message(text: (error?.localizedDescription)!, duration: 2.0)
                         }
                         AppUserService.logoutUser()
+                        ActivityIndicator.stopActivityIndicatorAnimation()
                     }
                 }
             }
-//            ActivityIndicator.stopActivityIndicatorAnimation()
+//
         }else{
             AppUserService.logoutUser()
             Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)

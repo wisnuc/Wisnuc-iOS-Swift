@@ -5,6 +5,9 @@
   Created by wisnuc-imac on 2018/4/11.
   Copyright © 2018年 wisnuc-imac. All rights reserved.
 */
+
+"Cancel" = "取消";
+
 "wechat_login" = "微信登录";
 "Log out" = "注销";
 "Sort by..." = "排序";
@@ -23,4 +26,7 @@
 "Files" = "文件";
 
 "New" = "新建";
+"No file" = "暂无文件";
+
+
 

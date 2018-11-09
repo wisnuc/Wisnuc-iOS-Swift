@@ -5,15 +5,21 @@
   Created by wisnuc-imac on 2018/4/11.
   Copyright © 2018年 wisnuc-imac. All rights reserved.
 */
+"Confirm" = "Confirm";
+"Cancel" = "Cancel";
 
 "wechat_login" = "WeChat Login";
 "login" = "Login";
 "my_station" = "My Device";
 "add_Device" = "Add Device";
 "station_checking" = "checking";
-"confirm" = "Confirm";
+
 "power_off" = "Power Off";
+
 "Folders" = "Folders";
 "NAME" = "NAME";
 "Rename" = "Rename";
 "Files" = "Files";
+"No file" = "No file";
+
+

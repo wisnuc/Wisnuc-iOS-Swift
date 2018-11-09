@@ -52,6 +52,10 @@ class DriveDirAPI: BaseRequest {
         }
     }
     
+    override func requestEncoding() -> RequestParameterEncoding {
+        return  requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
+    }
+    
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:

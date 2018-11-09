@@ -41,7 +41,7 @@ class BaseRequest: NSObject{
     }
     
     func requestEncoding() -> RequestParameterEncoding{
-        return URLEncoding.default
+        return  self.requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
     }
     
     func requestHTTPHeaders() -> RequestHTTPHeaders? {

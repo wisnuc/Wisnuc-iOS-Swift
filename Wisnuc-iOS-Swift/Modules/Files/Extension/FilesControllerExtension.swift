@@ -772,25 +772,34 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         let op = FilesOptionType.rename.rawValue
         let name = "\(oldName ?? "")|\(newName)"
-        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: op).startRequestJSONCompletionHandler
-            { [weak self] (response) in
-                if response.error == nil{
-                    Message.message(text: "\(oldName ?? "") \(LocalizedString(forKey: "renamed to")) \(newName)")
-                    self?.prepareData()
-                }else{
-                    if response.data != nil {
-                        let errorDict =  dataToNSDictionary(data: response.data!)
-                        if errorDict != nil{
+        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: op).startRequestDataCompletionHandler { [weak self](response) in
+            if response.error == nil{
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        if errorDict!["code"] as? Int64 != 1{
                             Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-                        }else{
-                            let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-                            Message.message(text: backToString ?? "error")
+                            return
                         }
-                    }else{
-                        Message.message(text: (response.error?.localizedDescription)!)
                     }
                 }
+            
+                Message.message(text: "\(oldName ?? "") \(LocalizedString(forKey: "renamed to")) \(newName)")
+                self?.prepareData()
+            }else{
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                          Message.message(text: (response.error?.localizedDescription)!)
+                    }
+                }else{
+                    Message.message(text: (response.error?.localizedDescription)!)
+                }
+            }
         }
+    
     }
     
     func localNetStateCreateNewFolderRequest(name:String) {

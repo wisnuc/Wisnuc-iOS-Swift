@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class DriveAPI: BaseRequest {
     override func requestURL() -> String {
@@ -41,6 +42,10 @@ class DriveAPI: BaseRequest {
         default:
             return nil
         }
+    }
+    
+    override func requestEncoding() -> RequestParameterEncoding {
+        return  requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {

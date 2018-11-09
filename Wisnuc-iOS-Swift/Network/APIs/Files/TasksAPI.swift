@@ -76,7 +76,20 @@ class TasksAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return nil
+            let urlPath = nodeUUID !=  nil ? "/tasks/\(self.taskUUID!)/nodes/\(self.nodeUUID!)" : taskUUID != nil ? "/tasks/\(self.taskUUID!)" : "/tasks"
+            if self.method == RequestHTTPMethod.post{
+                let src = [kRequestTaskDriveKey:srcDrive!,kRequestTaskDirKey:srcDir!]
+                let dst = [kRequestTaskDriveKey:dstDrive!,kRequestTaskDirKey:dstDir!]
+                let params = [kRequestTaskTypeKey:type!,kRequestTaskSrcKey:src,kRequestTaskDstKey:dst,kRequestEntriesValueKey:names!] as [String : Any]
+                let dic = [kRequestVerbKey:RequestMethodValue.POST,kRequestUrlPathKey:urlPath,kRequestImageParamsKey:params] as [String : Any]
+                return dic
+            }else if self.method == RequestHTTPMethod.patch{
+                let params = [kRequestTaskPolicyKey:[policySameValue != nil ? policySameValue : nil ,policyDiffValue != nil ? policyDiffValue! : nil], "applyToAll" : applyToAll ?? NSNumber.init(value: false)] as [String : Any]
+                let dic = [kRequestVerbKey:RequestMethodValue.PATCH,kRequestUrlPathKey:urlPath,kRequestImageParamsKey:params] as [String : Any]
+                return dic
+            }else{
+                return nil
+            }
         case .local?:
             if self.method == RequestHTTPMethod.post{
                 let src = [kRequestTaskDriveKey:srcDrive!,kRequestTaskDirKey:srcDir!]

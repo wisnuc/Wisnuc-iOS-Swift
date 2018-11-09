@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class SearchAPI: BaseRequest {
 //    order
@@ -88,6 +89,17 @@ class SearchAPI: BaseRequest {
         }
     }
     
+    override func requestMethod() -> RequestHTTPMethod {
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return .post
+        case .local?:
+            return .get
+        default:
+            return .get
+        }
+    }
+    
     override func requestParameters() -> RequestParameters? {
         let dic:NSMutableDictionary?
         dic = NSMutableDictionary.init()
@@ -102,7 +114,22 @@ class SearchAPI: BaseRequest {
         dic?.setValue(tags, forKey: "tags")
         dic?.setValue(name, forKey: "name")
         dic?.setValue(fileOnly, forKey: "fileOnly")
-        return dic as? RequestParameters
+        switch AppNetworkService.networkState {
+        case .normal?:
+            guard let params = dic as? RequestParameters else{
+                return nil
+            }
+            let urlPath = "/files"
+            return [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params]
+        case .local?:
+            return dic as? RequestParameters
+        default:
+            return nil
+        }
+    }
+    
+    override func requestEncoding() -> RequestParameterEncoding {
+        return  requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {

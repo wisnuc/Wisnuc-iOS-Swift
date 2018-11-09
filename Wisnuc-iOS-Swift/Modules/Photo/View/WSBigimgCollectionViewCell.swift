@@ -194,29 +194,45 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         }
         self.wsAsset = asset
         self.indicator.startAnimating()
-
-        self.imageDownloadTask = AppNetworkService.getHighWebImage(hash: (asset as! NetAsset).fmhash!, callback: { [weak self] (error, img) in
-            self?.indicator.stopAnimating()
-            if let completeCallback = self?.loadCompleteCallback{
-                completeCallback()
-            }
-            if error != nil {
-                // TODO: Load Error Image
-            } else {
-                self?.loadOK = true
-                self?.imageView.image = img
-                if asset.type == WSAssetType.GIF{
-                  self?.resumeGif()
+        if let requestImageUrl = self.requestImageUrl(hash: (asset as! NetAsset).fmhash){
+            ImageCache.default.retrieveImage(forKey: requestImageUrl.absoluteString, options: nil) { [weak self]
+                image, cacheType in
+                if let image = image {
+                    self?.loadOK = true
+                    self?.imageView.image = image
+                    if asset.type == WSAssetType.GIF{
+                        self?.resumeGif()
+                    }
+                    self?.resetSubviewSize(image)
+                    print("Get image \(image), cacheType: \(cacheType).")
+                    //In this code snippet, the `cacheType` is .disk
+                } else {
+                    self?.imageDownloadTask = AppNetworkService.getHighWebImage(url: requestImageUrl, callback: { [weak self] (error, img) in
+                        self?.indicator.stopAnimating()
+                        if let completeCallback = self?.loadCompleteCallback{
+                            completeCallback()
+                        }
+                        if error != nil {
+                            Message.message(text: "图片加载失败", duration: 1.4)
+                        } else {
+                            self?.loadOK = true
+                            self?.imageView.image = img
+                            if asset.type == WSAssetType.GIF{
+                                self?.resumeGif()
+                            }
+                            self?.resetSubviewSize(img)
+                        }
+                        self?.imageDownloadTask = nil
+                    })
                 }
-                self?.resetSubviewSize(img)
             }
-            self?.imageDownloadTask = nil
-         
-        })
+        }else{
+            Message.message(text: "图片加载失败", duration: 1.4)
+        }
     }
     
     func loadImage(filesModel:EntriesModel){
-        self.imageView.image = nil
+//        self.imageView.image = nil
 
         if(self.imageDownloadTask != nil){
             imageDownloadTask?.cancel()
@@ -224,25 +240,79 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         }
         self.filesModel = filesModel
         self.indicator.startAnimating()
-        self.imageDownloadTask = AppNetworkService.getHighWebImage(hash: filesModel.hash ?? "", callback: { [weak self] (error, img) in
-          
-            if let completeCallback = self?.loadCompleteCallback{
-                completeCallback()
-            }
-            if error != nil {
-                Message.message(text: "图片加载失败", duration: 1.4)
-                // TODO: Load Error Image
-            } else {
-                self?.loadOK = true
-                self?.imageView.image = img
-                if filesModel.metadata?.type?.lowercased() == FilesFormatType.GIF.rawValue{
-                    self?.resumeGif()
+        if let requestImageUrl = self.requestImageUrl(hash: filesModel.hash){
+            ImageCache.default.retrieveImage(forKey: requestImageUrl.absoluteString, options: nil) { [weak self]
+                image, cacheType in
+                if let image = image {
+                
+                    self?.loadOK = true
+                    self?.imageView.image = image
+                    if filesModel.metadata?.type?.lowercased() == FilesFormatType.GIF.rawValue{
+                        self?.resumeGif()
+                    }
+                    self?.resetSubviewSize(image)
+                self?.indicator.stopAnimating()
+                    print("Get image \(image), cacheType: \(cacheType).")
+                    //In this code snippet, the `cacheType` is .disk
+                } else {
+                    self?.imageDownloadTask = AppNetworkService.getHighWebImage(url: requestImageUrl, callback: { [weak self] (error, img) in
+                        
+                        if let completeCallback = self?.loadCompleteCallback{
+                            completeCallback()
+                        }
+                        if error != nil {
+                            Message.message(text: "图片加载失败", duration: 1.4)
+                            // TODO: Load Error Image
+                        } else {
+                            self?.loadOK = true
+                            self?.imageView.image = img
+                            if filesModel.metadata?.type?.lowercased() == FilesFormatType.GIF.rawValue{
+                                self?.resumeGif()
+                            }
+                            self?.resetSubviewSize(img)
+                        }
+                        self?.imageDownloadTask = nil
+                        self?.indicator.stopAnimating()
+                    })
                 }
-                self?.resetSubviewSize(img)
             }
-            self?.imageDownloadTask = nil
-            self?.indicator.stopAnimating()
-        })
+        }else{
+            Message.message(text: "图片加载失败", duration: 1.4)
+        }
+    }
+
+    func requestImageUrl(hash:String?)->URL?{
+        guard let digest = hash else {
+            return nil
+        }
+        let detailURL = "media"
+        let resource = "/media/\(digest)"
+        let param = "\(kRequestImageAltKey)=\(kRequestImageDataValue)"
+        ImageDownloader.default.downloadTimeout = 20000
+        
+        let params:[String:String] = [kRequestImageAltKey:kRequestImageDataValue]
+        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+            return nil
+        }
+        
+        guard let dataString = String.init(data: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+            return nil
+        }
+        
+        guard  let normalUrl = URL.init(string:urlString) else {
+            return nil
+        }
+        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(digest)?\(param)") : normalUrl else {
+            return nil
+        }
+        
+        return url
     }
 
     @objc func doubleTapAction(_ sender:UITapGestureRecognizer?){
@@ -567,9 +637,9 @@ class WSPreviewVideo: WSBasePreviewView {
         self.playBtn.isHidden = false
         self.icloudLoadFailedLabel.isHidden = true
         self.imageView.isHidden = false
-        if AppNetworkService.networkState == .normal{
-            Message.message(text: LocalizedString(forKey: "Operation not support"))
-        }
+//        if AppNetworkService.networkState == .normal{
+//            Message.message(text: LocalizedString(forKey: "Operation not support"))
+//        }
 //
         self.indicator.startAnimating()
         if (asset as! NetAsset).fmhash == nil{
@@ -669,9 +739,9 @@ class WSPreviewVideo: WSBasePreviewView {
         self.playBtn.isHidden = false
         self.icloudLoadFailedLabel.isHidden = true
         self.imageView.isHidden = false
-        if AppNetworkService.networkState == .normal{
-            Message.message(text: LocalizedString(forKey: "Operation not support"))
-        }
+//        if AppNetworkService.networkState == .normal{
+//            Message.message(text: LocalizedString(forKey: "Operation not support"))
+//        }
         //
         self.indicator.startAnimating()
         if filesModel.hash == nil{
@@ -698,8 +768,33 @@ class WSPreviewVideo: WSBasePreviewView {
                             self?.initVideoLoadFailedFromiCloudUI()
                             return
                         }
+                        let urlPath = "/media/random"
+//                        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+//                            return nil
+//                        }
                         
-                        url = URL(string: "\(anURL)/media/random/\(String(describing: randomKey))")
+                        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestUrlPathKey)=\(urlPath)&\(kRequestVerbKey)=\(RequestMethodValue.GET)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+                            return
+                        }
+//
+                        guard  let normalUrl = URL.init(string:urlString) else {
+                            return
+                        }
+                        url =  AppNetworkService.networkState == .normal ? normalUrl : URL(string: "\(anURL)/media/random/\(String(describing: randomKey))")
+                        let player = AVPlayer(url: url!)
+                        self?.layer.addSublayer((self?.playLayer)!)
+                        self?.playLayer?.player = player
+                        self?.switchVideoStatus()
+                        self?.playLayer?.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
+                        do {
+                            try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+                        }catch{
+                            
+                        }
+                        
+                        self?.hasObserverStatus = true
+                        NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+                         self?.indicator.stopAnimating()
 //                        self?.player = SGPlayer.init()
 //                        self?.player?.decoder = SGPlayerDecoder.byDefault()
 //
@@ -819,9 +914,9 @@ class WSPreviewVideo: WSBasePreviewView {
                     }
                 })
             }else {
-                if AppNetworkService.networkState == .normal{
-                 Message.message(text: LocalizedString(forKey: "Operation not support"))
-                }
+//                if AppNetworkService.networkState == .normal{
+//                 Message.message(text: LocalizedString(forKey: "Operation not support"))
+//                }
             }
         } else {
             self.switchVideoStatus()

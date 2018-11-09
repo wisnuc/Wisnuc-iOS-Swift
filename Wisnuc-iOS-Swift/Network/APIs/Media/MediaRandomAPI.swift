@@ -15,14 +15,14 @@ class MediaRandomAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-//        switch AppNetworkService.networkState {
-//        case .normal?:
-//            return .post
-//        case .local?:
-//            return .get
-//        default:
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return .post
+        case .local?:
             return .get
-//        }
+        default:
+            return .get
+        }
     }
     
     override func requestURL() -> String {
@@ -41,7 +41,7 @@ class MediaRandomAPI: BaseRequest {
         case .normal?:
             let resurce = "/media/\(self.photoHash!)"
             let param = [kRequestImageAltKey:kRequestImageRandomValue]
-            return [kRequestImageDataValue:[kRequestUrlPathKey:resurce,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsValue:param]]
+            return [kRequestUrlPathKey:resurce,kRequestVerbKey:RequestMethodValue.GET,kRequestImageAltKey:kRequestImageRandomValue]
         case .local?:
             return [kRequestImageAltKey:kRequestImageRandomValue]
         default:

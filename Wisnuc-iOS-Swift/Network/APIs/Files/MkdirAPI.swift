@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class MkdirAPI: BaseRequest {
     var driveUUID:String?
@@ -22,6 +23,10 @@ class MkdirAPI: BaseRequest {
     
     override func requestMethod() -> RequestHTTPMethod {
         return RequestHTTPMethod.post
+    }
+    
+    override func requestEncoding() -> RequestParameterEncoding {
+        return  requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
     }
     
     override func requestURL() -> String {

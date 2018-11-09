@@ -127,7 +127,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                             self?.image = image
                             print("Get image \(image), cacheType: \(cacheType).")
                             //In this code snippet, the `cacheType` is .disk
-                            return
                         } else {
                             print("Not exist in cache.")
                             _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image,reqUrl)  in

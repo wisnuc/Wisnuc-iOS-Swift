@@ -633,33 +633,33 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 FilesHelper.sharedInstance().addSelectFiles(model: model)
             }
              self.collectionView?.reloadData()
-          }
-        if let metadata = metadataType(metadata: model.metadata){
-            if kMediaTypes.contains(metadata.rawValue) {
-                
-               let array = sectionArray.map { (model) -> EntriesModel in
-                    var result = model
-                    let modelIndexPath = IndexPath(item: sectionArray.firstIndex(where: {$0.hash == model.hash}) ?? 0, section: indexPath.section)
-                    result.indexPath = modelIndexPath
-                    return result
-                }
-                
-                let resultArray = array.filter { (model) -> Bool in
-                    return kMediaTypes.contains(model.metadata?.type?.lowercased() ?? "")
-                }
-//                for (i,value) in sectionArray.enumerated(){
-//                    let modelIndexPath = IndexPath(item: i, section: indexPath.section)
-//                    value.indexPath = modelIndexPath
-//                }
-                model.indexPath = IndexPath(row: indexPath.row, section: indexPath.section)
-                let vc = self.getMatchVC(model: model,array: resultArray,indexPath:indexPath)
-                
-                if let presentVC = vc{
-                    self.present(presentVC, animated: true) {
+          }else{
+            if let metadata = metadataType(metadata: model.metadata){
+                if kMediaTypes.contains(metadata.rawValue) {
+                    let array = sectionArray.map { (model) -> EntriesModel in
+                        var result = model
+                        let modelIndexPath = IndexPath(item: sectionArray.firstIndex(where: {$0.hash == model.hash}) ?? 0, section: indexPath.section)
+                        result.indexPath = modelIndexPath
+                        return result
+                    }
+                    
+                    let resultArray = array.filter { (model) -> Bool in
+                        return kMediaTypes.contains(model.metadata?.type?.lowercased() ?? "")
+                    }
+                    //                for (i,value) in sectionArray.enumerated(){
+                    //                    let modelIndexPath = IndexPath(item: i, section: indexPath.section)
+                    //                    value.indexPath = modelIndexPath
+                    //                }
+                    model.indexPath = IndexPath(row: indexPath.row, section: indexPath.section)
+                    let vc = self.getMatchVC(model: model,array: resultArray,indexPath:indexPath)
+                    
+                    if let presentVC = vc{
+                        self.present(presentVC, animated: true) {
+                        }
                     }
                 }
+                return
             }
-            return
         }
        
         if let delegateOK = self.delegate{

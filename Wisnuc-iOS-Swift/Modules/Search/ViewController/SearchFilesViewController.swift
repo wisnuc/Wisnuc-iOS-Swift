@@ -109,9 +109,11 @@ class SearchFilesViewController: BaseViewController {
         let request = SearchAPI.init(order:order, places: places,class:sClass, types:types, name:text)
             request.startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
-                if response.value is NSArray{
-                    let rootArray = response.value as! NSArray
-                    for (_ , value) in rootArray.enumerated(){
+                let isLocalRequest = AppNetworkService.networkState == .local
+                let result = (isLocalRequest ? response.value as? NSArray : (response.value as! NSDictionary)["data"]) as? NSArray
+                if result != nil{
+                    let rootArray = result
+                    for (_ , value) in (rootArray?.enumerated())!{
                         if value is NSDictionary{
                             let dic = value as! NSDictionary
 //
@@ -315,8 +317,8 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         if let cell = cell as?  FilesOfflineTableViewCell {
             let model = dataSouce![indexPath.row]
-            let exestr = (model.name! as NSString).pathExtension
-            cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: model.metadata?.type ?? FilesFormatType.DEFAULT.rawValue)))
+//            let exestr = (model.name! as NSString).pathExtension
+            cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: model.metadata?.type?.lowercased() ?? FilesFormatType.DEFAULT.rawValue)))
             cell.detailImageView.isHidden = true
             if cell.detailImageView.isHidden {
                 cell.reloadLayout()
@@ -331,9 +333,8 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
                 filesBottomVC.delegate = self
                 let bottomSheet = AppBottomSheetController.init(contentViewController: filesBottomVC)
                 bottomSheet.trackingScrollView = filesBottomVC.tableView
-                let exestr = (model.name! as NSString).pathExtension
                 filesBottomVC.headerTitleLabel.text = model.name ?? ""
-                filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr)))
+                filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: model.metadata?.type?.lowercased() ?? FilesFormatType.DEFAULT.rawValue)))
                 self?.present(bottomSheet, animated: true, completion: {
                 })
             }
@@ -449,7 +450,7 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
                 chipsView.titleTextLabel.text = LocalizedString(forKey: "Excel")
                 types = "\(FilesFormatType.XLS.rawValue).\(FilesFormatType.XLSX.rawValue)".uppercased()
             case 3:
-                chipsView.imageView.image = UIImage.init(named: "files_pdf_small.png")
+                chipsView.imageView.image = UIImage.init(named: "files_ppt_small.png")
                 chipsView.titleTextLabel.text = LocalizedString(forKey: "PPT")
                 types = "\(FilesFormatType.PPT.rawValue).\(FilesFormatType.PPTX.rawValue)".uppercased()
             case 4:
@@ -543,7 +544,7 @@ extension SearchFilesViewController:DZNEmptyDataSetSource{
     }
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        let text = LocalizedString(forKey: "Not found")
+        let text = LocalizedString(forKey: "No file")
         let attributes = [NSAttributedStringKey.font : MiddleTitleFont,NSAttributedStringKey.foregroundColor : LightGrayColor]
         return NSAttributedString.init(string: text, attributes: attributes)
     }

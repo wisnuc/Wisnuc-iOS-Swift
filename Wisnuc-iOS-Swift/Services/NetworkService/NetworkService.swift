@@ -491,7 +491,7 @@ class NetworkService: NSObject {
     /*
      * WISNUC API:GET IMAGE(High Resolution)
      */
-    func getHighWebImage(hash:String,callback:@escaping (Error?,UIImage?)->())->RetrieveImageDownloadTask?{
+    func getHighWebImage(url:URL,callback:@escaping (Error?,UIImage?)->())->RetrieveImageDownloadTask?{
         //        SDWebImageManager.shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
         //            var dic = Dictionary<String, String>.init()
         //            dic.merge(with: headers!)
@@ -504,35 +504,15 @@ class NetworkService: NSObject {
             req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
             return req
         }
-        let detailURL = "media"
-        let resource = "/media/\(hash)"
-        let param = "\(kRequestImageAltKey)=\(kRequestImageDataValue)"
-        ImageDownloader.default.downloadTimeout = 20000
-  
-        let params:[String:String] = [kRequestImageAltKey:kRequestImageDataValue]
-        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
-        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
-            return nil
-        }
-        
-        guard let dataString = String.init(data: data, encoding: .utf8) else {
-            return nil
-        }
-        
-        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-            return nil
-        }
-        
-        guard  let normalUrl = URL.init(string:urlString) else {
-            return nil
-        }
-        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
-            return nil
-        }
         
         return  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
+                if let image =  image, let url = reqUrl {
+                    ImageCache.default.store(image,
+                                             original: nil,
+                                             forKey: url.absoluteString,
+                                             toDisk: true)
+                }
                 callback(nil, image)
             }else{
                 callback(error, nil)

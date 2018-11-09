@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+
 enum FilesOptionType:String{
     case remove
     case rename
@@ -29,10 +31,25 @@ class DirOprationAPI: BaseRequest {
     override func requestMethod() -> RequestHTTPMethod {
         return RequestHTTPMethod.post
     }
+
     
     override func requestURL() -> String {
         switch AppNetworkService.networkState {
         case .normal?:
+            let requstUrl = "/\(self.detailUrl!)"
+//            let dataDic =  [kRequestUrlPathKey:requstUrl,kRequestVerbKey:RequestMethodValue.POST] as [String : Any]
+//            guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+//                return ""
+//            }
+//
+//            guard let dataString = String.init(data: data, encoding: .utf8) else {
+//                return ""
+//            }
+//
+//            guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonJsonUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+//                return ""
+//            }
+            
             return kCloudCommonJsonUrl
         case .local?:
             return "/\(self.detailUrl!)"
@@ -41,10 +58,16 @@ class DirOprationAPI: BaseRequest {
         }
     }
     
+    override func requestEncoding() -> RequestParameterEncoding {
+        return JSONEncoding.default
+    }
+    
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestResourceKey:detailUrl.toBase64(),kRequestMethodKey:RequestMethodValue.POST,kRequestOpKey:op!,kRequestToNameKey:name!]
+            let requstUrl = "/\(self.detailUrl!)"
+            let param = [kRequestOpKey:op!,kRequestToNameKey:name!]
+            return [kRequestUrlPathKey:requstUrl,kRequestVerbKey:RequestMethodValue.POST,kRequestImageParamsKey:param]
         case .local?:
             return nil
         default:

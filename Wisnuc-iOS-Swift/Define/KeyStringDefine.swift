@@ -14,6 +14,7 @@ struct RequestMethodValue {
     public static let POST:String = "POST"
     public static let DELETE:String = "DELETE"
     public static let PUT:String = "PUT"
+    public static let PATCH:String = "PATCH"
 }
 
 struct RequestMediaClassValue {
