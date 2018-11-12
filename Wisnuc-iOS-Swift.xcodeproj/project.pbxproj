@@ -915,6 +915,7 @@
 		1FFC816B2195613100371C8D /* files_excel_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC81672195612F00371C8D /* files_excel_normal.png */; };
 		1FFC816D2195613E00371C8D /* files_excel_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC816C2195613D00371C8D /* files_excel_normal@2x.png */; };
 		1FFC816F2195614A00371C8D /* files_excel_normal@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC816E2195614900371C8D /* files_excel_normal@3x.png */; };
+		1FFC81762199628000371C8D /* ErrorTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC81752199628000371C8D /* ErrorTools.swift */; };
 		1FFD12AD20E3412E0053A3F7 /* FilesMoveToRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12AC20E3412E0053A3F7 /* FilesMoveToRootViewController.swift */; };
 		1FFD12B020E3662D0053A3F7 /* MDCFreshHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12AF20E3662D0053A3F7 /* MDCFreshHeader.swift */; };
 		1FFD12B220E3979F0053A3F7 /* TasksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */; };
@@ -2560,6 +2561,7 @@
 		1FFC81672195612F00371C8D /* files_excel_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_excel_normal.png; sourceTree = "<group>"; };
 		1FFC816C2195613D00371C8D /* files_excel_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_excel_normal@2x.png"; sourceTree = "<group>"; };
 		1FFC816E2195614900371C8D /* files_excel_normal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_excel_normal@3x.png"; sourceTree = "<group>"; };
+		1FFC81752199628000371C8D /* ErrorTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTools.swift; sourceTree = "<group>"; };
 		1FFD12AC20E3412E0053A3F7 /* FilesMoveToRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesMoveToRootViewController.swift; sourceTree = "<group>"; };
 		1FFD12AF20E3662D0053A3F7 /* MDCFreshHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDCFreshHeader.swift; sourceTree = "<group>"; };
 		1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksAPI.swift; sourceTree = "<group>"; };
@@ -4104,6 +4106,7 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1FFC81712199624B00371C8D /* Error */,
 				1F1B640621918D8E00499E8E /* SGPlayer */,
 				1F1C2FBE2186D1E7002B13F8 /* Keyboard */,
 				1F38E29A21816CBB003FCAEE /* Copy */,
@@ -5737,6 +5740,14 @@
 			path = BottomSheet;
 			sourceTree = "<group>";
 		};
+		1FFC81712199624B00371C8D /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				1FFC81752199628000371C8D /* ErrorTools.swift */,
+			);
+			path = Error;
+			sourceTree = "<group>";
+		};
 		1FFD12AB20E340D80053A3F7 /* MoveRoot */ = {
 			isa = PBXGroup;
 			children = (
@@ -7065,6 +7076,7 @@
 				1FD1F2EA2153414200C3E429 /* PhotoAlbumViewController.swift in Sources */,
 				1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */,
 				1F38E24921787F4A003FCAEE /* DeviceUserInfoViewController.swift in Sources */,
+				1FFC81762199628000371C8D /* ErrorTools.swift in Sources */,
 				1F8EBB48209C512300E8AB83 /* FilesFileCollectionViewCell.swift in Sources */,
 				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
 				1F5882302085D39D00394BD6 /* UIViewExtension.swift in Sources */,

@@ -436,14 +436,39 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         let names = existModel.name != nil ? [existModel.name!] : []
         TasksAPI.init(type: FilesTasksType.copy.rawValue, names: names, srcDrive:self.existDrive(), srcDir: self.existDir(), dstDrive: self.existDrive(), dstDir: self.existDir()).startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
-                let dic = response.value as! NSDictionary
-                if let taskModel = FilesTasksModel.deserialize(from: dic){
-                    self?.taskHandle(taskModel: taskModel)
+                let rootDic = response.value as! NSDictionary
+                switch AppNetworkService.networkState {
+                case .local?:
+                    if let taskModel = FilesTasksModel.deserialize(from: rootDic){
+                        self?.taskHandle(taskModel: taskModel)
+                    }
+                case .normal?:
+                    if let dataCode = rootDic["code"] as? Int64{
+                        if dataCode == 1{
+                            if let dic =  rootDic["data"] as? NSDictionary{
+                                if let taskModel = FilesTasksModel.deserialize(from: dic){
+                                    self?.taskHandle(taskModel: taskModel)
+                                }
+                            }
+                        }else{
+                            if response.data != nil {
+                                let errorDict =  dataToNSDictionary(data: response.data!)
+                                if errorDict != nil{
+                                    Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                                }else{
+                                    Message.message(text: LocalizedString(forKey: "请求错误"))
+                                }
+                            }
+                        }
+                    }
+                default:
+                    break
                 }
-                
+            
             }else{
                 Message.message(text: (response.error?.localizedDescription)!)
             }
+             ActivityIndicator.stopActivityIndicatorAnimation()
         }
     }
     
@@ -456,6 +481,8 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                         if error == nil{
                             Message.message(text: LocalizedString(forKey: "创建副本成功"))
                             self?.prepareData()
+                        }else{
+                            
                         }
                         
                     })
@@ -772,18 +799,16 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         let op = FilesOptionType.rename.rawValue
         let name = "\(oldName ?? "")|\(newName)"
-        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: op).startRequestDataCompletionHandler { [weak self](response) in
+        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: op).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
+            let dic = [kRequestOpKey: op]
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
+                formData.append(data, withName:name)
+            }catch{
+                Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
+            }
+        }, {  [weak self] (response) in
             if response.error == nil{
-                if response.data != nil {
-                    let errorDict =  dataToNSDictionary(data: response.data!)
-                    if errorDict != nil{
-                        if errorDict!["code"] as? Int64 != 1{
-                            Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-                            return
-                        }
-                    }
-                }
-            
                 Message.message(text: "\(oldName ?? "") \(LocalizedString(forKey: "renamed to")) \(newName)")
                 self?.prepareData()
             }else{
@@ -792,14 +817,16 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
                     if errorDict != nil{
                         Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
                     }else{
-                          Message.message(text: (response.error?.localizedDescription)!)
+                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                        Message.message(text: backToString ?? "error")
                     }
                 }else{
                     Message.message(text: (response.error?.localizedDescription)!)
                 }
             }
+        }) { (error) -> (Void) in
+            Message.message(text: error.localizedDescription)
         }
-    
     }
     
     func localNetStateCreateNewFolderRequest(name:String) {

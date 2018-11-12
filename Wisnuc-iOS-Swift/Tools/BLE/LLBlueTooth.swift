@@ -12,19 +12,59 @@ import Foundation
 import CoreBluetooth
 
 
-let kDataCharacteristic = "F000C0E1-0451-4000-B000-000000000000"
+
+let kStationIdCharacteristic = "F000BEF1-0451-4000-B000-000000000000"
+let kStationStatusCharacteristic = "F000BEF2-0451-4000-B000-000000000000"
+let kBindingProgressCharacteristic = "F000BEF3-0451-4000-B000-000000000000"
+
+let kStationeSessionCharacteristic = "F000BEF4-0451-4000-B000-000000000000"
+let kSPSDataCharacteristic = "F000C0E1-0451-4000-B000-000000000000"
+
+
 @objc protocol LLBlueToothDelegate {
     func didDiscoverPeripheral(_ peripheral:CBPeripheral)
   @objc optional  func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?)
      func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral)
      func centralManagerDidUpdateState(_ central: CBCentralManager)
+     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?)-> ()
+    
+    func peripheralCharacteristicDidUpdateValue(deviceBLEModels:[DeviceBLEModel]?)
 }
 
 
 //用于看发送数据是否成功!
 class LLBlueTooth:NSObject {
     
-    weak var delegate:LLBlueToothDelegate?
+    weak var delegate:LLBlueToothDelegate?{
+        didSet{
+//            if self.central != nil{
+//                self.central = nil
+//            }
+//              self.central = CBCentralManager.init(delegate:self, queue:nil, options:[CBCentralManagerOptionShowPowerAlertKey:false])
+        }
+   
+    }
+    
+    struct Static
+    {
+        static var instance: LLBlueTooth?
+    }
+    
+    class var sharedInstance: LLBlueTooth
+    {
+        if Static.instance == nil
+        {
+            Static.instance = LLBlueTooth()
+        }
+        
+        return Static.instance!
+    }
+    
+    func dispose()
+    {
+        LLBlueTooth.Static.instance = nil
+        print("Disposed Singleton instance")
+    }
     
     //单例对象
     internal static let instance = LLBlueTooth()
@@ -39,6 +79,13 @@ class LLBlueTooth:NSObject {
             
         }
     }
+    
+    var deviceDatas: [DeviceBLEModel]?{
+        didSet{
+            
+        }
+    }
+    
     
     // 当前连接的设备
     var peripheral:CBPeripheral!
@@ -55,6 +102,7 @@ class LLBlueTooth:NSObject {
         
         self.deviceList = NSMutableArray()
         
+        self.deviceDatas = [DeviceBLEModel]()
     }
     
     
@@ -94,14 +142,32 @@ class LLBlueTooth:NSObject {
      case disconnecting
      }
      */
-    func requestConnectPeripheral(_ model:CBPeripheral) {
+    func requestConnectPeripheral(_ peripheral:CBPeripheral) {
         
-        if (model.state != CBPeripheralState.connected) {
+        if (peripheral.state != CBPeripheralState.connected) {
             
-            central?.connect(model , options: nil)
+            central?.connect(peripheral , options: nil)
             
         }
         
+    }
+    
+    func disConnectPeripheral(_ peripheral:CBPeripheral) {
+        
+        if (peripheral.state == CBPeripheralState.connected) {
+            
+            central?.cancelPeripheralConnection(peripheral)
+            
+        }
+        
+    }
+    
+    func disConnectPeripherals(_ peripherals:[CBPeripheral]) {
+        for peripheral in peripherals{
+            if (peripheral.state == CBPeripheralState.connected) {
+                central?.cancelPeripheralConnection(peripheral)
+            }
+        }
     }
     
 }
@@ -219,21 +285,28 @@ extension LLBlueTooth : CBPeripheralDelegate {
         for  characteristic in service.characteristics! {
             print(characteristic.uuid.description)
             switch characteristic.uuid.description {
+            case kStationIdCharacteristic:
+                // 读区特征值，只能读到一次
+                peripheral.readValue(for:characteristic)
                 
+            case kStationStatusCharacteristic:
+                // 读区特征值，只能读到一次
+                peripheral.readValue(for:characteristic)
 //            case "A28DA977":
 //                // 订阅特征值，订阅成功后后续所有的值变化都会自动通知
 //                peripheral.setNotifyValue(true, for: characteristic)
-            case kDataCharacteristic:
+            case kStationeSessionCharacteristic:
                 // 订阅特征值，订阅成功后后续所有的值变化都会自动通知
                 peripheral.setNotifyValue(true, for: characteristic)
                 sendCharacteristic = characteristic
-            case "******":
-                // 读区特征值，只能读到一次
-                peripheral.readValue(for:characteristic)
+            case kSPSDataCharacteristic:
+                // 订阅特征值，订阅成功后后续所有的值变化都会自动通知
+                peripheral.setNotifyValue(true, for: characteristic)
+                sendCharacteristic = characteristic
+           
             default:
                 print("扫描到其他特征")
             }
-            
         }
         
     }
@@ -244,26 +317,62 @@ extension LLBlueTooth : CBPeripheralDelegate {
         guard error == nil  else {
             return
         }
+        print(error as Any)
         
     }
     
     // MARK: - 获取外设发来的数据
     // 注意，所有的，不管是 read , notify 的特征的值都是在这里读取
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?)-> (){
-        
+        self.delegate?.peripheral(peripheral, didUpdateValueFor: characteristic, error: error)
         if(error != nil){
             return
         }
-        
+        let model = DeviceBLEModel.init()
+        model.peripheral = peripheral
+        var stationId:String?
         switch characteristic.uuid.uuidString {
-        case kDataCharacteristic:
+        case kStationIdCharacteristic:
+           if let string = String.init(data: characteristic.value!, encoding: .utf8){
+                stationId = string
+                model.stationId = stationId
+            }
+        case kStationStatusCharacteristic:
+            let data = characteristic.value
+            var byte:UInt8 = 0
+            data?.copyBytes(to: &byte, count: 1)
+            let valueInInt = Int(byte)
+            print(valueInInt)
+            if let deviceType = DeviceBLEModelType(rawValue: valueInInt){
+                model.type = deviceType
+            }
+            let string = String.init(data: characteristic.value!, encoding: .ascii)
+            print(string ?? "no data")
+        //  print("收到了StationId数据特征数据:\(String(describing: string))")
+        case kSPSDataCharacteristic:
             let string = String.init(data: characteristic.value!, encoding: .utf8)
             print(string ?? "no data")
 //            print("接收到了设备的Data Characteristic的变化")
+        case kStationeSessionCharacteristic:
+            let string = String.init(data: characteristic.value!, encoding: .utf8)
+            print(string ?? "no data")
         default:
             print("收到了其他数据特征数据: \(characteristic.uuid.uuidString)")
         }
-    
+        
+        guard let id = stationId else {
+            return
+        }
+        
+        if deviceDatas?.contains(where: {$0.stationId == id}) ?? false{
+            if let index = deviceDatas?.firstIndex(where: {$0.stationId == id}){
+                deviceDatas?[index] = model
+            }
+        }else{
+            deviceDatas?.append(model)
+        }
+        
+        delegate?.peripheralCharacteristicDidUpdateValue(deviceBLEModels: deviceDatas)
     }
     
     

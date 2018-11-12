@@ -60,10 +60,13 @@ func jsonToData(jsonDic:NSDictionary) ->Data?{
     return data
 }
 
-func dataToNSDictionary(data:Data) ->NSDictionary?{
+func dataToNSDictionary(data:Data?) ->NSDictionary?{
     var dic:NSDictionary?
+    if data == nil{
+       return nil
+    }
     do {
-        let dict = try JSONSerialization.jsonObject(with:data, options: .mutableContainers) as! NSDictionary
+        let dict = try JSONSerialization.jsonObject(with:data!, options: .mutableContainers) as! NSDictionary
         dic = dict
     } catch  {
         dic = nil

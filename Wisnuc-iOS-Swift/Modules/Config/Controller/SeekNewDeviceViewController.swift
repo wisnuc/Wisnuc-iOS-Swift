@@ -18,6 +18,7 @@ class SeekNewDeviceViewController: BaseViewController {
     private let headerViewHeight:CGFloat = 64
     let cellReuseIdentifier = "cell"
     lazy var dataSource:Array<DeviceBLEModel> = [DeviceBLEModel]()
+    lazy var dataPeripheralList:Array<CBPeripheral> = [CBPeripheral]()
     var state:SeekNewDeviceState?{
         didSet{
             switch state {
@@ -42,10 +43,16 @@ class SeekNewDeviceViewController: BaseViewController {
         self.view.addSubview(deviceTableView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
         self.state = .searching
-        self.setData()
+//        self.setData()
          defaultNotificationCenter().addObserver(self, selector: #selector(confirmFinish(_:)), name: NSNotification.Name.Config.DiskFormaConfirmDismissKey, object: nil)
 //        self.title = "发现设备"
 //        appBar.navigationBar.ti
+    }
+    
+    deinit {
+        LLBlueTooth.instance.disConnectPeripherals(dataPeripheralList)
+        LLBlueTooth.instance.dispose()
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,8 +61,15 @@ class SeekNewDeviceViewController: BaseViewController {
         LLBlueTooth.instance.delegate = self
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        LLBlueTooth.instance.stopScan()
+    }
+    
     func searchingStateAction(){
         titleLabel.text = LocalizedString(forKey: "未发现设备")
+        let options =  [CBCentralManagerScanOptionAllowDuplicatesKey:false]
+        LLBlueTooth.instance.scanForPeripheralsWithServices(nil, options: options as [String : AnyObject])
     }
     
     func notFoundStateAction(){
@@ -83,16 +97,16 @@ class SeekNewDeviceViewController: BaseViewController {
     }
     
     func setData(){
-        let data1 = DeviceBLEModel.init(name: "Device1", type: DeviceBLEModelType.configFinish)
-        let data2 = DeviceBLEModel.init(name: "不知道什么名字的设备", type: DeviceBLEModelType.configWithData)
-        let data3 = DeviceBLEModel.init(name: "新新新设备", type: DeviceBLEModelType.config)
-        let data4 = DeviceBLEModel.init(name: "Error Device", type: DeviceBLEModelType.configErrorNoDisk)
-        dataSource.append(data1)
-        dataSource.append(data2)
-        dataSource.append(data3)
-        dataSource.append(data4)
-        deviceTableView.reloadData()
-        self.state = .found
+//        let data1 = DeviceBLEModel.init(name: "Device1", type: DeviceBLEModelType.configFinish)
+//        let data2 = DeviceBLEModel.init(name: "不知道什么名字的设备", type: DeviceBLEModelType.configWithData)
+//        let data3 = DeviceBLEModel.init(name: "新新新设备", type: DeviceBLEModelType.config)
+//        let data4 = DeviceBLEModel.init(name: "Error Device", type: DeviceBLEModelType.configErrorNoDisk)
+//        dataSource.append(data1)
+//        dataSource.append(data2)
+//        dataSource.append(data3)
+//        dataSource.append(data4)
+//        deviceTableView.reloadData()
+//        self.state = .found
     }
     
     @objc func confirmFinish(_ noti:Notification){
@@ -117,7 +131,7 @@ class SeekNewDeviceViewController: BaseViewController {
     }()
     
     lazy var errorLabel:AttributeTouchLabel = {
-        let string = "需要通过蓝牙发现设备 蓝牙未打开，前往设置"
+        let string = "需要通过蓝牙发现设备\n蓝牙未打开，前往设置"
         let margin:CGFloat = 100
         let size = labelSizeToFit(title: LocalizedString(forKey: string), font: UIFont.systemFont(ofSize: 16))
         let label = AttributeTouchLabel.init(frame: CGRect(x: margin, y: __kHeight/2 - 50, width: __kWidth - margin*2, height: size.height + 4))
@@ -135,20 +149,23 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
         tableView.separatorStyle = .none
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! SeekNewDeviceTableViewCell
         let model = dataSource[indexPath.row]
-        cell.titleLabel.text = model.name
+        cell.titleLabel.text = model.stationId
         cell.accessoryType = .none
         switch model.type {
-        case .config?:
+        case .NeedConfig?:
             cell.detailLabel.text = LocalizedString(forKey: "待配置")
             cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
-        case .configFinish?:
+        case .Done?:
             cell.detailLabel.text = LocalizedString(forKey: "已配置")
             cell.rightImageView.image =  UIImage.init(named: "config_finish.png")
-        case .configWithData?:
+        case .NeedConfigWithData?:
             cell.detailLabel.text = LocalizedString(forKey: "待配置，磁盘含有数据")
             cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
-        case .configErrorNoDisk?:
+        case .NoDisk?:
             cell.detailLabel.text = LocalizedString(forKey: "检测不到设备磁盘")
+            cell.rightImageView.image =  UIImage.init(named: "config_error.png")
+        case .Default?:
+            cell.detailLabel.text = LocalizedString(forKey: "无法获取该设备信息")
             cell.rightImageView.image =  UIImage.init(named: "config_error.png")
         default:
             break
@@ -159,23 +176,23 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = dataSource[indexPath.row]
-        switch model.type {
-        case .config?:
-            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
-            self.navigationController?.pushViewController(configNetVC, animated: true)
-        case .configFinish?:
-           break
-        case .configWithData?:
-            let diskFormatVC = DiskFormatViewController.init(style: .whiteWithoutShadow)
-            let navi = UINavigationController.init(rootViewController: diskFormatVC)
-            self.present(navi, animated: true) {
-                
-            }
-        case .configErrorNoDisk?:
-            break
-        default:
-            break
-        }
+//        switch model.type {
+//        case .config?:
+//            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
+//            self.navigationController?.pushViewController(configNetVC, animated: true)
+//        case .configFinish?:
+//           break
+//        case .configWithData?:
+//            let diskFormatVC = DiskFormatViewController.init(style: .whiteWithoutShadow)
+//            let navi = UINavigationController.init(rootViewController: diskFormatVC)
+//            self.present(navi, animated: true) {
+//
+//            }
+//        case .configErrorNoDisk?:
+//            break
+//        default:
+//            break
+//        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -205,16 +222,40 @@ extension SeekNewDeviceViewController:UIScrollViewDelegate{
 }
 
 extension SeekNewDeviceViewController:LLBlueToothDelegate{
+    func peripheralCharacteristicDidUpdateValue(deviceBLEModels: [DeviceBLEModel]?) {
+        if let devices = deviceBLEModels{
+            dataSource = devices
+            self.state = .found
+            self.deviceTableView.reloadData()
+        }
+       
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        if(error != nil){
+            return
+        }
+
+    }
+    
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        
+    
     }
     
     func didDiscoverPeripheral(_ peripheral: CBPeripheral) {
-      
+        //  在这个地方可以判读是不是自己本公司的设备,这个是根据设备的名称过滤的
+        guard peripheral.name != nil , peripheral.name!.contains("Wisnuc") else {
+            return
+        }
+        
+        if !(dataPeripheralList.contains(peripheral)) {
+            dataPeripheralList.append(peripheral)
+            LLBlueTooth.instance.requestConnectPeripheral(peripheral)
+        }
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -223,13 +264,14 @@ extension SeekNewDeviceViewController:LLBlueToothDelegate{
                 
             case CBManagerState.poweredOn:
                 print("蓝牙打开")
+                self.state = .searching
                
             case CBManagerState.unauthorized:
                 print("没有蓝牙功能")
                 
             case CBManagerState.poweredOff:
                 print("蓝牙关闭")
-//                self.state = .bleNotOpen
+                self.state = .bleNotOpen
                 
             default:
                 print("未知状态")

@@ -352,7 +352,7 @@ class LoginNextStepViewController: BaseViewController {
     func sendCodeAction(callback:@escaping ((_ userExist:Bool?)->())){
         ActivityIndicator.startActivityIndicatorAnimation()
         GetSmsCodeAPI.init(phoneNumber: self.inputTextField.text!,wechatToken:self.requestToken).startRequestJSONCompletionHandler { (response) in
-            print(String(data: response.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
+//            print(String(data: response.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
             if  response.error == nil{
                 let responseDic = response.value as! NSDictionary
                 let code = responseDic["code"] as? Int
@@ -365,20 +365,33 @@ class LoginNextStepViewController: BaseViewController {
                     ActivityIndicator.stopActivityIndicatorAnimation()
                     callback(userExist)
                 }else{
+                    
+                    if let message = ErrorTools.responseErrorData(response.data){
+                        Message.message(text:"error: code:\(code!) message:\(message)")
+                    }
                     ActivityIndicator.stopActivityIndicatorAnimation()
                     //error
                 }
             }else{
                 // error
                 ActivityIndicator.stopActivityIndicatorAnimation()
-                let responseDic =  dataToNSDictionary(data: response.data!)
-                let code = responseDic?["code"] as? Int
-                let message = responseDic?["message"] as? String
+                guard let responseDic =  dataToNSDictionary(data: response.data) else{
+                    if response.error is BaseError{
+                        let baseError = response.error as! BaseError
+                        Message.message(text:"请求错误：\(String(describing: baseError.localizedDescription))")
+                    }else{
+                        let message = response.error?.localizedDescription ?? "未知原因"
+                        Message.message(text:"请求错误：\(message)")
+                    }
+                    return
+                }
+                let code = responseDic["code"] as? Int
+                let message = responseDic["message"] as? String
                 if code == ErrorCode.Request.UserAlreadyExist{
                     Message.message(text: LocalizedString(forKey: "该账号已注册"))
                 }else{
                     if let message = message{
-                        Message.message(text:"code:\(code!) message:\(message)")
+                        Message.message(text:"error: code:\(code!) message:\(message)")
                     }
                 }
 //                Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")

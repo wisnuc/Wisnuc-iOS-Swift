@@ -37,20 +37,20 @@ class DirOprationAPI: BaseRequest {
         switch AppNetworkService.networkState {
         case .normal?:
             let requstUrl = "/\(self.detailUrl!)"
-//            let dataDic =  [kRequestUrlPathKey:requstUrl,kRequestVerbKey:RequestMethodValue.POST] as [String : Any]
-//            guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
-//                return ""
-//            }
-//
-//            guard let dataString = String.init(data: data, encoding: .utf8) else {
-//                return ""
-//            }
-//
-//            guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonJsonUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-//                return ""
-//            }
+            let dataDic =  [kRequestUrlPathKey:requstUrl,kRequestVerbKey:RequestMethodValue.POST] as [String : Any]
+            guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+                return ""
+            }
+
+            guard let dataString = String.init(data: data, encoding: .utf8) else {
+                return ""
+            }
+
+            guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+                return ""
+            }
             
-            return kCloudCommonJsonUrl
+            return urlString
         case .local?:
             return "/\(self.detailUrl!)"
         default:

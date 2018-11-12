@@ -316,13 +316,19 @@ class LoginViewController: BaseViewController {
         self.getStations(token: token, closure: { [weak self](error, models) in
             if error == nil{
                 if let models = models{
-                    let deviceViewController = LoginSelectionDeviceViewController.init(style: .whiteWithoutShadow,devices:models,userId:userId)
-                    deviceViewController.delegate = self
-                    let navigationController =  UINavigationController.init(rootViewController: deviceViewController)
-                    //                let tab = retrieveTabbarController()
-                    //                tab?.setTabBarHidden(true, animated: true)
-                    self?.present(navigationController, animated: true) {
-                        
+                    if models.count > 0{
+                        let deviceViewController = LoginSelectionDeviceViewController.init(style: .whiteWithoutShadow,devices:models,userId:userId)
+                        deviceViewController.delegate = self
+                        let navigationController =  UINavigationController.init(rootViewController: deviceViewController)
+                        //                let tab = retrieveTabbarController()
+                        //                tab?.setTabBarHidden(true, animated: true)
+                        self?.present(navigationController, animated: true) {
+                            
+                        }
+                    }else{
+                        let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
+                        cofigVC.modalTransitionStyle = .coverVertical
+                        self?.navigationController?.pushViewController(cofigVC, animated: true)
                     }
                 }
                  print(models as Any)

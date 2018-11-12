@@ -32,9 +32,9 @@ class GetSmsCodeAPI: BaseRequest {
         return "/user/smsCode"
     }
     
-//    override func baseURL() -> String {
-//        return kDevelopAddr
-//    }
+    override func baseURL() -> String {
+        return kCloudBaseURL
+    }
     
     override func requestMethod() -> RequestHTTPMethod {
         return RequestHTTPMethod.get
