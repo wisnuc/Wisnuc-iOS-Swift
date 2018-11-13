@@ -20,16 +20,23 @@ let kBindingProgressCharacteristic = "F000BEF3-0451-4000-B000-000000000000"
 let kStationeSessionCharacteristic = "F000BEF4-0451-4000-B000-000000000000"
 let kSPSDataCharacteristic = "F000C0E1-0451-4000-B000-000000000000"
 
+let BLE_SEND_MAX_LEN = 18
 
 @objc protocol LLBlueToothDelegate {
     func didDiscoverPeripheral(_ peripheral:CBPeripheral)
-  @objc optional  func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?)
-     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral)
-     func centralManagerDidUpdateState(_ central: CBCentralManager)
-     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?)-> ()
+    @objc optional func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?)
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral)
+    func centralManagerDidUpdateState(_ central: CBCentralManager)
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?)-> ()
     
     func peripheralCharacteristicDidUpdateValue(deviceBLEModels:[DeviceBLEModel]?)
+    @objc optional func peripheralStationSPSCharacteristicDidUpdateValue(data:Data)
 }
+
+//@objc protocol LLBlueToothDataDelegate {
+//    @objc optional func peripheralStationSPSCharacteristicDidUpdateValue(data:Data)
+//}
+
 
 
 //用于看发送数据是否成功!
@@ -37,10 +44,6 @@ class LLBlueTooth:NSObject {
     
     weak var delegate:LLBlueToothDelegate?{
         didSet{
-//            if self.central != nil{
-//                self.central = nil
-//            }
-//              self.central = CBCentralManager.init(delegate:self, queue:nil, options:[CBCentralManagerOptionShowPowerAlertKey:false])
         }
    
     }
@@ -122,10 +125,13 @@ class LLBlueTooth:NSObject {
     }
     
     // MARK: 写数据
-    func writeToPeripheral(_ data: Data) {
-        peripheral.writeValue(data , for: sendCharacteristic!, type: CBCharacteristicWriteType.withoutResponse)
+    func writeToPeripheral(characteristic:CBCharacteristic,data: Data,writeType:CBCharacteristicWriteType) {
+        peripheral.writeValue(data , for: characteristic, type:writeType)
     }
     
+    func writeToPeripheral(peripheral:CBPeripheral,characteristic:CBCharacteristic,data: Data,writeType:CBCharacteristicWriteType) {
+        peripheral.writeValue(data , for: characteristic, type:writeType)
+    }
     
     // MARK: 连接某个设备的方法
     /*
@@ -167,6 +173,33 @@ class LLBlueTooth:NSObject {
             if (peripheral.state == CBPeripheralState.connected) {
                 central?.cancelPeripheralConnection(peripheral)
             }
+        }
+    }
+    
+    func send(data msgData: Data, send: @escaping (_ finished: Data?) -> ()) {
+        var i = 0
+        while i < msgData.count {
+            // 预加 最大包长度，如果依然小于总数据长度，可以取最大包数据大小
+            if (i + BLE_SEND_MAX_LEN) < msgData.count {
+                let rangeStr = String(format: "%i,%i", i, BLE_SEND_MAX_LEN)
+                if let range = Range.init(NSRangeFromString(rangeStr)){
+                    let subData = msgData.subdata(in:range)
+                    send(subData)
+                }
+                //    NSString *result = [[NSString alloc] initWithData:subData  encoding:NSUTF8StringEncoding];
+                //            NSLog(@"%@",result);
+                //根据接收模块的处理能力做相应延时
+            } else {
+                let rangeStr = String(format: "%i,%i", i, Int(msgData.count - i))
+                if let range = Range.init(NSRangeFromString(rangeStr)){
+                    let subData = msgData.subdata(in: range)
+                    send(subData)
+                }
+              
+//                var result = String(data: subData, encoding: .utf8)
+                //            NSLog(@"%@",result);
+            }
+            i += BLE_SEND_MAX_LEN
         }
     }
     
@@ -281,7 +314,8 @@ extension LLBlueTooth : CBPeripheralDelegate {
         if (error != nil){
             return
         }
-        
+        let model = DeviceBLEModel.init()
+        model.peripheral = peripheral
         for  characteristic in service.characteristics! {
             print(characteristic.uuid.description)
             switch characteristic.uuid.description {
@@ -290,22 +324,36 @@ extension LLBlueTooth : CBPeripheralDelegate {
                 peripheral.readValue(for:characteristic)
                 
             case kStationStatusCharacteristic:
-                // 读区特征值，只能读到一次
+
                 peripheral.readValue(for:characteristic)
-//            case "A28DA977":
-//                // 订阅特征值，订阅成功后后续所有的值变化都会自动通知
-//                peripheral.setNotifyValue(true, for: characteristic)
-            case kStationeSessionCharacteristic:
-                // 订阅特征值，订阅成功后后续所有的值变化都会自动通知
+                
+            case kBindingProgressCharacteristic:
+
                 peripheral.setNotifyValue(true, for: characteristic)
-                sendCharacteristic = characteristic
+                
+            case kStationeSessionCharacteristic:
+                
+                peripheral.setNotifyValue(true, for: characteristic)
+                
             case kSPSDataCharacteristic:
                 // 订阅特征值，订阅成功后后续所有的值变化都会自动通知
                 peripheral.setNotifyValue(true, for: characteristic)
-                sendCharacteristic = characteristic
-           
+                
+                model.spsDataCharacteristic = characteristic
+
             default:
                 print("扫描到其他特征")
+            }
+            
+            if let index = deviceDatas?.firstIndex(where: {$0.peripheral?.identifier == peripheral.identifier}){
+                if let deviceModel  = deviceDatas?[index]{
+                    if let spsDataCharacteristic = model.spsDataCharacteristic{
+                        deviceModel.spsDataCharacteristic = spsDataCharacteristic
+                    }
+                    deviceDatas?[index] = deviceModel
+                }
+            }else{
+                deviceDatas?.append(model)
             }
         }
         
@@ -346,32 +394,48 @@ extension LLBlueTooth : CBPeripheralDelegate {
             if let deviceType = DeviceBLEModelType(rawValue: valueInInt){
                 model.type = deviceType
             }
+            
             let string = String.init(data: characteristic.value!, encoding: .ascii)
             print(string ?? "no data")
-        //  print("收到了StationId数据特征数据:\(String(describing: string))")
+       
         case kSPSDataCharacteristic:
-            let string = String.init(data: characteristic.value!, encoding: .utf8)
-            print(string ?? "no data")
+            if let data = characteristic.value{
+                if let updateValue = self.delegate?.peripheralStationSPSCharacteristicDidUpdateValue{
+                    updateValue(data)
+                }
+            }
+            if  let string = String.init(data: characteristic.value!, encoding: .utf8){
+                print(string)
+                
+            }
 //            print("接收到了设备的Data Characteristic的变化")
         case kStationeSessionCharacteristic:
+            let string = String.init(data: characteristic.value!, encoding: .utf8)
+            print(string ?? "no data")
+            
+        case kBindingProgressCharacteristic:
             let string = String.init(data: characteristic.value!, encoding: .utf8)
             print(string ?? "no data")
         default:
             print("收到了其他数据特征数据: \(characteristic.uuid.uuidString)")
         }
-        
-        guard let id = stationId else {
-            return
-        }
-        
-        if deviceDatas?.contains(where: {$0.stationId == id}) ?? false{
-            if let index = deviceDatas?.firstIndex(where: {$0.stationId == id}){
-                deviceDatas?[index] = model
+//        guard let id = stationId else {
+//            return
+//        }
+//
+
+        if let index = deviceDatas?.firstIndex(where: {$0.peripheral?.identifier == peripheral.identifier}){
+            if let deviceModel = deviceDatas?[index]{
+                if let stationId =  model.stationId{
+                    deviceModel.stationId = stationId
+                }
+                if let type =  model.type{
+                    deviceModel.type = type
+                }
+                deviceDatas?[index] = deviceModel
             }
-        }else{
-            deviceDatas?.append(model)
         }
-        
+
         delegate?.peripheralCharacteristicDidUpdateValue(deviceBLEModels: deviceDatas)
     }
     

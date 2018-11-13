@@ -9,15 +9,25 @@
 import UIKit
 import SystemConfiguration.CaptiveNetwork
 import NetworkExtension
+import CoreBluetooth
+
 enum ConfigNetworkViewControllerState {
     case initialization
     case change
 }
 
 class ConfigNetworkViewController: BaseViewController {
+    let cellIdentifer = "celled"
     var textFieldControllerNetworkName:MDCTextInputControllerUnderline?
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
     var isNetworkNameTrue = false
+    var deviceModel:DeviceBLEModel?
+    var wifiBLEDataArray:[String] = Array.init()
+    var wifiBLEArray:[String] = Array.init(){
+        didSet{
+            self.wifiTabelView.reloadData()
+        }
+    }
     var state:ConfigNetworkViewControllerState?{
         didSet{
             switch state {
@@ -42,7 +52,9 @@ class ConfigNetworkViewController: BaseViewController {
         self.setTextFieldController()
         self.view.addSubview(nextButton)
         self.view.addSubview(errorLabel)
-       
+        self.view.addSubview(wifiTabelView)
+        tableViewContainerView.isHidden = true
+        setTableViewContent()
         // Do any additional setup after loading the view.
     }
     
@@ -57,6 +69,7 @@ class ConfigNetworkViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+         LLBlueTooth.instance.delegate = self
         if nextButton.isHidden{
             nextButton.isHidden = false
         }
@@ -134,6 +147,11 @@ class ConfigNetworkViewController: BaseViewController {
         self.textFieldControllerPassword?.activeColor = COR1
     }
     
+    func setTableViewContent(){
+        self.view.addSubview(tableViewContainerView)
+        tableViewContainerView.addSubview(self.wifiTabelView)
+    }
+    
     func leftView(image:UIImage?) -> UIView{
         let leftView = UIView.init(frame: CGRect(x: 0, y: 0, width: 24 + 12, height: 24))
         let imageView = UIImageView.init(image:image)
@@ -175,6 +193,33 @@ class ConfigNetworkViewController: BaseViewController {
         self.nextButton.isEnabled = true
     }
     
+    func spreadOut(){
+        self.tableViewContainerView.isHidden = false
+    }
+    
+    func sendData(){
+        guard let model = self.deviceModel else {
+            return
+        }
+        guard let peripheral = model.peripheral else {
+            return
+        }
+        guard let characteristic = model.spsDataCharacteristic else {
+            return
+        }
+        let dataString = "scan\n"
+        let packet : [UInt8] = [UInt8](dataString.utf8)
+        let data = Data.init(bytes: packet)
+        LLBlueTooth.instance.send(data: data) { (subData) in
+            if let subData = subData {
+            let dataString = String.init(data: subData, encoding: .utf8)
+            print(dataString ?? "No data")
+            LLBlueTooth.instance.writeToPeripheral(peripheral: peripheral, characteristic: characteristic, data: subData, writeType: CBCharacteristicWriteType.withoutResponse)
+            usleep(20 * 1000)
+            }
+        }
+    }
+    
     
     @objc func nextButtontTap(_ sender:MDCFloatingButton){
         self.networkNameTextFiled.resignFirstResponder()
@@ -209,8 +254,12 @@ class ConfigNetworkViewController: BaseViewController {
                 rightView.isSelect = !rightView.isSelect
                 if rightView.isSelect{
                     rightView.image = UIImage.init(named: "down_arrow_gray.png")
+                    self.sendData()
+                    self.tableViewContainerView.isHidden = false
+                    ActivityIndicator.startActivityIndicatorAnimation(in: wifiTabelView)
                 }else{
                     rightView.image = UIImage.init(named: "up_arrow_gray.png")
+                    self.tableViewContainerView.isHidden = true
                 }
             default:
                 break
@@ -337,6 +386,28 @@ class ConfigNetworkViewController: BaseViewController {
         label.textColor = UIColor.init(rgb: 0x0f44336)
         return label
     }()
+    
+    lazy var tableViewContainerView: UIView = { [weak self] in
+        let containerView:UIView = UIView(frame: CGRect(x: MarginsWidth, y: (self?.networkNameTextFiled.bottom)! - 20, width: __kWidth - MarginsWidth*2, height: 200))
+        self?.wifiTabelView.frame = containerView.bounds
+        containerView.backgroundColor = UIColor.clear
+        
+        containerView.layer.shadowOffset = CGSize(width: 0.5, height: 0.5)
+        containerView.layer.shadowRadius = 1
+        containerView.layer.shadowOpacity = 0.5
+        containerView.layer.shadowColor = DarkGrayColor.cgColor
+        return containerView
+    }()
+    
+    lazy var wifiTabelView: UITableView = {  [weak self] in
+        let tableView = UITableView.init()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.layer.masksToBounds = true
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifer)
+        tableView.tableFooterView = UIView.init(frame: CGRect.zero)
+        return tableView
+    }()
 
 }
 
@@ -358,3 +429,74 @@ extension ConfigNetworkViewController:UITextFieldDelegate{
         return true
     }
 }
+
+extension ConfigNetworkViewController:UITableViewDelegate,UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return wifiBLEArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        tableView.separatorStyle = .none
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifer, for: indexPath)
+        let string = wifiBLEArray[indexPath.row]
+        cell.contentView.removeAllSubviews()
+        let label = UILabel.init(frame: CGRect(x: 24 + 12, y: 0, width:__kWidth - MarginsWidth*2 - 24 + 12 , height: 44))
+        label.textColor = DarkGrayColor
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.text = string
+        cell.contentView.addSubview(label)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let string = wifiBLEArray[indexPath.row]
+        self.networkNameTextFiled.text = string
+        tableViewContainerView.isHidden = true
+    }
+}
+
+
+extension ConfigNetworkViewController:LLBlueToothDelegate{
+    func didDiscoverPeripheral(_ peripheral: CBPeripheral) {
+        
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        
+    }
+    
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        
+    }
+    
+    func peripheralCharacteristicDidUpdateValue(deviceBLEModels: [DeviceBLEModel]?) {
+        
+    }
+    
+
+    func peripheralStationSPSCharacteristicDidUpdateValue(data:Data){        
+        if let string = String.init(data: data, encoding: String.Encoding.utf8){
+            wifiBLEDataArray.append(string)
+            let bleString = wifiBLEDataArray.joined()
+            guard let bleData = bleString.data(using: String.Encoding.utf8) else{
+                return
+            }
+            
+            do {
+                if let wifiArray = try JSONSerialization.jsonObject(with:bleData, options: .mutableContainers) as? Array<String>{
+//                    print("😝\(wifiArray)")
+                   
+                    wifiBLEArray = wifiArray
+                    ActivityIndicator.stopActivity(in: self.wifiTabelView)
+                }
+            } catch  {
+               print(error)
+            }
+        }
+    }
+}
+

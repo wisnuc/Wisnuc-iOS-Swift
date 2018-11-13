@@ -54,8 +54,8 @@ class ActivityIndicator: NSObject{
             if shareSingleOneActivityIndicator.isAnimating{
                 stopActivityIndicatorAnimation()
             }
-            let width: CGFloat = __kWidth / 2
-            let height: CGFloat = __kHeight / 2
+            let width: CGFloat = view.width / 2
+            let height: CGFloat = view.height / 2
             let frame: CGRect = CGRect(x: width - 48/2, y: height, width: 48, height: 48)
             shareSingleOneActivityIndicator.frame = frame
             shareSingleOneActivityIndicator.cycleColors = [MDCPalette.blue, MDCPalette.red, MDCPalette.green, MDCPalette.yellow]
@@ -67,11 +67,20 @@ class ActivityIndicator: NSObject{
             shareSingleOneActivityIndicator.startAnimating()
             view.addSubview(shareSingleOneActivityIndicator)
             view.isUserInteractionEnabled = false
+            view.bringSubview(toFront: shareSingleOneActivityIndicator)
+        }
+    }
+    
+    class func stopActivity(in view:UIView){
+        mainThreadSafe {
+            shareSingleOneActivityIndicator.stopAnimating()
+            shareSingleOneActivityIndicator.removeFromSuperview()
+            view.isUserInteractionEnabled  = true
         }
     }
     
     class func stopActivityIndicatorAnimation(){
-        DispatchQueue.main.async  {
+        mainThreadSafe {
         shareSingleOneActivityIndicator.stopAnimating()
         shareSingleOneActivityIndicator.removeFromSuperview()
         let window = UIApplication.shared.keyWindow

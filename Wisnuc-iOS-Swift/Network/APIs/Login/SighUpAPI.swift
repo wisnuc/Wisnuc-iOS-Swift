@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import Alamofire
 class SighUpAPI: BaseRequest {
     var phoneNumber:String?
     var code:String?
@@ -26,16 +26,19 @@ class SighUpAPI: BaseRequest {
         return "/user"
     }
     
-//    override func baseURL() -> String {
-//        return kDevelopAddr
-//    }
+    override func baseURL() -> String {
+        return kCloudBaseURL
+    }
     
     override func requestMethod() -> RequestHTTPMethod {
         return RequestHTTPMethod.post
     }
+    override func requestEncoding() -> RequestParameterEncoding {
+        return JSONEncoding.default
+    }
     
     override func requestParameters() -> RequestParameters? {
-        let requestParameters:RequestParameters = ["phone":self.phoneNumber!,"code":self.code!,"password":self.password! ]
+        let requestParameters:RequestParameters = ["phone":self.phoneNumber!,"code":self.code!,"password":self.password! ,"clientId":getUniqueDevice() ?? "","type":"iOS"]
         return requestParameters
     }
 }

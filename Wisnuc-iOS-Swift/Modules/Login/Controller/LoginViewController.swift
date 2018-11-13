@@ -255,6 +255,7 @@ class LoginViewController: BaseViewController {
         ActivityIndicator.startActivityIndicatorAnimation()
         let request = SighInTokenAPI.init(phoneNumber: self.phoneNumberTextFiled.text!, password: self.passwordTextFiled.text!)
         request.startRequestDataCompletionHandler{ [weak self](response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
             if  response.error == nil{
                 do {
                     let model = try JSONDecoder().decode(SighInTokenModel.self, from: response.value!)
@@ -292,7 +293,7 @@ class LoginViewController: BaseViewController {
                     // 异常处理
                     Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
                 }
-                
+                 ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 // error
                 if response.data != nil {
@@ -308,7 +309,7 @@ class LoginViewController: BaseViewController {
                 }
                
             }
-            ActivityIndicator.stopActivityIndicatorAnimation()
+           ActivityIndicator.stopActivityIndicatorAnimation()
         }
     }
     

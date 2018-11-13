@@ -52,6 +52,8 @@ class DeviceBLEModel:NSObject{
     var stationId:String?
     var peripheral:CBPeripheral?
     var type:DeviceBLEModelType?
+    var stationStatusCharacteristic:CBCharacteristic?
+    var spsDataCharacteristic:CBCharacteristic?
 //    var state:DeviceBLEModelState?
 }
 

@@ -176,10 +176,12 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = dataSource[indexPath.row]
-//        switch model.type {
-//        case .config?:
-//            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
-//            self.navigationController?.pushViewController(configNetVC, animated: true)
+        switch model.type {
+        case .Default?:
+            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
+            configNetVC.deviceModel = model
+            self.navigationController?.pushViewController(configNetVC, animated: true)
+            LLBlueTooth.instance.stopScan()
 //        case .configFinish?:
 //           break
 //        case .configWithData?:
@@ -190,9 +192,9 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
 //            }
 //        case .configErrorNoDisk?:
 //            break
-//        default:
-//            break
-//        }
+        default:
+            break
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -258,6 +260,7 @@ extension SeekNewDeviceViewController:LLBlueToothDelegate{
         }
     }
     
+    
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if #available(iOS 10.0, *) {
             switch central.state {
@@ -265,7 +268,7 @@ extension SeekNewDeviceViewController:LLBlueToothDelegate{
             case CBManagerState.poweredOn:
                 print("蓝牙打开")
                 self.state = .searching
-               
+
             case CBManagerState.unauthorized:
                 print("没有蓝牙功能")
                 

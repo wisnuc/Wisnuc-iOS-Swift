@@ -9,8 +9,8 @@
 import Foundation
 public let KWxAppID = "wx99b54eb728323fe8"
 //public let kCloudAddr = "http://www.siyouqun.com"
-public let kCloudAddr = "http://abel.nodetribe.com"
-public let kCloudBaseURL = "http://abel.nodetribe.com/c/v1"
+public let kCloudAddr = "https://abel.nodetribe.com"
+public let kCloudBaseURL = "https://abel.nodetribe.com/c/v1"
 //public let kCloudBaseURL = "http://www.siyouqun.com/c/v1"
 
 //#define kCloudAddr    @"http://10.10.9.87:4000/"
