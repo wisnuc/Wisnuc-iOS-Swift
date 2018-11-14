@@ -10,6 +10,7 @@ import UIKit
 import SystemConfiguration.CaptiveNetwork
 import NetworkExtension
 import CoreBluetooth
+import Alamofire
 
 enum ConfigNetworkViewControllerState {
     case initialization
@@ -55,6 +56,7 @@ class ConfigNetworkViewController: BaseViewController {
         self.view.addSubview(wifiTabelView)
         tableViewContainerView.isHidden = true
         setTableViewContent()
+        
         // Do any additional setup after loading the view.
     }
     
@@ -96,6 +98,7 @@ class ConfigNetworkViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow(note:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         //键盘即将隐藏
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHidden(note:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        defaultNotificationCenter().addObserver(self, selector: #selector(progressHUDDisappear(_:)), name: NSNotification.Name.SVProgressHUDWillDisappear, object: nil)
     }
     
     func setState(_ state:ConfigNetworkViewControllerState){
@@ -193,11 +196,25 @@ class ConfigNetworkViewController: BaseViewController {
         self.nextButton.isEnabled = true
     }
     
-    func spreadOut(){
+    func spreadOut(rightView:RightImageView?){
+        rightView?.isSelect = true
+        rightView?.image = UIImage.init(named: "down_arrow_gray.png")
+        let param = ["action":"scan"]
+        self.sendData(param)
         self.tableViewContainerView.isHidden = false
+        ActivityIndicator.startActivityIndicatorAnimation(in: wifiTabelView)
     }
     
-    func sendData(){
+    func spreadIn(rightView:RightImageView?){
+         rightView?.isSelect = false
+        rightView?.image = UIImage.init(named: "up_arrow_gray.png")
+        self.tableViewContainerView.isHidden = true
+        ActivityIndicator.stopActivity(in: self.wifiTabelView)
+        wifiBLEArray.removeAll()
+        wifiBLEDataArray.removeAll()
+    }
+    
+    func sendData(_ param:[String:String]){
         guard let model = self.deviceModel else {
             return
         }
@@ -207,7 +224,9 @@ class ConfigNetworkViewController: BaseViewController {
         guard let characteristic = model.spsDataCharacteristic else {
             return
         }
-        let dataString = "scan\n"
+        let string = jsonToString(json: param, prettyPrinted: false)
+        let dataString = "\(string)\n"
+        print(dataString)
         let packet : [UInt8] = [UInt8](dataString.utf8)
         let data = Data.init(bytes: packet)
         LLBlueTooth.instance.send(data: data) { (subData) in
@@ -215,25 +234,231 @@ class ConfigNetworkViewController: BaseViewController {
             let dataString = String.init(data: subData, encoding: .utf8)
             print(dataString ?? "No data")
             LLBlueTooth.instance.writeToPeripheral(peripheral: peripheral, characteristic: characteristic, data: subData, writeType: CBCharacteristicWriteType.withoutResponse)
-            usleep(20 * 1000)
+//            usleep(20)
             }
         }
     }
     
+    func stationEncryptedAction(ipString:String){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        AppNetworkService.networkState = .normal
+        BindStationAPI.init().startRequestJSONCompletionHandler { [weak self] (response) in
+             ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error = response.error{
+                var messageText = error.localizedDescription
+                if response.error is BaseError{
+                    messageText =  (response.error as! BaseError).localizedDescription
+                }
+                Message.message(text:messageText)
+            }else{
+                if let errorString = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorString)
+                }else{
+                    if let rootDic = response.value as? NSDictionary{
+                        guard let dataDic = rootDic["data"] as? NSDictionary else{
+                            Message.message(text:LocalizedString(forKey: "error"))
+                            return
+                        }
+                        
+                        guard  let encryptedString = dataDic["encrypted"] as? String else{
+                            Message.message(text:LocalizedString(forKey: "error"))
+                            return
+                        }
+                       self?.stationBindAction(ipString: ipString, encryptedString:encryptedString)
+                    }
+                }
+            }
+        }
+    }
+    
+    func stationBindAction(ipString:String,encryptedString:String){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let parameters = ["encrypted":encryptedString]
+        let urlString = "http://\(ipString):3001/bind"
+        let requset = Alamofire.request(urlString, method: .post,parameters: parameters, encoding:JSONEncoding.default)
+        requset.validate().responseJSON { [weak self] (response) in
+             ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error = response.error{
+                let messageText = error.localizedDescription
+                Message.message(text:messageText)
+            }else{
+                print(response.value as Any)
+                if let dataDic = response.value as? NSDictionary{
+                    if let userId = dataDic["id"] as? String{
+                        self?.stationFetchAction(userId)
+                    }
+                }
+            }
+        }
+    }
+    
+    func stationFetchAction(_ userId:String){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        guard let token = AppUserService.currentUser?.cloudToken else {
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            Message.message(text: LocalizedString(forKey:"error:No token"))
+            return
+        }
+
+        self.getStations(token:token) { [weak self](error, models) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if error == nil{
+                if let models = models{
+                    if models.count > 0{
+                        self?.loginAction(userId: userId, model: models.first!)
+                    }else{
+                        Message.message(text: LocalizedString(forKey:"error:No station"))
+                    }
+                }
+                print(models as Any)
+            }else{
+                switch error{
+                case is LoginError :
+                    let loginError = error as! LoginError
+                    if loginError.kind == LoginError.ErrorKind.LoginNoBindDevice || loginError.kind == LoginError.ErrorKind.LoginNoOnlineDevice || loginError.kind == LoginError.ErrorKind.LoginRequestError {
+                        Message.message(text: LocalizedString(forKey: loginError.localizedDescription), duration:2.0)
+                    }else  {
+                        Message.message(text: LocalizedString(forKey:"\(String(describing: loginError.localizedDescription))"),duration:2.0)
+                    }
+                case is BaseError :
+                    let baseError = error as! BaseError
+                    Message.message(text: LocalizedString(forKey:"\(String(describing: baseError.localizedDescription))"),duration:2.0)
+                default:
+                    Message.message(text: LocalizedString(forKey:"\(String(describing: (error?.localizedDescription)!))"),duration:2.0)
+                }
+                ActivityIndicator.startActivityIndicatorAnimation()
+                print(error as Any)
+            }
+        }
+    }
+    
+    func loginAction(userId:String,model:StationsInfoModel){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        if let user = AppUserService.user(uuid: userId){
+            AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                if error == nil && userData != nil{
+                    AppUserService.isUserLogin = true
+                    AppUserService.isStationSelected = true
+                    AppUserService.setCurrentUser(userData)
+                    AppUserService.synchronizedCurrentUser()
+                    let identifyingFromDeviceVC = IdentifyingFromDeviceViewController.init(style: NavigationStyle.whiteWithoutShadow)
+                        self.navigationController?.pushViewController(identifyingFromDeviceVC, animated: true)
+                }else{
+                    if error != nil{
+                        switch error {
+                        case is LoginError:
+                            let loginError = error as! LoginError
+                            Message.message(text: loginError.localizedDescription, duration: 2.0)
+                        case is BaseError:
+                            let baseError = error as! BaseError
+                            Message.message(text: baseError.localizedDescription, duration: 2.0)
+                        default:
+                            Message.message(text: (error?.localizedDescription)!, duration: 2.0)
+                        }
+//                        AppUserService.logoutUser()
+                        ActivityIndicator.stopActivityIndicatorAnimation()
+                    }
+                }
+            }
+            //
+        }else{
+//            AppUserService.logoutUser()
+            Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
+            ActivityIndicator.stopActivityIndicatorAnimation()
+        }
+    }
+    
+    func getStations(token:String?,closure: @escaping (Error?,[StationsInfoModel]?) -> Void){
+        let requset = GetStationsAPI.init(token: token ?? "")
+        requset.startRequestJSONCompletionHandler({ (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if response.error == nil{
+                if response.result.value != nil {
+                    let rootDic = response.result.value as! NSDictionary
+                    //                    print(rootDic)
+                    let code = rootDic["code"] as! NSNumber
+                    let message = rootDic["message"] as! NSString
+                    if code.intValue != 1 && code.intValue > 200 {
+                        return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil)
+                    }
+                    if let dataDic = rootDic["data"] as? NSDictionary{
+                        var resultArray:[StationsInfoModel] = Array.init()
+                        if let ownStations =  dataDic["ownStations"] as? [NSDictionary]{
+                            var ownStationArray:[StationsInfoModel] = Array.init()
+                            for value in ownStations{
+                                do {
+                                    if let data =  jsonToData(jsonDic: value){
+                                        var model = try JSONDecoder().decode(StationsInfoModel.self, from:  data)
+                                        model.isShareStation = false
+                                        ownStationArray.append(model)
+                                    }
+                                }catch{
+                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                                }
+                            }
+                            resultArray.append(contentsOf: ownStationArray)
+                        }
+                        if let sharedStations =  dataDic["sharedStations"] as? [NSDictionary]{
+                            var sharedStationArray:[StationsInfoModel] = Array.init()
+                            for value in sharedStations{
+                                do {
+                                    if let data =  jsonToData(jsonDic: value){
+                                        var model = try JSONDecoder().decode(StationsInfoModel.self, from:  data)
+                                        model.isShareStation = true
+                                        sharedStationArray.append(model)
+                                    }
+                                }catch{
+                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                                }
+                            }
+                            resultArray.append(contentsOf:sharedStationArray)
+                        }
+                        return closure(nil,resultArray)
+                    }
+                }
+            }else{
+                return closure(response.error,nil)
+            }
+        })
+    }
     
     @objc func nextButtontTap(_ sender:MDCFloatingButton){
+        guard let ssidTxt = self.networkNameTextFiled.text else {
+            Message.message(text: LocalizedString(forKey: "Wi-Fi名称不能为空"))
+            return
+        }
+        
+        if ssidTxt.count == 0 {
+            Message.message(text: LocalizedString(forKey: "Wi-Fi名称不能为空"))
+            return
+        }
+        
+        guard let passwordTxt = self.passwordTextFiled.text else {
+            Message.message(text: LocalizedString(forKey: "Wi-Fi密码不能为空"))
+            return
+        }
+        
+        if passwordTxt.count == 0 {
+            Message.message(text: LocalizedString(forKey: "Wi-Fi密码不能为空"))
+            return
+        }
+        
         self.networkNameTextFiled.resignFirstResponder()
         self.passwordTextFiled.resignFirstResponder()
         SVProgressHUD.setDefaultStyle(SVProgressHUDStyle.dark)
         SVProgressHUD.show(withStatus: LocalizedString(forKey: "Wi-Fi配置中"))
+        SVProgressHUD.setMaximumDismissTimeInterval(20)
+        self.wifiBLEDataArray.removeAll()
         sender.isHidden = true
-        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 3) {
-            DispatchQueue.main.async {
-                 SVProgressHUD.dismiss()
-                let identifyingFromDeviceVC = IdentifyingFromDeviceViewController.init(style: NavigationStyle.whiteWithoutShadow)
-                self.navigationController?.pushViewController(identifyingFromDeviceVC, animated: true)
-            }
-        }
+        let param = ["action":"conn","ssid":ssidTxt,"password":passwordTxt]
+        self.sendData(param)
+//        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 3) {
+//            DispatchQueue.main.async {
+//                 SVProgressHUD.dismiss()
+//
+//            }
+//        }
     }
     
     
@@ -253,13 +478,9 @@ class ConfigNetworkViewController: BaseViewController {
             case .right?:
                 rightView.isSelect = !rightView.isSelect
                 if rightView.isSelect{
-                    rightView.image = UIImage.init(named: "down_arrow_gray.png")
-                    self.sendData()
-                    self.tableViewContainerView.isHidden = false
-                    ActivityIndicator.startActivityIndicatorAnimation(in: wifiTabelView)
+                    self.spreadOut(rightView: rightView)
                 }else{
-                    rightView.image = UIImage.init(named: "up_arrow_gray.png")
-                    self.tableViewContainerView.isHidden = true
+                    self.spreadIn(rightView: rightView)
                 }
             default:
                 break
@@ -295,6 +516,14 @@ class ConfigNetworkViewController: BaseViewController {
         
         UIView.animate(withDuration: duration) {
             self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: keyboardTopYPosition - MarginsWidth - self.nextButton.height/2)
+        }
+    }
+    @objc func progressHUDDisappear(_ note: Notification){
+        guard let userInfo = note.userInfo else {return}
+        guard let string = userInfo[SVProgressHUDStatusUserInfoKey] as? String else{return}
+        let time = SVProgressHUD.displayDuration(for: string)
+        if wifiBLEDataArray.count == 0{
+//            Message.message(text: LocalizedString(forKey: "Wi-Fi连接失败"))
         }
     }
     
@@ -451,7 +680,9 @@ extension ConfigNetworkViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let string = wifiBLEArray[indexPath.row]
         self.networkNameTextFiled.text = string
-        tableViewContainerView.isHidden = true
+        if let rightView = networkNameTextFiled.rightView as? RightImageView{
+             self.spreadIn(rightView: rightView)
+        }
     }
 }
 
@@ -478,7 +709,11 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
     }
     
 
-    func peripheralStationSPSCharacteristicDidUpdateValue(data:Data){        
+    func peripheralStationSPSCharacteristicDidUpdateValue(data:Data){
+         SVProgressHUD.dismiss()
+        if nextButton.isHidden {
+            nextButton.isHidden = false
+        }
         if let string = String.init(data: data, encoding: String.Encoding.utf8){
             wifiBLEDataArray.append(string)
             let bleString = wifiBLEDataArray.joined()
@@ -486,15 +721,56 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
                 return
             }
             
-            do {
-                if let wifiArray = try JSONSerialization.jsonObject(with:bleData, options: .mutableContainers) as? Array<String>{
-//                    print("😝\(wifiArray)")
+            if bleString.contains(find: "[]"){
+                 ActivityIndicator.stopActivity(in: self.wifiTabelView)
+            }
+            
+            if bleString.contains(find: "[") && bleString.contains(find: "]"){
+                ActivityIndicator.stopActivity(in: self.wifiTabelView)
+            }
+            
+            if bleString.contains(find: "{") && bleString.contains(find: "}"){
+                ActivityIndicator.stopActivity(in: self.wifiTabelView)
+                if let wifiDic =  dataToNSDictionary(data: bleData){
+//                    if let error = wifiDic["error"] as? NSDictionary{
+//                        wifiBLEDataArray.removeAll()
+//                        Message.message(text: "error:\(error)")
+//                        return
+//                    }
+                    if wifiDic.count == 0{
+                        wifiBLEDataArray.removeAll()
+                        Message.message(text: "error")
+                    }
+                    
+                    if bleString.contains(find: "error"){
+                        wifiBLEDataArray.removeAll()
+                        ActivityIndicator.stopActivity(in: self.wifiTabelView)
+                        Message.message(text: "error")
+                        return
+                    }
                    
-                    wifiBLEArray = wifiArray
-                    ActivityIndicator.stopActivity(in: self.wifiTabelView)
+                    if let wifiArray = wifiDic["data"] as? Array<String>{
+                        self.wifiBLEArray = wifiArray
+                        wifiBLEDataArray.removeAll()
+                        return
+                    }
+                    
+                    if let data = wifiDic["data"] as? NSDictionary{
+                        if let ipString = data["ip"] as? String{
+                            self.stationEncryptedAction(ipString: ipString)
+                            wifiBLEDataArray.removeAll()
+                        }
+                    }
+                }else{
+                     wifiBLEDataArray.removeAll()
+                     Message.message(text: "error")
                 }
-            } catch  {
-               print(error)
+            }
+            
+            if bleString.contains(find: "error"){
+                 wifiBLEDataArray.removeAll()
+                ActivityIndicator.stopActivity(in: self.wifiTabelView)
+                Message.message(text: "error")
             }
         }
     }

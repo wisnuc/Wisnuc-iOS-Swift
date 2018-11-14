@@ -307,9 +307,9 @@ class LoginViewController: BaseViewController {
                 }else{
                     Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
                 }
-               
+               ActivityIndicator.stopActivityIndicatorAnimation()
             }
-           ActivityIndicator.stopActivityIndicatorAnimation()
+           
         }
     }
     
@@ -572,6 +572,8 @@ extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
             let model = stationModel as! StationsInfoModel
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
                 if error == nil && userData != nil{
+                    AppUserService.isUserLogin = true
+                    AppUserService.isStationSelected = true
                     AppUserService.setCurrentUser(userData)
                     AppUserService.synchronizedCurrentUser()
                     appDelegate.initRootVC()

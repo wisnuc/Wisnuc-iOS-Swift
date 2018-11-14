@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class SighInWechatUser: BaseRequest {
     var phoneNumber:String?
@@ -28,12 +29,16 @@ class SighInWechatUser: BaseRequest {
         return "/wechat/user"
     }
     
-//    override func baseURL() -> String {
-//        return kDevelopAddr
-//    }
+    override func baseURL() -> String {
+        return kCloudBaseURL
+    }
     
     override func requestMethod() -> RequestHTTPMethod {
         return RequestHTTPMethod.patch
+    }
+    
+    override func requestEncoding() -> RequestParameterEncoding {
+        return JSONEncoding.default
     }
     
     override func requestParameters() -> RequestParameters? {

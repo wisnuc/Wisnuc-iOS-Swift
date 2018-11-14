@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             userDefaults.set(kCurrentAppVersion, forKey:kappVersionKey)
             userDefaults.synchronize()
         } else{
-            if AppUserService.isUserLogin{
+            if AppUserService.isUserLogin && AppUserService.isStationSelected{
                 setRootViewController()
                 setAppNetworkState()
             }else{

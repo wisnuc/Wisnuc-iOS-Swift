@@ -156,6 +156,7 @@
     }
     
     @objc func configFinish(_ noti:Notification){
+        appDelegate.initRootVC()
 //        let vc  = UIViewController.init()
 //        vc.view.backgroundColor = .white
 //        vc.title = "主界面"
@@ -245,13 +246,18 @@
                     print(String(data: responseData.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
                     if let user = wechatSighInModel.data?.user{
                         if !user{
-                            if (wechatSighInModel.data?.token != nil) && !isNilString(wechatSighInModel.data?.token) {
-                                ActivityIndicator.stopActivityIndicatorAnimation()
-                                self?.next(requestToken: wechatSighInModel.data?.token)
-                            }
+                              ActivityIndicator.stopActivityIndicatorAnimation()
+//                            if (wechatSighInModel.data?.token != nil) && !isNilString(wechatSighInModel.data?.token) {
+//                                ActivityIndicator.stopActivityIndicatorAnimation()
+//                                self?.next(requestToken: wechatSighInModel.data?.token)
+//                            }
                         }else{
                             self?.getStations(token: wechatSighInModel.data?.token, closure: { (error, stationsArray) in
                                 if error == nil{
+                                    if let message = ErrorTools.responseErrorData(responseData.data){
+                                        Message.message(text: message)
+                                        return
+                                    }
                                     if let stationsArray =  stationsArray{
                                         if stationsArray.count == 0{
                                             Message.message(text: "无绑定设备")
@@ -264,12 +270,7 @@
                                     }
 //
                                 }else{
-                                        Message.message(text: error?.localizedDescription ?? "请求错误")
-//                                    let responseErrorDic = dataToNSDictionary(data: responseData.data!)
-//                                    print(responseErrorDic as Any)
-//                                    if let message = responseErrorDic?[kRequestResponseMessageKey] as? String{
-//                                        Message.message(text: message)
-//                                    }
+                                    Message.message(text: error?.localizedDescription ?? "请求错误")
                                 }
                             })
                         }

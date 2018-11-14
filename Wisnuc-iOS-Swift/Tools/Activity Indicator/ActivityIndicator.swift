@@ -56,8 +56,9 @@ class ActivityIndicator: NSObject{
             }
             let width: CGFloat = view.width / 2
             let height: CGFloat = view.height / 2
-            let frame: CGRect = CGRect(x: width - 48/2, y: height, width: 48, height: 48)
+            let frame: CGRect = CGRect(x: 0, y: 0, width: 48, height: 48)
             shareSingleOneActivityIndicator.frame = frame
+            shareSingleOneActivityIndicator.center = CGPoint(x: width, y: height)
             shareSingleOneActivityIndicator.cycleColors = [MDCPalette.blue, MDCPalette.red, MDCPalette.green, MDCPalette.yellow]
             shareSingleOneActivityIndicator.radius = 18.0
             shareSingleOneActivityIndicator.strokeWidth = 3.0

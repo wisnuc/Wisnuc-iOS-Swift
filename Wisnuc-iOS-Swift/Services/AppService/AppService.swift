@@ -216,7 +216,7 @@ class AppService: NSObject,ServiceProtocol{
 //                dispatch_async(dispatch_get_global_queue(0, 0), ^{
 //                [weak_self updateCurrentUserInfoWithCompleteBlock:nil];
 //                });
-                self?.updateCurrentUserInfo()
+//                self?.updateCurrentUserInfo()
                 return callback(nil, currentUser);
             })
         }

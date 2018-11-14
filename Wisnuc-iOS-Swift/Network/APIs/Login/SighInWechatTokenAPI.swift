@@ -22,16 +22,16 @@ class SighInWechatTokenAPI: BaseRequest {
         return "/wechat/token"
     }
     
-//    override func baseURL() -> String {
-//        return kDevelopAddr
-//    }
+    override func baseURL() -> String {
+        return kCloudBaseURL
+    }
     
     override func requestMethod() -> RequestHTTPMethod {
         return RequestHTTPMethod.get
     }
     
     override func requestParameters() -> RequestParameters? {
-        let requestParameters:RequestParameters = ["type":"mobile","code":self.code! ]
+        let requestParameters:RequestParameters = ["loginType":"mobile","code":self.code! ,"clientId":getUniqueDevice() ?? "","type":"iOS"]
         return requestParameters
     }
 }

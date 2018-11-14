@@ -74,6 +74,24 @@ func dataToNSDictionary(data:Data?) ->NSDictionary?{
     return dic
 }
 
+func jsonToString(json: Any, prettyPrinted: Bool = false) -> String {
+    var options: JSONSerialization.WritingOptions = []
+    if prettyPrinted {
+        options = JSONSerialization.WritingOptions.prettyPrinted
+    }
+    
+    do {
+        let data = try JSONSerialization.data(withJSONObject: json, options: options)
+        if let string = String(data: data, encoding: String.Encoding.utf8) {
+            return string
+        }
+    } catch {
+        print(error)
+    }
+    
+    return ""
+}
+
 func sizeString(_ size :Int64) ->String{
     var sizeText:String?
     if size == 0{

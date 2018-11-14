@@ -21,6 +21,13 @@ class ErrorTools: NSObject {
             return nil
         }
         
+        guard let code =  errorDict["code"] as? Int else{
+            return nil
+        }
+        
+        if code == 1 || message == "ok"{
+            return nil
+        }
         return message
     }
 }

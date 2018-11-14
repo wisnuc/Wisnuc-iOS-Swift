@@ -121,9 +121,9 @@ class NetworkService: NSObject {
     }
     
     func getLocalInCloudLogin(_ closure:@escaping (( _ error:Error?,_ token:String?)->())){
-        if  !AppUserService.isUserLogin {
-            return closure(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NotLogin)), nil)
-        }
+//        if  !AppUserService.isUserLogin {
+//            return closure(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NotLogin)), nil)
+//        }
         
         if isNilString( AppUserService.currentUser?.cloudToken){
             return closure(LoginError(code: ErrorCode.Login.NoToken, kind: LoginError.ErrorKind.LoginNoToken, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NoToken)), nil)

@@ -76,6 +76,7 @@ class IdentifyingFromDeviceViewController: BaseViewController {
         activityIndicator.stopAnimating()
         self.presentingViewController?.dismiss(animated: false, completion: {
             defaultNotificationCenter().post(name: NSNotification.Name.Config.ConfigFinishDismissKey, object: nil)
+
         })
     }
     

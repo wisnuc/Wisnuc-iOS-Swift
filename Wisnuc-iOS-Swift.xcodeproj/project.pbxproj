@@ -916,6 +916,7 @@
 		1FFC816D2195613E00371C8D /* files_excel_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC816C2195613D00371C8D /* files_excel_normal@2x.png */; };
 		1FFC816F2195614A00371C8D /* files_excel_normal@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC816E2195614900371C8D /* files_excel_normal@3x.png */; };
 		1FFC81762199628000371C8D /* ErrorTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC81752199628000371C8D /* ErrorTools.swift */; };
+		1FFC8198219BF4B400371C8D /* BindStationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC8197219BF4B200371C8D /* BindStationAPI.swift */; };
 		1FFD12AD20E3412E0053A3F7 /* FilesMoveToRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12AC20E3412E0053A3F7 /* FilesMoveToRootViewController.swift */; };
 		1FFD12B020E3662D0053A3F7 /* MDCFreshHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12AF20E3662D0053A3F7 /* MDCFreshHeader.swift */; };
 		1FFD12B220E3979F0053A3F7 /* TasksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */; };
@@ -2562,6 +2563,7 @@
 		1FFC816C2195613D00371C8D /* files_excel_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_excel_normal@2x.png"; sourceTree = "<group>"; };
 		1FFC816E2195614900371C8D /* files_excel_normal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_excel_normal@3x.png"; sourceTree = "<group>"; };
 		1FFC81752199628000371C8D /* ErrorTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTools.swift; sourceTree = "<group>"; };
+		1FFC8197219BF4B200371C8D /* BindStationAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindStationAPI.swift; sourceTree = "<group>"; };
 		1FFD12AC20E3412E0053A3F7 /* FilesMoveToRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesMoveToRootViewController.swift; sourceTree = "<group>"; };
 		1FFD12AF20E3662D0053A3F7 /* MDCFreshHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDCFreshHeader.swift; sourceTree = "<group>"; };
 		1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksAPI.swift; sourceTree = "<group>"; };
@@ -2977,6 +2979,7 @@
 				1FD1F2E52152231F00C3E429 /* SighInWechatTokenAPI.swift */,
 				1FD1F2E72152472B00C3E429 /* SighInWechatUser.swift */,
 				1F38E294217F01FB003FCAEE /* GetStationsAPI.swift */,
+				1FFC8197219BF4B200371C8D /* BindStationAPI.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -6986,6 +6989,7 @@
 				1FE674DC20D21B11006F97DB /* TRCommon.swift in Sources */,
 				1FBB7089213FC5630090FA57 /* FSOpenSSL.m in Sources */,
 				1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */,
+				1FFC8198219BF4B400371C8D /* BindStationAPI.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1F362F8221351782000B3384 /* LoginNextStepViewController.swift in Sources */,
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,

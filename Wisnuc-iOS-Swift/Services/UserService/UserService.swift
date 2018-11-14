@@ -13,6 +13,7 @@ class UserService: NSObject,ServiceProtocol{
     var defaultToken:String?
     var currentUser:User?
     var isUserLogin:Bool = false
+    var isStationSelected:Bool = false
     var isLocalLogin:Bool?{
         didSet{
             if isLocalLogin == true {
@@ -68,6 +69,7 @@ class UserService: NSObject,ServiceProtocol{
     
     func logoutUser(){
         isUserLogin = false
+        isStationSelected = false
         currentUser = nil
         isLocalLogin = nil
         userDefaults.removeObject(forKey: kCurrentUserUUID)
