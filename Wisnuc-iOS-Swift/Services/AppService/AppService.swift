@@ -153,7 +153,9 @@ class AppService: NSObject,ServiceProtocol{
             orginTokenUser.lanIP = lanIP
         }
         self.userService.setCurrentUser(orginTokenUser)
+        self.updateCurrentUserInfo()
         self.userService.synchronizedCurrentUser()
+        
         if orginTokenUser.localAddr != nil{
             networkService.checkIP(address: orginTokenUser.lanIP!) { [weak self] (success) in
                 if success{
@@ -280,15 +282,11 @@ class AppService: NSObject,ServiceProtocol{
             if  response.error == nil{
                 do {
                     let userModel = try JSONDecoder().decode(UserModel.self, from: response.data!)
-                    if userModel.uuid == AppUserService.currentUser?.uuid{
-                        AppUserService.currentUser?.isAdmin = userModel.isAdmin != nil ? NSNumber.init(value: userModel.isAdmin!) : nil
-                        AppUserService.currentUser?.isFirstUser = userModel.isFirstUser != nil ? NSNumber.init(value: userModel.isFirstUser!) : nil 
-                        if (userModel.global) != nil {
-                            AppUserService.currentUser?.guid = userModel.global?.id;
-//                            AppUserService.currentUser?.isBindWechat = YES;
-                        }else{
-//                            AppUserService.currentUser?.isBindWechat = NO;
-                        }
+                    if userModel.id == AppUserService.currentUser?.uuid{
+                        AppUserService.currentUser?.userName = userModel.username
+                        AppUserService.currentUser?.avaterURL = userModel.avatarUrl
+                        AppUserService.currentUser?.nickName = userModel.nickName
+                        AppUserService.currentUser?.userName = userModel.username
                         AppUserService.synchronizedCurrentUser()
                     }
                 } catch {

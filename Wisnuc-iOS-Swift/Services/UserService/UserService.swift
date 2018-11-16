@@ -33,15 +33,23 @@ class UserService: NSObject,ServiceProtocol{
         if userDefaults.object(forKey: kCurrentUserUUID) != nil || !isNilString(userDefaults.object(forKey: kCurrentUserUUID) as? String)  {
             let uuid = userDefaults.object(forKey: kCurrentUserUUID) as! String
             self.currentUser = user(uuid: uuid)
-            if self.currentUser == nil || ((self.currentUser?.isLocalLogin) == nil){
+            if self.currentUser == nil || self.currentUser?.isLocalLogin == nil || currentUser?.isSelectStation == nil{
                 self.isUserLogin = false
+             
 //                userDefaults.removeObject(forKey: kCurrentUserUUID)
 //                userDefaults.synchronize()
                 return
             }
+            
+            if !(currentUser?.isSelectStation?.boolValue)! {
+                self.isStationSelected = false
+                return
+            }
+            
             self.isUserLogin = true
         }else{
             self.currentUser = nil
+            self.isStationSelected = false
             self.isUserLogin = false
             self.defaultToken = nil
         }
@@ -59,6 +67,7 @@ class UserService: NSObject,ServiceProtocol{
         if(currentUser == nil || currentUser?.uuid == nil || isNilString((currentUser?.uuid)!)) {
             return logoutUser()
         }
+       
         defaultToken = currentUser?.localToken
         self.currentUser = currentUser;
         userDefaults.set(currentUser?.uuid, forKey: kCurrentUserUUID)
@@ -70,6 +79,8 @@ class UserService: NSObject,ServiceProtocol{
     func logoutUser(){
         isUserLogin = false
         isStationSelected = false
+        currentUser?.isSelectStation = NSNumber.init(value: isStationSelected)
+        synchronizedCurrentUser()
         currentUser = nil
         isLocalLogin = nil
         userDefaults.removeObject(forKey: kCurrentUserUUID)

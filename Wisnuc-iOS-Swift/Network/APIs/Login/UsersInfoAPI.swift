@@ -9,64 +9,37 @@
 import UIKit
 
 class UsersInfoAPI: BaseRequest {
-    var method:String?
-    var disabled:Bool?
-    var isAdmin:Bool?
-    var uuid:String?
-    
-    init(method:String,disabled:Bool,uuid:String?) {
-        self.method = method
-        self.disabled = disabled
-        self.uuid = uuid
-    }
-    
-    init(method:String,isAdmin:Bool,uuid:String?) {
-        self.method = method
-        self.isAdmin = isAdmin
-        self.uuid = uuid
-    }
-    
+   
     override init() {
-        
+      super.init()
     }
     
     override func requestURL() -> String {
-        var resource = ""
-        if !isNilString(uuid) {
-            resource  = "users/\(String(describing: uuid!)))"
-        }else{
-            resource = "users/\(String(describing: (AppUserService.currentUser?.uuid!)!))"
-        }
-        
         switch AppNetworkService.networkState {
         case .normal?:
-            return "\(kCloudCommonJsonUrl)?resource=\(resource)&method=\(RequestMethodValue.GET)"
+            return "/user"
         case .local?:
-            return "/\(resource)"
+            return "/user"
         default:
             return ""
         }
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-        if method != nil{
-            return RequestHTTPMethod(rawValue: method!)!
-        }else{
-            return RequestHTTPMethod.get
-        }
+        return RequestHTTPMethod.get
     }
     
-    override func requestParameters() -> RequestParameters? {
-        var requestParameters:RequestParameters?
-        if disabled != nil {
-            requestParameters = ["disabled":disabled!]
-        }
-        
-        if isAdmin != nil {
-            requestParameters = ["isAdmin":isAdmin!]
-        }
-        return requestParameters
-    }
+//    override func requestParameters() -> RequestParameters? {
+//        var requestParameters:RequestParameters?
+//        if disabled != nil {
+//            requestParameters = ["disabled":disabled!]
+//        }
+//
+//        if isAdmin != nil {
+//            requestParameters = ["isAdmin":isAdmin!]
+//        }
+//        return requestParameters
+//    }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {

@@ -243,36 +243,28 @@
             if responseData.error == nil{
                 do {
                     let wechatSighInModel = try JSONDecoder().decode(WechatSighInModel.self, from: responseData.data!)
-                    print(String(data: responseData.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
+//                    print(String(data: responseData.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
                     if let user = wechatSighInModel.data?.user{
                         if !user{
                               ActivityIndicator.stopActivityIndicatorAnimation()
-//                            if (wechatSighInModel.data?.token != nil) && !isNilString(wechatSighInModel.data?.token) {
-//                                ActivityIndicator.stopActivityIndicatorAnimation()
-//                                self?.next(requestToken: wechatSighInModel.data?.token)
-//                            }
+                              if let wechatToken = wechatSighInModel.data?.wechat{
+                                    ActivityIndicator.stopActivityIndicatorAnimation()
+                                    self?.next(.bindPhoneWechat,requestToken: wechatToken)
+                              }
                         }else{
-                            self?.getStations(token: wechatSighInModel.data?.token, closure: { (error, stationsArray) in
-                                if error == nil{
-                                    if let message = ErrorTools.responseErrorData(responseData.data){
-                                        Message.message(text: message)
-                                        return
-                                    }
-                                    if let stationsArray =  stationsArray{
-                                        if stationsArray.count == 0{
-                                            Message.message(text: "无绑定设备")
-                                        }else{
-                                            self?.stationArray = stationsArray
-//                                            self?.cloudLoginArray?.sort(by: {$0.isOnline! && !$1.isOnline!})
-//
-//                                            self?.stationView.stationArray = self?.cloudLoginArray
+                            do {
+                                let model = try JSONDecoder().decode(SighInTokenModel.self, from: responseData.data!)
+                                    if let token = model.data?.token {
+                                        guard let userId = model.data?.id else{
+                                            return
                                         }
+                                        self?.synchronizedUser(model)
+                                        LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!)
                                     }
-//
-                                }else{
-                                    Message.message(text: error?.localizedDescription ?? "请求错误")
-                                }
-                            })
+                            } catch {
+                                // 异常处理
+                                Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
+                            }
                         }
                     }
                     
@@ -287,34 +279,23 @@
         }
     }
     
-    func getStations(token:String?,closure: @escaping (Error?,[StationsInfoModel]?) -> Void){
-//        if token == nil{
-//            return
-//        }
-        let requset = GetStationsAPI.init(token: token ?? "")
-        requset.startRequestJSONCompletionHandler({ (response) in
-            ActivityIndicator.stopActivityIndicatorAnimation()
-            if response.error == nil{
-                if response.result.value != nil {
-                    let rootDic = response.result.value as! NSDictionary
-                    //                    print(rootDic)
-                    let code = rootDic["code"] as! NSNumber
-                    let message = rootDic["message"] as! NSString
-                    if code.intValue != 1 && code.intValue > 200 {
-                        return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil)
-                    }
-                    if let dataDic = rootDic["data"] as? NSDictionary{
-
-                        if let ownStations = dataDic["ownStations"] as? [StationsInfoModel]{
-                            return closure(nil,ownStations)
-                        }
-                    }
-                }
-            }else{
-                 return closure(response.error,nil)
-            }
-        })
-
+    func synchronizedUser(_ model:SighInTokenModel){
+        let user = AppUserService.createUser(uuid: (model.data?.id)!)
+        user.cloudToken = model.data?.token!
+        if let avatarUrl = model.data?.avatarUrl{
+            user.avaterURL = avatarUrl
+        }
+        
+        if let nickName = model.data?.nickName{
+            user.nickName = nickName
+        }
+        
+        if let username = model.data?.username{
+            user.userName = username
+        }
+        
+        AppUserService.setCurrentUser(user)
+        AppUserService.synchronizedCurrentUser()
     }
 //
     func weChatCallBackRespCode(code:String){
@@ -545,11 +526,12 @@
     }
 
     @objc func creatNewAccoutButton(_ sender:MDBaseButton?){
-       next()
+       next(.bindPhoneNumber)
     }
     
-    func next(requestToken:String? = nil){
-        let creatNewAccoutVC = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "绑定手机号"), detailTitleString: LocalizedString(forKey: "手机号码是您忘记密码时，找回面的唯一途径 请慎重填写"), state: .bindPhoneNumber,requestToken:requestToken)
+    func next(_ state:LoginNextStepViewControllerState,requestToken:String? = nil){
+        let smsCodeType:SmsCodeType = .register
+        let creatNewAccoutVC = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "绑定手机号"), detailTitleString: LocalizedString(forKey: "手机号码是您忘记密码时，找回面的唯一途径 请慎重填写"), state: state,requestToken:requestToken,smsCodeType:smsCodeType)
         let navigationController = UINavigationController.init(rootViewController: creatNewAccoutVC)
         navigationController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         self.present(navigationController, animated: true, completion: nil)
@@ -581,15 +563,6 @@
         }else{
             Message.message(text: "请先安装微信")
         }
-        
-        //       ActivityIndicator.startActivityIndicatorAnimation()
-        //        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 4.0) {
-        //            print("after!")
-        //            ActivityIndicator.stopActivityIndicatorAnimation()
-        //            DispatchQueue.main.async {
-        //                self.logintype = .token
-        //            }
-        //        }
     }
     
     func actionForStationType() {
@@ -632,7 +605,6 @@
             self.cloudLoginArray?.removeAll()
         }
     }
-    
     
     func actionForTokenLoginType() {
         if cloudLoginArray != nil{
@@ -907,3 +879,41 @@
     }
  }
  
+ extension LoginRootViewController:LoginSelectionDeviceViewControllerDelegte{
+    func loginFinish(userId: String, stationModel: Any) {
+        ActivityIndicator.startActivityIndicatorAnimation()
+        if let user = AppUserService.user(uuid: userId){
+            let model = stationModel as! StationsInfoModel
+            AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
+                if error == nil && userData != nil{
+                    AppUserService.isUserLogin = true
+                    AppUserService.isStationSelected = true
+                    AppUserService.setCurrentUser(userData)
+                    AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
+                    AppUserService.synchronizedCurrentUser()
+                    appDelegate.initRootVC()
+                }else{
+                    if error != nil{
+                        switch error {
+                        case is LoginError:
+                            let loginError = error as! LoginError
+                            Message.message(text: loginError.localizedDescription, duration: 2.0)
+                        case is BaseError:
+                            let baseError = error as! BaseError
+                            Message.message(text: baseError.localizedDescription, duration: 2.0)
+                        default:
+                            Message.message(text: (error?.localizedDescription)!, duration: 2.0)
+                        }
+                        AppUserService.logoutUser()
+                        ActivityIndicator.stopActivityIndicatorAnimation()
+                    }
+                }
+            }
+            //
+        }else{
+            AppUserService.logoutUser()
+            Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
+            ActivityIndicator.stopActivityIndicatorAnimation()
+        }
+    }
+ }

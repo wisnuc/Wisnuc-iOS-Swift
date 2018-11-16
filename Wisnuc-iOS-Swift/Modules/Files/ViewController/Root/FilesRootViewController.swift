@@ -285,11 +285,13 @@ class FilesRootViewController: BaseViewController{
                     var filesArray = Array<EntriesModel>.init()
                     var directoryArray = Array<EntriesModel>.init()
                     var finishArray = Array<Any>.init()
-                    for (_,value) in (model.entries?.enumerated())!{
-                        if value.type == FilesType.directory.rawValue{
-                            filesArray.append(value)
-                        }else if value.type == FilesType.file.rawValue{
-                            directoryArray.append(value)
+                    if let entries = model.entries{
+                        for (_,value) in entries.enumerated(){
+                            if value.type == FilesType.directory.rawValue{
+                                filesArray.append(value)
+                            }else if value.type == FilesType.file.rawValue{
+                                directoryArray.append(value)
+                            }
                         }
                     }
                     if filesArray.count != 0{

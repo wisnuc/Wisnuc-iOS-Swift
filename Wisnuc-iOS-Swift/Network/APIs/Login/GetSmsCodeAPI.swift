@@ -7,13 +7,23 @@
 //
 
 import UIKit
+import Alamofire
+
+enum SmsCodeType:String{
+    case register
+    case password
+    case login
+    case replace
+}
 
 class GetSmsCodeAPI: BaseRequest {
     var phoneNumber:String?
     var wechatToken:String?
-    init(phoneNumber:String,wechatToken:String? = nil) {
+    var type:SmsCodeType?
+    init(phoneNumber:String,type:SmsCodeType,wechatToken:String? = nil) {
         self.phoneNumber = phoneNumber
         self.wechatToken = wechatToken
+        self.type = type
     }
     
     override init() {
@@ -37,11 +47,15 @@ class GetSmsCodeAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-        return RequestHTTPMethod.get
+        return RequestHTTPMethod.post
+    }
+    
+    override func requestEncoding() -> RequestParameterEncoding {
+        return JSONEncoding.default
     }
     
     override func requestParameters() -> RequestParameters? {
-        let requestParameters:RequestParameters = ["phone":self.phoneNumber!]
+        let requestParameters:RequestParameters = ["phone":self.phoneNumber!,"type":(self.type?.rawValue)!]
         return requestParameters
     }
     

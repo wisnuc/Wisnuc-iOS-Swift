@@ -78,7 +78,7 @@ class SeekNewDeviceViewController: BaseViewController {
     
     func foundStateAction(){
         titleLabel.text = LocalizedString(forKey: "发现设备")
-        deviceTableView.removeAllSubviews()
+//        deviceTableView.removeAllSubviews()
     }
     
     func  bleNotOpenAction(){
@@ -141,6 +141,9 @@ class SeekNewDeviceViewController: BaseViewController {
 }
 
 extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
@@ -165,8 +168,11 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
             cell.detailLabel.text = LocalizedString(forKey: "检测不到设备磁盘")
             cell.rightImageView.image =  UIImage.init(named: "config_error.png")
         case .Default?:
-            cell.detailLabel.text = LocalizedString(forKey: "无法获取该设备信息")
-            cell.rightImageView.image =  UIImage.init(named: "config_error.png")
+            cell.detailLabel.text = LocalizedString(forKey: "待配置")
+            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
+        case .NoData?:
+            cell.detailLabel.text = LocalizedString(forKey: "待配置")
+            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
         default:
             break
         }
@@ -184,12 +190,11 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
             LLBlueTooth.instance.stopScan()
 //        case .configFinish?:
 //           break
-//        case .configWithData?:
-//            let diskFormatVC = DiskFormatViewController.init(style: .whiteWithoutShadow)
-//            let navi = UINavigationController.init(rootViewController: diskFormatVC)
-//            self.present(navi, animated: true) {
-//
-//            }
+        case .NoData?:
+            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
+            configNetVC.deviceModel = model
+            self.navigationController?.pushViewController(configNetVC, animated: true)
+            LLBlueTooth.instance.stopScan()
 //        case .configErrorNoDisk?:
 //            break
         default:

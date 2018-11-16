@@ -11,9 +11,12 @@ import UIKit
 class SighInTokenAPI: BaseRequest {
     var phoneNumber:String?
     var password:String?
-    init(phoneNumber:String,password:String) {
+    var code:String?
+    init(phoneNumber:String,password:String? = nil,code:String? = nil) {
+        super.init()
         self.phoneNumber = phoneNumber
         self.password = password
+        self.code = code
     }
     
     override init() {
@@ -21,7 +24,13 @@ class SighInTokenAPI: BaseRequest {
     }
     
     override func requestURL() -> String {
-        return "/user/token"
+        if self.password != nil{
+           return "/user/password/token"
+        }
+        if self.code != nil{
+            return "/user/smsCode/token"
+        }
+        return "/user/password/token"
     }
     
     override func baseURL() -> String {
@@ -34,7 +43,15 @@ class SighInTokenAPI: BaseRequest {
     
     override func requestParameters() -> RequestParameters? {
         print(getUniqueDevice() as Any)
-        let requestParameters:RequestParameters = ["username":self.phoneNumber!,"password":self.password!,"clientId":getUniqueDevice() ?? "","type":"iOS"]
+        var requestParameters:RequestParameters? = nil
+        if let password = self.password{
+           requestParameters = ["username":self.phoneNumber!,"password":password,"clientId":getUniqueDevice() ?? "","type":"iOS"]
+        }
+        if let code = self.code{
+            requestParameters = ["phone":self.phoneNumber!,"code":code,"clientId":getUniqueDevice() ?? "","type":"iOS"]
+        }
+       
         return requestParameters
     }
 }
+

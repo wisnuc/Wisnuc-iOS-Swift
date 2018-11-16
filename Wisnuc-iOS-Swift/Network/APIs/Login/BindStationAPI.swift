@@ -27,6 +27,6 @@ class BindStationAPI: BaseRequest {
     
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
-        return [kRequestAuthorizationKey:AppTokenManager.token ?? ""]
+        return [kRequestAuthorizationKey:AppTokenManager.token ?? AppUserService.currentUser?.cloudToken ?? ""]
     }
 }

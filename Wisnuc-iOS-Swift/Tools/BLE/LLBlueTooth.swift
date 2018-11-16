@@ -85,7 +85,7 @@ class LLBlueTooth:NSObject {
     
     var deviceDatas: [DeviceBLEModel]?{
         didSet{
-            
+          
         }
     }
     

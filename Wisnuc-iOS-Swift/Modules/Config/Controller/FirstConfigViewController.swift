@@ -24,14 +24,18 @@ class FirstConfigViewController: BaseViewController {
         return .default
     }
     
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.appBar.navigationBar.tintColor = COR1
 //        self.appBar.headerViewController.headerView.tintColor = COR1
         setNeedsStatusBarAppearanceUpdate()
     }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.view.frame = CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight)
+    }
+    
 
     func setNavigationBar(){
         self.navigationItem.leftBarButtonItem  = UIBarButtonItem.init(title: LocalizedString(forKey: "退出"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_ :)))

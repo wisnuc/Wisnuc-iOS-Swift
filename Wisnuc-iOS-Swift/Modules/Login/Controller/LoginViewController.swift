@@ -210,7 +210,7 @@ class LoginViewController: BaseViewController {
     }
     
     @objc func forgetPwdTap(_ sender:UIBarButtonItem){
-        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "忘记密码"), detailTitleString:LocalizedString(forKey: "请输入您的手机号码来查找账号"), state: .forgetPwd)
+        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "忘记密码"), detailTitleString:LocalizedString(forKey: "请输入您的手机号码来查找账号"), state: .forgetPwd,smsCodeType:.password)
         nextViewController.modalTransitionStyle = .crossDissolve
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
@@ -266,7 +266,7 @@ class LoginViewController: BaseViewController {
                                 return
                             }
                             let user = AppUserService.createUser(uuid: userId)
-                            user.cloudToken = model.data?.token!
+                           
                             if let avatarUrl = model.data?.avatarUrl{
                                 user.avaterURL = avatarUrl
                             }
@@ -278,14 +278,16 @@ class LoginViewController: BaseViewController {
                             if let username = model.data?.username{
                                 user.userName = username
                             }
-
+                            user.cloudToken = model.data?.token!
                             AppUserService.setCurrentUser(user)
                             AppUserService.synchronizedCurrentUser()
 //                            Message.message(text: "登录成功")
-                            self?.stationAction(token: token,userId:user.uuid!)
+                            LoginCommonHelper.instance.stationAction(token: token,userId:user.uuid!, viewController: self!)
                         }
                     }else{
-                        //error
+                        if let errorString = ErrorTools.responseErrorData(response.data){
+                            Message.message(text: errorString)
+                        }
                         print(response.error as Any)
                     }
                     
@@ -309,108 +311,7 @@ class LoginViewController: BaseViewController {
                 }
                ActivityIndicator.stopActivityIndicatorAnimation()
             }
-           
         }
-    }
-    
-    func stationAction(token:String,userId:String) {
-        self.getStations(token: token, closure: { [weak self](error, models) in
-            if error == nil{
-                if let models = models{
-                    if models.count > 0{
-                        let deviceViewController = LoginSelectionDeviceViewController.init(style: .whiteWithoutShadow,devices:models,userId:userId)
-                        deviceViewController.delegate = self
-                        let navigationController =  UINavigationController.init(rootViewController: deviceViewController)
-                        //                let tab = retrieveTabbarController()
-                        //                tab?.setTabBarHidden(true, animated: true)
-                        self?.present(navigationController, animated: true) {
-                            
-                        }
-                    }else{
-                        let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
-                        cofigVC.modalTransitionStyle = .coverVertical
-                        self?.navigationController?.pushViewController(cofigVC, animated: true)
-                    }
-                }
-                 print(models as Any)
-            }else{
-                switch error{
-                case is LoginError :
-                    let loginError = error as! LoginError
-                    if loginError.kind == LoginError.ErrorKind.LoginNoBindDevice || loginError.kind == LoginError.ErrorKind.LoginNoOnlineDevice || loginError.kind == LoginError.ErrorKind.LoginRequestError {
-                        Message.message(text: LocalizedString(forKey: loginError.localizedDescription), duration:2.0)
-                    }else  {
-                        Message.message(text: LocalizedString(forKey:"\(String(describing: loginError.localizedDescription))"),duration:2.0)
-                    }
-                case is BaseError :
-                    let baseError = error as! BaseError
-                    Message.message(text: LocalizedString(forKey:"\(String(describing: baseError.localizedDescription))"),duration:2.0)
-                default:
-                    Message.message(text: LocalizedString(forKey:"\(String(describing: (error?.localizedDescription)!))"),duration:2.0)
-                }
-                ActivityIndicator.startActivityIndicatorAnimation()
-                print(error as Any)
-            }
-        })
-    }
-    
-    func getStations(token:String?,closure: @escaping (Error?,[StationsInfoModel]?) -> Void){
-        let requset = GetStationsAPI.init(token: token ?? "")
-        requset.startRequestJSONCompletionHandler({ (response) in
-            ActivityIndicator.stopActivityIndicatorAnimation()
-            if response.error == nil{
-                if response.result.value != nil {
-                    let rootDic = response.result.value as! NSDictionary
-                    //                    print(rootDic)
-                    let code = rootDic["code"] as! NSNumber
-                    let message = rootDic["message"] as! NSString
-                    if code.intValue != 1 && code.intValue > 200 {
-                        return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil)
-                    }
-                    if let dataDic = rootDic["data"] as? NSDictionary{
-                        var resultArray:[StationsInfoModel] = Array.init()
-                        if let ownStations =  dataDic["ownStations"] as? [NSDictionary]{
-                            var ownStationArray:[StationsInfoModel] = Array.init()
-                            for value in ownStations{
-                                do {
-                                    if let data =  jsonToData(jsonDic: value){
-                                        var model = try JSONDecoder().decode(StationsInfoModel.self, from:  data)
-                                        model.isShareStation = false
-                                        ownStationArray.append(model)
-                                    }
-                                }catch{
-                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
-                                }
-                            }
-                           resultArray.append(contentsOf: ownStationArray)
-                        }
-                        if let sharedStations =  dataDic["sharedStations"] as? [NSDictionary]{
-                            var sharedStationArray:[StationsInfoModel] = Array.init()
-                            for value in sharedStations{
-                                do {
-                                    if let data =  jsonToData(jsonDic: value){
-                                        var model = try JSONDecoder().decode(StationsInfoModel.self, from:  data)
-                                        model.isShareStation = true
-                                        sharedStationArray.append(model)
-                                    }
-                                }catch{
-                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
-                                }
-                            }
-                            resultArray.append(contentsOf:sharedStationArray)
-                        }
-                
-                         return closure(nil,resultArray)
-//                        if let ownStations =  as? [StationsInfoModel]{
-//                            return closure(nil,ownStations)
-//                        }
-                    }
-                }
-            }else{
-                return closure(response.error,nil)
-            }
-        })
-        
     }
     
     lazy var titleLabel: UILabel = {
@@ -547,6 +448,12 @@ extension LoginViewController:UITextFieldDelegate{
                 textField.rightView = nil
             }
         }else{
+            if checkIsPhoneNumber(number: self.phoneNumberTextFiled.text) {
+                textField.rightView = self.rightView(type: RightViewType.right)
+                phoneNumberIsRight = true
+            }else{
+                textField.rightView = nil
+            }
             if fullString.count >= passwordLimitCount && phoneNumberIsRight {
                 self.nextButtonEnableStyle()
             }else{
@@ -575,6 +482,7 @@ extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
                     AppUserService.isUserLogin = true
                     AppUserService.isStationSelected = true
                     AppUserService.setCurrentUser(userData)
+                    AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
                     AppUserService.synchronizedCurrentUser()
                     appDelegate.initRootVC()
                 }else{

@@ -10,14 +10,10 @@ import UIKit
 import Alamofire
 
 class SighInWechatUser: BaseRequest {
-    var phoneNumber:String?
-    var password:String?
-    var code:String?
+    var loginToken:String?
     var wechatToken:String?
-    init(phoneNumber:String,code:String,wechatToken:String,password:String? = nil) {
-        self.code = code
-        self.phoneNumber = phoneNumber
-        self.password = password
+    init(wechatToken:String,loginToken:String) {
+        self.loginToken = loginToken
         self.wechatToken = wechatToken
     }
     
@@ -42,14 +38,17 @@ class SighInWechatUser: BaseRequest {
     }
     
     override func requestParameters() -> RequestParameters? {
-        var requestParameters:RequestParameters = ["phone":self.phoneNumber!,"code":self.code!]
-        if password != nil{
-            requestParameters = ["phone":self.phoneNumber!,"code":self.code!,"password":self.password!]
+        guard let wechatToken = self.wechatToken else {
+            return nil
         }
+        let  requestParameters:RequestParameters = [kRequestWechatKey:wechatToken]
         return requestParameters
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
-        return [kRequestWechatKey:wechatToken!]
+        guard let loginToken = self.loginToken else {
+            return nil
+        }
+        return [kRequestAuthorizationKey:loginToken]
     }
 }

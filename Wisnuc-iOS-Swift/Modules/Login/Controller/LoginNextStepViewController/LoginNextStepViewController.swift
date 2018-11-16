@@ -14,8 +14,12 @@ enum LoginNextStepViewControllerState{
     case verifyCode
     case resetPwd
     case bindPhoneNumber
+    case bindPhoneWechat
     case creatPwd
-    case signUpverifyCode
+    case bindPhoneWechatCreatPwd
+    case signUpVerifyCode
+    case wechatSignUpVerifyCode
+    case wechatLoginVerifyCode
     case creatAccountFinish
 }
 
@@ -30,8 +34,9 @@ class LoginNextStepViewController: BaseViewController {
     private var verifyCode:String?
     private var requestToken:String?
     private var userExist:Bool?
+    private var smsCodeType:SmsCodeType?
     let phoneNumberLimitCount = 11
-    let verifyCodeLimitCount = 6
+    let verifyCodeLimitCount = 4
     let passwordLimitCount = 8
     var alertView:TipsAlertView?
     var textFieldController:MDCTextInputControllerUnderline?
@@ -40,16 +45,12 @@ class LoginNextStepViewController: BaseViewController {
             switch self.state {
             case .forgetPwd?:
                 phoneNumberStyle()
-            case .verifyCode?:
+            case .verifyCode?,.signUpVerifyCode?,.wechatSignUpVerifyCode?,.wechatLoginVerifyCode?:
                 verifyCodeStyle()
-            case .resetPwd?:
+            case .resetPwd?,.creatPwd?,.bindPhoneWechatCreatPwd?:
                 resetPwdStyle()
-            case .bindPhoneNumber?:
+            case .bindPhoneNumber?,.bindPhoneWechat?:
                 bindPhoneNumberStyle()
-            case .creatPwd?:
-                resetPwdStyle()
-            case .signUpverifyCode?:
-                verifyCodeStyle()
             case .creatAccountFinish?:
                 creatAccountFinishStyle()
             default:
@@ -62,7 +63,7 @@ class LoginNextStepViewController: BaseViewController {
         NotificationCenter.default.removeObserver(self)
     }
   
-    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState,phoneNumber:String? = nil,password:String? = nil,verifyCode:String? = nil,requestToken:String? = nil,userExist:Bool? = nil) {
+    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState,phoneNumber:String? = nil,password:String? = nil,verifyCode:String? = nil,requestToken:String? = nil,userExist:Bool? = nil,smsCodeType:SmsCodeType? = nil) {
         super.init()
         titleLabel.text = titleString
         detailTitleLabel.text = detailTitleString
@@ -72,6 +73,7 @@ class LoginNextStepViewController: BaseViewController {
         self.verifyCode = verifyCode
         self.requestToken = requestToken
         self.userExist = userExist
+        self.smsCodeType = smsCodeType
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -139,7 +141,7 @@ class LoginNextStepViewController: BaseViewController {
     
     func verifyCodeStyle(){
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "帮助"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(helpTap(_ :)))
-        self.textFiledTitleLabel.text = LocalizedString(forKey: "6位验证码")
+        self.textFiledTitleLabel.text = LocalizedString(forKey: "验证码")
         self.inputTextField.leftView = nil
         
     }
@@ -188,7 +190,7 @@ class LoginNextStepViewController: BaseViewController {
     }
     
     func setRightView(){
-        if state == .resetPwd ||  state == .creatPwd {
+        if state == .resetPwd ||  state == .creatPwd || state == .bindPhoneWechatCreatPwd{
           self.inputTextField.rightView = self.rightView(type: RightViewType.password)
         }
     }
@@ -272,20 +274,19 @@ class LoginNextStepViewController: BaseViewController {
         switch self.state {
         case .forgetPwd?:
             verifyCodePush()
-        case .verifyCode?:
+        case .verifyCode?,.signUpVerifyCode?,.wechatSignUpVerifyCode?:
             resetOrCreatPwdPush()
+        case .wechatLoginVerifyCode?:
+            smsCodeLogin()
         case .resetPwd?:
             resetPwdFinish()
-        case .bindPhoneNumber?:
+        case .bindPhoneNumber?,.bindPhoneWechat?:
             verifyCodePush()
-        case .signUpverifyCode?:
-            resetOrCreatPwdPush()
-        case .creatPwd?:
+        case .creatPwd?,.bindPhoneWechatCreatPwd?:
             creatAccountFinish()
         case .creatAccountFinish?:
-          firstConfigAction()
-//                defaultNotificationCenter().post(name: NSNotification.Name.Login.CreatAccountFinishDismissKey, object: nil)
-            
+            firstConfigAction()
+//        defaultNotificationCenter().post(name: NSNotification.Name.Login.CreatAccountFinishDismissKey, object: nil)
         default:
             break
         }
@@ -301,7 +302,11 @@ class LoginNextStepViewController: BaseViewController {
         
         alertController.addAction(changePhoneNumberAction)
         let verifyCodeAction = UIAlertAction (title: LocalizedString(forKey: "再次发送验证码"), style: UIAlertActionStyle.default, handler: { (alertAction) in
-             self.sendCodeAction { (userExist) in
+            guard let smsCodeType = self.smsCodeType else{
+                Message.message(text: "无法发送验证码")
+                return
+            }
+            self.sendCodeAction(type:smsCodeType) { (userExist) in
                 Message.message(text: "验证码已重新发送，请注意查收")
             }
         })
@@ -340,18 +345,42 @@ class LoginNextStepViewController: BaseViewController {
             self.alertError(errorText: LocalizedString(forKey:"请输入正确的手机号"))
             return
         }
+        
+        guard let smsCodeType = self.smsCodeType else{
+            Message.message(text: "无法发送验证码")
+            return
+        }
        
-        self.sendCodeAction { [weak self] (userExist) in
-            let state = self?.state == .bindPhoneNumber ? LoginNextStepViewControllerState.signUpverifyCode : LoginNextStepViewControllerState.verifyCode
-            let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "请输入6位验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: self?.inputTextField.text ?? "手机号")) 发送了一个验证码 请在下面输入"), state: state,phoneNumber:(self?.inputTextField.text)!,requestToken:self?.requestToken,userExist:userExist)
+        self.sendCodeAction(type: smsCodeType) { [weak self] (userExist) in
+            var state = LoginNextStepViewControllerState.verifyCode
+            switch self?.state {
+            case .bindPhoneNumber?:
+               state = LoginNextStepViewControllerState.signUpVerifyCode
+            case .bindPhoneWechat?:
+               state = LoginNextStepViewControllerState.wechatSignUpVerifyCode
+            default:
+                break
+            }
+        
+            let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "请输入验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: self?.inputTextField.text ?? "手机号")) 发送了一个验证码 请在下面输入"), state: state,phoneNumber:(self?.inputTextField.text)!,requestToken:self?.requestToken,userExist:userExist,smsCodeType:self?.smsCodeType)
             nextViewController.modalTransitionStyle = .crossDissolve
             self?.navigationController?.pushViewController(nextViewController, animated: true)
         }
     }
     
-    func sendCodeAction(callback:@escaping ((_ userExist:Bool?)->())){
+    func sendCodeAction(type:SmsCodeType,callback:@escaping ((_ userExist:Bool?)->())){
         ActivityIndicator.startActivityIndicatorAnimation()
-        GetSmsCodeAPI.init(phoneNumber: self.inputTextField.text!,wechatToken:self.requestToken).startRequestJSONCompletionHandler { (response) in
+        var phone = self.inputTextField.text
+        if !checkIsPhoneNumber(number: self.inputTextField.text){
+            if let phoneNumer = self.phoneNumber{
+                phone = phoneNumer
+            }
+        }
+        guard let phoneNumer = phone else {
+            Message.message(text: "手机号不正确")
+            return
+        }
+        GetSmsCodeAPI.init(phoneNumber: phoneNumer,type:type,wechatToken:self.requestToken).startRequestJSONCompletionHandler { [weak self] (response) in
 //            print(String(data: response.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
             if  response.error == nil{
                 let responseDic = response.value as! NSDictionary
@@ -370,7 +399,6 @@ class LoginNextStepViewController: BaseViewController {
                         Message.message(text:"error: code:\(code!) message:\(message)")
                     }
                     ActivityIndicator.stopActivityIndicatorAnimation()
-                    //error
                 }
             }else{
                 // error
@@ -385,64 +413,128 @@ class LoginNextStepViewController: BaseViewController {
                     }
                     return
                 }
-                let code = responseDic["code"] as? Int
-                let message = responseDic["message"] as? String
-                if code == ErrorCode.Request.UserAlreadyExist{
-                    Message.message(text: LocalizedString(forKey: "该账号已注册"))
-                }else{
-                    if let message = message{
-                        Message.message(text:"error: code:\(code!) message:\(message)")
+                 if let code = responseDic["code"] as? Int{
+                   
+                    switch code {
+                    case ErrorCode.Request.UserAlreadyExist:
+                        if self?.state == .bindPhoneWechat{
+                            self?.sendLoginSmsCode()
+                        }else{
+                            Message.message(text: LocalizedString(forKey: "该账号已注册"))
+                        }
+                    case ErrorCode.Request.MobileError:
+                        Message.message(text: LocalizedString(forKey: "手机号错误"))
+                    case ErrorCode.Request.CodeLimitOut:
+                        Message.message(text: LocalizedString(forKey: "验证码发送超过限制，请稍候重试"))
+                    default:
+                        if let message = responseDic["message"] as? String{
+                            Message.message(text:"\(message)")
+                        }
                     }
-                }
-//                Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
-                print(String(data: response.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
+                 }else{
+                     Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                 }
             }
         }
     }
     
-    func resetOrCreatPwdPush(){
-        if let token = self.requestToken{
-            if userExist != nil{
-                if userExist! {
-                    self.wechatBindUserAction(wechatToken: token)
-                     return
-                }
-            }
+    func sendLoginSmsCode(){
+        let sendType:SmsCodeType = .login
+        self.sendCodeAction(type: sendType) { [weak self](userExist) in
+            let state = LoginNextStepViewControllerState.wechatLoginVerifyCode
+            let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "请输入验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: self?.inputTextField.text ?? "手机号")) 发送了一个验证码 请在下面输入"), state: state,phoneNumber:(self?.inputTextField.text)!,requestToken:self?.requestToken,smsCodeType:sendType)
+            nextViewController.modalTransitionStyle = .crossDissolve
+            self?.navigationController?.pushViewController(nextViewController, animated: true)
         }
-        let state = self.state == .signUpverifyCode ? LoginNextStepViewControllerState.creatPwd : LoginNextStepViewControllerState.resetPwd
-        let titleString = self.state == .signUpverifyCode ? LocalizedString(forKey: "创建密码") : LocalizedString(forKey: "重置密码")
+    }
+    
+    func resetOrCreatPwdPush(){
+        var state = LoginNextStepViewControllerState.resetPwd
+        var titleString = LocalizedString(forKey: "重置密码")
+        switch self.state {
+        case .signUpVerifyCode?:
+            state = LoginNextStepViewControllerState.creatPwd
+            titleString = LocalizedString(forKey: "创建密码")
+        case .wechatSignUpVerifyCode?:
+            state = LoginNextStepViewControllerState.bindPhoneWechatCreatPwd
+            titleString = LocalizedString(forKey: "创建密码")
+        default:
+            break
+        }
         let nextViewController = LoginNextStepViewController.init(titleString:titleString , detailTitleString: LocalizedString(forKey: "您的密码必须包含至少1个符号，长度至少为8个字符"), state: state,phoneNumber:self.phoneNumber!,verifyCode:self.inputTextField.text!,requestToken:self.requestToken,userExist:self.userExist)
         nextViewController.modalTransitionStyle = .crossDissolve
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
     func resetPwdFinish(){
-        self.navigationController?.popToRootViewController(animated: true)
+       
+        guard let token = self.requestToken else {
+            return
+        }
+        
+        guard let phone = self.phoneNumber else {
+            return
+        }
+        
+        guard let password = self.inputTextField.text else {
+            return
+        }
+         ActivityIndicator.startActivityIndicatorAnimation()
+        let request = ResetPasswordAPI.init(token: token, phone: phone, password: password)
+        request.startRequestJSONCompletionHandler { [weak self](response) in
+             ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error = response.error{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                }else{
+                    Message.message(text:error.localizedDescription)
+                }
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                 Message.message(text:"重置密码成功，请重新登录")
+                self?.navigationController?.popToRootViewController(animated: true)
+            }
+        }
     }
     
     func creatAccountFinish(){
-        if let token = self.requestToken{
-            if userExist != nil{
-                if !userExist! {
-                    self.wechatBindUserAction(wechatToken: token,password: self.inputTextField.text!)
-                    return
-                }
-            }
-        }
-        
-         ActivityIndicator.startActivityIndicatorAnimation()
+        ActivityIndicator.startActivityIndicatorAnimation()
         let request = SighUpAPI.init(phoneNumber: self.phoneNumber! , code:self.verifyCode!, password:self.inputTextField.text!)
-        request.startRequestJSONCompletionHandler { (response) in
+        request.startRequestDataCompletionHandler { [weak self](response) in
             if  response.error == nil{
-                let responseDic = response.value as! NSDictionary
-                let code = responseDic["code"] as? Int
-                if code == 1 {
-                    let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "账号创建成功"), detailTitleString: LocalizedString(forKey: "欢迎使用闻上云盘"), state: .creatAccountFinish)
-                    nextViewController.modalTransitionStyle = .crossDissolve
-                    self.navigationController?.pushViewController(nextViewController, animated: true)
-                }else{
-                    //error
-                }
+                    do {
+                        let model = try JSONDecoder().decode(SighInTokenModel.self, from: response.value!)
+                        if model.code == 1 {
+                            if let token = model.data?.token {
+                                if  self?.state == .bindPhoneWechatCreatPwd{
+                                    guard let wechatToken = self?.requestToken else{
+                                        Message.message(text:LocalizedString(forKey: "发生错误"))
+                                        return
+                                    }
+                                    self?.wechatBindUserAction(wechatToken: wechatToken, loginToken: token, closure: { [weak self] in
+                                        self?.pushToFinishView()
+                                    })
+                                }else{
+                                    self?.pushToFinishView()
+                                }
+                                guard (model.data?.id) != nil else{
+                                    return
+                                }
+                                self?.synchronizedUser(model)
+                            }
+                        }else{
+                            if let errorMessage = ErrorTools.responseErrorData(response.data){
+                                Message.message(text:errorMessage)
+                            }
+                        }
+                    } catch {
+                        // 异常处理
+                        Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
+                    }
+                    ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 // error
                 Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
@@ -453,44 +545,120 @@ class LoginNextStepViewController: BaseViewController {
         }
     }
     
+    func synchronizedUser( _ model:SighInTokenModel){
+        let user = AppUserService.createUser(uuid: (model.data?.id)!)
+        user.cloudToken = model.data?.token!
+        if let avatarUrl = model.data?.avatarUrl{
+            user.avaterURL = avatarUrl
+        }
+        
+        if let nickName = model.data?.nickName{
+            user.nickName = nickName
+        }
+        
+        if let username = model.data?.username{
+            user.userName = username
+        }
+        
+        AppUserService.setCurrentUser(user)
+        AppUserService.synchronizedCurrentUser()
+    }
+    
     func firstConfigAction() {
          self.navigationController?.delegate = nil
         let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
          cofigVC.modalTransitionStyle = .coverVertical
         self.navigationController?.pushViewController(cofigVC, animated: true)
-       
     }
     
-    func wechatBindUserAction(wechatToken:String,password:String? = nil){
-        ActivityIndicator.stopActivityIndicatorAnimation()
-        let request = SighInWechatUser.init(phoneNumber: self.phoneNumber!, code: self.inputTextField.text!, wechatToken: wechatToken, password: password)
-        request.startRequestJSONCompletionHandler { [weak self](response) in
-             print(String(data: response.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
+    func pushToFinishView(){
+        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "账号创建成功"), detailTitleString: LocalizedString(forKey: "欢迎使用闻上云盘"), state: .creatAccountFinish)
+        nextViewController.modalTransitionStyle = .crossDissolve
+        self.navigationController?.pushViewController(nextViewController, animated: true)
+    }
+    
+    func smsCodeLogin(){
+        guard let phoneNumber = self.phoneNumber else {
+            Message.message(text: "错误，原因：没有手机号")
+            return
+        }
+        guard let code = self.inputTextField.text else {
+            Message.message(text: "错误，原因：没有验证码")
+            return
+        }
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let request = SighInTokenAPI.init(phoneNumber: phoneNumber, code: code)
+        request.startRequestDataCompletionHandler{ [weak self](response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
             if  response.error == nil{
-//                let responseDic = response.value as! NSDictionary
-//                let code = responseDic["code"] as? Int
-//                if code == 1 {
-                    self?.presentingViewController?.dismiss(animated: true, completion: {
-                        Message.message(text: "关联手机号成功")
-                    })
-//                }else{
-//                    //error
-//                }
-            }else{
-                let responseDic =  dataToNSDictionary(data: response.data!)
-                let code = responseDic?["code"] as? Int
-                let message = responseDic?["message"] as? String
-                if let message = message{
-                        Message.message(text:"code:\(code!) message:\(message)")
+                do {
+                    let model = try JSONDecoder().decode(SighInTokenModel.self, from: response.value!)
+                    if model.code == 1 {
+                        if let token = model.data?.token {
+                            guard let userId = model.data?.id else{
+                                return
+                            }
+                            self?.synchronizedUser(model)
+                            guard let wechatToken = self?.requestToken else{
+                                Message.message(text:LocalizedString(forKey: "发生错误"))
+                                return
+                            }
+                            self?.wechatBindUserAction(wechatToken: wechatToken, loginToken: token, closure: {
+                                LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!)
+                            })
+                        }
+                    }else{
+                        if let errorString = ErrorTools.responseErrorData(response.data){
+                            Message.message(text: errorString)
+                        }
+                    }
+
+                } catch {
+                    // 异常处理
+                    Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
                 }
-             
-//                Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
-               
+                ActivityIndicator.stopActivityIndicatorAnimation()
+            }else{
+                // error
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                        Message.message(text: backToString ?? "error")
+                    }
+                }else{
+                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                }
+                ActivityIndicator.stopActivityIndicatorAnimation()
+            }
+        }
+    }
+    
+    func wechatBindUserAction(wechatToken:String,loginToken:String,closure:@escaping ()->()){
+        ActivityIndicator.stopActivityIndicatorAnimation()
+        let request = SighInWechatUser.init(wechatToken: wechatToken, loginToken: loginToken)
+        request.startRequestJSONCompletionHandler {(response) in
+            if  response.error == nil{
+                let responseDic = response.value as! NSDictionary
+                let code = responseDic["code"] as? Int
+                if code == 1 {
+                  return closure()
+                }else{
+                    if let errorMessage = ErrorTools.responseErrorData(response.data){
+                        Message.message(text:errorMessage)
+                    }
+                }
+            }else{
+                Message.message(text:(response.error?.localizedDescription)!)
             }
             
             ActivityIndicator.stopActivityIndicatorAnimation()
         }
     }
+    
+    
     
     lazy var titleLabel: UILabel = {
         let label = UILabel.init(frame: CGRect.init(x: MarginsWidth, y: MDCAppNavigationBarHeight + 25, width: __kWidth - MarginsWidth*2 , height: 28))
@@ -566,7 +734,7 @@ extension LoginNextStepViewController:UITextFieldDelegate{
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
         print(fullString)
         switch state {
-        case .bindPhoneNumber?, .forgetPwd?:
+        case .bindPhoneNumber?,.bindPhoneWechat?,.forgetPwd?:
             if  fullString.count > phoneNumberLimitCount {
                 self.inputTextField.text = textField.text?.subString(to: phoneNumberLimitCount)
                 return false
@@ -579,7 +747,7 @@ extension LoginNextStepViewController:UITextFieldDelegate{
                 textField.rightView = nil
             }
             
-        case .verifyCode?, .signUpverifyCode?:
+        case .verifyCode?, .signUpVerifyCode?,.wechatSignUpVerifyCode?,.wechatLoginVerifyCode?:
             if  fullString.count > verifyCodeLimitCount {
                 self.inputTextField.text = textField.text?.subString(to: verifyCodeLimitCount)
                 return false
@@ -592,7 +760,7 @@ extension LoginNextStepViewController:UITextFieldDelegate{
                 textField.rightView = nil
             }
             
-        case .resetPwd?,.creatPwd?:
+        case .resetPwd?,.creatPwd?,.bindPhoneWechatCreatPwd?:
             if fullString.count >= passwordLimitCount {
                 self.nextButtonEnableStyle()
             }else{

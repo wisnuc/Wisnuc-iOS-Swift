@@ -23,6 +23,8 @@ class ConfigNetworkViewController: BaseViewController {
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
     var isNetworkNameTrue = false
     var deviceModel:DeviceBLEModel?
+    var methodStart:Date?
+    var methodFinish:Date?
     var wifiBLEDataArray:[String] = Array.init()
     var wifiBLEArray:[String] = Array.init(){
         didSet{
@@ -264,7 +266,9 @@ class ConfigNetworkViewController: BaseViewController {
                             Message.message(text:LocalizedString(forKey: "error"))
                             return
                         }
-                       self?.stationBindAction(ipString: ipString, encryptedString:encryptedString)
+                        let userInfo:[String:String] = ["encrypted":encryptedString,"ip":ipString]
+                        self?.methodStart = Date()
+                        Timer.scheduledTimer(timeInterval: 2, target: self!, selector: #selector(self?.timerFired(_:)), userInfo: userInfo, repeats: true)
                     }
                 }
             }
@@ -300,7 +304,7 @@ class ConfigNetworkViewController: BaseViewController {
             return
         }
 
-        self.getStations(token:token) { [weak self](error, models) in
+        LoginCommonHelper.instance.getStations(token:token) { [weak self](error, models) in
             ActivityIndicator.stopActivityIndicatorAnimation()
             if error == nil{
                 if let models = models{
@@ -341,6 +345,7 @@ class ConfigNetworkViewController: BaseViewController {
                     AppUserService.isUserLogin = true
                     AppUserService.isStationSelected = true
                     AppUserService.setCurrentUser(userData)
+                    AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
                     AppUserService.synchronizedCurrentUser()
                     let identifyingFromDeviceVC = IdentifyingFromDeviceViewController.init(style: NavigationStyle.whiteWithoutShadow)
                         self.navigationController?.pushViewController(identifyingFromDeviceVC, animated: true)
@@ -369,59 +374,6 @@ class ConfigNetworkViewController: BaseViewController {
         }
     }
     
-    func getStations(token:String?,closure: @escaping (Error?,[StationsInfoModel]?) -> Void){
-        let requset = GetStationsAPI.init(token: token ?? "")
-        requset.startRequestJSONCompletionHandler({ (response) in
-            ActivityIndicator.stopActivityIndicatorAnimation()
-            if response.error == nil{
-                if response.result.value != nil {
-                    let rootDic = response.result.value as! NSDictionary
-                    //                    print(rootDic)
-                    let code = rootDic["code"] as! NSNumber
-                    let message = rootDic["message"] as! NSString
-                    if code.intValue != 1 && code.intValue > 200 {
-                        return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil)
-                    }
-                    if let dataDic = rootDic["data"] as? NSDictionary{
-                        var resultArray:[StationsInfoModel] = Array.init()
-                        if let ownStations =  dataDic["ownStations"] as? [NSDictionary]{
-                            var ownStationArray:[StationsInfoModel] = Array.init()
-                            for value in ownStations{
-                                do {
-                                    if let data =  jsonToData(jsonDic: value){
-                                        var model = try JSONDecoder().decode(StationsInfoModel.self, from:  data)
-                                        model.isShareStation = false
-                                        ownStationArray.append(model)
-                                    }
-                                }catch{
-                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
-                                }
-                            }
-                            resultArray.append(contentsOf: ownStationArray)
-                        }
-                        if let sharedStations =  dataDic["sharedStations"] as? [NSDictionary]{
-                            var sharedStationArray:[StationsInfoModel] = Array.init()
-                            for value in sharedStations{
-                                do {
-                                    if let data =  jsonToData(jsonDic: value){
-                                        var model = try JSONDecoder().decode(StationsInfoModel.self, from:  data)
-                                        model.isShareStation = true
-                                        sharedStationArray.append(model)
-                                    }
-                                }catch{
-                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
-                                }
-                            }
-                            resultArray.append(contentsOf:sharedStationArray)
-                        }
-                        return closure(nil,resultArray)
-                    }
-                }
-            }else{
-                return closure(response.error,nil)
-            }
-        })
-    }
     
     @objc func nextButtontTap(_ sender:MDCFloatingButton){
         guard let ssidTxt = self.networkNameTextFiled.text else {
@@ -469,10 +421,10 @@ class ConfigNetworkViewController: BaseViewController {
             case .password?:
                 rightView.isSelect = !rightView.isSelect
                 if rightView.isSelect{
-                    rightView.image = UIImage.init(named: "eye_close_gary.png")
+                    rightView.image = UIImage.init(named: "eye_open_gray.png")
                     self.passwordTextFiled.isSecureTextEntry = false
                 }else{
-                    rightView.image = UIImage.init(named: "eye_open_gary.png")
+                    rightView.image = UIImage.init(named: "eye_close_gray.png")
                     self.passwordTextFiled.isSecureTextEntry = true
                 }
             case .right?:
@@ -521,12 +473,46 @@ class ConfigNetworkViewController: BaseViewController {
     @objc func progressHUDDisappear(_ note: Notification){
         guard let userInfo = note.userInfo else {return}
         guard let string = userInfo[SVProgressHUDStatusUserInfoKey] as? String else{return}
-        let time = SVProgressHUD.displayDuration(for: string)
+//        let time = SVProgressHUD.displayDuration(for: string)
         if wifiBLEDataArray.count == 0{
 //            Message.message(text: LocalizedString(forKey: "Wi-Fi连接失败"))
         }
     }
     
+    
+    @objc func timerFired(_ timer: Timer) {
+        guard let userInfo = timer.userInfo as? [String:String] else{
+            return
+        }
+        
+        guard let ipString = userInfo["ip"] else{
+            return
+        }
+        
+        guard let encryptedString = userInfo["encrypted"] else{
+            return
+        }
+        
+        AppNetworkService.checkIP(address: ipString, { [weak self](success) in
+            if success{
+                timer.fireDate = Date.distantFuture
+                timer.invalidate()
+                self?.stationBindAction(ipString: ipString, encryptedString:encryptedString)
+            }else{
+                self?.methodFinish = Date()
+                guard let methodFinish = self?.methodFinish else{
+                    return
+                }
+                if let methodStart = self?.methodStart{
+                    let executionTime = methodFinish.timeIntervalSince(methodStart)
+                    if executionTime > 30{
+                        timer.fireDate = Date.distantFuture
+                        timer.invalidate()
+                    }
+                }
+            }
+        })
+    }
 
     lazy var titleLabel: UILabel = {
         let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: MarginsWidth + MDCAppNavigationBarHeight, width: __kWidth - MarginsWidth*2, height: 22))

@@ -41,4 +41,5 @@ extension User {
     @NSManaged public var isWIFIAutoBackup:NSNumber?
     @NSManaged public var language:NSNumber?
     @NSManaged public var retrievePasswordState:NSNumber?
+    @NSManaged public var isSelectStation:NSNumber?
 }

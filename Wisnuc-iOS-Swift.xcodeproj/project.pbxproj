@@ -174,6 +174,11 @@
 		1F307C7520BEB18700AE105C /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C7420BEB18700AE105C /* SettingViewController.swift */; };
 		1F307C7820BFC7D700AE105C /* DriveAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C7720BFC7D700AE105C /* DriveAPI.swift */; };
 		1F307C7A20BFEBC900AE105C /* LocalUserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F307C7920BFEBC900AE105C /* LocalUserAPI.swift */; };
+		1F329389219E9CFA00F075DD /* LoginCommonHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F329388219E9CFA00F075DD /* LoginCommonHelper.swift */; };
+		1F32938E219EAE9C00F075DD /* eye_close_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F32938D219EAE9C00F075DD /* eye_close_gray.png */; };
+		1F329390219EAEA600F075DD /* eye_close_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F32938F219EAEA600F075DD /* eye_close_gray@2x.png */; };
+		1F329392219EAEB100F075DD /* eye_close_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F329391219EAEB000F075DD /* eye_close_gray@3x.png */; };
+		1F329394219EC6C400F075DD /* ResetPasswordAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F329393219EC6C400F075DD /* ResetPasswordAPI.swift */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -1178,6 +1183,11 @@
 		1F307C7420BEB18700AE105C /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		1F307C7720BFC7D700AE105C /* DriveAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAPI.swift; sourceTree = "<group>"; };
 		1F307C7920BFEBC900AE105C /* LocalUserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalUserAPI.swift; sourceTree = "<group>"; };
+		1F329388219E9CFA00F075DD /* LoginCommonHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCommonHelper.swift; sourceTree = "<group>"; };
+		1F32938D219EAE9C00F075DD /* eye_close_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eye_close_gray.png; sourceTree = "<group>"; };
+		1F32938F219EAEA600F075DD /* eye_close_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_close_gray@2x.png"; sourceTree = "<group>"; };
+		1F329391219EAEB000F075DD /* eye_close_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_close_gray@3x.png"; sourceTree = "<group>"; };
+		1F329393219EC6C400F075DD /* ResetPasswordAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordAPI.swift; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -2980,6 +2990,7 @@
 				1FD1F2E72152472B00C3E429 /* SighInWechatUser.swift */,
 				1F38E294217F01FB003FCAEE /* GetStationsAPI.swift */,
 				1FFC8197219BF4B200371C8D /* BindStationAPI.swift */,
+				1F329393219EC6C400F075DD /* ResetPasswordAPI.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -3225,6 +3236,9 @@
 		1F520951214A0B750058A8D3 /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				1F32938D219EAE9C00F075DD /* eye_close_gray.png */,
+				1F32938F219EAEA600F075DD /* eye_close_gray@2x.png */,
+				1F329391219EAEB000F075DD /* eye_close_gray@3x.png */,
 				1F0FD106214B7DB3003D7936 /* close_gray@3x.png */,
 				1F0FD102214B7D95003D7936 /* close_gray.png */,
 				1F0FD104214B7DA4003D7936 /* close_gray@2x.png */,
@@ -3455,13 +3469,14 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
-		1F58825D2085FA4000394BD6 /* Tool */ = {
+		1F58825D2085FA4000394BD6 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
 				1F58825E2085FA7600394BD6 /* MyStationTapGestureRecognizer.swift */,
 				1FDBC50D20932171004DE6B8 /* DiskPopUpViewManager.swift */,
+				1F329388219E9CFA00F075DD /* LoginCommonHelper.swift */,
 			);
-			path = Tool;
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		1F5AD92D20AD602A0065DAD3 /* Transition */ = {
@@ -4038,7 +4053,7 @@
 			children = (
 				1F5209432147B5680058A8D3 /* Transition */,
 				1F2CE39A20B6CBDB00D9E5BD /* Model */,
-				1F58825D2085FA4000394BD6 /* Tool */,
+				1F58825D2085FA4000394BD6 /* Helper */,
 				1FD9B783207CC6F400906D80 /* ViewModel */,
 				1FD9B784207CC6F400906D80 /* Controller */,
 				1FD9B786207CC6F400906D80 /* Model */,
@@ -6291,6 +6306,7 @@
 				1FA5D783215CC4380025F870 /* location_gary@3x.png in Resources */,
 				1FAADECF20ABFE5C00739220 /* files_share_other_app@2x.png in Resources */,
 				1FA6A1C920CFBD63007A0AB2 /* gridstyle@2x.png in Resources */,
+				1F329390219EAEA600F075DD /* eye_close_gray@2x.png in Resources */,
 				1FC8FF8820AE887800F65194 /* searchTableViewCell.xib in Resources */,
 				1F3C240120A2DAD500E6B953 /* liststyle@2x.png in Resources */,
 				1F1BAC3120CA61E800D32C5A /* files_arrow_down@2x.png in Resources */,
@@ -6487,6 +6503,7 @@
 				1F050E3320AA7BB10037F00A /* files_share_all.png in Resources */,
 				1FBB6F5B213923220090FA57 /* 86@3x.png in Resources */,
 				1F050E5120AAB7110037F00A /* files_file_big@2x.png in Resources */,
+				1F329392219EAEB100F075DD /* eye_close_gray@3x.png in Resources */,
 				1F5882232085885C00394BD6 /* logo@3x.png in Resources */,
 				1F359FD72091A97C00E2FF36 /* disk_error@2x.png in Resources */,
 				1F38E287217DBAFC003FCAEE /* tab_device_selected@3x.png in Resources */,
@@ -6726,6 +6743,7 @@
 				1F0FD0CC214A46A6003D7936 /* config_error@3x.png in Resources */,
 				1FAADEDD20ABFF1F00739220 /* files_edit_tag@3x.png in Resources */,
 				1F8EBB5A20A0239F00E8AB83 /* files_folder@3x.png in Resources */,
+				1F32938E219EAE9C00F075DD /* eye_close_gray.png in Resources */,
 				1F38E2AA2181CA27003FCAEE /* photo_icon_device_detail@2x.png in Resources */,
 				1F83AE7020883AA2007CCCFD /* help@3x.png in Resources */,
 				1F3C242220A547A800E6B953 /* files_download.png in Resources */,
@@ -6923,6 +6941,7 @@
 				1FD9B79C207CC78B00906D80 /* BaseRequest.swift in Sources */,
 				1FE0897B21749E8C0049F44B /* UIProgressViewExtension.swift in Sources */,
 				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
+				1F329394219EC6C400F075DD /* ResetPasswordAPI.swift in Sources */,
 				1F4242BA20F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift in Sources */,
 				1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */,
 				1FFD132B20EF3B220053A3F7 /* AssetService.swift in Sources */,
@@ -7113,6 +7132,7 @@
 				1F53789A21106FA200A555C5 /* ArrayExtension.swift in Sources */,
 				1FE089862175D6370049F44B /* DeviceBackupRootTableViewCell.swift in Sources */,
 				1FD1F3002153A71200C3E429 /* PhotoAlbumCollectionViewHeaderView.swift in Sources */,
+				1F329389219E9CFA00F075DD /* LoginCommonHelper.swift in Sources */,
 				1F1BAC2D20C92A1A00D32C5A /* UIScrollExtension.swift in Sources */,
 				1FBB6F61213923C30090FA57 /* TextFiledExtension.swift in Sources */,
 				1FFD12B020E3662D0053A3F7 /* MDCFreshHeader.swift in Sources */,

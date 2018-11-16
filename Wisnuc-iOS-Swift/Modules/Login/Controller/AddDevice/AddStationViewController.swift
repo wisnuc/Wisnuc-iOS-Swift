@@ -154,7 +154,6 @@ class AddStationViewController: BaseViewController {
             DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2.3) {
                 self.searchUser(model.LANIP!, closure: { [weak self] (error, userModels) in
                     if error == nil{
-//                        if userModel?.username == "136165786562"{
                             dispatch_async_on_main_queue {
                                 ActivityIndicator.stopActivityIndicatorAnimation()
                                 self?.navigationController?.popViewController(animated: true)
@@ -163,16 +162,13 @@ class AddStationViewController: BaseViewController {
                                     for userModel in userModels!{
                                         let newModel = CloadLoginUserRemotModel.init()
                                         newModel.username = userModel.username
-                                        newModel.uuid = userModel.uuid
+                                        newModel.uuid = userModel.id
                                         newModel.type = model.type
                                         newModel.name = model.name
                                         newModel.LANIP = model.LANIP
                                         newModel.state = model.state
                                         userModelArray.append(newModel)
                                     }
-                                   
-//                                    model.username = userModel?.username
-//                                    model.uuid = userModel?.uuid
                                     delegateOK.addStationFinish!(models: userModelArray)
                                     Message.message(text: LocalizedString(forKey: "添加成功"))
                                 }

@@ -20,6 +20,7 @@ struct WechatSighInModel: Decodable {
 
 struct WechatSighInData: Decodable {
     var  token:String?
+    var  wechat:String?
     var  user:Bool?
 }
 
