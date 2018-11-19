@@ -161,18 +161,18 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
         case .Done?:
             cell.detailLabel.text = LocalizedString(forKey: "已配置")
             cell.rightImageView.image =  UIImage.init(named: "config_finish.png")
-        case .NeedConfigWithData?:
-            cell.detailLabel.text = LocalizedString(forKey: "待配置，磁盘含有数据")
-            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
-        case .NoDisk?:
-            cell.detailLabel.text = LocalizedString(forKey: "检测不到设备磁盘")
-            cell.rightImageView.image =  UIImage.init(named: "config_error.png")
-        case .Default?:
-            cell.detailLabel.text = LocalizedString(forKey: "待配置")
-            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
-        case .NoData?:
-            cell.detailLabel.text = LocalizedString(forKey: "待配置")
-            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
+//        case .NeedConfigWithData?:
+//            cell.detailLabel.text = LocalizedString(forKey: "待配置，磁盘含有数据")
+//            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
+//        case .NoDisk?:
+//            cell.detailLabel.text = LocalizedString(forKey: "检测不到设备磁盘")
+//            cell.rightImageView.image =  UIImage.init(named: "config_error.png")
+//        case .Default?:
+//            cell.detailLabel.text = LocalizedString(forKey: "待配置")
+//            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
+//        case .NoData?:
+//            cell.detailLabel.text = LocalizedString(forKey: "待配置")
+//            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
         default:
             break
         }
@@ -183,14 +183,14 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
         tableView.deselectRow(at: indexPath, animated: true)
         let model = dataSource[indexPath.row]
         switch model.type {
-        case .Default?:
+        case .NeedConfig?:
             let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
             configNetVC.deviceModel = model
             self.navigationController?.pushViewController(configNetVC, animated: true)
             LLBlueTooth.instance.stopScan()
 //        case .configFinish?:
 //           break
-        case .NoData?:
+        case .Done?:
             let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
             configNetVC.deviceModel = model
             self.navigationController?.pushViewController(configNetVC, animated: true)

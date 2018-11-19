@@ -136,7 +136,7 @@ class FilesRootViewController: BaseViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = lightGrayBackgroudColor
-        prepareData()
+        prepareData(animation: true)
         prepareCollectionView()
         setCellStyle()
         switch selfState {
@@ -159,7 +159,7 @@ class FilesRootViewController: BaseViewController{
         FilesRootViewController.downloadManager.isStartDownloadImmediately = false
         self.navigationTitle = title
         self.collcectionViewController.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
-           self?.prepareData()
+            self?.prepareData(animation: false)
         })
         self.appBar.headerViewController.inferPreferredStatusBarStyle = false
         self.appBar.headerViewController.preferredStatusBarStyle = .default
@@ -211,7 +211,7 @@ class FilesRootViewController: BaseViewController{
         if fromViewController != nil{
             if !(self.navigationController?.viewControllers.contains(fromViewController!))! && self.presentedViewController == nil
             {//Something is being popped and we are being revealed
-                self.prepareData()
+                self.prepareData(animation: false)
             }
         }
     }
@@ -251,10 +251,12 @@ class FilesRootViewController: BaseViewController{
         styleItem.image = UIImage.init(named: "liststyle.png")
     }
      
-    func prepareData() {
+    func prepareData(animation:Bool) {
         self.dataSource = Array.init()
         isRequesting = true
-        ActivityIndicator.startActivityIndicatorAnimation()
+        if animation{
+           ActivityIndicator.startActivityIndicatorAnimation()
+        }
         self.collcectionViewController.collectionView?.reloadEmptyDataSet()
         let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
         let requestDriveUUID = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
@@ -605,7 +607,7 @@ class FilesRootViewController: BaseViewController{
             mainThreadSafe {
                 if response.error == nil{
                     Message.message(text: LocalizedString(forKey: "Folder removed"))
-                    self?.prepareData()
+                    self?.prepareData(animation: false)
                 }else{
                     if response.data != nil {
                         let errorDict =  dataToNSDictionary(data: response.data!)
@@ -637,7 +639,7 @@ class FilesRootViewController: BaseViewController{
         DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: FilesOptionType.remove.rawValue).startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
                 Message.message(text: LocalizedString(forKey: "Folder removed"))
-                 self?.prepareData()
+                self?.prepareData(animation: false)
             }else{
                 if response.data != nil {
                     let errorDict =  dataToNSDictionary(data: response.data!)
@@ -655,7 +657,7 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func refreshNotification(_ notifa:Notification){
-      self.prepareData()
+        self.prepareData(animation: false)
     }
     
     @objc func enterSearch(){

@@ -70,24 +70,48 @@ class TasksAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-        return  self.method ?? RequestHTTPMethod.get
+        switch AppNetworkService.networkState {
+        case .local?:
+             return  self.method ?? RequestHTTPMethod.get
+        case .normal?:
+            return  .post
+        default:
+            return  RequestHTTPMethod.get
+        }
+        
     }
     
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            let urlPath = nodeUUID !=  nil ? "/tasks/\(self.taskUUID!)/nodes/\(self.nodeUUID!)" : taskUUID != nil ? "/tasks/\(self.taskUUID!)" : "/tasks"
-            if self.method == RequestHTTPMethod.post{
+            var urlPath = "/tasks"
+            if let uuid = self.taskUUID,let node = self.nodeUUID{
+                 urlPath =  "/tasks/\(uuid)/nodes/\(node)"
+            }
+            
+            if let uuid = self.taskUUID{
+                if self.nodeUUID == nil{
+                    urlPath =  "/tasks/\(uuid)"
+                }
+            }
+
+            switch self.method{
+            case .get?:
+                let dic = [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:urlPath]
+                return dic
+                
+            case .post?:
                 let src = [kRequestTaskDriveKey:srcDrive!,kRequestTaskDirKey:srcDir!]
                 let dst = [kRequestTaskDriveKey:dstDrive!,kRequestTaskDirKey:dstDir!]
                 let params = [kRequestTaskTypeKey:type!,kRequestTaskSrcKey:src,kRequestTaskDstKey:dst,kRequestEntriesValueKey:names!] as [String : Any]
                 let dic = [kRequestVerbKey:RequestMethodValue.POST,kRequestUrlPathKey:urlPath,kRequestImageParamsKey:params] as [String : Any]
                 return dic
-            }else if self.method == RequestHTTPMethod.patch{
+                
+            case .patch?:
                 let params = [kRequestTaskPolicyKey:[policySameValue != nil ? policySameValue : nil ,policyDiffValue != nil ? policyDiffValue! : nil], "applyToAll" : applyToAll ?? NSNumber.init(value: false)] as [String : Any]
                 let dic = [kRequestVerbKey:RequestMethodValue.PATCH,kRequestUrlPathKey:urlPath,kRequestImageParamsKey:params] as [String : Any]
                 return dic
-            }else{
+            default:
                 return nil
             }
         case .local?:
@@ -105,6 +129,8 @@ class TasksAPI: BaseRequest {
         default:
             return nil
         }
+        
+        return nil
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
@@ -119,6 +145,6 @@ class TasksAPI: BaseRequest {
     }
     
     override func requestEncoding() -> RequestParameterEncoding {
-        return  self.method == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
+        return  self.requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
     }
 }

@@ -47,6 +47,7 @@ class UserService: NSObject,ServiceProtocol{
             }
             
             self.isUserLogin = true
+            self.isStationSelected = true
         }else{
             self.currentUser = nil
             self.isStationSelected = false

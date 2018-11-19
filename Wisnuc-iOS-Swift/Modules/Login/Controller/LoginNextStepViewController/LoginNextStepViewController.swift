@@ -461,9 +461,57 @@ class LoginNextStepViewController: BaseViewController {
         default:
             break
         }
-        let nextViewController = LoginNextStepViewController.init(titleString:titleString , detailTitleString: LocalizedString(forKey: "您的密码必须包含至少1个符号，长度至少为8个字符"), state: state,phoneNumber:self.phoneNumber!,verifyCode:self.inputTextField.text!,requestToken:self.requestToken,userExist:self.userExist)
+        
+        if state == LoginNextStepViewControllerState.resetPwd{
+            self.getTicket { [weak self](ticket) in
+                if let ticket = ticket{
+                   self?.nextViewControllerForPassword(titleString: titleString, state: state, requestToken: ticket)
+                }
+            }
+        }else{
+            self.nextViewControllerForPassword(titleString: titleString, state: state, requestToken: self.requestToken)
+        }
+    }
+    
+    func nextViewControllerForPassword(titleString:String,state:LoginNextStepViewControllerState,requestToken:String?){
+        let nextViewController = LoginNextStepViewController.init(titleString:titleString , detailTitleString: LocalizedString(forKey: "您的密码必须包含至少1个符号，长度至少为8个字符"), state: state,phoneNumber:self.phoneNumber!,verifyCode:self.inputTextField.text!,requestToken:requestToken,userExist:self.userExist)
         nextViewController.modalTransitionStyle = .crossDissolve
         self.navigationController?.pushViewController(nextViewController, animated: true)
+    }
+    
+    func getTicket(closure:@escaping (_ ticket:String?)->()) {
+        guard let phone = self.phoneNumber else {
+            return
+        }
+        guard let code = self.inputTextField.text else {
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let request = SmsCodeTicket.init(phone:phone, code: code,type:.password)
+        request.startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error = response.error{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                }else{
+                    Message.message(text:error.localizedDescription)
+                }
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                guard let rootDic = response.value as? NSDictionary else{
+                    return
+                }
+                guard let smsCodeTicket = rootDic["data"] as? String else{
+                    return
+                }
+                
+                return closure(smsCodeTicket)
+            }
+        }
     }
     
     func resetPwdFinish(){
@@ -479,7 +527,8 @@ class LoginNextStepViewController: BaseViewController {
         guard let password = self.inputTextField.text else {
             return
         }
-         ActivityIndicator.startActivityIndicatorAnimation()
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
         let request = ResetPasswordAPI.init(token: token, phone: phone, password: password)
         request.startRequestJSONCompletionHandler { [weak self](response) in
              ActivityIndicator.stopActivityIndicatorAnimation()
@@ -494,7 +543,7 @@ class LoginNextStepViewController: BaseViewController {
                     Message.message(text: errorMessage)
                     return
                 }
-                 Message.message(text:"重置密码成功，请重新登录")
+                 Message.message(text:"重置密码成功")
                 self?.navigationController?.popToRootViewController(animated: true)
             }
         }
@@ -540,8 +589,7 @@ class LoginNextStepViewController: BaseViewController {
                 Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
                 print(String(data: response.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
             }
-            
-             ActivityIndicator.stopActivityIndicatorAnimation()
+            ActivityIndicator.stopActivityIndicatorAnimation()
         }
     }
     

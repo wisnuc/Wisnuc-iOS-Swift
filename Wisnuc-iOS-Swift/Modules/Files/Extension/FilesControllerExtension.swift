@@ -393,7 +393,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     func patchNodes(taskUUID:String,nodeUUID:String,policySameValue:String? = nil , policyDiffValue:String? = nil ,callback:@escaping ((_ error:Error?)->())){
         TasksAPI.init(taskUUID: taskUUID, nodeUUID: nodeUUID, policySameValue: policySameValue, policyDiffValue: policyDiffValue).startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
-                self?.prepareData()
+                self?.prepareData(animation: false)
                 callback(nil)
             }else{
                 if response.data != nil {
@@ -412,17 +412,33 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
     }
     
-    func getTask(taskUUID:String,callback:@escaping (_ task:FilesTasksModel? ,_ error:Error?)->()) {
+    func getTask(taskUUID:String,callback:@escaping (_ task:FilesTasksModel)->()) {
         TasksAPI.init(taskUUID: taskUUID).startRequestJSONCompletionHandler {(response) in
             if response.error == nil{
-                let dic = response.value as! NSDictionary
-                if let taskModel = FilesTasksModel.deserialize(from: dic){
-                    return callback(taskModel,nil)
+                let isLocal = AppNetworkService.networkState == .local ? true : false
+                if !isLocal{
+                    if let errorMessage = ErrorTools.responseErrorData(response.data){
+                        Message.message(text: errorMessage)
+                        return
+                    }
+                }
+                guard let dic = response.value as? NSDictionary else{
+                    Message.message(text: LocalizedString(forKey: "error"))
+                   return
+                }
+                var modelDic:NSDictionary = dic
+                if !isLocal{
+                    if let dataDic = dic["data"] as? NSDictionary{
+                        modelDic = dataDic
+                    }
+                }
+                if let taskModel = FilesTasksModel.deserialize(from: modelDic){
+                    return callback(taskModel)
                 }else{
-                    return callback(nil,BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
+                     Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
                 }
             }else{
-                return callback(nil,response.error)
+                Message.message(text: (response.error?.localizedDescription)!)
             }
         }
     }
@@ -464,7 +480,6 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 default:
                     break
                 }
-            
             }else{
                 Message.message(text: (response.error?.localizedDescription)!)
             }
@@ -473,20 +488,20 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     }
     
     func taskHandle(taskModel:FilesTasksModel){
-        self.getTask(taskUUID: taskModel.uuid!, callback: { [weak self](model, error) in
-            if model?.nodes?.count != 0 {
-                if model?.nodes?.first?.state == .Conflict && model?.nodes?.first?.error?.code == .EEXIST{
-                    self?.patchNodes(taskUUID: (model?.uuid!)!, nodeUUID: (model?.nodes?.first?.src?.uuid!)!, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { [weak self] (error)in
+        self.getTask(taskUUID: taskModel.uuid!, callback: { [weak self](model) in
+            if model.nodes?.count != 0 {
+                if model.nodes?.first?.state == .Conflict && model.nodes?.first?.error?.code == .EEXIST{
+                    guard let uuid = model.uuid,let srcuuid = model.nodes?.first?.src?.uuid else{
+                        Message.message(text: LocalizedString(forKey: "error"))
+                        return
+                    }
+                    self?.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { [weak self] (error)in
                         ActivityIndicator.stopActivityIndicatorAnimation()
-                        if error == nil{
                             Message.message(text: LocalizedString(forKey: "创建副本成功"))
-                            self?.prepareData()
-                        }else{
-                            
-                        }
+                            self?.prepareData(animation: false)
                         
                     })
-                }else if model?.nodes?.first?.state == .Working{
+                }else if model.nodes?.first?.state == .Working{
                     self?.taskHandle(taskModel: taskModel)
                 }
             }
@@ -707,7 +722,7 @@ extension FilesRootViewController:DZNEmptyDataSetSource{
 
 extension FilesRootViewController:DZNEmptyDataSetDelegate{
     func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
-        self.prepareData()
+        self.prepareData(animation: true)
     }
     
     func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
@@ -775,7 +790,7 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
         }, {  [weak self] (response) in
             if response.error == nil{
                 Message.message(text: "\(oldName ?? "") \(LocalizedString(forKey: "renamed to")) \(newName)")
-                self?.prepareData()
+                self?.prepareData(animation: false)
             }else{
                 if response.data != nil {
                     let errorDict =  dataToNSDictionary(data: response.data!)
@@ -810,7 +825,7 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
         }, {  [weak self] (response) in
             if response.error == nil{
                 Message.message(text: "\(oldName ?? "") \(LocalizedString(forKey: "renamed to")) \(newName)")
-                self?.prepareData()
+                self?.prepareData(animation: false)
             }else{
                 if response.data != nil {
                     let errorDict =  dataToNSDictionary(data: response.data!)
@@ -843,7 +858,7 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
         }, { [weak self] (response) in
             if response.error == nil{
                 Message.message(text: LocalizedString(forKey: "Folder created"))
-                self?.prepareData()
+                self?.prepareData(animation: false)
             }else{
                 if response.data != nil {
                     let errorDict =  dataToNSDictionary(data: response.data!)
@@ -868,7 +883,7 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
         MkdirAPI.init(driveUUID: drive, directoryUUID: dir, name: name).startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
                 Message.message(text: LocalizedString(forKey: "Folder created"))
-                self?.prepareData()
+                self?.prepareData(animation: false)
             }else{
                 if response.data != nil {
                     let errorDict =  dataToNSDictionary(data: response.data!)

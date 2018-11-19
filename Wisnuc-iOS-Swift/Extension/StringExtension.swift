@@ -92,11 +92,21 @@ extension String{
     
 
     func subString(to index: Int) -> String {
-        return String(self[..<self.index(self.startIndex, offsetBy: index)])
+        if self.count > index {
+             return String(self[..<self.index(self.startIndex, offsetBy: index)])
+        } else {
+            return self
+        }
     }
     
-    func subString(from index: Int) -> String {
-        return String(self[self.index(self.startIndex, offsetBy: index)...])
+    func substring(from index: Int) -> String? {
+        if self.count > index {
+            let startIndex = self.index(self.startIndex, offsetBy: index)
+            let subString = self[startIndex..<self.endIndex]
+            return String(subString)
+        } else {
+            return self
+        }
     }
 }
 

@@ -100,7 +100,7 @@ class ConfigNetworkViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow(note:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         //键盘即将隐藏
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHidden(note:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        defaultNotificationCenter().addObserver(self, selector: #selector(progressHUDDisappear(_:)), name: NSNotification.Name.SVProgressHUDWillDisappear, object: nil)
+        defaultNotificationCenter().addObserver(self, selector: #selector(progressHUDDisappear(_:)), name: NSNotification.Name.SVProgressHUDDidDisappear,object: nil)
     }
     
     func setState(_ state:ConfigNetworkViewControllerState){
@@ -474,9 +474,7 @@ class ConfigNetworkViewController: BaseViewController {
         guard let userInfo = note.userInfo else {return}
         guard let string = userInfo[SVProgressHUDStatusUserInfoKey] as? String else{return}
 //        let time = SVProgressHUD.displayDuration(for: string)
-        if wifiBLEDataArray.count == 0{
-//            Message.message(text: LocalizedString(forKey: "Wi-Fi连接失败"))
-        }
+
     }
     
     
@@ -696,10 +694,7 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
     
 
     func peripheralStationSPSCharacteristicDidUpdateValue(data:Data){
-         SVProgressHUD.dismiss()
-        if nextButton.isHidden {
-            nextButton.isHidden = false
-        }
+        
         if let string = String.init(data: data, encoding: String.Encoding.utf8){
             wifiBLEDataArray.append(string)
             let bleString = wifiBLEDataArray.joined()
@@ -732,17 +727,26 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
                         wifiBLEDataArray.removeAll()
                         ActivityIndicator.stopActivity(in: self.wifiTabelView)
                         Message.message(text: "error")
+                        SVProgressHUD.dismiss()
+                        if nextButton.isHidden {
+                            nextButton.isHidden = false
+                        }
                         return
                     }
                    
                     if let wifiArray = wifiDic["data"] as? Array<String>{
                         self.wifiBLEArray = wifiArray
                         wifiBLEDataArray.removeAll()
+                        
                         return
                     }
                     
                     if let data = wifiDic["data"] as? NSDictionary{
                         if let ipString = data["ip"] as? String{
+                            SVProgressHUD.dismiss()
+                            if nextButton.isHidden {
+                                nextButton.isHidden = false
+                            }
                             self.stationEncryptedAction(ipString: ipString)
                             wifiBLEDataArray.removeAll()
                         }

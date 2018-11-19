@@ -179,6 +179,7 @@
 		1F329390219EAEA600F075DD /* eye_close_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F32938F219EAEA600F075DD /* eye_close_gray@2x.png */; };
 		1F329392219EAEB100F075DD /* eye_close_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F329391219EAEB000F075DD /* eye_close_gray@3x.png */; };
 		1F329394219EC6C400F075DD /* ResetPasswordAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F329393219EC6C400F075DD /* ResetPasswordAPI.swift */; };
+		1F329396219ED42100F075DD /* SmsCodeTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F329395219ED42100F075DD /* SmsCodeTicket.swift */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -1188,6 +1189,7 @@
 		1F32938F219EAEA600F075DD /* eye_close_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_close_gray@2x.png"; sourceTree = "<group>"; };
 		1F329391219EAEB000F075DD /* eye_close_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_close_gray@3x.png"; sourceTree = "<group>"; };
 		1F329393219EC6C400F075DD /* ResetPasswordAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordAPI.swift; sourceTree = "<group>"; };
+		1F329395219ED42100F075DD /* SmsCodeTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmsCodeTicket.swift; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -2991,6 +2993,7 @@
 				1F38E294217F01FB003FCAEE /* GetStationsAPI.swift */,
 				1FFC8197219BF4B200371C8D /* BindStationAPI.swift */,
 				1F329393219EC6C400F075DD /* ResetPasswordAPI.swift */,
+				1F329395219ED42100F075DD /* SmsCodeTicket.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -7151,6 +7154,7 @@
 				1F2CE30220B4311000D9E5BD /* User+CoreDataProperties.swift in Sources */,
 				1F0FD101214B698C003D7936 /* DiskFormatViewController.swift in Sources */,
 				1F8EBB52209FF7C700E8AB83 /* FilesFolderCollectionViewCell.swift in Sources */,
+				1F329396219ED42100F075DD /* SmsCodeTicket.swift in Sources */,
 				1F5378782108754F00A555C5 /* AnyCodable.swift in Sources */,
 				1F307C6720BE91B200AE105C /* ErrorDfine.swift in Sources */,
 				1FE0895B217462AB0049F44B /* MySecureStepViewController.swift in Sources */,

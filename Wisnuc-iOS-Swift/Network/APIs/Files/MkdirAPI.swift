@@ -43,7 +43,15 @@ class MkdirAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestResourceKey:detailUrl.toBase64(),kRequestMethodKey:RequestMethodValue.POST,kRequestOpKey:kRequestMkdirValue,kRequestToNameKey:name!]
+            guard let detailUrl = self.detailUrl else{
+                return nil
+            }
+            
+            guard let name = self.name else{
+                return nil
+            }
+            let params = [kRequestOpKey:kRequestMkdirValue,kRequestToNameKey:name]
+            return [kRequestUrlPathKey:"/\(detailUrl)",kRequestVerbKey:RequestMethodValue.POST,kRequestImageParamsKey:params]
         case .local?:
            return nil
         default:
