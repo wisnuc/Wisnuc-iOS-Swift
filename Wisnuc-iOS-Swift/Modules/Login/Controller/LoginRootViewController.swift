@@ -258,7 +258,13 @@
                                         guard let userId = model.data?.id else{
                                             return
                                         }
-                                        self?.synchronizedUser(model)
+                                        guard let header = responseData.response?.allHeaderFields else {
+                                            return
+                                        }
+                                        guard let cookie = header["Set-Cookie"] as? String else {
+                                            return
+                                        }
+                                        self?.synchronizedUser(model, cookie)
                                         LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!)
                                     }
                             } catch {
@@ -279,12 +285,13 @@
         }
     }
     
-    func synchronizedUser(_ model:SighInTokenModel){
+    func synchronizedUser(_ model:SighInTokenModel,_ cookie:String){
         let user = AppUserService.createUser(uuid: (model.data?.id)!)
         user.cloudToken = model.data?.token!
         if let avatarUrl = model.data?.avatarUrl{
             user.avaterURL = avatarUrl
         }
+        user.cookie = cookie
         
         if let nickName = model.data?.nickName{
             user.nickName = nickName
@@ -530,7 +537,7 @@
     }
     
     func next(_ state:LoginNextStepViewControllerState,requestToken:String? = nil){
-        let smsCodeType:SmsCodeType = .register
+        let smsCodeType:SendCodeType = .register
         let creatNewAccoutVC = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "绑定手机号"), detailTitleString: LocalizedString(forKey: "手机号码是您忘记密码时，找回面的唯一途径 请慎重填写"), state: state,requestToken:requestToken,smsCodeType:smsCodeType)
         let navigationController = UINavigationController.init(rootViewController: creatNewAccoutVC)
         navigationController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve

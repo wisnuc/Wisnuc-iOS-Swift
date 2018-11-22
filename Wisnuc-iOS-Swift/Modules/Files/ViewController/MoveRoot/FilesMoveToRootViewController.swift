@@ -28,6 +28,7 @@ class FilesMoveToRootViewController: BaseViewController {
         movetoButton.isEnabled = false
         let buttonTitle = isCopy ? LocalizedString(forKey: "复制到") : LocalizedString(forKey: "移动到")
         movetoButton.setTitle(buttonTitle, for: UIControlState.normal)
+        movetoButton.sizeToFit()
         moveFilesBottomBar.addSubview(movetoButton)
         moveFilesBottomBar.addSubview(cancelMovetoButton)
     }
@@ -97,7 +98,6 @@ class FilesMoveToRootViewController: BaseViewController {
         button.setTitleColor(COR1, for: UIControlState.normal)
         button.setTitleColor(LightGrayColor, for: UIControlState.disabled)
         button.addTarget(self, action: #selector(movetoButtonTap(_ :)), for: UIControlEvents.touchUpInside)
-        button.sizeToFit()
         button.frame = CGRect(x: self.moveFilesBottomBar.width - button.width - MarginsWidth, y: self.moveFilesBottomBar.height/2 - button.height/2, width: button.width, height: button.height)
         return button
     }()

@@ -61,7 +61,8 @@ class LoginSelectionDeviceViewController: BaseViewController {
     
     @objc func addDeviceTap(_ sender:UIBarButtonItem){
         alertControllerActionSheet(title: nil, message: nil, cancelActionTitle: LocalizedString(forKey: "取消"), action1Title: LocalizedString(forKey: "添加新设备"), action1Handler: { (alertAction1) in
-            
+            let seekNewDeviceVC = SeekNewDeviceViewController.init(style: NavigationStyle.whiteWithoutShadow)
+            self.navigationController?.pushViewController(seekNewDeviceVC, animated: true)
         }, action2Title: LocalizedString(forKey: "扫一扫，添加他人设备")) { (alertAction2) in
             
         }

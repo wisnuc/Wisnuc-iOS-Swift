@@ -8,8 +8,9 @@
 //
 
 import Foundation
+import Alamofire
 
-class DeletTasksAPI: BaseRequest {
+class DeleteTasksAPI: BaseRequest {
     var taskUUID:String?
     
     init(taskUUID:String) {
@@ -28,14 +29,40 @@ class DeletTasksAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-        return  RequestHTTPMethod.delete
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return RequestHTTPMethod.post
+        case .local?:
+            return RequestHTTPMethod.delete
+        default:
+            return RequestHTTPMethod.get
+        }
     }
     
+    override func requestEncoding() -> RequestParameterEncoding {
+        return JSONEncoding.default
+    }
+    
+    override func requestParameters() -> RequestParameters? {
+        switch AppNetworkService.networkState {
+        case .normal?:
+            guard let uuid = self.taskUUID else{
+              return nil
+            }
+            let urlPath =  "/tasks/\(uuid)"
+            let params = [kRequestVerbKey:RequestMethodValue.DELETE,kRequestUrlPathKey:urlPath]
+            return params
+        case .local?:
+            return nil
+        default:
+            return nil
+        }
+    }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestAuthorizationKey:AppTokenManager.token!]
+            return [kRequestAuthorizationKey:AppTokenManager.token!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
         case .local?:
             return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
         default:

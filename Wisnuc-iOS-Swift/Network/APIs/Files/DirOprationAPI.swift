@@ -62,23 +62,23 @@ class DirOprationAPI: BaseRequest {
         return JSONEncoding.default
     }
     
-    override func requestParameters() -> RequestParameters? {
-        switch AppNetworkService.networkState {
-        case .normal?:
-            let requstUrl = "/\(self.detailUrl!)"
-            let param = [kRequestOpKey:op!,kRequestToNameKey:name!]
-            return [kRequestUrlPathKey:requstUrl,kRequestVerbKey:RequestMethodValue.POST,kRequestImageParamsKey:param]
-        case .local?:
-            return nil
-        default:
-            return nil
-        }
-    }
+//    override func requestParameters() -> RequestParameters? {
+//        switch AppNetworkService.networkState {
+//        case .normal?:
+//            let requstUrl = "/\(self.detailUrl!)"
+//            let param = [kRequestOpKey:op!,kRequestToNameKey:name!]
+//            return [kRequestUrlPathKey:requstUrl,kRequestVerbKey:RequestMethodValue.POST,kRequestImageParamsKey:param]
+//        case .local?:
+//            return nil
+//        default:
+//            return nil
+//        }
+//    }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestAuthorizationKey:AppTokenManager.token!]
+            return [kRequestAuthorizationKey:AppTokenManager.token!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
         case .local?:
             return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
         default:

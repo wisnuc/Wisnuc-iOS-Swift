@@ -45,17 +45,31 @@ class TransferTaskTableViewController: BaseViewController {
         var array:Array<FilesTasksModel> = Array.init()
         TasksAPI.init().startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil {
-                if response.value is NSArray{
-                    let rootArray = response.value as! NSArray
-                    for  value  in rootArray {
-                        let dic = value as! NSDictionary
-                        if let model = FilesTasksModel.deserialize(from: dic){
-                           array.append(model)
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                let isLocal = AppNetworkService.networkState == .local ? true : false
+                var rootArray:NSArray = NSArray.init()
+                if isLocal{
+                    if response.value is NSArray{
+                        rootArray = response.value as! NSArray
+                    }
+                }else{
+                    if let rootDic = response.value as? NSDictionary{
+                        if let dataArray = rootDic["data"] as? NSArray{
+                            rootArray = dataArray
                         }
                     }
-                    self?.taskDataSource?.append(contentsOf: array)
-//                    print(self?.taskDataSource ?? "sss")
                 }
+                
+                for  value  in rootArray {
+                    let dic = value as! NSDictionary
+                    if let model = FilesTasksModel.deserialize(from: dic){
+                        array.append(model)
+                    }
+                }
+                self?.taskDataSource?.append(contentsOf: array)
             }else{
                 Message.message(text: (response.error?.localizedDescription)!)
             }
@@ -264,7 +278,7 @@ extension TransferTaskTableViewController:UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "delete")) { [weak self](tableViewForAction, indexForAction) in
+        let deleteRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "Delete")) { [weak self](tableViewForAction, indexForAction) in
             let index = indexForAction.row
             let any = self?.taskDataSource![index]
             if any is TRTask{
@@ -279,7 +293,7 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                 downloadManager.remove(task.URLString, completely: true)
             }else if any is FilesTasksModel{
                 let model = any as? FilesTasksModel
-                DeletTasksAPI.init(taskUUID: (model?.uuid!)!).startRequestJSONCompletionHandler({ (response) in
+                DeleteTasksAPI.init(taskUUID: (model?.uuid!)!).startRequestJSONCompletionHandler({ (response) in
                     if response.error == nil {
 //                        mainThreadSafe {
                             self?.taskDataSource?.remove(at: index)
@@ -291,12 +305,12 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                 })
             }
         }
-        deleteRowAction.backgroundColor = UIColor.red
-        let priorityRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "priority_transfer")) { (tableViewForAction, indexForAction) in
-            
-        }
-        priorityRowAction.backgroundColor = UIColor.purple
-        return [deleteRowAction,priorityRowAction]
+//        deleteRowAction.backgroundColor = UIColor.red
+//        let priorityRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "priority_transfer")) { (tableViewForAction, indexForAction) in
+//
+//        }
+//        priorityRowAction.backgroundColor = UIColor.purple
+        return [deleteRowAction]
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

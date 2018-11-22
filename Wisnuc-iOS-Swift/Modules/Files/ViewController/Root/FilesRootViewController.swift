@@ -252,7 +252,6 @@ class FilesRootViewController: BaseViewController{
     }
      
     func prepareData(animation:Bool) {
-        self.dataSource = Array.init()
         isRequesting = true
         if animation{
            ActivityIndicator.startActivityIndicatorAnimation()
@@ -262,6 +261,7 @@ class FilesRootViewController: BaseViewController{
         let requestDriveUUID = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let requestDirectoryUUID = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         DriveDirAPI.init(driveUUID: requestDriveUUID, directoryUUID: requestDirectoryUUID).startRequestJSONCompletionHandler(queue) {[weak self] (response) in
+            self?.dataSource = Array.init()
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let responseDic = isLocalRequest ? response.value as! NSDictionary: (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
@@ -583,30 +583,68 @@ class FilesRootViewController: BaseViewController{
         return self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
     }
     
-    func localNetStateFilesRemoveOptionRequest(names:[String]){
+//    func localNetStateFilesRemoveOptionRequest(names:[String]){
+//        for name in names {
+//            localNetStateFilesRemoveOptionRequest(name: name)
+//        }
+//    }
+    
+//    func localNetStateFilesRemoveOptionRequest(name:String){
+//        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+//        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+//        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: FilesOptionType.remove.rawValue).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
+//            let dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
+//            do {
+//                let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
+//                    formData.append(data, withName: name)
+//            }catch{
+//                Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
+//            }
+//        }, { [weak self] (response) in
+//            mainThreadSafe {
+//                if response.error == nil{
+//                    Message.message(text: LocalizedString(forKey: "Folder removed"))
+//                    self?.prepareData(animation: false)
+//                }else{
+//                    if response.data != nil {
+//                        let errorDict =  dataToNSDictionary(data: response.data!)
+//                        if errorDict != nil{
+//                            Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+//                        }else{
+//                            let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+//                            Message.message(text: backToString ?? "error")
+//                        }
+//                    }else{
+//                        Message.message(text: (response.error?.localizedDescription)!)
+//                    }
+//                }
+//            }
+//        }, errorHandler: { (error) -> (Void) in
+//            Message.message(text: error.localizedDescription)
+//        })
+//    }
+    
+    func filesRemoveOptionRequest(names:[String]){
         for name in names {
-            localNetStateFilesRemoveOptionRequest(name: name)
+            filesRemoveOptionRequest(name: name)
         }
     }
     
-    func localNetStateFilesRemoveOptionRequest(name:String){
+    func filesRemoveOptionRequest(name:String){
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: FilesOptionType.remove.rawValue).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
             let dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
             do {
                 let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
-//                mainThreadSafe {
-//                DispatchQueue.main.async {
-                    formData.append(data, withName: name)
-//                }
+                formData.append(data, withName: name)
             }catch{
                 Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
             }
         }, { [weak self] (response) in
             mainThreadSafe {
                 if response.error == nil{
-                    Message.message(text: LocalizedString(forKey: "Folder removed"))
+                    Message.message(text: LocalizedString(forKey: "文件/文件夹已删除"))
                     self?.prepareData(animation: false)
                 }else{
                     if response.data != nil {
@@ -622,38 +660,9 @@ class FilesRootViewController: BaseViewController{
                     }
                 }
             }
-        }, errorHandler: { (error) -> (Void) in
-            Message.message(text: error.localizedDescription)
+            }, errorHandler: { (error) -> (Void) in
+                Message.message(text: error.localizedDescription)
         })
-    }
-    
-    func normalNetStateFilesRemoveOptionRequest(names:[String]){
-        for name in names {
-            normalNetStateFilesRemoveOptionRequest(name: name)
-        }
-    }
-    
-    func normalNetStateFilesRemoveOptionRequest(name:String){
-        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
-        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
-        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: FilesOptionType.remove.rawValue).startRequestJSONCompletionHandler { [weak self] (response) in
-            if response.error == nil{
-                Message.message(text: LocalizedString(forKey: "Folder removed"))
-                self?.prepareData(animation: false)
-            }else{
-                if response.data != nil {
-                    let errorDict =  dataToNSDictionary(data: response.data!)
-                    if errorDict != nil{
-                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-                    }else{
-                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-                        Message.message(text: backToString ?? "error")
-                    }
-                }else{
-                    Message.message(text: (response.error?.localizedDescription)!)
-                }
-            }
-        }
     }
     
     @objc func refreshNotification(_ notifa:Notification){
@@ -689,12 +698,53 @@ class FilesRootViewController: BaseViewController{
         searchBar.textField.delegate = self
     }
     
-    func downloadRequestURL(model:EntriesModel) -> String{
-        let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
-        let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
-        var requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
-        requestURL = requestURL.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-        return requestURL
+    func downloadRequestURL(model:EntriesModel) -> String?{
+        guard let driveUUID = self.driveUUID else {
+            return nil
+        }
+        
+        guard let directoryUUID = self.directoryUUID else {
+            return nil
+        }
+        
+        guard let uuid = model.uuid else {
+            return nil
+        }
+        
+        guard let name = model.name else {
+            return nil
+        }
+        
+        switch AppNetworkService.networkState {
+        case .normal?:
+              let urlPath = "/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))"
+              let params = ["name":name]
+              let dataDic = [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+              guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+                return nil
+              }
+              
+              guard let dataString = String.init(data: data, encoding: .utf8) else {
+                return nil
+              }
+              
+              guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+                return nil
+            }
+            
+            return urlString
+        case .local?:
+            guard let baseURL = RequestConfig.sharedInstance.baseURL else {
+                return nil
+            }
+           
+            let localUrl = "\(String(describing: baseURL))/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))?name=\(String(describing: name))"
+            
+            return localUrl.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        default:
+            break
+        }
+        return nil
     }
     
     // ojbc function (Selector)
@@ -794,7 +844,29 @@ class FilesRootViewController: BaseViewController{
     }
     
     @objc func newFolderButtonTap(_ sender:UIBarButtonItem){
+        let bundle = Bundle.init(for: NewFolderViewController.self)
+        let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
+        let identifier = "inputNewFolderDialogID"
         
+        let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+        viewController.modalPresentationStyle = UIModalPresentationStyle.custom
+        viewController.transitioningDelegate = self.transitionController
+        
+        let vc =  viewController as! NewFolderViewController
+        vc.type = InputAlertType.creatNewFolder
+        vc.titleString = LocalizedString(forKey:"New folder")
+        vc.inputString =  LocalizedString(forKey: "Untitled folder")
+        vc.inputPlaceholder =  LocalizedString(forKey: "Folder name")
+        vc.confirmButtonName =  LocalizedString(forKey: "Create")
+        vc.delegate = self
+        self.present(viewController, animated: true, completion: {
+            vc.inputTextField.becomeFirstResponder()
+        })
+        let presentationController =
+            viewController.mdc_dialogPresentationController
+        if presentationController != nil{
+            presentationController?.dismissOnBackgroundTap = false
+        }
     }
     
     @objc func movetoButtonTap(_ sender:UIButton){

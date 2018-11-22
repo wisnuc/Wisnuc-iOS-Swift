@@ -16,10 +16,25 @@
 
 "power_off" = "Power Off";
 
+
+//Files
 "Folders" = "Folders";
+"Folder" = "Folder";
 "NAME" = "NAME";
 "Rename" = "Rename";
 "Files" = "Files";
 "No file" = "No file";
+"Create a copy" = "Create a copy";
+"Copy to..." = "Copy to...";
+"Remove" = "Remove";
+"Share to shared folder" = "Share to shared folder";
+"Untitled folder" = "Untitled folder";
+"Create" = "Create";
+"New folder" = "New folder";
+"Folder name" = "Folder name";
+"Offline available" = "Offline available";
+"Open with other apps" = "Open with other apps";
 
+//Task
+"Delete" = "Delete";
 

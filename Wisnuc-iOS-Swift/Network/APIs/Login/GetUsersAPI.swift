@@ -24,9 +24,7 @@ class GetUsersAPI: BaseRequest {
 
     override func requestParameters() -> RequestParameters? {
         let requestUrl = "/users"
-        let resource = requestUrl.toBase64()
-        let dic = [kRequestMethodKey:RequestMethodValue.GET,kRequestResourceKey:resource]
-        print(resource)
+        let dic = [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:requestUrl]
         return dic
     }
 

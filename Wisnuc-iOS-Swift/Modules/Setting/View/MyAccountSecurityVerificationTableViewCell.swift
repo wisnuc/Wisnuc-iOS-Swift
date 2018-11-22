@@ -11,41 +11,41 @@ import UIKit
 class MyAccountSecurityVerificationTableViewCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var selectButton: UIButton!
+
     var disabled:Bool = false{
         didSet{
-            if disabled{
-                disabledAction()
-            }else{
-                abledAction()
-            }
+//            if disabled{
+//                disabledAction()
+//            }else{
+//                abledAction()
+//            }
         }
     }
     override var isSelected: Bool{
         didSet{
-            if isSelected {
-                self.selectButton.isSelected = true
-            }else{
-                self.selectButton.isSelected = false
-            }
+//            if isSelected {
+//                self.selectButton.isSelected = true
+//            }else{
+//                self.selectButton.isSelected = false
+//            }
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.selectButton.isUserInteractionEnabled = false
+//        self.selectButton.isUserInteractionEnabled = false
         // Initialization code
     }
     
-    func disabledAction(){
-        self.selectButton.isEnabled = false
-        self.isUserInteractionEnabled = false
-    }
-    
-    func abledAction(){
-        self.selectButton.isEnabled = true
-        self.isUserInteractionEnabled = true
-    }
+//    func disabledAction(){
+//        self.selectButton.isEnabled = false
+//        self.isUserInteractionEnabled = false
+//    }
+//
+//    func abledAction(){
+//        self.selectButton.isEnabled = true
+//        self.isUserInteractionEnabled = true
+//    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

@@ -59,7 +59,7 @@ class GetMediaAPI: BaseRequest {
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestAuthorizationKey:AppTokenManager.token!]
+            return [kRequestAuthorizationKey:AppTokenManager.token!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
         case .local?:
             return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
         default:

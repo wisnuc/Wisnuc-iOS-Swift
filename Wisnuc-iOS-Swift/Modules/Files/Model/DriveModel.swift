@@ -17,4 +17,10 @@ struct DriveModel:HandyJSON {
     var type:String?
     var label:String?
     var writelist:Array<Any>?
+    var readlist:Array<Any>?
+    var privacy:Bool?
+    var isDeleted:Bool?
+    var smb:Bool?
+    var ctime:Int64?
+    var mtime:Int64?
 }

@@ -1,21 +1,20 @@
 //
-//  DriveAPI.swift
+//  FruitmixStatsAPI.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/5/31.
-//  Copyright © 2018年 wisnuc-imac. All rights reserved.
+//  Created by wisnuc-imac on 2018/11/20.
+//  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
-import Alamofire
 
-class DriveAPI: BaseRequest {
+class FruitmixStatsAPI: BaseRequest {
     override func requestURL() -> String {
         switch AppNetworkService.networkState {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return "/\(kRquestDrivesURL)"
+            return "/fruitmix/stats"
         default:
             return ""
         }
@@ -35,7 +34,7 @@ class DriveAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            let urlPath = "/\(kRquestDrivesURL)"
+            let urlPath = "/fruitmix/stats"
             return [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:urlPath]
         case .local?:
             return nil
@@ -43,15 +42,12 @@ class DriveAPI: BaseRequest {
             return nil
         }
     }
-    
-    override func requestEncoding() -> RequestParameterEncoding {
-        return  requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
-    }
+ 
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestAuthorizationKey:AppTokenManager.token!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
+            return [kRequestAuthorizationKey:AppTokenManager.token!]
         case .local?:
             return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
         default:

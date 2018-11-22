@@ -509,12 +509,12 @@ class WSUploadModel: NSObject {
             }else {
                     urlString = "\(kCloudAddr)\(kCloudCommonPipeUrl)"
                 let requestUrl = "/drives/\((AppUserService.currentUser?.userHome!)!)/dirs/\((AppUserService.currentUser?.backUpDirectoryUUID!)!)/entries"
-                    let resource = requestUrl.toBase64()
+//                    let resource = requestUrl.toBase64()
                 var manifestDic  = Dictionary<String, Any>.init()
                     manifestDic[kRequestOpKey] = kRequestOpNewFileValue
-                    manifestDic[kRequestMethodKey] = RequestMethodValue.POST
+                    manifestDic[kRequestVerbKey] = RequestMethodValue.POST
                     manifestDic[kRequestToNameKey] = fileName!
-                    manifestDic[kRequestResourceKey] = resource
+                    manifestDic[kRequestUrlPathKey] = requestUrl
                     manifestDic["sha256"]  = hashString!
                     manifestDic["size"] = NSNumber.init(value: sizeNumber)
                     let josnData = jsonToData(jsonDic: manifestDic as NSDictionary)

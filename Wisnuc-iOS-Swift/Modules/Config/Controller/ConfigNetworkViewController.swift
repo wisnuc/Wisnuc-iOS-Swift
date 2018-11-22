@@ -116,14 +116,6 @@ class ConfigNetworkViewController: BaseViewController {
     }
     
     func getWifiInfo() -> (ssid: String?, mac: String?) {
-        if #available(iOS 11.0, *) {
-            NEHotspotConfigurationManager.shared.getConfiguredSSIDs { (strings) in
-                print("😆\(strings)")
-            }
-        } else {
-            // Fallback on earlier versions
-        }
-        
         if let cfas: NSArray = CNCopySupportedInterfaces() {
             for cfa in cfas {
                 if let dict = CFBridgingRetain(
@@ -245,8 +237,8 @@ class ConfigNetworkViewController: BaseViewController {
         ActivityIndicator.startActivityIndicatorAnimation()
         AppNetworkService.networkState = .normal
         BindStationAPI.init().startRequestJSONCompletionHandler { [weak self] (response) in
-             ActivityIndicator.stopActivityIndicatorAnimation()
             if let error = response.error{
+                ActivityIndicator.stopActivityIndicatorAnimation()
                 var messageText = error.localizedDescription
                 if response.error is BaseError{
                     messageText =  (response.error as! BaseError).localizedDescription
@@ -719,6 +711,7 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
 //                        return
 //                    }
                     if wifiDic.count == 0{
+                        SVProgressHUD.dismiss()
                         wifiBLEDataArray.removeAll()
                         Message.message(text: "error")
                     }
@@ -737,13 +730,13 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
                     if let wifiArray = wifiDic["data"] as? Array<String>{
                         self.wifiBLEArray = wifiArray
                         wifiBLEDataArray.removeAll()
-                        
+                        SVProgressHUD.dismiss()
                         return
                     }
                     
                     if let data = wifiDic["data"] as? NSDictionary{
+                         SVProgressHUD.dismiss()
                         if let ipString = data["ip"] as? String{
-                            SVProgressHUD.dismiss()
                             if nextButton.isHidden {
                                 nextButton.isHidden = false
                             }
@@ -752,6 +745,7 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
                         }
                     }
                 }else{
+                    SVProgressHUD.dismiss()
                      wifiBLEDataArray.removeAll()
                      Message.message(text: "error")
                 }
@@ -759,6 +753,7 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
             
             if bleString.contains(find: "error"){
                  wifiBLEDataArray.removeAll()
+                SVProgressHUD.dismiss()
                 ActivityIndicator.stopActivity(in: self.wifiTabelView)
                 Message.message(text: "error")
             }

@@ -11,6 +11,7 @@
         <attribute name="backUpDirectoryUUID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="bonjour_name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cloudToken" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cookie" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isAdmin" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isFirstUser" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
@@ -33,6 +34,6 @@
     </entity>
     <elements>
         <element name="LocalAsset" positionX="-54" positionY="117" width="128" height="75"/>
-        <element name="User" positionX="-54" positionY="-9" width="128" height="420"/>
+        <element name="User" positionX="-54" positionY="-9" width="128" height="435"/>
     </elements>
 </model>

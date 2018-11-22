@@ -32,7 +32,24 @@ class MkdirAPI: BaseRequest {
     override func requestURL() -> String {
         switch AppNetworkService.networkState {
         case .normal?:
-            return kCloudCommonJsonUrl
+            guard let url = detailUrl else{
+                return ""
+            }
+            let requstUrl = "/\(url)"
+            let dataDic =  [kRequestUrlPathKey:requstUrl,kRequestVerbKey:RequestMethodValue.POST] as [String : Any]
+            guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+                return ""
+            }
+            
+            guard let dataString = String.init(data: data, encoding: .utf8) else {
+                return ""
+            }
+            
+            guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+                return ""
+            }
+            
+            return urlString
         case .local?:
             return "/\(self.detailUrl!)"
         default:
@@ -40,29 +57,29 @@ class MkdirAPI: BaseRequest {
         }
     }
     
-    override func requestParameters() -> RequestParameters? {
-        switch AppNetworkService.networkState {
-        case .normal?:
-            guard let detailUrl = self.detailUrl else{
-                return nil
-            }
-            
-            guard let name = self.name else{
-                return nil
-            }
-            let params = [kRequestOpKey:kRequestMkdirValue,kRequestToNameKey:name]
-            return [kRequestUrlPathKey:"/\(detailUrl)",kRequestVerbKey:RequestMethodValue.POST,kRequestImageParamsKey:params]
-        case .local?:
-           return nil
-        default:
-            return nil
-        }
-    }
+//    override func requestParameters() -> RequestParameters? {
+//        switch AppNetworkService.networkState {
+//        case .normal?:
+//            guard let detailUrl = self.detailUrl else{
+//                return nil
+//            }
+//            
+//            guard let name = self.name else{
+//                return nil
+//            }
+//            let params = [kRequestOpKey:kRequestMkdirValue,kRequestToNameKey:name]
+//            return [kRequestUrlPathKey:"/\(detailUrl)",kRequestVerbKey:RequestMethodValue.POST,kRequestImageParamsKey:params]
+//        case .local?:
+//           return nil
+//        default:
+//            return nil
+//        }
+//    }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestAuthorizationKey:AppTokenManager.token!]
+            return [kRequestAuthorizationKey:AppTokenManager.token!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
         case .local?:
             return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
         default:

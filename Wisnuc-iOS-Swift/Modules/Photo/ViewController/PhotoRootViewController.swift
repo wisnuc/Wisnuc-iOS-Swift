@@ -10,6 +10,7 @@ import UIKit
 import Material
 import MaterialComponents.MaterialCollections
 import MaterialComponents.MaterialButtons
+import NetworkExtension
 
 private var menuButton: IconButton!
 
@@ -103,7 +104,6 @@ class PhotoRootViewController: BaseViewController {
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
         NotificationCenter.default.addObserver(self, selector: #selector(assetDidChangeHandle(_:)), name: NSNotification.Name.Change.AssetChangeNotiKey, object: nil)
     }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.appBarViewController.headerView.trackingScrollView = self.photoCollcectionViewController.collectionView

@@ -9,18 +9,20 @@
 import UIKit
 import Alamofire
 
-enum SmsCodeType:String{
+enum SendCodeType:String{
     case register
     case password
     case login
     case replace
+    case bind
+    case unbind
 }
 
 class GetSmsCodeAPI: BaseRequest {
     var phoneNumber:String?
     var wechatToken:String?
-    var type:SmsCodeType?
-    init(phoneNumber:String,type:SmsCodeType,wechatToken:String? = nil) {
+    var type:SendCodeType?
+    init(phoneNumber:String,type:SendCodeType,wechatToken:String? = nil) {
         self.phoneNumber = phoneNumber
         self.wechatToken = wechatToken
         self.type = type

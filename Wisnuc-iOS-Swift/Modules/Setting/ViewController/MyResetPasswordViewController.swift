@@ -109,7 +109,7 @@ extension MyResetPasswordViewController:UITextFieldDelegate{
         }
         
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
-        if fullString.count > 0 && checkIsPhoneNumber(number: fullString){
+        if fullString.count > 0 && Validate.phoneNum(fullString).isRight{
             //            nextButtonEnableStyle()
         }else{
             //            nextButtonDisableStyle()

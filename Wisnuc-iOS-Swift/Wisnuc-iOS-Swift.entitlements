@@ -10,6 +10,8 @@
 	<array>
 		<string>CloudDocuments</string>
 	</array>
+	<key>com.apple.developer.networking.HotspotConfiguration</key>
+	<true/>
 	<key>com.apple.developer.networking.networkextension</key>
 	<array/>
 	<key>com.apple.developer.ubiquity-container-identifiers</key>

@@ -10,12 +10,12 @@ import UIKit
 import Alamofire
 
 class ResetPasswordAPI: BaseRequest {
-    var token:String?
-    var phone:String?
+    var mailTicket:String?
+    var phoneTicket:String?
     var password:String?
-    init(token:String,phone:String,password:String) {
-        self.token = token
-        self.phone = phone
+    init(phoneTicket:String? = nil, mailTicket:String? = nil,password:String) {
+        self.mailTicket = mailTicket
+        self.phoneTicket = phoneTicket
         self.password = password
     }
     
@@ -28,7 +28,7 @@ class ResetPasswordAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-        return RequestHTTPMethod.post
+        return RequestHTTPMethod.patch
     }
 
     override func requestEncoding() -> RequestParameterEncoding {
@@ -36,15 +36,17 @@ class ResetPasswordAPI: BaseRequest {
     }
     
     override func requestParameters() -> RequestParameters? {
-        guard let token = self.token else {
-            return nil
-        }
-        guard let phone = self.phone else {
-            return nil
-        }
         guard let password = self.password else {
             return nil
         }
-        return ["token":token,"phone":phone,"password":password]
+        
+        if let mailTicket = self.mailTicket {
+            return ["mailTicket":mailTicket,"password":password]
+        }
+        
+        if let phoneTicket = self.phoneTicket {
+            return ["phoneTicket":phoneTicket,"password":password]
+        }
+        return nil
     }
 }

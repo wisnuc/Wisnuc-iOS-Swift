@@ -7,7 +7,7 @@
 //
 
 enum DeviceBLEModelType:Int {
-    case NeedConfig
+    case NeedConfig = 1
     case Done
 //    case
 //    case NeedConfig

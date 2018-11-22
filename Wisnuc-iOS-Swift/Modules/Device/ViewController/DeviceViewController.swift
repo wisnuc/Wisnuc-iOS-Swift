@@ -37,12 +37,15 @@ class DeviceViewController: BaseViewController {
       
       self.view.bringSubview(toFront: appBar.headerViewController.headerView)
       
-      setHeaderContentFrame()
+      setData()
+      
+//      setHeaderContentFrame()
       
       deviecNameTitleTextField.text = "Wisnuc office"
 
       self.state = .normal
      
+      
       // Do any additional setup after loading the view.
    }
    
@@ -53,13 +56,63 @@ class DeviceViewController: BaseViewController {
       tab?.setTabBarHidden(false, animated: true)
    }
    
-   func setHeaderContentFrame(){
+   func setData(){
+      let requset = FruitmixStatsAPI.init()
+      requset.startRequestJSONCompletionHandler({ [weak self](response) in
+         if let error =  response.error{
+            Message.message(text: error.localizedDescription)
+         }else{
+            if let errorMessage = ErrorTools.responseErrorData(response.data){
+               Message.message(text: errorMessage)
+               return
+            }
+            
+            if let rootDic = response.value as? NSDictionary {
+               let  isLocal = AppNetworkService.networkState == .local ? true : false
+               var dataDic = rootDic
+               if !isLocal{
+                  if let dic = rootDic["data"] as? NSDictionary{
+                     dataDic = dic
+                  }
+               }
+               do {
+                  guard let data = jsonToData(jsonDic: dataDic) else{
+                     return
+                  }
+                  let model = try JSONDecoder().decode(StatsModel.self, from: data)
+                  self?.setHeaderContentFrame(model: model)
+               }catch{
+                  print(error as Any)
+                  //error
+               }
+            }
+         }
+      })
+   }
+   
+   func setHeaderContentFrame(model:StatsModel){
+      var filesProportion:CGFloat = 0.0
+      if let documentSize = model.document?.totalSize{
+//         filesProportion = CGFloat(documentSize/totalSize)
+      }
+      
+      var imageProportion:CGFloat = 0.0
+      if let imageSize = model.image?.totalSize{
+//         imageProportion = CGFloat(imageSize/totalSize)
+      }
+      
+      var videoProportion:CGFloat = 0.0
+      if let totalSize = model.video?.totalSize{
+//         videoProportion = CGFloat(videoSize/totalSize)
+      }
+     
+ 
       capacityFilesProgressView.snp.makeConstraints { (make) in
          make.centerY.equalTo(capacityProgressBackgroudView.snp.centerY)
          make.left.equalTo(capacityProgressBackgroudView.snp.left)
          make.top.equalTo(capacityProgressBackgroudView.snp.top)
          make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
-         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * 0.2)
+         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * filesProportion)
       }
       
       capacityPhotoProgressView.snp.makeConstraints { (make) in
@@ -67,7 +120,7 @@ class DeviceViewController: BaseViewController {
          make.left.equalTo(capacityFilesProgressView.snp.right).offset(2)
          make.top.equalTo(capacityProgressBackgroudView.snp.top)
          make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
-         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * 0.4)
+         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * imageProportion)
       }
       
       capacityVideoProgressView.snp.makeConstraints { (make) in
@@ -75,7 +128,7 @@ class DeviceViewController: BaseViewController {
          make.left.equalTo(capacityPhotoProgressView.snp.right).offset(2)
          make.top.equalTo(capacityProgressBackgroudView.snp.top)
          make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
-         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * 0.1)
+         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * videoProportion)
       }
       
       capacityOtherProgressView.snp.makeConstraints { (make) in

@@ -8,23 +8,20 @@
 
 import UIKit
 import Material
-
-enum RetrievePasswordState:Int {
-    case phone = 0
-    case email
-    case doubleVerification
-}
+import HandyJSON
 
 class MyAccountSecurityViewController: BaseViewController {
     let identifier = "Cellidentifier"
     let identifierSection2 = "Cellidentifier2"
     let headerHeight:CGFloat = 48
     let cellHeight:CGFloat = 72
+    var mailDataSource:Array<UserMailModel>?
+    var phoneDataSource:Array<UserPhoneModel>?
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setData()
 
+        setData()
+        
         self.view.addSubview(infoTabelView)
         
         appBar.headerViewController.headerView.trackingScrollView = infoTabelView
@@ -33,10 +30,73 @@ class MyAccountSecurityViewController: BaseViewController {
     }
     
     func setData(){
-        if  AppUserService.currentUser?.retrievePasswordState == nil{
-            AppUserService.currentUser?.retrievePasswordState = NSNumber.init(value:
-                RetrievePasswordState.phone.rawValue)
-            AppUserService.synchronizedCurrentUser()
+        getPhone()
+        getMail()
+    }
+    
+    func getMail(){
+        UserMailAPI.init().startRequestJSONCompletionHandler { [weak self](response) in
+            if let error = response.error {
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                }else{
+                    guard let jsonData = response.data else{
+                        return
+                    }
+                    do {
+                        if let stringDic = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String : Any]{
+                            if let mailArray = stringDic["data"] as? Array<[String:Any]>{
+                                var mailDataArray = Array<UserMailModel>.init()
+                                for value in mailArray{
+                                    if let mailModel = UserMailModel.deserialize(from: value) {
+                                        mailDataArray.append(mailModel)
+                                    }
+                                }
+                                self?.mailDataSource = mailDataArray
+                                self?.infoTabelView.reloadData()
+                            }
+                            print(stringDic as Any)
+                        }
+                    } catch let error {
+                        print(error)
+                    }
+                }
+            }
+        }
+    }
+    
+    func getPhone(){
+        UserPhoneAPI.init().startRequestJSONCompletionHandler { [weak self](response) in
+            if let error = response.error {
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                }else{
+                    guard let jsonData = response.data else{
+                        return
+                    }
+                    do {
+                        if let stringDic = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String : Any]{
+                            if let phoneArray = stringDic["data"] as? Array<[String:Any]>{
+                                var phoneDataArray = Array<UserPhoneModel>.init()
+                                for value in phoneArray{
+                                    if let phoneModel = UserPhoneModel.deserialize(from: value) {
+                                        phoneDataArray.append(phoneModel)
+                                    }
+                                }
+                                self?.phoneDataSource = phoneDataArray
+                                self?.infoTabelView.reloadData()
+                            }
+                            print(stringDic as Any)
+                        }
+                    } catch let error {
+                        print(error)
+                    }
+                }
+            }
         }
     }
     
@@ -55,18 +115,6 @@ class MyAccountSecurityViewController: BaseViewController {
         return label
     }
     
-    func cells(for tableView: UITableView , section:Int) -> [MyAccountSecurityVerificationTableViewCell]? {
-        var cells: [MyAccountSecurityVerificationTableViewCell] = []
-        let rows: Int = tableView.numberOfRows(inSection: section)
-        for row in 0..<rows {
-            let indexPath = IndexPath(row: row, section: section)
-            if let aPath = tableView.cellForRow(at: indexPath){
-                cells.append(aPath as! MyAccountSecurityVerificationTableViewCell)
-            }
-        }
-        return cells
-    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == infoTabelView {
 //            var tableview = scrollView as? UITableView
@@ -77,6 +125,10 @@ class MyAccountSecurityViewController: BaseViewController {
                 scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0)
             }
         }
+    }
+    
+    @objc func switchBtnHandle(_ sender:UISwitch){
+        
     }
     
     lazy var infoTabelView: UITableView = {
@@ -104,22 +156,20 @@ extension MyAccountSecurityViewController:UITableViewDelegate{
             case 0:
                 break
             case 1:
-                let verificationState = RetrievePasswordState(rawValue: AppUserService.currentUser?.retrievePasswordState?.intValue ?? 0)
-                var verificationCodeViewController:MyVerificationCodeViewController?
-                switch verificationState {
-                case .phone?:
-                   verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
-                case .email?:
-                    verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.changePassword)
-                case .doubleVerification?:
-                    verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
-                default:
-                    break
-                }
-                
-                if let verificationCodeVC = verificationCodeViewController{
-                    self.navigationController?.pushViewController(verificationCodeVC, animated: true)
-                }
+                  break
+//                var verificationCodeViewController:MyVerificationCodeViewController?
+//                switch verificationState {
+//                case .phone?:
+//                   verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
+//                case .doubleVerification?:
+//                    verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
+//                default:
+//                    break
+//                }
+//
+//                if let verificationCodeVC = verificationCodeViewController{
+//                    self.navigationController?.pushViewController(verificationCodeVC, animated: true)
+//                }
               
             case 2:
                 let bindPhoneViewController = MyBindPhoneViewController.init(style: .whiteWithoutShadow)
@@ -129,16 +179,6 @@ extension MyAccountSecurityViewController:UITableViewDelegate{
                 self.navigationController?.pushViewController(verificationCodeVC, animated: true)
             default:
                 break
-            }
-        }else{
-            for (i,value) in (cells(for: tableView,section: indexPath.section)?.enumerated())! {
-                if i != indexPath.row {
-                    value.isSelected = false
-                } else if i == indexPath.row {
-                    value.isSelected = true
-                    AppUserService.currentUser?.retrievePasswordState = NSNumber.init(value: RetrievePasswordState.init(rawValue: indexPath.row)!.rawValue)
-                    AppUserService.synchronizedCurrentUser()
-                }
             }
         }
     }
@@ -152,7 +192,7 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
         if section == 0{
             return 4
         }else{
-            return 3
+            return 1
         }
     }
     
@@ -180,7 +220,6 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
             headerView.addSubview(titleLabel)
             return headerView
         }
-        
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -195,7 +234,9 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
             switch indexPath.row {
             case 0:
                 cell.textLabel?.text = LocalizedString(forKey: "账号")
-                cell.detailTextLabel?.text = LocalizedString(forKey: "139****7773")
+                if let userName = AppUserService.currentUser?.userName {
+                    cell.detailTextLabel?.text = userName.replacePhone()
+                }
                 
             case 1:
                 cell.textLabel?.text = LocalizedString(forKey: "密码")
@@ -213,17 +254,28 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
                 cell.contentView.addSubview(label)
             case 2:
                 cell.textLabel?.text = LocalizedString(forKey: "绑定手机号")
-                cell.detailTextLabel?.text = LocalizedString(forKey: "139****7773")
                 cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-                
-                let label = self.rightLabel(LocalizedString(forKey: "去修改"))
-                cell.contentView.addSubview(label)
+                if let phoneArray = self.phoneDataSource{
+                    if phoneArray.count > 0 && phoneArray.first?.phoneNumber != nil {
+                        cell.detailTextLabel?.text = (phoneArray.first?.phoneNumber)!
+                        let label = self.rightLabel(LocalizedString(forKey: "去修改"))
+                        cell.contentView.addSubview(label)
+                    }
+                }
+               
             case 3:
                 cell.textLabel?.text = LocalizedString(forKey: "邮箱")
-                cell.detailTextLabel?.text = LocalizedString(forKey: "未绑定")
+                cell.detailTextLabel?.text =  LocalizedString(forKey: "未绑定")
+                var label = self.rightLabel(LocalizedString(forKey: "去绑定"))
+                if let mailArray = self.mailDataSource{
+                    if mailArray.count > 0 && mailArray.first?.mail != nil {
+                        if mailArray.first?.user == AppUserService.currentUser?.uuid{
+                            cell.detailTextLabel?.text = LocalizedString(forKey: (mailArray.first?.mail)!)
+                            label = self.rightLabel(LocalizedString(forKey: "去修改"))
+                        }
+                    }
+                }
                 cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-                
-                let label = self.rightLabel(LocalizedString(forKey: "去绑定"))
                 cell.contentView.addSubview(label)
             default: break
             }
@@ -238,23 +290,15 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
             cell.selectionStyle = .none
             switch indexPath.row {
             case 0:
-                cell.titleLabel.text = LocalizedString(forKey: "仅通过绑定手机找回密码")
-                cell.isSelected = AppUserService.currentUser?.retrievePasswordState?.intValue  == RetrievePasswordState.phone.rawValue ? true : false
-            case 1:
-               cell.titleLabel.text = LocalizedString(forKey: "仅使用邮箱找回密码")
-               cell.isSelected = AppUserService.currentUser?.retrievePasswordState?.intValue  == RetrievePasswordState.email.rawValue ? true : false
-            case 2:
                 cell.titleLabel.text = LocalizedString(forKey: "双重身份验证")
-                cell.isSelected = AppUserService.currentUser?.retrievePasswordState?.intValue  == RetrievePasswordState.doubleVerification.rawValue ? true : false
+                let switchBtn = UISwitch.init()
+                switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
+                switchBtn.isOn = AppUserService.currentUser?.retrievePasswordState?.intValue  == 1 ? true : false
+                switchBtn.addTarget(self, action: #selector(switchBtnHandle(_ :)), for: UIControlEvents.valueChanged)
+                cell.contentView.addSubview(switchBtn)
             default: break
                 
             }
-        
-//            if cell.isSelected {
-//                cell.selectButton.isSelected = true
-//            }else{
-//                cell.selectButton.isSelected = true
-//            }
             return cell
         }
     }

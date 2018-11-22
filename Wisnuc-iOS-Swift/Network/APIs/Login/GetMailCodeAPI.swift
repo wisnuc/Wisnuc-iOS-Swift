@@ -1,26 +1,28 @@
 //
-//  SmsCodeTicket.swift
+//  GetMailCodeAPI.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/11/16.
+//  Created by wisnuc-imac on 2018/11/22.
 //  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
 import Alamofire
 
-class SmsCodeTicket: BaseRequest {
-    var phone:String?
-    var code:String?
+class GetMailCodeAPI: BaseRequest {
+    var mail:String?
     var type:SendCodeType?
-    init(phone:String,code:String,type:SendCodeType) {
-        self.code = code
-        self.phone = phone
+    init(mail:String,type:SendCodeType) {
+        self.mail = mail
         self.type = type
     }
     
+    override init() {
+        
+    }
+    
     override func requestURL() -> String {
-        return "/user/smsCode/ticket"
+        return "/user/mailCode"
     }
     
     override func baseURL() -> String {
@@ -36,16 +38,14 @@ class SmsCodeTicket: BaseRequest {
     }
     
     override func requestParameters() -> RequestParameters? {
-        guard let code = self.code else {
-            return nil
-        }
-        guard let phone = self.phone else {
+        guard let mail = self.mail else {
             return nil
         }
         
         guard let type = self.type else {
             return nil
         }
-        return ["phone":phone,"code":code,"type":type.rawValue]
+        let requestParameters:RequestParameters = ["mail":mail,"type":type]
+        return requestParameters
     }
 }

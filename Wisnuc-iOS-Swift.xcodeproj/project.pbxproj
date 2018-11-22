@@ -180,6 +180,19 @@
 		1F329392219EAEB100F075DD /* eye_close_gray@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F329391219EAEB000F075DD /* eye_close_gray@3x.png */; };
 		1F329394219EC6C400F075DD /* ResetPasswordAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F329393219EC6C400F075DD /* ResetPasswordAPI.swift */; };
 		1F329396219ED42100F075DD /* SmsCodeTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F329395219ED42100F075DD /* SmsCodeTicket.swift */; };
+		1F32939E21A3FD4600F075DD /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F32939D21A3FD4600F075DD /* NetworkExtension.framework */; };
+		1F3293A521A403FA00F075DD /* FruitmixStatsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293A421A403FA00F075DD /* FruitmixStatsAPI.swift */; };
+		1F3293A821A405AD00F075DD /* StatsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293A721A405AD00F075DD /* StatsModel.swift */; };
+		1F3293AA21A54C5000F075DD /* message_leftView.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3293A921A54C4F00F075DD /* message_leftView.png */; };
+		1F3293AC21A54C6100F075DD /* message_leftView@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3293AB21A54C6000F075DD /* message_leftView@2x.png */; };
+		1F3293AE21A54C6A00F075DD /* message_leftView@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3293AD21A54C6900F075DD /* message_leftView@3x.png */; };
+		1F3293B021A5593E00F075DD /* CheckUserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293AF21A5593E00F075DD /* CheckUserAPI.swift */; };
+		1F3293B421A645E900F075DD /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F3293B321A645E900F075DD /* ExternalAccessory.framework */; };
+		1F3293B621A6521500F075DD /* GetMailCodeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293B521A6521500F075DD /* GetMailCodeAPI.swift */; };
+		1F3293B921A67A9600F075DD /* UserMailAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293B821A67A9600F075DD /* UserMailAPI.swift */; };
+		1F3293BC21A6982F00F075DD /* UserMailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293BB21A6982F00F075DD /* UserMailModel.swift */; };
+		1F3293BE21A6A0FF00F075DD /* UserPhoneAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293BD21A6A0FF00F075DD /* UserPhoneAPI.swift */; };
+		1F3293C021A6A17D00F075DD /* UserPhoneModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293BF21A6A17D00F075DD /* UserPhoneModel.swift */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -230,8 +243,6 @@
 		1F362F8A21355E26000B3384 /* next_button_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8921355E25000B3384 /* next_button_arrow@3x.png */; };
 		1F362F8C21355E2F000B3384 /* next_button_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8B21355E2E000B3384 /* next_button_arrow@2x.png */; };
 		1F362F8E21355E36000B3384 /* next_button_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F362F8D21355E35000B3384 /* next_button_arrow.png */; };
-		1F362F902136803B000B3384 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F362F8F2136803B000B3384 /* ExternalAccessory.framework */; };
-		1F362F92213680BC000B3384 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F362F91213680BC000B3384 /* NetworkExtension.framework */; };
 		1F38E23921782E7E003FCAEE /* select_device_main_theme.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E23821782E7D003FCAEE /* select_device_main_theme.png */; };
 		1F38E23B21782E8A003FCAEE /* select_device_main_theme@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E23A21782E8A003FCAEE /* select_device_main_theme@2x.png */; };
 		1F38E23D21782E95003FCAEE /* select_device_main_theme@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F38E23C21782E95003FCAEE /* select_device_main_theme@3x.png */; };
@@ -1190,6 +1201,19 @@
 		1F329391219EAEB000F075DD /* eye_close_gray@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eye_close_gray@3x.png"; sourceTree = "<group>"; };
 		1F329393219EC6C400F075DD /* ResetPasswordAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordAPI.swift; sourceTree = "<group>"; };
 		1F329395219ED42100F075DD /* SmsCodeTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmsCodeTicket.swift; sourceTree = "<group>"; };
+		1F32939D21A3FD4600F075DD /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		1F3293A421A403FA00F075DD /* FruitmixStatsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FruitmixStatsAPI.swift; sourceTree = "<group>"; };
+		1F3293A721A405AD00F075DD /* StatsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsModel.swift; sourceTree = "<group>"; };
+		1F3293A921A54C4F00F075DD /* message_leftView.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message_leftView.png; sourceTree = "<group>"; };
+		1F3293AB21A54C6000F075DD /* message_leftView@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message_leftView@2x.png"; sourceTree = "<group>"; };
+		1F3293AD21A54C6900F075DD /* message_leftView@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message_leftView@3x.png"; sourceTree = "<group>"; };
+		1F3293AF21A5593E00F075DD /* CheckUserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUserAPI.swift; sourceTree = "<group>"; };
+		1F3293B321A645E900F075DD /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		1F3293B521A6521500F075DD /* GetMailCodeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMailCodeAPI.swift; sourceTree = "<group>"; };
+		1F3293B821A67A9600F075DD /* UserMailAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMailAPI.swift; sourceTree = "<group>"; };
+		1F3293BB21A6982F00F075DD /* UserMailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMailModel.swift; sourceTree = "<group>"; };
+		1F3293BD21A6A0FF00F075DD /* UserPhoneAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPhoneAPI.swift; sourceTree = "<group>"; };
+		1F3293BF21A6A17D00F075DD /* UserPhoneModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPhoneModel.swift; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -1243,8 +1267,6 @@
 		1F362F8921355E25000B3384 /* next_button_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next_button_arrow@3x.png"; sourceTree = "<group>"; };
 		1F362F8B21355E2E000B3384 /* next_button_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "next_button_arrow@2x.png"; sourceTree = "<group>"; };
 		1F362F8D21355E35000B3384 /* next_button_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next_button_arrow.png; sourceTree = "<group>"; };
-		1F362F8F2136803B000B3384 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
-		1F362F91213680BC000B3384 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		1F38E23821782E7D003FCAEE /* select_device_main_theme.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select_device_main_theme.png; sourceTree = "<group>"; };
 		1F38E23A21782E8A003FCAEE /* select_device_main_theme@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select_device_main_theme@2x.png"; sourceTree = "<group>"; };
 		1F38E23C21782E95003FCAEE /* select_device_main_theme@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select_device_main_theme@3x.png"; sourceTree = "<group>"; };
@@ -2632,10 +2654,10 @@
 				1FDF4CF221917BFA00521DDE /* AudioToolbox.framework in Frameworks */,
 				1FDF4C8521917ABD00521DDE /* CoreMedia.framework in Frameworks */,
 				1FBB701D213FC5240090FA57 /* libssl.a in Frameworks */,
-				1F362F902136803B000B3384 /* ExternalAccessory.framework in Frameworks */,
-				1F362F92213680BC000B3384 /* NetworkExtension.framework in Frameworks */,
+				1F32939E21A3FD4600F075DD /* NetworkExtension.framework in Frameworks */,
 				1FBB701C213FC5240090FA57 /* libcrypto.a in Frameworks */,
 				F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */,
+				1F3293B421A645E900F075DD /* ExternalAccessory.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2994,6 +3016,8 @@
 				1FFC8197219BF4B200371C8D /* BindStationAPI.swift */,
 				1F329393219EC6C400F075DD /* ResetPasswordAPI.swift */,
 				1F329395219ED42100F075DD /* SmsCodeTicket.swift */,
+				1F3293AF21A5593E00F075DD /* CheckUserAPI.swift */,
+				1F3293B521A6521500F075DD /* GetMailCodeAPI.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -3044,6 +3068,40 @@
 				1FFD12C520EB80E70053A3F7 /* DirOprationAPI.swift */,
 			);
 			path = Files;
+			sourceTree = "<group>";
+		};
+		1F3293A321A403B600F075DD /* Device */ = {
+			isa = PBXGroup;
+			children = (
+				1F3293A421A403FA00F075DD /* FruitmixStatsAPI.swift */,
+			);
+			path = Device;
+			sourceTree = "<group>";
+		};
+		1F3293A621A4059F00F075DD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1F3293A721A405AD00F075DD /* StatsModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1F3293B721A67A6B00F075DD /* My */ = {
+			isa = PBXGroup;
+			children = (
+				1F3293BD21A6A0FF00F075DD /* UserPhoneAPI.swift */,
+				1F3293B821A67A9600F075DD /* UserMailAPI.swift */,
+			);
+			path = My;
+			sourceTree = "<group>";
+		};
+		1F3293BA21A697C200F075DD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1F3293BB21A6982F00F075DD /* UserMailModel.swift */,
+				1F3293BF21A6A17D00F075DD /* UserPhoneModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		1F359FC42091828B00E2FF36 /* DiskError */ = {
@@ -3334,6 +3392,7 @@
 		1F537A0B2124128600A555C5 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				1F3293BA21A697C200F075DD /* Model */,
 				1F38E2BB2182FCBD003FCAEE /* View */,
 				1FE0894B21709E590049F44B /* ViewController */,
 			);
@@ -3351,6 +3410,9 @@
 		1F5882282085918B00394BD6 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				1F3293A921A54C4F00F075DD /* message_leftView.png */,
+				1F3293AB21A54C6000F075DD /* message_leftView@2x.png */,
+				1F3293AD21A54C6900F075DD /* message_leftView@3x.png */,
 				1FA5D7542159FECA0025F870 /* eye_open.png */,
 				1FA5D7562159FED20025F870 /* eye_open@2x.png */,
 				1FA5D7582159FED90025F870 /* eye_open@3x.png */,
@@ -4219,6 +4281,8 @@
 		1FD9B796207CC78B00906D80 /* APIs */ = {
 			isa = PBXGroup;
 			children = (
+				1F3293B721A67A6B00F075DD /* My */,
+				1F3293A321A403B600F075DD /* Device */,
 				1F537898210FFB9600A555C5 /* Media */,
 				1FA9C3DC210585C600E8411E /* Photos */,
 				1F307C7620BFC76D00AE105C /* Files */,
@@ -5612,6 +5676,7 @@
 		1FE0895C217469550049F44B /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				1F3293A621A4059F00F075DD /* Model */,
 				1FE089752174947F0049F44B /* View */,
 				1FE0897221748F600049F44B /* ViewController */,
 			);
@@ -5923,6 +5988,8 @@
 		8F207FC9B9AE44C14EAC998A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F3293B321A645E900F075DD /* ExternalAccessory.framework */,
+				1F32939D21A3FD4600F075DD /* NetworkExtension.framework */,
 				1FDF4E092191807F00521DDE /* SGPlayer */,
 				1FDF4DE22191800000521DDE /* SGPlatform */,
 				1FDF4DDE21917FA300521DDE /* compile-build.sh */,
@@ -5934,8 +6001,6 @@
 				1FDF4CF121917BF800521DDE /* AudioToolbox.framework */,
 				1FDF4C8421917ABC00521DDE /* CoreMedia.framework */,
 				1FDF4BA221917A5A00521DDE /* SGPlayer */,
-				1F362F91213680BC000B3384 /* NetworkExtension.framework */,
-				1F362F8F2136803B000B3384 /* ExternalAccessory.framework */,
 				8E6E2B482DFBAE19258235E2 /* Pods_Wisnuc_iOS_Swift.framework */,
 				CC624A8B343908C1991C848B /* Pods_Wisnuc_iOS_SwiftTests.framework */,
 			);
@@ -6153,6 +6218,9 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.HotspotConfiguration = {
+								enabled = 1;
+							};
 							com.apple.NetworkExtensions.iOS = {
 								enabled = 1;
 							};
@@ -6265,6 +6333,7 @@
 				1FD9B75A207CBE8900906D80 /* Assets.xcassets in Resources */,
 				1F38E29E2181C5B3003FCAEE /* cell_arrow@2x.png in Resources */,
 				1FD1F30A2154E24E00C3E429 /* unselect_white@2x.png in Resources */,
+				1F3293AE21A54C6A00F075DD /* message_leftView@3x.png in Resources */,
 				1F050E2520A990CD0037F00A /* FilesOfflineTableViewCell.xib in Resources */,
 				1FBB6F552137F6DB0090FA57 /* x_gray.png in Resources */,
 				1F2B45A6208F290200C8971F /* close@2x.png in Resources */,
@@ -6675,6 +6744,7 @@
 				1F8EBB5620A0239000E8AB83 /* files_folder.png in Resources */,
 				1FE089AF217714AD0049F44B /* add_user@3x.png in Resources */,
 				1FD1F2EE2153434B00C3E429 /* add_album@2x.png in Resources */,
+				1F3293AA21A54C5000F075DD /* message_leftView.png in Resources */,
 				1FA6A1AB20CFA074007A0AB2 /* search@2x.png in Resources */,
 				1F359FF3209310A200E2FF36 /* RadioButtonTableViewCell.xib in Resources */,
 				1FDF46E6218ADC1800521DDE /* delete_photo@2x.png in Resources */,
@@ -6712,6 +6782,7 @@
 				1FD1F2FC2153A46900C3E429 /* photo_placeholder@2x.png in Resources */,
 				1F4E93882089D64D00DD1EA7 /* disk@2x.png in Resources */,
 				1F565A0120D10F5100D86FDB /* logo_gray@2x.png in Resources */,
+				1F3293AC21A54C6100F075DD /* message_leftView@2x.png in Resources */,
 				1F050E1420A967EB0037F00A /* files_cloud.png in Resources */,
 				1FE089892175E3B80049F44B /* phone_icon_device.png in Resources */,
 				1FD1F2F02153435400C3E429 /* add_album.png in Resources */,
@@ -6945,6 +7016,7 @@
 				1FE0897B21749E8C0049F44B /* UIProgressViewExtension.swift in Sources */,
 				1F2CE30C20B5376200D9E5BD /* AppService.swift in Sources */,
 				1F329394219EC6C400F075DD /* ResetPasswordAPI.swift in Sources */,
+				1F3293B621A6521500F075DD /* GetMailCodeAPI.swift in Sources */,
 				1F4242BA20F5D2A50085E2F0 /* WSBigimgCollectionViewCell.swift in Sources */,
 				1F307C5D20BBCB9900AE105C /* CloudGetStationsAPI.swift in Sources */,
 				1FFD132B20EF3B220053A3F7 /* AssetService.swift in Sources */,
@@ -7020,6 +7092,7 @@
 				1F359FF2209310A200E2FF36 /* RadioButtonTableViewCell.swift in Sources */,
 				1FAADEF320AC144A00739220 /* FilesFileInfoTableViewController.swift in Sources */,
 				1F1BABA620C5195900D32C5A /* EntriesModel.swift in Sources */,
+				1F3293C021A6A17D00F075DD /* UserPhoneModel.swift in Sources */,
 				1F362F8821351FDA000B3384 /* LoginRootViewController.swift in Sources */,
 				1F0FD0D9214A5298003D7936 /* AttributeTouchLabel.swift in Sources */,
 				1F588213208481A200394BD6 /* UIImageExtension.swift in Sources */,
@@ -7083,6 +7156,7 @@
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FE089C1217731530049F44B /* DeviceAddDeviceViewController.swift in Sources */,
 				1FA3B1D521884BEB00B68AA7 /* PhotoMediaContainerViewController.swift in Sources */,
+				1F3293BE21A6A0FF00F075DD /* UserPhoneAPI.swift in Sources */,
 				1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */,
 				1F1BABA420C50C7100D32C5A /* DriveDirAPI.swift in Sources */,
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
@@ -7090,6 +7164,7 @@
 				1FE674E120D21B11006F97DB /* TRManager.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
 				1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */,
+				1F3293B921A67A9600F075DD /* UserMailAPI.swift in Sources */,
 				1FFD131720EF0ABB0053A3F7 /* TYDecorationSectionLayout.m in Sources */,
 				06EE1ED320A70D52000E739D /* BaseTableViewController.swift in Sources */,
 				1F359FC6209182BB00E2FF36 /* DiskErrorViewController.swift in Sources */,
@@ -7103,6 +7178,7 @@
 				1F58821B20849FCA00394BD6 /* KeyStringDefine.swift in Sources */,
 				1F38E24921787F4A003FCAEE /* DeviceUserInfoViewController.swift in Sources */,
 				1FFC81762199628000371C8D /* ErrorTools.swift in Sources */,
+				1F3293A821A405AD00F075DD /* StatsModel.swift in Sources */,
 				1F8EBB48209C512300E8AB83 /* FilesFileCollectionViewCell.swift in Sources */,
 				1F169DD3207F5D0B00860F31 /* FirstLaunchViewController.swift in Sources */,
 				1F5882302085D39D00394BD6 /* UIViewExtension.swift in Sources */,
@@ -7112,6 +7188,7 @@
 				1F38E2BA2181D0BF003FCAEE /* SettingLanguageViewController.swift in Sources */,
 				1F1C2FCE2186D314002B13F8 /* KeyBoradTool.m in Sources */,
 				1F520968214A19BF0058A8D3 /* DeviceBLEModel.swift in Sources */,
+				1F3293BC21A6982F00F075DD /* UserMailModel.swift in Sources */,
 				1FDF46EA2191334F00521DDE /* UIImageViewExtension.swift in Sources */,
 				1FE089952175F7400049F44B /* DeviceBackupPhoneDtailsViewController.swift in Sources */,
 				1F5882632085FDB400394BD6 /* UIViewControllerExtension.swift in Sources */,
@@ -7169,6 +7246,7 @@
 				1F38E2BE2182FD33003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift in Sources */,
 				1F83AE7720886A13007CCCFD /* LogOutViewController.swift in Sources */,
 				1FFD131320EE29460053A3F7 /* WSAsset.swift in Sources */,
+				1F3293A521A403FA00F075DD /* FruitmixStatsAPI.swift in Sources */,
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
 				1FD1F2D92150FBA100C3E429 /* GetSmsCodeAPI.swift in Sources */,
 				1FFD132820EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m in Sources */,
@@ -7179,6 +7257,7 @@
 				1FE08923216DEADF0049F44B /* NewAlbumViewCollectionLayout.swift in Sources */,
 				1FE08978217494D30049F44B /* DeviceChangeDeviceTableViewCell.swift in Sources */,
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
+				1F3293B021A5593E00F075DD /* CheckUserAPI.swift in Sources */,
 				1FFD132620EF36A50053A3F7 /* UIScrollView+IndicatorExt.m in Sources */,
 				1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */,
 				1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */,

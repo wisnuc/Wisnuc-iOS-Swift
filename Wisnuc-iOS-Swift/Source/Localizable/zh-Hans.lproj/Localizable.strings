@@ -19,14 +19,27 @@
 "confirm" = "确定";
 "power_off" = "关机";
 
+//文件
 "Folders" = "文件夹";
+"Folder" = "文件夹";
 "NAME" = "名称";
-
 "Rename" = "重命名";
 "Files" = "文件";
-
 "New" = "新建";
 "No file" = "暂无文件";
+"Create a copy" = "创建一个副本";
+"Copy to..." = "复制到...";
+"Remove" = "删除";
+"Share to shared folder" = "分享到共享文件夹";
+"Untitled folder" = "未命名文件夹";
+"Create" = "新建";
+"New folder" = "新建文件夹";
+"Folder name" = "文件夹名";
+"Offline available" = "离线可用";
+"Open with other apps" = "使用其他应用打开";
+
+//任务
+"Delete" = "删除";
 
 
 

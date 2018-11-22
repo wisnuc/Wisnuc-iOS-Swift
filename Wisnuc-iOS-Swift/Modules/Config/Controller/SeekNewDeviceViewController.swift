@@ -191,10 +191,11 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
 //        case .configFinish?:
 //           break
         case .Done?:
-            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
-            configNetVC.deviceModel = model
-            self.navigationController?.pushViewController(configNetVC, animated: true)
-            LLBlueTooth.instance.stopScan()
+            Message.message(text: LocalizedString(forKey: "已被绑定，无法使用"))
+//            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
+//            configNetVC.deviceModel = model
+//            self.navigationController?.pushViewController(configNetVC, animated: true)
+//            LLBlueTooth.instance.stopScan()
 //        case .configErrorNoDisk?:
 //            break
         default:

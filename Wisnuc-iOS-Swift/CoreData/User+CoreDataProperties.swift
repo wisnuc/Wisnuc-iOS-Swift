@@ -42,4 +42,5 @@ extension User {
     @NSManaged public var language:NSNumber?
     @NSManaged public var retrievePasswordState:NSNumber?
     @NSManaged public var isSelectStation:NSNumber?
+    @NSManaged public var cookie:String?
 }

@@ -171,6 +171,30 @@ class LoginViewController: BaseViewController {
         }
     }
     
+    func synchronizedUser(_ model:SighInTokenModel, _ cookie:String){
+        guard let userId = model.data?.id else{
+            return
+        }
+        let user = AppUserService.createUser(uuid: userId)
+        
+        user.cookie = cookie
+        
+        if let avatarUrl = model.data?.avatarUrl{
+            user.avaterURL = avatarUrl
+        }
+        
+        if let nickName = model.data?.nickName{
+            user.nickName = nickName
+        }
+        
+        if let username = model.data?.username{
+            user.userName = username
+        }
+        user.cloudToken = model.data?.token!
+        AppUserService.setCurrentUser(user)
+        AppUserService.synchronizedCurrentUser()
+    }
+    
     //键盘弹出监听
     @objc func keyboardShow(note: Notification)  {
         if self.alertView != nil {
@@ -210,7 +234,7 @@ class LoginViewController: BaseViewController {
     }
     
     @objc func forgetPwdTap(_ sender:UIBarButtonItem){
-        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "忘记密码"), detailTitleString:LocalizedString(forKey: "请输入您的手机号码来查找账号"), state: .forgetPwd,smsCodeType:.password)
+        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "忘记密码"), detailTitleString:LocalizedString(forKey: "您可通过手机号或邮箱来找回密码"), state: .forgetPwd,smsCodeType:.password)
         nextViewController.modalTransitionStyle = .crossDissolve
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
@@ -248,7 +272,7 @@ class LoginViewController: BaseViewController {
         if isNilString(self.phoneNumberTextFiled.text)  {
             self.alertError(errorText: LocalizedString(forKey: "手机号不能为空"))
             return
-        }else if !checkIsPhoneNumber(number: self.phoneNumberTextFiled.text!){
+        }else if !Validate.phoneNum(self.phoneNumberTextFiled.text!).isRight{
             self.alertError(errorText: LocalizedString(forKey:"请输入正确的手机号"))
             return
         }
@@ -260,29 +284,18 @@ class LoginViewController: BaseViewController {
                 do {
                     let model = try JSONDecoder().decode(SighInTokenModel.self, from: response.value!)
                     if model.code == 1 {
+                        guard let header = response.response?.allHeaderFields else {
+                            return
+                        }
+                        guard let cookie = header["Set-Cookie"] as? String else {
+                            return
+                        }
                         if let token = model.data?.token {
-//                            print(token)
+                            self?.synchronizedUser(model, cookie)
                             guard let userId = model.data?.id else{
                                 return
                             }
-                            let user = AppUserService.createUser(uuid: userId)
-                           
-                            if let avatarUrl = model.data?.avatarUrl{
-                                user.avaterURL = avatarUrl
-                            }
-
-                            if let nickName = model.data?.nickName{
-                                user.nickName = nickName
-                            }
-                            
-                            if let username = model.data?.username{
-                                user.userName = username
-                            }
-                            user.cloudToken = model.data?.token!
-                            AppUserService.setCurrentUser(user)
-                            AppUserService.synchronizedCurrentUser()
-//                            Message.message(text: "登录成功")
-                            LoginCommonHelper.instance.stationAction(token: token,userId:user.uuid!, viewController: self!)
+                            LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!)
                         }
                     }else{
                         if let errorString = ErrorTools.responseErrorData(response.data){
@@ -441,14 +454,14 @@ extension LoginViewController:UITextFieldDelegate{
                 textField.text = textField.text?.subString(to: phoneNumberLimitCount)
                 return false
             }
-            if checkIsPhoneNumber(number: fullString) {
+            if Validate.phoneNum(fullString).isRight {
                 textField.rightView = self.rightView(type: RightViewType.right)
                 phoneNumberIsRight = true
             }else{
                 textField.rightView = nil
             }
         }else{
-            if checkIsPhoneNumber(number: self.phoneNumberTextFiled.text) {
+            if Validate.phoneNum( self.phoneNumberTextFiled.text!).isRight {
                 textField.rightView = self.rightView(type: RightViewType.right)
                 phoneNumberIsRight = true
             }else{
