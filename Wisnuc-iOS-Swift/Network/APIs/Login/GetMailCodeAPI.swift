@@ -45,7 +45,7 @@ class GetMailCodeAPI: BaseRequest {
         guard let type = self.type else {
             return nil
         }
-        let requestParameters:RequestParameters = ["mail":mail,"type":type]
+        let requestParameters:RequestParameters = ["mail":mail,"type":type.rawValue]
         return requestParameters
     }
 }

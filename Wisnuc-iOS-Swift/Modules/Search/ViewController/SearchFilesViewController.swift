@@ -185,6 +185,59 @@ class SearchFilesViewController: BaseViewController {
         headerViewTitleLabel.removeFromSuperview()
         requests?.removeAll()
     }
+    
+    func downloadRequestURL(model:EntriesModel) -> String?{
+        guard let place = model.place else {
+            return nil
+        }
+        
+        guard let driveUUID = placesArray?[place] else {
+            return nil
+        }
+        
+        guard let directoryUUID = model.pdir else {
+            return nil
+        }
+        
+        guard let uuid = model.uuid else {
+            return nil
+        }
+        
+        guard let name = model.name else {
+            return nil
+        }
+        
+        switch AppNetworkService.networkState {
+        case .normal?:
+            let urlPath = "/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))"
+            let params = ["name":name]
+            let dataDic = [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+            guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+                return nil
+            }
+            
+            guard let dataString = String.init(data: data, encoding: .utf8) else {
+                return nil
+            }
+            
+            guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+                return nil
+            }
+            
+            return urlString
+        case .local?:
+            guard let baseURL = RequestConfig.sharedInstance.baseURL else {
+                return nil
+            }
+            
+            let localUrl = "\(String(describing: baseURL))/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))?name=\(String(describing: name))"
+            
+            return localUrl.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        default:
+            break
+        }
+        return nil
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -380,11 +433,9 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
             if FilesRootViewController.downloadManager.cache.fileExists(fileName: model.name ?? ""){
                 self.readFile(filePath: FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
             }else{
-            let driveUUID = placesArray![model.place!]
-            let resource = "/drives/\(String(describing: driveUUID))/dirs/\(String(describing: model.pdir!))/entries/\(String(describing: model.uuid!))"
-            let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID))/dirs/\(String(describing: model.pdir!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
-            var requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
-            requestURL = requestURL.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                guard let requestURL =  downloadRequestURL(model: model) else{
+                    return
+                }
                 let bundle = Bundle.init(for: FilesDownloadAlertViewController.self)
                 let storyboard = UIStoryboard.init(name: "FilesDownloadAlertViewController", bundle: bundle)
                 let identifier = "FilesDownloadDialogID"

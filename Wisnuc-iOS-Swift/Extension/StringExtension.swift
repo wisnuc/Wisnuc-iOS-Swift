@@ -55,7 +55,10 @@ enum Validate {
 }
 
 extension String{
-    func replacePhone() -> String {
+    func replacePhone() -> String? {
+        if self.count != 11 {
+            return nil
+        }
         let start = self.index(self.startIndex, offsetBy: 3)
         let end = self.index(self.startIndex, offsetBy: 7)
         let range = Range(uncheckedBounds: (lower: start, upper: end))

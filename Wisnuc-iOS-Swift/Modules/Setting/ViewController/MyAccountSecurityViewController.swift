@@ -19,14 +19,17 @@ class MyAccountSecurityViewController: BaseViewController {
     var phoneDataSource:Array<UserPhoneModel>?
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        setData()
         
         self.view.addSubview(infoTabelView)
         
         appBar.headerViewController.headerView.trackingScrollView = infoTabelView
         
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setData()
     }
     
     func setData(){
@@ -127,6 +130,69 @@ class MyAccountSecurityViewController: BaseViewController {
         }
     }
     
+    func sendCodeAction(type:SendCodeType,callback:@escaping (()->())){
+        guard let phone = phoneDataSource?.first?.phoneNumber else {
+            Message.message(text: "没有绑定手机号")
+            return
+        }
+        
+        if !Validate.phoneNum(phone).isRight{
+            Message.message(text: "手机号不符合规则")
+            return
+        }
+        
+        guard let token = AppUserService.currentUser?.cloudToken else {
+            Message.message(text: "无法发送短信验证码")
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        GetSmsCodeAPI.init(phoneNumber: phone,type:type,wechatToken:token).startRequestJSONCompletionHandler { (response) in
+            if  response.error == nil{
+                let responseDic = response.value as! NSDictionary
+                let code = responseDic["code"] as? Int
+                if code == 1 {
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    callback()
+                }else{
+                    
+                    if let message = ErrorTools.responseErrorData(response.data){
+                        Message.message(text:"error: code:\(code!) message:\(message)")
+                    }
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                }
+            }else{
+                // error
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                guard let responseDic =  dataToNSDictionary(data: response.data) else{
+                    if response.error is BaseError{
+                        let baseError = response.error as! BaseError
+                        Message.message(text:"请求错误：\(String(describing: baseError.localizedDescription))")
+                    }else{
+                        let message = response.error?.localizedDescription ?? "未知原因"
+                        Message.message(text:"请求错误：\(message)")
+                    }
+                    return
+                }
+                if let code = responseDic["code"] as? Int{
+                    switch code {
+                    case ErrorCode.Request.MobileError:
+                        Message.message(text: LocalizedString(forKey: "手机号错误"))
+                    case ErrorCode.Request.CodeLimitOut:
+                        Message.message(text: LocalizedString(forKey: "验证码发送超过限制，请稍候重试"))
+                    default:
+                        if let message = responseDic["message"] as? String{
+                            Message.message(text:"\(message)")
+                        }
+                    }
+                }else{
+                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                }
+            }
+        }
+    }
+    
+    
     @objc func switchBtnHandle(_ sender:UISwitch){
         
     }
@@ -175,8 +241,18 @@ extension MyAccountSecurityViewController:UITableViewDelegate{
                 let bindPhoneViewController = MyBindPhoneViewController.init(style: .whiteWithoutShadow)
                 self.navigationController?.pushViewController(bindPhoneViewController, animated: true)
             case 3:
-                let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.bindEmail)
-                self.navigationController?.pushViewController(verificationCodeVC, animated: true)
+                guard let phone = phoneDataSource?.first?.phoneNumber else {
+                    Message.message(text: "没有绑定手机号")
+                    return
+                }
+                
+                sendCodeAction(type: .mail) {
+                    var verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.bindEmail,codeType:.mail,phone:phone)
+                    if let mail = self.mailDataSource?.first?.mail{
+                        verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.emailCodeVerification,codeType:.mail,phone:phone,mail:mail)
+                    }
+                    self.navigationController?.pushViewController(verificationCodeVC, animated: true)
+                }
             default:
                 break
             }
@@ -257,7 +333,7 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
                 cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                 if let phoneArray = self.phoneDataSource{
                     if phoneArray.count > 0 && phoneArray.first?.phoneNumber != nil {
-                        cell.detailTextLabel?.text = (phoneArray.first?.phoneNumber)!
+                        cell.detailTextLabel?.text = (phoneArray.first?.phoneNumber)!.replacePhone()
                         let label = self.rightLabel(LocalizedString(forKey: "去修改"))
                         cell.contentView.addSubview(label)
                     }

@@ -89,7 +89,7 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>WISNUC 需要访问您的相册</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>WISNUC 需要访问您的相册用以备份</string>
+	<string>WISNUC 需要访问您的相册用以备份及浏览本地相片</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

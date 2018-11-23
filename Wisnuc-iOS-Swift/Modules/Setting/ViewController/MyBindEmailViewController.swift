@@ -15,10 +15,15 @@ class MyBindEmailViewController: BaseViewController {
         prepareNotification()
         self.view.addSubview(titleLabel)
         self.view.addSubview(detailLabel)
-        self.view.addSubview(nicknameTextField)
+        self.view.addSubview(emailAdressTextField)
         self.view.addSubview(nextButton)
         // Do any additional setup after loading the view.
     }
+    
+//    init(style: NavigationStyle,mail:String) {
+//        super.init(style: style)
+//
+//    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -45,11 +50,66 @@ class MyBindEmailViewController: BaseViewController {
         self.nextButton.isEnabled = true
     }
     
+    func sendMailCodeAction(type:SendCodeType,callback:@escaping (()->())){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        guard let mail = self.emailAdressTextField.text else {
+            Message.message(text: "邮箱不能为空")
+            return
+        }
+        if !Validate.email(mail).isRight{
+            Message.message(text: "邮箱格式不正确")
+        }
+        GetMailCodeAPI.init(mail: mail,type:type).startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if  response.error == nil{
+                let responseDic = response.value as! NSDictionary
+                let code = responseDic["code"] as? Int
+                if code == 1 {
+                    return callback()
+                }else{
+                    if let message = ErrorTools.responseErrorData(response.data){
+                        Message.message(text:"error: code:\(code!) message:\(message)")
+                    }
+                }
+            }else{
+                // error
+                guard let responseDic =  dataToNSDictionary(data: response.data) else{
+                    if response.error is BaseError{
+                        let baseError = response.error as! BaseError
+                        Message.message(text:"请求错误：\(String(describing: baseError.localizedDescription))")
+                    }else{
+                        let message = response.error?.localizedDescription ?? "未知原因"
+                        Message.message(text:"请求错误：\(message)")
+                    }
+                    return
+                }
+                if let code = responseDic["code"] as? Int{
+                    
+                    switch code {
+                    case ErrorCode.Request.MobileError:
+                        Message.message(text: LocalizedString(forKey: "手机号错误"))
+                    case ErrorCode.Request.CodeLimitOut:
+                        Message.message(text: LocalizedString(forKey: "验证码发送超过限制，请稍候重试"))
+                    default:
+                        if let message = responseDic["message"] as? String{
+                            Message.message(text:"\(message)")
+                        }
+                    }
+                }else{
+                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                }
+            }
+        }
+    }
+
     @objc func nextButtonTap(_ sender:UIButton){
-        self.alertController(title: LocalizedString(forKey: "邮箱激活绑定"), message: LocalizedString(forKey: "请前往邮箱里点击激活绑定链接 激活绑定"), cancelActionTitle: "好的", okActionHandler: { (alertAction) in
-            
-        }) { (alertAction) in
-            
+        self.sendMailCodeAction(type: .bind) {
+            self.alertController(title: LocalizedString(forKey: "邮箱验证码已发送"), message: LocalizedString(forKey: "请前往邮箱里查看验证码并在下一步输入验证"), okActionTitle: "好的", okActionHandler: { (alertAction) in
+                let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.bindEmailComplete,mail:self.emailAdressTextField.text!)
+                self.navigationController?.pushViewController(verificationCodeVC, animated: true)
+            }) { (alertAction) in
+                
+            }
         }
     }
     
@@ -80,7 +140,7 @@ class MyBindEmailViewController: BaseViewController {
     
     lazy var titleLabel = UILabel.initTitleLabel(color: DarkGrayColor, text: LocalizedString(forKey: "绑定邮箱"))
     lazy var detailLabel = UILabel.initDetailTitleLabel(text:LocalizedString(forKey: "可提升用户防御能力"))
-    lazy var nicknameTextField: UITextField = { [weak self] in
+    lazy var emailAdressTextField: UITextField = { [weak self] in
         let textField = UITextField.init(frame: CGRect(x: 0, y: (self?.detailLabel.bottom)! + 32, width: __kWidth, height: 64))
         let view = UIView.init(frame: CGRect(x: 0, y: 0, width: MarginsWidth, height: 64))
         textField.leftView = view

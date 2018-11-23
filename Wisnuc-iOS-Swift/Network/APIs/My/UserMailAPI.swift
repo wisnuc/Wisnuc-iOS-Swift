@@ -7,11 +7,17 @@
 //
 
 import UIKit
+import Alamofire
 
 class UserMailAPI: BaseRequest {
     var method:RequestHTTPMethod?
-    init(_ method:RequestHTTPMethod? = nil){
+    var mail:String?
+    var code:String?
+    init(_ method:RequestHTTPMethod? = nil,mail:String? = nil, code:String? = nil){
         super.init()
+        self.method = method
+        self.mail = mail
+        self.code = code
     }
     override init() {
         
@@ -26,14 +32,29 @@ class UserMailAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-        
         return  self.method == nil ? RequestHTTPMethod.get : self.method!
+    }
+    
+    override func requestParameters() -> RequestParameters? {
+        if self.method == .post{
+            if let mail = self.mail,let code = self.code{
+                return ["mail":mail,"code":code]
+            }
+        }
+        return nil
+    }
+    
+    override func requestEncoding() -> RequestParameterEncoding {
+        return  self.requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding
+            .default
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         guard let token = AppUserService.currentUser?.cloudToken else {
             return nil
         }
-        return [kRequestAuthorizationKey:token]
+        
+        let params =  [kRequestAuthorizationKey:token]
+        return params
     }
 }

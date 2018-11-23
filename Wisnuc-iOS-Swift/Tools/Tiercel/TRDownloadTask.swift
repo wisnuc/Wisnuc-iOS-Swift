@@ -62,7 +62,7 @@ public class TRDownloadTask: TRTask {
             }
         }
         request?.setValue(AppNetworkService.networkState == .local ? JWTTokenString(token: AppTokenManager.token!) : AppTokenManager.token!, forHTTPHeaderField: kRequestAuthorizationKey)
-        
+        request?.addValue(AppUserService.currentUser?.cookie ?? "", forHTTPHeaderField: kRequestSetCookieKey)
         // 在云状态下断点续传请求头设置无效
         request?.addValue("bytes=\(progress.completedUnitCount)-", forHTTPHeaderField: "Range")
         guard let request = request else { return  }

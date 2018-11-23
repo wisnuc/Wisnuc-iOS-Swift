@@ -64,7 +64,7 @@ class LoginNextStepViewController: BaseViewController {
         NotificationCenter.default.removeObserver(self)
     }
   
-    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState,phoneNumber:String? = nil,password:String? = nil,verifyCode:String? = nil,requestToken:String? = nil,userExist:Bool? = nil,smsCodeType:SendCodeType? = nil) {
+    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState,phoneNumber:String? = nil,password:String? = nil,verifyCode:String? = nil,requestToken:String? = nil,userExist:Bool? = nil,smsCodeType:SendCodeType? = nil,mail:String? = nil) {
         super.init()
         titleLabel.text = titleString
         detailTitleLabel.text = detailTitleString
@@ -421,9 +421,11 @@ class LoginNextStepViewController: BaseViewController {
                             self?.navigationController?.pushViewController(nextViewController, animated: true)
                         }
                     }else if checkType == .mail{
-                        self?.sendMailCodeAction(type: self?.sendCodeType ?? .password, callback: {
-                            
-                        })
+//                        self?.sendMailCodeAction(type: self?.sendCodeType ?? .password, callback: {
+//                            let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "请输入验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: inputText)) 发送了一个验证码 请在下面输入"), state: state!,phoneNumber:inputText,requestToken:self?.requestToken,userExist:userExist,smsCodeType:self?.sendCodeType)
+//                            nextViewController.modalTransitionStyle = .crossDissolve
+//                            self?.navigationController?.pushViewController(nextViewController, animated: true)
+//                        })
                     }
                 }else{
                     

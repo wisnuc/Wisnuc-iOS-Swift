@@ -57,6 +57,11 @@ class DeviceViewController: BaseViewController {
    }
    
    func setData(){
+       getBootData()
+      
+   }
+   
+   func getFruitmixStatsData(){
       let requset = FruitmixStatsAPI.init()
       requset.startRequestJSONCompletionHandler({ [weak self](response) in
          if let error =  response.error{
@@ -66,7 +71,37 @@ class DeviceViewController: BaseViewController {
                Message.message(text: errorMessage)
                return
             }
-            
+            if let rootDic = response.value as? NSDictionary {
+               let  isLocal = AppNetworkService.networkState == .local ? true : false
+               var dataDic = rootDic
+               if !isLocal{
+                  if let dic = rootDic["data"] as? NSDictionary{
+                     dataDic = dic
+                  }
+               }
+               do {
+                  guard let data = jsonToData(jsonDic: dataDic) else{return}
+                  let model = try JSONDecoder().decode(StatsModel.self, from: data)
+                  self?.setHeaderContentFrame(model: model)
+               }catch{
+                  print(error as Any)
+                  //error
+               }
+            }
+         }
+      })
+   }
+   
+   func getBootData(){
+      let requset = BootSpaceAPI.init()
+      requset.startRequestJSONCompletionHandler({ [weak self](response) in
+         if let error =  response.error{
+            Message.message(text: error.localizedDescription)
+         }else{
+            if let errorMessage = ErrorTools.responseErrorData(response.data){
+               Message.message(text: errorMessage)
+               return
+            }
             if let rootDic = response.value as? NSDictionary {
                let  isLocal = AppNetworkService.networkState == .local ? true : false
                var dataDic = rootDic
@@ -79,8 +114,8 @@ class DeviceViewController: BaseViewController {
                   guard let data = jsonToData(jsonDic: dataDic) else{
                      return
                   }
-                  let model = try JSONDecoder().decode(StatsModel.self, from: data)
-                  self?.setHeaderContentFrame(model: model)
+                  let model = try JSONDecoder().decode(BootSpaceModel.self, from: data)
+            
                }catch{
                   print(error as Any)
                   //error
@@ -102,7 +137,7 @@ class DeviceViewController: BaseViewController {
       }
       
       var videoProportion:CGFloat = 0.0
-      if let totalSize = model.video?.totalSize{
+      if let videoSize = model.video?.totalSize{
 //         videoProportion = CGFloat(videoSize/totalSize)
       }
      

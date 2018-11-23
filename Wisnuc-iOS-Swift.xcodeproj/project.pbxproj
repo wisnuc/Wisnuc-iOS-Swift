@@ -193,6 +193,8 @@
 		1F3293BC21A6982F00F075DD /* UserMailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293BB21A6982F00F075DD /* UserMailModel.swift */; };
 		1F3293BE21A6A0FF00F075DD /* UserPhoneAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293BD21A6A0FF00F075DD /* UserPhoneAPI.swift */; };
 		1F3293C021A6A17D00F075DD /* UserPhoneModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293BF21A6A17D00F075DD /* UserPhoneModel.swift */; };
+		1F3293C221A80A8E00F075DD /* BootSpaceAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293C121A80A8D00F075DD /* BootSpaceAPI.swift */; };
+		1F3293C421A80BB500F075DD /* BootSpaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293C321A80BB500F075DD /* BootSpaceModel.swift */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -1214,6 +1216,8 @@
 		1F3293BB21A6982F00F075DD /* UserMailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMailModel.swift; sourceTree = "<group>"; };
 		1F3293BD21A6A0FF00F075DD /* UserPhoneAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPhoneAPI.swift; sourceTree = "<group>"; };
 		1F3293BF21A6A17D00F075DD /* UserPhoneModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPhoneModel.swift; sourceTree = "<group>"; };
+		1F3293C121A80A8D00F075DD /* BootSpaceAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootSpaceAPI.swift; sourceTree = "<group>"; };
+		1F3293C321A80BB500F075DD /* BootSpaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootSpaceModel.swift; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -3074,6 +3078,7 @@
 			isa = PBXGroup;
 			children = (
 				1F3293A421A403FA00F075DD /* FruitmixStatsAPI.swift */,
+				1F3293C121A80A8D00F075DD /* BootSpaceAPI.swift */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -3082,6 +3087,7 @@
 			isa = PBXGroup;
 			children = (
 				1F3293A721A405AD00F075DD /* StatsModel.swift */,
+				1F3293C321A80BB500F075DD /* BootSpaceModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -7143,6 +7149,7 @@
 				1FFF3EA22094649900828623 /* MyStationCollectionViewController.swift in Sources */,
 				1F307C7820BFC7D700AE105C /* DriveAPI.swift in Sources */,
 				1FFD132F20EF3DB50053A3F7 /* LocalAsset+CoreDataProperties.swift in Sources */,
+				1F3293C221A80A8E00F075DD /* BootSpaceAPI.swift in Sources */,
 				1F4E938E208DB8B600DD1EA7 /* WSRadioButton.m in Sources */,
 				1F5AD92F20AD60700065DAD3 /* SearchTransition.swift in Sources */,
 				1F537A082122809300A555C5 /* FilesDownloadAlertViewController.swift in Sources */,
@@ -7164,6 +7171,7 @@
 				1FE674E120D21B11006F97DB /* TRManager.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
 				1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */,
+				1F3293C421A80BB500F075DD /* BootSpaceModel.swift in Sources */,
 				1F3293B921A67A9600F075DD /* UserMailAPI.swift in Sources */,
 				1FFD131720EF0ABB0053A3F7 /* TYDecorationSectionLayout.m in Sources */,
 				06EE1ED320A70D52000E739D /* BaseTableViewController.swift in Sources */,

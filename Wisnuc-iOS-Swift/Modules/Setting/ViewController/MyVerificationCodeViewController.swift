@@ -16,6 +16,9 @@ enum MyVerificationCodeViewControllerState {
 
 enum MyVerificationCodeViewControllerNextState {
     case bindEmail
+    case exchangeEmail
+    case emailCodeVerification
+    case bindEmailComplete
     case bindPhone
     case changePassword
     case resetPassword
@@ -23,22 +26,26 @@ enum MyVerificationCodeViewControllerNextState {
 }
 
 class MyVerificationCodeViewController: BaseViewController {
+    var phoneNumber:String?
+    var mail:String?
     let textFieldHeight:CGFloat = 64
     var countdownTimer: Timer?
     var extrakeyButton:UIButton?
+    var codeLimit:Int = 4
+    var sendCodeType:SendCodeType?
     var remainingSeconds: Int = 0 {
         willSet {
             let text = LocalizedString(forKey: "\(newValue)秒后重新获取")
             sendButton.setTitle(text, for: .normal)
             let font = UIFont.systemFont(ofSize: 14)
             let width:CGFloat = labelWidthFrom(title: text, font: font) + 3
-            sendButton.frame = CGRect(x: __kWidth - MarginsWidth - width , y: 0, width:  width, height: textFieldHeight)
+            sendButton.frame = CGRect(x: __kWidth - MarginsWidth - width , y: self.inputTextField.top, width:  width, height: textFieldHeight)
             if newValue <= 0 {
                 let text = LocalizedString(forKey: "重新获取验证码")
                 sendButton.setTitle(text, for: .normal)
                 let font = UIFont.systemFont(ofSize: 14)
                 let width:CGFloat = labelWidthFrom(title: text, font: font) + 3
-                sendButton.frame = CGRect(x: __kWidth - MarginsWidth - width , y: 0, width:  width, height: textFieldHeight)
+                sendButton.frame = CGRect(x: __kWidth - MarginsWidth - width , y: self.inputTextField.top, width:  width, height: textFieldHeight)
                 isCounting = false
             }
         }
@@ -75,8 +82,11 @@ class MyVerificationCodeViewController: BaseViewController {
     
     var nextState:MyVerificationCodeViewControllerNextState?
     
-    init(style: NavigationStyle,state:MyVerificationCodeViewControllerState,nextState:MyVerificationCodeViewControllerNextState) {
+    init(style: NavigationStyle,state:MyVerificationCodeViewControllerState,nextState:MyVerificationCodeViewControllerNextState,codeType:SendCodeType? = nil,phone:String? = nil,mail:String? = nil) {
         super.init(style: style)
+        self.phoneNumber = phone
+        self.mail = mail
+        self.sendCodeType = codeType
         self.setState(state)
         self.nextState = nextState
     }
@@ -91,10 +101,11 @@ class MyVerificationCodeViewController: BaseViewController {
         prepareNotification()
         self.view.addSubview(titleLabel)
         self.view.addSubview(detailLabel)
-        self.view.addSubview(nicknameTextField)
-        nicknameTextField.addSubview(sendButton)
+        self.view.addSubview(inputTextField)
+        self.view.addSubview(sendButton)
         self.view.addSubview(nextButton)
-        nicknameTextField.becomeFirstResponder()
+        inputTextField.becomeFirstResponder()
+        isCounting = true
         // Do any additional setup after loading the view.
     }
     
@@ -134,18 +145,196 @@ class MyVerificationCodeViewController: BaseViewController {
     }
     
     func emailStateAction(){
-        detailLabel.text = "6位验证码已发送至：\n wenshang@163.com(绑定邮箱)"
+        var mail = ""
+        if let mailAdress = self.mail{
+            mail = mailAdress
+        }
+        detailLabel.text = "4位验证码已发送至：\n\(mail)(绑定邮箱)"
         detailLabel.frame = CGRect(x: MarginsWidth, y: titleLabel.bottom + MarginsWidth, width: __kWidth - MarginsWidth*2, height: 14*3)
-        let keyboard = KeyBoardView.init()
-        keyboard.delegate = self
-        nicknameTextField.inputView = keyboard
+        inputTextField.keyboardType = .numberPad
+//        let keyboard = KeyBoardView.init()
+//        keyboard.delegate = self
+//        inputTextField.inputView = keyboard
     }
     
     func phoneStateAction(){
-        detailLabel.text = "验证码已发送至您的手机号：139****2222"
+        var phone = ""
+        if let phoneNumber = self.phoneNumber{
+            if  let replacePhone = phoneNumber.replacePhone(){
+                phone = replacePhone
+            }
+        }
+        detailLabel.text = "验证码已发送至您的手机号：\(phone)"
         detailLabel.frame = CGRect(x: MarginsWidth, y: titleLabel.bottom + MarginsWidth, width: __kWidth - MarginsWidth*2, height: 14)
-        nicknameTextField.inputView = nil
-        nicknameTextField.keyboardType = .numberPad
+        inputTextField.inputView = nil
+        inputTextField.keyboardType = .numberPad
+    }
+    
+    func getSmsCodeTicket(closure:@escaping (_ ticket:String?)->()){
+        guard let phone = self.phoneNumber else {
+            return
+        }
+        guard let code = self.inputTextField.text else {
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let request = SmsCodeTicket.init(phone:phone, code: code,type:.mail)
+        request.startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error = response.error{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                }else{
+                    Message.message(text:error.localizedDescription)
+                }
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                guard let rootDic = response.value as? NSDictionary else{
+                    return
+                }
+                guard let smsCodeTicket = rootDic["data"] as? String else{
+                    return
+                }
+                
+                return closure(smsCodeTicket)
+            }
+        }
+    }
+    
+    func mailAction(method:RequestHTTPMethod,callback:@escaping ()->()){
+        guard let mail = self.mail, let code = self.inputTextField.text else {
+            return
+        }
+        let requset = UserMailAPI.init(method,mail:mail,code:code)
+        requset.startRequestJSONCompletionHandler { (response) in
+            if let error = response.error {
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+               return callback()
+            }
+        }
+    }
+    
+    func sendCodeAction(type:SendCodeType,callback:@escaping (()->())){
+        guard let phone = self.phoneNumber else {
+            Message.message(text: "没有绑定手机号")
+            return
+        }
+        
+        if !Validate.phoneNum(phone).isRight{
+            Message.message(text: "手机号不符合规则")
+            return
+        }
+        
+        guard let token = AppUserService.currentUser?.cloudToken else {
+            Message.message(text: "无法发送短信验证码")
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        GetSmsCodeAPI.init(phoneNumber: phone,type:type,wechatToken:token).startRequestJSONCompletionHandler { (response) in
+            if  response.error == nil{
+                let responseDic = response.value as! NSDictionary
+                let code = responseDic["code"] as? Int
+                if code == 1 {
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    callback()
+                }else{
+                    if let message = ErrorTools.responseErrorData(response.data){
+                        Message.message(text:"error: code:\(code!) message:\(message)")
+                    }
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                }
+            }else{
+                // error
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                guard let responseDic =  dataToNSDictionary(data: response.data) else{
+                    if response.error is BaseError{
+                        let baseError = response.error as! BaseError
+                        Message.message(text:"请求错误：\(String(describing: baseError.localizedDescription))")
+                    }else{
+                        let message = response.error?.localizedDescription ?? "未知原因"
+                        Message.message(text:"请求错误：\(message)")
+                    }
+                    return
+                }
+                if let code = responseDic["code"] as? Int{
+                    
+                    switch code {
+                    case ErrorCode.Request.MobileError:
+                        Message.message(text: LocalizedString(forKey: "手机号错误"))
+                    case ErrorCode.Request.CodeLimitOut:
+                        Message.message(text: LocalizedString(forKey: "验证码发送超过限制，请稍候重试"))
+                    default:
+                        if let message = responseDic["message"] as? String{
+                            Message.message(text:"\(message)")
+                        }
+                    }
+                }else{
+                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                }
+            }
+        }
+    }
+    
+    func sendMailCodeAction(mail:String?,type:SendCodeType,callback:@escaping (()->())){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        guard let email = mail else {
+            Message.message(text: "邮箱不能为空")
+            return
+        }
+        if !Validate.email(email).isRight{
+            Message.message(text: "邮箱格式不正确")
+        }
+        GetMailCodeAPI.init(mail: email,type:type).startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if  response.error == nil{
+                let responseDic = response.value as! NSDictionary
+                let code = responseDic["code"] as? Int
+                if code == 1 {
+                    return callback()
+                }else{
+                    if let message = ErrorTools.responseErrorData(response.data){
+                        Message.message(text:"error: code:\(code!) message:\(message)")
+                    }
+                }
+            }else{
+                // error
+                guard let responseDic =  dataToNSDictionary(data: response.data) else{
+                    if response.error is BaseError{
+                        let baseError = response.error as! BaseError
+                        Message.message(text:"请求错误：\(String(describing: baseError.localizedDescription))")
+                    }else{
+                        let message = response.error?.localizedDescription ?? "未知原因"
+                        Message.message(text:"请求错误：\(message)")
+                    }
+                    return
+                }
+                if let code = responseDic["code"] as? Int{
+                    
+                    switch code {
+                    case ErrorCode.Request.MobileError:
+                        Message.message(text: LocalizedString(forKey: "手机号错误"))
+                    case ErrorCode.Request.CodeLimitOut:
+                        Message.message(text: LocalizedString(forKey: "验证码发送超过限制，请稍候重试"))
+                    default:
+                        if let message = responseDic["message"] as? String{
+                            Message.message(text:"\(message)")
+                        }
+                    }
+                }else{
+                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                }
+            }
+        }
     }
     
     @objc func buttonDidClicked(_ sender:UIButton){
@@ -155,8 +344,26 @@ class MyVerificationCodeViewController: BaseViewController {
     @objc func nextButtonTap(_ sender:UIButton){
         switch nextState {
         case .bindEmail?:
-            let bindEmailVC =  MyBindEmailViewController.init(style: NavigationStyle.whiteWithoutShadow)
-            self.navigationController?.pushViewController(bindEmailVC, animated: true)
+            self.getSmsCodeTicket { [weak self](ticket) in
+                let bindEmailVC =  MyBindEmailViewController.init(style: NavigationStyle.whiteWithoutShadow)
+                self?.navigationController?.pushViewController(bindEmailVC, animated: true)
+            }
+        case .exchangeEmail?:
+            self.mailAction(method: .delete) { [weak self] in
+                let bindEmailVC =  MyBindEmailViewController.init(style: NavigationStyle.whiteWithoutShadow)
+                self?.navigationController?.pushViewController(bindEmailVC, animated: true)
+            }
+        case .emailCodeVerification?:
+            self.getSmsCodeTicket { [weak self] (ticket) in
+                guard let mail = self?.mail else{
+                    Message.message(text: LocalizedString(forKey: "无法发送验证码"))
+                    return
+                }
+                self?.sendMailCodeAction(mail: mail, type: (self?.sendCodeType)!, callback: { [weak self] in
+                    let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.exchangeEmail,codeType:.mail,mail:mail)
+                    self?.navigationController?.pushViewController(verificationCodeVC, animated: true)
+                })
+            }
         case .bindPhone?:
             let changePhoneNumberViewController =  MyChangePhoneNumberViewController.init(style: NavigationStyle.whiteWithoutShadow)
             self.navigationController?.pushViewController(changePhoneNumberViewController, animated: true)
@@ -170,7 +377,11 @@ class MyVerificationCodeViewController: BaseViewController {
         case .setSamba?:
             let sambaSetPasswordViewController =  DeviceSambaSetPasswordViewController.init(style: NavigationStyle.whiteWithoutShadow)
             self.navigationController?.pushViewController(sambaSetPasswordViewController, animated: true)
-        
+        case .bindEmailComplete?:
+            self.mailAction(method: .post) { [weak self] in
+                Message.message(text: LocalizedString(forKey: "绑定邮箱成功"))
+                self?.navigationController?.popToRootViewController(animated: true)
+            }
         default:
             break
         }
@@ -178,7 +389,21 @@ class MyVerificationCodeViewController: BaseViewController {
     
     @objc func verificationCodeButtonTap(_ sender:UIButton){
         // 启动倒计时
-        isCounting = true
+        
+        guard let sendCodeType = self.sendCodeType else {
+            Message.message(text: "无法发送验证码")
+            return
+        }
+        
+        if self.state == .email{
+            self.sendMailCodeAction(mail: self.inputTextField.text, type: sendCodeType) { [weak self] in
+                self?.isCounting = true
+            }
+            return
+        }
+        sendCodeAction(type: sendCodeType) { [weak self] in
+            self?.isCounting = true
+        }
     }
     
     @objc func updateTime(_ sender:Timer){
@@ -225,7 +450,7 @@ class MyVerificationCodeViewController: BaseViewController {
         return label
     }()
     
-    lazy var nicknameTextField: UITextField = { [weak self] in
+    lazy var inputTextField: UITextField = { [weak self] in
         let textField = UITextField.init(frame: CGRect(x: 0, y: (self?.detailLabel.bottom)! + 32, width: __kWidth, height: textFieldHeight))
         let view = UIView.init(frame: CGRect(x: 0, y: 0, width: 114, height:textFieldHeight))
         let textLabel = UILabel.init(frame: CGRect(x: 0, y: 0, width: 96, height: view.height))
@@ -257,7 +482,7 @@ class MyVerificationCodeViewController: BaseViewController {
         let text = LocalizedString(forKey: "获取验证码")
         let font = UIFont.systemFont(ofSize: 14)
         let width:CGFloat = labelWidthFrom(title: text, font: font) + 3
-        button.frame = CGRect(x: (self?.nicknameTextField.width)! - MarginsWidth - width, y: 0, width: width, height: textFieldHeight)
+        button.frame = CGRect(x: (self?.inputTextField.width)! - MarginsWidth - width, y: (self?.inputTextField.top)!, width: width, height: textFieldHeight)
         button.setTitle(text, for: UIControlState.normal)
         button.titleLabel?.font = font
         button.setTitleColor(COR1, for: UIControlState.normal)
@@ -287,7 +512,7 @@ extension MyVerificationCodeViewController:UITextFieldDelegate{
         }
         
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
-        if fullString.count >= 6 {
+        if fullString.count >= codeLimit {
             nextButtonEnableStyle()
         }else{
             nextButtonDisableStyle()
@@ -296,15 +521,15 @@ extension MyVerificationCodeViewController:UITextFieldDelegate{
     }
 }
 
-extension MyVerificationCodeViewController:KeyBoardViewDelegate{
-    func keyboard(_ keyboard: KeyBoardView!, didClickTextButton textBtn: UIButton!, string: NSMutableString!) {
-        if let textString = string as String?{
-            self.nicknameTextField.text = textString
-            if self.nicknameTextField.text?.count ?? 0 >= 6{
-                nextButtonEnableStyle()
-            }else{
-                nextButtonDisableStyle()
-            }
-        }
-    }
-}
+//extension MyVerificationCodeViewController:KeyBoardViewDelegate{
+//    func keyboard(_ keyboard: KeyBoardView!, didClickTextButton textBtn: UIButton!, string: NSMutableString!) {
+//        if let textString = string as String?{
+//            self.inputTextField.text = textString
+//            if self.inputTextField.text?.count ?? 0 >= codeLimit{
+//                nextButtonEnableStyle()
+//            }else{
+//                nextButtonDisableStyle()
+//            }
+//        }
+//    }
+//}

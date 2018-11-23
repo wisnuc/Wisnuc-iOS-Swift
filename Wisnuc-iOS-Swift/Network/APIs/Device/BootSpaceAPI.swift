@@ -1,20 +1,20 @@
 //
-//  FruitmixStatsAPI.swift
+//  BootAPI.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/11/20.
+//  Created by wisnuc-imac on 2018/11/23.
 //  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
-
-class FruitmixStatsAPI: BaseRequest {
+import Alamofire
+class BootSpaceAPI: BaseRequest {
     override func requestURL() -> String {
         switch AppNetworkService.networkState {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return "/fruitmix/stats"
+            return "/boot/space"
         default:
             return ""
         }
@@ -34,7 +34,7 @@ class FruitmixStatsAPI: BaseRequest {
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {
         case .normal?:
-            let urlPath = "/fruitmix/stats"
+            let urlPath = "/boot/space"
             return [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:urlPath]
         case .local?:
             return nil
@@ -42,7 +42,10 @@ class FruitmixStatsAPI: BaseRequest {
             return nil
         }
     }
- 
+    
+    override func requestEncoding() -> RequestParameterEncoding {
+        return  requestMethod() == RequestHTTPMethod.get ? URLEncoding.default : JSONEncoding.default
+    }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {

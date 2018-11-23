@@ -16,6 +16,7 @@ enum SendCodeType:String{
     case replace
     case bind
     case unbind
+    case mail
 }
 
 class GetSmsCodeAPI: BaseRequest {
