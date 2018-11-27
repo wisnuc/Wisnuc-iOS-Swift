@@ -16,15 +16,30 @@ class MyInfoCenterViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.view.addSubview(infoTabelView)
         
         appBar.headerViewController.headerView.trackingScrollView = infoTabelView
 
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+        
+        avatarImageView.layer.cornerRadius = avatarImageView.size.width/2
+        
+        avatarImageView.clipsToBounds = true
+        
+        AppService.sharedInstance().updateCurrentUserInfo(complete: { [weak self] in
+            self?.infoTabelView.reloadData()
+        })
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.infoTabelView.reloadData()
     }
     
     lazy var avatarImageView = UIImageView.init(frame: CGRect(x: __kWidth - MarginsCloseWidth - avatarHeight - MarginsWidth - MarginsSoFarWidth, y: cellHeight/2  - avatarHeight/2, width: avatarHeight, height: avatarHeight))
@@ -45,7 +60,6 @@ class MyInfoCenterViewController: BaseViewController {
 //        view.backgroundColor = .red
         return view
     }()
-
 }
 
 extension MyInfoCenterViewController:UITableViewDelegate{
@@ -104,15 +118,24 @@ extension MyInfoCenterViewController:UITableViewDataSource{
         case 0:
             cell.textLabel?.text = LocalizedString(forKey: "头像")
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-            avatarImageView.image = UIImage.init(named: "avatar_placeholder.png")
+            let image = UIImage.init(named: "avatar_placeholder.png")
+            avatarImageView.was_setCircleImage(withUrlString: AppUserService.currentUser?.avaterURL ?? "", placeholder: image)
             cell.contentView.addSubview(avatarImageView)
         case 1:
             cell.textLabel?.text = LocalizedString(forKey: "昵称")
             cell.detailTextLabel?.text = LocalizedString(forKey: "去设置")
+            if let nickName = AppUserService.currentUser?.nickName{
+                cell.detailTextLabel?.text = nickName
+            }
+         
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         case 2:
             cell.textLabel?.text = LocalizedString(forKey: "账户名")
-            cell.detailTextLabel?.text = LocalizedString(forKey: "139****7773")
+            if let userName = AppUserService.currentUser?.userName{
+                if let placeUserName = userName.replacePhone(){
+                    cell.detailTextLabel?.text = placeUserName
+                }
+            }
         case 3:
             cell.textLabel?.text = LocalizedString(forKey: "微信")
             cell.detailTextLabel?.text = LocalizedString(forKey: "去绑定")

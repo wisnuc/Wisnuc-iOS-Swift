@@ -452,8 +452,13 @@ class NetworkService: NSObject {
       
         let modifier = AnyModifier { request in
             var req = request
-            
             req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
+            if let cookie = AppUserService.currentUser?.cookie{
+                if self.networkState == .normal{
+                 req.addValue(cookie, forHTTPHeaderField: kRequestSetCookieKey)
+                }
+            }
+           
 //            if self.networkState == .normal{
 //                if let data = jsonToData(jsonDic: dataDic as NSDictionary){
 //                    if let dataString = String.init(data: data, encoding: .utf8){
@@ -464,8 +469,7 @@ class NetworkService: NSObject {
             return req
         }
         ImageDownloader.default.downloadTimeout = 20000
-        
-        return  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier),.targetCache(ImageCache.default)], progressBlock: nil) { (image, error, reqUrl, data) in
+        let task =  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier),.targetCache(ImageCache.default)], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl {
                     ImageCache.default.store(image,
@@ -478,6 +482,7 @@ class NetworkService: NSObject {
                 callback(error, nil,reqUrl)
             }
             }!
+        return task
         //        return SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.useNSURLCache, progress: nil, completed: { (image, data, error, finished) in
         //            if (image != nil) {
         //            callback(nil, image)
@@ -502,9 +507,13 @@ class NetworkService: NSObject {
         let modifier = AnyModifier { request in
             var req = request
             req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
+            if let cookie = AppUserService.currentUser?.cookie{
+                req.addValue(cookie, forHTTPHeaderField: kRequestSetCookieKey)
+            }
+            
             return req
         }
-        
+        ImageDownloader.default.downloadTimeout = 20000
         return  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl {

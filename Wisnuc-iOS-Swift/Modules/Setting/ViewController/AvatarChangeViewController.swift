@@ -14,7 +14,8 @@ class AvatarChangeViewController: BaseViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .black
         prepareNavigation()
-        avatarImageView.image = UIImage.init(named: "avatar_placeholder_big.png")
+        let imageURL = URL.init(string: AppUserService.currentUser?.avaterURL ?? "")
+        avatarImageView.setImageWith(imageURL, placeholder: UIImage.init(named: "avatar_placeholder_big.png"))
         self.view.addSubview(headerView)
         self.view.addSubview(avatarImageView)
         // Do any additional setup after loading the view.
@@ -22,6 +23,31 @@ class AvatarChangeViewController: BaseViewController {
     
     func prepareNavigation(){
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "更换头像"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightBarButtonItemTap(_ :)))
+    }
+    
+    func changteAavator(image:UIImage){
+        guard let imageData = image.compressQuality(withMaxLength: 400) else {
+            Message.message(text: LocalizedString(forKey: "错误，无法跟换头像"))
+            return
+        }
+        let reuqest = AvatarAPI.init()
+        reuqest.uploadRequestJSONCompletionHandler(requestData: imageData, { (response) in
+            if let error = response.error{
+                SVProgressHUD.showError(withStatus: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    SVProgressHUD.showError(withStatus: errorMessage)
+                }else{
+                    if  let rootDic = response.value as? NSDictionary{
+                        if let url = rootDic["data"] as? String{
+                            AppUserService.currentUser?.avaterURL = url
+                            AppUserService.synchronizedCurrentUser()
+                            SVProgressHUD.showSuccess(withStatus: LocalizedString(forKey: "头像更换成功"))
+                        }
+                    }
+                }
+            }
+        })
     }
     
     @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){
@@ -73,8 +99,10 @@ class AvatarChangeViewController: BaseViewController {
 
 extension AvatarChangeViewController:UIImagePickerControllerDelegate,UINavigationControllerDelegate{
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let newPhoto = info["UIImagePickerControllerEditedImage"] as? UIImage
-        avatarImageView.image = newPhoto
-        dismiss(animated: true)
+        if let newPhoto = info["UIImagePickerControllerEditedImage"] as? UIImage{
+            avatarImageView.image = newPhoto
+            dismiss(animated: true)
+            changteAavator(image: newPhoto)
+        }
     }
 }

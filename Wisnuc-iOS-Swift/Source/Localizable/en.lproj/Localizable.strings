@@ -15,6 +15,7 @@
 "station_checking" = "checking";
 
 "power_off" = "Power Off";
+"Loading..." = "Loading...";
 
 
 //Files

@@ -14,7 +14,7 @@
 //圆角矩阵
 - (void)was_roundRectImageWithSize:(CGSize)size fillColor:(UIColor *)fillColor opaque:(BOOL)opaque radius:(CGFloat)radius completion:(void (^)(UIImage *))completion;
 + (UIImage *)scaleImage:(UIImage *)image toScale:(float)scaleSize;
-
+- (NSData *)compressQualityWithMaxLength:(NSInteger)maxLength;
 @end
 
 @interface UIImageView (Extension)

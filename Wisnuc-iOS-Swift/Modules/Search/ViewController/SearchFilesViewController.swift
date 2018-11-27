@@ -618,8 +618,24 @@ extension SearchFilesViewController:DZNEmptyDataSetDelegate{
 
 extension SearchFilesViewController:FilesBottomSheetContentVCDelegate{
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton, model: Any) {
-        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imagery)
-        filesInfoVC.model = (model as! EntriesModel)
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(true, animated: true)
+        guard  let filesModel =  model as? EntriesModel else {
+            return
+        }
+        guard let place = filesModel.place else {
+            return
+        }
+        guard let drive = placesArray?[place] else {
+            return
+        }
+        
+        guard let dir = filesModel.pdir else {
+            return
+        }
+//        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+//        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imagery,model: filesModel,driveUUID:drive,dirUUID: dir,location:self.title)
         self.navigationController?.pushViewController(filesInfoVC, animated: true)
     }
     

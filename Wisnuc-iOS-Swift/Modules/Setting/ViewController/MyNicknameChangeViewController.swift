@@ -46,6 +46,33 @@ class MyNicknameChangeViewController: BaseViewController {
         self.nextButton.isEnabled = true
     }
     
+    @objc func nextButtonTap(_ sender:UIButton){
+        guard let text = self.nicknameTextField.text else {
+            Message.message(text: LocalizedString(forKey: "昵称不能为空"))
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let request = NicknameAPI.init(nickname: text)
+        request.startRequestJSONCompletionHandler { [weak self](response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error = response.error{
+                Message.message(text:error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text:errorMessage)
+                    return
+                }
+                if !isNilString(self?.nicknameTextField.text){
+                    AppUserService.currentUser?.nickName = (self?.nicknameTextField.text)!
+                    AppUserService.synchronizedCurrentUser()
+                }
+                 Message.message(text:LocalizedString(forKey: "昵称设置成功"))
+                self?.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
+    
     //键盘弹出监听
     @objc func keyboardShow(note: Notification)  {
         guard let userInfo = note.userInfo else {return}
@@ -96,6 +123,7 @@ class MyNicknameChangeViewController: BaseViewController {
         button.isEnabled = false
         button.layer.masksToBounds = true
         button.layer.cornerRadius = width/2
+        button.addTarget(self, action: #selector(nextButtonTap(_:)), for: UIControlEvents.touchUpInside)
         return button
     }()
 }

@@ -11,13 +11,32 @@ import MaterialComponents.MDCAppBar
 private let cellReuseIdentifier = "reuseIdentifier"
 class FilesFileInfoTableViewController: BaseViewController {
     var model:EntriesModel?
+    var location:String?
+    var driveUUID:String?
+    var dirUUID:String?
+    var filseDirModel:FilesStatsModel?
     deinit {
         print("\(className()) deinit")
     }
-
+    
+    init(style: NavigationStyle,model:EntriesModel,driveUUID:String,dirUUID:String,location:String?) {
+        super.init(style: style)
+        self.model = model
+        self.driveUUID = driveUUID
+        self.dirUUID = dirUUID
+        self.location = location
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareNavigationBar()
+        if self.model?.type == FilesType.directory.rawValue{
+           self.loadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,6 +63,53 @@ class FilesFileInfoTableViewController: BaseViewController {
         appBar.headerViewController.headerView.delegate = self
         navigationBarBottomImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: (model?.type)!), format: FilesFormatType(rawValue: model?.metadata?.type ?? FilesFormatType.DEFAULT.rawValue)))
         navigationBarBottomLabel.text = appBar.navigationBar.title
+    }
+    
+    func loadData(){
+        guard let driveUUID = self.driveUUID else {
+            return
+        }
+        
+//        guard let model = self.model else {
+//            return
+//        }
+        
+        guard let dirUUID = self.dirUUID else {
+            return
+        }
+        let request = FilesStats.init(driveUUID: driveUUID, directoryUUID: dirUUID)
+        request.startRequestJSONCompletionHandler { [weak self](response) in
+            if let error = response.error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                }else{
+                    guard let dic = response.value as? NSDictionary else{
+                        Message.message(text: LocalizedString(forKey: "error"))
+                        return
+                    }
+                    
+                    let isLocal = AppNetworkService.networkState == .local ? true : false
+                    var modelDic:NSDictionary = dic
+                    if !isLocal{
+                        if let dataDic = dic["data"] as? NSDictionary{
+                            modelDic = dataDic
+                        }
+                    }
+                    if let data = jsonToData(jsonDic: modelDic){
+                        do{
+                            let model = try JSONDecoder().decode(FilesStatsModel.self, from: data)
+                            self?.filseDirModel = model
+                            self?.tableView.reloadData()
+                        }catch{
+                           Message.message(text: error.localizedDescription)
+                        }
+                    }
+                }
+            }
+        }
+        
     }
 
     lazy var tableView: UITableView = {
@@ -94,7 +160,7 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if model?.type == FilesType.directory.rawValue {
-             return 4
+             return 6
         }else{
             return 4
         }
@@ -110,20 +176,31 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
             cell.rightLabel.text = model?.type == FilesType.directory.rawValue ? "文件夹" : model?.name?.pathExtension
         case 1:
             cell.leftLabel.text = LocalizedString(forKey: "大小")
-            cell.rightLabel.text = model?.size != nil ? sizeString((model?.size!)!) : ""
+            if model?.type == FilesType.directory.rawValue{
+                if let size = filseDirModel?.fileTotalSize{
+                    cell.rightLabel.text = sizeString(Int64(size))
+                }
+            }else{
+               cell.rightLabel.text = model?.size != nil ? sizeString((model?.size!)!) : ""
+            }
         case 2:
             cell.leftLabel.text = LocalizedString(forKey: "位置")
             cell.rightLabel.isHidden = true
             cell.filesImageView.isHidden = false
             cell.folderButton.isHidden = false
-//            cell.folderButton.setTitle("My Drive", for: UIControlState.normal)
-//        case 3:
-//            cell.leftLabel.text = LocalizedString(forKey: "Files quantity")
-//            cell.rightLabel.text = "10"
-//        case 4:
-//            cell.leftLabel.text = LocalizedString(forKey: "Media files quantity")
-//            cell.rightLabel.text = "2"
+            cell.folderButton.setTitle(self.location ?? "", for: UIControlState.normal)
         case 3:
+            if model?.type == FilesType.directory.rawValue{
+                cell.leftLabel.text = LocalizedString(forKey: "文件数量")
+                cell.rightLabel.text = filseDirModel?.fileCount != nil ? String.init(describing: (filseDirModel?.fileCount)!) : "0"
+            }else{
+                cell.leftLabel.text = LocalizedString(forKey: "创建时间")
+                cell.rightLabel.text =  model?.mtime != nil ? TimeTools.timeString(TimeInterval((model?.mtime!)!/1000)) : LocalizedString(forKey: "No time")
+            }
+        case 4:
+            cell.leftLabel.text = LocalizedString(forKey: "文件夹数量")
+            cell.rightLabel.text = filseDirModel?.dirCount != nil ? String.init(describing: (filseDirModel?.dirCount)!) : "0"
+        case 5:
             cell.leftLabel.text = LocalizedString(forKey: "创建时间")
             cell.rightLabel.text =  model?.mtime != nil ? TimeTools.timeString(TimeInterval((model?.mtime!)!/1000)) : LocalizedString(forKey: "No time")
 //        case 6:

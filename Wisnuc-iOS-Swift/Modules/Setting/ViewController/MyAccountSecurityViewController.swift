@@ -371,6 +371,10 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
                 switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
                 switchBtn.isOn = AppUserService.currentUser?.retrievePasswordState?.intValue  == 1 ? true : false
                 switchBtn.addTarget(self, action: #selector(switchBtnHandle(_ :)), for: UIControlEvents.valueChanged)
+                if let switchButton = cell.contentView.subviews.first(where: {$0 is UISwitch}){
+                    switchButton.removeFromSuperview()
+                }
+
                 cell.contentView.addSubview(switchBtn)
             default: break
                 

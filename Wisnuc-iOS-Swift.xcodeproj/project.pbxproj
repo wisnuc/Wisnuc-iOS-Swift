@@ -99,6 +99,8 @@
 		1F169DD820805B2000860F31 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DD720805B2000860F31 /* Message.swift */; };
 		1F169DDB208080DC00860F31 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DDA208080DC00860F31 /* ActivityIndicator.swift */; };
 		1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DDD2080AB7800860F31 /* TokenManager.swift */; };
+		1F16B34D21AD116D00178143 /* NicknameAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B34C21AD116D00178143 /* NicknameAPI.swift */; };
+		1F16B35221AD1A0400178143 /* AvatarAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B35121AD1A0400178143 /* AvatarAPI.swift */; };
 		1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */; };
 		1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */; };
 		1F17698220AD379B003D955F /* SearchFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17698120AD379B003D955F /* SearchFilesViewController.swift */; };
@@ -187,7 +189,6 @@
 		1F3293AC21A54C6100F075DD /* message_leftView@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3293AB21A54C6000F075DD /* message_leftView@2x.png */; };
 		1F3293AE21A54C6A00F075DD /* message_leftView@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3293AD21A54C6900F075DD /* message_leftView@3x.png */; };
 		1F3293B021A5593E00F075DD /* CheckUserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293AF21A5593E00F075DD /* CheckUserAPI.swift */; };
-		1F3293B421A645E900F075DD /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F3293B321A645E900F075DD /* ExternalAccessory.framework */; };
 		1F3293B621A6521500F075DD /* GetMailCodeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293B521A6521500F075DD /* GetMailCodeAPI.swift */; };
 		1F3293B921A67A9600F075DD /* UserMailAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293B821A67A9600F075DD /* UserMailAPI.swift */; };
 		1F3293BC21A6982F00F075DD /* UserMailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293BB21A6982F00F075DD /* UserMailModel.swift */; };
@@ -195,6 +196,11 @@
 		1F3293C021A6A17D00F075DD /* UserPhoneModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293BF21A6A17D00F075DD /* UserPhoneModel.swift */; };
 		1F3293C221A80A8E00F075DD /* BootSpaceAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293C121A80A8D00F075DD /* BootSpaceAPI.swift */; };
 		1F3293C421A80BB500F075DD /* BootSpaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293C321A80BB500F075DD /* BootSpaceModel.swift */; };
+		1F3293C821ABA4B200F075DD /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F3293C721ABA4B200F075DD /* ExternalAccessory.framework */; };
+		1F3293CA21ABBB6300F075DD /* FilesStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293C921ABBB6300F075DD /* FilesStats.swift */; };
+		1F3293CD21ABC65600F075DD /* FilesStatsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293CC21ABC65600F075DD /* FilesStatsModel.swift */; };
+		1F3293CF21ABFFEE00F075DD /* DeviceNetAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293CE21ABFFEE00F075DD /* DeviceNetAPI.swift */; };
+		1F3293D121AC047D00F075DD /* DeviceNetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F3293D021AC047D00F075DD /* DeviceNetModel.swift */; };
 		1F3591FC20889CAB00196CCB /* station_w215i.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591F920889CAA00196CCB /* station_w215i.png */; };
 		1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FA20889CAA00196CCB /* station_w215i@2x.png */; };
 		1F3591FE20889CAB00196CCB /* station_w215i@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F3591FB20889CAA00196CCB /* station_w215i@3x.png */; };
@@ -1120,6 +1126,8 @@
 		1F169DD720805B2000860F31 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		1F169DDA208080DC00860F31 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		1F169DDD2080AB7800860F31 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
+		1F16B34C21AD116D00178143 /* NicknameAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameAPI.swift; sourceTree = "<group>"; };
+		1F16B35121AD1A0400178143 /* AvatarAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarAPI.swift; sourceTree = "<group>"; };
 		1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesShareBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTaskBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17698120AD379B003D955F /* SearchFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilesViewController.swift; sourceTree = "<group>"; };
@@ -1210,7 +1218,6 @@
 		1F3293AB21A54C6000F075DD /* message_leftView@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message_leftView@2x.png"; sourceTree = "<group>"; };
 		1F3293AD21A54C6900F075DD /* message_leftView@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "message_leftView@3x.png"; sourceTree = "<group>"; };
 		1F3293AF21A5593E00F075DD /* CheckUserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckUserAPI.swift; sourceTree = "<group>"; };
-		1F3293B321A645E900F075DD /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		1F3293B521A6521500F075DD /* GetMailCodeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMailCodeAPI.swift; sourceTree = "<group>"; };
 		1F3293B821A67A9600F075DD /* UserMailAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMailAPI.swift; sourceTree = "<group>"; };
 		1F3293BB21A6982F00F075DD /* UserMailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMailModel.swift; sourceTree = "<group>"; };
@@ -1218,6 +1225,11 @@
 		1F3293BF21A6A17D00F075DD /* UserPhoneModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPhoneModel.swift; sourceTree = "<group>"; };
 		1F3293C121A80A8D00F075DD /* BootSpaceAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootSpaceAPI.swift; sourceTree = "<group>"; };
 		1F3293C321A80BB500F075DD /* BootSpaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootSpaceModel.swift; sourceTree = "<group>"; };
+		1F3293C721ABA4B200F075DD /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		1F3293C921ABBB6300F075DD /* FilesStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesStats.swift; sourceTree = "<group>"; };
+		1F3293CC21ABC65600F075DD /* FilesStatsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesStatsModel.swift; sourceTree = "<group>"; };
+		1F3293CE21ABFFEE00F075DD /* DeviceNetAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceNetAPI.swift; sourceTree = "<group>"; };
+		1F3293D021AC047D00F075DD /* DeviceNetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceNetModel.swift; sourceTree = "<group>"; };
 		1F3591F920889CAA00196CCB /* station_w215i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = station_w215i.png; sourceTree = "<group>"; };
 		1F3591FA20889CAA00196CCB /* station_w215i@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@2x.png"; sourceTree = "<group>"; };
 		1F3591FB20889CAA00196CCB /* station_w215i@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "station_w215i@3x.png"; sourceTree = "<group>"; };
@@ -2661,7 +2673,7 @@
 				1F32939E21A3FD4600F075DD /* NetworkExtension.framework in Frameworks */,
 				1FBB701C213FC5240090FA57 /* libcrypto.a in Frameworks */,
 				F0B25576157C6CF14835204A /* Pods_Wisnuc_iOS_Swift.framework in Frameworks */,
-				1F3293B421A645E900F075DD /* ExternalAccessory.framework in Frameworks */,
+				1F3293C821ABA4B200F075DD /* ExternalAccessory.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3070,6 +3082,7 @@
 				1FFD12B120E3979F0053A3F7 /* TasksAPI.swift */,
 				1FFD12BC20EA265E0053A3F7 /* DeletTasksAPI.swift */,
 				1FFD12C520EB80E70053A3F7 /* DirOprationAPI.swift */,
+				1F3293C921ABBB6300F075DD /* FilesStats.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -3079,6 +3092,7 @@
 			children = (
 				1F3293A421A403FA00F075DD /* FruitmixStatsAPI.swift */,
 				1F3293C121A80A8D00F075DD /* BootSpaceAPI.swift */,
+				1F3293CE21ABFFEE00F075DD /* DeviceNetAPI.swift */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -3088,6 +3102,7 @@
 			children = (
 				1F3293A721A405AD00F075DD /* StatsModel.swift */,
 				1F3293C321A80BB500F075DD /* BootSpaceModel.swift */,
+				1F3293D021AC047D00F075DD /* DeviceNetModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3097,6 +3112,8 @@
 			children = (
 				1F3293BD21A6A0FF00F075DD /* UserPhoneAPI.swift */,
 				1F3293B821A67A9600F075DD /* UserMailAPI.swift */,
+				1F16B34C21AD116D00178143 /* NicknameAPI.swift */,
+				1F16B35121AD1A0400178143 /* AvatarAPI.swift */,
 			);
 			path = My;
 			sourceTree = "<group>";
@@ -5820,6 +5837,7 @@
 				1FC5702C20C144B500D4499D /* DriveModel.swift */,
 				1F1BABA520C5195900D32C5A /* EntriesModel.swift */,
 				1F1BABA720C51F5100D32C5A /* DirectoriesModel.swift */,
+				1F3293CC21ABC65600F075DD /* FilesStatsModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -5994,7 +6012,7 @@
 		8F207FC9B9AE44C14EAC998A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1F3293B321A645E900F075DD /* ExternalAccessory.framework */,
+				1F3293C721ABA4B200F075DD /* ExternalAccessory.framework */,
 				1F32939D21A3FD4600F075DD /* NetworkExtension.framework */,
 				1FDF4E092191807F00521DDE /* SGPlayer */,
 				1FDF4DE22191800000521DDE /* SGPlatform */,
@@ -6221,6 +6239,9 @@
 						CreatedOnToolsVersion = 9.3;
 						LastSwiftMigration = 0930;
 						SystemCapabilities = {
+							com.apple.AccessWiFi = {
+								enabled = 1;
+							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
@@ -6903,12 +6924,14 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-SwiftTests/Pods-Wisnuc-iOS-SwiftTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxBlocking/RxBlocking.framework",
 				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxBlocking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxTest.framework",
@@ -6946,6 +6969,7 @@
 				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
 				"${BUILT_PRODUCTS_DIR}/RealReachability/RealReachability.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SAMKeychain/SAMKeychain.framework",
@@ -6977,6 +7001,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealReachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SAMKeychain.framework",
@@ -7048,6 +7073,7 @@
 				1F307C7520BEB18700AE105C /* SettingViewController.swift in Sources */,
 				1F0FD0FF214A77AB003D7936 /* IdentifyingFromDeviceViewController.swift in Sources */,
 				060F918821575B3400AD9F26 /* PhotoAlbumModel.swift in Sources */,
+				1F3293CA21ABBB6300F075DD /* FilesStats.swift in Sources */,
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
 				1F38E2472178711B003FCAEE /* DeviceSambaSetPasswordViewController.swift in Sources */,
 				1FD1F2DD2151092800C3E429 /* SighUpAPI.swift in Sources */,
@@ -7071,6 +7097,7 @@
 				1F5882652086E96900394BD6 /* AddStationViewController.swift in Sources */,
 				1F0FD0D5214A4BA0003D7936 /* LLBlueTooth.swift in Sources */,
 				1F1BABA820C51F5100D32C5A /* DirectoriesModel.swift in Sources */,
+				1F3293CF21ABFFEE00F075DD /* DeviceNetAPI.swift in Sources */,
 				1FE674E320D21B11006F97DB /* TRCache.swift in Sources */,
 				1FA9C3DE210585FE00E8411E /* GetMediaAPI.swift in Sources */,
 				1FD1F2E62152231F00C3E429 /* SighInWechatTokenAPI.swift in Sources */,
@@ -7114,6 +7141,7 @@
 				1FE9EF8B20EF5DEA00732728 /* FileHash.m in Sources */,
 				1F050E6020AAC8400037F00A /* FilesSequenceTableViewCell.swift in Sources */,
 				1F362F8621351FAC000B3384 /* LoginViewController.swift in Sources */,
+				1F16B35221AD1A0400178143 /* AvatarAPI.swift in Sources */,
 				1F307C7A20BFEBC900AE105C /* LocalUserAPI.swift in Sources */,
 				1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */,
 				1FE08959217448450049F44B /* MyUserAgreementViewController.swift in Sources */,
@@ -7143,6 +7171,7 @@
 				1F52094F21491DDF0058A8D3 /* FirstConfigViewController.swift in Sources */,
 				1F52095F214A0FF20058A8D3 /* SeekNewDeviceViewController.swift in Sources */,
 				1F38E2512179B144003FCAEE /* FilesConvenientEntranceView.swift in Sources */,
+				1F3293CD21ABC65600F075DD /* FilesStatsModel.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
 				1FE0894D21709EA40049F44B /* MyBindPhoneViewController.swift in Sources */,
 				1F8EBB5420A01EF100E8AB83 /* FilesRootCollectionViewController.swift in Sources */,
@@ -7171,6 +7200,7 @@
 				1FE674E120D21B11006F97DB /* TRManager.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
 				1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */,
+				1F3293D121AC047D00F075DD /* DeviceNetModel.swift in Sources */,
 				1F3293C421A80BB500F075DD /* BootSpaceModel.swift in Sources */,
 				1F3293B921A67A9600F075DD /* UserMailAPI.swift in Sources */,
 				1FFD131720EF0ABB0053A3F7 /* TYDecorationSectionLayout.m in Sources */,
@@ -7259,6 +7289,7 @@
 				1FD1F2D92150FBA100C3E429 /* GetSmsCodeAPI.swift in Sources */,
 				1FFD132820EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m in Sources */,
 				1F307C6C20BEA61D00AE105C /* NetworkService.swift in Sources */,
+				1F16B34D21AD116D00178143 /* NicknameAPI.swift in Sources */,
 				1F38E245217854FD003FCAEE /* DeviceSambaSettingViewController.swift in Sources */,
 				1F362F11212672F2000B3384 /* DBService.swift in Sources */,
 				1FFD12C620EB80E80053A3F7 /* DirOprationAPI.swift in Sources */,

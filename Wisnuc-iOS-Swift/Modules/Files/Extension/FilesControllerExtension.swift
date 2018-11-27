@@ -381,8 +381,13 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton, model: Any) {
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
-        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imagery)
-        filesInfoVC.model = model as? EntriesModel
+        guard  let filesModel =  model as? EntriesModel else {
+            return
+        }
+        
+        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+        let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imagery,model: filesModel,driveUUID:drive,dirUUID: dir,location:self.title)
         self.navigationController?.pushViewController(filesInfoVC, animated: true)
     }
     

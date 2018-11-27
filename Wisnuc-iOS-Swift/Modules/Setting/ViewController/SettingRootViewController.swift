@@ -20,6 +20,10 @@ class SettingRootViewController: BaseViewController {
         appBar.headerViewController.headerView.trackingScrollView = settingTabelView
         self.view.addSubview(settingTabelView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
+        AppService.sharedInstance().updateCurrentUserInfo {
+            self.setAvatar()
+            self.setHeaderTitle()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -40,6 +44,12 @@ class SettingRootViewController: BaseViewController {
                 tab.setTabBarHidden(false, animated: true)
             }
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.setAvatar()
+        self.setHeaderTitle()
     }
     
     func setSwitchState(){
@@ -93,18 +103,35 @@ class SettingRootViewController: BaseViewController {
         appDelegate.initRootVC()
     }
     
+    func setAvatar(){
+        let imageURL = URL.init(string: AppUserService.currentUser?.avaterURL ?? "")
+        avatarImageView.setImageWith(imageURL, placeholder: UIImage.init(named: "avatar_placeholder_big.png"))
+        avatarImageView.layer.cornerRadius = avatarImageView.width/2
+        avatarImageView.clipsToBounds = true
+    }
+    
+    func setHeaderTitle(){
+        if let nickName = AppUserService.currentUser?.nickName {
+             headerTitleLabel.text = nickName
+        }else{
+            if let userName = AppUserService.currentUser?.userName {
+                headerTitleLabel.text = userName.replacePhone()
+            }
+        }
+        headerTitleLabel.font = UIFont.boldSystemFont(ofSize: 28)
+        headerTitleLabel.textColor = DarkGrayColor
+    }
+    
     func setHeaderContent(){
         headerDetailLabel.text = LocalizedString(forKey: "查看并编辑个人资料")
         headerDetailLabel.font = UIFont.systemFont(ofSize: 14)
         headerDetailLabel.textColor = DarkGrayColor
         myInfoView.addSubview(headerDetailLabel)
         
-        headerTitleLabel.text = LocalizedString(forKey: "13929900902")
-        headerTitleLabel.font = UIFont.boldSystemFont(ofSize: 28)
-        headerTitleLabel.textColor = DarkGrayColor
+        setHeaderTitle()
         myInfoView.addSubview(headerTitleLabel)
         
-        avatarImageView.image = UIImage.init(named: "avatar_placeholder.png")
+        setAvatar()
         myInfoView.addSubview(avatarImageView)
         
         headerTipsLabel.text = LocalizedString(forKey: "提高安全性还有1步")

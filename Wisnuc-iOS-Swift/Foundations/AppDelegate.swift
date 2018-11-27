@@ -13,6 +13,7 @@ import RealReachability
 import CatalogByConvention
 import MagicalRecord
 import SugarRecord
+import Alamofire
 import IQKeyboardManagerSwift
 
 @UIApplicationMain
@@ -65,6 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             if AppUserService.isUserLogin && AppUserService.isStationSelected{
                 setRootViewController()
                 setAppNetworkState()
+                fetchCookie()
             }else{
 //                let type:LoginState?
 //                type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
@@ -120,7 +122,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         
         let filesVC = FilesRootViewController()
         filesVC.selfState = .root
-        filesVC.title = LocalizedString(forKey: "Files")
+        filesVC.title = LocalizedString(forKey: "云盘")
         let photosVC = PhotoAlbumViewController.init(style: NavigationStyle.whiteWithoutShadow)
 //        photosVC.localAssetDataSources.append(contentsOf:AppAssetService.allAssets!)
 //        AppAssetService.getNetAssets { (error, netAssets) in
@@ -182,6 +184,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         }else{
            let status = RealReachability.sharedInstance().currentReachabilityStatus()
            checkNetworkStatus(status: status)
+        }
+    }
+    
+    func fetchCookie(){
+        Alamofire.request(kCloudBaseURL).validate().responseData { (response) in
+            guard let header = response.response?.allHeaderFields else {
+                return
+            }
+            guard let cookie = header["Set-Cookie"] as? String else {
+                return
+            }
+            
+            AppUserService.currentUser?.cookie = cookie
+            AppUserService.synchronizedCurrentUser()
         }
     }
     

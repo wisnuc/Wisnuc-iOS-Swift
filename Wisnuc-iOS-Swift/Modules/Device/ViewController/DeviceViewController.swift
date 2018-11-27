@@ -15,6 +15,8 @@ enum DeviceViewControllerState{
 
 class DeviceViewController: BaseViewController {
    let legendHeight:CGFloat =  12
+   var bootSpaceModel:BootSpaceModel?
+   var statsModel:StatsModel?
    var inputTextFieldController:MDCTextInputControllerUnderline?
    var state:DeviceViewControllerState?{
       didSet{
@@ -52,18 +54,34 @@ class DeviceViewController: BaseViewController {
    override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
       appBar.headerViewController.headerView.trackingScrollView = self.deviceTableView
-      let tab = retrieveTabbarController()
-      tab?.setTabBarHidden(false, animated: true)
+      if let controller = UIViewController.currentViewController(){
+         if !(controller is DeviceViewController){
+            return
+         }
+      }
+      if let tab = retrieveTabbarController(){
+         if tab.tabBarHidden{
+            tab.setTabBarHidden(false, animated: true)
+         }
+      }
    }
    
    func setData(){
        getBootData()
-      
    }
    
-   func getFruitmixStatsData(){
+   func setLabelFrame(text:String){
+      let font = UIFont.boldSystemFont(ofSize: 14)
+      let width = labelWidthFrom(title: text, font: font)
+      self.capacityLabel.frame = CGRect(x:__kWidth - MarginsWidth - width - 2  , y:self.deviecNameTitleTextField.top + self.deviecNameTitleTextField.height/2 - 14/2 + 8, width: width + 2, height: 14)
+      self.capacityLabel.textColor = LightGrayColor
+      self.capacityLabel.font = font
+      self.capacityLabel.text = text
+   }
+   
+   func getFruitmixStatsData(closure:@escaping (_ stats:StatsModel)->()){
       let requset = FruitmixStatsAPI.init()
-      requset.startRequestJSONCompletionHandler({ [weak self](response) in
+      requset.startRequestJSONCompletionHandler({(response) in
          if let error =  response.error{
             Message.message(text: error.localizedDescription)
          }else{
@@ -82,7 +100,7 @@ class DeviceViewController: BaseViewController {
                do {
                   guard let data = jsonToData(jsonDic: dataDic) else{return}
                   let model = try JSONDecoder().decode(StatsModel.self, from: data)
-                  self?.setHeaderContentFrame(model: model)
+                  return closure(model)
                }catch{
                   print(error as Any)
                   //error
@@ -115,7 +133,14 @@ class DeviceViewController: BaseViewController {
                      return
                   }
                   let model = try JSONDecoder().decode(BootSpaceModel.self, from: data)
-            
+                  if let total = model.total,let used = model.used{
+                     self?.setLabelFrame(text:"已使用\(sizeString(used*1024)) / \(sizeString(total*1024))")
+                  }
+                  self?.getFruitmixStatsData(closure: { (statsModel) in
+                     self?.setHeaderContentFrame(statsModel: statsModel,bootSpaceModel:model)
+                     self?.bootSpaceModel = model
+                     self?.statsModel = statsModel
+                  })
                }catch{
                   print(error as Any)
                   //error
@@ -125,23 +150,47 @@ class DeviceViewController: BaseViewController {
       })
    }
    
-   func setHeaderContentFrame(model:StatsModel){
-      var filesProportion:CGFloat = 0.0
-      if let documentSize = model.document?.totalSize{
-//         filesProportion = CGFloat(documentSize/totalSize)
+   func setHeaderContentFrame(statsModel:StatsModel,bootSpaceModel:BootSpaceModel){
+      print("😆\(statsModel)")
+      print("🍄\(bootSpaceModel)")
+      guard  let documentSize = statsModel.document?.totalSize ,let imageSize = statsModel.image?.totalSize,let videoSize = statsModel.video?.totalSize,let otherSize = statsModel.others?.totalSize else {
+         return
       }
+      
+      guard  var totalSize = bootSpaceModel.total else {
+         return
+      }
+      
+      guard  var usedSize = bootSpaceModel.used else {
+         return
+      }
+      
+      if totalSize == 0{
+         return
+      }
+      totalSize = totalSize * 1024
+      usedSize = usedSize * 1024
+      let statsTotalSize = documentSize + imageSize + videoSize + otherSize
+      
+      var totalProportion:CGFloat = 0.0
+      
+      if statsTotalSize != 0 && statsTotalSize > usedSize {
+         totalProportion = CGFloat(usedSize)/CGFloat(statsTotalSize)
+      }
+      
+      var filesProportion:CGFloat = 0.0
+      filesProportion = CGFloat(documentSize)/CGFloat(totalSize) * totalProportion
+   
       
       var imageProportion:CGFloat = 0.0
-      if let imageSize = model.image?.totalSize{
-//         imageProportion = CGFloat(imageSize/totalSize)
-      }
+      imageProportion = CGFloat(imageSize)/CGFloat(totalSize) * totalProportion
+     
       
       var videoProportion:CGFloat = 0.0
-      if let videoSize = model.video?.totalSize{
-//         videoProportion = CGFloat(videoSize/totalSize)
-      }
+      videoProportion = CGFloat(videoSize)/CGFloat(totalSize) * totalProportion
      
- 
+      var othersProportion:CGFloat = 0.0
+      othersProportion = CGFloat(otherSize)/CGFloat(totalSize) * totalProportion
       capacityFilesProgressView.snp.makeConstraints { (make) in
          make.centerY.equalTo(capacityProgressBackgroudView.snp.centerY)
          make.left.equalTo(capacityProgressBackgroudView.snp.left)
@@ -171,7 +220,7 @@ class DeviceViewController: BaseViewController {
          make.left.equalTo(capacityVideoProgressView.snp.right).offset(2)
          make.top.equalTo(capacityProgressBackgroudView.snp.top)
          make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
-         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * 0.05)
+         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * othersProportion)
       }
    }
    
@@ -333,7 +382,13 @@ class DeviceViewController: BaseViewController {
    }
    
    @objc func deviceInfoTap(_ sender:UIGestureRecognizer){
-      let deviceInfoViewController = DeviceDetailInfoViewController.init(style: .whiteWithoutShadow)
+      guard let statsModel = self.statsModel  else {
+         return
+      }
+      guard let bootSpaceModel = self.bootSpaceModel  else {
+         return
+      }
+      let deviceInfoViewController = DeviceDetailInfoViewController.init(style: .whiteWithoutShadow,statsModel:statsModel,bootSpaceModel:bootSpaceModel)
       let navigationController = UINavigationController.init(rootViewController: deviceInfoViewController)
       self.present(navigationController, animated: true) {
          
@@ -395,13 +450,7 @@ class DeviceViewController: BaseViewController {
       }()
    
    lazy var capacityLabel: UILabel = { [weak self] in
-      let text = "已使用45.4GB / 2TB"
-      let font = UIFont.boldSystemFont(ofSize: 14)
-      let width = labelWidthFrom(title: text, font: font)
-      let label = UILabel.init(frame: CGRect(x:__kWidth - MarginsWidth - width - 2  , y:(self?.deviecNameTitleTextField.top)! + (self?.deviecNameTitleTextField.height)!/2 - 14/2 + 8, width: width + 2, height: 14))
-      label.textColor = LightGrayColor
-      label.font = font
-      label.text = text
+      let label = UILabel.init()
       return label
       }()
    

@@ -88,7 +88,7 @@ func jsonToString(json: Any, prettyPrinted: Bool = false) -> String {
 func sizeString(_ size :Int64) ->String{
     var sizeText:String?
     if size == 0{
-        return ""
+        return "0B"
     }
     let doubleSize = Double(size)
     if doubleSize >= pow(Double(10) , Double(9)) { // size >= 1GB

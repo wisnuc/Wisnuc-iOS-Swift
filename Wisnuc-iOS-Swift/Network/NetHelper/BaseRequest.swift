@@ -115,6 +115,16 @@ class BaseRequest: NSObject{
         }
     }
     
+    func uploadRequestJSONCompletionHandler(_ queue: DispatchQueue? = nil ,requestData:Data,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler) {
+        networkState { (isConnect) in
+            if isConnect{
+                NetEngine.sharedInstance.addUpload(requestObj: self, data: requestData, queue: queue, requestCompletionHandler)
+            }else{
+                requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法连接服务器，请检查网络"), code: ErrorCode.Network.NotConnect))))
+            }
+        }
+    }
+    
     func networkState(_ closure:@escaping (_ isConnected:Bool)->()){
         NetworkStatus.getNetworkStatus { (status) in
             if status == .Disconnected{

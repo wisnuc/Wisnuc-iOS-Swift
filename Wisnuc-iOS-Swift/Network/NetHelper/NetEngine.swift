@@ -165,6 +165,28 @@ class NetEngine: NSObject {
             requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
         }
     }
+    
+    func addUpload(requestObj:BaseRequest ,data:Data,queue: DispatchQueue? = nil,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler){
+        let baseRequsetObject = requestObj
+        
+        let requestURL = bulidRequestURL(request: requestObj)
+        var requestHTTPHeaders:RequestHTTPHeaders = [:]
+        if baseRequsetObject.requestHTTPHeaders() != nil {
+            requestHTTPHeaders = baseRequsetObject.requestHTTPHeaders()!
+        }
+        var originalRequest: URLRequest?
+        do {
+            originalRequest = try URLRequest(url: URL.init(string: requestURL ?? urlPlaceholder)! , method: baseRequsetObject.requestMethod(), headers: requestHTTPHeaders)
+            originalRequest?.timeoutInterval = baseRequsetObject.timeoutIntervalForRequest()
+            let request = Alamofire.upload(data, with: originalRequest!).validate().responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
+//            request(encodedURLRequest).validate().responseJSON(queue: queue, options: JSONSerialization.ReadingOptions.allowFragments, completionHandler: requestCompletionHandler)
+            baseRequsetObject.task = request.task
+            baseRequsetObject.dataRequest = request
+            addRecord(request: request)
+        } catch {
+            requestCompletionHandler(DataResponse<Any>.init(request: nil, response: nil, data: nil, result: Result<Any>.failure(BaseError.init(localizedDescription: LocalizedString(forKey: "无法创建请求"), code: ErrorCode.Network.CannotBuidRequest))))
+        }
+    }
 
     //增加一条记录
     func addRecord(request:DataRequest){

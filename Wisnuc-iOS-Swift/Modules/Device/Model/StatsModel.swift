@@ -34,6 +34,7 @@ struct StatsModel:Codable {
     var video:FilesTypeStatsModel?
     var audio:FilesTypeStatsModel?
     var document:FilesTypeStatsModel?
+    var others:FilesTypeStatsModel?
 }
 
 //struct FilesStatsModel:Codable {

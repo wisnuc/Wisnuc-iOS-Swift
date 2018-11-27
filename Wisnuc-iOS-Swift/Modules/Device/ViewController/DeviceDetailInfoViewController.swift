@@ -11,6 +11,8 @@ import UIKit
 class DeviceDetailInfoViewController: BaseViewController {
     let identifier = "cellIdentifier"
     let headerHeight:CGFloat = 64
+    var statsModel:StatsModel?
+    var bootSpaceModel:BootSpaceModel?
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,10 +25,47 @@ class DeviceDetailInfoViewController: BaseViewController {
       
     }
     
+    init(style: NavigationStyle,statsModel:StatsModel,bootSpaceModel:BootSpaceModel) {
+        super.init(style: style)
+        self.statsModel = statsModel
+        self.bootSpaceModel = bootSpaceModel
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.headerViewController.headerView.trackingScrollView = self.infoTableView
        
+    }
+    
+    func fetchTotalProportion(statsModel:StatsModel,bootSpaceModel:BootSpaceModel) ->  Float? {
+        guard  let documentSize = statsModel.document?.totalSize ,let imageSize = statsModel.image?.totalSize,let videoSize = statsModel.video?.totalSize,let otherSize = statsModel.others?.totalSize else {
+            return nil
+        }
+        guard  var totalSize = bootSpaceModel.total else {
+            return nil
+        }
+        
+        guard  var usedSize = bootSpaceModel.used else {
+            return nil
+        }
+        
+        if totalSize == 0{
+            return nil
+        }
+        totalSize = totalSize * 1024
+        usedSize = usedSize * 1024
+        let statsTotalSize = documentSize + imageSize + videoSize + otherSize
+        
+        var totalProportion:Float = 0.0
+        
+        if statsTotalSize != 0 && statsTotalSize > usedSize {
+            totalProportion = Float(usedSize)/Float(statsTotalSize)
+        }
+        return totalProportion
     }
     
     @objc func dismiss(_ sender:UIBarButtonItem){
@@ -94,23 +133,53 @@ extension DeviceDetailInfoViewController:UITableViewDataSource,UITableViewDelega
         case 0:
             cell.titleLabel.text = LocalizedString(forKey: "文件")
             cell.leftImageView.image = UIImage.init(named: "files_icon_device_detail.png")
-            cell.detailLabel.text = "12233个"
-            cell.rightLabel.text = "201G"
+            if let count = self.statsModel?.document?.count{
+                cell.detailLabel.text = "\(count)个"
+            }
+            
+            if let documentTotalSize = self.statsModel?.document?.totalSize{
+                if let proportion  = self.fetchTotalProportion(statsModel: statsModel!, bootSpaceModel: bootSpaceModel!) {
+                    let size = Float(documentTotalSize) * proportion
+                    cell.rightLabel.text = sizeString(Int64(size))
+                }
+            }
+           
         case 1:
             cell.titleLabel.text = LocalizedString(forKey: "照片")
             cell.leftImageView.image = UIImage.init(named: "photo_icon_device_detail.png")
-            cell.detailLabel.text = "12233个"
-            cell.rightLabel.text = "201G"
+            if let count = self.statsModel?.image?.count{
+                cell.detailLabel.text = "\(count)个"
+            }
+            if let imageTotalSize = self.statsModel?.image?.totalSize{
+                if let proportion  = self.fetchTotalProportion(statsModel: statsModel!, bootSpaceModel: bootSpaceModel!) {
+                    let size = Float(imageTotalSize) * proportion
+                    cell.rightLabel.text = sizeString(Int64(size))
+                }
+            }
         case 2:
             cell.titleLabel.text = LocalizedString(forKey: "视频")
             cell.leftImageView.image = UIImage.init(named: "video_icon_device_detail.png")
-            cell.detailLabel.text = "12233个"
-            cell.rightLabel.text = "2G"
+            if let count = self.statsModel?.video?.count{
+                cell.detailLabel.text = "\(count)个"
+            }
+            if let videoTotalSize = self.statsModel?.video?.totalSize{
+                if let proportion  = self.fetchTotalProportion(statsModel: statsModel!, bootSpaceModel: bootSpaceModel!) {
+                    let size = Float(videoTotalSize) * proportion
+                    cell.rightLabel.text = sizeString(Int64(size))
+                }
+            }
         case 3:
             cell.titleLabel.text = LocalizedString(forKey: "其他")
             cell.leftImageView.image = UIImage.init(named: "other_icon_device_detail.png")
-            cell.detailLabel.text = "12233个"
-            cell.rightLabel.text = "21G"
+            if let count = self.statsModel?.others?.count{
+                cell.detailLabel.text = "\(count)个"
+            }
+            if let othersTotalSize = self.statsModel?.others?.totalSize{
+                if let proportion  = self.fetchTotalProportion(statsModel: statsModel!, bootSpaceModel: bootSpaceModel!) {
+                    let size = Float(othersTotalSize) * proportion
+                    cell.rightLabel.text = sizeString(Int64(size))
+                }
+            }
         default:
             break
         }

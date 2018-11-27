@@ -15,9 +15,9 @@ enum DeviceNetworkSpeedTestState {
 }
 
 class DeviceNetworkSettingViewController: BaseViewController {
-
     let identifier = "celled"
     let cellHeight:CGFloat = 64
+    lazy var modelDataSource:Array<DeviceNetModel>? = Array.init()
     var state:DeviceNetworkSpeedTestState?{
         didSet{
           infoSettingTableView.reloadData()
@@ -25,6 +25,7 @@ class DeviceNetworkSettingViewController: BaseViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.loadData()
         self.largeTitle = LocalizedString(forKey: "网络")
         self.state = .ready
         prepareNavigation()
@@ -40,6 +41,49 @@ class DeviceNetworkSettingViewController: BaseViewController {
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.infoSettingTableView, viewController: self)
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
+    }
+    
+    func loadData(){
+        let requset = DeviceNetAPI.init()
+        requset.startRequestJSONCompletionHandler { [weak self](response) in
+            if let error =  response.error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                
+                let  isLocal = AppNetworkService.networkState == .local ? true : false
+                var rootArray = NSArray.init()
+                if response.value is NSArray {
+                    rootArray = response.value as! NSArray
+                }
+                if !isLocal && response.value is NSDictionary{
+                    let rootDic = response.value as! NSDictionary
+                    if let array = rootDic["data"] as? NSArray{
+                        rootArray = array
+                    }
+                }
+                var resultArray = Array<DeviceNetModel>.init()
+                for dataDic in rootArray{
+                    if let dataDic = dataDic as? NSDictionary{
+                        guard let data = jsonToData(jsonDic: dataDic) else{
+                            return
+                        }
+                        do {
+                            let model = try JSONDecoder().decode(DeviceNetModel.self, from: data)
+                            resultArray.append(model)
+                        }catch{
+                            print(error as Any)
+                            //error
+                        }
+                    }
+                }
+                self?.modelDataSource = resultArray
+                self?.infoSettingTableView.reloadData()
+            }
+        }
     }
     
     @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){
@@ -95,7 +139,14 @@ extension DeviceNetworkSettingViewController:UITableViewDataSource,UITableViewDe
             cell.detailTextLabel?.text = "naxian800"
         case 1:
             cell.textLabel?.text = LocalizedString(forKey:"IP地址")
-            cell.detailTextLabel?.text = "255.255.255.0"
+            cell.detailTextLabel?.text = LocalizedString(forKey: "Loading...")
+            if (modelDataSource?.count)! > 0{
+                if let model = modelDataSource?.first(where: {$0.state == "up"}){
+                    if let detailModel =  model.ipAddresses?.first(where: {$0.family == "IPv4"}){
+                        cell.detailTextLabel?.text = detailModel.address
+                    }
+                }
+            }
         case 2:
             cell.textLabel?.text = LocalizedString(forKey:"测速")
             let label = UILabel.init(frame: CGRect(x: __kWidth - (__kWidth/2 - 50) - speedActivityIndicator.width - 10 - MarginsWidth, y: 0, width: __kWidth/2 - 50, height: cellHeight))

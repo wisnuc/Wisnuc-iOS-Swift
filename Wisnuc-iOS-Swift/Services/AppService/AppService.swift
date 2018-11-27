@@ -153,7 +153,7 @@ class AppService: NSObject,ServiceProtocol{
             orginTokenUser.lanIP = lanIP
         }
         self.userService.setCurrentUser(orginTokenUser)
-        self.updateCurrentUserInfo()
+        self.updateCurrentUserInfo(complete: {})
         self.userService.synchronizedCurrentUser()
         
         if orginTokenUser.localAddr != nil{
@@ -277,23 +277,47 @@ class AppService: NSObject,ServiceProtocol{
         }
     }
     
-    func updateCurrentUserInfo(){
+    func updateCurrentUserInfo(complete:@escaping ()->()){
         UsersInfoAPI.init().startRequestDataCompletionHandler { (response) in
             if  response.error == nil{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                
+                guard let rootDic = dataToNSDictionary(data: response.data)else {
+                    return
+                }
+                
+                guard let dataDic = rootDic["data"] as? NSDictionary else {
+                    return
+                }
+                
+                guard let data = jsonToData(jsonDic: dataDic) else {
+                    return
+                }
+                
                 do {
-                    let userModel = try JSONDecoder().decode(UserModel.self, from: response.data!)
+                    let userModel = try JSONDecoder().decode(UserModel.self, from: data)
                     if userModel.id == AppUserService.currentUser?.uuid{
                         AppUserService.currentUser?.userName = userModel.username
                         AppUserService.currentUser?.avaterURL = userModel.avatarUrl
                         AppUserService.currentUser?.nickName = userModel.nickName
                         AppUserService.currentUser?.userName = userModel.username
                         AppUserService.synchronizedCurrentUser()
+                        complete()
                     }
                 } catch {
                     Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
                 }
             }else{
-                Message.message(text: (response.error?.localizedDescription)!)
+                switch response.error {
+                case is BaseError:
+                    let baseError = response.error as! BaseError
+                    Message.message(text: baseError.localizedDescription)
+                default:
+                    Message.message(text: (response.error?.localizedDescription)!)
+                }
             }
         }
     }

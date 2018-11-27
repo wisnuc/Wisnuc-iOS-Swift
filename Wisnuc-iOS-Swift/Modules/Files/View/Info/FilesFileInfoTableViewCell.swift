@@ -27,6 +27,7 @@ class FilesFileInfoTableViewCell: UITableViewCell {
         folderButton.isHidden = true
         folderButton.setTitleColor(COR1, for: UIControlState.normal)
         folderButton.titleLabel?.font = BoldMiddleTitleFont
+        folderButton.isEnabled = false
     }
     
     @IBAction func folderButtonTap(_ sender: UIButton) {
