@@ -359,8 +359,8 @@ class MyVerificationCodeViewController: BaseViewController {
                     Message.message(text: LocalizedString(forKey: "无法发送验证码"))
                     return
                 }
-                self?.sendMailCodeAction(mail: mail, type: (self?.sendCodeType)!, callback: { [weak self] in
-                    let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.exchangeEmail,codeType:.mail,mail:mail)
+                self?.sendMailCodeAction(mail: mail, type: .unbind, callback: { [weak self] in
+                    let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.exchangeEmail,codeType:.unbind,mail:mail)
                     self?.navigationController?.pushViewController(verificationCodeVC, animated: true)
                 })
             }

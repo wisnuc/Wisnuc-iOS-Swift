@@ -105,7 +105,7 @@ class MyBindEmailViewController: BaseViewController {
     @objc func nextButtonTap(_ sender:UIButton){
         self.sendMailCodeAction(type: .bind) {
             self.alertController(title: LocalizedString(forKey: "邮箱验证码已发送"), message: LocalizedString(forKey: "请前往邮箱里查看验证码并在下一步输入验证"), okActionTitle: "好的", okActionHandler: { (alertAction) in
-                let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.bindEmailComplete,mail:self.emailAdressTextField.text!)
+                let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.bindEmailComplete,codeType:.bind,mail:self.emailAdressTextField.text!)
                 self.navigationController?.pushViewController(verificationCodeVC, animated: true)
             }) { (alertAction) in
                 

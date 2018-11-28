@@ -22,4 +22,6 @@ struct SighInData:Decodable{
     var nickName:String?
     var updatedAt:String?
     var username:String?
+    var mail:String?
+    var safety:Int?
 }

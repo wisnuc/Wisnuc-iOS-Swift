@@ -194,7 +194,25 @@ class MyAccountSecurityViewController: BaseViewController {
     
     
     @objc func switchBtnHandle(_ sender:UISwitch){
-        
+        if let safety = AppUserService.currentUser?.safety?.intValue{
+            let requsetSafety = safety == 1 ? 0 : 1
+            let request = UserSafetyChange.init(safety: requsetSafety)
+            request.startRequestDataCompletionHandler { (response) in
+                let errorBool = safety == 1 ? true : false
+                if let error = response.error {
+                    sender.isOn = errorBool
+                    Message.message(text: error.localizedDescription)
+                }else{
+                    if let errorMessage = ErrorTools.responseErrorData(response.data){
+                        sender.isOn = errorBool
+                        Message.message(text: errorMessage)
+                    }else{
+                        AppUserService.currentUser?.safety = NSNumber.init(value: requsetSafety)
+                        AppUserService.synchronizedCurrentUser()
+                    }
+                }
+            }
+        }
     }
     
     lazy var infoTabelView: UITableView = {
@@ -222,20 +240,19 @@ extension MyAccountSecurityViewController:UITableViewDelegate{
             case 0:
                 break
             case 1:
-                  break
-//                var verificationCodeViewController:MyVerificationCodeViewController?
-//                switch verificationState {
-//                case .phone?:
-//                   verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
-//                case .doubleVerification?:
-//                    verificationCodeViewController = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.changePassword)
-//                default:
-//                    break
-//                }
-//
-//                if let verificationCodeVC = verificationCodeViewController{
-//                    self.navigationController?.pushViewController(verificationCodeVC, animated: true)
-//                }
+                
+                if AppUserService.currentUser?.safety?.intValue  == 1{
+                    let mail = self.mailDataSource?.first?.mail ?? AppUserService.currentUser?.mail
+                    let phone = self.phoneDataSource?.first?.phoneNumber ?? AppUserService.currentUser?.userName
+                    if let email = mail,let phoneNumber = phone{
+                        let selectChangePasswordViewController = MySelectChangePasswordViewController.init(style: NavigationStyle.mainTheme, phone: phoneNumber, mail: email)
+                        self.navigationController?.pushViewController(selectChangePasswordViewController, animated: true)
+                    }
+                }else{
+//                    if let verificationCodeVC = verificationCodeViewController{
+//                        self.navigationController?.pushViewController(verificationCodeVC, animated: true)
+//                    }
+                }
               
             case 2:
                 let bindPhoneViewController = MyBindPhoneViewController.init(style: .whiteWithoutShadow)
@@ -369,7 +386,7 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
                 cell.titleLabel.text = LocalizedString(forKey: "双重身份验证")
                 let switchBtn = UISwitch.init()
                 switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
-                switchBtn.isOn = AppUserService.currentUser?.retrievePasswordState?.intValue  == 1 ? true : false
+                switchBtn.isOn = AppUserService.currentUser?.safety?.intValue  == 1 ? true : false
                 switchBtn.addTarget(self, action: #selector(switchBtnHandle(_ :)), for: UIControlEvents.valueChanged)
                 if let switchButton = cell.contentView.subviews.first(where: {$0 is UISwitch}){
                     switchButton.removeFromSuperview()

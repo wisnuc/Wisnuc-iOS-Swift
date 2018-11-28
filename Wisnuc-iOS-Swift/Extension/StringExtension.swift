@@ -65,6 +65,18 @@ extension String{
         return self.replacingCharacters(in: range, with: "****")
     }
     
+    func replaceMail() -> String? {
+        if self.count < 13 {
+            return self
+        }
+        let start = self.index(self.startIndex, offsetBy: 2)
+        guard let end = self.firstIndex(of: "@") else {
+            return nil
+        }
+        let range = Range(uncheckedBounds: (lower: start, upper: end))
+        return self.replacingOccurrences(of: <#T##StringProtocol#>, with: <#T##StringProtocol#>, options: <#T##String.CompareOptions#>, range: <#T##Range<String.Index>?#>)
+    }
+    
     func contains(find: String) -> Bool{
         return self.range(of: find) != nil
     }

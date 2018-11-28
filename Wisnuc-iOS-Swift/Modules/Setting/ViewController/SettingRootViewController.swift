@@ -44,10 +44,18 @@ class SettingRootViewController: BaseViewController {
                 tab.setTabBarHidden(false, animated: true)
             }
         }
+        getMail(complete: { [weak self](isBind) in
+            if isBind{
+//                self?.headerTipsView.isHidden = true
+            }
+        }) { [weak self] in
+//            self?.headerTipsView.isHidden = false
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+     
         self.setAvatar()
         self.setHeaderTitle()
     }
@@ -122,6 +130,10 @@ class SettingRootViewController: BaseViewController {
         headerTitleLabel.textColor = DarkGrayColor
     }
     
+    func setHeaderTipsView(){
+        headerTipsView.isHidden = true
+    }
+    
     func setHeaderContent(){
         headerDetailLabel.text = LocalizedString(forKey: "查看并编辑个人资料")
         headerDetailLabel.font = UIFont.systemFont(ofSize: 14)
@@ -150,6 +162,44 @@ class SettingRootViewController: BaseViewController {
         headerView.addSubview(myInfoView)
         headerView.addSubview(headerTipsView)
         headerView.addSubview(secureHighView)
+    }
+    
+    func getMail(complete:@escaping (_ isBind:Bool)->(),errorHandler:@escaping ()->()){
+        UserMailAPI.init().startRequestJSONCompletionHandler {(response) in
+            if let error = response.error {
+                Message.message(text: error.localizedDescription)
+                errorHandler()
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    errorHandler()
+                }else{
+                    guard let jsonData = response.data else{
+                      errorHandler()
+                      return
+                    }
+                    do {
+                        guard let stringDic = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String : Any] else{
+                            errorHandler()
+                          return
+                        }
+                        
+                        if let mailArray = stringDic["data"] as? Array<[String:Any]>{
+                            var mailDataArray = Array<UserMailModel>.init()
+                            for value in mailArray{
+                                if let mailModel = UserMailModel.deserialize(from: value) {
+                                    mailDataArray.append(mailModel)
+                                }
+                            }
+                            complete(mailDataArray.count > 0)
+                        }
+                        print(stringDic as Any)
+                    } catch {
+                        errorHandler()
+                    }
+                }
+            }
+        }
     }
     
     lazy var settingTabelView: UITableView = {

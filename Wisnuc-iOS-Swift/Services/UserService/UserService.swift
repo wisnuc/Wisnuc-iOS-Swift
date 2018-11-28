@@ -63,6 +63,34 @@ class UserService: NSObject,ServiceProtocol{
     deinit {
         
     }
+    
+    func synchronizedUserInLogin(_ model:SighInTokenModel,_ cookie:String){
+        let user = self.createUser(uuid: (model.data?.id)!)
+        user.cloudToken = model.data?.token!
+        if let avatarUrl = model.data?.avatarUrl{
+            user.avaterURL = avatarUrl
+        }
+        user.cookie = cookie
+        
+        if let nickName = model.data?.nickName{
+            user.nickName = nickName
+        }
+        
+        if let username = model.data?.username{
+            user.userName = username
+        }
+        
+        if let mail = model.data?.mail{
+            user.mail = mail
+        }
+        
+        if let safety = model.data?.safety{
+            user.safety = NSNumber.init(value: safety)
+        }
+        
+        self.setCurrentUser(user)
+        self.synchronizedCurrentUser()
+    }
 
     func setCurrentUser(_ currentUser:User?){
         if(currentUser == nil || currentUser?.uuid == nil || isNilString((currentUser?.uuid)!)) {

@@ -36,7 +36,7 @@ class UserMailAPI: BaseRequest {
     }
     
     override func requestParameters() -> RequestParameters? {
-        if self.method == .post{
+        if self.method != .get{
             if let mail = self.mail,let code = self.code{
                 return ["mail":mail,"code":code]
             }

@@ -264,7 +264,7 @@
                                         guard let cookie = header["Set-Cookie"] as? String else {
                                             return
                                         }
-                                        self?.synchronizedUser(model, cookie)
+                                        AppUserService.synchronizedUserInLogin(model, cookie)
                                         LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!)
                                     }
                             } catch {
@@ -283,26 +283,6 @@
             }
             ActivityIndicator.stopActivityIndicatorAnimation()
         }
-    }
-    
-    func synchronizedUser(_ model:SighInTokenModel,_ cookie:String){
-        let user = AppUserService.createUser(uuid: (model.data?.id)!)
-        user.cloudToken = model.data?.token!
-        if let avatarUrl = model.data?.avatarUrl{
-            user.avaterURL = avatarUrl
-        }
-        user.cookie = cookie
-        
-        if let nickName = model.data?.nickName{
-            user.nickName = nickName
-        }
-        
-        if let username = model.data?.username{
-            user.userName = username
-        }
-        
-        AppUserService.setCurrentUser(user)
-        AppUserService.synchronizedCurrentUser()
     }
 //
     func weChatCallBackRespCode(code:String){

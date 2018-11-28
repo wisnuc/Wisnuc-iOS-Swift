@@ -171,30 +171,6 @@ class LoginViewController: BaseViewController {
         }
     }
     
-    func synchronizedUser(_ model:SighInTokenModel, _ cookie:String){
-        guard let userId = model.data?.id else{
-            return
-        }
-        let user = AppUserService.createUser(uuid: userId)
-        
-        user.cookie = cookie
-        
-        if let avatarUrl = model.data?.avatarUrl{
-            user.avaterURL = avatarUrl
-        }
-        
-        if let nickName = model.data?.nickName{
-            user.nickName = nickName
-        }
-        
-        if let username = model.data?.username{
-            user.userName = username
-        }
-        user.cloudToken = model.data?.token!
-        AppUserService.setCurrentUser(user)
-        AppUserService.synchronizedCurrentUser()
-    }
-    
     //键盘弹出监听
     @objc func keyboardShow(note: Notification)  {
         if self.alertView != nil {
@@ -291,7 +267,7 @@ class LoginViewController: BaseViewController {
                             return
                         }
                         if let token = model.data?.token {
-                            self?.synchronizedUser(model, cookie)
+                            AppUserService.synchronizedUserInLogin(model, cookie)
                             guard let userId = model.data?.id else{
                                 return
                             }

@@ -116,6 +116,9 @@ extension MyInfoCenterViewController:UITableViewDataSource{
         switch indexPath.row {
             
         case 0:
+            if let view = cell.contentView.subviews.first(where: {$0 is UIImageView}){
+                view.removeFromSuperview()
+            }
             cell.textLabel?.text = LocalizedString(forKey: "头像")
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             let image = UIImage.init(named: "avatar_placeholder.png")

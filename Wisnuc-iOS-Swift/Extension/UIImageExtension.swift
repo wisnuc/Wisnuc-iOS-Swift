@@ -53,5 +53,97 @@ extension UIImage {
         return pixelsData
     }
 
+    func compressQuality(withMaxLength maxLength: Int) -> Data? {
+        var compression: CGFloat = 1
+       
+        var data =  UIImageJPEGRepresentation(self, compression)
+        if (data?.count ?? 0) < maxLength {
+            return data
+        }
+        var max: CGFloat = 1
+        var min: CGFloat = 0
+        for _ in 0..<6 {
+            compression = (max + min) / 2
+            data =  UIImageJPEGRepresentation(self, compression)
+            if Double((data?.count ?? 0)) < Double(maxLength) * 0.9 {
+                min = compression
+            } else if (data?.count ?? 0) > maxLength {
+                max = compression
+            } else {
+                break
+            }
+        }
+        return data
+    }
+    
+    
+    class func scale(_ image: UIImage?, toScale scaleSize: Float) -> UIImage? {
+        UIGraphicsBeginImageContext(CGSize(width: (image?.size.width ?? 0.0) * CGFloat(scaleSize), height: (image?.size.height ?? 0.0) * CGFloat(scaleSize)))
+        image?.draw(in: CGRect(x: 0, y: 0, width: (image?.size.width ?? 0.0) * CGFloat(scaleSize), height: (image?.size.height ?? 0.0) * CGFloat(scaleSize)))
+        let scaledImage: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return scaledImage
+    }
+    
+    func was_roundImage(with size: CGSize, fill fillColor: UIColor?, opaque: Bool, completion: @escaping (UIImage?) -> Void) {
+        DispatchQueue.global(qos: .default).async(execute: {
+            //        NSTimeInterval start = CACurrentMediaTime();
+            // 1. 利用绘图，建立上下文 BOOL选项为是否为不透明
+            UIGraphicsBeginImageContextWithOptions(size, _: opaque, _: 0)
+            let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            // 2. 设置填充颜色
+            if opaque {
+                fillColor?.setFill()
+                UIRectFill(rect)
+            }
+            // 3. 利用 贝赛尔路径 `裁切 效果
+            let path = UIBezierPath(ovalIn: rect)
+            path.addClip()
+            // 4. 绘制图像 如果图片为空那么为单色渲染
+            
+            self.draw(in: rect)
+        
+            // 5. 取得结果
+            let result: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
+            // 6. 关闭上下文
+            UIGraphicsEndImageContext()
+            //        NSLog(@"%f", CACurrentMediaTime() - start);
+            // 7. 完成回调
+            DispatchQueue.main.async(execute: {
+                completion(result)
+            })
+        })
+    }
+    
+    func was_roundRectImage(with size: CGSize, fill fillColor: UIColor?, opaque: Bool, radius: CGFloat, completion: @escaping (UIImage?) -> Void) {
+        DispatchQueue.global(qos: .default).async(execute: {
+            //        NSTimeInterval start = CACurrentMediaTime();
+            // 1. 利用绘图，建立上下文 BOOL选项为是否为不透明
+            UIGraphicsBeginImageContextWithOptions(size, _: opaque, _: 0)
+            let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            // 2. 设置填充颜色
+            if opaque {
+                fillColor?.setFill()
+                UIRectFill(rect)
+            }
+            // 3. 利用 贝赛尔路径 `裁切 效果
+            let path = UIBezierPath(roundedRect: rect, cornerRadius: radius)
+            //        UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:rect];
+            path.addClip()
+            // 4. 绘制图像
+            
+            self.draw(in: rect)
+        
+            // 5. 取得结果
+            let result: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
+            // 6. 关闭上下文
+            UIGraphicsEndImageContext()
+            //        NSLog(@"%f", CACurrentMediaTime() - start);
+            // 7. 完成回调
+            DispatchQueue.main.async(execute: {
+                completion(result)
+            })
+        })
+    }
 }
 

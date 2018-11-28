@@ -101,6 +101,12 @@
 		1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F169DDD2080AB7800860F31 /* TokenManager.swift */; };
 		1F16B34D21AD116D00178143 /* NicknameAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B34C21AD116D00178143 /* NicknameAPI.swift */; };
 		1F16B35221AD1A0400178143 /* AvatarAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B35121AD1A0400178143 /* AvatarAPI.swift */; };
+		1F16B35521AE322300178143 /* StationUserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B35421AE322300178143 /* StationUserAPI.swift */; };
+		1F16B35A21AE391C00178143 /* StationUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B35921AE391C00178143 /* StationUserModel.swift */; };
+		1F16B35D21AE609900178143 /* DeviceUserManagerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B35B21AE609900178143 /* DeviceUserManagerTableViewCell.swift */; };
+		1F16B35E21AE609900178143 /* DeviceUserManagerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F16B35C21AE609900178143 /* DeviceUserManagerTableViewCell.xib */; };
+		1F16B36021AE9DFF00178143 /* UserSafetyChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B35F21AE9DFF00178143 /* UserSafetyChange.swift */; };
+		1F16B36221AEA22100178143 /* MySelectChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B36121AEA22100178143 /* MySelectChangePasswordViewController.swift */; };
 		1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */; };
 		1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */; };
 		1F17698220AD379B003D955F /* SearchFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17698120AD379B003D955F /* SearchFilesViewController.swift */; };
@@ -1128,6 +1134,12 @@
 		1F169DDD2080AB7800860F31 /* TokenManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenManager.swift; sourceTree = "<group>"; };
 		1F16B34C21AD116D00178143 /* NicknameAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameAPI.swift; sourceTree = "<group>"; };
 		1F16B35121AD1A0400178143 /* AvatarAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarAPI.swift; sourceTree = "<group>"; };
+		1F16B35421AE322300178143 /* StationUserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationUserAPI.swift; sourceTree = "<group>"; };
+		1F16B35921AE391C00178143 /* StationUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationUserModel.swift; sourceTree = "<group>"; };
+		1F16B35B21AE609900178143 /* DeviceUserManagerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceUserManagerTableViewCell.swift; sourceTree = "<group>"; };
+		1F16B35C21AE609900178143 /* DeviceUserManagerTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceUserManagerTableViewCell.xib; sourceTree = "<group>"; };
+		1F16B35F21AE9DFF00178143 /* UserSafetyChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSafetyChange.swift; sourceTree = "<group>"; };
+		1F16B36121AEA22100178143 /* MySelectChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySelectChangePasswordViewController.swift; sourceTree = "<group>"; };
 		1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesShareBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTaskBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17698120AD379B003D955F /* SearchFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilesViewController.swift; sourceTree = "<group>"; };
@@ -3093,6 +3105,7 @@
 				1F3293A421A403FA00F075DD /* FruitmixStatsAPI.swift */,
 				1F3293C121A80A8D00F075DD /* BootSpaceAPI.swift */,
 				1F3293CE21ABFFEE00F075DD /* DeviceNetAPI.swift */,
+				1F16B35421AE322300178143 /* StationUserAPI.swift */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -3103,6 +3116,7 @@
 				1F3293A721A405AD00F075DD /* StatsModel.swift */,
 				1F3293C321A80BB500F075DD /* BootSpaceModel.swift */,
 				1F3293D021AC047D00F075DD /* DeviceNetModel.swift */,
+				1F16B35921AE391C00178143 /* StationUserModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3114,6 +3128,7 @@
 				1F3293B821A67A9600F075DD /* UserMailAPI.swift */,
 				1F16B34C21AD116D00178143 /* NicknameAPI.swift */,
 				1F16B35121AD1A0400178143 /* AvatarAPI.swift */,
+				1F16B35F21AE9DFF00178143 /* UserSafetyChange.swift */,
 			);
 			path = My;
 			sourceTree = "<group>";
@@ -4247,9 +4262,10 @@
 				1F359FE92092C87800E2FF36 /* UIImage+extension.m */,
 				1FD9B78C207CC75500906D80 /* StringExtension.swift */,
 				1F588212208481A200394BD6 /* UIImageExtension.swift */,
+				1FDF46E92191334E00521DDE /* UIImageViewExtension.swift */,
+				1F5882312085D72600394BD6 /* UIButttonExtension.swift */,
 				1F58821C2084A56D00394BD6 /* UIColorExtension.swift */,
 				1F58822F2085D39D00394BD6 /* UIViewExtension.swift */,
-				1F5882312085D72600394BD6 /* UIButttonExtension.swift */,
 				1F5882622085FDB400394BD6 /* UIViewControllerExtension.swift */,
 				1FBD1DFF20B2A0170067BE3E /* NotificationExtension.swift */,
 				1F1BAC2C20C92A1900D32C5A /* UIScrollExtension.swift */,
@@ -4262,7 +4278,6 @@
 				1FBB6F60213923C30090FA57 /* TextFiledExtension.swift */,
 				1FE0893B216F5ACB0049F44B /* UILabelExtension.swift */,
 				1FE0897A21749E8C0049F44B /* UIProgressViewExtension.swift */,
-				1FDF46E92191334E00521DDE /* UIImageViewExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -5692,6 +5707,7 @@
 				1FE08958217448450049F44B /* MyUserAgreementViewController.swift */,
 				1FE0895A217462AB0049F44B /* MySecureStepViewController.swift */,
 				1F38E2B92181D0BE003FCAEE /* SettingLanguageViewController.swift */,
+				1F16B36121AEA22100178143 /* MySelectChangePasswordViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -5798,6 +5814,8 @@
 				1FE089C5217829D70049F44B /* DeviceAddDeviceTableViewCell.xib */,
 				1F38E24C21789C5A003FCAEE /* DeviceDetailInfdTableViewCell.swift */,
 				1F38E24D21789C5A003FCAEE /* DeviceDetailInfdTableViewCell.xib */,
+				1F16B35B21AE609900178143 /* DeviceUserManagerTableViewCell.swift */,
+				1F16B35C21AE609900178143 /* DeviceUserManagerTableViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -6352,6 +6370,7 @@
 				1F38E2672179D6AD003FCAEE /* transfer_taks_icon@2x.png in Resources */,
 				1FFD12B920E9C72F0053A3F7 /* files_move_to@2x.png in Resources */,
 				1F58824F2085F09F00394BD6 /* station_normal.png in Resources */,
+				1F16B35E21AE609900178143 /* DeviceUserManagerTableViewCell.xib in Resources */,
 				1F38E2B02181CA9D003FCAEE /* video_icon_device_detail@2x.png in Resources */,
 				1FFC816B2195613100371C8D /* files_excel_normal.png in Resources */,
 				1FE089632174797B0049F44B /* add_gray@2x.png in Resources */,
@@ -7115,10 +7134,12 @@
 				1FFD12B520E61B4D0053A3F7 /* FilesTasksModel.swift in Sources */,
 				1FE674DC20D21B11006F97DB /* TRCommon.swift in Sources */,
 				1FBB7089213FC5630090FA57 /* FSOpenSSL.m in Sources */,
+				1F16B35D21AE609900178143 /* DeviceUserManagerTableViewCell.swift in Sources */,
 				1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */,
 				1FFC8198219BF4B400371C8D /* BindStationAPI.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1F362F8221351782000B3384 /* LoginNextStepViewController.swift in Sources */,
+				1F16B36021AE9DFF00178143 /* UserSafetyChange.swift in Sources */,
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,
 				1F537A102125150D00A555C5 /* AutoBackupManager.swift in Sources */,
 				1FFD136720EF50D10053A3F7 /* PHPhotoLibrary+JYEXT.m in Sources */,
@@ -7141,6 +7162,7 @@
 				1FE9EF8B20EF5DEA00732728 /* FileHash.m in Sources */,
 				1F050E6020AAC8400037F00A /* FilesSequenceTableViewCell.swift in Sources */,
 				1F362F8621351FAC000B3384 /* LoginViewController.swift in Sources */,
+				1F16B35521AE322300178143 /* StationUserAPI.swift in Sources */,
 				1F16B35221AD1A0400178143 /* AvatarAPI.swift in Sources */,
 				1F307C7A20BFEBC900AE105C /* LocalUserAPI.swift in Sources */,
 				1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */,
@@ -7162,6 +7184,7 @@
 				1FA5D75B215A14590025F870 /* TimeTools.swift in Sources */,
 				1F8EBB33209ABF4700E8AB83 /* FilesRootViewController.swift in Sources */,
 				1F050E2420A990CD0037F00A /* FilesOfflineTableViewCell.swift in Sources */,
+				1F16B35A21AE391C00178143 /* StationUserModel.swift in Sources */,
 				1F2A380820DBAD750035EED5 /* SearchAPI.swift in Sources */,
 				1F050E3020AA77E90037F00A /* FilesShareFolderTableViewCell.swift in Sources */,
 				1FBD1DFD20AEE93D0067BE3E /* FilesAShareAuthorityTableViewCell.swift in Sources */,
@@ -7309,6 +7332,7 @@
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
 				1FE089992176D9470049F44B /* DevicePeripheralDeviceViewController.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
+				1F16B36221AEA22100178143 /* MySelectChangePasswordViewController.swift in Sources */,
 				1FE0894F2170AD530049F44B /* MyChangePhoneNumberViewController.swift in Sources */,
 				1FE0893C216F5ACB0049F44B /* UILabelExtension.swift in Sources */,
 				1FC695F520D26F2400C62E76 /* FileTools.swift in Sources */,

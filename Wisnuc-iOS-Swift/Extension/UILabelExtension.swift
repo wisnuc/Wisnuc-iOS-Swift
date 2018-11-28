@@ -16,10 +16,14 @@ extension UILabel{
         return label
     }
     
-    class func initDetailTitleLabel(text:String) -> UILabel{
+    class func initDetailTitleLabel(text:String,color:UIColor? = nil) -> UILabel{
         let label = UILabel.init()
         label.text = text
-        label.textColor = LightGrayColor
+        if let color = color{
+           label.textColor = color
+        }else{
+           label.textColor = LightGrayColor
+        }
         label.font = UIFont.systemFont(ofSize: 14)
         label.numberOfLines = 0
         return label

@@ -10,8 +10,10 @@ import UIKit
 
 class DeviceUsersManageViewController: BaseViewController {
     let identifier = "celled"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadData()
         prepareNavigation()
         self.largeTitle = LocalizedString(forKey: "设备用户")
         self.view.addSubview(infoSettingTableView)
@@ -36,19 +38,60 @@ class DeviceUsersManageViewController: BaseViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "add_user.png"), style: .plain, target: self, action: #selector(addUserBarButtonItemTap(_:)))
     }
     
+    func loadData(){
+        guard let stationId = AppUserService.currentUser?.stationId else {
+            return
+        }
+        let requset =  StationUserAPI.init(stationId: stationId)
+        requset.startRequestJSONCompletionHandler { [weak self] (response) in
+            if let error =  response.error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                if let rootDic = response.value as? NSDictionary {
+                    if let dataDic = rootDic["data"] as? NSDictionary{
+                         var array = Array<StationUserModel>.init()
+                        do {
+                            guard let data = jsonToData(jsonDic: dataDic) else{return}
+                            let model = try JSONDecoder().decode(StationUserListModel.self, from: data)
+                            if let owner = model.owner{
+                               let ownerArray = owner.filter({$0.id != AppUserService.currentUser?.stationId})
+                                array.append(contentsOf:ownerArray)
+                            }
+                            if let sharer = model.sharer{
+                                let sharerArray = sharer.filter({$0.id != AppUserService.currentUser?.stationId})
+                                array.append(contentsOf:sharerArray)
+                            }
+                            self?.dataSource = array
+                            self?.infoSettingTableView.reloadData()
+                        }catch{
+                            print(error as Any)
+                            //error
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     lazy var infoSettingTableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
+        tableView.register(UINib.init(nibName: StringExtension.classNameAsString(targetClass: DeviceUserManagerTableViewCell.self), bundle: nil), forCellReuseIdentifier: identifier)
         tableView.tableFooterView = UIView.init(frame: CGRect.zero)
         return tableView
     }()
+    
+    lazy var dataSource = Array<StationUserModel>.init()
 }
 
 extension DeviceUsersManageViewController:UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return dataSource.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -57,31 +100,19 @@ extension DeviceUsersManageViewController:UITableViewDataSource,UITableViewDeleg
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: identifier)
-        switch indexPath.row {
-        case 0:
-            cell.textLabel?.text = "13176679901"
-            cell.detailTextLabel?.text = "已用2.1GB"
-            cell.imageView?.image = UIImage.init(named: "user_avatar_placeholder.png")
-            cell.imageView?.was_setCircleImage(withUrlString: "", placeholder: UIImage.init(named: "user_avatar_placeholder.png"))
-        case 1:
-            cell.textLabel?.text = "13176679220"
-            cell.detailTextLabel?.text = "已用10GB"
-            cell.imageView?.image = UIImage.init(named: "user_avatar_placeholder.png")
-            cell.imageView?.was_setCircleImage(withUrlString: "", placeholder: UIImage.init(named: "user_avatar_placeholder.png"))
-        case 2:
-            cell.textLabel?.text = "13988888888"
-            cell.detailTextLabel?.text = "已用1GB"
-            cell.imageView?.image = UIImage.init(named: "user_avatar_placeholder.png")
-            cell.imageView?.was_setCircleImage(withUrlString: "", placeholder: UIImage.init(named: "user_avatar_placeholder.png"))
-        default:
-            break
+        let cell:DeviceUserManagerTableViewCell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! DeviceUserManagerTableViewCell
+        let model = self.dataSource[indexPath.row]
+        cell.titleLabel.text = model.username
+//            cell.detailTextLabel?.text = "已用2.1GB"
+//            cell.imageView?.layer.cornerRadius = cell.imageView?.width/2
+        let placeholderImage = UIImage.init(named: "user_avatar_placeholder.png")
+        if let avatarUrl = model.avatarUrl{
+            cell.leftImageView.was_setCircleImage(withUrlString: avatarUrl, placeholder: placeholderImage)
+        }else{
+           cell.leftImageView.image = placeholderImage
         }
         cell.separatorInset = UIEdgeInsets.init(top: 0, left: 16, bottom: 0, right: 0)
-        cell.textLabel?.textColor = DarkGrayColor
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        cell.detailTextLabel?.textColor = LightGrayColor
-        cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+       
         return cell
     }
     

@@ -727,7 +727,7 @@ class LoginNextStepViewController: BaseViewController {
                                 guard let cookie = header["Set-Cookie"] as? String else {
                                     return
                                 }
-                                self?.synchronizedUser(model, cookie)
+                                AppUserService.synchronizedUserInLogin(model, cookie)
                             }
                         }else{
                             if let errorMessage = ErrorTools.responseErrorData(response.data){
@@ -746,28 +746,6 @@ class LoginNextStepViewController: BaseViewController {
             }
             ActivityIndicator.stopActivityIndicatorAnimation()
         }
-    }
-    
-    func synchronizedUser( _ model:SighInTokenModel,_ cookie:String){
-        let user = AppUserService.createUser(uuid: (model.data?.id)!)
-        user.cloudToken = model.data?.token!
-        
-        user.cookie = cookie
-        
-        if let avatarUrl = model.data?.avatarUrl{
-            user.avaterURL = avatarUrl
-        }
-        
-        if let nickName = model.data?.nickName{
-            user.nickName = nickName
-        }
-        
-        if let username = model.data?.username{
-            user.userName = username
-        }
-        
-        AppUserService.setCurrentUser(user)
-        AppUserService.synchronizedCurrentUser()
     }
     
     func firstConfigAction() {
@@ -810,7 +788,7 @@ class LoginNextStepViewController: BaseViewController {
                             guard let cookie = header["Set-Cookie"] as? String else {
                                 return
                             }
-                            self?.synchronizedUser(model,cookie)
+                            AppUserService.synchronizedUserInLogin(model,cookie)
                             guard let wechatToken = self?.requestToken else{
                                 Message.message(text:LocalizedString(forKey: "发生错误"))
                                 return
