@@ -74,7 +74,7 @@ extension String{
             return nil
         }
         let range = Range(uncheckedBounds: (lower: start, upper: end))
-        return self.replacingOccurrences(of: <#T##StringProtocol#>, with: <#T##StringProtocol#>, options: <#T##String.CompareOptions#>, range: <#T##Range<String.Index>?#>)
+        return self.replacingCharacters(in: range, with: "*")
     }
     
     func contains(find: String) -> Bool{

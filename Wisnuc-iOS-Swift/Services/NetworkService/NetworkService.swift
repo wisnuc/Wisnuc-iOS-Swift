@@ -86,7 +86,7 @@ class NetworkService: NSObject {
     }
     
     func checkIP(address:String, _ closure:@escaping (_ success:Bool)->()) {
-        let requestURL = "http://\(address):3001/info"
+        let requestURL = "http://\(address):3001/winasd/info"
         do {
             var urlRequest = try URLRequest.init(url: URL.init(string: requestURL)!, method: HTTPMethod.get)
             urlRequest.timeoutInterval = TimeInterval.init(10)
@@ -429,7 +429,7 @@ class NetworkService: NSObject {
         let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
      
         let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
-        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
         guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
           return nil
         }

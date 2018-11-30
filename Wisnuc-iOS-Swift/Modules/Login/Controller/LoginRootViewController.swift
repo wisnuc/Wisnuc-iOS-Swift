@@ -548,7 +548,7 @@
             req.state = "App"
             WXApi.send(req)
         }else{
-            Message.message(text: "请先安装微信")
+            Message.message(text: LocalizedString(forKey: "请先安装微信"))
         }
     }
     

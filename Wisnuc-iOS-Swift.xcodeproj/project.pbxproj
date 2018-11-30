@@ -107,6 +107,15 @@
 		1F16B35E21AE609900178143 /* DeviceUserManagerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F16B35C21AE609900178143 /* DeviceUserManagerTableViewCell.xib */; };
 		1F16B36021AE9DFF00178143 /* UserSafetyChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B35F21AE9DFF00178143 /* UserSafetyChange.swift */; };
 		1F16B36221AEA22100178143 /* MySelectChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B36121AEA22100178143 /* MySelectChangePasswordViewController.swift */; };
+		1F16B36421AFB46B00178143 /* MailCodeTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B36321AFB46B00178143 /* MailCodeTicket.swift */; };
+		1F16B36D21AFEED000178143 /* LocalizeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B36C21AFEED000178143 /* LocalizeHelper.swift */; };
+		1F16B36F21B1014D00178143 /* WechatInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B36E21B1014D00178143 /* WechatInfoAPI.swift */; };
+		1F16B37121B1092A00178143 /* WechatInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37021B1092A00178143 /* WechatInfoModel.swift */; };
+		1F16B37321B1151700178143 /* WechatActionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37221B1151700178143 /* WechatActionAPI.swift */; };
+		1F16B37521B13B6500178143 /* WinasdInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37421B13B6500178143 /* WinasdInfoAPI.swift */; };
+		1F16B37821B13C4900178143 /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37721B13C4900178143 /* DeviceHelper.swift */; };
+		1F16B37A21B13EEA00178143 /* WinasdInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37921B13EEA00178143 /* WinasdInfoModel.swift */; };
+		1F16B37C21B147EA00178143 /* RenameStatiomNameAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37B21B147EA00178143 /* RenameStatiomNameAPI.swift */; };
 		1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */; };
 		1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */; };
 		1F17698220AD379B003D955F /* SearchFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17698120AD379B003D955F /* SearchFilesViewController.swift */; };
@@ -1140,6 +1149,15 @@
 		1F16B35C21AE609900178143 /* DeviceUserManagerTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceUserManagerTableViewCell.xib; sourceTree = "<group>"; };
 		1F16B35F21AE9DFF00178143 /* UserSafetyChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSafetyChange.swift; sourceTree = "<group>"; };
 		1F16B36121AEA22100178143 /* MySelectChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySelectChangePasswordViewController.swift; sourceTree = "<group>"; };
+		1F16B36321AFB46B00178143 /* MailCodeTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailCodeTicket.swift; sourceTree = "<group>"; };
+		1F16B36C21AFEED000178143 /* LocalizeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizeHelper.swift; sourceTree = "<group>"; };
+		1F16B36E21B1014D00178143 /* WechatInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WechatInfoAPI.swift; sourceTree = "<group>"; };
+		1F16B37021B1092A00178143 /* WechatInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WechatInfoModel.swift; sourceTree = "<group>"; };
+		1F16B37221B1151700178143 /* WechatActionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WechatActionAPI.swift; sourceTree = "<group>"; };
+		1F16B37421B13B6500178143 /* WinasdInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinasdInfoAPI.swift; sourceTree = "<group>"; };
+		1F16B37721B13C4900178143 /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
+		1F16B37921B13EEA00178143 /* WinasdInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinasdInfoModel.swift; sourceTree = "<group>"; };
+		1F16B37B21B147EA00178143 /* RenameStatiomNameAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameStatiomNameAPI.swift; sourceTree = "<group>"; };
 		1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesShareBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTaskBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17698120AD379B003D955F /* SearchFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilesViewController.swift; sourceTree = "<group>"; };
@@ -2849,6 +2867,22 @@
 			path = Token;
 			sourceTree = "<group>";
 		};
+		1F16B36821AFEEBE00178143 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				1F16B36C21AFEED000178143 /* LocalizeHelper.swift */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		1F16B37621B13C2600178143 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				1F16B37721B13C4900178143 /* DeviceHelper.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		1F17697C20AD3259003D955F /* BottomSheetContent */ = {
 			isa = PBXGroup;
 			children = (
@@ -3046,6 +3080,7 @@
 				1F329395219ED42100F075DD /* SmsCodeTicket.swift */,
 				1F3293AF21A5593E00F075DD /* CheckUserAPI.swift */,
 				1F3293B521A6521500F075DD /* GetMailCodeAPI.swift */,
+				1F16B36321AFB46B00178143 /* MailCodeTicket.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -3106,6 +3141,8 @@
 				1F3293C121A80A8D00F075DD /* BootSpaceAPI.swift */,
 				1F3293CE21ABFFEE00F075DD /* DeviceNetAPI.swift */,
 				1F16B35421AE322300178143 /* StationUserAPI.swift */,
+				1F16B37421B13B6500178143 /* WinasdInfoAPI.swift */,
+				1F16B37B21B147EA00178143 /* RenameStatiomNameAPI.swift */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -3117,6 +3154,7 @@
 				1F3293C321A80BB500F075DD /* BootSpaceModel.swift */,
 				1F3293D021AC047D00F075DD /* DeviceNetModel.swift */,
 				1F16B35921AE391C00178143 /* StationUserModel.swift */,
+				1F16B37921B13EEA00178143 /* WinasdInfoModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3129,6 +3167,8 @@
 				1F16B34C21AD116D00178143 /* NicknameAPI.swift */,
 				1F16B35121AD1A0400178143 /* AvatarAPI.swift */,
 				1F16B35F21AE9DFF00178143 /* UserSafetyChange.swift */,
+				1F16B36E21B1014D00178143 /* WechatInfoAPI.swift */,
+				1F16B37221B1151700178143 /* WechatActionAPI.swift */,
 			);
 			path = My;
 			sourceTree = "<group>";
@@ -3138,6 +3178,7 @@
 			children = (
 				1F3293BB21A6982F00F075DD /* UserMailModel.swift */,
 				1F3293BF21A6A17D00F075DD /* UserPhoneModel.swift */,
+				1F16B37021B1092A00178143 /* WechatInfoModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4227,6 +4268,7 @@
 		1FD9B78A207CC75500906D80 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				1F16B36821AFEEBE00178143 /* Localization */,
 				1FFC81712199624B00371C8D /* Error */,
 				1F1B640621918D8E00499E8E /* SGPlayer */,
 				1F1C2FBE2186D1E7002B13F8 /* Keyboard */,
@@ -5715,6 +5757,7 @@
 		1FE0895C217469550049F44B /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				1F16B37621B13C2600178143 /* Helper */,
 				1F3293A621A4059F00F075DD /* Model */,
 				1FE089752174947F0049F44B /* View */,
 				1FE0897221748F600049F44B /* ViewController */,
@@ -6996,6 +7039,7 @@
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SugarRecord/SugarRecord.framework",
 				"${BUILT_PRODUCTS_DIR}/YYKit/YYKit.framework",
+				"${BUILT_PRODUCTS_DIR}/zxcvbn-ios/zxcvbn_ios.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -7028,6 +7072,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SugarRecord.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/zxcvbn_ios.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -7095,6 +7140,7 @@
 				1F3293CA21ABBB6300F075DD /* FilesStats.swift in Sources */,
 				1F4E93842089BD3300DD1EA7 /* OSTools.swift in Sources */,
 				1F38E2472178711B003FCAEE /* DeviceSambaSetPasswordViewController.swift in Sources */,
+				1F16B37321B1151700178143 /* WechatActionAPI.swift in Sources */,
 				1FD1F2DD2151092800C3E429 /* SighUpAPI.swift in Sources */,
 				1F1C2FD02186D314002B13F8 /* KeyBoardView.m in Sources */,
 				1F050E4020AAB00F0037F00A /* FilesFABBottomSheetDisplayViewController.swift in Sources */,
@@ -7121,6 +7167,7 @@
 				1FA9C3DE210585FE00E8411E /* GetMediaAPI.swift in Sources */,
 				1FD1F2E62152231F00C3E429 /* SighInWechatTokenAPI.swift in Sources */,
 				1F1BABAA20C5290700D32C5A /* MkdirAPI.swift in Sources */,
+				1F16B36D21AFEED000178143 /* LocalizeHelper.swift in Sources */,
 				1FE08946217075FD0049F44B /* MyChangePasswordViewController.swift in Sources */,
 				1F38E295217F01FD003FCAEE /* GetStationsAPI.swift in Sources */,
 				1F1BAC4D20CA80F000D32C5A /* CollectionExtension.swift in Sources */,
@@ -7166,6 +7213,7 @@
 				1F16B35221AD1A0400178143 /* AvatarAPI.swift in Sources */,
 				1F307C7A20BFEBC900AE105C /* LocalUserAPI.swift in Sources */,
 				1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */,
+				1F16B37821B13C4900178143 /* DeviceHelper.swift in Sources */,
 				1FE08959217448450049F44B /* MyUserAgreementViewController.swift in Sources */,
 				1FD1F2F72153824A00C3E429 /* PhotoAlbumCollectionViewCell.swift in Sources */,
 				1FA5D76A215C77E50025F870 /* BigPhotoInfoTableViewCell.swift in Sources */,
@@ -7193,6 +7241,7 @@
 				1F0FD0D7214A4D3B003D7936 /* ConfigNetworkViewController.swift in Sources */,
 				1F52094F21491DDF0058A8D3 /* FirstConfigViewController.swift in Sources */,
 				1F52095F214A0FF20058A8D3 /* SeekNewDeviceViewController.swift in Sources */,
+				1F16B37C21B147EA00178143 /* RenameStatiomNameAPI.swift in Sources */,
 				1F38E2512179B144003FCAEE /* FilesConvenientEntranceView.swift in Sources */,
 				1F3293CD21ABC65600F075DD /* FilesStatsModel.swift in Sources */,
 				1FD9B794207CC77900906D80 /* BasicDefine.swift in Sources */,
@@ -7299,9 +7348,11 @@
 				1FAADEF820AC149500739220 /* FilesFileInfoTableViewCell.swift in Sources */,
 				1F537A0D212412A600A555C5 /* SettingRootViewController.swift in Sources */,
 				1FD9B752207CBE8700906D80 /* ViewController.swift in Sources */,
+				1F16B37521B13B6500178143 /* WinasdInfoAPI.swift in Sources */,
 				1FE08930216F38B40049F44B /* MyAccountSecurityViewController.swift in Sources */,
 				1F8EBB35209AD91200E8AB83 /* WSTabBarController.swift in Sources */,
 				1FFD12C120EB0F310053A3F7 /* NewFolderViewController.swift in Sources */,
+				1F16B37121B1092A00178143 /* WechatInfoModel.swift in Sources */,
 				1FE9EF8F20EF61A200732728 /* PHPhotoLibraryExtension.swift in Sources */,
 				1F169DDE2080AB7800860F31 /* TokenManager.swift in Sources */,
 				1F38E2BE2182FD33003FCAEE /* MyAccountSecurityVerificationTableViewCell.swift in Sources */,
@@ -7321,6 +7372,7 @@
 				1F169DCD207F365B00860F31 /* NetworkStatus.swift in Sources */,
 				1F3293B021A5593E00F075DD /* CheckUserAPI.swift in Sources */,
 				1FFD132620EF36A50053A3F7 /* UIScrollView+IndicatorExt.m in Sources */,
+				1F16B37A21B13EEA00178143 /* WinasdInfoModel.swift in Sources */,
 				1FC8FF7B20AE65B000F65194 /* ChlipsView.swift in Sources */,
 				1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */,
 				1FE0899D217701760049F44B /* DeviceCurrentDeviceInfoViewController.swift in Sources */,
@@ -7328,10 +7380,12 @@
 				1FAADEF120AC031100739220 /* FilesSearchMoreBottomSheetContentTableViewController.swift in Sources */,
 				1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */,
 				1FBB6F532137D83E0090FA57 /* TipsAlertView.swift in Sources */,
+				1F16B36F21B1014D00178143 /* WechatInfoAPI.swift in Sources */,
 				1F38E29921816CB2003FCAEE /* ArrayDeppCopy.swift in Sources */,
 				1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */,
 				1FE089992176D9470049F44B /* DevicePeripheralDeviceViewController.swift in Sources */,
 				1F050E2120A98FBF0037F00A /* FilesOfflineViewController.swift in Sources */,
+				1F16B36421AFB46B00178143 /* MailCodeTicket.swift in Sources */,
 				1F16B36221AEA22100178143 /* MySelectChangePasswordViewController.swift in Sources */,
 				1FE0894F2170AD530049F44B /* MyChangePhoneNumberViewController.swift in Sources */,
 				1FE0893C216F5ACB0049F44B /* UILabelExtension.swift in Sources */,

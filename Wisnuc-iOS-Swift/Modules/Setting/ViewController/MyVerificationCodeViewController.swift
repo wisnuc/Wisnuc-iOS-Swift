@@ -18,6 +18,7 @@ enum MyVerificationCodeViewControllerNextState {
     case bindEmail
     case exchangeEmail
     case emailCodeVerification
+    case passwordEmailCodeVerification
     case bindEmailComplete
     case bindPhone
     case changePassword
@@ -32,6 +33,7 @@ class MyVerificationCodeViewController: BaseViewController {
     var countdownTimer: Timer?
     var extrakeyButton:UIButton?
     var codeLimit:Int = 4
+    var phoneTicket:String?
     var sendCodeType:SendCodeType?
     var remainingSeconds: Int = 0 {
         willSet {
@@ -82,11 +84,12 @@ class MyVerificationCodeViewController: BaseViewController {
     
     var nextState:MyVerificationCodeViewControllerNextState?
     
-    init(style: NavigationStyle,state:MyVerificationCodeViewControllerState,nextState:MyVerificationCodeViewControllerNextState,codeType:SendCodeType? = nil,phone:String? = nil,mail:String? = nil) {
+    init(style: NavigationStyle,state:MyVerificationCodeViewControllerState,nextState:MyVerificationCodeViewControllerNextState,codeType:SendCodeType? = nil,phone:String? = nil,mail:String? = nil,phoneTicket:String? = nil) {
         super.init(style: style)
         self.phoneNumber = phone
         self.mail = mail
         self.sendCodeType = codeType
+        self.phoneTicket = phoneTicket
         self.setState(state)
         self.nextState = nextState
     }
@@ -178,8 +181,12 @@ class MyVerificationCodeViewController: BaseViewController {
             return
         }
         
+        guard let codeType = self.sendCodeType else {
+            return
+        }
+        
         ActivityIndicator.startActivityIndicatorAnimation()
-        let request = SmsCodeTicket.init(phone:phone, code: code,type:.mail)
+        let request = SmsCodeTicket.init(phone:phone, code: code,type:codeType)
         request.startRequestJSONCompletionHandler { (response) in
             ActivityIndicator.stopActivityIndicatorAnimation()
             if let error = response.error{
@@ -337,6 +344,41 @@ class MyVerificationCodeViewController: BaseViewController {
         }
     }
     
+    func getMailCodeTicket(sendCodeType:SendCodeType, closure:@escaping (_ ticket:String)->()){
+        guard let mail = self.mail else {
+            return
+        }
+        guard let code = self.inputTextField.text else {
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let request = MailCodeTicket.init(mail:mail, code: code,type:sendCodeType)
+        request.startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error = response.error{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                }else{
+                    Message.message(text:error.localizedDescription)
+                }
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                guard let rootDic = response.value as? NSDictionary else{
+                    return
+                }
+                guard let mailCodeTicket = rootDic["data"] as? String else{
+                    return
+                }
+                
+                return closure(mailCodeTicket)
+            }
+        }
+    }
+    
     @objc func buttonDidClicked(_ sender:UIButton){
         
     }
@@ -359,8 +401,26 @@ class MyVerificationCodeViewController: BaseViewController {
                     Message.message(text: LocalizedString(forKey: "无法发送验证码"))
                     return
                 }
+                
                 self?.sendMailCodeAction(mail: mail, type: .unbind, callback: { [weak self] in
-                    let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.exchangeEmail,codeType:.unbind,mail:mail)
+                     let mailVerificationCodeVC =  MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.exchangeEmail,codeType:.unbind,mail:mail)
+                    self?.navigationController?.pushViewController(mailVerificationCodeVC, animated: true)
+                })
+            }
+            
+        case .passwordEmailCodeVerification?:
+            self.getSmsCodeTicket { [weak self] (ticket) in
+                guard let mail = self?.mail else{
+                    Message.message(text: LocalizedString(forKey: "无法发送验证码"))
+                    return
+                }
+                
+                var verificationCodeVC =  MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.resetPassword,codeType:.password,mail:mail)
+                
+                if AppUserService.currentUser?.safety?.intValue == 1 {
+                    verificationCodeVC =  MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.email,nextState:.resetPassword,codeType:.password,phone:(self?.phoneNumber)!,mail:mail,phoneTicket:ticket)
+                 }
+                self?.sendMailCodeAction(mail: mail, type: .password, callback: { [weak self] in
                     self?.navigationController?.pushViewController(verificationCodeVC, animated: true)
                 })
             }
@@ -372,8 +432,23 @@ class MyVerificationCodeViewController: BaseViewController {
             self.navigationController?.pushViewController(changePasswordViewController, animated: true)
             
         case .resetPassword?:
-            let resetPasswordViewController =  MyResetPasswordViewController.init(style: NavigationStyle.whiteWithoutShadow)
-            self.navigationController?.pushViewController(resetPasswordViewController, animated: true)
+            if self.mail == nil{
+                self.getSmsCodeTicket { [weak self] (ticket) in
+                    self?.resetPasswordPushAction(phoneTicket: ticket)
+                }
+            }else if self.phoneNumber == nil{
+                self.getMailCodeTicket(sendCodeType: .password) { [weak self] (ticket) in
+                    self?.resetPasswordPushAction(mailTicket:ticket)
+                }
+            }
+            if AppUserService.currentUser?.safety?.intValue == 1{
+                guard let phoneTicket = self.phoneTicket else{
+                    return
+                }
+                self.getMailCodeTicket(sendCodeType: .password) { [weak self] (ticket) in
+                    self?.resetPasswordPushAction(phoneTicket:phoneTicket,mailTicket:ticket)
+                }
+            }
         case .setSamba?:
             let sambaSetPasswordViewController =  DeviceSambaSetPasswordViewController.init(style: NavigationStyle.whiteWithoutShadow)
             self.navigationController?.pushViewController(sambaSetPasswordViewController, animated: true)
@@ -385,6 +460,11 @@ class MyVerificationCodeViewController: BaseViewController {
         default:
             break
         }
+    }
+    
+    func resetPasswordPushAction(phoneTicket:String? = nil ,mailTicket:String? = nil){
+        let resetPasswordViewController =  MyResetPasswordViewController.init(style: NavigationStyle.whiteWithoutShadow,phoneTicket: phoneTicket,mailTicket:mailTicket)
+        self.navigationController?.pushViewController(resetPasswordViewController, animated: true)
     }
     
     @objc func verificationCodeButtonTap(_ sender:UIButton){

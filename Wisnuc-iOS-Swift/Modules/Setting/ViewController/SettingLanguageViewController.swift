@@ -7,9 +7,13 @@
 //
 
 import UIKit
-enum LanguageType:Int64{
-    case Chinese = 0
-    case English
+enum LanguageType:String{
+    case Chinese = "zh-Hans"
+    case English = "en"
+    init(number n: Int) {
+        if n == 0 { self = .Chinese }
+        else { self = .English }
+    }
 }
 
 class SettingLanguageViewController: BaseViewController {
@@ -37,6 +41,19 @@ class SettingLanguageViewController: BaseViewController {
         
     }
     
+    func chooseLanguageRefresh() {
+        //                UserDefaults.standard[AppStatic.kCurrentLanguage] = Language.english.rawValue
+        SVProgressHUD.setDefaultStyle(SVProgressHUDStyle.dark)
+        SVProgressHUD.show(withStatus: LocalizedString(forKey: "Setting Language..."))
+        //                UIApplication.shared.keyWindow?.alpha = 0.5
+        appDelegate.setRootViewController()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1, execute: {
+            UIView.animate(withDuration: 1, animations: {UIApplication.shared.keyWindow?.alpha = 1})
+            SVProgressHUD.dismiss()
+        })
+    }
+    
+    
     lazy var infoTableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)
         tableView.dataSource = self
@@ -54,7 +71,7 @@ class SettingLanguageViewController: BaseViewController {
     }()
     
     lazy var deviecNameLabel: UILabel = {
-        let text = LocalizedString(forKey: "语言")
+        let text = LocalizedString(forKey: "Language")
         let font = UIFont.boldSystemFont(ofSize: 21)
         let height = headerHeight
         let label = UILabel.init(frame: CGRect(x:MarginsWidth , y:0 , width: __kWidth - MarginsWidth*2, height: height))
@@ -87,6 +104,8 @@ extension SettingLanguageViewController:UITableViewDataSource,UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
         
+        cell.tintColor = COR1
+        
         switch indexPath.row {
         case 0:
             cell.textLabel?.text = "中文"
@@ -109,8 +128,6 @@ extension SettingLanguageViewController:UITableViewDataSource,UITableViewDelegat
             cell.accessoryType = UITableViewCellAccessoryType.none
 
         }
-        cell.tintColor = COR1
-        
         return cell
     }
     
@@ -125,9 +142,22 @@ extension SettingLanguageViewController:UITableViewDataSource,UITableViewDelegat
             oldCell?.accessoryType = UITableViewCellAccessoryType.none
             self .lastPath = indexPath
         }
+        
+       
          tableView.deselectRow(at: indexPath, animated: true)
+         let language = LanguageType(number: Int(indexPath.row))
+         LocalizeHelper.instance.setLanguage(language.rawValue)
          AppUserService.currentUser?.language =  NSNumber.init(value: Int64(indexPath.row))
          AppUserService.synchronizedCurrentUser()
+//        switch indexPath.row {
+//        case 0:
+//             break
+//        case 1:
+//             LocalizeHelper.instance.setLanguage("en")
+//        default:
+//            break
+//        }
          self.infoTableView.reloadData()
+         chooseLanguageRefresh()
     }
 }

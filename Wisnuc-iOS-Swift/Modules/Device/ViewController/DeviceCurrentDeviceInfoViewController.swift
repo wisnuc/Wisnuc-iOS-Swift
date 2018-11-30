@@ -24,6 +24,10 @@ class DeviceCurrentDeviceInfoViewController: BaseViewController {
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.infoSettingTableView, viewController: self)
     }
     
+    func loadData(){
+//     DeviceHelper.
+    }
+    
     lazy var infoSettingTableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)
         tableView.dataSource = self

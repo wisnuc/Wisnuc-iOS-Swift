@@ -29,12 +29,6 @@ class SettingViewController: BaseViewController {
         
     }
     
-    func logoutAction(){
-        AppUserService.logoutUser()
-        AppService.sharedInstance().abort()
-        appDelegate.initRootVC()
-    }
-    
     lazy var settingTabelView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight))
         tableView.delegate = self
@@ -56,7 +50,7 @@ class SettingViewController: BaseViewController {
 extension SettingViewController:UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        self.logoutAction()
+        AppService.sharedInstance().logoutAction()
     }
 }
 

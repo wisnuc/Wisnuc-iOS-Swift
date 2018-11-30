@@ -13,7 +13,7 @@ class MyInfoCenterViewController: BaseViewController {
     let headerHeight:CGFloat = 64
     let cellHeight:CGFloat = 64
     let avatarHeight:CGFloat = 40
-    
+    var wechatModels:[WechatInfoModel]?
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,7 +30,6 @@ class MyInfoCenterViewController: BaseViewController {
         AppService.sharedInstance().updateCurrentUserInfo(complete: { [weak self] in
             self?.infoTabelView.reloadData()
         })
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -39,7 +38,53 @@ class MyInfoCenterViewController: BaseViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self.loadWechatData { [weak self](models) in
+            guard let wechatModels = models else{
+                return
+            }
+            self?.wechatModels = wechatModels
+            self?.infoTabelView.reloadData()
+            
+        }
         self.infoTabelView.reloadData()
+    }
+    
+    func loadWechatData(closure:@escaping (_ wechatInfoModels:[WechatInfoModel]?)->()){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let requset = WechatInfoAPI.init()
+        requset.startRequestJSONCompletionHandler({(response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error =  response.error{
+                Message.message(text: error.localizedDescription)
+                return closure(nil)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return closure(nil)
+                }
+                guard let rootDic = response.value as? NSDictionary else {
+                    return closure(nil)
+                }
+                
+                guard let dataArray = rootDic["data"] as? NSArray else {
+                    return closure(nil)
+                }
+                var resultArray = Array<WechatInfoModel>.init()
+                for value in dataArray{
+                    if let dataDic = value as? NSDictionary{
+                        do {
+                            if let data = jsonToData(jsonDic: dataDic){
+                                let model = try JSONDecoder().decode(WechatInfoModel.self, from: data)
+                                resultArray.append(model)
+                            }
+                        }catch{
+                            print(error as Any)
+                        }
+                    }
+                }
+                return closure(resultArray)
+            }
+        })
     }
     
     lazy var avatarImageView = UIImageView.init(frame: CGRect(x: __kWidth - MarginsCloseWidth - avatarHeight - MarginsWidth - MarginsSoFarWidth, y: cellHeight/2  - avatarHeight/2, width: avatarHeight, height: avatarHeight))
@@ -141,7 +186,11 @@ extension MyInfoCenterViewController:UITableViewDataSource{
             }
         case 3:
             cell.textLabel?.text = LocalizedString(forKey: "微信")
-            cell.detailTextLabel?.text = LocalizedString(forKey: "去绑定")
+            var text = LocalizedString(forKey: "去绑定")
+            if wechatModels != nil {
+                 text = LocalizedString(forKey: "去更换")
+            }
+            cell.detailTextLabel?.text = text
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
       
         default: break

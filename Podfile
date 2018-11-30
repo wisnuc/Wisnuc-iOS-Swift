@@ -34,6 +34,7 @@ pod 'IQKeyboardManagerSwift'
 #pod 'FBMemoryProfiler'
 #pod 'HaishinKit'
 pod 'SAMKeychain'
+pod 'zxcvbn-ios'
 end
 
 

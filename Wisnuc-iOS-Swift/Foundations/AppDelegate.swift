@@ -67,6 +67,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
                 setRootViewController()
                 setAppNetworkState()
                 fetchCookie()
+                if let language = AppUserService.currentUser?.language?.intValue{
+                    let languageType = LanguageType(number: language)
+                    LocalizeHelper.instance.setLanguage(languageType.rawValue)
+                }
             }else{
 //                let type:LoginState?
 //                type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
@@ -279,6 +283,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
                     if  controller.isKind(of: LoginRootViewController.self){
                         let loginVC = UIViewController.currentViewController() as! LoginRootViewController
                         loginVC.weChatCallBackRespCode(code: aresp.code)
+                    }
+                    if  controller.isKind(of: MyBindWechatViewController.self){
+                        let bindVC = UIViewController.currentViewController() as! MyBindWechatViewController
+                        bindVC.weChatCallBackRespCode(code: aresp.code)
                     }
                 }
             }

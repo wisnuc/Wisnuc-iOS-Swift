@@ -38,6 +38,7 @@ class AppService: NSObject,ServiceProtocol{
     func abort() {
         NetEngine.sharedInstance.cancleAllRequest()
         userService.abort()
+        LocalizeHelper.instance.dispose()
         print("Disposed Singleton instance")
     }
     
@@ -320,6 +321,12 @@ class AppService: NSObject,ServiceProtocol{
                 }
             }
         }
+    }
+    
+    func logoutAction(){
+        AppUserService.logoutUser()
+        AppService.sharedInstance().abort()
+        appDelegate.initRootVC()
     }
     
     func requestForBackupPhotos(callback: @escaping (_ shouldUpload:Bool)->()) {

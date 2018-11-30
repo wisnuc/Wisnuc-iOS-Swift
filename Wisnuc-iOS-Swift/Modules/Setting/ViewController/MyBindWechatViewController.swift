@@ -13,13 +13,14 @@ enum  MyBindWechatViewControllerState{
 }
 
 class MyBindWechatViewController: BaseViewController {
+    var wmodels:[WechatInfoModel]?
     var state:MyBindWechatViewControllerState?{
         didSet{
             switch self.state {
             case .none?:
                 noneStateAction()
             case .binded?:
-                bindedStateAction()
+                bindedStateAction(nickName: wmodels?.first?.nickname)
             default:
                 break
             }
@@ -33,8 +34,19 @@ class MyBindWechatViewController: BaseViewController {
         self.view.addSubview(detailLabel)
         self.view.addSubview(bindStateLabel)
         self.view.addSubview(bindButton)
-        setState(.none)
+        wechatInfoCheck()
         // Do any additional setup after loading the view.
+    }
+    
+    func wechatInfoCheck(){
+        self.loadData { [weak self](models) in
+            if let wechatModels = models{
+                self?.wmodels = wechatModels
+                self?.setState(.binded)
+            }else{
+                self?.setState(.none)
+            }
+        }
     }
     
     func setState(_ state:MyBindWechatViewControllerState){
@@ -49,17 +61,127 @@ class MyBindWechatViewController: BaseViewController {
     }
     
     func noneStateAction(){
-        bindStateLabel.text = "未检测到微信号"
-        bindButton.isEnabled = true
+        bindStateLabel.text =  LocalizedString(forKey: "您尚未绑定微信")
+        bindButton.setTitle(LocalizedString(forKey: "立即绑定"), for: UIControlState.normal)
     }
     
-    func bindedStateAction(){
-        bindStateLabel.text = "检测到微信号：139****2222"
-        bindButton.isEnabled = false
+    func bindedStateAction(nickName:String?){
+        if let nickName = nickName{
+            bindStateLabel.text = "已绑定微信昵称为\(nickName)的用户"
+        }else{
+            bindStateLabel.text = "已绑定微信"
+        }
+        bindButton.setTitle(LocalizedString(forKey: "立即更换"), for: UIControlState.normal)
+    }
+    
+    func loadData(closure:@escaping (_ wechatInfoModels:[WechatInfoModel]?)->()){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let requset = WechatInfoAPI.init()
+        requset.startRequestJSONCompletionHandler({(response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error =  response.error{
+                Message.message(text: error.localizedDescription)
+                return closure(nil)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return closure(nil)
+                }
+                guard let rootDic = response.value as? NSDictionary else {
+                    return closure(nil)
+                }
+                
+                guard let dataArray = rootDic["data"] as? NSArray else {
+                    return closure(nil)
+                }
+                var resultArray = Array<WechatInfoModel>.init()
+                for value in dataArray{
+                    if let dataDic = value as? NSDictionary{
+                        do {
+                            if let data = jsonToData(jsonDic: dataDic ){
+                                let model = try JSONDecoder().decode(WechatInfoModel.self, from: data)
+                                resultArray.append(model)
+                            }
+                        }catch{
+                            print(error as Any)
+                        }
+                    }
+                }
+                return closure(resultArray)
+            }
+        })
+    }
+    
+    func weChatCallBackRespCode(code:String){
+        if let models = wmodels{
+            if models.count>0{
+                guard let unionid  =  models.first?.unionid else {
+                    return
+                }
+                self.unbindWechat(unionid: unionid, closure: { [weak self] in
+                    self?.bindWechat(code:code, closure: { [weak self] in
+                        self?.wechatInfoCheck()
+                    })
+                })
+            }else{
+               bindWechat(code:code, closure: { [weak self] in
+                    self?.wechatInfoCheck()
+               })
+            }
+        }else{
+            bindWechat(code:code, closure: { [weak self] in
+                self?.wechatInfoCheck()
+            })
+        }
+    }
+    
+    func bindWechat(code:String,closure:@escaping ()->()){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let requset =  WechatActionAPI.init(type: .bind, code: code)
+        requset.startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error =  response.error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                return closure()
+            }
+        }
+    }
+    
+    func unbindWechat(unionid:String,closure:@escaping ()->()){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let requset =  WechatActionAPI.init(type: .unbind, unionid: unionid)
+        requset.startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error =  response.error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                return closure()
+            }
+        }
+    }
+    
+    func checkWechat() {
+        if (WXApi.isWXAppInstalled()) {
+            let req = SendAuthReq.init()
+            req.scope = "snsapi_userinfo"
+            req.state = "App"
+            WXApi.send(req)
+        }else{
+            Message.message(text: LocalizedString(forKey: "请先安装微信"))
+        }
     }
     
     @objc func bindButtonTap(_ sender:UIButton){
-        
+       self.checkWechat()
     }
     
     lazy var titleLabel = UILabel.initTitleLabel(color: DarkGrayColor, text: LocalizedString(forKey: "绑定微信"))

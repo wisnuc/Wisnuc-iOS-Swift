@@ -31,3 +31,4 @@
 
 //#import <SGPlayer/SGPlayer.h>
 #import <SAMKeychain/SAMKeychain.h>
+#import "Zxcvbn/DBZxcvbn.h"

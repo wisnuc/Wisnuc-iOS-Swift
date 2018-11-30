@@ -12,7 +12,9 @@ import Kingfisher
 class SettingRootViewController: BaseViewController {
     let identifier = "Cellidentifier"
     let cellHeight:CGFloat = 52
-    let headerHeight:CGFloat = 126 + 32 + 36 + 8
+    var headerHeight:CGFloat = 126 + 32 + 36 + 8
+    let noTipsHeaderHeight:CGFloat = 70 + 8
+    let normalHeaderHeight:CGFloat = 126 + 32 + 36 + 8
     var autoBackupSwitchOn = false
     var wifiSwitchOn = true
     override func viewDidLoad() {
@@ -46,10 +48,12 @@ class SettingRootViewController: BaseViewController {
         }
         getMail(complete: { [weak self](isBind) in
             if isBind{
-//                self?.headerTipsView.isHidden = true
+                self?.setHeaderTipsSecureHighView(isHidden: true,reload:true)
+            }else{
+                self?.setHeaderTipsSecureHighView(isHidden: false,reload:true)
             }
         }) { [weak self] in
-//            self?.headerTipsView.isHidden = false
+            self?.setHeaderTipsSecureHighView(isHidden: false,reload:true)
         }
     }
     
@@ -58,6 +62,7 @@ class SettingRootViewController: BaseViewController {
      
         self.setAvatar()
         self.setHeaderTitle()
+        self.settingTabelView.reloadData()
     }
     
     func setSwitchState(){
@@ -105,11 +110,6 @@ class SettingRootViewController: BaseViewController {
         self.navigationController?.pushViewController(secureStepVC, animated: true)
     }
     
-    func logoutAction(){
-        AppUserService.logoutUser()
-        AppService.sharedInstance().abort()
-        appDelegate.initRootVC()
-    }
     
     func setAvatar(){
         let imageURL = URL.init(string: AppUserService.currentUser?.avaterURL ?? "")
@@ -130,8 +130,15 @@ class SettingRootViewController: BaseViewController {
         headerTitleLabel.textColor = DarkGrayColor
     }
     
-    func setHeaderTipsView(){
-        headerTipsView.isHidden = true
+    func setHeaderTipsSecureHighView(isHidden:Bool,reload:Bool? = nil){
+        headerTipsView.isHidden = isHidden
+        secureHighView.isHidden = isHidden
+        headerHeight =  isHidden ? noTipsHeaderHeight : normalHeaderHeight
+        if let reload = reload{
+            if reload{
+               self.settingTabelView.reloadData()
+            }
+        }
     }
     
     func setHeaderContent(){
@@ -151,9 +158,14 @@ class SettingRootViewController: BaseViewController {
         headerTipsLabel.textColor = DarkGrayColor
         
         //        headerTipsView.backgroundColor = .red
+       
+        if  AppUserService.currentUser?.mail != nil{
+            self.setHeaderTipsSecureHighView(isHidden: true)
+        }
         headerTipsView.addSubview(headerTipsLabel)
         headerTipsView.addSubview(secureProgressView)
         headerTipsView.isUserInteractionEnabled = true
+        
 
         secureProgressView.transform = CGAffineTransform.init(scaleX: 1.0, y: 10.0)
         secureProgressView.progressTintColor = UIColor.colorFromRGB(rgbValue: 0x0f9a825)
@@ -302,7 +314,7 @@ extension SettingRootViewController:UITableViewDelegate{
                 tab.setTabBarHidden(true, animated: true)
             }
         case 4:
-          self.logoutAction()
+          AppService.sharedInstance().logoutAction()
         default: break
             
         }
@@ -335,18 +347,15 @@ extension SettingRootViewController:UITableViewDataSource{
         switch indexPath.row {
         case 0:
             cell.textLabel?.text = LocalizedString(forKey: "账户安全")
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-            cell.textLabel?.textColor = DarkGrayColor
+         
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         case 1:
-            cell.textLabel?.text = LocalizedString(forKey: "语言")
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-            cell.textLabel?.textColor = DarkGrayColor
+            cell.textLabel?.text = LocalizedString(forKey: "Language")
+        
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         case 2:
             cell.textLabel?.text = LocalizedString(forKey: "清除缓存")
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-            cell.textLabel?.textColor = DarkGrayColor
+          
             cell.contentView.addSubview(cacheLabel)
             
             var i =  YYImageCache.shared().diskCache.totalCost()
@@ -369,9 +378,7 @@ extension SettingRootViewController:UITableViewDataSource{
             
             
         case 3:
-            cell.textLabel?.text = LocalizedString(forKey: "关于")
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-            cell.textLabel?.textColor = DarkGrayColor
+            cell.textLabel?.text = LocalizedString(forKey: "About")
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 //            let switchBtn = UISwitch.init()
 //            switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
@@ -385,6 +392,8 @@ extension SettingRootViewController:UITableViewDataSource{
         default: break
             
         }
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+        cell.textLabel?.textColor = DarkGrayColor
         return cell
     }
 

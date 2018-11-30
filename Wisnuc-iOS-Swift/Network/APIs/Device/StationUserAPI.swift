@@ -7,11 +7,21 @@
 //
 
 import UIKit
+import Alamofire
+
+enum StationUserActionType {
+    case fetchInfo
+    case add
+}
 
 class StationUserAPI: BaseRequest {
+    var type:StationUserActionType?
     var stationId:String?
-    init(stationId:String) {
+    var phone:String?
+    init(stationId:String,type:StationUserActionType,phone:String? = nil) {
+        self.type = type
         self.stationId = stationId
+        self.phone = phone
     }
     
     override func requestURL() -> String {
@@ -27,7 +37,34 @@ class StationUserAPI: BaseRequest {
     
     
     override func requestMethod() -> RequestHTTPMethod {
+        switch self.type {
+        case .fetchInfo?:
+            return .get
+        case .add?:
+            return .post
+        default:
+            break
+        }
         return .get
+    }
+    
+    override func requestParameters() -> RequestParameters? {
+        switch self.type {
+        case .fetchInfo?:
+            return nil
+        case .add?:
+            guard let phone = self.phone else{
+                return nil
+            }
+            return ["phone":phone]
+        default:
+            break
+        }
+        return nil
+    }
+    
+    override func requestEncoding() -> RequestParameterEncoding {
+        return self.requestMethod() == .get ? URLEncoding.default : JSONEncoding.default
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {

@@ -6,6 +6,12 @@
   Copyright © 2018年 wisnuc-imac. All rights reserved.
 */
 "Confirm" = "Confirm";
+
+"Log out" = "Log out";
+"About" = "About";
+"Language" = "Language";
+"Setting Language..." = "Setting Language...";
+
 "Cancel" = "Cancel";
 
 "wechat_login" = "WeChat Login";
@@ -14,8 +20,9 @@
 "add_Device" = "Add Device";
 "station_checking" = "checking";
 
-"power_off" = "Power Off";
+"Power_off" = "Power Off";
 "Loading..." = "Loading...";
+
 
 
 //Files
@@ -39,3 +46,6 @@
 //Task
 "Delete" = "Delete";
 
+"Weak" = "Weak";
+"Medium" = "Medium";
+"Strong" = "Strong";

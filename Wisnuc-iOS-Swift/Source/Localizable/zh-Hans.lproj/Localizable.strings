@@ -8,8 +8,13 @@
 
 "Cancel" = "取消";
 
-"wechat_login" = "微信登录";
 "Log out" = "注销";
+"About" = "关于";
+"Language" = "语言";
+
+"Setting Language..." = "正在设置语言...";
+
+"wechat_login" = "微信登录";
 "Sort by..." = "排序";
 "Select..." = "选择";
 "Select all" = "选择全部";
@@ -42,6 +47,8 @@
 //任务
 "Delete" = "删除";
 
-
+"Weak" = "弱";
+"Medium" = "中";
+"Strong" = "强";
 
 

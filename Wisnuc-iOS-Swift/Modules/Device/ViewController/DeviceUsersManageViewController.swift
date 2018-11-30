@@ -42,7 +42,7 @@ class DeviceUsersManageViewController: BaseViewController {
         guard let stationId = AppUserService.currentUser?.stationId else {
             return
         }
-        let requset =  StationUserAPI.init(stationId: stationId)
+        let requset =  StationUserAPI.init(stationId: stationId, type: .fetchInfo)
         requset.startRequestJSONCompletionHandler { [weak self] (response) in
             if let error =  response.error{
                 Message.message(text: error.localizedDescription)

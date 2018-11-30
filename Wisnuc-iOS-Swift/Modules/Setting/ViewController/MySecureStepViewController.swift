@@ -22,6 +22,69 @@ class MySecureStepViewController: BaseViewController {
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
     }
     
+    func sendCodeAction(phone:String,type:SendCodeType,callback:@escaping ((_ userExist:Bool?)->())){
+        if !Validate.phoneNum(phone).isRight{
+           Message.message(text:  LocalizedString(forKey: "手机号不正确"))
+        }
+        
+        guard let requestToken = AppUserService.currentUser?.cloudToken else {
+            Message.message(text:  LocalizedString(forKey:"无法发送验证码"))
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        GetSmsCodeAPI.init(phoneNumber: phone,type:type,wechatToken:requestToken).startRequestJSONCompletionHandler { [weak self] (response) in
+            //            print(String(data: response.data!, encoding: String.Encoding.utf8) as String? ?? "2222")
+            if  response.error == nil{
+                let responseDic = response.value as! NSDictionary
+                let code = responseDic["code"] as? Int
+                if code == 1 {
+                    var userExist:Bool?
+                    if responseDic["data"] != nil{
+                        let dataDic = responseDic["data"] as! NSDictionary
+                        userExist = dataDic["userExist"] as? Bool
+                    }
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    callback(userExist)
+                }else{
+                    
+                    if let message = ErrorTools.responseErrorData(response.data){
+                        Message.message(text:"error: code:\(code!) message:\(message)")
+                    }
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                }
+            }else{
+                // error
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                guard let responseDic =  dataToNSDictionary(data: response.data) else{
+                    if response.error is BaseError{
+                        let baseError = response.error as! BaseError
+                        Message.message(text:"请求错误：\(String(describing: baseError.localizedDescription))")
+                    }else{
+                        let message = response.error?.localizedDescription ?? "未知原因"
+                        Message.message(text:"请求错误：\(message)")
+                    }
+                    return
+                }
+                if let code = responseDic["code"] as? Int{
+                    
+                    switch code {
+                    case ErrorCode.Request.MobileError:
+                        Message.message(text: LocalizedString(forKey: "手机号错误"))
+                    case ErrorCode.Request.CodeLimitOut:
+                        Message.message(text: LocalizedString(forKey: "验证码发送超过限制，请稍候重试"))
+                    default:
+                        if let message = responseDic["message"] as? String{
+                            Message.message(text:"\(message)")
+                        }
+                    }
+                }else{
+                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                }
+            }
+        }
+    }
+    
     lazy var infoTabelView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)
         tableView.delegate = self
@@ -40,16 +103,20 @@ extension MySecureStepViewController:UITableViewDelegate{
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            let avatarChangeVC = AvatarChangeViewController.init(style: .black)
-            self.navigationController?.pushViewController(avatarChangeVC, animated: true)
-        case 1:
-            let nicknameVC = MyNicknameChangeViewController.init(style: .whiteWithoutShadow)
-            self.navigationController?.pushViewController(nicknameVC, animated: true)
-        case 2:
-            break
-        case 3:
-            let bindWechatVC = MyBindWechatViewController.init(style: .whiteWithoutShadow)
-            self.navigationController?.pushViewController(bindWechatVC, animated: true)
+            guard let phone = AppUserService.currentUser?.userName else {
+                Message.message(text: "没有绑定手机号")
+                return
+            }
+            
+            self.sendCodeAction(phone:phone,type: .mail) { [weak self] (userExist) in
+                let verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.bindEmail,codeType:.mail,phone:phone)
+                self?.navigationController?.pushViewController(verificationCodeVC, animated: true)
+            }
+//        case 2:
+//            break
+//        case 3:
+//            let bindWechatVC = MyBindWechatViewController.init(style: .whiteWithoutShadow)
+//            self.navigationController?.pushViewController(bindWechatVC, animated: true)
         default: break
             
         }
@@ -116,6 +183,7 @@ extension MySecureStepViewController:UITableViewDataSource{
         cell.textLabel?.textColor = DarkGrayColor
         cell.detailTextLabel?.font = UIFont.systemFont(ofSize: 14)
         cell.detailTextLabel?.textColor = LightGrayColor
+        cell.tintColor = COR1
         return cell
     }
     

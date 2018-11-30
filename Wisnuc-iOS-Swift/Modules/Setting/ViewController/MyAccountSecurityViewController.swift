@@ -58,6 +58,10 @@ class MyAccountSecurityViewController: BaseViewController {
                                     }
                                 }
                                 self?.mailDataSource = mailDataArray
+                                if mailDataArray.count == 0{
+                                    AppUserService.currentUser?.mail = nil
+                                    AppUserService.synchronizedCurrentUser()
+                                }
                                 self?.infoTabelView.reloadData()
                             }
                             print(stringDic as Any)
@@ -192,26 +196,34 @@ class MyAccountSecurityViewController: BaseViewController {
         }
     }
     
+    func safetyChange(safety:Int, switchSender:UISwitch){
+        let request = UserSafetyChange.init(safety: safety)
+        request.startRequestDataCompletionHandler { (response) in
+            let errorBool = safety == 1 ? true : false
+            if let error = response.error {
+                switchSender.isOn = errorBool
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    switchSender.isOn = errorBool
+                    Message.message(text: errorMessage)
+                }else{
+                    AppUserService.currentUser?.safety = NSNumber.init(value: safety)
+                    AppUserService.synchronizedCurrentUser()
+                }
+            }
+        }
+    }
+    
+    func resetPasswordPushAction(phoneTicket:String? = nil ,mailTicket:String? = nil){
+        let resetPasswordViewController =  MyResetPasswordViewController.init(style: NavigationStyle.whiteWithoutShadow,phoneTicket: phoneTicket,mailTicket:mailTicket)
+        self.navigationController?.pushViewController(resetPasswordViewController, animated: true)
+    }
     
     @objc func switchBtnHandle(_ sender:UISwitch){
         if let safety = AppUserService.currentUser?.safety?.intValue{
             let requsetSafety = safety == 1 ? 0 : 1
-            let request = UserSafetyChange.init(safety: requsetSafety)
-            request.startRequestDataCompletionHandler { (response) in
-                let errorBool = safety == 1 ? true : false
-                if let error = response.error {
-                    sender.isOn = errorBool
-                    Message.message(text: error.localizedDescription)
-                }else{
-                    if let errorMessage = ErrorTools.responseErrorData(response.data){
-                        sender.isOn = errorBool
-                        Message.message(text: errorMessage)
-                    }else{
-                        AppUserService.currentUser?.safety = NSNumber.init(value: requsetSafety)
-                        AppUserService.synchronizedCurrentUser()
-                    }
-                }
-            }
+            self.safetyChange(safety: requsetSafety,switchSender:sender)
         }
     }
     
@@ -240,19 +252,31 @@ extension MyAccountSecurityViewController:UITableViewDelegate{
             case 0:
                 break
             case 1:
-                
+                   let sendCodeType = SendCodeType.password
                 if AppUserService.currentUser?.safety?.intValue  == 1{
+                    let mail = self.mailDataSource?.first?.mail ?? AppUserService.currentUser?.mail
+                    let phone = self.phoneDataSource?.first?.phoneNumber ?? AppUserService.currentUser?.userName
+                    if let email = mail,let phoneNumber = phone{
+                        self.sendCodeAction(type: sendCodeType) { [weak self] in
+                            let  verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.passwordEmailCodeVerification,codeType:sendCodeType,phone:phoneNumber,mail:email)
+                            self?.navigationController?.pushViewController(verificationCodeVC, animated: true)
+                        }
+                    }
+                }else{
                     let mail = self.mailDataSource?.first?.mail ?? AppUserService.currentUser?.mail
                     let phone = self.phoneDataSource?.first?.phoneNumber ?? AppUserService.currentUser?.userName
                     if let email = mail,let phoneNumber = phone{
                         let selectChangePasswordViewController = MySelectChangePasswordViewController.init(style: NavigationStyle.mainTheme, phone: phoneNumber, mail: email)
                         self.navigationController?.pushViewController(selectChangePasswordViewController, animated: true)
+
+                    }else if mail == nil{
+                        self.sendCodeAction(type: sendCodeType) { [weak self] in
+                            let  verificationCodeVC = MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.resetPassword,codeType:sendCodeType,phone:phone)
+                            self?.navigationController?.pushViewController(verificationCodeVC, animated: true)
+                        }
                     }
-                }else{
-//                    if let verificationCodeVC = verificationCodeViewController{
-//                        self.navigationController?.pushViewController(verificationCodeVC, animated: true)
-//                    }
                 }
+//                resetPasswordPushAction()
               
             case 2:
                 let bindPhoneViewController = MyBindPhoneViewController.init(style: .whiteWithoutShadow)
@@ -333,14 +357,14 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
                 
             case 1:
                 cell.textLabel?.text = LocalizedString(forKey: "密码")
-                let secureLevelString = "低"
-                let detailText = "安全性 \(secureLevelString)"
-                let attributedText = NSMutableAttributedString.init(string:detailText )
-                let font = UIFont.systemFont(ofSize: 12)
-                attributedText.addAttribute(NSAttributedStringKey.font, value:font , range: NSRange.init(location: 0, length: attributedText.length))
-                attributedText.addAttribute(NSAttributedStringKey.foregroundColor, value: LightGrayColor, range: NSRange.init(location: 0, length: 3))
-                attributedText.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.red, range: NSRange.init(location: 4, length: 1))
-                cell.detailTextLabel?.attributedText = attributedText
+//                let secureLevelString = "低"
+//                let detailText = "安全性 \(secureLevelString)"
+//                let attributedText = NSMutableAttributedString.init(string:detailText )
+//                let font = UIFont.systemFont(ofSize: 12)
+//                attributedText.addAttribute(NSAttributedStringKey.font, value:font , range: NSRange.init(location: 0, length: attributedText.length))
+//                attributedText.addAttribute(NSAttributedStringKey.foregroundColor, value: LightGrayColor, range: NSRange.init(location: 0, length: 3))
+//                attributedText.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.red, range: NSRange.init(location: 4, length: 1))
+//                cell.detailTextLabel?.attributedText = attributedText
                 cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                 
                 let label = self.rightLabel(LocalizedString(forKey: "去修改"))
@@ -387,6 +411,13 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
                 let switchBtn = UISwitch.init()
                 switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
                 switchBtn.isOn = AppUserService.currentUser?.safety?.intValue  == 1 ? true : false
+                let mail = self.mailDataSource?.first?.mail ?? AppUserService.currentUser?.mail
+                if  mail == nil{
+                    switchBtn.isOn = false
+                    self.safetyChange(safety: 0,switchSender:switchBtn)
+                    AppUserService.currentUser?.safety = NSNumber.init(value: 0)
+                    AppUserService.synchronizedCurrentUser()
+                }
                 switchBtn.addTarget(self, action: #selector(switchBtnHandle(_ :)), for: UIControlEvents.valueChanged)
                 if let switchButton = cell.contentView.subviews.first(where: {$0 is UISwitch}){
                     switchButton.removeFromSuperview()

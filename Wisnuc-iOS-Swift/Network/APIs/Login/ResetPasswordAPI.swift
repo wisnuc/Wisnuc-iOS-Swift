@@ -40,6 +40,10 @@ class ResetPasswordAPI: BaseRequest {
             return nil
         }
         
+        if let phoneTicket = self.phoneTicket,let mailTicket = self.mailTicket {
+            return ["phoneTicket":phoneTicket,"mailTicket":mailTicket,"password":password]
+        }
+        
         if let mailTicket = self.mailTicket {
             return ["mailTicket":mailTicket,"password":password]
         }
@@ -47,6 +51,8 @@ class ResetPasswordAPI: BaseRequest {
         if let phoneTicket = self.phoneTicket {
             return ["phoneTicket":phoneTicket,"password":password]
         }
+        
+        
         return nil
     }
 }

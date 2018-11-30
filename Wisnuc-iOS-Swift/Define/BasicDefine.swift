@@ -19,7 +19,10 @@ let kCurrentSystemVersion = (UIDevice.current.systemVersion as NSString).doubleV
 let kWindow = UIApplication.shared.keyWindow
 var kStatusBarHeight = UIApplication.shared.statusBarFrame.size.height
 
-public func LocalizedString(forKey key:String) -> String {
+public func LocalizedString(forKey key:String) -> String{
+   if let string = LocalizeHelper.instance.localizedString(forKey: key){
+      return string
+   }
   return Bundle.main.localizedString(forKey: key, value:"", table: nil)
 }
 

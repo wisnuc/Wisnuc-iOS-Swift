@@ -191,36 +191,51 @@ class DeviceViewController: BaseViewController {
      
       var othersProportion:CGFloat = 0.0
       othersProportion = CGFloat(otherSize)/CGFloat(totalSize) * totalProportion
+      
+      let minProportion:CGFloat  = 0.01
+      let minWidth:CGFloat  = 2
+      let baseWith = (capacityProgressBackgroudView.width - 3*2)
+      let capacityFilesProgressViewWidth:CGFloat = baseWith * filesProportion
+      let capacityPhotoProgressViewWidth:CGFloat = baseWith * imageProportion
+      let capacityVideoProgressViewWidth:CGFloat = baseWith * videoProportion
+      let capacityOtherProgressViewWidth:CGFloat = baseWith * othersProportion
+      let minProportionWidth:CGFloat = baseWith * minProportion
+      
+      let capacityFilesWidth:CGFloat = capacityFilesProgressViewWidth <= minWidth ? 0 : capacityFilesProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityFilesProgressViewWidth
+      let capacityPhotoWidth:CGFloat = capacityPhotoProgressViewWidth == minWidth ? 0 : capacityPhotoProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityFilesProgressViewWidth
+      let capacityVideoWidth:CGFloat = capacityVideoProgressViewWidth == minWidth ? 0 : capacityVideoProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityVideoProgressViewWidth
+      let capacityOtherWidth:CGFloat = capacityOtherProgressViewWidth == 0 ? 0 : capacityOtherProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityOtherProgressViewWidth
+      
       capacityFilesProgressView.snp.makeConstraints { (make) in
          make.centerY.equalTo(capacityProgressBackgroudView.snp.centerY)
          make.left.equalTo(capacityProgressBackgroudView.snp.left)
          make.top.equalTo(capacityProgressBackgroudView.snp.top)
          make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
-         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * filesProportion)
+         make.width.equalTo(capacityFilesWidth)
       }
       
       capacityPhotoProgressView.snp.makeConstraints { (make) in
          make.centerY.equalTo(capacityProgressBackgroudView.snp.centerY)
-         make.left.equalTo(capacityFilesProgressView.snp.right).offset(2)
+         make.left.equalTo(capacityFilesProgressView.snp.right).offset(capacityFilesWidth < minProportionWidth ? 0 : 2)
          make.top.equalTo(capacityProgressBackgroudView.snp.top)
          make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
-         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * imageProportion)
+         make.width.equalTo(capacityPhotoWidth)
       }
       
       capacityVideoProgressView.snp.makeConstraints { (make) in
          make.centerY.equalTo(capacityProgressBackgroudView.snp.centerY)
-         make.left.equalTo(capacityPhotoProgressView.snp.right).offset(2)
+         make.left.equalTo(capacityPhotoProgressView.snp.right).offset(capacityPhotoWidth < minProportionWidth ? 0 : 2)
          make.top.equalTo(capacityProgressBackgroudView.snp.top)
          make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
-         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * videoProportion)
+         make.width.equalTo(capacityVideoWidth)
       }
       
       capacityOtherProgressView.snp.makeConstraints { (make) in
          make.centerY.equalTo(capacityProgressBackgroudView.snp.centerY)
-         make.left.equalTo(capacityVideoProgressView.snp.right).offset(2)
+         make.left.equalTo(capacityVideoProgressView.snp.right).offset(capacityVideoWidth < minProportionWidth ? 0 : 2)
          make.top.equalTo(capacityProgressBackgroudView.snp.top)
          make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
-         make.width.equalTo((capacityProgressBackgroudView.width - 3*2) * othersProportion)
+         make.width.equalTo(capacityOtherWidth)
       }
    }
    
@@ -580,7 +595,7 @@ extension DeviceViewController:UITableViewDataSource,UITableViewDelegate{
       if self.state == .editing{
          return 0
       }else{
-         return 4
+         return 3
       }
    }
    
@@ -609,13 +624,13 @@ extension DeviceViewController:UITableViewDataSource,UITableViewDelegate{
       case 0:
          cell.accessoryType = .disclosureIndicator
          cell.textLabel?.text = LocalizedString(forKey: "备份")
+//      case 1:
+//         cell.accessoryType = .disclosureIndicator
+//         cell.textLabel?.text = LocalizedString(forKey: "USB")
       case 1:
          cell.accessoryType = .disclosureIndicator
-         cell.textLabel?.text = LocalizedString(forKey: "USB")
-      case 2:
-         cell.accessoryType = .disclosureIndicator
          cell.textLabel?.text = LocalizedString(forKey: "网络")
-      case 3:
+      case 2:
          cell.accessoryType = .disclosureIndicator
          cell.textLabel?.text = LocalizedString(forKey: "高级")
       default:
@@ -634,17 +649,17 @@ extension DeviceViewController:UITableViewDataSource,UITableViewDelegate{
          let tab = retrieveTabbarController()
          tab?.setTabBarHidden(true, animated: true)
          self.navigationController?.pushViewController(deviceBackupRootViewController, animated: true)
+//      case 1:
+//         let peripheralDeviceViewController = DevicePeripheralDeviceViewController.init(style:.highHeight)
+//         let tab = retrieveTabbarController()
+//         tab?.setTabBarHidden(true, animated: true)
+//         self.navigationController?.pushViewController(peripheralDeviceViewController, animated: true)
       case 1:
-         let peripheralDeviceViewController = DevicePeripheralDeviceViewController.init(style:.highHeight)
-         let tab = retrieveTabbarController()
-         tab?.setTabBarHidden(true, animated: true)
-         self.navigationController?.pushViewController(peripheralDeviceViewController, animated: true)
-      case 2:
          let networkSettingViewController = DeviceNetworkSettingViewController.init(style:.highHeight)
          let tab = retrieveTabbarController()
          tab?.setTabBarHidden(true, animated: true)
          self.navigationController?.pushViewController(networkSettingViewController, animated: true)
-      case 3:
+      case 2:
          let advancedSettingViewController = DeviceAdvancedSettingViewController.init(style:.highHeight)
          let tab = retrieveTabbarController()
          tab?.setTabBarHidden(true, animated: true)
