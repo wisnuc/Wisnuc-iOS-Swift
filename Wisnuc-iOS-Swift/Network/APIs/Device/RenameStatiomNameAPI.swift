@@ -8,15 +8,22 @@
 
 import UIKit
 
-class RenameStatiomNameAPI: NSObject {
+class RenameStatiomNameAPI: BaseRequest {
     var name:String?
     init(name:String) {
         self.name = name
     }
     
     override func baseURL() -> String{
-        if let lanIP = AppUserService.currentUser?.lanIP{
-            return lanIP
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return kCloudBaseURL
+        case .local?:
+            if let lanIP = AppUserService.currentUser?.lanIP{
+                return "http://\(lanIP):3001"
+            }
+        default:
+            return ""
         }
         return ""
     }
@@ -42,7 +49,7 @@ class RenameStatiomNameAPI: NSObject {
         case .normal?:
             let urlPath = "/winasd/device"
             let params = ["name":name!]
-            return [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:urlPath,kRequestImageParamsKey:params]
+            return [kRequestVerbKey:RequestMethodValue.POST,kRequestUrlPathKey:urlPath,kRequestImageParamsKey:params]
         case .local?:
             return nil
         default:

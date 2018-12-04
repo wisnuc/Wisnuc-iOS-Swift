@@ -173,7 +173,7 @@ class NewAlbumViewController: BaseViewController {
                 photosVC.localAssetDataSources.append(contentsOf:assets)
                 photosVC.localDataSouceSort()
             }
-            AppAssetService.getNetAssets { (error, netAssets) in
+           let _ = AppAssetService.getNetAssets { (error, netAssets) in
                 if error == nil{
                     DispatchQueue.main.async {
                         photosVC.addNetAssets(assetsArr: netAssets!)

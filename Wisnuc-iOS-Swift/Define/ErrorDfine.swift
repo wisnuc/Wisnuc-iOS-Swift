@@ -46,6 +46,8 @@ struct ErrorCode {
         public static let UserAlreadyExist:Int = 60001
         public static let MobileError:Int = 60701
         public static let CodeLimitOut:Int =  60702
+        public static let ShareUserExist:Int =  60107
+       
     }
     
 }
@@ -106,6 +108,7 @@ struct ErrorLocalizedDescription{
         public static let UserAlreadyExist = "user already exist"
         public static let MobileError = "mobile is error"
         public static let CodeLimitOut = "code limit out"
+        public static let ShareUserExist = "user already exist"
     }
 }
 

@@ -9,10 +9,44 @@
 import UIKit
 import Alamofire
 class BootSpaceAPI: BaseRequest {
-    override func requestURL() -> String {
+    var stationId:String?
+    var address:String?
+    override init() {
+        
+    }
+    
+    init(stationId:String,address:String? = nil){
+        self.stationId = stationId
+        self.address = address
+    }
+    
+    override func baseURL() -> String {
+        if self.stationId != nil && self.address == nil{
+             return kCloudBaseURL
+        }
         switch AppNetworkService.networkState {
         case .normal?:
-            return kCloudCommonJsonUrl
+                return kCloudBaseURL
+        case .local?:
+            if let address = self.address{
+                return "http://\(address):3000"
+            }
+            return AppUserService.currentUser?.localAddr ?? ""
+        default:
+            return ""
+        }
+    }
+    
+    override func requestURL() -> String {
+        if self.stationId != nil && self.address == nil{
+            return "/station/\(String(describing: self.stationId!))/json"
+        }
+        switch AppNetworkService.networkState {
+        case .normal?:
+            if let stationId = self.stationId{
+               return "/station/\(String(describing: stationId))/json"
+            }
+            return "/station/\(String(describing: AppUserService.currentUser?.stationId ?? ""))/json"
         case .local?:
             return "/boot/space"
         default:
@@ -21,6 +55,9 @@ class BootSpaceAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
+        if self.stationId != nil && self.address == nil{
+            return .post
+        }
         switch AppNetworkService.networkState {
         case .normal?:
             return .post
@@ -32,6 +69,10 @@ class BootSpaceAPI: BaseRequest {
     }
     
     override func requestParameters() -> RequestParameters? {
+        if self.stationId != nil && self.address == nil{
+            let urlPath = "/boot/space"
+            return [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:urlPath]
+        }
         switch AppNetworkService.networkState {
         case .normal?:
             let urlPath = "/boot/space"
@@ -48,6 +89,9 @@ class BootSpaceAPI: BaseRequest {
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
+        if self.stationId != nil && self.address == nil{
+            return [kRequestAuthorizationKey:AppTokenManager.token!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
+        }
         switch AppNetworkService.networkState {
         case .normal?:
             return [kRequestAuthorizationKey:AppTokenManager.token!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]

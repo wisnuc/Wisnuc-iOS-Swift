@@ -9,8 +9,19 @@
 import UIKit
 
 class DeviceIdentityViewController: BaseViewController {
-
+    var model:WinasdInfoModel?
     let identifier = "celled"
+    
+    
+    init(style: NavigationStyle,model:WinasdInfoModel) {
+        super.init(style: style)
+        self.model = model
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.largeTitle = LocalizedString(forKey: "设备身份")
@@ -50,19 +61,21 @@ extension DeviceIdentityViewController:UITableViewDataSource,UITableViewDelegate
         switch indexPath.row {
         case 0:
             cell.textLabel?.text = LocalizedString(forKey: "设备SN")
-            cell.detailTextLabel?.text = "naxian800"
+            cell.detailTextLabel?.text = model?.device?.sn
         case 1:
             cell.textLabel?.text = LocalizedString(forKey:"证书")
-            cell.detailTextLabel?.text = "6A:3D41"
+            cell.detailTextLabel?.text = model?.device?.cert
         case 2:
             cell.textLabel?.text = LocalizedString(forKey:"证书指纹")
-            cell.detailTextLabel?.text = "255.255.255.0"
+            cell.detailTextLabel?.text = model?.device?.fingerprint
         case 3:
             cell.textLabel?.text = LocalizedString(forKey:"证书签发身份")
-            cell.detailTextLabel?.text = "xxxxxxx"
+            cell.detailTextLabel?.text = model?.device?.signer
         case 4:
             cell.textLabel?.text = LocalizedString(forKey:"证书签发时间")
-            cell.detailTextLabel?.text = "2018-10-1"
+            if let notBefore = model?.device?.notBefore{
+            cell.detailTextLabel?.text = TimeTools.timeString(TimeInterval.init(notBefore)/1000 , formatterString: "yyyy-MM-dd")
+            }
         default:
             break
         }

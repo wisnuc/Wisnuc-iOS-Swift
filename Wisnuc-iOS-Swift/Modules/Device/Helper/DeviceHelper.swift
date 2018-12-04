@@ -9,18 +9,20 @@
 import UIKit
 
 class DeviceHelper: NSObject {
-    class func fetchInasdInfo(closure:(_ model:WinasdInfoModel)->()){
+    class func fetchInasdInfo(closure:@escaping (_ model:WinasdInfoModel?)->()){
         let request = WinasdInfoAPI.init()
         request.startRequestJSONCompletionHandler { (response) in
             if let error = response.error{
                 Message.message(text:error.localizedDescription)
+                return closure(nil)
             }else{
                 if let errorMessage = ErrorTools.responseErrorData(response.data){
                     Message.message(text:errorMessage)
+                    return closure(nil)
                 }else{
                     guard let dic = response.value as? NSDictionary else{
                         Message.message(text: LocalizedString(forKey: "error"))
-                        return
+                        return  closure(nil)
                     }
                     let isLocal = AppNetworkService.networkState == .local ? true : false
                     var modelDic:NSDictionary = dic
@@ -31,10 +33,11 @@ class DeviceHelper: NSObject {
                     }
                     if let data = jsonToData(jsonDic: modelDic){
                         do{
-                            let model = try JSONDecoder().decode(FilesStatsModel.self, from: data)
-                            closure(model)
+                            let model = try JSONDecoder().decode(WinasdInfoModel.self, from: data)
+                            return  closure(model)
                         }catch{
-                            
+                            print(error as Any)
+                            closure(nil)
                         }
                     }
                 }

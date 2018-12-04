@@ -7,11 +7,18 @@
 //
 
 import UIKit
-
+import Alamofire
 class WinasdInfoAPI: BaseRequest {
     override func baseURL() -> String{
-        if let lanIP = AppUserService.currentUser?.lanIP{
-            return lanIP
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return kCloudBaseURL
+        case .local?:
+            if let lanIP = AppUserService.currentUser?.lanIP{
+                return "http://\(lanIP):3001"
+            }
+        default:
+            return ""
         }
         return ""
     }
@@ -37,6 +44,8 @@ class WinasdInfoAPI: BaseRequest {
             return .get
         }
     }
+    
+    
     
     override func requestParameters() -> RequestParameters? {
         switch AppNetworkService.networkState {

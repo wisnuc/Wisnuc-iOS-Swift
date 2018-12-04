@@ -13,7 +13,6 @@ class DeviceUsersManageViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadData()
         prepareNavigation()
         self.largeTitle = LocalizedString(forKey: "设备用户")
         self.view.addSubview(infoSettingTableView)
@@ -27,6 +26,11 @@ class DeviceUsersManageViewController: BaseViewController {
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.infoSettingTableView, viewController: self)
 //        let tabbar = retrieveTabbarController()
 //        tabbar?.setTabBarHidden(true, animated: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        loadData()
     }
     
     @objc func addUserBarButtonItemTap(_ sender:UIBarButtonItem){
@@ -58,20 +62,73 @@ class DeviceUsersManageViewController: BaseViewController {
                             guard let data = jsonToData(jsonDic: dataDic) else{return}
                             let model = try JSONDecoder().decode(StationUserListModel.self, from: data)
                             if let owner = model.owner{
-                               let ownerArray = owner.filter({$0.id != AppUserService.currentUser?.stationId})
+                               let ownerArray = owner.filter({$0.id != AppUserService.currentUser?.uuid})
                                 array.append(contentsOf:ownerArray)
                             }
                             if let sharer = model.sharer{
-                                let sharerArray = sharer.filter({$0.id != AppUserService.currentUser?.stationId})
+                                let sharerArray = sharer.filter({$0.id != AppUserService.currentUser?.uuid})
                                 array.append(contentsOf:sharerArray)
                             }
                             self?.dataSource = array
                             self?.infoSettingTableView.reloadData()
+//                            self?.fetchDeviceSpace(stations: array)
                         }catch{
                             print(error as Any)
                             //error
                         }
                     }
+                }
+            }
+        }
+    }
+    
+//    func fetchDeviceSpace(stations:[StationUserModel]){
+//        var changeStations = stations
+//        for (i,value) in stations.enumerated() {
+//            if let stationId = value.id{
+//                let request = BootSpaceAPI.init(stationId: stationId)
+//                request.startRequestJSONCompletionHandler { [weak self](response) in
+//                    if let error = response.error {
+//                        Message.message(text: error.localizedDescription)
+//                    }else{
+//                        if let errorMessage = ErrorTools.responseErrorData(response.data){
+//                            Message.message(text: errorMessage)
+//                        }else{
+//                            if let rootDic = response.value as? NSDictionary {
+//                                if let dic = rootDic["data"] as? NSDictionary{
+//                                    do {
+//                                        guard let data = jsonToData(jsonDic: dic) else{
+//                                            return
+//                                        }
+//                                        let spaceModel = try JSONDecoder().decode(BootSpaceModel.self, from: data)
+//                                        var stationUserModel = changeStations[i]
+//                                        stationUserModel.bootSpace = spaceModel
+//                                        self?.dataSource[i] = stationUserModel
+//                                        self?.infoSettingTableView.reloadData()
+//                                    }catch{
+//                                        print(error as Any)
+//                                        //error
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+    func deleteSharedUser(model:StationUserModel?){
+        guard let stationId = AppUserService.currentUser?.stationId else { return }
+        guard let userId = model?.id else { return }
+        let requset = StationUserAPI.init(stationId: stationId, type: .delete, userId: userId)
+        requset.startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error =  response.error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
                 }
             }
         }
@@ -83,6 +140,8 @@ class DeviceUsersManageViewController: BaseViewController {
         tableView.delegate = self
         tableView.register(UINib.init(nibName: StringExtension.classNameAsString(targetClass: DeviceUserManagerTableViewCell.self), bundle: nil), forCellReuseIdentifier: identifier)
         tableView.tableFooterView = UIView.init(frame: CGRect.zero)
+        tableView.emptyDataSetSource = self
+        tableView.emptyDataSetDelegate = self
         return tableView
     }()
     
@@ -103,8 +162,12 @@ extension DeviceUsersManageViewController:UITableViewDataSource,UITableViewDeleg
         let cell:DeviceUserManagerTableViewCell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! DeviceUserManagerTableViewCell
         let model = self.dataSource[indexPath.row]
         cell.titleLabel.text = model.username
-//            cell.detailTextLabel?.text = "已用2.1GB"
-//            cell.imageView?.layer.cornerRadius = cell.imageView?.width/2
+//        if let used = model.bootSpace?.used{
+//            cell.detailLabel.text = "\(sizeString(used*1024))"
+//        }else{
+//            cell.detailLabel.text = LocalizedString(forKey: "Loading...")
+//        }
+        
         let placeholderImage = UIImage.init(named: "user_avatar_placeholder.png")
         if let avatarUrl = model.avatarUrl{
             cell.leftImageView.was_setCircleImage(withUrlString: avatarUrl, placeholder: placeholderImage)
@@ -122,6 +185,16 @@ extension DeviceUsersManageViewController:UITableViewDataSource,UITableViewDeleg
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "删除")) { [weak self](tableViewForAction, indexForAction) in
+           let index = indexForAction.row
+            self?.alertController(title: LocalizedString(forKey:"您确定删除该用户吗？"), cancelActionTitle: LocalizedString(forKey: "Cancel"), okActionTitle: LocalizedString(forKey: "Confirm"), okActionHandler: { (okAlertAction) in
+                let model = self?.dataSource[indexPath.row]
+                self?.deleteSharedUser(model: model)
+                self?.dataSource.remove(at: index)
+                
+                tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+            }, cancelActionHandler: { (cancelAlertAction) in
+                
+            })
 //            let index = indexForAction.row
 //            tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         }
@@ -136,6 +209,33 @@ extension DeviceUsersManageViewController:UITableViewDataSource,UITableViewDeleg
         let navigationController = UINavigationController.init(rootViewController: userInfoViewController)
         self.present(navigationController, animated: true) {
             
+        }
+    }
+}
+
+extension DeviceUsersManageViewController:DZNEmptyDataSetSource{
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        return UIImage.init(named: "logo_gray")
+    }
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        let text = LocalizedString(forKey: "暂无用户")
+        let attributes = [NSAttributedStringKey.font : MiddleTitleFont,NSAttributedStringKey.foregroundColor : LightGrayColor]
+        return NSAttributedString.init(string: text, attributes: attributes)
+    }
+    
+}
+
+extension DeviceUsersManageViewController:DZNEmptyDataSetDelegate{
+    func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
+        //        self.prepareData()
+    }
+    
+    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
+        if self.dataSource.count == 0{
+            return true
+        }else{
+            return false
         }
     }
 }

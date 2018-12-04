@@ -15,7 +15,7 @@ public struct EntriesModel:Codable {
     var uuid:String?
     var hash:String?
     var magic:AnyCodable?
-    var mtime:Double?
+    var mtime:Int64?
     var size:Int64?
     var driveUUID:String?
     var parentUUID:String?
@@ -60,5 +60,6 @@ struct Metadata: Codable {
     var make: String?
     var model: String?
     var date: String?
+    var datec:String?
 //    required init() {}
 }

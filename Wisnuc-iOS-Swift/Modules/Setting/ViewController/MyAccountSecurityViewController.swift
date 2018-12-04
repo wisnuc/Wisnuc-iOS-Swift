@@ -279,8 +279,12 @@ extension MyAccountSecurityViewController:UITableViewDelegate{
 //                resetPasswordPushAction()
               
             case 2:
-                let bindPhoneViewController = MyBindPhoneViewController.init(style: .whiteWithoutShadow)
-                self.navigationController?.pushViewController(bindPhoneViewController, animated: true)
+                if let phoneArray = self.phoneDataSource{
+                    if phoneArray.count > 0 && phoneArray.first?.phoneNumber != nil {
+                        let bindPhoneViewController = MyBindPhoneViewController.init(style: .whiteWithoutShadow,phone:(phoneArray.first?.phoneNumber)!)
+                        self.navigationController?.pushViewController(bindPhoneViewController, animated: true)
+                    }
+                }
             case 3:
                 guard let phone = phoneDataSource?.first?.phoneNumber else {
                     Message.message(text: "没有绑定手机号")

@@ -17,7 +17,9 @@ class DeviceViewController: BaseViewController {
    let legendHeight:CGFloat =  12
    var bootSpaceModel:BootSpaceModel?
    var statsModel:StatsModel?
+   var infoModel:WinasdInfoModel?
    var inputTextFieldController:MDCTextInputControllerUnderline?
+   var originName:String?
    var state:DeviceViewControllerState?{
       didSet{
          switch state {
@@ -39,21 +41,20 @@ class DeviceViewController: BaseViewController {
       
       self.view.bringSubview(toFront: appBar.headerViewController.headerView)
       
-      setData()
+      deviecNameTitleTextField.text = LocalizedString(forKey: "Loading...")
       
-//      setHeaderContentFrame()
-      
-      deviecNameTitleTextField.text = "Wisnuc office"
-
       self.state = .normal
-     
-      
-      // Do any additional setup after loading the view.
    }
    
    override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
       appBar.headerViewController.headerView.trackingScrollView = self.deviceTableView
+   }
+   
+   override func viewDidAppear(_ animated: Bool) {
+      super.viewDidAppear(animated)
+      setData()
+      loadDeviceData()
       if let controller = UIViewController.currentViewController(){
          if !(controller is DeviceViewController){
             return
@@ -65,7 +66,6 @@ class DeviceViewController: BaseViewController {
          }
       }
    }
-   
    func setData(){
        getBootData()
    }
@@ -77,6 +77,16 @@ class DeviceViewController: BaseViewController {
       self.capacityLabel.textColor = LightGrayColor
       self.capacityLabel.font = font
       self.capacityLabel.text = text
+   }
+   
+   
+   func loadDeviceData(){
+      DeviceHelper.fetchInasdInfo { [weak self](model) in
+         self?.infoModel = model
+         if let stationName =  model?.device?.name{
+             self?.deviecNameTitleTextField.text = stationName
+         }
+      }
    }
    
    func getFruitmixStatsData(closure:@escaping (_ stats:StatsModel)->()){
@@ -150,9 +160,29 @@ class DeviceViewController: BaseViewController {
       })
    }
    
+   func renameStation(originName:String){
+      guard let name  =  deviecNameTitleTextField.text else { return }
+      if name.count == 0 { return }
+      if name == originName { return }
+      let requset = RenameStatiomNameAPI.init(name:name)
+      requset.startRequestJSONCompletionHandler({ [weak self](response) in
+         if let error =  response.error{
+            Message.message(text: error.localizedDescription)
+            self?.deviecNameTitleTextField.text = originName
+         }else{
+            if let errorMessage = ErrorTools.responseErrorData(response.data){
+               Message.message(text: errorMessage)
+               self?.deviecNameTitleTextField.text = originName
+               return
+            }
+            self?.originName = self?.deviecNameTitleTextField.text
+         }
+      })
+   }
+   
    func setHeaderContentFrame(statsModel:StatsModel,bootSpaceModel:BootSpaceModel){
-      print("😆\(statsModel)")
-      print("🍄\(bootSpaceModel)")
+//      print("😆\(statsModel)")
+//      print("🍄\(bootSpaceModel)")
       guard  let documentSize = statsModel.document?.totalSize ,let imageSize = statsModel.image?.totalSize,let videoSize = statsModel.video?.totalSize,let otherSize = statsModel.others?.totalSize else {
          return
       }
@@ -380,7 +410,11 @@ class DeviceViewController: BaseViewController {
    }
    
    @objc func editBarButtonItemTap(_ sender:UIBarButtonItem){
-       self.state = .editing
+      if self.infoModel != nil{
+         self.state = .editing
+      }else{
+         Message.message(text:LocalizedString(forKey: "Loading..."))
+      }
    }
    
    
@@ -394,6 +428,9 @@ class DeviceViewController: BaseViewController {
    
    @objc func editingConfirmBarButtonItemTap(_ sender:UIBarButtonItem){
       self.state = .normal
+      if let stationName =  self.infoModel?.device?.name{
+          self.renameStation(originName: self.originName ?? stationName)
+      }
    }
    
    @objc func deviceInfoTap(_ sender:UIGestureRecognizer){
@@ -445,7 +482,7 @@ class DeviceViewController: BaseViewController {
    
    lazy var capacityProgressView: UIProgressView = { [weak self] in
       let progressView = UIProgressView.init(frame: CGRect(x: MarginsWidth, y: (self?.deviecNameTitleTextField.bottom)! + MarginsWidth , width: __kWidth - MarginsWidth*2, height: 12))
-      progressView.progress = 0.4
+      progressView.progress = 0
       progressView.transform = CGAffineTransform(scaleX: 1.0, y: 8.0)
       //设置进度条颜色和圆角
       progressView.setRadiusTrackColor(UIColor.white.withAlphaComponent(0.12), progressColor: UIColor.colorFromRGB(rgbValue: 0x04db6ac))

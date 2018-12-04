@@ -24,6 +24,7 @@ enum MyVerificationCodeViewControllerNextState {
     case changePassword
     case resetPassword
     case setSamba
+    case replacePhoneComplete
 }
 
 class MyVerificationCodeViewController: BaseViewController {
@@ -173,7 +174,7 @@ class MyVerificationCodeViewController: BaseViewController {
         inputTextField.keyboardType = .numberPad
     }
     
-    func getSmsCodeTicket(closure:@escaping (_ ticket:String?)->()){
+    func getSmsCodeTicket(closure:@escaping (_ ticket:String)->()){
         guard let phone = self.phoneNumber else {
             return
         }
@@ -425,8 +426,10 @@ class MyVerificationCodeViewController: BaseViewController {
                 })
             }
         case .bindPhone?:
-            let changePhoneNumberViewController =  MyChangePhoneNumberViewController.init(style: NavigationStyle.whiteWithoutShadow)
-            self.navigationController?.pushViewController(changePhoneNumberViewController, animated: true)
+            self.getSmsCodeTicket { [weak self](tiket) in
+                let changePhoneNumberViewController =  MyChangePhoneNumberViewController.init(style: NavigationStyle.whiteWithoutShadow,oldTicket:tiket)
+                self?.navigationController?.pushViewController(changePhoneNumberViewController, animated: true)
+            }
         case .changePassword?:
             let changePasswordViewController =  MyChangePasswordViewController.init(style: NavigationStyle.whiteWithoutShadow)
             self.navigationController?.pushViewController(changePasswordViewController, animated: true)
@@ -457,10 +460,40 @@ class MyVerificationCodeViewController: BaseViewController {
                 Message.message(text: LocalizedString(forKey: "绑定邮箱成功"))
                 self?.navigationController?.popToRootViewController(animated: true)
             }
+        case .replacePhoneComplete?:
+            self.getSmsCodeTicket { [weak self](ticket) in
+                self?.replacePhoneAction(newTicket: ticket, callback: {
+                    if let phone = self?.phoneNumber?.replacePhone(){
+                        self?.alertController(title: "修改绑定手机号成功", message: "可用\(phone)加密码直接登录", okActionTitle: "重新登录",okActionHandler: { (alertAction) in
+                            AppService.sharedInstance().logoutAction()
+                        })
+                    }
+                })
+            }
         default:
             break
         }
     }
+    
+    func replacePhoneAction(newTicket:String,callback:@escaping ()->()){
+        guard let oldTicket = self.phoneTicket else {
+            return
+        }
+        
+        let request = UserPhoneAPI.init(.patch, oldTicket: oldTicket, newTicket: newTicket)
+        request.startRequestJSONCompletionHandler { (response) in
+            if let error = response.error {
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                return callback()
+            }
+        }
+    }
+    
     
     func resetPasswordPushAction(phoneTicket:String? = nil ,mailTicket:String? = nil){
         let resetPasswordViewController =  MyResetPasswordViewController.init(style: NavigationStyle.whiteWithoutShadow,phoneTicket: phoneTicket,mailTicket:mailTicket)

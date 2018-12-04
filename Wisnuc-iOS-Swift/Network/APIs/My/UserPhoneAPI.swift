@@ -10,8 +10,12 @@ import UIKit
 
 class UserPhoneAPI: BaseRequest {
     var method:RequestHTTPMethod?
-    init(_ method:RequestHTTPMethod? = nil){
+    var oldTicket:String?
+    var newTicket:String?
+    init(_ method:RequestHTTPMethod? = nil,oldTicket:String? = nil ,newTicket:String? = nil){
         super.init()
+        self.oldTicket = oldTicket
+        self.newTicket = newTicket
     }
     override init() {
         
@@ -26,8 +30,16 @@ class UserPhoneAPI: BaseRequest {
     }
     
     override func requestMethod() -> RequestHTTPMethod {
-        
         return  self.method == nil ? RequestHTTPMethod.get : self.method!
+    }
+    
+    override func requestParameters() -> RequestParameters? {
+        if  self.method == .patch{
+            if let oldTicket = self.oldTicket,let newTicket = self.newTicket{
+             return  ["oldTicket":oldTicket,"newTicket":newTicket]
+            }
+        }
+        return nil
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {

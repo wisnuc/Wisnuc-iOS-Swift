@@ -116,6 +116,7 @@
 		1F16B37821B13C4900178143 /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37721B13C4900178143 /* DeviceHelper.swift */; };
 		1F16B37A21B13EEA00178143 /* WinasdInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37921B13EEA00178143 /* WinasdInfoModel.swift */; };
 		1F16B37C21B147EA00178143 /* RenameStatiomNameAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37B21B147EA00178143 /* RenameStatiomNameAPI.swift */; };
+		1F16B37F21B619D000178143 /* MySettingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F16B37E21B619CF00178143 /* MySettingHelper.swift */; };
 		1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */; };
 		1F17697E20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */; };
 		1F17698220AD379B003D955F /* SearchFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F17698120AD379B003D955F /* SearchFilesViewController.swift */; };
@@ -524,6 +525,7 @@
 		1F8EBB5620A0239000E8AB83 /* files_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5520A0238F00E8AB83 /* files_folder.png */; };
 		1F8EBB5820A0239700E8AB83 /* files_folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */; };
 		1F8EBB5A20A0239F00E8AB83 /* files_folder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */; };
+		1F99863A21B6802900174FCC /* PhotoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863921B6802900174FCC /* PhotoHelper.swift */; };
 		1FA3B1D521884BEB00B68AA7 /* PhotoMediaContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D421884BEB00B68AA7 /* PhotoMediaContainerViewController.swift */; };
 		1FA3B1D721884DAB00B68AA7 /* PhotoTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D621884DAB00B68AA7 /* PhotoTools.swift */; };
 		1FA3B1DB218869BB00B68AA7 /* play_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D8218869BA00B68AA7 /* play_video@2x.png */; };
@@ -1158,6 +1160,7 @@
 		1F16B37721B13C4900178143 /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		1F16B37921B13EEA00178143 /* WinasdInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinasdInfoModel.swift; sourceTree = "<group>"; };
 		1F16B37B21B147EA00178143 /* RenameStatiomNameAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameStatiomNameAPI.swift; sourceTree = "<group>"; };
+		1F16B37E21B619CF00178143 /* MySettingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySettingHelper.swift; sourceTree = "<group>"; };
 		1F17697A20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesShareBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17697D20AD3298003D955F /* TransferTaskBottomSheetContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferTaskBottomSheetContentTableViewController.swift; sourceTree = "<group>"; };
 		1F17698120AD379B003D955F /* SearchFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFilesViewController.swift; sourceTree = "<group>"; };
@@ -1572,6 +1575,7 @@
 		1F8EBB5520A0238F00E8AB83 /* files_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_folder.png; sourceTree = "<group>"; };
 		1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@2x.png"; sourceTree = "<group>"; };
 		1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@3x.png"; sourceTree = "<group>"; };
+		1F99863921B6802900174FCC /* PhotoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoHelper.swift; sourceTree = "<group>"; };
 		1FA3B1D421884BEB00B68AA7 /* PhotoMediaContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMediaContainerViewController.swift; sourceTree = "<group>"; };
 		1FA3B1D621884DAB00B68AA7 /* PhotoTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTools.swift; sourceTree = "<group>"; };
 		1FA3B1D8218869BA00B68AA7 /* play_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_video@2x.png"; sourceTree = "<group>"; };
@@ -2883,6 +2887,14 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
+		1F16B37D21B619A800178143 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				1F16B37E21B619CF00178143 /* MySettingHelper.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		1F17697C20AD3259003D955F /* BottomSheetContent */ = {
 			isa = PBXGroup;
 			children = (
@@ -3471,6 +3483,7 @@
 		1F537A0B2124128600A555C5 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				1F16B37D21B619A800178143 /* Helper */,
 				1F3293BA21A697C200F075DD /* Model */,
 				1F38E2BB2182FCBD003FCAEE /* View */,
 				1FE0894B21709E590049F44B /* ViewController */,
@@ -3904,6 +3917,14 @@
 				1F8EBB4F209FF08500E8AB83 /* more_gray_horizontal@3x.png */,
 			);
 			path = Files;
+			sourceTree = "<group>";
+		};
+		1F99863521B6800700174FCC /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				1F99863921B6802900174FCC /* PhotoHelper.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		1FA9C3DC210585C600E8411E /* Photos */ = {
@@ -5957,6 +5978,7 @@
 		1FFD12D020EE11540053A3F7 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				1F99863521B6800700174FCC /* Helper */,
 				1FE08921216DEA770049F44B /* Layout */,
 				1FFD133020EF3E010053A3F7 /* Model */,
 				1FFD12E220EE19950053A3F7 /* View */,
@@ -7186,6 +7208,7 @@
 				1FFC8198219BF4B400371C8D /* BindStationAPI.swift in Sources */,
 				1FD9B7A9207E152B00906D80 /* SizeTools.swift in Sources */,
 				1F362F8221351782000B3384 /* LoginNextStepViewController.swift in Sources */,
+				1F99863A21B6802900174FCC /* PhotoHelper.swift in Sources */,
 				1F16B36021AE9DFF00178143 /* UserSafetyChange.swift in Sources */,
 				1F359FB620916D5C00E2FF36 /* InitLastViewCardViewTableViewCell.swift in Sources */,
 				1F537A102125150D00A555C5 /* AutoBackupManager.swift in Sources */,
@@ -7270,6 +7293,7 @@
 				1F8EBB30209AB6AA00E8AB83 /* BaseTools.swift in Sources */,
 				1FA669DA208880A200E9CAE3 /* BottomSheetDummyStaticViewController.swift in Sources */,
 				1FE674E120D21B11006F97DB /* TRManager.swift in Sources */,
+				1F16B37F21B619D000178143 /* MySettingHelper.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
 				1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */,
 				1F3293D121AC047D00F075DD /* DeviceNetModel.swift in Sources */,

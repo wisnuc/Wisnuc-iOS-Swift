@@ -9,6 +9,15 @@
 import Foundation
 import Photos
 extension PHAsset{
+    
+    class func latestAsset() -> PHAsset? {
+        // 获取所有资源的集合，并按资源的创建时间排序
+        let options = PHFetchOptions()
+        options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        let assetsFetchResults = PHAsset.fetchAssets(with: options)
+        return assetsFetchResults.firstObject
+    }
+
    func getWSAssetType() -> WSAssetType{
     return self.isGif() ? WSAssetType.GIF
     : self.isLivePhoto() ? WSAssetType.LivePhoto

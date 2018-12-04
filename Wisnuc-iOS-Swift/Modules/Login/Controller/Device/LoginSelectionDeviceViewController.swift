@@ -173,7 +173,7 @@ extension LoginSelectionDeviceViewController:UITableViewDataSource,UITableViewDe
         let cell:DeviceAddDeviceTableViewCell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! DeviceAddDeviceTableViewCell
         cell.selectionStyle = .none
         let model = devices![indexPath.row]
-        cell.nameLabel.text = model.sn
+        cell.nameLabel.text = model.name
         if let onlineNumber = model.online{
             if let online = Bool.init(exactly: NSNumber.init(value: onlineNumber)){
             cell.detailLabel.text = online ? LocalizedString(forKey:"在线") : LocalizedString(forKey:"关机")

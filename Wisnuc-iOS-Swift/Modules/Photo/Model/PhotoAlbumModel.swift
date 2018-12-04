@@ -17,7 +17,10 @@ class PhotoAlbumModel:HandyJSON{
     var type:PhotoAlbumType?
     var name:String?
     var describe:String?
+    var coverThumbnilhash:String?
+    var coverThumbnilAsset:PHAsset?
     var dataSource:[WSAsset]?
+    var count:Int?
     required init() {
         
     }

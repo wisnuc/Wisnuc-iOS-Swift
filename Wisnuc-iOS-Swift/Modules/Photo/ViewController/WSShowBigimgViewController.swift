@@ -1052,7 +1052,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                     mtime = (TimeTools.dateTimeInterval(date) ?? 0)*1000
                 }else
                 if let time = filesModel.mtime{
-                    mtime = time
+                    mtime = TimeInterval(time)
                 }
             }
             

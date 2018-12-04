@@ -118,7 +118,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                 })
             }else if model is NetAsset{
                 let netAsset = model as! NetAsset
-                if let requestUrl =  self.requestImageUrl(size: size,hash: netAsset.fmhash!){
+                if let requestUrl =  PhotoHelper.requestImageUrl(size: size,hash: netAsset.fmhash!){
                     ImageCache.default.retrieveImage(forKey: requestUrl.absoluteString, options: nil) { [weak self]
                         image, cacheType in
                         if let image = image {
@@ -249,37 +249,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         }else{
             self.imageView?.transform = CGAffineTransform.identity
         }
-    }
-    
-    func requestImageUrl(size:CGSize,hash:String)->URL?{
-        let detailURL = "media"
-        let frameWidth = size.width
-        let frameHeight = size.height
-        let resource = "/media/\(hash)"
-        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-        
-        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth),kRequestImageHeightKey:String(describing: frameHeight),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
-        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
-        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
-            return nil
-        }
-        
-        guard let dataString = String.init(data: data, encoding: .utf8) else {
-            return nil
-        }
-        
-        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-            return nil
-        }
-        
-        guard  let normalUrl = URL.init(string:urlString) else {
-            return nil
-        }
-        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
-            return nil
-        }
-        return url
     }
 
     @objc func btnSelectClick(_ sender:UIButton?){

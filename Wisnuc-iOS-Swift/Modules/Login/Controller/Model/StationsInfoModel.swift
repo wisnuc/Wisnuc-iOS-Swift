@@ -16,5 +16,19 @@ struct StationsInfoModel: Decodable {
     var onlineTime : String?
     var offlineTime : String?
     var LANIP:String?
+    var name:String?
     var isShareStation:Bool?
+    var bootSpace:BootSpaceModel?
+    
+    
+    enum CodingKeys : String, CodingKey {
+        case sn
+        case createdAt
+        case owner
+        case online
+        case onlineTime
+        case offlineTime
+        case LANIP
+        case name
+    }
 }

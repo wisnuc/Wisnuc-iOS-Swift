@@ -7,18 +7,24 @@
 //
 
 import UIKit
+import Photos
+
+enum SclassType:String {
+    case image
+    case video
+}
 
 class PhotoAlbumViewController: BaseViewController {
     private let reuseIdentifier = "reuseIdentifierPhotoCell"
     private let reuseHeaderIdentifier = "reuseIdentifierPhotoFooter"
     private let cellContentSizeWidth = (__kWidth - MarginsWidth*3)/2
     private let cellContentSizeHeight = (__kWidth - MarginsWidth*3)/2 + 56
-    var dataSource:Array<Array<PhotoAlbumModel>>?
     var index:Int = 0
+    var placesArray:Array<String>?
     override func viewDidLoad() {
         super.viewDidLoad()
+        getData()
 //        prepareNavigationBar()
-        setData()
         self.view.addSubview(albumCollectionView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
         appBar.headerViewController.headerView.changeContentInsets { [weak self] in
@@ -52,33 +58,174 @@ class PhotoAlbumViewController: BaseViewController {
     func prepareNavigationBar(){
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "add_album.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightButtonItemTap(_:)))
     }
+    func getData(){
+        allPhotoAlbumData()
+//        allVideoAlbumData()
+        
+    }
     
-    func setData(){
-        dataSource = Array.init()
+    func allPhotoAlbumData(){
+        getAlbumData(sclass: SclassType.image.rawValue, closure: {[weak self](hash, asset,count) in
+            if let hash = hash{
+                self?.setAllPhotoData(hash:hash,count:count)
+            }else{
+                self?.setAllPhotoData(loacalAsset:asset!,count:count)
+            }
+        })
+    }
+        
+    func allVideoAlbumData(){
+        getAlbumData(sclass: SclassType.video.rawValue, closure: {[weak self](hash, asset,count) in
+            if let hash = hash{
+                self?.setAllPhotoData(hash:hash,count:count)
+            }else{
+                self?.setAllPhotoData(loacalAsset:asset!,count:count)
+            }
+        })
+    }
+    
+    func getAlbumData(sclass:String,closure:@escaping (_ hash:String?,_ localAsset:PHAsset?,_ count:Int?)->()){
+        self.searchAny(sClass: sclass) { [weak self](models, error) in
+            if error == nil && models != nil{
+                if let netTime = self?.fetchPhotoTime(model: models?.first),let localDate = PHAsset.latestAsset()?.creationDate{
+                    let localTime = localDate.timeIntervalSince1970
+                    if netTime > localTime{
+                        if let photoHash =  models?.first?.hash{
+                            return closure(photoHash,nil,models?.count)
+                        }
+                    }else{
+                        return closure(nil,PHAsset.latestAsset()!,models?.count)
+                    }
+                }
+            }
+        }
+    }
+    
+//    func getAllPhotoAlbumData(closure:@escaping (_ hash:String?,_ localAsset:PHAsset?,_ count:Int?)->()){
+//
+//        self.searchAny(sClass: sclass) { [weak self](models, error) in
+//            if error == nil && models != nil{
+//                if let netTime = self?.fetchPhotoTime(model: models?.first),let localDate = PHAsset.latestAsset()?.creationDate{
+//                    let localTime = localDate.timeIntervalSince1970
+//                    if netTime > localTime{
+//                        if let photoHash =  models?.first?.hash{
+//                            return closure(photoHash,nil,models?.count)
+//                        }
+//                    }else{
+//                        return closure(nil,PHAsset.latestAsset()!,models?.count)
+//                    }
+//                }
+//            }
+//        }
+//    }
+    
+    func fetchPhotoTime(model:EntriesModel?)->TimeInterval?{
+            guard let model = model else{
+                return nil
+            }
+        if  model.mtime != nil, let date =  model.metadata?.date,let datec = model.metadata?.datec{
+            guard let dataTimeInterval = TimeTools.dateTimeIntervalUTC(date) else{
+                return nil
+            }
+            
+            guard let datacTimeInterval = TimeTools.dateTimeIntervalUTC(datec) else{
+                return nil
+            }
+    
+            return  dataTimeInterval > datacTimeInterval ?  dataTimeInterval : datacTimeInterval
+        }else if  model.mtime != nil, let date = model.metadata?.date ,model.metadata?.datec == nil{
+            if let dataTimeInterval = TimeTools.dateTimeIntervalUTC(date){
+                 return dataTimeInterval
+            }else{
+                 return nil
+            }
+        }else if  let mtime = model.mtime{
+            return TimeInterval(mtime/1000)
+        }
+        
+        return  nil
+    }
+    
+    func searchAny(text:String? = nil,types:String? = nil,sClass:String? = nil,complete:@escaping (_ mdoels: [EntriesModel]?,_ error:Error?)->()){
+        var array:Array<EntriesModel> =  Array.init()
+        var order:String?
+        
+        order = !isNilString(types) || !isNilString(sClass) ? nil : SearhOrder.newest.rawValue
+        var placesArray:Array<String> = Array.init()
+        let uuid = AppUserService.currentUser?.userHome
+        placesArray.append(uuid!)
+        self.placesArray = placesArray
+        let places = placesArray.joined(separator: ".")
+        let request = SearchAPI.init(order:order, places: places,class:sClass, types:types, name:text)
+        request.startRequestJSONCompletionHandler { (response) in
+            if response.error == nil{
+                let isLocalRequest = AppNetworkService.networkState == .local
+                let result = (isLocalRequest ? response.value as? NSArray : (response.value as! NSDictionary)["data"]) as? NSArray
+                if result != nil{
+                    let rootArray = result
+                    for (_ , value) in (rootArray?.enumerated())!{
+                        if value is NSDictionary{
+                            let dic = value as! NSDictionary
+                            
+                            do{
+                                let data = jsonToData(jsonDic: dic)
+                                let model = try JSONDecoder().decode(EntriesModel.self, from: data!)
+                                array.append(model)
+                            }catch{
+                                return  complete(nil,BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
+                            }
+                        }
+                    }
+                    return complete(array,nil)
+                }
+            }else{
+                return complete(nil,response.error)
+            }
+        }
+    }
+    
+    func setAllPhotoData(hash:String? = nil,loacalAsset:PHAsset? = nil,count:Int?){
         var collectionAlbumArray = Array<PhotoAlbumModel>.init()
         let photoAlbumModel1 = PhotoAlbumModel.init()
         photoAlbumModel1.type = PhotoAlbumType.collecion
-        photoAlbumModel1.name = "所有相片"
-        photoAlbumModel1.describe = nil
-        photoAlbumModel1.dataSource = nil
-        let photoAlbumModel2 = PhotoAlbumModel.init()
-        photoAlbumModel2.type = PhotoAlbumType.collecion
-        photoAlbumModel2.name = "来自iPhone XR"
-        photoAlbumModel2.describe = nil
-        photoAlbumModel2.dataSource = nil
+        photoAlbumModel1.name = LocalizedString(forKey: "所有相片")
+        if let photoHash = hash{
+            photoAlbumModel1.coverThumbnilhash = photoHash
+        }
+        
+        if let loacalAsset = loacalAsset{
+            photoAlbumModel1.coverThumbnilAsset = loacalAsset
+        }
+        
+        if let count = count{
+            if let allAssets = AppAssetService.allAssets{
+                photoAlbumModel1.count = count + allAssets.count
+            }else{
+                photoAlbumModel1.count = count
+            }
+        }
+        
+        
+//        photoAlbumModel1.describe = nil
+//        photoAlbumModel1.dataSource = nil
+//        let photoAlbumModel2 = PhotoAlbumModel.init()
+//        photoAlbumModel2.type = PhotoAlbumType.collecion
+//        photoAlbumModel2.name = "来自iPhone XR"
+//        photoAlbumModel2.describe = nil
+//        photoAlbumModel2.dataSource = nil
         let photoAlbumModel3 = PhotoAlbumModel.init()
         photoAlbumModel3.type  = PhotoAlbumType.collecion
         photoAlbumModel3.name = "视频"
         photoAlbumModel3.describe = nil
         photoAlbumModel3.dataSource = nil
         collectionAlbumArray.append(photoAlbumModel1)
-        collectionAlbumArray.append(photoAlbumModel2)
+//        collectionAlbumArray.append(photoAlbumModel2)
         collectionAlbumArray.append(photoAlbumModel3)
-        
-        let collectionMyArray = Array<PhotoAlbumModel>.init()
-        dataSource?.append(collectionAlbumArray)
-        dataSource?.append(collectionMyArray)
-        
+//
+//        let collectionMyArray = Array<PhotoAlbumModel>.init()
+        dataSource.append(collectionAlbumArray)
+//        dataSource?.append(collectionMyArray)
+        self.albumCollectionView.reloadData()
     }
 
     @objc func rightButtonItemTap(_ sender:UIBarButtonItem){
@@ -125,19 +272,19 @@ class PhotoAlbumViewController: BaseViewController {
 extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewDataSource{
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return self.dataSource!.count
+        return self.dataSource.count
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-       return self.dataSource![section].count
+       return self.dataSource?[section].count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:PhotoAlbumCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoAlbumCollectionViewCell
         let model = dataSource![indexPath.section][indexPath.row]
-        cell.imageView.image =  UIImage.init(color: UIColor.black.withAlphaComponent(0.04))
+        cell.setCoverImage(indexPath: indexPath, hash: model.coverThumbnilhash, asset: model.coverThumbnilAsset)
         cell.nameLabel.text = model.name
-        if  let photoData = model.dataSource{
-            cell.countLabel.text = String(describing: photoData.count)
+        if  let count = model.count{
+            cell.countLabel.text = String(describing: count)
         }else{
             cell.countLabel.text = "0"
         }
@@ -207,11 +354,11 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                 break
             }
         }else{
-            let model = dataSource?[indexPath.section][indexPath.row]
-            let newAlbumVC = NewAlbumViewController.init(style: NavigationStyle.whiteWithoutShadow, photos: model?.dataSource)
+            let model = dataSource[indexPath.section][indexPath.row]
+            let newAlbumVC = NewAlbumViewController.init(style: NavigationStyle.whiteWithoutShadow, photos: model.dataSource)
             newAlbumVC.delegate = self
             newAlbumVC.setState(NewAlbumViewControllerState.normal)
-            newAlbumVC.setContent(title: model?.name, describe: model?.describe)
+            newAlbumVC.setContent(title: model.name, describe: model?.describe)
             self.navigationController?.pushViewController(newAlbumVC, animated: true)
             self.index = indexPath.row
         }
@@ -223,6 +370,7 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
         return headView
     }
     
+    lazy var dataSource:[[PhotoAlbumModel]] = Array.init()
 
 }
 
@@ -252,6 +400,7 @@ extension PhotoAlbumViewController :UICollectionViewDelegateFlowLayout{
 //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
 //        return CGSize(width: cellContentSize, height: 8 + 14 + 8)
 //    }
+
     
 }
 

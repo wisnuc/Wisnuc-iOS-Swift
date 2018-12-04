@@ -10,14 +10,23 @@ import UIKit
 
 class MyChangePhoneNumberViewController: BaseViewController {
     let textFieldHeight:CGFloat = 64
+    var oldTicket:String?
+    init(style: NavigationStyle,oldTicket:String?) {
+        super.init(style: style)
+        self.oldTicket = oldTicket
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setContentFrame()
         prepareNotification()
         self.view.addSubview(titleLabel)
         self.view.addSubview(detailLabel)
-        self.view.addSubview(phoneNumberLabel)
-        self.view.addSubview(nicknameTextField)
+        self.view.addSubview(phoneTextField)
         self.view.addSubview(nextButton)
         // Do any additional setup after loading the view.
     }
@@ -36,9 +45,6 @@ class MyChangePhoneNumberViewController: BaseViewController {
         titleLabel.frame = CGRect(x: MarginsWidth, y: MarginsWidth + MDCAppNavigationBarHeight , width: __kWidth - MarginsWidth*2, height: 48)
         detailLabel.frame = CGRect(x: MarginsWidth, y: titleLabel.bottom + MarginsWidth , width: __kWidth - MarginsWidth*2, height: 14)
         
-        phoneNumberLabel.frame = CGRect(x: MarginsWidth, y: detailLabel.bottom + 66 , width: __kWidth - MarginsWidth*2, height: 14)
-        phoneNumberLabel.textAlignment = .center
-        
     }
     
     func nextButtonDisableStyle(){
@@ -51,9 +57,71 @@ class MyChangePhoneNumberViewController: BaseViewController {
         self.nextButton.isEnabled = true
     }
     
+    func sendCodeAction(phone:String,type:SendCodeType,callback:@escaping (()->())){
+        if !Validate.phoneNum(phone).isRight{
+            Message.message(text: "手机号不符合规则")
+            return
+        }
+        
+        guard let token = AppUserService.currentUser?.cloudToken else {
+            Message.message(text: "无法发送短信验证码")
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        GetSmsCodeAPI.init(phoneNumber: phone,type:type,wechatToken:token).startRequestJSONCompletionHandler { (response) in
+            if  response.error == nil{
+                let responseDic = response.value as! NSDictionary
+                let code = responseDic["code"] as? Int
+                if code == 1 {
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    callback()
+                }else{
+                    
+                    if let message = ErrorTools.responseErrorData(response.data){
+                        Message.message(text:"error: code:\(code!) message:\(message)")
+                    }
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                }
+            }else{
+                // error
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                guard let responseDic =  dataToNSDictionary(data: response.data) else{
+                    if response.error is BaseError{
+                        let baseError = response.error as! BaseError
+                        Message.message(text:"请求错误：\(String(describing: baseError.localizedDescription))")
+                    }else{
+                        let message = response.error?.localizedDescription ?? "未知原因"
+                        Message.message(text:"请求错误：\(message)")
+                    }
+                    return
+                }
+                if let code = responseDic["code"] as? Int{
+                    switch code {
+                    case ErrorCode.Request.MobileError:
+                        Message.message(text: LocalizedString(forKey: "手机号错误"))
+                    case ErrorCode.Request.CodeLimitOut:
+                        Message.message(text: LocalizedString(forKey: "验证码发送超过限制，请稍候重试"))
+                    default:
+                        if let message = responseDic["message"] as? String{
+                            Message.message(text:"\(message)")
+                        }
+                    }
+                }else{
+                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                }
+            }
+        }
+    }
+    
+    
     @objc func nextButtonTap(_ sender:UIButton){
-        self.alertController(title: "修改绑定手机号成功", message: "可用 139****2222加密码直接登录", okActionTitle: "重新登录") { (alertAction) in
-            
+        guard let phone = self.phoneTextField.text else { return }
+        guard let phoneTicket = self.oldTicket else { return }
+        let sendCodeType = SendCodeType.replace
+        self.sendCodeAction(phone: phone, type: sendCodeType) { [weak self] in
+           let verificationCodeVC =  MyVerificationCodeViewController.init(style: .whiteWithoutShadow,state:.phone,nextState:.replacePhoneComplete,codeType:sendCodeType,phone:phone,phoneTicket:phoneTicket)
+            self?.navigationController?.pushViewController(verificationCodeVC, animated: true)
         }
     }
     
@@ -84,14 +152,13 @@ class MyChangePhoneNumberViewController: BaseViewController {
     
     lazy var titleLabel = UILabel.initTitleLabel(color: DarkGrayColor, text: LocalizedString(forKey: "修改绑定手机"))
     lazy var detailLabel = UILabel.initDetailTitleLabel(text:LocalizedString(forKey: "更换手机号后，下次登录使用新手机号登录"))
-    lazy var phoneNumberLabel = UILabel.initDetailTitleLabel(text:LocalizedString(forKey: "133****2333"))
-    
-    lazy var nicknameTextField: UITextField = { [weak self] in
-        let textField = UITextField.init(frame: CGRect(x: 0, y: (self?.phoneNumberLabel.bottom)! + 32, width: __kWidth, height: textFieldHeight))
+  
+    lazy var phoneTextField: UITextField = { [weak self] in
+        let textField = UITextField.init(frame: CGRect(x: 0, y: (self?.detailLabel.bottom)! + 32, width: __kWidth, height: textFieldHeight))
         let view = UIView.init(frame: CGRect(x: 0, y: 0, width: 114, height:textFieldHeight))
         let textLabel = UILabel.init(frame: CGRect(x: 0, y: 0, width: 96, height: view.height))
         textLabel.textColor = DarkGrayColor
-        textLabel.font = UIFont.systemFont(ofSize: 14)
+        textLabel.font = UIFont.systemFont(ofSize: 16)
         textLabel.textAlignment = .center
         textLabel.text = "+86"
         view.addSubview(textLabel)

@@ -43,7 +43,7 @@ class TimeTools: NSObject {
         return dateString
     }
     
-    class func timeString(_ timeSecond:TimeInterval) ->String{
+    class func timeString(timeSecond:TimeInterval) ->String{
         let date = Date.init(timeIntervalSince1970: timeSecond)
         let formater = DateFormatter.init()
         formater.dateFormat = "yyyy年MM月dd日"
@@ -64,12 +64,42 @@ class TimeTools: NSObject {
         return dateString
     }
     
+    class func timeString(_ time:TimeInterval?, formatterString:String? = nil ) ->String?{
+        guard let timeSecond = time else {
+            return nil
+        }
+        let date = Date.init(timeIntervalSince1970: timeSecond)
+        let formater = DateFormatter.init()
+        if let formatterString = formatterString{
+            formater.dateFormat = formatterString
+        }else{
+            formater.dateFormat = "yyyy:MM:dd HH:mm:ss"
+        }
+        //    "yyyy年MM月dd日 hh:mm:ss"
+        let timeZone = NSTimeZone.init(name:"Asia/Shanghai")
+        formater.timeZone = TimeZone.init(secondsFromGMT: 8)
+        let dateString = formater.string(from: date)
+        return dateString
+    }
+    
     class func dateTimeInterval(_ string:String) ->TimeInterval?{
         let formater = DateFormatter.init()
+        formater.dateStyle = .full
         formater.dateFormat = "yyyy:MM:dd HH:mm:ss"
+//        formater.locale = Locale.current
+//        let timeZone = NSTimeZone.init(name:"Asia/Shanghai")
+        formater.timeZone = TimeZone.init(secondsFromGMT: 8)
         //    "yyyy年MM月dd日 hh:mm:ss"
         let date = formater.date(from: string)
-       
+        let time = date?.timeIntervalSince1970
+        return time
+    }
+    
+    class func dateTimeIntervalUTC(_ string:String) ->TimeInterval?{
+        let formater = DateFormatter.init()
+        formater.dateStyle = .full
+        formater.dateFormat = "yyyy:MM:dd HH:mm:ss"
+        let date = formater.date(from: string)
         let time = date?.timeIntervalSince1970
         return time
     }

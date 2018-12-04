@@ -414,7 +414,9 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 cell.titleLabel.text = model.name
                 let time = model.mtime != nil ? TimeTools.timeString(TimeInterval(model.mtime!/1000)) : LocalizedString(forKey: "No time")
                 let size = model.size != nil ? sizeString(Int64(model.size!)) : ""
-                cell.detailLabel.text = "\(time) \(size)"
+                if let  mtime = time{
+                    cell.detailLabel.text = "\(String(describing: mtime)) \(size)"
+                }
                 cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
                     if let delegateOK = self?.delegate{
                         delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)

@@ -80,14 +80,46 @@ class DeviceAaddUserPhoneNumberViewController: BaseViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "确定"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightBarButtonItemTap(_ :)))
     }
     
+    func nextButtonDisableStyle(){
+        self.confirmButton.isEnabled = false
+    }
+    
+    func nextButtonEnableStyle(){
+        self.confirmButton.isEnabled = true
+    }
+    
     func setContentFrame(){
         titleLabel.frame = CGRect(x: MarginsWidth, y: MarginsWidth + MDCAppNavigationBarHeight , width: __kWidth - MarginsWidth*2, height: 21)
         detailLabel.frame = CGRect(x: MarginsWidth, y: titleLabel.bottom + MarginsWidth , width: __kWidth - MarginsWidth*2, height: 12)
     }
     
     @objc func confirmButtonTap(_ sender:UIButton){
-        self.state = .bindFinish
         self.view.endEditing(true)
+        guard let stationId = AppUserService.currentUser?.stationId else { return }
+        guard let phone = self.phoneNumberInputTextField.text else { return }
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let requset = StationUserAPI.init(stationId: stationId, type: .add, phone: phone)
+        requset.startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error =  response.error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let dic = response.value as? NSDictionary{
+                     if let code =  dic["code"] as? Int{
+                        if code == ErrorCode.Request.ShareUserExist{
+                            Message.message(text: ErrorLocalizedDescription.Request.ShareUserExist)
+                            return
+                        }
+                    }
+                }
+                
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                 self.state = .bindFinish
+            }
+        }
     }
     
     lazy var titleLabel = UILabel.initTitleLabel(color: DarkGrayColor, text: LocalizedString(forKey: "添加用户手机"))
@@ -138,15 +170,14 @@ class DeviceAaddUserPhoneNumberViewController: BaseViewController {
         }()
     
     lazy var confirmButton: UIButton = { [weak self] in
-        let button = UIButton.init(frame: CGRect(x: MarginsWidth, y: (self?.phoneNumberInputTextField.bottom)! + 32, width:__kWidth - MarginsWidth*2 , height: 44))
+        let button = UIButton.init(frame: CGRect(x: MarginsWidth, y: (self?.phoneNumberInputTextField.bottom)! + 64, width:__kWidth - MarginsWidth*2 , height: 44))
         button.setTitle(LocalizedString(forKey: "确定"), for: UIControlState.normal)
         button.setTitleColor(.white, for: UIControlState.normal)
-        button.setTitleColor(COR1, for: UIControlState.disabled)
         button.setBackgroundImage(UIImage.init(color: COR1), for: UIControlState.normal)
         button.setBackgroundImage(UIImage.init(color: Gray12Color), for: UIControlState.disabled)
         button.layer.cornerRadius = 44/2
         button.clipsToBounds = true
-        
+        button.isEnabled = false
         button.addTarget(self, action: #selector(confirmButtonTap(_ :)), for: UIControlEvents.touchUpInside)
         return button
         }()
@@ -160,13 +191,14 @@ extension DeviceAaddUserPhoneNumberViewController:UITextFieldDelegate{
         }
         
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
-        if fullString.count > 0 && Validate.phoneNum(fullString).isRight{
-            //            nextButtonEnableStyle()
+        if Validate.phoneNum(fullString).isRight{
+            nextButtonEnableStyle()
         }else{
-            //            nextButtonDisableStyle()
+            nextButtonDisableStyle()
         }
         return true
     }
     
 }
+
 

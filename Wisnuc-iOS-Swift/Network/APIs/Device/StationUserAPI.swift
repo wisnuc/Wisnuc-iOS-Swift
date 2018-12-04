@@ -12,16 +12,19 @@ import Alamofire
 enum StationUserActionType {
     case fetchInfo
     case add
+    case delete
 }
 
 class StationUserAPI: BaseRequest {
     var type:StationUserActionType?
     var stationId:String?
     var phone:String?
-    init(stationId:String,type:StationUserActionType,phone:String? = nil) {
+    var userId:String?
+    init(stationId:String,type:StationUserActionType,phone:String? = nil,userId:String? = nil) {
         self.type = type
         self.stationId = stationId
         self.phone = phone
+        self.userId = userId
     }
     
     override func requestURL() -> String {
@@ -42,6 +45,8 @@ class StationUserAPI: BaseRequest {
             return .get
         case .add?:
             return .post
+        case .delete?:
+            return .delete
         default:
             break
         }
@@ -57,6 +62,11 @@ class StationUserAPI: BaseRequest {
                 return nil
             }
             return ["phone":phone]
+        case .delete?:
+            guard let userId = self.userId else{
+                return nil
+            }
+            return ["sharedUserId":userId]
         default:
             break
         }

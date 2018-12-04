@@ -91,8 +91,8 @@ struct WinasdInfoDeviceModel: Codable {
     var fingerprint:String?
     var cert:String?
     var signer:String?
-    var notBefore:String?
-    var notAfter:String?
+    var notBefore:Int64?
+    var notAfter:Int64?
     var bleAddr:String?
     var name:String?
 }

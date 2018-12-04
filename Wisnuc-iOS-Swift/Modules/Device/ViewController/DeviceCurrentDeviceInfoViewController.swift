@@ -10,11 +10,13 @@ import UIKit
 
 class DeviceCurrentDeviceInfoViewController: BaseViewController {
     let identifier = "celled"
+    var model:WinasdInfoModel?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.largeTitle = LocalizedString(forKey: "关于本机")
         self.view.addSubview(infoSettingTableView)
         self.view.bringSubview(toFront: appBar.appBarViewController.headerView)
+        self.loadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -25,7 +27,10 @@ class DeviceCurrentDeviceInfoViewController: BaseViewController {
     }
     
     func loadData(){
-//     DeviceHelper.
+        DeviceHelper.fetchInasdInfo(closure:  { [weak self](model) in
+            self?.model = model
+            self?.infoSettingTableView.reloadData()
+        })
     }
     
     lazy var infoSettingTableView: UITableView = {
@@ -53,16 +58,18 @@ extension DeviceCurrentDeviceInfoViewController:UITableViewDataSource,UITableVie
         switch indexPath.row {
         case 0:
             cell.textLabel?.text = LocalizedString(forKey: "蓝牙地址")
-            cell.detailTextLabel?.text = "6A:3D41"
+            cell.detailTextLabel?.text = self.model?.ble?.address
         case 1:
             cell.textLabel?.text = LocalizedString(forKey:"设备身份")
             cell.accessoryType = .disclosureIndicator
         case 2:
             cell.textLabel?.text = LocalizedString(forKey:"加密芯片")
-            cell.detailTextLabel?.text = "255.255.255.0"
+            cell.detailTextLabel?.text = self.model?.device?.ecc
         case 3:
             cell.textLabel?.text = LocalizedString(forKey:"网卡宽带")
-            cell.detailTextLabel?.text = "1000Mbps"
+            if let speed = self.model?.net?.networkInterface?.speed{
+              cell.detailTextLabel?.text =  "\(speed)Mbps"
+            }
         default:
             break
         }
@@ -79,8 +86,10 @@ extension DeviceCurrentDeviceInfoViewController:UITableViewDataSource,UITableVie
         if indexPath.section == 0{
             switch indexPath.row {
             case 1:
-                let deviceIdentityViewController = DeviceIdentityViewController.init(style:.highHeight)
+                if let model = self.model{
+                let deviceIdentityViewController = DeviceIdentityViewController.init(style:.highHeight,model:model  )
                 self.navigationController?.pushViewController(deviceIdentityViewController, animated: true)
+                }
             default:
                 break
             }

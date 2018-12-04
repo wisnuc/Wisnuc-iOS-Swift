@@ -13,7 +13,7 @@ class DeviceAddDeviceViewController: BaseViewController {
     let cellHeight:CGFloat = 64
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.largeTitle = LocalizedString(forKey: "添加设备")
+        self.largeTitle = LocalizedString(forKey: "Add Device")
         prepareNavigationBar()
         self.view.addSubview(infoSettingTableView)
         self.view.bringSubview(toFront: appBar.appBarViewController.headerView)
