@@ -13,10 +13,15 @@ import Material
 var downloadTask:TRTask?
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     func shareBoxTap() {
-        let shareVC = FileShareFolderViewController.init(style:.white)
-        let tab = retrieveTabbarController()
-        tab?.setTabBarHidden(true, animated: true)
-        self.navigationController?.pushViewController(shareVC, animated: true)
+        AppNetworkService.getShareSpaceBuiltIn { [weak self](error, uuid) in
+            if error == nil,let uuid = uuid{
+                let nextViewController = FilesRootViewController.init(driveUUID: uuid, directoryUUID: uuid,style:.white)
+                nextViewController.title = LocalizedString(forKey: "共享空间")
+                let tab = retrieveTabbarController()
+                tab?.setTabBarHidden(true, animated: true)
+                self?.navigationController?.pushViewController(nextViewController, animated: true)
+            }
+        }
     }
     
     func backupBoxTap() {

@@ -296,7 +296,7 @@ class ConfigNetworkViewController: BaseViewController {
             return
         }
 
-        LoginCommonHelper.instance.getStations(token:token) { [weak self](error, models) in
+        LoginCommonHelper.instance.getStations(token:token) { [weak self](error, models,lastSn)  in
             ActivityIndicator.stopActivityIndicatorAnimation()
             if error == nil{
                 if let models = models{

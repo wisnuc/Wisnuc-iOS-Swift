@@ -793,8 +793,10 @@ class LoginNextStepViewController: BaseViewController {
                                 Message.message(text:LocalizedString(forKey: "发生错误"))
                                 return
                             }
-                            self?.wechatBindUserAction(wechatToken: wechatToken, loginToken: token, closure: {
-                                LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!)
+                            self?.wechatBindUserAction(wechatToken: wechatToken, loginToken: token, closure: { [weak self] in
+                                LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!, lastDeviceClosure: { [weak self ](userId,stationModel) in
+                                    self?.loginAction(userId: userId, model: stationModel)
+                                })
                             })
                         }
                     }else{
@@ -823,6 +825,46 @@ class LoginNextStepViewController: BaseViewController {
                 }
                 ActivityIndicator.stopActivityIndicatorAnimation()
             }
+        }
+    }
+    
+    func loginAction(userId:String,model:StationsInfoModel){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        if let user = AppUserService.user(uuid: userId){
+            AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                if error == nil && userData != nil{
+                    AppUserService.isUserLogin = true
+                    AppUserService.isStationSelected = true
+                    AppUserService.setCurrentUser(userData)
+                    AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
+                    AppUserService.synchronizedCurrentUser()
+                    if let sn = model.sn,let cloudToken = userData?.cloudToken{
+                        AppService.sharedInstance().saveUserUsedDeviceInfo(sn: sn, token: cloudToken, closure: {})
+                    }
+                    appDelegate.initRootVC()
+                }else{
+                    if error != nil{
+                        switch error {
+                        case is LoginError:
+                            let loginError = error as! LoginError
+                            Message.message(text: loginError.localizedDescription, duration: 2.0)
+                        case is BaseError:
+                            let baseError = error as! BaseError
+                            Message.message(text: baseError.localizedDescription, duration: 2.0)
+                        default:
+                            Message.message(text: (error?.localizedDescription)!, duration: 2.0)
+                        }
+                        //                        AppUserService.logoutUser()
+                        ActivityIndicator.stopActivityIndicatorAnimation()
+                    }
+                }
+            }
+            //
+        }else{
+            //            AppUserService.logoutUser()
+            Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
+            ActivityIndicator.stopActivityIndicatorAnimation()
         }
     }
     

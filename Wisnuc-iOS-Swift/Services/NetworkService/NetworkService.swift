@@ -178,6 +178,36 @@ class NetworkService: NSObject {
         }
     }
     
+    func getShareSpaceBuiltIn(_ callBack:@escaping (_ error:Error?, _ uuid:String?)->()) {
+        if !AppUserService.isUserLogin {
+            return callBack(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)
+        }
+        
+        var find:Bool = false
+        DriveAPI.init().startRequestJSONCompletionHandler { (response) in
+            if response.error == nil{
+                let isLocalRequest = AppNetworkService.networkState == .local
+                let responseArr = isLocalRequest ? response.value as! NSArray : (response.value as! NSDictionary).object(forKey: "data") as! NSArray
+                responseArr.enumerateObjects({ (obj, idx, stop) in
+                    let dic = obj as! NSDictionary
+                    if let driveModel = DriveModel.deserialize(from: dic) {
+                        if driveModel.tag == "built-in"{
+                            find = true
+                            stop.pointee = true
+                            return callBack(nil, driveModel.uuid);
+                        }
+                    }
+                })
+                
+                if !find{
+                    return callBack(LoginError.init(code: ErrorCode.Login.NoUserHome, kind: LoginError.ErrorKind.LoginNoUserHome, localizedDescription: ErrorLocalizedDescription.Login.NoUserHome), nil)
+                }
+            }else{
+                return callBack(response.error, nil)
+            }
+        }
+    }
+    
     func getUserBackupDir(name:String ,_ callback:@escaping (_ error:Error?,_ entryUUID:String?)->()){
         if !AppUserService.isUserLogin {
             return callback(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)

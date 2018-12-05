@@ -406,6 +406,21 @@ class AppService: NSObject,ServiceProtocol{
         }
     }
     
+    func saveUserUsedDeviceInfo(sn:String,token:String,closure:@escaping ()->()){
+        let request =  UserDeviceInfoAPI.init(sn: sn, token: token)
+        request.startRequestJSONCompletionHandler { (response) in
+            if let error = response.error {
+                Message.message(text: error.localizedDescription)
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                return closure()
+            }
+        }
+    }
+    
     lazy var userService: UserService = {
         let service = UserService.init()
         return service

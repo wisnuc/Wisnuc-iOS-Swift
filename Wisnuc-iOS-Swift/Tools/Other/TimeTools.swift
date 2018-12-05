@@ -76,7 +76,7 @@ class TimeTools: NSObject {
             formater.dateFormat = "yyyy:MM:dd HH:mm:ss"
         }
         //    "yyyy年MM月dd日 hh:mm:ss"
-        let timeZone = NSTimeZone.init(name:"Asia/Shanghai")
+        _ = NSTimeZone.init(name:"Asia/Shanghai")
         formater.timeZone = TimeZone.init(secondsFromGMT: 8)
         let dateString = formater.string(from: date)
         return dateString

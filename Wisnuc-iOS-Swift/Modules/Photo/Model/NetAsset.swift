@@ -60,6 +60,6 @@ class HJMetadata: HandyJSON {
     var model:String?
     var orient:Int?
     var type:String?
-   
+    var datec:String?
     required init() {}
 }

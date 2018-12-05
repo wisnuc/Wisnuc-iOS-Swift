@@ -13,6 +13,8 @@ class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
+    var indexPath:IndexPath?
+    
    
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,6 +33,9 @@ class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     }
     
     func setCoverImage(indexPath:IndexPath,hash:String? = nil,asset:PHAsset? = nil){
+        if indexPath != self.indexPath{
+            return
+        }
         let size = CGSize.init(width: 200, height: 200)
         if let hash = hash{
             loadNetCover(hash,size)
@@ -67,8 +72,8 @@ class PhotoAlbumCollectionViewCell: UICollectionViewCell {
                                                      original: nil,
                                                      forKey: url.absoluteString,
                                                      toDisk: true)
+                             self?.imageView.image = image
                         }
-                        self?.imageView.image = image
                     }
                 }
             }

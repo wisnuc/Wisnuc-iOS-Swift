@@ -526,6 +526,7 @@
 		1F8EBB5820A0239700E8AB83 /* files_folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */; };
 		1F8EBB5A20A0239F00E8AB83 /* files_folder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */; };
 		1F99863A21B6802900174FCC /* PhotoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863921B6802900174FCC /* PhotoHelper.swift */; };
+		1F99863C21B7B34300174FCC /* UserDeviceInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863B21B7B34200174FCC /* UserDeviceInfoAPI.swift */; };
 		1FA3B1D521884BEB00B68AA7 /* PhotoMediaContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D421884BEB00B68AA7 /* PhotoMediaContainerViewController.swift */; };
 		1FA3B1D721884DAB00B68AA7 /* PhotoTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D621884DAB00B68AA7 /* PhotoTools.swift */; };
 		1FA3B1DB218869BB00B68AA7 /* play_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D8218869BA00B68AA7 /* play_video@2x.png */; };
@@ -1576,6 +1577,7 @@
 		1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@2x.png"; sourceTree = "<group>"; };
 		1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@3x.png"; sourceTree = "<group>"; };
 		1F99863921B6802900174FCC /* PhotoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoHelper.swift; sourceTree = "<group>"; };
+		1F99863B21B7B34200174FCC /* UserDeviceInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDeviceInfoAPI.swift; sourceTree = "<group>"; };
 		1FA3B1D421884BEB00B68AA7 /* PhotoMediaContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMediaContainerViewController.swift; sourceTree = "<group>"; };
 		1FA3B1D621884DAB00B68AA7 /* PhotoTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTools.swift; sourceTree = "<group>"; };
 		1FA3B1D8218869BA00B68AA7 /* play_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_video@2x.png"; sourceTree = "<group>"; };
@@ -3093,6 +3095,7 @@
 				1F3293AF21A5593E00F075DD /* CheckUserAPI.swift */,
 				1F3293B521A6521500F075DD /* GetMailCodeAPI.swift */,
 				1F16B36321AFB46B00178143 /* MailCodeTicket.swift */,
+				1F99863B21B7B34200174FCC /* UserDeviceInfoAPI.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -7252,6 +7255,7 @@
 				1F38E24E21789C5A003FCAEE /* DeviceDetailInfdTableViewCell.swift in Sources */,
 				1FD9B791207CC75500906D80 /* NetServerBrower.swift in Sources */,
 				1F050E0B20A9640D0037F00A /* TransferTaskTableViewCell.swift in Sources */,
+				1F99863C21B7B34300174FCC /* UserDeviceInfoAPI.swift in Sources */,
 				1FA5D75B215A14590025F870 /* TimeTools.swift in Sources */,
 				1F8EBB33209ABF4700E8AB83 /* FilesRootViewController.swift in Sources */,
 				1F050E2420A990CD0037F00A /* FilesOfflineTableViewCell.swift in Sources */,

@@ -32,29 +32,40 @@ class LoginCommonHelper: NSObject {
         print("LoginCommonHelper Disposed Singleton instance")
     }
     
-    func stationAction(token:String,userId:String,viewController:UIViewController) {
-        self.getStations(token: token, closure: { [weak viewController](error, models) in
+    func stationAction(token:String,userId:String,viewController:UIViewController,lastDeviceClosure:@escaping (_ userId:String,_ stationModel:StationsInfoModel)->()) {
+        self.getStations(token: token, closure: { [weak self](error, models,lastSn) in
             if error == nil{
                 if let models = models{
                     if models.count > 0{
-                        let deviceViewController = LoginSelectionDeviceViewController.init(style: .whiteWithoutShadow,devices:models,userId:userId)
-                        deviceViewController.delegate = viewController as? LoginSelectionDeviceViewControllerDelegte
-                        let navigationController =  UINavigationController.init(rootViewController: deviceViewController)
-                        viewController?.present(navigationController, animated: true) {
-                            
+                        if let lastSn = lastSn{
+                            guard let model = models.first(where: {$0.sn == lastSn}) else{
+                                self?.selectStation(models: models, userId: userId, viewController: viewController)
+                                return
+                            }
+                            guard let online = model.online else{
+                                self?.selectStation(models: models, userId: userId, viewController: viewController)
+                                return
+                            }
+                            if online == 1{
+                                lastDeviceClosure(userId,model)
+                            }else{
+                                self?.selectStation(models: models, userId: userId, viewController: viewController)
+                            }
+                        }else{
+                          self?.selectStation(models: models, userId: userId, viewController: viewController)
                         }
                     }else{
                         let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
                         if viewController is LoginRootViewController{
                           let navi = UINavigationController.init(rootViewController: cofigVC)
-                            viewController?.present(navi, animated: true, completion: {
+                            viewController.present(navi, animated: true, completion: {
                                 
                             })
                           return
                         }
                         
                         cofigVC.modalTransitionStyle = .coverVertical
-                        viewController?.navigationController?.pushViewController(cofigVC, animated: true)
+                        viewController.navigationController?.pushViewController(cofigVC, animated: true)
                     }
                 }
                 print(models as Any)
@@ -79,7 +90,16 @@ class LoginCommonHelper: NSObject {
         })
     }
     
-    func getStations(token:String?,closure: @escaping (Error?,[StationsInfoModel]?) -> Void){
+    func selectStation(models:[StationsInfoModel],userId:String,viewController:UIViewController){
+        let deviceViewController = LoginSelectionDeviceViewController.init(style: .whiteWithoutShadow,devices:models,userId:userId)
+        deviceViewController.delegate = viewController as? LoginSelectionDeviceViewControllerDelegte
+        let navigationController =  UINavigationController.init(rootViewController: deviceViewController)
+        viewController.present(navigationController, animated: true) {
+            
+        }
+    }
+    
+    func getStations(token:String?,closure: @escaping (Error?,[StationsInfoModel]?,_ lastSn:String?) -> Void){
         let requset = GetStationsAPI.init(token: token ?? "")
         requset.startRequestJSONCompletionHandler({ (response) in
             ActivityIndicator.stopActivityIndicatorAnimation()
@@ -89,7 +109,7 @@ class LoginCommonHelper: NSObject {
                     let code = rootDic["code"] as! NSNumber
                     let message = rootDic["message"] as! NSString
                     if code.intValue != 1 && code.intValue > 200 {
-                        return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil)
+                        return  closure(LoginError.init(code: Int(code.int64Value), kind: LoginError.ErrorKind.LoginRequestError, localizedDescription: message as String), nil,nil)
                     }
                     if let dataDic = rootDic["data"] as? NSDictionary{
                         var resultArray:[StationsInfoModel] = Array.init()
@@ -103,7 +123,7 @@ class LoginCommonHelper: NSObject {
                                         ownStationArray.append(model)
                                     }
                                 }catch{
-                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil,nil)
                                 }
                             }
                             resultArray.append(contentsOf: ownStationArray)
@@ -118,17 +138,21 @@ class LoginCommonHelper: NSObject {
                                         sharedStationArray.append(model)
                                     }
                                 }catch{
-                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil)
+                                    return  closure(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail),nil,nil)
                                 }
                             }
                             resultArray.append(contentsOf:sharedStationArray)
                         }
                         
-                        return closure(nil,resultArray)
+                        var lastSn:String?
+                        if let lastUseDeviceSn =  dataDic["lastUseDeviceSn"] as? String{
+                           lastSn = lastUseDeviceSn
+                        }
+                        return closure(nil,resultArray,lastSn)
                     }
                 }
             }else{
-                return closure(response.error,nil)
+                return closure(response.error,nil,nil)
             }
         })
     }

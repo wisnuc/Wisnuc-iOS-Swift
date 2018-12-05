@@ -265,7 +265,9 @@
                                             return
                                         }
                                         AppUserService.synchronizedUserInLogin(model, cookie)
-                                        LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!)
+                                        LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!, lastDeviceClosure: { [weak self](userId,stationModel) in
+                                            self?.loginFinish(userId: userId, stationModel: stationModel)
+                                        })
                                     }
                             } catch {
                                 // 异常处理
@@ -878,6 +880,9 @@
                     AppUserService.setCurrentUser(userData)
                     AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
                     AppUserService.synchronizedCurrentUser()
+                    if let sn = model.sn,let cloudToken = userData?.cloudToken{
+                        AppService.sharedInstance().saveUserUsedDeviceInfo(sn: sn, token: cloudToken, closure: {})
+                    }
                     appDelegate.initRootVC()
                 }else{
                     if error != nil{

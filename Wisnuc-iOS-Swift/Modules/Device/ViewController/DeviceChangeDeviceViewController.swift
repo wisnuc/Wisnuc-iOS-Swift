@@ -27,7 +27,7 @@ class DeviceChangeDeviceViewController: BaseViewController {
     
     func loadStations() {
         if let token = AppUserService.currentUser?.cloudToken {
-            LoginCommonHelper.instance.getStations(token: token) { [weak self](error, stations) in
+            LoginCommonHelper.instance.getStations(token: token) { [weak self](error, stations,lastSn ) in
                 if error != nil{
                     switch error {
                     case is BaseError:
@@ -133,6 +133,11 @@ extension DeviceChangeDeviceViewController:UITableViewDelegate{
                             AppUserService.setCurrentUser(user)
                             AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
                             AppUserService.synchronizedCurrentUser()
+                            if let sn = stationInfoModel.sn,let cloudToken = user?.cloudToken{
+                                AppService.sharedInstance().saveUserUsedDeviceInfo(sn: sn, token: cloudToken, closure: {
+                                    
+                                })
+                            }
                             appDelegate.initRootVC()
                         }
                     })

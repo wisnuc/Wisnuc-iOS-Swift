@@ -26,6 +26,10 @@ class SettingRootViewController: BaseViewController {
             self.setAvatar()
             self.setHeaderTitle()
         }
+        
+        if  AppUserService.currentUser?.mail != nil{
+            self.setHeaderTipsSecureHighView(isHidden: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -134,6 +138,14 @@ class SettingRootViewController: BaseViewController {
         headerTipsView.isHidden = isHidden
         secureHighView.isHidden = isHidden
         headerHeight =  isHidden ? noTipsHeaderHeight : normalHeaderHeight
+        if isHidden{
+            headerTipsView.removeFromSuperview()
+            secureHighView.removeFromSuperview()
+        }else{
+            headerView.addSubview(headerTipsView)
+            headerView.addSubview(secureHighView)
+        }
+      
         if let reload = reload{
             if reload{
                self.settingTabelView.reloadData()
@@ -157,11 +169,8 @@ class SettingRootViewController: BaseViewController {
         headerTipsLabel.font = UIFont.systemFont(ofSize: 18)
         headerTipsLabel.textColor = DarkGrayColor
         
-        //        headerTipsView.backgroundColor = .red
+//        headerTipsView.backgroundColor = .red
        
-        if  AppUserService.currentUser?.mail != nil{
-            self.setHeaderTipsSecureHighView(isHidden: true)
-        }
         headerTipsView.addSubview(headerTipsLabel)
         headerTipsView.addSubview(secureProgressView)
         headerTipsView.isUserInteractionEnabled = true
@@ -172,8 +181,8 @@ class SettingRootViewController: BaseViewController {
         secureProgressView.trackTintColor = Gray12Color
         secureProgressView.progress = 0.5
         headerView.addSubview(myInfoView)
-        headerView.addSubview(headerTipsView)
-        headerView.addSubview(secureHighView)
+//        headerView.addSubview(headerTipsView)
+//        headerView.addSubview(secureHighView)
     }
     
     func getMail(complete:@escaping (_ isBind:Bool)->(),errorHandler:@escaping ()->()){

@@ -12,8 +12,8 @@ class PhotoHelper: NSObject {
     class func requestImageUrl(size:CGSize? = nil,hash:String)->URL?{
         let detailURL = "media"
         let holdPlaceSize:CGFloat = 200
-        let frameWidth:CGFloat = size?.width ?? holdPlaceSize
-        let frameHeight:CGFloat = size?.height ?? holdPlaceSize
+        let frameWidth:Int = Int(size?.width ?? holdPlaceSize)
+        let frameHeight:Int = Int(size?.height ?? holdPlaceSize)
         let resource = "/media/\(hash)"
         let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
         

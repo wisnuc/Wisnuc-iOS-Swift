@@ -49,3 +49,6 @@
 "Weak" = "Weak";
 "Medium" = "Medium";
 "Strong" = "Strong";
+
+//Photo
+"Video" = "Video";

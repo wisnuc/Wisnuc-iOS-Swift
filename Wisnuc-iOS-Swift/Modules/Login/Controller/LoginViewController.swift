@@ -271,7 +271,9 @@ class LoginViewController: BaseViewController {
                             guard let userId = model.data?.id else{
                                 return
                             }
-                            LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!)
+                            LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!, lastDeviceClosure:{ [weak self](userId,stationModel) in
+                                self?.loginFinish(userId: userId, stationModel: stationModel)
+                            })
                         }
                     }else{
                         if let errorString = ErrorTools.responseErrorData(response.data){
@@ -473,6 +475,9 @@ extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
                     AppUserService.setCurrentUser(userData)
                     AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
                     AppUserService.synchronizedCurrentUser()
+                    if let sn = model.sn,let cloudToken = userData?.cloudToken{
+                        AppService.sharedInstance().saveUserUsedDeviceInfo(sn: sn, token: cloudToken, closure: {})
+                    }
                     appDelegate.initRootVC()
                 }else{
                     if error != nil{

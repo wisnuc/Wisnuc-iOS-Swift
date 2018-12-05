@@ -23,7 +23,6 @@ class FilesConvenientEntranceView: UIScrollView {
         super.init(frame: frame)
         self.addSubview(shareBoxView)
         self.addSubview(backupBoxView)
-        self.addSubview(usbDeviceView)
         self.addSubview(transferTaskView)
     }
     
@@ -107,38 +106,38 @@ class FilesConvenientEntranceView: UIScrollView {
         return view
         }()
     
-    lazy var usbDeviceView: UIView = { [weak self] in
-        let view = UIView.init(frame: CGRect(x: (self?.backupBoxView.right)! + MarginsCloseWidth, y: 4, width: (self?.entranceViewFrame)!, height: (self?.entranceViewFrame)!))
-        view.isUserInteractionEnabled = true
-        let tapGestrue = UITapGestureRecognizer.init(target: self, action: #selector(usbDeviceTap(_ :)))
-        view.addGestureRecognizer(tapGestrue)
-        
-        let imageView = UIImageView.init()
-        imageView.image = UIImage.init(named: "usb_icon.png")
-        view.addSubview(imageView)
-        
-        let label = UILabel.init()
-        label.textColor = DarkGrayColor
-        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        label.text = LocalizedString(forKey: "USB")
-        label.textAlignment = .center
-        view.addSubview(label)
-        imageView.snp.makeConstraints({ (make) in
-            make.top.equalTo(view.snp.top)
-            make.centerX.equalTo(view.snp.centerX)
-            make.size.equalTo(CGSize(width:entranceViewImageViewFrame , height: entranceViewImageViewFrame))
-        })
-        
-        label.snp.makeConstraints({ (make) in
-            make.bottom.equalTo(view.snp.bottom).offset(-4)
-            make.centerX.equalTo(view.snp.centerX)
-            make.size.equalTo(CGSize(width:view.width , height: 14))
-        })
-        return view
-        }()
+//    lazy var usbDeviceView: UIView = { [weak self] in
+//        let view = UIView.init(frame: CGRect(x: (self?.backupBoxView.right)! + MarginsCloseWidth, y: 4, width: (self?.entranceViewFrame)!, height: (self?.entranceViewFrame)!))
+//        view.isUserInteractionEnabled = true
+//        let tapGestrue = UITapGestureRecognizer.init(target: self, action: #selector(usbDeviceTap(_ :)))
+//        view.addGestureRecognizer(tapGestrue)
+//
+//        let imageView = UIImageView.init()
+//        imageView.image = UIImage.init(named: "usb_icon.png")
+//        view.addSubview(imageView)
+//
+//        let label = UILabel.init()
+//        label.textColor = DarkGrayColor
+//        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+//        label.text = LocalizedString(forKey: "USB")
+//        label.textAlignment = .center
+//        view.addSubview(label)
+//        imageView.snp.makeConstraints({ (make) in
+//            make.top.equalTo(view.snp.top)
+//            make.centerX.equalTo(view.snp.centerX)
+//            make.size.equalTo(CGSize(width:entranceViewImageViewFrame , height: entranceViewImageViewFrame))
+//        })
+//
+//        label.snp.makeConstraints({ (make) in
+//            make.bottom.equalTo(view.snp.bottom).offset(-4)
+//            make.centerX.equalTo(view.snp.centerX)
+//            make.size.equalTo(CGSize(width:view.width , height: 14))
+//        })
+//        return view
+//        }()
     
     lazy var transferTaskView: UIView = { [weak self] in
-        let view = UIView.init(frame: CGRect(x: (self?.usbDeviceView.right)! + MarginsCloseWidth, y: 4, width: (self?.entranceViewFrame)!, height: (self?.entranceViewFrame)!))
+        let view = UIView.init(frame: CGRect(x: (self?.backupBoxView.right)! + MarginsCloseWidth, y: 4, width: (self?.entranceViewFrame)!, height: (self?.entranceViewFrame)!))
         view.isUserInteractionEnabled = true
         let tapGestrue = UITapGestureRecognizer.init(target: self, action: #selector(transferTaskTap(_ :)))
         view.addGestureRecognizer(tapGestrue)
