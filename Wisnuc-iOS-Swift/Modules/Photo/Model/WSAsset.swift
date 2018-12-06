@@ -45,7 +45,6 @@ class WSAsset: NSObject,NSCopying{
     
     var cellIndexPath:IndexPath?
     
-    var createDate:Date?
     
     override init() {
         super.init()
@@ -82,6 +81,19 @@ class WSAsset: NSObject,NSCopying{
             model.assetLocalIdentifier = asset?.localIdentifier;
         }
         return model
+    }
+    
+    var createDate:Date?{
+        get{
+            if self is NetAsset{
+                return Date.init(timeIntervalSince1970: PhotoHelper.fetchPhotoTime(model: self as? NetAsset) ?? Date.distantPast.timeIntervalSince1970)
+            }else{
+               return self.asset?.creationDate
+            }
+        }
+        set(newValue){
+        
+        }
     }
     
     

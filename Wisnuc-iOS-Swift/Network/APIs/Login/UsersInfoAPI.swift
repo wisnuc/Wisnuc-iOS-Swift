@@ -44,7 +44,10 @@ class UsersInfoAPI: BaseRequest {
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestAuthorizationKey:AppTokenManager.token!]
+            if let token = AppUserService.currentUser?.cloudToken{
+                return [kRequestAuthorizationKey:token]
+            }
+            return nil
         case .local?:
             return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
         default:

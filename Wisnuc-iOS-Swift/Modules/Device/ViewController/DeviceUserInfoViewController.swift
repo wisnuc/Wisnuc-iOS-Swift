@@ -13,10 +13,14 @@ class DeviceUserInfoViewController: BaseViewController {
     let cellHeight:CGFloat = 48
     let headerHeight:CGFloat = 48
     
+    init(style: NavigationStyle,phone:String,avatar:String?) {
+        self.largeTitle = phone
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareNavigationBar()
-        self.largeTitle = LocalizedString(forKey: "13911232222")
+        
         self.view.addSubview(infoSettingTableView)
         self.view.bringSubview(toFront: appBar.appBarViewController.headerView)
         headerContentLayout()
@@ -85,7 +89,7 @@ extension DeviceUserInfoViewController:UITableViewDataSource,UITableViewDelegate
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
-            return 4
+            return 3
         }else{
             return 1
         }
@@ -112,7 +116,7 @@ extension DeviceUserInfoViewController:UITableViewDataSource,UITableViewDelegate
         if section == 0{
             leftLabel.text = LocalizedString(forKey: "共享空间")
         }else{
-            leftLabel.text = LocalizedString(forKey: "Samba密码")
+            leftLabel.text = LocalizedString(forKey: "共用空间")
         }
 //        headerView.addSubview(lineView)
         return headerView
@@ -132,14 +136,8 @@ extension DeviceUserInfoViewController:UITableViewDataSource,UITableViewDelegate
             case 1:
                 cell.textLabel?.text = LocalizedString(forKey: "相册")
                 cell.detailTextLabel?.text = LocalizedString(forKey: "开启")
+    
             case 2:
-                cell.textLabel?.text = LocalizedString(forKey: "USB设备")
-                let switchBtn = UISwitch.init()
-                switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
-                switchBtn.isOn = false
-                switchBtn.addTarget(self, action: #selector(switchBtnHandleForUSB(_ :)), for: UIControlEvents.valueChanged)
-                cell.contentView.addSubview(switchBtn)
-            case 3:
                 cell.textLabel?.text = LocalizedString(forKey: "共享空间")
                 let switchBtn = UISwitch.init()
                 switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)

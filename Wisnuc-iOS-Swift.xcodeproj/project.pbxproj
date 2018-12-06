@@ -527,6 +527,7 @@
 		1F8EBB5A20A0239F00E8AB83 /* files_folder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */; };
 		1F99863A21B6802900174FCC /* PhotoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863921B6802900174FCC /* PhotoHelper.swift */; };
 		1F99863C21B7B34300174FCC /* UserDeviceInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863B21B7B34200174FCC /* UserDeviceInfoAPI.swift */; };
+		1F99863E21B8D0D600174FCC /* LoginInputPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863D21B8D0D600174FCC /* LoginInputPasswordViewController.swift */; };
 		1FA3B1D521884BEB00B68AA7 /* PhotoMediaContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D421884BEB00B68AA7 /* PhotoMediaContainerViewController.swift */; };
 		1FA3B1D721884DAB00B68AA7 /* PhotoTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D621884DAB00B68AA7 /* PhotoTools.swift */; };
 		1FA3B1DB218869BB00B68AA7 /* play_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D8218869BA00B68AA7 /* play_video@2x.png */; };
@@ -1578,6 +1579,7 @@
 		1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@3x.png"; sourceTree = "<group>"; };
 		1F99863921B6802900174FCC /* PhotoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoHelper.swift; sourceTree = "<group>"; };
 		1F99863B21B7B34200174FCC /* UserDeviceInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDeviceInfoAPI.swift; sourceTree = "<group>"; };
+		1F99863D21B8D0D600174FCC /* LoginInputPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInputPasswordViewController.swift; sourceTree = "<group>"; };
 		1FA3B1D421884BEB00B68AA7 /* PhotoMediaContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMediaContainerViewController.swift; sourceTree = "<group>"; };
 		1FA3B1D621884DAB00B68AA7 /* PhotoTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTools.swift; sourceTree = "<group>"; };
 		1FA3B1D8218869BA00B68AA7 /* play_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_video@2x.png"; sourceTree = "<group>"; };
@@ -4242,6 +4244,7 @@
 			children = (
 				1F362F8521351FAC000B3384 /* LoginViewController.swift */,
 				1F362F8721351FDA000B3384 /* LoginRootViewController.swift */,
+				1F99863D21B8D0D600174FCC /* LoginInputPasswordViewController.swift */,
 				1F1B641D2192C04200499E8E /* Device */,
 				1F362F8421351787000B3384 /* LoginNextStepViewController */,
 				1F307C5F20BBDBD600AE105C /* FirstLaunch */,
@@ -7145,6 +7148,7 @@
 				1F1BAC5120CE637000D32C5A /* Enum.swift in Sources */,
 				1FE0899B2176E7EF0049F44B /* DeviceAdvancedSettingViewController.swift in Sources */,
 				1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */,
+				1F99863E21B8D0D600174FCC /* LoginInputPasswordViewController.swift in Sources */,
 				1FE0892C216F1E510049F44B /* MyInfoCenterViewController.swift in Sources */,
 				1F4242AF20F5CBF60085E2F0 /* JYProcessView.m in Sources */,
 				1F38E297217F0A94003FCAEE /* StationsInfoModel.swift in Sources */,

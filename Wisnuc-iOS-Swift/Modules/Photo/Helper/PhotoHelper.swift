@@ -40,4 +40,35 @@ class PhotoHelper: NSObject {
         }
         return url
     }
+    
+    class func fetchPhotoTime(model:NetAsset?)->TimeInterval?{
+        guard let emodel = model else{
+            return nil
+        }
+        if  emodel.mtime != nil, let date =  emodel.metadata?.date,let datec = emodel.metadata?.datec{
+            guard let datacTimeInterval = TimeTools.dateTimeIntervalUTC(datec),let dataTimeInterval = TimeTools.dateTimeIntervalUTC(date) else{
+                return TimeInterval(emodel.mtime!/1000)
+            }
+            
+            if let datacTimeInterval = TimeTools.dateTimeIntervalUTC(datec),TimeTools.dateTimeIntervalUTC(date) == nil{
+                return datacTimeInterval
+            }
+            
+            if let dataTimeInterval = TimeTools.dateTimeIntervalUTC(date),TimeTools.dateTimeIntervalUTC(datec) == nil{
+                return dataTimeInterval
+            }
+            
+            return  dataTimeInterval > datacTimeInterval ?  dataTimeInterval : datacTimeInterval
+        }else if  emodel.mtime != nil, let date = emodel.metadata?.date ,emodel.metadata?.datec == nil{
+            if let dataTimeInterval = TimeTools.dateTimeIntervalUTC(date){
+                return dataTimeInterval
+            }else{
+                return TimeInterval(emodel.mtime!/1000)
+            }
+        }else if  let mtime = emodel.mtime{
+            return TimeInterval(mtime/1000)
+        }
+        
+        return  nil
+    }
 }

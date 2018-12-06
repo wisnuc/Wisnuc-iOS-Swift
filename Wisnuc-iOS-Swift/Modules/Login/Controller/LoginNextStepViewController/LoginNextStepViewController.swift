@@ -13,6 +13,8 @@ enum LoginNextStepViewControllerState{
     case forgetPwd
     case verifyCode
     case verifyEmailCode
+    case inputEmail
+    case inputPhone
     case resetPwd
     case bindPhoneNumber
     case bindPhoneWechat
@@ -35,6 +37,11 @@ class LoginNextStepViewController: BaseViewController {
     private var verifyCode:String?
     private var requestToken:String?
     private var userExist:Bool?
+    private var mail:String?
+    private var safety:Int?
+    private var safetyStep:Int?
+    private var mailTicket:String?
+    
     private var sendCodeType:SendCodeType?
     let phoneNumberLimitCount = 11
     let verifyCodeLimitCount = 4
@@ -46,14 +53,18 @@ class LoginNextStepViewController: BaseViewController {
             switch self.state {
             case .forgetPwd?:
                 forgetPasswordStyle()
-            case .verifyCode?,.signUpVerifyCode?,.wechatSignUpVerifyCode?,.wechatLoginVerifyCode?:
+            case .verifyCode?,.signUpVerifyCode?,.wechatSignUpVerifyCode?,.wechatLoginVerifyCode?,.verifyEmailCode?:
                 verifyCodeStyle()
             case .resetPwd?,.creatPwd?,.bindPhoneWechatCreatPwd?:
                 resetPwdStyle()
+            case .inputPhone?:
+                inputPhoneStyle()
             case .bindPhoneNumber?,.bindPhoneWechat?:
                 bindPhoneNumberStyle()
             case .creatAccountFinish?:
                 creatAccountFinishStyle()
+            case .inputEmail?:
+                inputEmailStyle()
             default:
                 break
             }
@@ -64,7 +75,7 @@ class LoginNextStepViewController: BaseViewController {
         NotificationCenter.default.removeObserver(self)
     }
   
-    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState,phoneNumber:String? = nil,password:String? = nil,verifyCode:String? = nil,requestToken:String? = nil,userExist:Bool? = nil,smsCodeType:SendCodeType? = nil,mail:String? = nil) {
+    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState,phoneNumber:String? = nil,password:String? = nil,verifyCode:String? = nil,requestToken:String? = nil,userExist:Bool? = nil,smsCodeType:SendCodeType? = nil,mail:String? = nil,safety:Int? = nil,mailTicket:String? = nil,safetyStep:Int? = nil) {
         super.init()
         titleLabel.text = titleString
         detailTitleLabel.text = detailTitleString
@@ -75,6 +86,10 @@ class LoginNextStepViewController: BaseViewController {
         self.requestToken = requestToken
         self.userExist = userExist
         self.sendCodeType = smsCodeType
+        self.mail = mail
+        self.safety = safety
+        self.mailTicket = mailTicket
+        self.safetyStep = safetyStep
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -141,16 +156,42 @@ class LoginNextStepViewController: BaseViewController {
     }
     
     func forgetPasswordStyle(){
-        self.textFiledTitleLabel.text = LocalizedString(forKey: "手机号 / 邮箱")
+        self.textFiledTitleLabel.text = LocalizedString(forKey: "手机号")
+        self.inputTextField.leftView = self.leftView(image: UIImage.init(named: "86.png"))
+       
+        useEmailResetPasswordButton.removeFromSuperview()
+        useEmailResetPasswordButton.setTitle(LocalizedString(forKey: "使用邮箱"), for: UIControlState.normal)
+        self.view.addSubview(useEmailResetPasswordButton)
+        self.inputTextField.resignFirstResponder()
+        self.inputTextField.keyboardType = .numberPad
+        self.inputTextField.becomeFirstResponder()
+        self.inputTextField.text = nil
+    }
+    
+    
+    func forgetPasswordUseMailStyle(){
+        self.textFiledTitleLabel.text = LocalizedString(forKey: "邮箱")
         self.inputTextField.leftView = self.leftView(image: UIImage.init(named: "message_leftView.png"))
-        self.inputTextField.keyboardType = .default
+      
+        useEmailResetPasswordButton.removeFromSuperview()
+        useEmailResetPasswordButton.setTitle(LocalizedString(forKey: "使用手机"), for: UIControlState.normal)
+        self.view.addSubview(useEmailResetPasswordButton)
+        self.inputTextField.resignFirstResponder()
+        self.inputTextField.keyboardType = .emailAddress
+        self.inputTextField.becomeFirstResponder()
+        self.inputTextField.text = nil
     }
     
     func verifyCodeStyle(){
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "帮助"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(helpTap(_ :)))
-        self.textFiledTitleLabel.text = LocalizedString(forKey: "验证码")
+        self.textFiledTitleLabel.text = LocalizedString(forKey: "4位验证码")
         self.inputTextField.leftView = nil
-        
+    }
+    
+    func verifyEmailCodeStyle(){
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "帮助"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(helpTap(_ :)))
+         self.textFiledTitleLabel.text = LocalizedString(forKey: "4位验证码")
+         self.inputTextField.leftView = nil
     }
     
     func  resetPwdStyle(){
@@ -174,6 +215,18 @@ class LoginNextStepViewController: BaseViewController {
         nextButtonEnableStyle()
         appBar.headerViewController.navigationItem.backBarButtonItem = nil
         appBar.navigationBar.backItem = nil
+    }
+    
+    func inputEmailStyle(){
+        self.textFiledTitleLabel.text = LocalizedString(forKey: "邮箱")
+        self.inputTextField.leftView = self.leftView(image: UIImage.init(named: "message_leftView.png"))
+        self.inputTextField.keyboardType = .emailAddress
+    }
+    
+    func inputPhoneStyle(){
+        self.textFiledTitleLabel.text = LocalizedString(forKey: "手机号")
+        self.inputTextField.leftView = self.leftView(image: UIImage.init(named: "86.png"))
+        self.inputTextField.keyboardType = .numberPad
     }
     
     func preparerTextFieldController() {
@@ -232,7 +285,7 @@ class LoginNextStepViewController: BaseViewController {
         return imageView
     }
     
-    func alertError(errorText:String){
+    func alertError(errorText:String,timeInterval:TimeInterval? = nil){
         for view in (kWindow?.subviews)!{
             if view.isKind(of: TipsAlertView.self){
                 let alert = view as! TipsAlertView
@@ -245,6 +298,14 @@ class LoginNextStepViewController: BaseViewController {
         self.alertView = alertView
         UIView.animate(withDuration: alertView.alertDuration()) {
             self.nextButton.center = CGPoint(x: self.nextButton.center.x, y:self.nextButton.center.y - alertView.height)
+            self.useEmailResetPasswordButton .center = CGPoint(x: self.useEmailResetPasswordButton.center.x, y:self.useEmailResetPasswordButton.center.y - alertView.height)
+        }
+        if let timeInterval = timeInterval{
+            DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + timeInterval) {
+                DispatchQueue.main.async {
+                    alertView.dismiss()
+                }
+            }
         }
     }
     
@@ -258,9 +319,10 @@ class LoginNextStepViewController: BaseViewController {
         //获取键盘弹起的高度
         let keyboardTopYPosition =  keyboardRect.origin.y
         let duration = note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
-        
+        let useEmailResetPasswordButtonCenter = CGPoint(x: self.useEmailResetPasswordButton.center.x, y: keyboardTopYPosition - 36)
         UIView.animate(withDuration: duration) {
             self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: keyboardTopYPosition - 36)
+            self.useEmailResetPasswordButton.center = useEmailResetPasswordButtonCenter
         }
     }
     
@@ -273,6 +335,7 @@ class LoginNextStepViewController: BaseViewController {
         let duration = note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
         UIView.animate(withDuration: duration) {
             self.nextButton.center = CGPoint(x: self.nextButton.center.x, y:keyboardTopYPosition - MarginsWidth - self.nextButton.height/2 )
+            self.useEmailResetPasswordButton.center = CGPoint(x: self.useEmailResetPasswordButton.center.x, y: keyboardTopYPosition - MarginsWidth - self.nextButton.height/2)
         }
     }
     
@@ -291,8 +354,14 @@ class LoginNextStepViewController: BaseViewController {
             signUpVerifyCodePush()
         case .creatPwd?,.bindPhoneWechatCreatPwd?:
             creatAccountFinish()
+        case .verifyEmailCode?:
+            resetPwdPushUseMail()
         case .creatAccountFinish?:
             firstConfigAction()
+        case .inputEmail?:
+            inputEmailPush()
+        case .inputPhone?:
+            inputPhonePush()
 //        defaultNotificationCenter().post(name: NSNotification.Name.Login.CreatAccountFinishDismissKey, object: nil)
         default:
             break
@@ -300,26 +369,39 @@ class LoginNextStepViewController: BaseViewController {
     }
     
     @objc func helpTap(_ sender:UIBarButtonItem){
+        
+        var alertTitle = LocalizedString(forKey: "更改我的手机号")
+        var checkType:CheckUserType = .phone
+        if self.state == .verifyEmailCode{
+            alertTitle = LocalizedString(forKey: "更改我的邮箱")
+            checkType = .mail
+        }
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
         let cancelAction = UIAlertAction (title: LocalizedString(forKey: "取消"), style: UIAlertActionStyle.cancel, handler: nil)
         alertController.addAction(cancelAction)
-        let changePhoneNumberAction = UIAlertAction (title: LocalizedString(forKey: "更改我的手机号"), style: UIAlertActionStyle.default, handler: { (alertAction) in
+       
+        let changePhoneNumberAction = UIAlertAction (title: alertTitle, style: UIAlertActionStyle.default, handler: { (alertAction) in
             self.navigationController?.popViewController(animated: true)
         })
         
         alertController.addAction(changePhoneNumberAction)
         let verifyCodeAction = UIAlertAction (title: LocalizedString(forKey: "再次发送验证码"), style: UIAlertActionStyle.default, handler: { (alertAction) in
-            guard let smsCodeType = self.sendCodeType else{
+            guard let sendCodeType = self.sendCodeType else{
                 Message.message(text: "无法发送验证码")
                 return
             }
-            
-            if self.state == .verifyEmailCode{
-                
-              return
-            }
-            self.sendCodeAction(type:smsCodeType) { (userExist) in
-                Message.message(text: "验证码已重新发送，请注意查收")
+            if checkType == .mail{
+                guard let mail = self.mail else{
+                    Message.message(text: "无法发送验证码")
+                    return
+                }
+                self.sendMailCodeAction(mail: mail, type: sendCodeType, callback: {
+                    Message.message(text: "验证码已重新发送，请注意查收")
+                })
+            }else{
+                self.sendCodeAction(type:sendCodeType) { (userExist) in
+                    Message.message(text: "验证码已重新发送，请注意查收")
+                }
             }
         })
         alertController.addAction(verifyCodeAction)
@@ -349,8 +431,17 @@ class LoginNextStepViewController: BaseViewController {
         }
     }
     
+    @objc func useMailResetPasswordButtonClick(_ sender:MDBaseButton){
+        sender.isSelected = !sender.isSelected
+        if sender.isSelected{
+            forgetPasswordUseMailStyle()
+        }else{
+            forgetPasswordStyle()
+        }
+    }
+    
     func verifyCodePush(){
-        let errorText = "手机号或邮箱不能为空"
+        let errorText = "手机号不能为空"
         guard let inputText = self.inputTextField.text else {
             self.alertError(errorText: LocalizedString(forKey: errorText))
             return
@@ -361,21 +452,19 @@ class LoginNextStepViewController: BaseViewController {
         }
         
         var state:LoginNextStepViewControllerState?
-        var checkType:CheckUserType?
-        if Validate.email(inputText).isRight{
+        var checkType:CheckUserType = .phone
+        if Validate.email(inputText).isRight && useEmailResetPasswordButton.isSelected{
             state = LoginNextStepViewControllerState.verifyEmailCode
             checkType = .mail
-        }else if Validate.phoneNum(inputText).isRight{
+        }else if Validate.phoneNum(inputText).isRight && !useEmailResetPasswordButton.isSelected{
             state = LoginNextStepViewControllerState.verifyCode
-            checkType = .phone
         }
-        
-        if state == nil || checkType == nil{
+ 
+        if state == nil {
             self.alertError(errorText: LocalizedString(forKey: "手机号或邮箱不符合规则"))
             return
         }
-        
-        let requset = CheckUserAPI.init(accountNumber: inputText, type: checkType!)
+        let requset = CheckUserAPI.init(accountNumber: inputText, type: checkType)
         requset.startRequestJSONCompletionHandler { [weak self](response) in
             if let error = response.error{
                 Message.message(text: error.localizedDescription)
@@ -409,26 +498,32 @@ class LoginNextStepViewController: BaseViewController {
                     Message.message(text: errorMessage)
                     return
                 }
-                if safety == 0{
-                    if checkType == .phone{
-                        guard let smsCodeType = self?.sendCodeType else{
-                            Message.message(text: "无法发送验证码")
-                            return
-                        }
-                        self?.sendCodeAction(type: smsCodeType) { [weak self] (userExist) in
-                            let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "请输入验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: inputText)) 发送了一个验证码 请在下面输入"), state: state!,phoneNumber:inputText,requestToken:self?.requestToken,userExist:userExist,smsCodeType:self?.sendCodeType)
-                            nextViewController.modalTransitionStyle = .crossDissolve
-                            self?.navigationController?.pushViewController(nextViewController, animated: true)
-                        }
-                    }else if checkType == .mail{
-//                        self?.sendMailCodeAction(type: self?.sendCodeType ?? .password, callback: {
-//                            let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "请输入验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: inputText)) 发送了一个验证码 请在下面输入"), state: state!,phoneNumber:inputText,requestToken:self?.requestToken,userExist:userExist,smsCodeType:self?.sendCodeType)
-//                            nextViewController.modalTransitionStyle = .crossDissolve
-//                            self?.navigationController?.pushViewController(nextViewController, animated: true)
-//                        })
+                
+                if safety == 1{
+                    Message.message(text: LocalizedString(forKey: "该账号开启了双重验证，接下来要通过手机，邮箱双重验证才能重置密码"))
+                }
+                
+                if checkType == .phone{
+                    guard let smsCodeType = self?.sendCodeType else{
+                        Message.message(text: "无法发送验证码")
+                        return
                     }
-                }else{
                     
+                    self?.sendCodeAction(type: smsCodeType) { [weak self] (userExist) in
+                        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: safety == 1 ? "手机验证" : "请输入验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: inputText)) 发送了一个验证码 请在下面输入"), state: state!,phoneNumber:inputText,requestToken:self?.requestToken,userExist:userExist,smsCodeType:self?.sendCodeType,safety:safety,safetyStep:1)
+                        nextViewController.modalTransitionStyle = .crossDissolve
+                        self?.navigationController?.pushViewController(nextViewController, animated: true)
+                    }
+                }else if checkType == .mail{
+                    guard let email = self?.inputTextField.text else{
+                        return
+                    }
+                    let sendCodeType = self?.sendCodeType ?? .password
+                    self?.sendMailCodeAction(mail: email, type: sendCodeType) { [weak self] in
+                        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: safety == 1 ? "邮箱验证" : "请输入验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: email)) 发送了一个验证码 请在下面输入"), state: state!,requestToken:self?.requestToken,userExist:userExist,smsCodeType:sendCodeType,mail:email,safety:safety,safetyStep:1)
+                        nextViewController.modalTransitionStyle = .crossDissolve
+                        self?.navigationController?.pushViewController(nextViewController, animated: true)
+                    }
                 }
             }
         }
@@ -462,7 +557,20 @@ class LoginNextStepViewController: BaseViewController {
         }
     }
     
-    func sendMailCodeAction(type:SendCodeType,callback:@escaping (()->())){
+    func inputEmailPush(){
+        guard let email = self.inputTextField.text else{
+            return
+        }
+        let  state = LoginNextStepViewControllerState.verifyEmailCode
+        let sendCodeType = self.sendCodeType ?? .password
+        self.sendMailCodeAction(mail: email, type: sendCodeType) { [weak self] in
+            let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: self?.safety == 1 ? "邮箱验证" : "请输入验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: email)) 发送了一个验证码 请在下面输入"), state: state,requestToken:self?.requestToken,userExist:self?.userExist,smsCodeType:sendCodeType,mail:email,safety:self?.safety,safetyStep:self?.safetyStep)
+            nextViewController.modalTransitionStyle = .crossDissolve
+            self?.navigationController?.pushViewController(nextViewController, animated: true)
+        }
+    }
+    
+    func sendMailCodeAction(mail:String,type:SendCodeType,callback:@escaping (()->())){
         ActivityIndicator.startActivityIndicatorAnimation()
         guard let mail = self.inputTextField.text else {
             Message.message(text: "邮箱不能为空")
@@ -602,6 +710,7 @@ class LoginNextStepViewController: BaseViewController {
     }
     
     func resetOrCreatPwdPush(){
+        guard let phone = self.phoneNumber else { return }
         var state = LoginNextStepViewControllerState.resetPwd
         var titleString = LocalizedString(forKey: "重置密码")
         switch self.state {
@@ -618,20 +727,163 @@ class LoginNextStepViewController: BaseViewController {
         if state == LoginNextStepViewControllerState.resetPwd{
             self.getTicket { [weak self](ticket) in
                 if let ticket = ticket{
-                   self?.nextViewControllerForPassword(titleString: titleString, state: state, requestToken: ticket)
+                    if let safety = self?.safety ,let safetyStep = self?.safetyStep{
+                        if safety == 0{
+                            self?.nextViewControllerForPassword(phone:phone,titleString: titleString, state: state, requestToken: ticket)
+                            return
+                        }else{
+                            if safetyStep == 1{
+                                self?.doubleEmailPush(requestToken:ticket)
+                            }else{
+                                self?.nextViewControllerForPassword(phone:self?.phoneNumber,mail:self?.mail,titleString: titleString, state: state, requestToken: ticket,mailTicket:self?.mailTicket)
+                            }
+                        }
+                    }else{
+                       self?.nextViewControllerForPassword(phone:phone,titleString: titleString, state: state, requestToken: ticket)
+                    }
                 }
             }
         }else{
-            self.nextViewControllerForPassword(titleString: titleString, state: state, requestToken: self.requestToken)
+            self.nextViewControllerForPassword(phone:phone,titleString: titleString, state: state, requestToken: self.requestToken)
         }
     }
     
-    func nextViewControllerForPassword(titleString:String,state:LoginNextStepViewControllerState,requestToken:String?){
-        let nextViewController = LoginNextStepViewController.init(titleString:titleString , detailTitleString: LocalizedString(forKey: "您的密码必须包含至少1个符号，长度至少为8个字符"), state: state,phoneNumber:self.phoneNumber!,verifyCode:self.inputTextField.text!,requestToken:requestToken,userExist:self.userExist)
+    func doubleEmailPush(requestToken:String){
+        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "邮箱验证"), detailTitleString:LocalizedString(forKey: "如果你在“账户安全”中设置了双重身份认证，\n需要通过手机和邮箱验证"),state:.inputEmail,requestToken:requestToken,safety:safety,safetyStep:2)
         nextViewController.modalTransitionStyle = .crossDissolve
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
+    func doublePhonePush(mailTicket:String){
+        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "手机验证"), detailTitleString:LocalizedString(forKey: "如果你在“账户安全”中设置了双重身份认证，\n需要通过手机和邮箱验证"),state:.inputPhone,safety:safety,mailTicket:mailTicket, safetyStep:2)
+        nextViewController.modalTransitionStyle = .crossDissolve
+        self.navigationController?.pushViewController(nextViewController, animated: true)
+    }
+    
+    func inputPhonePush(){
+        guard let inputText = inputTextField.text else { return }
+        let smsCodeType = self.sendCodeType ?? .password
+        let state = LoginNextStepViewControllerState.verifyCode
+        self.sendCodeAction(type: smsCodeType) { [weak self] (userExist) in
+            let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: self?.safety == 1 ? "手机验证" : "请输入验证码"), detailTitleString: LocalizedString(forKey: "我们向 \(String(describing: inputText)) 发送了一个验证码 请在下面输入"), state: state,phoneNumber:inputText,userExist:userExist,smsCodeType:self?.sendCodeType,safety:self?.safety,mailTicket:self?.mailTicket, safetyStep:2)
+            nextViewController.modalTransitionStyle = .crossDissolve
+            self?.navigationController?.pushViewController(nextViewController, animated: true)
+        }
+    }
+    
+    func resetPwdPushUseMail(){
+        let state = LoginNextStepViewControllerState.resetPwd
+        let titleString = LocalizedString(forKey: "重置密码")
+        guard let sendCodeType = self.sendCodeType else { return }
+        guard let mail = self.mail else { return }
+        getMailCodeTicket(sendCodeType: sendCodeType) { [weak self](ticket) in
+            if let safety = self?.safety ,let safetyStep = self?.safetyStep{
+                if safety == 1 && safetyStep == 2{
+                    self?.nextViewControllerForPassword(mail:mail,titleString: titleString, state: state, requestToken: self?.requestToken,mailTicket:ticket)
+                }else if safety == 1 && safetyStep == 1{
+                    self?.doublePhonePush(mailTicket: ticket)
+                }else{
+                   self?.nextViewControllerForPassword(mail:mail,titleString: titleString, state: state, requestToken: ticket)
+                }
+            }else{
+                self?.nextViewControllerForPassword(mail:mail,titleString: titleString, state: state, requestToken: ticket)
+            }
+        }
+    }
+    
+    func nextViewControllerForPassword(phone:String? = nil,mail:String? = nil, titleString:String,state:LoginNextStepViewControllerState,requestToken:String?,mailTicket:String? = nil){
+        let nextViewController = LoginNextStepViewController.init(titleString:titleString , detailTitleString: LocalizedString(forKey: "您的密码必须包含至少1个符号，长度至少为8个字符"), state: state,phoneNumber:phone,verifyCode:self.inputTextField.text!,requestToken:requestToken,userExist:self.userExist,mail:mail,mailTicket:mailTicket)
+        nextViewController.modalTransitionStyle = .crossDissolve
+        self.navigationController?.pushViewController(nextViewController, animated: true)
+    }
+
+    func getMailCodeTicket(sendCodeType:SendCodeType, closure:@escaping (_ ticket:String)->()){
+        guard let mail = self.mail else {
+            return
+        }
+        guard let code = self.inputTextField.text else {
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let request = MailCodeTicket.init(mail:mail, code: code,type:sendCodeType)
+        request.startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error = response.error{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                }else{
+                    Message.message(text:error.localizedDescription)
+                }
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                guard let rootDic = response.value as? NSDictionary else{
+                    return
+                }
+                guard let mailCodeTicket = rootDic["data"] as? String else{
+                    return
+                }
+                
+                return closure(mailCodeTicket)
+            }
+        }
+    }
+
+    
+    func sendMailCodeAction(mail:String?,type:SendCodeType,callback:@escaping (()->())){
+        ActivityIndicator.startActivityIndicatorAnimation()
+        guard let mail = mail else {
+            Message.message(text: "邮箱不能为空")
+            return
+        }
+        if !Validate.email(mail).isRight{
+            Message.message(text: "邮箱格式不正确")
+        }
+        GetMailCodeAPI.init(mail: mail,type:type).startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if  response.error == nil{
+                let responseDic = response.value as! NSDictionary
+                let code = responseDic["code"] as? Int
+                if code == 1 {
+                    return callback()
+                }else{
+                    if let message = ErrorTools.responseErrorData(response.data){
+                        Message.message(text:"error: code:\(code!) message:\(message)")
+                    }
+                }
+            }else{
+                // error
+                guard let responseDic =  dataToNSDictionary(data: response.data) else{
+                    if response.error is BaseError{
+                        let baseError = response.error as! BaseError
+                        Message.message(text:"请求错误：\(String(describing: baseError.localizedDescription))")
+                    }else{
+                        let message = response.error?.localizedDescription ?? "未知原因"
+                        Message.message(text:"请求错误：\(message)")
+                    }
+                    return
+                }
+                if let code = responseDic["code"] as? Int{
+                    switch code {
+                    case ErrorCode.Request.MobileError:
+                        Message.message(text: LocalizedString(forKey: "手机号错误"))
+                    case ErrorCode.Request.CodeLimitOut:
+                        Message.message(text: LocalizedString(forKey: "验证码发送超过限制，请稍候重试"))
+                    default:
+                        if let message = responseDic["message"] as? String{
+                            Message.message(text:"\(message)")
+                        }
+                    }
+                }else{
+                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                }
+            }
+        }
+    }
+
     func getTicket(closure:@escaping (_ ticket:String?)->()) {
         guard let phone = self.phoneNumber else {
             return
@@ -668,7 +920,6 @@ class LoginNextStepViewController: BaseViewController {
     }
     
     func resetPwdFinish(){
-       
         guard let token = self.requestToken else {
             return
         }
@@ -676,9 +927,16 @@ class LoginNextStepViewController: BaseViewController {
         guard let password = self.inputTextField.text else {
             return
         }
-        
         ActivityIndicator.startActivityIndicatorAnimation()
-        let request = ResetPasswordAPI.init(phoneTicket: token, password: password)
+        var request = ResetPasswordAPI.init(phoneTicket: token, password: password)
+        if self.mail != nil && self.phoneNumber == nil{
+            request = ResetPasswordAPI.init(mailTicket: token, password: password)
+        }
+        
+        if  let mailTicket = self.mailTicket{
+            request = ResetPasswordAPI.init(phoneTicket: token,mailTicket: mailTicket, password: password)
+        }
+        
         request.startRequestJSONCompletionHandler { [weak self](response) in
              ActivityIndicator.stopActivityIndicatorAnimation()
             if let error = response.error{
@@ -918,7 +1176,7 @@ class LoginNextStepViewController: BaseViewController {
         let textInput = MDCTextField.init(frame: CGRect(x: MarginsWidth, y: (self?.textFiledTitleLabel.bottom)! + 16, width: __kWidth - MarginsWidth*2, height: 120))
         textInput.keyboardType = .phonePad
         textInput.textColor = .white
-        textInput.font = UIFont.systemFont(ofSize: 16)
+        textInput.font = UIFont.systemFont(ofSize: 18)
         textInput.leftView = self?.leftView(image: UIImage.init(named: "86.png"))
         textInput.leftViewMode = .always
         textInput.clearButtonMode = .never
@@ -945,12 +1203,26 @@ class LoginNextStepViewController: BaseViewController {
     }()
     
     lazy var successImageView: UIImageView = UIImageView.init(image: UIImage.init(named: "success_white.png"))
+    
+    lazy var useEmailResetPasswordButton: MDBaseButton = { [weak self] in
+        let ButtonHeight:CGFloat = 32
+        let innerButton = MDBaseButton.init(frame: CGRect(x: MarginsWidth, y: __kHeight - MarginsWidth - ButtonHeight, width: 100, height: ButtonHeight))
+        innerButton.backgroundColor = COR1
+        innerButton.layer.cornerRadius = ButtonHeight/2
+        innerButton.setBorderColor(UIColor.white, for: UIControlState.normal)
+        innerButton.setBorderWidth(1, for: UIControlState.normal)
+        innerButton.setTitle(LocalizedString(forKey: "使用邮箱"), for: UIControlState.normal)
+        innerButton.isSelected = false
+        innerButton.addTarget(self, action: #selector(useMailResetPasswordButtonClick), for: UIControlEvents.touchUpInside)
+        return innerButton
+        }()
 }
 
 extension LoginNextStepViewController:TipsAlertViewDelegate{
     func alertDismiss(animateDuration: TimeInterval) {
         UIView.animate(withDuration: animateDuration) {
             self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: __kHeight - MarginsWidth - self.nextButton.height/2)
+            self.useEmailResetPasswordButton.center = CGPoint(x: self.useEmailResetPasswordButton.center.x, y: __kHeight - MarginsWidth - self.useEmailResetPasswordButton.height/2)
         }
     }
 }
@@ -966,17 +1238,24 @@ extension LoginNextStepViewController:UITextFieldDelegate{
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
         print(fullString)
         switch state {
-            
         case .forgetPwd?:
-            if Validate.phoneNum(fullString).isRight || Validate.email(fullString).isRight{
+            if (Validate.phoneNum(fullString).isRight && !useEmailResetPasswordButton.isSelected) || (Validate.email(fullString).isRight && useEmailResetPasswordButton.isSelected){
                 self.nextButtonEnableStyle()
                 textField.rightView = self.rightView(type: RightViewType.right)
             }else{
                 self.nextButtonDisableStyle()
                 textField.rightView = nil
             }
-            
-        case .bindPhoneNumber?,.bindPhoneWechat?:
+        case . inputEmail?:
+            if Validate.email(fullString).isRight{
+                self.nextButtonEnableStyle()
+                textField.rightView = self.rightView(type: RightViewType.right)
+            }else{
+                self.nextButtonDisableStyle()
+                textField.rightView = nil
+            }
+       
+        case .bindPhoneNumber?,.bindPhoneWechat?,.inputPhone?:
             if  fullString.count > phoneNumberLimitCount {
                 self.inputTextField.text = textField.text?.subString(to: phoneNumberLimitCount)
                 return false
@@ -989,7 +1268,7 @@ extension LoginNextStepViewController:UITextFieldDelegate{
                 textField.rightView = nil
             }
             
-        case .verifyCode?, .signUpVerifyCode?,.wechatSignUpVerifyCode?,.wechatLoginVerifyCode?:
+        case .verifyCode?, .signUpVerifyCode?,.wechatSignUpVerifyCode?,.wechatLoginVerifyCode?,.verifyEmailCode?:
             if  fullString.count > verifyCodeLimitCount {
                 self.inputTextField.text = textField.text?.subString(to: verifyCodeLimitCount)
                 return false

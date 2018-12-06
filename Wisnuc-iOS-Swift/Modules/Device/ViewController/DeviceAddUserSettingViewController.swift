@@ -12,9 +12,10 @@ class DeviceAddUserSettingViewController: BaseViewController {
 
     let identifier = "celled"
     let headerHeight:CGFloat = 48
+    var publicSpace:Int = 1
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.largeTitle = LocalizedString(forKey: "备份空间")
+        self.largeTitle = LocalizedString(forKey: "添加用户")
         self.view.addSubview(backupTableView)
         self.view.bringSubview(toFront: appBar.appBarViewController.headerView)
         self.view.addSubview(nextButton)
@@ -32,11 +33,15 @@ class DeviceAddUserSettingViewController: BaseViewController {
     }
     
     @objc func switchBtnHandleForShare(_ sender:UISwitch){
-       
+        if sender.isOn {
+            self.publicSpace = 1
+        }else{
+            self.publicSpace = 0
+        }
     }
     
     @objc func nextButtonTap(_ sender:UIButton){
-        let aaddUserPhoneNumberViewController = DeviceAaddUserPhoneNumberViewController.init(style: .whiteWithoutShadow)
+        let aaddUserPhoneNumberViewController = DeviceAaddUserPhoneNumberViewController.init(style: .whiteWithoutShadow,publicSpace:self.publicSpace)
         self.navigationController?.pushViewController(aaddUserPhoneNumberViewController, animated: true)
     }
 
@@ -71,7 +76,7 @@ extension DeviceAddUserSettingViewController:UITableViewDataSource,UITableViewDe
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0{
-             return 4
+             return 3
         }else{
              return 1
         }
@@ -105,7 +110,7 @@ extension DeviceAddUserSettingViewController:UITableViewDataSource,UITableViewDe
         if section == 0{
             leftLabel.text = LocalizedString(forKey: "设置权限")
         }else{
-            leftLabel.text = LocalizedString(forKey: "共用空间(总共: 2TB)")
+            leftLabel.text = LocalizedString(forKey: "共用空间")
         }
         return headerView
     }
@@ -121,17 +126,10 @@ extension DeviceAddUserSettingViewController:UITableViewDataSource,UITableViewDe
                 cell.textLabel?.text = LocalizedString(forKey: "相册")
                 cell.detailTextLabel?.text = LocalizedString(forKey: "开启")
             case 2:
-                cell.textLabel?.text = LocalizedString(forKey: "USB设备")
-                let switchBtn = UISwitch.init()
-                switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
-                switchBtn.isOn = false
-                switchBtn.addTarget(self, action: #selector(switchBtnHandleForUSB(_ :)), for: UIControlEvents.valueChanged)
-                cell.contentView.addSubview(switchBtn)
-            case 3:
                 cell.textLabel?.text = LocalizedString(forKey: "共享空间")
                 let switchBtn = UISwitch.init()
                 switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
-                switchBtn.isOn = false
+                switchBtn.isOn = self.publicSpace == 0 ? false : true
                 switchBtn.addTarget(self, action: #selector(switchBtnHandleForShare(_ :)), for: UIControlEvents.valueChanged)
                 cell.contentView.addSubview(switchBtn)
             default:

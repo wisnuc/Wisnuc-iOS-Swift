@@ -14,6 +14,7 @@ enum DeviceAaddUserPhoneNumberViewControllerState {
 
 class DeviceAaddUserPhoneNumberViewController: BaseViewController {
     var phoneNumberTextFieldController:MDCTextInputControllerUnderline?
+    var publicSpace:Int?
     var state:DeviceAaddUserPhoneNumberViewControllerState?{
         didSet{
             switch state {
@@ -25,6 +26,15 @@ class DeviceAaddUserPhoneNumberViewController: BaseViewController {
                 break
             }
         }
+    }
+    
+    init(style: NavigationStyle,publicSpace:Int?) {
+        super.init(style: style)
+        self.publicSpace = publicSpace
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -97,8 +107,9 @@ class DeviceAaddUserPhoneNumberViewController: BaseViewController {
         self.view.endEditing(true)
         guard let stationId = AppUserService.currentUser?.stationId else { return }
         guard let phone = self.phoneNumberInputTextField.text else { return }
+        guard let publicSpace = self.publicSpace else { return }
         ActivityIndicator.startActivityIndicatorAnimation()
-        let requset = StationUserAPI.init(stationId: stationId, type: .add, phone: phone)
+        let requset = StationUserAPI.init(stationId: stationId, type: .add, phone: phone,publicSpace:publicSpace)
         requset.startRequestJSONCompletionHandler { (response) in
             ActivityIndicator.stopActivityIndicatorAnimation()
             if let error =  response.error{

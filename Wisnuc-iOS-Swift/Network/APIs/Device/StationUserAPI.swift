@@ -20,11 +20,14 @@ class StationUserAPI: BaseRequest {
     var stationId:String?
     var phone:String?
     var userId:String?
-    init(stationId:String,type:StationUserActionType,phone:String? = nil,userId:String? = nil) {
+    var publicSpace:Int?
+    
+    init(stationId:String,type:StationUserActionType,phone:String? = nil,userId:String? = nil,publicSpace:Int? = nil) {
         self.type = type
         self.stationId = stationId
         self.phone = phone
         self.userId = userId
+        self.publicSpace = publicSpace
     }
     
     override func requestURL() -> String {
@@ -58,12 +61,13 @@ class StationUserAPI: BaseRequest {
         case .fetchInfo?:
             return nil
         case .add?:
-            guard let phone = self.phone else{
+            guard let phone = self.phone,let publicSpace = self.publicSpace else{
                 return nil
             }
-            return ["phone":phone]
+            let setting = ["cloud":1,"publicSpace":publicSpace]
+            return ["phone":phone,"setting":setting]
         case .delete?:
-            guard let userId = self.userId else{
+            guard let userId = self.userId else {
                 return nil
             }
             return ["sharedUserId":userId]

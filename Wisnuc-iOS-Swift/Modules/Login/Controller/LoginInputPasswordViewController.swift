@@ -1,51 +1,30 @@
 //
-//  LoginViewController.swift
+//  LoginInputPasswordViewController.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/8/28.
-//  Copyright © 2018年 wisnuc-imac. All rights reserved.
+//  Created by wisnuc-imac on 2018/12/6.
+//  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
-import IQKeyboardManagerSwift
 
-enum EditingState {
-    case editing
-    case endEditing
-}
-
-@objc protocol LoginViewControllerDelegate {
-    func wechatLogin()
-}
-
-class LoginViewController: BaseViewController {
-    let phoneNumberLimitCount = 11
-    var phoneNumberIsRight = false
-    weak var delegate:LoginViewControllerDelegate?
-    var textFieldControllerPhoneNumber:MDCTextInputControllerUnderline?
+class LoginInputPasswordViewController: BaseViewController {
+    let passwordLimitCount = 6
+    var phone:String?
+    var textFieldControllerPassword:MDCTextInputControllerUnderline?
     var alertView:TipsAlertView?
-    var editingState:EditingState?{
-        didSet{
-            if editingState == .editing{
-//               edtingAction()
-            }else{
-                
-            }
-        }
-    }
-    override init(style: NavigationStyle) {
+    
+    init(style: NavigationStyle,phone:String) {
         super.init(style: style)
-        self.prepareNavigationBar()
+        self.phone = phone
+        
+      
         self.prepareNotification()
+        self.prepareNavigationBar()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-        print("\(className()) deinit")
     }
     
     override func viewDidLoad() {
@@ -53,23 +32,12 @@ class LoginViewController: BaseViewController {
         self.view.backgroundColor = COR1
         self.view.addSubview(titleLabel)
         self.titleLabel.text = LocalizedString(forKey: "登录")
-        self.view.addSubview(phoneNumberTitleLabel)
-        self.view.addSubview(phoneNumberTextFiled)
-      
         self.setTextFieldController()
-        self.view.addSubview(nextButton)
-        self.view.addSubview(weChatLoginButton)
-        self.phoneNumberTextFiled.becomeFirstResponder()
-    }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.delegate = self
+        self.view.addSubview(passwordTitleLabel)
+        self.view.addSubview(passwordTextFiled)
+        self.view.addSubview(nextButton)
+        self.passwordTextFiled.becomeFirstResponder()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -80,10 +48,8 @@ class LoginViewController: BaseViewController {
         self.view.endEditing(true)
     }
     
-    func edtingAction(){
-        UIView.animate(withDuration: 0.5) {
-           self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: kIQUseDefaultKeyboardDistance + 20)
-        }
+    func prepareNavigationBar(){
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "忘记密码"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(forgetPwdTap(_ :)))
     }
     
     func prepareNotification() {
@@ -92,17 +58,21 @@ class LoginViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHidden(note:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func prepareNavigationBar(){
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: MDCIcons.imageFor_ic_arrow_back()?.byTintColor(UIColor.white), style: UIBarButtonItemStyle.plain, target: self, action: #selector(backButtonTap(_ :)))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: LocalizedString(forKey: "忘记密码"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(forgetPwdTap(_ :)))
+    func setTextFieldController(){
+        self.textFieldControllerPassword = MDCTextInputControllerUnderline.init(textInput: passwordTextFiled)
+        self.textFieldControllerPassword?.isFloatingEnabled = false
+        self.textFieldControllerPassword?.normalColor = UIColor.white.withAlphaComponent(0.38)
+        self.textFieldControllerPassword?.activeColor = .white
     }
     
-    func setTextFieldController(){
-        self.textFieldControllerPhoneNumber = MDCTextInputControllerUnderline.init(textInput: phoneNumberTextFiled)
-        self.textFieldControllerPhoneNumber?.isFloatingEnabled = false
-        //        self.textFieldControllerPhoneNumber?.placeholderText = LocalizedString(forKey: "password_text")
-        self.textFieldControllerPhoneNumber?.normalColor = UIColor.white.withAlphaComponent(0.38)
-        self.textFieldControllerPhoneNumber?.activeColor = .white
+    func nextButtonDisableStyle(){
+        self.nextButton.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+        self.nextButton.isEnabled = false
+    }
+    
+    func nextButtonEnableStyle(){
+        self.nextButton.backgroundColor = UIColor.white
+        self.nextButton.isEnabled = true
     }
     
     func leftView(image:UIImage?) -> UIView{
@@ -136,18 +106,6 @@ class LoginViewController: BaseViewController {
         return imageView
     }
     
-    func nextButtonDisableStyle(){
-        self.nextButton.backgroundColor = UIColor.white.withAlphaComponent(0.4)
-        self.nextButton.isEnabled = false
-        self.phoneNumberTextFiled.rightView = nil
-    }
-    
-    func nextButtonEnableStyle(){
-        self.nextButton.backgroundColor = UIColor.white
-        self.nextButton.isEnabled = true
-        self.phoneNumberTextFiled.rightView = self.rightView(type: RightViewType.right)
-    }
-    
     func alertError(errorText:String){
         for view in (kWindow?.subviews)!{
             if view.isKind(of: TipsAlertView.self){
@@ -161,10 +119,24 @@ class LoginViewController: BaseViewController {
         self.alertView = alertView
         UIView.animate(withDuration: alertView.alertDuration()) {
             self.nextButton.center = CGPoint(x: self.nextButton.center.x, y:self.nextButton.center.y - alertView.height)
-            self.weChatLoginButton.center = CGPoint(x: self.weChatLoginButton.center.x, y:self.weChatLoginButton.center.y - alertView.height)
         }
     }
     
+    @objc func rightViewTap(_ gestrue:UIGestureRecognizer){
+        if (gestrue.view?.isKind(of: RightImageView.self))!{
+            let rightView = gestrue.view as! RightImageView
+            if  rightView.type == .password{
+                rightView.isSelect = !rightView.isSelect
+                if rightView.isSelect{
+                    rightView.image = UIImage.init(named: "eye_close.png")
+                    self.passwordTextFiled.isSecureTextEntry = false
+                }else{
+                    rightView.image = UIImage.init(named: "eye_open.png")
+                    self.passwordTextFiled.isSecureTextEntry = true
+                }
+            }
+        }
+    }
     //键盘弹出监听
     @objc func keyboardShow(note: Notification)  {
         if self.alertView != nil {
@@ -177,15 +149,12 @@ class LoginViewController: BaseViewController {
         let duration = note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
         
         var nextButtonCenter = CGPoint(x: self.nextButton.center.x, y: keyboardTopYPosition - 36)
-        var weChatLoginButtonCenter = CGPoint(x: self.weChatLoginButton.center.x, y: keyboardTopYPosition - 36)
         if  is47InchScreen {
             nextButtonCenter  = CGPoint(x: self.nextButton.center.x, y: keyboardTopYPosition)
-            weChatLoginButtonCenter = CGPoint(x: self.weChatLoginButton.center.x, y: keyboardTopYPosition)
         }
-    
+        
         UIView.animate(withDuration: duration) {
             self.nextButton.center = nextButtonCenter
-            self.weChatLoginButton.center = weChatLoginButtonCenter
         }
     }
     
@@ -193,13 +162,12 @@ class LoginViewController: BaseViewController {
     @objc func keyboardHidden(note: Notification){
         guard let userInfo = note.userInfo else {return}
         guard let keyboardRect = userInfo[UIKeyboardFrameEndUserInfoKey] as? CGRect else{return}
-//        //获取键盘弹起的高度
+        //        //获取键盘弹起的高度
         let keyboardTopYPosition = keyboardRect.origin.y
         let duration = note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! Double
         
         UIView.animate(withDuration: duration) {
             self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: keyboardTopYPosition - MarginsWidth - self.nextButton.height/2)
-            self.weChatLoginButton.center = CGPoint(x: self.weChatLoginButton.center.x, y: keyboardTopYPosition - MarginsWidth - self.nextButton.height/2)
         }
     }
     
@@ -209,37 +177,75 @@ class LoginViewController: BaseViewController {
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
-    @objc func backButtonTap(_ sender:UIBarButtonItem){
-        self.presentingViewController?.dismiss(animated: true, completion: nil)
-    }
-    
-    
-    @objc func weChatLoginButtonClick(_ sender:MDBaseButton){
-        self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
-            self?.delegate?.wechatLogin()
-        })
-    }
-    
-    @objc func rightViewTap(_ gestrue:UIGestureRecognizer){
-       
-    }
     
     @objc func nextButtontTap(_ sender:MDCFloatingButton){
-        self.phoneNumberTextFiled.resignFirstResponder()
-      
-        if isNilString(self.phoneNumberTextFiled.text)  {
-            self.alertError(errorText: LocalizedString(forKey: "手机号不能为空"))
-            return
-        }else if !Validate.phoneNum(self.phoneNumberTextFiled.text!).isRight{
-            self.alertError(errorText: LocalizedString(forKey:"请输入正确的手机号"))
+        self.passwordTextFiled.resignFirstResponder()
+        guard let password = self.passwordTextFiled.text else {
             return
         }
         
-        if let phone = self.phoneNumberTextFiled.text{
-            let loginPasswordVC = LoginInputPasswordViewController.init(style: .mainTheme, phone: phone)
-            self.navigationController?.pushViewController(loginPasswordVC, animated: true)
+        if password.count == 0{
+             return
         }
+        
+        guard  let phone = self.phone else {
+            return
+        }
+        
+        ActivityIndicator.startActivityIndicatorAnimation()
+        let request = SighInTokenAPI.init(phoneNumber: phone, password: password)
+        request.startRequestDataCompletionHandler{ [weak self](response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if  response.error == nil{
+                do {
+                    let model = try JSONDecoder().decode(SighInTokenModel.self, from: response.value!)
+                    if model.code == 1 {
+                        guard let header = response.response?.allHeaderFields else {
+                            return
+                        }
+                        guard let cookie = header["Set-Cookie"] as? String else {
+                            return
+                        }
+                        if let token = model.data?.token {
+                            AppUserService.synchronizedUserInLogin(model, cookie)
+                            guard let userId = model.data?.id else{
+                                return
+                            }
+                            ActivityIndicator.startActivityIndicatorAnimation()
+                            LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!, lastDeviceClosure:{ [weak self](userId,stationModel) in
+                                self?.loginFinish(userId: userId, stationModel: stationModel)
+                            })
+                        }
+                    }else{
+                        if let errorString = ErrorTools.responseErrorData(response.data){
+                            Message.message(text: errorString)
+                        }
+                        self?.nextButtonDisableStyle()
+                        print(response.error as Any)
+                    }
 
+                } catch {
+                    // 异常处理
+                    Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
+                }
+                 ActivityIndicator.stopActivityIndicatorAnimation()
+            }else{
+                // error
+                self?.nextButtonDisableStyle()
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                        Message.message(text: backToString ?? "error")
+                    }
+                }else{
+                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                }
+               ActivityIndicator.stopActivityIndicatorAnimation()
+            }
+        }
     }
     
     lazy var titleLabel: UILabel = {
@@ -249,44 +255,38 @@ class LoginViewController: BaseViewController {
         return label
     }()
     
-//    lazy var detailTitleLabel: UILabel = {
-//        let label = UILabel.init(frame: CGRect.init(x: MarginsWidth, y: titleLabel.bottom + MarginsWidth, width: __kWidth - MarginsWidth*2 , height: 28))
-//        label.font = UIFont.boldSystemFont(ofSize: 14)
-//        label.textColor = .white
-//        label.numberOfLines = 0
-//        return label
-//    }()
-    
-    lazy var phoneNumberTitleLabel: UILabel = {  [weak self] in
+    lazy var passwordTitleLabel: UILabel = {  [weak self] in
         let label = UILabel.init(frame: CGRect(x: MarginsWidth, y: (self?.titleLabel.bottom)! + 46, width: __kWidth - MarginsWidth*2, height: 12))
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .white
-        label.text = LocalizedString(forKey: "手机号")
+        label.text = LocalizedString(forKey: "密码")
+        
         return label
-    }()
+        }()
     
-    lazy var phoneNumberTextFiled: MDCTextField = {  [weak self] in
-        let textInput = MDCTextField.init(frame: CGRect(x: MarginsWidth, y: (self?.phoneNumberTitleLabel.bottom)! + MarginsWidth, width: __kWidth - MarginsWidth*2, height: 80))
+    lazy var passwordTextFiled: MDCTextField = { [weak self] in
+        let textInput = MDCTextField.init(frame: CGRect(x: MarginsWidth, y: (self?.passwordTitleLabel.bottom)! + MarginsWidth, width: __kWidth - MarginsWidth*2, height: 80))
         textInput.leftViewMode = .always
-        textInput.keyboardType = .phonePad
         textInput.textColor = .white
         textInput.font = UIFont.systemFont(ofSize: 18)
-        textInput.leftView = self?.leftView(image: UIImage.init(named: "86.png"))
+        textInput.isSecureTextEntry = true
+        textInput.leftView = self?.leftView(image: UIImage.init(named: "lock.png"))
+        
         if #available(iOS 10.0, *) {
             textInput.adjustsFontForContentSizeCategory = true
         } else {
             textInput.mdc_adjustsFontForContentSizeCategory = true
         }
         textInput.clearButtonMode = .never
+        textInput.rightView = rightView(type: RightViewType.password)
         textInput.rightViewMode = .always
         textInput.delegate = self
         if is47InchScreen{
-            textInput.keyboardDistanceFromTextField = 160
+            textInput.keyboardDistanceFromTextField = 36
         }
         return textInput
-    }()
-
-
+        }()
+    
     lazy var nextButton: UIButton = {
         let button = UIButton.init(type: .custom)
         let width:CGFloat = 40
@@ -300,29 +300,18 @@ class LoginViewController: BaseViewController {
         return button
     }()
     
-    lazy var weChatLoginButton: MDBaseButton = { [weak self] in
-        let ButtonHeight:CGFloat = 32
-        let innerButton = MDBaseButton.init(frame: CGRect(x: MarginsWidth, y: __kHeight - MarginsWidth - ButtonHeight, width: 100, height: ButtonHeight))
-        innerButton.backgroundColor = COR1
-        innerButton.layer.cornerRadius = ButtonHeight/2
-        innerButton.setBorderColor(UIColor.white, for: UIControlState.normal)
-        innerButton.setBorderWidth(1, for: UIControlState.normal)
-        innerButton.setTitle(LocalizedString(forKey: "微信登录"), for: UIControlState.normal)
-        innerButton.addTarget(self, action: #selector(weChatLoginButtonClick(_ :)), for: UIControlEvents.touchUpInside)
-        return innerButton
-        }()
+    
 }
 
-extension LoginViewController:TipsAlertViewDelegate{
+extension LoginInputPasswordViewController:TipsAlertViewDelegate{
     func alertDismiss(animateDuration: TimeInterval) {
         UIView.animate(withDuration: animateDuration) {
             self.nextButton.center = CGPoint(x: self.nextButton.center.x, y: __kHeight - MarginsWidth - self.nextButton.height/2)
-            self.weChatLoginButton.center = CGPoint(x: self.weChatLoginButton.center.x, y: __kHeight - MarginsWidth - self.weChatLoginButton.height/2)
         }
     }
 }
 
-extension LoginViewController:UITextFieldDelegate{
+extension LoginInputPasswordViewController:UITextFieldDelegate{
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {
@@ -331,33 +320,18 @@ extension LoginViewController:UITextFieldDelegate{
         }
         
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
-//        print(fullString)
-        if textField == phoneNumberTextFiled {
-            if  fullString.count > phoneNumberLimitCount {
-                textField.text = textField.text?.subString(to: phoneNumberLimitCount)
-                return false
-            }
-            if Validate.phoneNum(fullString).isRight {
-                self.nextButtonEnableStyle()
-            }else{
-                self.nextButtonDisableStyle()
-            }
+
+        if fullString.count >= passwordLimitCount {
+            self.nextButtonEnableStyle()
+        }else{
+            self.nextButtonDisableStyle()
         }
-       
         return true
     }
 }
 
-extension LoginViewController:UINavigationControllerDelegate{
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        let transition = LoginTransition()
-        return transition
-    }
-}
-
-extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
+extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDelegte{
     func loginFinish(userId: String, stationModel: Any) {
-         ActivityIndicator.startActivityIndicatorAnimation()
         if let user = AppUserService.user(uuid: userId){
             let model = stationModel as! StationsInfoModel
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
@@ -388,7 +362,7 @@ extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
                     }
                 }
             }
-//
+            //
         }else{
             AppUserService.logoutUser()
             Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
