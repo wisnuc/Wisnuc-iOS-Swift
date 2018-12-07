@@ -29,3 +29,6 @@ public let kBackupDirectory = "kBackupDirectory"
 
 public let kAssetsRemovedKey = "kAssetsRemovedKey"
 public let kAssetsInsertedKey = "kAssetsInsertedKey"
+
+
+public let kBLEUsedKey = "kBLEUsedKey"

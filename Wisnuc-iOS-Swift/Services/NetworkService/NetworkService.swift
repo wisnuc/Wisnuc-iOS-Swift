@@ -76,11 +76,15 @@ class NetworkService: NSObject {
     }
     
     func networkStateNormalAction() {
+        Message.message(text: "外网")
+        
         RequestConfig.sharedInstance.baseURL = kCloudBaseURL
         AppTokenManager.token = AppUserService.currentUser?.cloudToken
     }
     
     func networkStateLocalAction() {
+        Message.message(text: "内网")
+        
         RequestConfig.sharedInstance.baseURL = AppUserService.currentUser?.localAddr!
         AppTokenManager.token = AppUserService.currentUser?.localToken
     }

@@ -15,6 +15,7 @@ let appDelegate = UIApplication.shared.delegate as! AppDelegate
 public let userDefaults = UserDefaults.standard
 let infoDictionary = Bundle.main.infoDictionary
 let kCurrentAppVersion = infoDictionary!["CFBundleShortVersionString"] as! String
+let kAppId = "1132191394"
 let kCurrentSystemVersion = (UIDevice.current.systemVersion as NSString).doubleValue
 let kWindow = UIApplication.shared.keyWindow
 var kStatusBarHeight = UIApplication.shared.statusBarFrame.size.height

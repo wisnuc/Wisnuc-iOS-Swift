@@ -12,6 +12,7 @@ import Alamofire
 enum StationUserActionType {
     case fetchInfo
     case add
+    case changeAuthority
     case delete
 }
 
@@ -48,6 +49,8 @@ class StationUserAPI: BaseRequest {
             return .get
         case .add?:
             return .post
+        case .changeAuthority?:
+             return .patch
         case .delete?:
             return .delete
         default:
@@ -66,6 +69,12 @@ class StationUserAPI: BaseRequest {
             }
             let setting = ["cloud":1,"publicSpace":publicSpace]
             return ["phone":phone,"setting":setting]
+        case .changeAuthority?:
+            guard let userId = self.userId,let publicSpace = self.publicSpace else{
+                return nil
+            }
+            let setting = ["publicSpace":publicSpace]
+            return ["sharedUserId":userId,"setting":setting]
         case .delete?:
             guard let userId = self.userId else {
                 return nil

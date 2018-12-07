@@ -191,7 +191,14 @@ class AppService: NSObject,ServiceProtocol{
             
             currentUser?.userHome = userHome;
             self?.userService.synchronizedCurrentUser()
-            AppNetworkService.getUserBackupDir(name: kBackUpAssetDirName, { (userBackupDirError, entryUUID) in
+            
+            self?.networkService.getShareSpaceBuiltIn({ [weak self](error, uuid) in
+                if error == nil,let shareSpace = uuid{
+                    currentUser?.shareSpace = shareSpace
+                    self?.userService.synchronizedCurrentUser()
+                }
+            })
+            self?.networkService.getUserBackupDir(name: kBackUpAssetDirName, { [weak self](userBackupDirError, entryUUID) in
                 if userBackupDirError != nil{
                     self?.userService.logoutUser()
                     return callback(userBackupDirError, currentUser);

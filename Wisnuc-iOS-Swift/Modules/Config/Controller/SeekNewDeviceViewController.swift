@@ -67,7 +67,7 @@ class SeekNewDeviceViewController: BaseViewController {
     }
     
     func searchingStateAction(){
-        titleLabel.text = LocalizedString(forKey: "未发现设备")
+        titleLabel.text = LocalizedString(forKey: "搜索设备中...")
         let options =  [CBCentralManagerScanOptionAllowDuplicatesKey:false]
         LLBlueTooth.instance.scanForPeripheralsWithServices(nil, options: options as [String : AnyObject])
     }

@@ -231,13 +231,20 @@ class PhotoRootViewController: BaseViewController {
             var localAssets:Array<PHAsset> = Array.init()
             for asset in self.photoCollcectionViewController.choosePhotos{
                 if asset is NetAsset{
-                    
+                    #warning("删除NAS照片")
+                    alertController(title: LocalizedString(forKey: "您确定要删除照片吗？"), message: LocalizedString(forKey: "照片删除后将无法恢复"), cancelActionTitle: LocalizedString(forKey: "Cancel"), okActionTitle: LocalizedString(forKey: "Confirm"), okActionHandler: { (AlertAction1) in
+                        
+                    }) { (AlertAction2) in
+                        
+                    }
                 }else{
                     if let localAsset = asset.asset{
                         localAssets.append(localAsset)
                     }
                 }
             }
+            
+            
             PHPhotoLibrary.shared().performChanges({
                PHAssetChangeRequest.deleteAssets(localAssets as NSFastEnumeration)
             }) { (finish, error) in

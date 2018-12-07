@@ -38,7 +38,7 @@ class DeviceAdvancedSettingViewController: BaseViewController {
 
 extension DeviceAdvancedSettingViewController:UITableViewDataSource,UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return 3
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -52,13 +52,13 @@ extension DeviceAdvancedSettingViewController:UITableViewDataSource,UITableViewD
             case 0:
                 cell.textLabel?.text = LocalizedString(forKey: "设备用户")
                 cell.accessoryType = .disclosureIndicator
+//            case 1:
+//                cell.textLabel?.text = LocalizedString(forKey:"SAMBA设置")
+//                cell.accessoryType = .disclosureIndicator
             case 1:
-                cell.textLabel?.text = LocalizedString(forKey:"SAMBA设置")
-                cell.accessoryType = .disclosureIndicator
-            case 2:
                 cell.textLabel?.text = LocalizedString(forKey:"还原")
                 cell.accessoryType = .disclosureIndicator
-            case 3:
+            case 2:
                 cell.textLabel?.text = LocalizedString(forKey:"关于本机")
                 cell.accessoryType = .disclosureIndicator
             default:
@@ -77,13 +77,13 @@ extension DeviceAdvancedSettingViewController:UITableViewDataSource,UITableViewD
             case 0:
                 let deviceUsersManageViewController = DeviceUsersManageViewController.init(style:.highHeight)
                 self.navigationController?.pushViewController(deviceUsersManageViewController, animated: true)
+//            case 1:
+//                let sambaSettingViewController = DeviceSambaSettingViewController.init(style:.highHeight)
+//                self.navigationController?.pushViewController(sambaSettingViewController, animated: true)
             case 1:
-                let sambaSettingViewController = DeviceSambaSettingViewController.init(style:.highHeight)
-                self.navigationController?.pushViewController(sambaSettingViewController, animated: true)
-            case 2:
                 let reductionSettingViewController = DeviceReductionSettingViewController.init(style:.highHeight)
                 self.navigationController?.pushViewController(reductionSettingViewController, animated: true)
-            case 3:
+            case 2:
                 let currentDeviceInfoViewController = DeviceCurrentDeviceInfoViewController.init(style:.highHeight)
                 self.navigationController?.pushViewController(currentDeviceInfoViewController, animated: true)
             default:

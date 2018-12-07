@@ -26,6 +26,7 @@ enum CellStyle:Int {
 enum RootControllerState:Int {
     case root = 0
     case movecopy
+    case share
     case next
 }
 
@@ -96,6 +97,14 @@ class FilesRootViewController: BaseViewController{
                 if  (self.moveModelArray?.contains(where: {$0.uuid == model?.uuid}))!{
                     self.movetoButton.isEnabled = false
                 }
+                
+            case .share?:
+                let title =  LocalizedString(forKey: "分享到")
+                self.movetoButton.setTitle(title, for: UIControlState.normal)
+                if  (self.moveModelArray?.contains(where: {$0.uuid == model?.uuid}))!{
+                    self.movetoButton.isEnabled = false
+                }
+
             case .next?:
                break
             default:
@@ -144,7 +153,7 @@ class FilesRootViewController: BaseViewController{
             prepareRootAppNavigtionBar()
             prepareSearchBar()
 //            self.view.addSubview(fabButton)
-        case .movecopy?:
+        case .movecopy?,.share?:
             prepareMoveCopyAppNavigtionBar()
             setMoveToCollectionViewFrame()
             self.view.addSubview(moveFilesBottomBar)
@@ -576,11 +585,11 @@ class FilesRootViewController: BaseViewController{
     }
     
     func existDrive()->String{
-        return self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+        return self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
     }
     
     func existDir()->String{
-        return self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+        return self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
     }
     
 //    func localNetStateFilesRemoveOptionRequest(names:[String]){
@@ -872,11 +881,12 @@ class FilesRootViewController: BaseViewController{
     @objc func movetoButtonTap(_ sender:UIButton){
         if self.moveModelArray?.count == 0 || self.moveModelArray == nil || self.srcDictionary == nil{return}
         let names:Array<String> = self.moveModelArray!.map{$0.name!}
-        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+        let drive =  self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
-        if drive ==  self.srcDictionary![kRequestTaskDriveKey]! &&  dir == self.srcDictionary![kRequestTaskDirKey]!{
-            Message.message(text: LocalizedString(forKey: "无法完成此操作"))
-            return
+        
+        if drive ==  self.srcDictionary![kRequestTaskDriveKey]! &&  dir == self.srcDictionary![kRequestTaskDirKey]! && self.selfState != .share{
+                Message.message(text: LocalizedString(forKey: "无法完成此操作"))
+                return
         }
         let type = isCopy ? FilesTasksType.copy.rawValue : FilesTasksType.move.rawValue
         let task = TasksAPI.init(type: type, names: names, srcDrive: self.srcDictionary![kRequestTaskDriveKey]!, srcDir: self.srcDictionary![kRequestTaskDirKey]!, dstDrive: drive, dstDir: dir)

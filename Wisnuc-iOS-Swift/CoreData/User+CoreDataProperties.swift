@@ -44,4 +44,6 @@ extension User {
     @NSManaged public var cookie:String?
     @NSManaged public var mail:String?
     @NSManaged public var safety:NSNumber?
+    @NSManaged public var shareSpace:String?
+    
 }

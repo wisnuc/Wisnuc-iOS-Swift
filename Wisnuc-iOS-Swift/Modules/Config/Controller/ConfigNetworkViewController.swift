@@ -15,6 +15,7 @@ import Alamofire
 enum ConfigNetworkViewControllerState {
     case initialization
     case change
+    case add
 }
 
 class ConfigNetworkViewController: BaseViewController {
@@ -23,6 +24,7 @@ class ConfigNetworkViewController: BaseViewController {
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
     var isNetworkNameTrue = false
     var deviceModel:DeviceBLEModel?
+    var infoModel:WinasdInfoModel?
     var methodStart:Date?
     var methodFinish:Date?
     var wifiBLEDataArray:[String] = Array.init()
@@ -36,8 +38,25 @@ class ConfigNetworkViewController: BaseViewController {
             switch state {
             case .change?:
                 changeStateAction()
-            case .initialization?:
+            case .initialization?,.add?:
                 initializationStateAction()
+            default:
+                break
+            }
+        }
+    }
+    
+    var seekNewDeviceState:SeekNewDeviceState?{
+        didSet{
+            switch seekNewDeviceState {
+            case .searching?:
+                searchingStateAction()
+            case .notFound?:
+                notFoundStateAction()
+            case .found?:
+                foundStateAction()
+            case .bleNotOpen?:
+                bleNotOpenAction()
             default:
                 break
             }
@@ -77,10 +96,49 @@ class ConfigNetworkViewController: BaseViewController {
         if nextButton.isHidden{
             nextButton.isHidden = false
         }
+        if self.state == .change{
+            LLBlueTooth.instance.delegate = self
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        didViewAppearAction()
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if self.state == .change{
+            LLBlueTooth.instance.stopScan()
+        }
+    }
+    
+    deinit {
+        defaultNotificationCenter().removeObserver(self)
+        LLBlueTooth.instance.disConnectPeripherals(dataPeripheralList)
+        LLBlueTooth.instance.dispose()
+    }
+    
+    func didViewAppearAction(){
+        if self.state == .change{
+           fetchCurrentDeviceNetwork()
+        }else{
+           fetchCurrentPhoneNetwork()
+        }
+    }
+    
+    func fetchCurrentDeviceNetwork(){
+        DeviceHelper.fetchInasdInfo (closure:{ [weak self](model) in
+            self?.infoModel = model
+            self?.wifiTabelView.reloadData()
+            if let essid = model?.net?.networkInterface?.essid{
+                self?.networkNameTextFiled.text = essid
+            }
+        })
+    }
+    
+    func fetchCurrentPhoneNetwork(){
         NetworkStatus.getNetworkStatus { (status) in
             switch status {
             case .WIFI:
@@ -89,13 +147,28 @@ class ConfigNetworkViewController: BaseViewController {
                 self.networkNameTextFiled.text = LocalizedString(forKey: "未连接Wi-Fi")
             }
         }
-        
     }
     
-    deinit {
-        defaultNotificationCenter().removeObserver(self)
+    func searchingStateAction(){
+        let options =  [CBCentralManagerScanOptionAllowDuplicatesKey:false]
+        LLBlueTooth.instance.scanForPeripheralsWithServices(nil, options: options as [String : AnyObject])
     }
     
+    func notFoundStateAction(){
+        SVProgressHUD.setDefaultStyle(.dark)
+        SVProgressHUD.show(withStatus: LocalizedString(forKey: "未发现设备"))
+    }
+    
+    func foundStateAction(){
+       
+        //        infoSettingTableView.removeAllSubviews()
+    }
+    
+    func  bleNotOpenAction(){
+        dataSource.removeAll()
+        SVProgressHUD.showError(withStatus: LocalizedString(forKey: "蓝牙未开启"))
+    }
+
     func prepareNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow(note:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         //键盘即将隐藏
@@ -109,6 +182,7 @@ class ConfigNetworkViewController: BaseViewController {
     
     func changeStateAction(){
         self.titleLabel.text = LocalizedString(forKey: "切换Wi-Fi")
+        self.seekNewDeviceState = .searching
     }
     
     func initializationStateAction(){
@@ -279,6 +353,10 @@ class ConfigNetworkViewController: BaseViewController {
                 Message.message(text:messageText)
             }else{
                 print(response.value as Any)
+                if self?.state == .add{
+                    Message.message(text: LocalizedString(forKey: "添加设备成功"))
+                    return
+                }
                 if let dataDic = response.value as? NSDictionary{
                     if let userId = dataDic["id"] as? String{
                         self?.stationFetchAction(userId)
@@ -614,6 +692,27 @@ class ConfigNetworkViewController: BaseViewController {
         return tableView
     }()
 
+    lazy var dataSource:Array<DeviceBLEModel> = [DeviceBLEModel]()
+    lazy var dataPeripheralList:Array<CBPeripheral> = [CBPeripheral]()
+    var bleUsedArray: [String] {
+        get{
+            if let userId = AppUserService.currentUser?.uuid{
+                if let array = userDefaults.array(forKey: "\(kBLEUsedKey)_\(userId)") as? [String]{
+                    return array
+                }else{
+                    let bleArray:[String] = [String]()
+                    return bleArray
+                }
+            }else{
+                let bleArray:[String] = [String]()
+                return bleArray
+            }
+        }
+        set{
+            
+        }
+       
+    }
 }
 
 extension ConfigNetworkViewController:UITextFieldDelegate{
@@ -636,15 +735,81 @@ extension ConfigNetworkViewController:UITextFieldDelegate{
 }
 
 extension ConfigNetworkViewController:UITableViewDelegate,UITableViewDataSource{
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if self.bleUsedArray.count > 0{
+            return 2
+        }else{
+            return 1
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return wifiBLEArray.count
+        if section == 0{
+            return bleUsedArray.count != 0 ? bleUsedArray.count : wifiBLEArray.count
+        }else{
+            return wifiBLEArray.count
+        }
+    }
+    
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 0{
+            if bleUsedArray.count != 0{
+                cell.backgroundColor = UIColor.init(argb: 0x0f5f5f5)
+            }else{
+                cell.backgroundColor = UIColor.white
+            }
+        }else{
+            cell.backgroundColor = UIColor.white
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView.init(frame: CGRect.zero)
+        let label = UILabel.init(frame: CGRect.init(x: MarginsWidth, y: 0, width: __kWidth - MarginsWidth*2, height: 44))
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = LightGrayColor
+        if section == 0{
+            if bleUsedArray.count != 0{
+                label.text = LocalizedString(forKey: "历史记录")
+                headerView.backgroundColor = UIColor.init(argb: 0x0f5f5f5)
+            }else{
+                label.text = LocalizedString(forKey: "搜索到")
+                headerView.backgroundColor = UIColor.white
+            }
+        }else{
+            label.text = LocalizedString(forKey: "搜索到")
+            headerView.backgroundColor = UIColor.white
+        }
+        headerView.addSubview(label)
+        return headerView
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 44
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         tableView.separatorStyle = .none
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifer, for: indexPath)
-        let string = wifiBLEArray[indexPath.row]
+        cell.accessoryType = .none
         cell.contentView.removeAllSubviews()
+        var string = ""
+        if indexPath.section == 0{
+            if bleUsedArray.count != 0{
+               string = bleUsedArray[indexPath.row]
+            }else{
+                string = wifiBLEArray[indexPath.row]
+            }
+        }else{
+             string = wifiBLEArray[indexPath.row]
+        }
+        cell.tintColor = COR1
+        if let essid = self.infoModel?.net?.networkInterface?.essid{
+            if string == essid{
+                cell.accessoryType = .checkmark
+            }
+        }
         let label = UILabel.init(frame: CGRect(x: 24 + 12, y: 0, width:__kWidth - MarginsWidth*2 - 24 + 12 , height: 44))
         label.textColor = DarkGrayColor
         label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
@@ -654,7 +819,16 @@ extension ConfigNetworkViewController:UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let string = wifiBLEArray[indexPath.row]
+        var string = ""
+        if indexPath.section == 0{
+            if bleUsedArray.count != 0{
+                string = bleUsedArray[indexPath.row]
+            }else{
+                string = wifiBLEArray[indexPath.row]
+            }
+        }else{
+            string = wifiBLEArray[indexPath.row]
+        }
         self.networkNameTextFiled.text = string
         if let rightView = networkNameTextFiled.rightView as? RightImageView{
              self.spreadIn(rightView: rightView)
@@ -665,7 +839,15 @@ extension ConfigNetworkViewController:UITableViewDelegate,UITableViewDataSource{
 
 extension ConfigNetworkViewController:LLBlueToothDelegate{
     func didDiscoverPeripheral(_ peripheral: CBPeripheral) {
+        //  在这个地方可以判读是不是自己本公司的设备,这个是根据设备的名称过滤的
+        guard peripheral.name != nil , peripheral.name!.contains("Wisnuc") else {
+            return
+        }
         
+        if !(dataPeripheralList.contains(peripheral)) {
+            dataPeripheralList.append(peripheral)
+            LLBlueTooth.instance.requestConnectPeripheral(peripheral)
+        }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -673,15 +855,44 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
     }
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        
+        if #available(iOS 10.0, *) {
+            switch central.state {
+                
+            case CBManagerState.poweredOn:
+                print("蓝牙打开")
+                self.seekNewDeviceState = .searching
+                
+            case CBManagerState.unauthorized:
+                print("没有蓝牙功能")
+                
+            case CBManagerState.poweredOff:
+                print("蓝牙关闭")
+                self.seekNewDeviceState = .bleNotOpen
+                
+            default:
+                print("未知状态")
+            }
+        }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        
+        if(error != nil){
+            return
+        }
     }
     
     func peripheralCharacteristicDidUpdateValue(deviceBLEModels: [DeviceBLEModel]?) {
-        
+        if let devices = deviceBLEModels{
+            dataSource = devices
+            for model in devices{
+                if let currentStationId = AppUserService.currentUser?.stationId, let stationId = model.stationId {
+                    if currentStationId.contains(stationId){
+                        deviceModel = model
+                    }
+                }
+            }
+            self.seekNewDeviceState = .found
+        }
     }
     
 
@@ -713,7 +924,7 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
                     if wifiDic.count == 0{
                         SVProgressHUD.dismiss()
                         wifiBLEDataArray.removeAll()
-                        Message.message(text: "error")
+//                        Message.message(text: "error")
                     }
                     
                     if bleString.contains(find: "error"){
@@ -736,12 +947,31 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
                     
                     if let data = wifiDic["data"] as? NSDictionary{
                          SVProgressHUD.dismiss()
+                        if state == .change{
+                            SVProgressHUD.setDefaultStyle(.dark)
+                            SVProgressHUD.showSuccess(withStatus: LocalizedString(forKey: "Wi-Fi切换成功"))
+                            self.navigationController?.popViewController(animated: true)
+                            return
+                        }
                         if let ipString = data["ip"] as? String{
                             if nextButton.isHidden {
                                 nextButton.isHidden = false
                             }
                             self.stationEncryptedAction(ipString: ipString)
                             wifiBLEDataArray.removeAll()
+                        }
+                        if let ssid = self.networkNameTextFiled.text{
+                            bleUsedArray.insert(ssid, at: 0)
+                            var usedBles:[String] = [String]()
+                            if bleUsedArray.count > 3{
+                               usedBles = Array(bleUsedArray.prefix(3))
+                            }else{
+                                usedBles = bleUsedArray
+                            }
+                            if let userId = AppUserService.currentUser?.uuid{
+                                userDefaults.set(usedBles, forKey: "\(kBLEUsedKey)_\(userId)")
+                                userDefaults.synchronize()
+                            }
                         }
                     }
                 }else{

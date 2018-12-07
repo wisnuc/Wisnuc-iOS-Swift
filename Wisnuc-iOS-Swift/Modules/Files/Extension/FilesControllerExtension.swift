@@ -482,7 +482,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
         let existModel = model as! EntriesModel
         let names = existModel.name != nil ? [existModel.name!] : []
-        TasksAPI.init(type: FilesTasksType.copy.rawValue, names: names, srcDrive:self.existDrive(), srcDir: self.existDir(), dstDrive: self.existDrive(), dstDir: self.existDir()).startRequestJSONCompletionHandler { [weak self] (response) in
+        TasksAPI.init(type: FilesTasksType.copy.rawValue, names: names, srcDrive:self.existDrive(), srcDir: self.existDir(), dstDrive:self.existDrive(), dstDir: self.existDir()).startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
                 let rootDic = response.value as! NSDictionary
                 switch AppNetworkService.networkState {
@@ -583,12 +583,15 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 presentationController?.dismissOnBackgroundTap = false
             }
         case 1:
-            let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.white)
-            
-            filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
-            filesMoveToRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
+            let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.white)
+            filesRootViewController.title = LocalizedString(forKey: "My Drive")
+            filesRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
+            filesRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
             self.registerNotification()
-            let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
+            filesRootViewController.isCopy = isCopy
+            filesRootViewController.selfState = .movecopy
+            
+            let navi = UINavigationController.init(rootViewController: filesRootViewController)
             self.present(navi, animated: true, completion: nil)
         case 2:
             if filesModel.type != FilesType.file.rawValue{
@@ -609,36 +612,24 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                     }
                 }
             }else{
-                
+//                #warning("分享到共享空间")
+                self.copyToAction(model: model, isShare:true)
             }
         case 4:
-            if filesModel.type != FilesType.file.rawValue{
+            if filesModel.type == FilesType.file.rawValue{
                 self.makeCopyTaskCreate(model: model)
             }else{
-                let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.white)
-                filesMoveToRootViewController.isCopy = true
-                filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
-                filesMoveToRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
-                self.registerNotification()
-                let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
-                self.present(navi, animated: true, completion: nil)
+                self.copyToAction(model:model)
             }
         case 5:
             if filesModel.type == FilesType.file.rawValue{
-                
+                self.copyToAction(model: model,isShare:true)
             }else{
                 self.removeFileOrDirectory(model: filesModel)
             }
         case 6:
             if filesModel.type == FilesType.file.rawValue{
-                let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.white)
-                
-                filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
-                filesMoveToRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
-                filesMoveToRootViewController.isCopy = true
-                self.registerNotification()
-                let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
-                self.present(navi, animated: true, completion: nil)
+                self.copyToAction(model:model)
             }else{
                 
             }
@@ -656,6 +647,33 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         let documentController = UIDocumentInteractionController.init(url: URL.init(fileURLWithPath: FilesRootViewController.downloadManager.cache.filePtah(fileName: filesModel.name!)!))
         documentController.delegate = self
         documentController.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
+    }
+    
+    func copyToAction(model:Any?,isShare:Bool? = nil){
+        let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.white)
+        filesRootViewController.title = LocalizedString(forKey: "My Drive")
+        filesRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
+//        if let srcDrive = srcDrive, let srcDir = srcDir{
+//             filesRootViewController.srcDictionary = [kRequestTaskDriveKey : srcDrive,kRequestTaskDirKey:srcDir]
+//
+//        }
+        
+        filesRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
+       
+        self.registerNotification()
+        filesRootViewController.selfState = .movecopy
+        if let isShare = isShare{
+            if isShare{
+                filesRootViewController.driveUUID = AppUserService.currentUser?.shareSpace
+                filesRootViewController.directoryUUID = AppUserService.currentUser?.shareSpace
+                filesRootViewController.selfState = .share
+            }
+        }
+        filesRootViewController.isCopy = true
+       
+        
+        let navi = UINavigationController.init(rootViewController: filesRootViewController)
+        self.present(navi, animated: true, completion: nil)
     }
     
     func removeFileOrDirectory(model:EntriesModel){

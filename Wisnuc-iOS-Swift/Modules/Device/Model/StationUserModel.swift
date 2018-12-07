@@ -18,12 +18,12 @@ struct StationUserModel: Codable {
     var username :String?
     var avatarUrl:String?
     var createdAt:String?
-    var bootSpace:BootSpaceModel?
-    
-    enum CodingKeys : String, CodingKey {
-        case id
-        case username
-        case avatarUrl
-        case createdAt
-    }
+//    var bootSpace:BootSpaceModel?
+    var publicSpace:Int?
+//    enum CodingKeys : String, CodingKey {
+//        case id
+//        case username
+//        case avatarUrl
+//        case createdAt
+//    }
 }

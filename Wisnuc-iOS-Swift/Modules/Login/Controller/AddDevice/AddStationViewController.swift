@@ -242,7 +242,7 @@ class AddStationViewController: BaseViewController {
     }
     
     func setBasicStyle(){
-        self.title = LocalizedString(forKey: "添加设备")
+        self.title = LocalizedString(forKey: "Add Device")
         self.view.backgroundColor = UIColor.white
         let rightBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "more.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightBarButtonItemClick(_ :)))
         appBar.navigationBar.rightBarButtonItem = rightBarButtonItem

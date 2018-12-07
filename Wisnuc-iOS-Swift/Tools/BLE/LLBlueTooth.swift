@@ -310,7 +310,7 @@ extension LLBlueTooth : CBPeripheralDelegate {
     
     //MARK: - 服务下的特征
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?){
-        delegate?.peripheral!(peripheral, didDiscoverCharacteristicsFor: service, error: error)
+        delegate?.peripheral?(peripheral, didDiscoverCharacteristicsFor: service, error: error)
         if (error != nil){
             return
         }

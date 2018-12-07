@@ -26,7 +26,6 @@ class DeviceNetworkSettingViewController: BaseViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.loadData()
         self.largeTitle = LocalizedString(forKey: "网络")
         self.state = .ready
         prepareNavigation()
@@ -43,6 +42,8 @@ class DeviceNetworkSettingViewController: BaseViewController {
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
     }
+    
+    
     
 //    func loadData(){
 //        let requset = DeviceNetAPI.init()
@@ -92,6 +93,11 @@ class DeviceNetworkSettingViewController: BaseViewController {
             self?.infoModel = model
             self?.infoSettingTableView.reloadData()
             })
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        loadData()
     }
     
     @objc func rightBarButtonItemTap(_ sender:UIBarButtonItem){

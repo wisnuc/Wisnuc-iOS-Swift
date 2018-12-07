@@ -12,9 +12,15 @@ class DeviceUserInfoViewController: BaseViewController {
     let identifier = "celled"
     let cellHeight:CGFloat = 48
     let headerHeight:CGFloat = 48
+    var stationUserModel:StationUserModel?
+    init(style: NavigationStyle,stationUserModel:StationUserModel) {
+        super.init(style: style)
+        self.largeTitle = stationUserModel.username
+        self.stationUserModel = stationUserModel
+    }
     
-    init(style: NavigationStyle,phone:String,avatar:String?) {
-        self.largeTitle = phone
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -45,6 +51,12 @@ class DeviceUserInfoViewController: BaseViewController {
     
     func headerContentLayout(){
         appBar.headerStackView.addSubview(self.avatarImageView)
+        let placeholderImage = UIImage.init(named: "user_avatar_placeholder.png")
+        if let avatarUrl = stationUserModel?.avatarUrl{
+            self.avatarImageView.was_setCircleImage(withUrlString: avatarUrl, placeholder: placeholderImage)
+        }else{
+            self.avatarImageView.image = placeholderImage
+        }
         largeTitleLabel.frame = CGRect(x: self.avatarImageView.right + 10, y: barMaximumHeight - 20 - 20 - 20, width: __kWidth - MarginsWidth*2, height: 20)
     }
     
@@ -59,9 +71,28 @@ class DeviceUserInfoViewController: BaseViewController {
     }
     
     @objc func switchBtnHandleForShare(_ sender:UISwitch){
-        
+        guard let userId = stationUserModel?.id else { return }
+        guard let stationId = AppUserService.currentUser?.stationId else { return }
+        guard let publicSpace = stationUserModel?.publicSpace else { return }
+        let requset = StationUserAPI.init(stationId: stationId, type: .changeAuthority, userId: userId,publicSpace:sender.isOn ? 1 : 0)
+        requset.startRequestJSONCompletionHandler { (response) in
+            ActivityIndicator.stopActivityIndicatorAnimation()
+            if let error =  response.error{
+                Message.message(text: error.localizedDescription)
+                sender.isOn = publicSpace == 1 ? true : false
+            }else{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    sender.isOn = publicSpace == 1 ? true : false
+                    Message.message(text: errorMessage)
+                    return
+                }
+            }
+        }
     }
     
+    func chengeSharedUserChangeAuthority(model:StationUserModel?){
+       
+    }
     
     lazy var infoSettingTableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.grouped)
@@ -141,7 +172,15 @@ extension DeviceUserInfoViewController:UITableViewDataSource,UITableViewDelegate
                 cell.textLabel?.text = LocalizedString(forKey: "共享空间")
                 let switchBtn = UISwitch.init()
                 switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
-                switchBtn.isOn = false
+                if let publicSpace = self.stationUserModel?.publicSpace{
+                    if publicSpace == 1{
+                        switchBtn.isOn = true
+                    }else{
+                        switchBtn.isOn = false
+                    }
+                }else{
+                    switchBtn.isOn = false
+                }
                 switchBtn.addTarget(self, action: #selector(switchBtnHandleForShare(_ :)), for: UIControlEvents.valueChanged)
                 cell.contentView.addSubview(switchBtn)
             default:

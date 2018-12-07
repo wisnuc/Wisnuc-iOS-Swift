@@ -70,7 +70,10 @@ extension MyAboutViewController:UITableViewDelegate{
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-           break
+            let urlStr = "https://itunes.apple.com/cn/app/id\(kAppId)"
+            if let aString = URL(string: urlStr) {
+                UIApplication.shared.openURL(aString)
+            }
         default: break
             
         }
@@ -106,6 +109,7 @@ extension MyAboutViewController:UITableViewDataSource{
         return view
     }
     
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //        var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
         //        if cell == nil {
@@ -115,7 +119,7 @@ extension MyAboutViewController:UITableViewDataSource{
             
         case 0:
             cell.textLabel?.text = LocalizedString(forKey: "升级")
-            cell.detailTextLabel?.text = LocalizedString(forKey: "当前版本V.2.0 / 最新版本V.2.4")
+            cell.detailTextLabel?.text = "\(LocalizedString(forKey: "当前版本"))V\(kCurrentAppVersion)"
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
       
         default: break
