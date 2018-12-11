@@ -101,6 +101,7 @@ class FilesRootViewController: BaseViewController{
             case .share?:
                 let title =  LocalizedString(forKey: "分享到")
                 self.movetoButton.setTitle(title, for: UIControlState.normal)
+                self.movetoButton.isEnabled = true
                 if  (self.moveModelArray?.contains(where: {$0.uuid == model?.uuid}))!{
                     self.movetoButton.isEnabled = false
                 }
@@ -271,6 +272,9 @@ class FilesRootViewController: BaseViewController{
         let requestDirectoryUUID = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         DriveDirAPI.init(driveUUID: requestDriveUUID, directoryUUID: requestDirectoryUUID).startRequestJSONCompletionHandler(queue) {[weak self] (response) in
             self?.dataSource = Array.init()
+            if self?.collcectionViewController.collectionView?.mj_header != nil {
+                self?.collcectionViewController.collectionView?.mj_header.endRefreshing()
+            }
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let responseDic = isLocalRequest ? response.value as! NSDictionary: (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
@@ -338,9 +342,6 @@ class FilesRootViewController: BaseViewController{
                     self?.collcectionViewController.collectionView?.reloadData()
                     self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
                 }
-            }
-            if self?.collcectionViewController.collectionView?.mj_header != nil {
-            self?.collcectionViewController.collectionView?.mj_header.endRefreshing()
             }
         }
     }
@@ -642,7 +643,7 @@ class FilesRootViewController: BaseViewController{
     func filesRemoveOptionRequest(name:String){
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
-        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: FilesOptionType.remove.rawValue).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
+        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
             let dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
             do {
                 let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
@@ -893,7 +894,7 @@ class FilesRootViewController: BaseViewController{
         task.startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
                 self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
-                    let messageDetail = (self?.isCopy)! ? LocalizedString(forKey: "已复制到") : LocalizedString(forKey: "已移动到")
+                    let messageDetail = self?.selfState == .share ? LocalizedString(forKey: "已分享到") : (self?.isCopy)! ? LocalizedString(forKey: "已复制到") : LocalizedString(forKey: "已移动到")
                     let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) \(messageDetail) \(self?.title ?? "files")") : LocalizedString(forKey: "\(names.count) 个文件 \(messageDetail) \(self?.title ?? "files")")
                      Message.message(text: message)
                      defaultNotificationCenter().post(name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)

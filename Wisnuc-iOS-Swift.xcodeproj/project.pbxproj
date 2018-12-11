@@ -525,6 +525,26 @@
 		1F8EBB5620A0239000E8AB83 /* files_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5520A0238F00E8AB83 /* files_folder.png */; };
 		1F8EBB5820A0239700E8AB83 /* files_folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */; };
 		1F8EBB5A20A0239F00E8AB83 /* files_folder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */; };
+		1F8EC3B221BF5BE0000FD702 /* andr_icon_backup@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3AE21BF5BDF000FD702 /* andr_icon_backup@3x.png */; };
+		1F8EC3B421BF5BEA000FD702 /* andr_icon_backup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3B321BF5BE9000FD702 /* andr_icon_backup@2x.png */; };
+		1F8EC3B621BF5BF1000FD702 /* andr_icon_backup.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3B521BF5BF0000FD702 /* andr_icon_backup.png */; };
+		1F8EC3B821BF5C2F000FD702 /* iphone_icon_backup.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3B721BF5C2F000FD702 /* iphone_icon_backup.png */; };
+		1F8EC3BA21BF5C3D000FD702 /* iphone_icon_backup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3B921BF5C3C000FD702 /* iphone_icon_backup@2x.png */; };
+		1F8EC3BC21BF5C48000FD702 /* iphone_icon_backup@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3BB21BF5C48000FD702 /* iphone_icon_backup@3x.png */; };
+		1F8EC3BE21BF5CCB000FD702 /* desktop_icon_backup.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3BD21BF5CCA000FD702 /* desktop_icon_backup.png */; };
+		1F8EC3C021BF5D01000FD702 /* desktop_icon_backup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3BF21BF5D00000FD702 /* desktop_icon_backup@2x.png */; };
+		1F8EC3C221BF5D30000FD702 /* desktop_icon_backup@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3C121BF5D30000FD702 /* desktop_icon_backup@3x.png */; };
+		1F8EC3C421BF5D6C000FD702 /* notebook_icon_backup.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3C321BF5D6B000FD702 /* notebook_icon_backup.png */; };
+		1F8EC3C621BF5D79000FD702 /* notebook_icon_backup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3C521BF5D78000FD702 /* notebook_icon_backup@2x.png */; };
+		1F8EC3C821BF5D89000FD702 /* notebook_icon_backup@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3C721BF5D89000FD702 /* notebook_icon_backup@3x.png */; };
+		1F8EC3CA21BF5DCE000FD702 /* notebook_mac_icon_backup.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3C921BF5DCD000FD702 /* notebook_mac_icon_backup.png */; };
+		1F8EC3CC21BF5DDE000FD702 /* notebook_mac_icon_backup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3CB21BF5DDD000FD702 /* notebook_mac_icon_backup@2x.png */; };
+		1F8EC3CE21BF5DED000FD702 /* notebook_mac_icon_backup@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3CD21BF5DEC000FD702 /* notebook_mac_icon_backup@3x.png */; };
+		1F8EC3D021BF5E1A000FD702 /* imac_icon_backup.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3CF21BF5E19000FD702 /* imac_icon_backup.png */; };
+		1F8EC3D221BF5E2B000FD702 /* imac_icon_backup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3D121BF5E2A000FD702 /* imac_icon_backup@2x.png */; };
+		1F8EC3D421BF5E46000FD702 /* imac_icon_backup@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8EC3D321BF5E45000FD702 /* imac_icon_backup@3x.png */; };
+		1F8EC3D621BF5ED3000FD702 /* DriveDirStatsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EC3D521BF5ED3000FD702 /* DriveDirStatsAPI.swift */; };
+		1F8EC3D821BFB94A000FD702 /* DriveOptionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8EC3D721BFB94A000FD702 /* DriveOptionAPI.swift */; };
 		1F99863A21B6802900174FCC /* PhotoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863921B6802900174FCC /* PhotoHelper.swift */; };
 		1F99863C21B7B34300174FCC /* UserDeviceInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863B21B7B34200174FCC /* UserDeviceInfoAPI.swift */; };
 		1F99863E21B8D0D600174FCC /* LoginInputPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863D21B8D0D600174FCC /* LoginInputPasswordViewController.swift */; };
@@ -1577,6 +1597,26 @@
 		1F8EBB5520A0238F00E8AB83 /* files_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_folder.png; sourceTree = "<group>"; };
 		1F8EBB5720A0239700E8AB83 /* files_folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@2x.png"; sourceTree = "<group>"; };
 		1F8EBB5920A0239F00E8AB83 /* files_folder@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_folder@3x.png"; sourceTree = "<group>"; };
+		1F8EC3AE21BF5BDF000FD702 /* andr_icon_backup@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "andr_icon_backup@3x.png"; sourceTree = "<group>"; };
+		1F8EC3B321BF5BE9000FD702 /* andr_icon_backup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "andr_icon_backup@2x.png"; sourceTree = "<group>"; };
+		1F8EC3B521BF5BF0000FD702 /* andr_icon_backup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = andr_icon_backup.png; sourceTree = "<group>"; };
+		1F8EC3B721BF5C2F000FD702 /* iphone_icon_backup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iphone_icon_backup.png; sourceTree = "<group>"; };
+		1F8EC3B921BF5C3C000FD702 /* iphone_icon_backup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphone_icon_backup@2x.png"; sourceTree = "<group>"; };
+		1F8EC3BB21BF5C48000FD702 /* iphone_icon_backup@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphone_icon_backup@3x.png"; sourceTree = "<group>"; };
+		1F8EC3BD21BF5CCA000FD702 /* desktop_icon_backup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = desktop_icon_backup.png; sourceTree = "<group>"; };
+		1F8EC3BF21BF5D00000FD702 /* desktop_icon_backup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "desktop_icon_backup@2x.png"; sourceTree = "<group>"; };
+		1F8EC3C121BF5D30000FD702 /* desktop_icon_backup@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "desktop_icon_backup@3x.png"; sourceTree = "<group>"; };
+		1F8EC3C321BF5D6B000FD702 /* notebook_icon_backup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notebook_icon_backup.png; sourceTree = "<group>"; };
+		1F8EC3C521BF5D78000FD702 /* notebook_icon_backup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notebook_icon_backup@2x.png"; sourceTree = "<group>"; };
+		1F8EC3C721BF5D89000FD702 /* notebook_icon_backup@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notebook_icon_backup@3x.png"; sourceTree = "<group>"; };
+		1F8EC3C921BF5DCD000FD702 /* notebook_mac_icon_backup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notebook_mac_icon_backup.png; sourceTree = "<group>"; };
+		1F8EC3CB21BF5DDD000FD702 /* notebook_mac_icon_backup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notebook_mac_icon_backup@2x.png"; sourceTree = "<group>"; };
+		1F8EC3CD21BF5DEC000FD702 /* notebook_mac_icon_backup@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notebook_mac_icon_backup@3x.png"; sourceTree = "<group>"; };
+		1F8EC3CF21BF5E19000FD702 /* imac_icon_backup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imac_icon_backup.png; sourceTree = "<group>"; };
+		1F8EC3D121BF5E2A000FD702 /* imac_icon_backup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imac_icon_backup@2x.png"; sourceTree = "<group>"; };
+		1F8EC3D321BF5E45000FD702 /* imac_icon_backup@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imac_icon_backup@3x.png"; sourceTree = "<group>"; };
+		1F8EC3D521BF5ED3000FD702 /* DriveDirStatsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveDirStatsAPI.swift; sourceTree = "<group>"; };
+		1F8EC3D721BFB94A000FD702 /* DriveOptionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveOptionAPI.swift; sourceTree = "<group>"; };
 		1F99863921B6802900174FCC /* PhotoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoHelper.swift; sourceTree = "<group>"; };
 		1F99863B21B7B34200174FCC /* UserDeviceInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDeviceInfoAPI.swift; sourceTree = "<group>"; };
 		1F99863D21B8D0D600174FCC /* LoginInputPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInputPasswordViewController.swift; sourceTree = "<group>"; };
@@ -3147,6 +3187,7 @@
 				1FFD12BC20EA265E0053A3F7 /* DeletTasksAPI.swift */,
 				1FFD12C520EB80E70053A3F7 /* DirOprationAPI.swift */,
 				1F3293C921ABBB6300F075DD /* FilesStats.swift */,
+				1F8EC3D721BFB94A000FD702 /* DriveOptionAPI.swift */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -3160,6 +3201,7 @@
 				1F16B35421AE322300178143 /* StationUserAPI.swift */,
 				1F16B37421B13B6500178143 /* WinasdInfoAPI.swift */,
 				1F16B37B21B147EA00178143 /* RenameStatiomNameAPI.swift */,
+				1F8EC3D521BF5ED3000FD702 /* DriveDirStatsAPI.swift */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -5795,6 +5837,24 @@
 		1FE0895F217478F40049F44B /* Device */ = {
 			isa = PBXGroup;
 			children = (
+				1F8EC3D321BF5E45000FD702 /* imac_icon_backup@3x.png */,
+				1F8EC3CF21BF5E19000FD702 /* imac_icon_backup.png */,
+				1F8EC3D121BF5E2A000FD702 /* imac_icon_backup@2x.png */,
+				1F8EC3C921BF5DCD000FD702 /* notebook_mac_icon_backup.png */,
+				1F8EC3CB21BF5DDD000FD702 /* notebook_mac_icon_backup@2x.png */,
+				1F8EC3CD21BF5DEC000FD702 /* notebook_mac_icon_backup@3x.png */,
+				1F8EC3C321BF5D6B000FD702 /* notebook_icon_backup.png */,
+				1F8EC3C521BF5D78000FD702 /* notebook_icon_backup@2x.png */,
+				1F8EC3C721BF5D89000FD702 /* notebook_icon_backup@3x.png */,
+				1F8EC3BD21BF5CCA000FD702 /* desktop_icon_backup.png */,
+				1F8EC3BF21BF5D00000FD702 /* desktop_icon_backup@2x.png */,
+				1F8EC3C121BF5D30000FD702 /* desktop_icon_backup@3x.png */,
+				1F8EC3B721BF5C2F000FD702 /* iphone_icon_backup.png */,
+				1F8EC3B921BF5C3C000FD702 /* iphone_icon_backup@2x.png */,
+				1F8EC3BB21BF5C48000FD702 /* iphone_icon_backup@3x.png */,
+				1F8EC3B521BF5BF0000FD702 /* andr_icon_backup.png */,
+				1F8EC3B321BF5BE9000FD702 /* andr_icon_backup@2x.png */,
+				1F8EC3AE21BF5BDF000FD702 /* andr_icon_backup@3x.png */,
 				1F38E2B32181CADA003FCAEE /* other_icon_device_detail.png */,
 				1F38E2B52181CAEC003FCAEE /* other_icon_device_detail@2x.png */,
 				1F38E2B72181CAFE003FCAEE /* other_icon_device_detail@3x.png */,
@@ -6463,7 +6523,9 @@
 				1F5AD94120AD80AC0065DAD3 /* files_audio_small@3x.png in Resources */,
 				1F2A380520DA57EA0035EED5 /* task_suspend@3x.png in Resources */,
 				1FC5CC1720D3C3D600499E63 /* files_download_transfer@2x.png in Resources */,
+				1F8EC3BA21BF5C3D000FD702 /* iphone_icon_backup@2x.png in Resources */,
 				1F050E1220A967690037F00A /* files_pdf_small@3x.png in Resources */,
+				1F8EC3C221BF5D30000FD702 /* desktop_icon_backup@3x.png in Resources */,
 				1FD9B7B8207E1B6600906D80 /* Localizable.strings in Resources */,
 				1F050E6520AAC9280037F00A /* files_arrow_up@2x.png in Resources */,
 				1FE0896721747B8A0049F44B /* edit_gray.png in Resources */,
@@ -6514,6 +6576,7 @@
 				1F83AE8420887936007CCCFD /* more.png in Resources */,
 				1F359FBB2091761500E2FF36 /* account@2x.png in Resources */,
 				1F3591FD20889CAB00196CCB /* station_w215i@2x.png in Resources */,
+				1F8EC3CE21BF5DED000FD702 /* notebook_mac_icon_backup@3x.png in Resources */,
 				1FE08928216F17080049F44B /* avatar_placeholder@2x.png in Resources */,
 				1F0FD0C4214A4670003D7936 /* config_finish@2x.png in Resources */,
 				1F050E7320ABCE560037F00A /* files_edit.png in Resources */,
@@ -6532,11 +6595,13 @@
 				1FE089872175D6370049F44B /* DeviceBackupRootTableViewCell.xib in Resources */,
 				1FEABB5520A14B6C00824448 /* files_word_small@2x.png in Resources */,
 				1F38E2B42181CADB003FCAEE /* other_icon_device_detail.png in Resources */,
+				1F8EC3D021BF5E1A000FD702 /* imac_icon_backup.png in Resources */,
 				1F38E273217DB04A003FCAEE /* tab_photos@2x.png in Resources */,
 				1FE08957217445CC0049F44B /* logo_main_theme@3x.png in Resources */,
 				1F83AE8220887936007CCCFD /* more@2x.png in Resources */,
 				1FAADEC320ABFD8700739220 /* files_move_gray@2x.png in Resources */,
 				1FA6A1C720CFBD57007A0AB2 /* gridstyle.png in Resources */,
+				1F8EC3B221BF5BE0000FD702 /* andr_icon_backup@3x.png in Resources */,
 				1F359FDD2091A99600E2FF36 /* disk_add@2x.png in Resources */,
 				1FE089912175EB8D0049F44B /* pc_icon_device@2x.png in Resources */,
 				1F050E4720AAB6020037F00A /* files_upload_big@3x.png in Resources */,
@@ -6549,19 +6614,24 @@
 				1FFC816F2195614A00371C8D /* files_excel_normal@3x.png in Resources */,
 				1F83AE67208838DD007CCCFD /* eye_off.png in Resources */,
 				1FE089402170740E0049F44B /* radioButton_right.png in Resources */,
+				1F8EC3C021BF5D01000FD702 /* desktop_icon_backup@2x.png in Resources */,
+				1F8EC3B821BF5C2F000FD702 /* iphone_icon_backup.png in Resources */,
 				1FC5CC0F20D3BD9F00499E63 /* file_finish.png in Resources */,
 				1FAADEE320ABFF6100739220 /* files_share@3x.png in Resources */,
 				1FA669DB208880A200E9CAE3 /* BottomSheetDummyStaticViewController.xib in Resources */,
 				1F3C244420A5AD4C00E6B953 /* files_tag@3x.png in Resources */,
 				1F5AD93120AD7F990065DAD3 /* files_excel_small.png in Resources */,
+				1F8EC3B421BF5BEA000FD702 /* andr_icon_backup@2x.png in Resources */,
 				1FAADED720ABFED300739220 /* files_creat_copy@3x.png in Resources */,
 				1F38E28D217DBC42003FCAEE /* tab_my@3x.png in Resources */,
 				1FAADEFC20AC24B900739220 /* mdc_theme.png in Resources */,
 				1F38E2652179D6A2003FCAEE /* transfer_taks_icon.png in Resources */,
+				1F8EC3B621BF5BF1000FD702 /* andr_icon_backup.png in Resources */,
 				1FAADEC720ABFDDC00739220 /* files_offline_normal.png in Resources */,
 				1FA6A1A920CFA065007A0AB2 /* search.png in Resources */,
 				1F38E2AE2181CA8F003FCAEE /* video_icon_device_detail.png in Resources */,
 				1F38E2612179D66A003FCAEE /* usb_icon@2x.png in Resources */,
+				1F8EC3CA21BF5DCE000FD702 /* notebook_mac_icon_backup.png in Resources */,
 				1F050E0E20A9674D0037F00A /* files_pdf_small.png in Resources */,
 				1F4E9395208DBB7600DD1EA7 /* radio_button@2x.png in Resources */,
 				1FD1F2F82153824A00C3E429 /* PhotoAlbumCollectionViewCell.xib in Resources */,
@@ -6592,6 +6662,7 @@
 				1FEABB5320A14B6300824448 /* files_word_small.png in Resources */,
 				1FD1F3222159D7F600C3E429 /* add_text_photo_new_album@2x.png in Resources */,
 				1FA6A1B120CFA6A9007A0AB2 /* files_video_normal@2x.png in Resources */,
+				1F8EC3C621BF5D79000FD702 /* notebook_icon_backup@2x.png in Resources */,
 				1F2B45A4208F290200C8971F /* close@3x.png in Resources */,
 				1FA5D7552159FECA0025F870 /* eye_open.png in Resources */,
 				1F3C243820A5AC1F00E6B953 /* transfer@3x.png in Resources */,
@@ -6639,6 +6710,7 @@
 				1F5659FF20D10F4400D86FDB /* logo_gray.png in Resources */,
 				1FAADEE520ABFF9200739220 /* files_copy_to.png in Resources */,
 				1F5659F720D0E36B00D86FDB /* share.png in Resources */,
+				1F8EC3C421BF5D6C000FD702 /* notebook_icon_backup.png in Resources */,
 				1FBB6F4F2137C48C0090FA57 /* success_white@2x.png in Resources */,
 				1F3C242C20A59BBF00E6B953 /* transfer.png in Resources */,
 				1FBB6F6321392C7B0090FA57 /* lock@3x.png in Resources */,
@@ -6681,6 +6753,7 @@
 				1FE089612174796D0049F44B /* add_gray.png in Resources */,
 				1FDF46E8218ADC2400521DDE /* delete_photo@3x.png in Resources */,
 				1FD1F3102159D6E400C3E429 /* location_new_album@2x.png in Resources */,
+				1F8EC3D421BF5E46000FD702 /* imac_icon_backup@3x.png in Resources */,
 				1FFD12BB20E9C73C0053A3F7 /* files_move_to@3x.png in Resources */,
 				1F4E93892089D64D00DD1EA7 /* disk@3x.png in Resources */,
 				1FBB6F592137F6EE0090FA57 /* x_gray@3x.png in Resources */,
@@ -6739,10 +6812,12 @@
 				1F0FD0CE214A4A34003D7936 /* disclosureIndicator.png in Resources */,
 				1FD1F30E2159D6D600C3E429 /* location_new_album.png in Resources */,
 				1FBB6F6921392D940090FA57 /* text_right.png in Resources */,
+				1F8EC3D221BF5E2B000FD702 /* imac_icon_backup@2x.png in Resources */,
 				1F58823E2085DCAF00394BD6 /* device_circle@2x.png in Resources */,
 				1FE674D220D20CED006F97DB /* file_icon@3x.png in Resources */,
 				1F8EBB3C209ADC7A00E8AB83 /* tab_files_selected@3x.png in Resources */,
 				1F38E24F21789C5A003FCAEE /* DeviceDetailInfdTableViewCell.xib in Resources */,
+				1F8EC3CC21BF5DDE000FD702 /* notebook_mac_icon_backup@2x.png in Resources */,
 				1FAADEBB20ABE38400739220 /* files_info.png in Resources */,
 				1F5882442085F07000394BD6 /* offline@2x.png in Resources */,
 				1F050E3120AA77E90037F00A /* FilesShareFolderTableViewCell.xib in Resources */,
@@ -6857,6 +6932,7 @@
 				1FA6A1C120CFA780007A0AB2 /* files_photo_normal.png in Resources */,
 				1FAADEBD20ABE39700739220 /* files_info@2x.png in Resources */,
 				1F1BAC5E20CE709100D32C5A /* files_png_small.png in Resources */,
+				1F8EC3BC21BF5C48000FD702 /* iphone_icon_backup@3x.png in Resources */,
 				1F588269208719BB00394BD6 /* refresh@2x.png in Resources */,
 				1F8EBB5620A0239000E8AB83 /* files_folder.png in Resources */,
 				1FE089AF217714AD0049F44B /* add_user@3x.png in Resources */,
@@ -6912,6 +6988,7 @@
 				1FA6A1BD20CFA727007A0AB2 /* files_pdf_normal@2x.png in Resources */,
 				1F1BAC6320CE709100D32C5A /* files_png_small@3x.png in Resources */,
 				1FBB6F5D2139232D0090FA57 /* 86@2x.png in Resources */,
+				1F8EC3BE21BF5CCB000FD702 /* desktop_icon_backup.png in Resources */,
 				1F050E5320AAB71D0037F00A /* files_file_big@3x.png in Resources */,
 				1FA3B1DD218869BB00B68AA7 /* play_video.png in Resources */,
 				1FA5D775215CC3840025F870 /* photo_gray_info@2x.png in Resources */,
@@ -6968,6 +7045,7 @@
 				1F359FCE2091A95D00E2FF36 /* disk_new_add@3x.png in Resources */,
 				1FE0897D2175800B0049F44B /* current_device_tip.png in Resources */,
 				1F5882492085F07E00394BD6 /* disk_warning@3x.png in Resources */,
+				1F8EC3C821BF5D89000FD702 /* notebook_icon_backup@3x.png in Resources */,
 				1F83AE69208838DD007CCCFD /* eye_off@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7303,6 +7381,7 @@
 				1FE674E120D21B11006F97DB /* TRManager.swift in Sources */,
 				1F16B37F21B619D000178143 /* MySettingHelper.swift in Sources */,
 				1F4E937C2089B23E00DD1EA7 /* InitializationDiskViewController.swift in Sources */,
+				1F8EC3D621BF5ED3000FD702 /* DriveDirStatsAPI.swift in Sources */,
 				1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */,
 				1F3293D121AC047D00F075DD /* DeviceNetModel.swift in Sources */,
 				1F3293C421A80BB500F075DD /* BootSpaceModel.swift in Sources */,
@@ -7391,6 +7470,7 @@
 				1F83AE7720886A13007CCCFD /* LogOutViewController.swift in Sources */,
 				1FFD131320EE29460053A3F7 /* WSAsset.swift in Sources */,
 				1F3293A521A403FA00F075DD /* FruitmixStatsAPI.swift in Sources */,
+				1F8EC3D821BFB94A000FD702 /* DriveOptionAPI.swift in Sources */,
 				1F58821720849F8000394BD6 /* FontDefine.swift in Sources */,
 				1FD1F2D92150FBA100C3E429 /* GetSmsCodeAPI.swift in Sources */,
 				1FFD132820EF36A50053A3F7 /* UIView+JY_ExtendTouchRect.m in Sources */,

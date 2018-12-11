@@ -682,7 +682,7 @@ extension DeviceViewController:UITableViewDataSource,UITableViewDelegate{
       tableView.deselectRow(at: indexPath, animated: true)
       switch indexPath.row {
       case 0:
-         let deviceBackupRootViewController = DeviceBackupRootViewController.init(style:.highHeight)
+         let deviceBackupRootViewController = DeviceBackupRootViewController.init(style:.highHeight,type:.device)
          let tab = retrieveTabbarController()
          tab?.setTabBarHidden(true, animated: true)
          self.navigationController?.pushViewController(deviceBackupRootViewController, animated: true)

@@ -36,6 +36,8 @@ public let kRequestFromNameKey  = "fromName"
 
 public let kRequestUrlPathKey = "urlPath"
 public let kRequestVerbKey = "verb"
+public let kRequestLabelKey = "label"
+public let kRequestClientKey = "client"
 
 public let kRequestOpNewFileValue    = "newfile"
 

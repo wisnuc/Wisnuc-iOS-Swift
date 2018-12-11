@@ -73,7 +73,11 @@ class PhotoAlbumViewController: BaseViewController {
         if animation{
             ActivityIndicator.startActivityIndicatorAnimation()
         }
+        self.dataSource.removeAll()
+        let collectionAlbumArray = Array<PhotoAlbumModel>.init()
+        self.dataSource.append(collectionAlbumArray)
         allPhotoAlbumData()
+        allVideoAlbumData()
     }
     
     func allPhotoAlbumData(){
@@ -83,7 +87,6 @@ class PhotoAlbumViewController: BaseViewController {
             }else{
                 self?.setAllPhotoData(loacalAsset:asset!,count:count)
             }
-            self?.allVideoAlbumData()
         })
     }
         
@@ -98,10 +101,10 @@ class PhotoAlbumViewController: BaseViewController {
     }
     
     func getAlbumPhotoData(sclass:String,closure:@escaping (_ hash:String?,_ localAsset:PHAsset?,_ count:Int?)->()){
-        self.searchAny(sClass: sclass) { [weak self](models, error) in
+        let _ = AppAssetService.getNetAssets(callback: { (error, models) in
             ActivityIndicator.stopActivityIndicatorAnimation()
             if error == nil && models != nil{
-                if let netTime = self?.fetchPhotoTime(model: models?.first),let localDate = PHAsset.latestAsset()?.creationDate{
+                if let netTime = self.fetchPhotoTime(model: models?.first),let localDate = PHAsset.latestAsset()?.creationDate{
                     let localTime = localDate.timeIntervalSince1970
                     if netTime > localTime{
                         if let photoHash =  models?.first?.fmhash{
@@ -114,7 +117,7 @@ class PhotoAlbumViewController: BaseViewController {
             }else{
                 return closure(nil,PHAsset.latestAsset()!,nil)
             }
-        }
+        })
     }
     
     func getAllVideoAlbumData(sclass:String,closure:@escaping (_ hash:String?,_ localAsset:PHAsset?,_ models:[NetAsset]?)->()){
@@ -201,7 +204,8 @@ class PhotoAlbumViewController: BaseViewController {
     }
     
     func setAllPhotoData(hash:String? = nil,loacalAsset:PHAsset? = nil,count:Int?){
-        var collectionAlbumArray = Array<PhotoAlbumModel>.init()
+        self.albumCollectionView.mj_header.endRefreshing()
+        
         let photoAlbumModel1 = PhotoAlbumModel.init()
         photoAlbumModel1.type = PhotoAlbumType.collecion
         photoAlbumModel1.name = LocalizedString(forKey: "所有相片")
@@ -221,21 +225,19 @@ class PhotoAlbumViewController: BaseViewController {
             }
         }
     
-        if dataSource.count > 0{
-            if var array = dataSource.first{
+        if var array = dataSource.first{
+            if array.count > 0{
+                array.insert(photoAlbumModel1, at: 0)
+            }else{
                 array.append(photoAlbumModel1)
-                dataSource[0] = array
             }
-        }else{
-            collectionAlbumArray.append(photoAlbumModel1)
-            dataSource.append(collectionAlbumArray)
+            dataSource[0] = array
         }
-       
         self.albumCollectionView.reloadData()
-        self.albumCollectionView.mj_header.endRefreshing()
     }
     
     func setVideoData(hash:String? = nil,loacalAsset:PHAsset? = nil,models:[NetAsset]?){
+        self.albumCollectionView.mj_header.endRefreshing()
         let photoAlbumModel = PhotoAlbumModel.init()
         photoAlbumModel.type  = PhotoAlbumType.collecion
         photoAlbumModel.name = LocalizedString(forKey: "Video")
@@ -258,20 +260,35 @@ class PhotoAlbumViewController: BaseViewController {
             photoAlbumModel.count = AppAssetService.allVideoAssets?.count
         }
         
-        if dataSource.count > 0{
-            if var array = dataSource.first{
-                array.append(photoAlbumModel)
-                dataSource[0] = array
+        if var array = dataSource.first{
+            if array.count > 0{
+               array.insert(photoAlbumModel, at: 1)
+            }else{
+               array.append(photoAlbumModel)
             }
-        }else{
-            var array:[PhotoAlbumModel] = Array.init()
-            array.append(photoAlbumModel)
-            dataSource.append(array)
+            dataSource[0] = array
         }
+//        }else{
+//            var array:[PhotoAlbumModel] = Array.init()
+//            array.append(photoAlbumModel)
+//            dataSource.append(array)
+//        }
         self.albumCollectionView.reloadData()
-        self.albumCollectionView.mj_header.endRefreshing()
+    }
+    
+    func getAllBackup(){
+        AppNetworkService.getUserAllBackupDrive { (error,driveModels) in
+            if let error = error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                
+            }
+        }
     }
 
+    func setVideoData(models:[DriveModel]?){
+        
+    }
     @objc func rightButtonItemTap(_ sender:UIBarButtonItem){
         let photosVC = PhotoRootViewController.init(style: NavigationStyle.select, state: PhotoRootViewControllerState.creat)
         photosVC.delegate = self

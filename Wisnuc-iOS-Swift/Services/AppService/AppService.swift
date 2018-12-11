@@ -8,6 +8,11 @@
 
 import UIKit
 import MaterialComponents.MDCAlertController
+ enum DriveType:String{
+    case home
+    case share = "bulit-in"
+    case backup
+ }
 
 let MainServices = AppService.sharedInstance
 let AppUserService =  MainServices().userService
@@ -183,30 +188,55 @@ class AppService: NSObject,ServiceProtocol{
     
     func nextStepForLogin(callback: @escaping (_ error:Error?,_ user:User?)->()) {
         let currentUser = self.userService.currentUser
-        self.networkService.getUserHome { [weak self] (userHomeError, userHome) in
+        self.networkService.getUserAllDrive { [weak self] (userHomeError, driveModels) in
             if userHomeError != nil{
                 self?.userService.logoutUser()
                 return callback(userHomeError, currentUser);
             }
-            
-            currentUser?.userHome = userHome;
+        
+            if let driveModels = driveModels{
+                for model in driveModels{
+                    if model.tag == DriveType.home.rawValue &&  model.type ==  "classic"{
+                        currentUser?.userHome = model.uuid
+                    }else if model.tag == DriveType.share.rawValue{
+                        currentUser?.shareSpace = model.uuid
+                    }else if model.type == DriveType.backup.rawValue{
+                        if let uuid = model.uuid{
+                            if !(self?.userService.backupArray.contains(where: {$0.uuid == uuid}))!{
+                                self?.userService.backupArray.append(model)
+                            }
+                        }
+                    }
+                }
+            }
+    
             self?.userService.synchronizedCurrentUser()
+            if self?.userService.backupArray.count == 0{
+                self?.networkService.creactBackupDrive(callBack: { [weak self](error, driveModel) in
+                    if driveModel != nil && error == nil{
+                        if let driveModel = driveModel{
+                            if let uuid = driveModel.uuid{
+                                if !(self?.userService.backupArray.contains(where: {$0.uuid == uuid}))!{
+                                    self?.userService.backupArray.append(driveModel)
+                                }
+                            }
+                        }
+                        return callback(nil, currentUser)
+                    }
+                })
+            }else{
+                 return callback(nil, currentUser)
+            }
+           
+//            self?.networkService.getUserBackupDir(name: kBackUpAssetDirName, { [weak self](userBackupDirError, entryUUID) in
+//                if userBackupDirError != nil{
+//                    self?.userService.logoutUser()
+//                    return callback(userBackupDirError, currentUser);
+//                }else{
+//                    currentUser?.backUpDirectoryUUID = entryUUID;
+//                    AppUserService.synchronizedCurrentUser()
+//                }
             
-            self?.networkService.getShareSpaceBuiltIn({ [weak self](error, uuid) in
-                if error == nil,let shareSpace = uuid{
-                    currentUser?.shareSpace = shareSpace
-                    self?.userService.synchronizedCurrentUser()
-                }
-            })
-            self?.networkService.getUserBackupDir(name: kBackUpAssetDirName, { [weak self](userBackupDirError, entryUUID) in
-                if userBackupDirError != nil{
-                    self?.userService.logoutUser()
-                    return callback(userBackupDirError, currentUser);
-                }else{
-                    currentUser?.backUpDirectoryUUID = entryUUID;
-                    AppUserService.synchronizedCurrentUser()
-                }
-                
                
                 // MARK:Upload Opration
                 //===================
@@ -227,8 +257,8 @@ class AppService: NSObject,ServiceProtocol{
 //                [weak_self updateCurrentUserInfoWithCompleteBlock:nil];
 //                });
 //                self?.updateCurrentUserInfo()
-                return callback(nil, currentUser);
-            })
+            
+//            })
         }
     }
     
@@ -266,23 +296,23 @@ class AppService: NSObject,ServiceProtocol{
     }
     
     func updateUserBackupDirectory(callback:@escaping (_ error:Error?,_ user:User?)->()){
-        AppNetworkService.getUserHome { [weak AppNetworkService](error, userHome) in
-            if error != nil{
-                return callback(error,nil)
-            }else{
-                AppUserService.currentUser?.userHome = userHome
-                AppUserService.synchronizedCurrentUser()
-                AppNetworkService?.getUserBackupDir(name: kBackupDirectory, { (backupDirerror, entryUUID) in
-                    if error != nil{
-                      return callback(backupDirerror,nil)
-                    }else{
-                        AppUserService.currentUser?.backUpDirectoryUUID = entryUUID
-                        AppUserService.synchronizedCurrentUser()
-                        return callback(nil, AppUserService.currentUser)
-                    }
-                })
-            }
-        }
+//        AppNetworkService.getUserHome { [weak AppNetworkService](error, userHome) in
+//            if error != nil{
+//                return callback(error,nil)
+//            }else{
+//                AppUserService.currentUser?.userHome = userHome
+//                AppUserService.synchronizedCurrentUser()
+//                AppNetworkService?.getUserBackupDir(name: kBackupDirectory, { (backupDirerror, entryUUID) in
+//                    if error != nil{
+//                      return callback(backupDirerror,nil)
+//                    }else{
+//                        AppUserService.currentUser?.backUpDirectoryUUID = entryUUID
+//                        AppUserService.synchronizedCurrentUser()
+//                        return callback(nil, AppUserService.currentUser)
+//                    }
+//                })
+//            }
+//        }
     }
     
     func updateCurrentUserInfo(complete:@escaping ()->()){

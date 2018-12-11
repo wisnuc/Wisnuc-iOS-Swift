@@ -25,7 +25,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     }
     
     func backupBoxTap() {
-        let deviceBackupRootViewController = DeviceBackupRootViewController.init(style:.highHeight)
+        let deviceBackupRootViewController = DeviceBackupRootViewController.init(style:.highHeight,type:.files)
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
         self.navigationController?.pushViewController(deviceBackupRootViewController, animated: true)
@@ -860,7 +860,7 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         let op = FilesOptionType.rename.rawValue
         let name = "\(oldName ?? "")|\(newName)"
-        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: op).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
+        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
             let dic = [kRequestOpKey: op]
             do {
                 let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)

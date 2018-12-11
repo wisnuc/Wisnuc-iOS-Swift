@@ -11,5 +11,5 @@ import Foundation
 struct FilesStatsModel:Codable {
     var fileCount:Int?
     var dirCount:Int?
-    var fileTotalSize:Int?
+    var fileTotalSize:Int64?
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,14 +28,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FP4-qj-kdm">
-                    <rect key="frame" x="24" y="566" width="48" height="48"/>
+                    <rect key="frame" x="24" y="587" width="327" height="48"/>
                     <state key="normal" image="files_file_big.png"/>
                     <connections>
                         <action selector="folderButtonTap:" destination="-1" eventType="touchUpInside" id="cDw-bw-YzX"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jsl-U9-s40">
-                    <rect key="frame" x="163" y="566" width="48" height="48"/>
+                    <rect key="frame" x="163.5" y="566" width="48" height="48"/>
                     <state key="normal" image="files_upload_big.png"/>
                     <connections>
                         <action selector="uploadButtonTap:" destination="-1" eventType="touchUpInside" id="0v3-fk-m95"/>
@@ -49,13 +49,13 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hQ5-fH-4jP">
-                    <rect key="frame" x="166" y="622" width="42" height="21"/>
+                    <rect key="frame" x="166.5" y="622" width="42" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="epQ-WR-lim">
-                    <rect key="frame" x="27" y="622" width="42" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="epQ-WR-lim">
+                    <rect key="frame" x="187.5" y="643" width="0.0" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -67,7 +67,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DoO-wM-8wp">
-                    <rect key="frame" x="24" y="523" width="42" height="21"/>
+                    <rect key="frame" x="24" y="544" width="42" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -79,18 +79,29 @@
                 <constraint firstItem="0DL-mb-ehV" firstAttribute="centerY" secondItem="epQ-WR-lim" secondAttribute="centerY" id="17E-6X-xNh"/>
                 <constraint firstItem="FP4-qj-kdm" firstAttribute="centerY" secondItem="Jsl-U9-s40" secondAttribute="centerY" id="6Pb-YW-EHC"/>
                 <constraint firstItem="5Xh-n1-eVA" firstAttribute="trailing" secondItem="Pww-l1-Zo2" secondAttribute="trailing" constant="24" id="8c7-nd-O0Y"/>
+                <constraint firstItem="FP4-qj-kdm" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="9GX-a0-XOu"/>
                 <constraint firstItem="hQ5-fH-4jP" firstAttribute="top" secondItem="Jsl-U9-s40" secondAttribute="bottom" constant="8" id="Agf-eE-gyK"/>
                 <constraint firstItem="0DL-mb-ehV" firstAttribute="centerX" secondItem="Pww-l1-Zo2" secondAttribute="centerX" id="INK-6X-cz9"/>
                 <constraint firstItem="FP4-qj-kdm" firstAttribute="top" secondItem="DoO-wM-8wp" secondAttribute="bottom" constant="22" id="LIq-cj-WLb"/>
                 <constraint firstItem="Jsl-U9-s40" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="NtS-kn-10t"/>
+                <constraint firstItem="epQ-WR-lim" firstAttribute="top" secondItem="FP4-qj-kdm" secondAttribute="bottom" constant="8" symbolic="YES" id="Rrh-fW-IsM"/>
                 <constraint firstItem="FP4-qj-kdm" firstAttribute="leading" secondItem="5Xh-n1-eVA" secondAttribute="leading" constant="24" id="WxW-7n-jT3"/>
                 <constraint firstItem="epQ-WR-lim" firstAttribute="centerX" secondItem="FP4-qj-kdm" secondAttribute="centerX" id="YiF-Mx-CSp"/>
                 <constraint firstItem="Pww-l1-Zo2" firstAttribute="centerY" secondItem="Jsl-U9-s40" secondAttribute="centerY" id="ggF-I4-aUF"/>
                 <constraint firstItem="FP4-qj-kdm" firstAttribute="leading" secondItem="DoO-wM-8wp" secondAttribute="leading" id="n7G-RZ-ebT"/>
+                <constraint firstItem="5Xh-n1-eVA" firstAttribute="bottom" secondItem="epQ-WR-lim" secondAttribute="bottom" constant="24" id="osY-4q-L0b"/>
                 <constraint firstItem="hQ5-fH-4jP" firstAttribute="centerY" secondItem="epQ-WR-lim" secondAttribute="centerY" id="tKj-J8-Lmx"/>
                 <constraint firstItem="hQ5-fH-4jP" firstAttribute="centerX" secondItem="Jsl-U9-s40" secondAttribute="centerX" id="xpU-pb-ffs"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="5Xh-n1-eVA"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="Jsl-U9-s40"/>
+                    <exclude reference="Pww-l1-Zo2"/>
+                    <exclude reference="hQ5-fH-4jP"/>
+                    <exclude reference="0DL-mb-ehV"/>
+                </mask>
+            </variation>
         </view>
     </objects>
     <resources>

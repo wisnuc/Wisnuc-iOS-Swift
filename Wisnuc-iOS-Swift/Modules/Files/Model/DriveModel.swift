@@ -9,6 +9,18 @@
 
 import Foundation
 import HandyJSON
+enum DriveClientModelState:String {
+    case Working
+    case Idle
+}
+
+enum BackupPlatformType:String {
+    case WinPC = "Win-PC"
+    case MacPC = "Mac-PC"
+    case LinuxPC = "Linux-PC"
+    case AndroidMobile = "Android-Mobile"
+    case iOSMobile = "iOS-Mobile"
+}
 
 struct DriveModel:HandyJSON {
     var owner:String?
@@ -23,4 +35,14 @@ struct DriveModel:HandyJSON {
     var smb:Bool?
     var ctime:Int64?
     var mtime:Int64?
+    var client:DriveClientModel?
+    var fileTotalSize:Int64?
+}
+
+struct DriveClientModel:HandyJSON {
+    var id: String?
+    var type:String?
+    var lastBackupTime:Int64?
+    var disabled:Bool?
+    var status:String?
 }

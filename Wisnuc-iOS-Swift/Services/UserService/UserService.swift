@@ -14,6 +14,7 @@ class UserService: NSObject,ServiceProtocol{
     var currentUser:User?
     var isUserLogin:Bool = false
     var isStationSelected:Bool = false
+    lazy var backupArray:[DriveModel] = [DriveModel]()
     var isLocalLogin:Bool?{
         didSet{
             if isLocalLogin == true {

@@ -17,14 +17,10 @@ enum FilesOptionType:String{
 class DirOprationAPI: BaseRequest {
     var driveUUID:String?
     var directoryUUID:String?
-    var name:String?
     var detailUrl:String!
-    var op:String?
-    init(driveUUID:String,directoryUUID:String,name:String,op:String) {
+    init(driveUUID:String,directoryUUID:String) {
         self.driveUUID = driveUUID
         self.directoryUUID = directoryUUID
-        self.name = name
-        self.op = op
         self.detailUrl = "\(kRquestDrivesURL)/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries"
     }
     

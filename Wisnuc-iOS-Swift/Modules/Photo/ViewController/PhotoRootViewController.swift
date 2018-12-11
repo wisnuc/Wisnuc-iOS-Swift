@@ -137,8 +137,9 @@ class PhotoRootViewController: BaseViewController {
             }else{
                 
             }
-            self?.photoCollcectionViewController.collectionView?.reloadData()
+        
             self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
+           self?.photoCollcectionViewController.collectionView?.reloadData()
         }
         
         self.requset = request
@@ -178,9 +179,9 @@ class PhotoRootViewController: BaseViewController {
         self.style = .select
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_:)))
         let shareButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "share_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightShareBarButtonItemTap(_:)))
-        let addButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "plus_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightAddBarButtonItemTap(_:)))
+//        let addButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "plus_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightAddBarButtonItemTap(_:)))
         let deleteButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "delete_photo.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightDeleteBarButtonItemTap(_:)))
-        self.navigationItem.rightBarButtonItems = [deleteButtonItem,addButtonItem,shareButtonItem]
+        self.navigationItem.rightBarButtonItems = [deleteButtonItem,shareButtonItem]
     }
     
     func unselectModeAction(){
@@ -228,34 +229,13 @@ class PhotoRootViewController: BaseViewController {
     
     @objc func rightDeleteBarButtonItemTap(_ sender:UIBarButtonItem){
         if self.photoCollcectionViewController.choosePhotos.count > 0{
-            var localAssets:Array<PHAsset> = Array.init()
-            for asset in self.photoCollcectionViewController.choosePhotos{
-                if asset is NetAsset{
-                    #warning("删除NAS照片")
-                    alertController(title: LocalizedString(forKey: "您确定要删除照片吗？"), message: LocalizedString(forKey: "照片删除后将无法恢复"), cancelActionTitle: LocalizedString(forKey: "Cancel"), okActionTitle: LocalizedString(forKey: "Confirm"), okActionHandler: { (AlertAction1) in
-                        
-                    }) { (AlertAction2) in
-                        
-                    }
-                }else{
-                    if let localAsset = asset.asset{
-                        localAssets.append(localAsset)
-                    }
-                }
-            }
-            
-            
-            PHPhotoLibrary.shared().performChanges({
-               PHAssetChangeRequest.deleteAssets(localAssets as NSFastEnumeration)
-            }) { (finish, error) in
-                if error != nil{
-                    print(error as Any)
-                }
+            let title = "\(self.photoCollcectionViewController.choosePhotos.count) 个照片\(LocalizedString(forKey: "将被删除"))"
+            alertController(title: title, message: LocalizedString(forKey: "照片删除后将无法恢复"), cancelActionTitle: LocalizedString(forKey: "Cancel"), okActionTitle: LocalizedString(forKey: "Confirm"), okActionHandler: { (AlertAction1) in
+                self.deleteSelectPhotos(photos: self.photoCollcectionViewController.choosePhotos)
+            }) { (AlertAction2) in
+                
             }
         }
-        self.isSelectMode = false
-        self.photoCollcectionViewController.isSelectMode = false
-        self.photoCollcectionViewController.collectionView?.reloadData()
     }
     
     @objc func leftBarButtonItemTap(_ sender:UIBarButtonItem){
@@ -312,7 +292,146 @@ class PhotoRootViewController: BaseViewController {
 //            })
 //        }
 //    }
+    
+    func deleteSelectPhotos(photos:[WSAsset]){
+        self.isSelectMode = false
+        self.photoCollcectionViewController.isSelectMode = false
+        self.photoCollcectionViewController.collectionView?.reloadData()
+        var localAssets:Array<PHAsset> = Array.init()
+        var netAssets:Array<NetAsset> = Array.init()
+        for asset in photos{
+            if asset is NetAsset{
+                #warning("删除NAS照片")
+                if let netAsset = asset as? NetAsset{
+                    netAssets.append(netAsset)
+                }
+            }else{
+                if let localAsset = asset.asset{
+                    localAssets.append(localAsset)
+                }
+            }
+        }
+        
+        if netAssets.count > 0{
+            photoRemoveOptionRequest(photos:netAssets)
+        }
+        
+        if localAssets.count > 0{
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.deleteAssets(localAssets as NSFastEnumeration)
+            }) { (finish, error) in
+                if error != nil{
+                    print(error as Any)
+                }
+            }
+            self.photoCollcectionViewController.collectionView?.reloadData()
+        }
+    }
+//
+    func photoRemoveOptionRequest(photos:[NetAsset]){
+        var index:Int = 0
+        ActivityIndicator.startActivityIndicatorAnimation()
+        for photo in photos {
+            self.photoRemoveOptionRequest(photo: photo) { [weak self] in
+                index = index + 1
+//                print("🌶\(index)")
+                if index == photos.count{
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    self?.photoCollcectionViewController.dataSource  = self?.assetDataSources
+                    self?.photoCollcectionViewController.collectionView?.reloadData()
+                }
+            }
+        }
+    }
 
+    func photoRemoveOptionRequest(photo: NetAsset,closure:@escaping ()->()){
+        let drive = photo.place == 0 ? AppUserService.currentUser?.userHome : AppUserService.currentUser?.shareSpace ?? ""
+        let dir = photo.pdir ?? ""
+        DirOprationAPI.init(driveUUID: drive ?? "", directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
+            var dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
+            guard let uuid = photo.uuid,let hash = photo.fmhash else{
+                return closure()
+            }
+            dic = [kRequestOpKey: FilesOptionType.remove.rawValue,"uuid":uuid,"hash":hash]
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
+                formData.append(data, withName: photo.name ?? "")
+            }catch{
+                Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
+                 return closure()
+            }
+        }, { [weak self] (response) in
+            mainThreadSafe {
+                if response.error == nil{
+                    if let errorMessage = ErrorTools.responseErrorData(response.data){
+                        Message.message(text: errorMessage)
+                        return closure()
+                    }
+                    if let time = PhotoHelper.fetchPhotoTime(model: photo),let assetDataSources =  self?.assetDataSources {
+                        let date = Date.init(timeIntervalSince1970: time)
+                        for (i,assetArray) in assetDataSources.enumerated(){
+                            if let creatDate = assetArray.first?.createDate {
+                                if  Calendar.current.isDate(creatDate , inSameDayAs: date){
+                                    var removeArray = assetArray
+                                    removeArray.removeAll(where: { (asset) -> Bool in
+                                        if let netAsset = asset as? NetAsset{
+                                            return netAsset.fmhash == photo.fmhash && netAsset.uuid == photo.uuid
+                                        }else{
+                                            return false
+                                        }
+                                    })
+                                    self?.assetDataSources[i] = removeArray
+                                    return closure()
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    if response.data != nil {
+                        let errorDict =  dataToNSDictionary(data: response.data!)
+                        if errorDict != nil{
+                            Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                            return closure()
+                        }else{
+                            let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                            Message.message(text: backToString ?? "error")
+                            return closure()
+                        }
+                    }else{
+                        Message.message(text: (response.error?.localizedDescription)!)
+                        return closure()
+                    }
+                }
+            }
+            }, errorHandler: { (error) -> (Void) in
+                Message.message(text: error.localizedDescription)
+                return closure()
+        })
+    }
+    
+//    func removeNASPhoto(models:[EntriesModel]){
+//        let title = "\(LocalizedString(forKey: "Remove"))"
+//        var message = "\(LocalizedString(forKey: "照片"))"
+//        
+//        let messageString =  "\(models.count) 个\(message)\(LocalizedString(forKey: "将被删除"))"
+//        
+//        let alertController = MDCAlertController(title: title, message: messageString)
+//        
+//        let acceptAction = MDCAlertAction(title:LocalizedString(forKey: "Remove")) { [weak self] (_) in
+//            
+//            self?.filesRemoveOptionRequest(names:models.map({$0.name!}))
+//        }
+//        alertController.addAction(acceptAction)
+//        
+//        let considerAction = MDCAlertAction(title:LocalizedString(forKey: "Cancel")) { (_) in print("Cancel") }
+//        alertController.addAction(considerAction)
+//        ViewTools.setAlertControllerColor(alertController:alertController)
+//        let presentationController =
+//            alertController.mdc_dialogPresentationController
+//        presentationController?.dismissOnBackgroundTap = false
+//        self.present(alertController, animated: true, completion: nil)
+//    }
+    
     func setNotification(){
         defaultNotificationCenter().addObserver(forName: Notification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: nil, queue: nil) {  [weak self] (noti) in
             var allPhotos = Array<WSAsset>.init()

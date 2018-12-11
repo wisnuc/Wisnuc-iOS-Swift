@@ -35,7 +35,7 @@ class FilesFABBottomSheetDisplayViewController: UIViewController {
         folderLabel.textAlignment = .center
         folderLabel.textColor = LightGrayColor
         folderLabel.font = SmallTitleFont
-        folderLabel.text = LocalizedString(forKey: "folder")
+        folderLabel.text = LocalizedString(forKey: "Folder")
         
         uploadLabel.textAlignment = .center
         uploadLabel.textColor = LightGrayColor

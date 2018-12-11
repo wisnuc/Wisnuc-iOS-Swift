@@ -178,7 +178,7 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
             cell.leftLabel.text = LocalizedString(forKey: "大小")
             if model?.type == FilesType.directory.rawValue{
                 if let size = filseDirModel?.fileTotalSize{
-                    cell.rightLabel.text = sizeString(Int64(size))
+                    cell.rightLabel.text = sizeString(size)
                 }
             }else{
                cell.rightLabel.text = model?.size != nil ? sizeString((model?.size!)!) : ""

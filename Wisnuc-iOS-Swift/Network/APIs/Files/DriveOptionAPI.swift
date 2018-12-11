@@ -1,22 +1,26 @@
 //
-//  DriveAPI.swift
+//  DriveOptionAPI.swift
 //  Wisnuc-iOS-Swift
 //
-//  Created by wisnuc-imac on 2018/5/31.
-//  Copyright © 2018年 wisnuc-imac. All rights reserved.
+//  Created by wisnuc-imac on 2018/12/11.
+//  Copyright © 2018 wisnuc-imac. All rights reserved.
 //
 
 import UIKit
 import Alamofire
-enum  DrivesAPIType {
+
+enum  DriveOptionAPIType {
     case fetchInfo
-    case creatBackup
-    case creatPublic
+    case update
+    case delete
 }
 
-class DriveAPI: BaseRequest {
-    var type:DrivesAPIType?
-    init(type:DrivesAPIType) {
+class DriveOptionAPI: BaseRequest {
+    var type:DriveOptionAPIType?
+    var drive:String?
+    
+    init(drive:String,type:DriveOptionAPIType) {
+        self.drive = drive
         self.type = type
     }
     
@@ -25,7 +29,10 @@ class DriveAPI: BaseRequest {
         case .normal?:
             return kCloudCommonJsonUrl
         case .local?:
-            return "/\(kRquestDrivesURL)"
+            if let drive = self.drive{
+                return "/\(kRquestDrivesURL)/\(drive)"
+            }
+            return ""
         default:
             return ""
         }
@@ -39,8 +46,10 @@ class DriveAPI: BaseRequest {
             switch self.type {
             case .fetchInfo?:
                 return .get
-            case .creatBackup?,.creatPublic?:
-                return .post
+            case .update?:
+                return .patch
+            case .delete?:
+                return .delete
             default:
                 return .post
             }
@@ -54,28 +63,33 @@ class DriveAPI: BaseRequest {
         case .normal?:
             switch self.type {
             case .fetchInfo?:
-                let urlPath = "/\(kRquestDrivesURL)"
-                return [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:urlPath]
-            case .creatBackup?:
-                let urlPath = "/\(kRquestDrivesURL)"
-                guard let unicode = getUniqueDevice() else{
-                   return nil
+                if let drive = self.drive{
+                    let urlPath = "/\(kRquestDrivesURL)/\(drive)"
+                    return [kRequestVerbKey:RequestMethodValue.GET,kRequestUrlPathKey:urlPath]
                 }
-                let client = [ "id": unicode,"type": kBackupClientType]
-                let params = [kRequestOpKey:"backup",kRequestLabelKey:UIDevice.current.modelName,kRequestClientKey:client] as [String : Any]
-                return [kRequestVerbKey:RequestMethodValue.POST,kRequestUrlPathKey:urlPath,kRequestImageParamsKey:params]
-            default:
-                return nil
-            }
-          
-        case .local?:
-            switch self.type {
-            case .creatBackup?:
+            case .update?:
+                let urlPath = "/\(kRquestDrivesURL)"
                 guard let unicode = getUniqueDevice() else{
                     return nil
                 }
                 let client = [ "id": unicode,"type": kBackupClientType]
                 let params = [kRequestOpKey:"backup",kRequestLabelKey:UIDevice.current.modelName,kRequestClientKey:client] as [String : Any]
+                return [kRequestVerbKey:RequestMethodValue.PATCH,kRequestUrlPathKey:urlPath,kRequestImageParamsKey:params]
+            case .delete?:
+                guard  let drive = self.drive else{
+                    return nil
+                }
+                let urlPath = "/\(kRquestDrivesURL)/\(drive)"
+                let params = [kRequestOpKey:"backup"]
+                return [kRequestVerbKey:RequestMethodValue.DELETE,kRequestUrlPathKey:urlPath,kRequestImageParamsKey:params]
+            default:
+                return nil
+            }
+            
+        case .local?:
+            switch self.type {
+            case .delete?:
+                let params = [kRequestOpKey:"backup"]
                 return params
             default:
                 return nil
@@ -83,6 +97,7 @@ class DriveAPI: BaseRequest {
         default:
             return nil
         }
+        return nil
     }
     
     override func requestEncoding() -> RequestParameterEncoding {

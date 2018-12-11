@@ -199,9 +199,6 @@ func deleteUniqueDevice()->Bool{
     return SAMKeychain.deletePassword(forService: kKeyChainService, account: kKeyChainAccount)
 }
 
-
-
-
 //- (void)changeControllerFromOldController:(UIViewController *)oldController toNewController:(UIViewController *)newController
 //{
 //    [self addChildViewController:newController];

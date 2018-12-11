@@ -43,6 +43,7 @@ struct ErrorCode {
     }
     
     struct Request {
+        public static let CloudRequstError:Int = 60000
         public static let UserAlreadyExist:Int = 60001
         public static let MobileError:Int = 60701
         public static let CodeLimitOut:Int =  60702

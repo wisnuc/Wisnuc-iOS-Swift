@@ -72,8 +72,19 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         if AppUserService.currentUser?.userHome == nil{
             return nil
         }
-       let request = GetMediaAPI.init(classType: RequestMediaClassValue.Image, placesUUID: (AppUserService.currentUser?.userHome!)!)
         
+        var places = [String]()
+        if let userHome = AppUserService.currentUser?.userHome{
+            places.append(userHome)
+        }
+        
+        if let shareSpace = AppUserService.currentUser?.shareSpace{
+            places.append(shareSpace)
+        }
+        
+        let placesUUID = places.joined(separator: ".")
+        
+       let request = GetMediaAPI.init(classType: RequestMediaClassValue.Image, placesUUID: placesUUID)
        request.startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
 //                print("😆\(String(describing: response.value))")

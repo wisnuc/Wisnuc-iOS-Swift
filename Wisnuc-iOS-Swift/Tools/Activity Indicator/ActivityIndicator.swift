@@ -12,6 +12,8 @@ import MaterialComponents.MDCActivityIndicator
 class ActivityIndicator: NSObject{
     
     static let shareSingleOneActivityIndicator = MDCActivityIndicator(frame: CGRect.zero)
+    static var window = UIWindow.init(frame: CGRect(x: 0, y: MDCAppNavigationBarHeight, width: __kWidth, height: __kHeight - MDCAppNavigationBarHeight))
+    
     
     struct MDCPalette {
         static let blue: UIColor = UIColor(red: 0.129, green: 0.588, blue: 0.953, alpha: 1.0)
@@ -31,7 +33,6 @@ class ActivityIndicator: NSObject{
         
             //Initialize single color progress indicator
             let frame: CGRect = CGRect(x: width - 48/2, y: height, width: 48, height: 48)
-    
             shareSingleOneActivityIndicator.frame = frame
             // Pass colors you want to indicator to cycle through
             shareSingleOneActivityIndicator.cycleColors = [MDCPalette.blue, MDCPalette.red, MDCPalette.green, MDCPalette.yellow]

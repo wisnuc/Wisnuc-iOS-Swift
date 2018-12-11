@@ -19,8 +19,6 @@ public func sgm_safeAreaInset(view:UIView) -> UIEdgeInsets{
 }
 
 extension UIDevice {
-
-    
     var modelName: String {
         var systemInfo = utsname()
         uname(&systemInfo)
@@ -46,12 +44,12 @@ extension UIDevice {
         case "iPhone9,3":                               return "iPhone 7 (GSM)"
         case "iPhone9,2":                               return "iPhone 7 Plus (CDMA)"
         case "iPhone9,4":                               return "iPhone 7 Plus (GSM)"
-        case "iPhone10,1":                              return "iPhone 8"
-        case "iPhone10,2":                              return "iPhone 8 Plus";
-        case "iPhone10,3":                              return "iPhone X"
-        case "iPhone10,4":                              return "iPhone 8"
-        case "iPhone10,5":                              return "iPhone 8 Plus"
-        case "iPhone10,6":                              return "iPhone X"
+        case "iPhone10,1","iPhone10,4":                 return "iPhone 8"
+        case "iPhone10,2","iPhone10,5":                 return "iPhone 8 Plus";
+        case "iPhone10,3","iPhone10,6":                 return "iPhone X"
+        case "iPhone11,2":                              return "iPhone Xs"
+        case "iPhone11,6":                              return "iPhone Xs Max"
+        case "iPhone11,8":                              return "iPhone XR"
             
         case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4":return "iPad 2"
         case "iPad3,1", "iPad3,2", "iPad3,3":           return "iPad 3"

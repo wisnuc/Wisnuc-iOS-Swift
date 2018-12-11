@@ -152,30 +152,48 @@ class NetworkService: NSObject {
         })
     }
     
-    func getUserHome(_ callBack:@escaping (_ error:Error?, _ userHome:String?)->()) {
+    func getUserAllDrive(_ callBack:@escaping (_ error:Error?, _ driveModels:[DriveModel]?)->()) {
         if !AppUserService.isUserLogin {
             return callBack(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)
         }
         
-        var find:Bool = false
-        DriveAPI.init().startRequestJSONCompletionHandler { (response) in
+        DriveAPI.init(type: .fetchInfo).startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let responseArr = isLocalRequest ? response.value as! NSArray : (response.value as! NSDictionary).object(forKey: "data") as! NSArray
+                var models:[DriveModel] = [DriveModel]()
                 responseArr.enumerateObjects({ (obj, idx, stop) in
                     let dic = obj as! NSDictionary
                     if let driveModel = DriveModel.deserialize(from: dic) {
-                        if driveModel.tag == "home"{
-                            find = true
-                            stop.pointee = true
-                            return callBack(nil, driveModel.uuid);
+                       models.append(driveModel)
+                    }
+                })
+                return callBack(nil, models)
+            }else{
+                return callBack(response.error, nil)
+            }
+        }
+    }
+    
+    func getUserAllBackupDrive(_ callBack:@escaping (_ error:Error?, _ driveModels:[DriveModel]?)->()) {
+        if !AppUserService.isUserLogin {
+            return callBack(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)
+        }
+        
+        DriveAPI.init(type: .fetchInfo).startRequestJSONCompletionHandler { (response) in
+            if response.error == nil{
+                let isLocalRequest = AppNetworkService.networkState == .local
+                let responseArr = isLocalRequest ? response.value as! NSArray : (response.value as! NSDictionary).object(forKey: "data") as! NSArray
+                var models:[DriveModel] = [DriveModel]()
+                responseArr.enumerateObjects({ (obj, idx, stop) in
+                    let dic = obj as! NSDictionary
+                    if let driveModel = DriveModel.deserialize(from: dic) {
+                        if driveModel.type == DriveType.backup.rawValue{
+                            models.append(driveModel)
                         }
                     }
                 })
-                
-                if !find{
-                    return callBack(LoginError.init(code: ErrorCode.Login.NoUserHome, kind: LoginError.ErrorKind.LoginNoUserHome, localizedDescription: ErrorLocalizedDescription.Login.NoUserHome), nil)
-                }
+                return callBack(nil, models)
             }else{
                 return callBack(response.error, nil)
             }
@@ -188,7 +206,7 @@ class NetworkService: NSObject {
         }
         
         var find:Bool = false
-        DriveAPI.init().startRequestJSONCompletionHandler { (response) in
+        DriveAPI.init(type: .fetchInfo).startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let responseArr = isLocalRequest ? response.value as! NSArray : (response.value as! NSDictionary).object(forKey: "data") as! NSArray
@@ -211,6 +229,36 @@ class NetworkService: NSObject {
             }
         }
     }
+    
+    func creactBackupDrive(callBack:@escaping (_ error:Error?,_ model:DriveModel?)->()){
+        DriveAPI.init(type: .creatBackup).startRequestJSONCompletionHandler { (response) in
+            if response.error == nil{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.Request.CloudRequstError, userInfo: [NSLocalizedDescriptionKey:errorMessage])
+                    return callBack(error as! CustomNSError,nil)
+                }
+                let isLocalRequest = AppNetworkService.networkState == .local
+                var responseDic = NSDictionary.init()
+                if isLocalRequest{
+                    responseDic = response.value as! NSDictionary
+                }else{
+                    guard let rootDic = response.value as? NSDictionary else {
+                        let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.JsonModel.SwitchTOModelFail, userInfo: [NSLocalizedDescriptionKey:ErrorLocalizedDescription.JsonModel.SwitchTOModelFail])
+                        return callBack(error as! CustomNSError,nil)
+                    }
+                    responseDic = rootDic["data"] as! NSDictionary
+                }
+               
+                if let driveModel = DriveModel.deserialize(from: responseDic) {
+                    return callBack(nil, driveModel)
+                }
+              
+            }else{
+                return callBack(response.error, nil)
+            }
+        }
+    }
+    
     
     func getUserBackupDir(name:String ,_ callback:@escaping (_ error:Error?,_ entryUUID:String?)->()){
         if !AppUserService.isUserLogin {
