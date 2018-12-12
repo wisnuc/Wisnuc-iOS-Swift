@@ -247,9 +247,10 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                 
                     self?.loadOK = true
                     self?.imageView.image = image
-                    if filesModel.metadata?.type?.lowercased() == FilesFormatType.GIF.rawValue{
+                    if(filesModel.metadata?.type?.caseInsensitiveCompare(FilesFormatType.GIF.rawValue) == .orderedSame){
                         self?.resumeGif()
                     }
+
                     self?.resetSubviewSize(image)
                 self?.indicator.stopAnimating()
                     print("Get image \(image), cacheType: \(cacheType).")
@@ -266,7 +267,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                         } else {
                             self?.loadOK = true
                             self?.imageView.image = img
-                            if filesModel.metadata?.type?.lowercased() == FilesFormatType.GIF.rawValue{
+                            if (filesModel.metadata?.type?.caseInsensitiveCompare(FilesFormatType.GIF.rawValue) == .orderedSame){
                                 self?.resumeGif()
                             }
                             self?.resetSubviewSize(img)
@@ -628,7 +629,7 @@ class WSPreviewVideo: WSBasePreviewView {
         if (playLayer != nil) {
             playLayer?.player = nil
             playLayer?.removeFromSuperlayer()
-            playLayer?.removeObserver(self, forKeyPath: "status")
+            playLayer?.removeObserverBlocks(forKeyPath: "status")
             hasObserverStatus = false
             playLayer = nil
         }
@@ -1034,9 +1035,9 @@ class WSPreviewView: UIView {
                 self.addSubview(self.imageGifView)
                 let filesModel = model as! EntriesModel
                 if let type = filesModel.metadata?.type{
-                    if  kVideoTypes.contains(type.lowercased()) {
+                    if kVideoTypes.contains(where: {$0.caseInsensitiveCompare(type) == .orderedSame}) {
                         self.videoView.loadNetNormalImage(filesModel: filesModel)
-                    }else if kImageTypes.contains(type.lowercased()){
+                    }else if kImageTypes.contains(where: {$0.caseInsensitiveCompare(type) == .orderedSame}){
                         self.imageGifView.loadImage(filesModel: filesModel)
                     }
                 }

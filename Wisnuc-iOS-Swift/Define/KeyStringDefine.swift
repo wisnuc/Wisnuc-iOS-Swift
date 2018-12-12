@@ -19,6 +19,7 @@ struct RequestMethodValue {
 
 struct RequestMediaClassValue {
     public static let Image:String = "image"
+    public static let Video:String = "video"
 }
 
 public let kFirstLaunchKey =  "kFirstLaunchKey"

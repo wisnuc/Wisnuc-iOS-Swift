@@ -634,20 +634,24 @@ class FilesRootViewController: BaseViewController{
 //        })
 //    }
     
-    func filesRemoveOptionRequest(names:[String]){
-        for name in names {
-            filesRemoveOptionRequest(name: name)
+    func filesRemoveOptionRequest(models:[EntriesModel]){
+        for model in models {
+            filesRemoveOptionRequest(model: model)
         }
     }
     
-    func filesRemoveOptionRequest(name:String){
+    func filesRemoveOptionRequest(model:EntriesModel){
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         DirOprationAPI.init(driveUUID: drive, directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
-            let dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
+            var dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
+            if let uuid = model.uuid,let hash = model.hash {
+                dic = [kRequestOpKey: FilesOptionType.remove.rawValue,"uuid":uuid,"hash":hash]
+            }
+          
             do {
                 let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
-                formData.append(data, withName: name)
+                formData.append(data, withName: model.name ?? LocalizedString(forKey: "未命名文件"))
             }catch{
                 Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
             }

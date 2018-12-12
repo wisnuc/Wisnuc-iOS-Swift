@@ -686,7 +686,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         let alertController = MDCAlertController(title: title, message: messageString)
         
         let acceptAction = MDCAlertAction(title:LocalizedString(forKey: "Remove")) { [weak self] (_) in
-            self?.filesRemoveOptionRequest(name:name)
+            self?.filesRemoveOptionRequest(model:model)
 //            switch AppNetworkService.networkState {
 //            case .local?:
 //                self?.localNetStateFilesRemoveOptionRequest(name:name)
@@ -732,7 +732,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
 //            default:
 //                break
 //            }
-            self?.filesRemoveOptionRequest(names:models.map({$0.name!}))
+            self?.filesRemoveOptionRequest(models:models)
         }
         alertController.addAction(acceptAction)
         
@@ -925,7 +925,7 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
     
     func createNewFolderRequest(name:String,drive:String,dir:String){
         MkdirAPI.init(driveUUID: drive, directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: {  (formData) in
-            let dic = [kRequestOpKey: kRequestMkdirValue]
+            let dic = [kRequestOpKey: kRequestMkdirValue,kRequestTaskPolicyKey:[nil,FilesTaskPolicy.rename.rawValue],kRequestBctimeKey:Date.init().timeIntervalSince1970*1000,kRequestBmtimeKey:Date.init().timeIntervalSince1970] as [String : Any]
             do {
                 let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
                 formData.append(data, withName:name)
@@ -938,8 +938,16 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
                     Message.message(text: LocalizedString(forKey: "创建文件夹失败"))
                     return
                 }
+                if let rootDic =  response.value as? NSDictionary{
+                    if let code = rootDic["code"] as? String{
+                        if code == "EEXIST"{
+                            Message.message(text: LocalizedString(forKey: "创建文件夹失败，同名文件夹已存在"))
+                        }
+                        return
+                    }
+                }
                 #warning ("Conflict")
-                Message.message(text: LocalizedString(forKey: "Folder created"))
+                Message.message(text: LocalizedString(forKey: "文件夹已创建"))
                 self?.prepareData(animation: false)
             }else{
                 if response.data != nil {

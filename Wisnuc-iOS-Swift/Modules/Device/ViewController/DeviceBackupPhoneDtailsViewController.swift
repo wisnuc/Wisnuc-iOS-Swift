@@ -80,7 +80,7 @@ class DeviceBackupPhoneDtailsViewController: BaseViewController {
         guard let placesUUID = model.uuid else {
             return
         }
-        let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal)
+        let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal,driveUUID:placesUUID)
         photosVC.title = model.label
         DispatchQueue.global(qos: .default).async {
             
@@ -139,7 +139,10 @@ class DeviceBackupPhoneDtailsViewController: BaseViewController {
         AppUserService.synchronizedCurrentUser()
         autoBackupSwitchOn = sender.isOn
         if autoBackupSwitchOn {
-            AppService.sharedInstance().startAutoBackup {
+            guard let uuid = self.model?.uuid else{
+                return
+            }
+            AppService.sharedInstance().startAutoBackup(uuid: uuid) {
             }
         } else{
             AppService.sharedInstance().autoBackupManager.stop()

@@ -29,6 +29,7 @@ class PhotoRootViewController: BaseViewController {
 //        return false
 //    }
     weak var delegate:PhotoRootViewControllerDelegate?
+    var driveUUID:String?
     var requset:BaseRequest?
     var state:PhotoRootViewControllerState?{
         didSet{
@@ -84,9 +85,10 @@ class PhotoRootViewController: BaseViewController {
         super.init(style: style)
     }
     
-    init(style: NavigationStyle ,state:PhotoRootViewControllerState) {
+    init(style: NavigationStyle ,state:PhotoRootViewControllerState,driveUUID:String? = nil) {
         super.init(style: style)
         self.setState(state: state)
+        self.driveUUID = driveUUID
     }
     
     override func viewDidLoad() {
@@ -345,14 +347,13 @@ class PhotoRootViewController: BaseViewController {
     }
 
     func photoRemoveOptionRequest(photo: NetAsset,closure:@escaping ()->()){
-        let drive = photo.place == 0 ? AppUserService.currentUser?.userHome : AppUserService.currentUser?.shareSpace ?? ""
+        let drive = self.driveUUID != nil ? self.driveUUID! : photo.place == 0 ? AppUserService.currentUser?.userHome : AppUserService.currentUser?.shareSpace ?? ""
         let dir = photo.pdir ?? ""
         DirOprationAPI.init(driveUUID: drive ?? "", directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
             var dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
-            guard let uuid = photo.uuid,let hash = photo.fmhash else{
-                return closure()
+            if let uuid = photo.uuid,let hash = photo.fmhash{
+              dic = [kRequestOpKey: FilesOptionType.remove.rawValue,"uuid":uuid,"hash":hash]
             }
-            dic = [kRequestOpKey: FilesOptionType.remove.rawValue,"uuid":uuid,"hash":hash]
             do {
                 let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
                 formData.append(data, withName: photo.name ?? "")
@@ -408,29 +409,6 @@ class PhotoRootViewController: BaseViewController {
                 return closure()
         })
     }
-    
-//    func removeNASPhoto(models:[EntriesModel]){
-//        let title = "\(LocalizedString(forKey: "Remove"))"
-//        var message = "\(LocalizedString(forKey: "照片"))"
-//        
-//        let messageString =  "\(models.count) 个\(message)\(LocalizedString(forKey: "将被删除"))"
-//        
-//        let alertController = MDCAlertController(title: title, message: messageString)
-//        
-//        let acceptAction = MDCAlertAction(title:LocalizedString(forKey: "Remove")) { [weak self] (_) in
-//            
-//            self?.filesRemoveOptionRequest(names:models.map({$0.name!}))
-//        }
-//        alertController.addAction(acceptAction)
-//        
-//        let considerAction = MDCAlertAction(title:LocalizedString(forKey: "Cancel")) { (_) in print("Cancel") }
-//        alertController.addAction(considerAction)
-//        ViewTools.setAlertControllerColor(alertController:alertController)
-//        let presentationController =
-//            alertController.mdc_dialogPresentationController
-//        presentationController?.dismissOnBackgroundTap = false
-//        self.present(alertController, animated: true, completion: nil)
-//    }
     
     func setNotification(){
         defaultNotificationCenter().addObserver(forName: Notification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: nil, queue: nil) {  [weak self] (noti) in

@@ -83,8 +83,8 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         }
         
         let placesUUID = places.joined(separator: ".")
-        
-       let request = GetMediaAPI.init(classType: RequestMediaClassValue.Image, placesUUID: placesUUID)
+        let types = kMediaTypes.joined(separator: ".")
+       let request = GetMediaAPI.init(placesUUID: placesUUID,types: types)
        request.startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
 //                print("😆\(String(describing: response.value))")

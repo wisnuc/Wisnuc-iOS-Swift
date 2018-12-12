@@ -75,15 +75,15 @@ class SettingRootViewController: BaseViewController {
     }
     
     @objc func switchBtnHandleForSync(_ sender:UISwitch){
-        AppUserService.currentUser?.autoBackUp = NSNumber.init(value: sender.isOn)
-        AppUserService.synchronizedCurrentUser()
-        autoBackupSwitchOn = sender.isOn
-        if autoBackupSwitchOn {
-            AppService.sharedInstance().startAutoBackup {
-            }
-        } else{
-            AppService.sharedInstance().autoBackupManager.stop()
-        }
+//        AppUserService.currentUser?.autoBackUp = NSNumber.init(value: sender.isOn)
+//        AppUserService.synchronizedCurrentUser()
+//        autoBackupSwitchOn = sender.isOn
+//        if autoBackupSwitchOn {
+//            AppService.sharedInstance().startAutoBackup {
+//            }
+//        } else{
+//            AppService.sharedInstance().autoBackupManager.stop()
+//        }
     }
     
     @objc func switchBtnHandleForWIFISync(_ sender:UISwitch){

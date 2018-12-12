@@ -371,7 +371,7 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
         if let cell = cell as?  FilesOfflineTableViewCell {
             let model = dataSouce![indexPath.row]
 //            let exestr = (model.name! as NSString).pathExtension
-            cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: model.metadata?.type?.lowercased() ?? FilesFormatType.DEFAULT.rawValue)))
+            cell.leftImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: model.metadata?.type ?? FilesFormatType.DEFAULT.rawValue)))
             cell.detailImageView.isHidden = true
             if cell.detailImageView.isHidden {
                 cell.reloadLayout()
@@ -380,14 +380,16 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
             cell.titleLabel.text = model.name
             let time = model.mtime != nil ? TimeTools.timeString(TimeInterval(model.mtime!/1000)) : LocalizedString(forKey: "No time")
             let size = model.size != nil ? sizeString(Int64(model.size!)) : ""
-            cell.detailLabel.text = "\(time) \(size)"
+            if let time = time{
+                cell.detailLabel.text = "\(time) \(size)"
+            }
             cell.cellCallBack = { [weak self](callBackCell , button) in
                 let filesBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
                 filesBottomVC.delegate = self
                 let bottomSheet = AppBottomSheetController.init(contentViewController: filesBottomVC)
                 bottomSheet.trackingScrollView = filesBottomVC.tableView
                 filesBottomVC.headerTitleLabel.text = model.name ?? ""
-                filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: model.metadata?.type?.lowercased() ?? FilesFormatType.DEFAULT.rawValue)))
+                filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: model.metadata?.type ?? FilesFormatType.DEFAULT.rawValue)))
                 self?.present(bottomSheet, animated: true, completion: {
                 })
             }

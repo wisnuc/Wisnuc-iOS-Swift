@@ -195,7 +195,7 @@ extension PHAsset{
             //    // less then iOS9
             if(UIDevice.current.systemVersion.floatValue < 9.0) {
                 let opt = PHVideoRequestOptions.init()
-                opt.isNetworkAccessAllowed = false// TODO ??
+                opt.isNetworkAccessAllowed = true// TODO ??
                 opt.deliveryMode = PHVideoRequestOptionsDeliveryMode.highQualityFormat
                 return PHImageManager.default().requestExportSession(forVideo: self, options: opt, exportPreset: AVAssetExportPresetHighestQuality, resultHandler: { (exportSession, info) in
                     if exportSession == nil{

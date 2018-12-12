@@ -39,28 +39,43 @@ class NetworkService: NSObject {
         }
         switch status {
         case .WIFI:
-            if networkState == .normal{
-                
-                getLocalInCloudLogin { [weak self] (error, localToken) in
-                    if error == nil {
-                        self?.checkIP(address: (AppUserService.currentUser?.lanIP)!, { (isLocal) in
+            if networkState == .normal || networkState == nil {
+                 self.networkState = .normal
+//                getLocalInCloudLogin { [weak self] (error, localToken) in
+//                    if error == nil {
+                        guard let ip = AppUserService.currentUser?.lanIP else{
+                            return
+                        }
+                        self.checkIP(address:ip, { (isLocal) in
                             if isLocal{
-                                AppUserService.currentUser?.localToken = localToken
-                                AppUserService.synchronizedCurrentUser()
-                                self?.networkState = .local
+//                                AppUserService.currentUser?.localToken = localToken
+//                                AppUserService.synchronizedCurrentUser()
+                                if AppUserService.currentUser?.localToken != nil{
+                                    self.networkState = .local
+                                }else{
+                                    self.networkState = .normal
+                                }
                             }
                         })
-                    }else{
-                        Message.message(text: (error?.localizedDescription)!)
-                        self?.networkState = .normal
-                    }
-                }
+//                    }else{
+////                        Message.message(text: (error?.localizedDescription)!)
+//                        self?.networkState = .normal
+//                    }
+//                }
             }else{
-                if AppUserService.currentUser?.cloudToken != nil {
-                    self.networkState = .normal
-                }else{
-                    self.networkState = .local
+//                 self.networkState = .normal
+                guard let ip = AppUserService.currentUser?.lanIP else{
+                    return
                 }
+                self.checkIP(address:ip, { (isLocal) in
+                    if isLocal{
+                        if AppUserService.currentUser?.localToken != nil{
+                            self.networkState = .local
+                        }else{
+                            self.networkState = .normal
+                        }
+                    }
+                })
             }
         case .ViaWWAN:
             if networkState == .local{
@@ -286,10 +301,14 @@ class NetworkService: NSObject {
     }
     
     // 获取backup目录下的所有文件
-    func getEntriesInUserBackupDirectory(callback:@escaping (_ error:Error?,_ entries:Array<EntriesModel>?)->()){
-        if let backUpDirectoryUUID = AppUserService.currentUser?.backUpDirectoryUUID {
-            DriveDirAPI.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: backUpDirectoryUUID).startRequestJSONCompletionHandler { [weak self] (response) in
+    func getEntriesInUserBackupDirectory(uuid:String,callback:@escaping (_ error:Error?,_ entries:Array<EntriesModel>?)->()){
+//        if let backUpDirectoryUUID = AppUserService.currentUser?.backUpDirectoryUUID {
+            DriveDirAPI.init(driveUUID: uuid, directoryUUID: uuid).startRequestJSONCompletionHandler { [weak self] (response) in
                 if response.error == nil{
+                    if let errorMessage = ErrorTools.responseErrorData(response.data){
+                        Message.message(text: errorMessage)
+                        return
+                    }
                     let dic = self?.networkState == .normal ? (response.value as! NSDictionary)["data"] as! NSDictionary: response.value as! NSDictionary
                     let array = NSArray.init(array: dic.object(forKey: "entries") as! NSArray)
                     var entries = Array<EntriesModel>.init()
@@ -317,10 +336,11 @@ class NetworkService: NSObject {
                     }
                 }
             }
-        }else{
-           
-            callback(BaseError(localizedDescription: ErrorLocalizedDescription.Backup.BackupDirNotFound, code: ErrorCode.Backup.BackupDirNotFound), nil)
         }
+//        else{
+//
+//            callback(BaseError(localizedDescription: ErrorLocalizedDescription.Backup.BackupDirNotFound, code: ErrorCode.Backup.BackupDirNotFound), nil)
+//        }
        
 //    FLGetDriveDirAPI *api = [FLGetDriveDirAPI apiWithDrive:WB_UserService.currentUser.userHome dir:WB_UserService.currentUser.backUpDir];
 //    [api startWithCompletionBlockWithSuccess:^(__kindof JYBaseRequest *request) {
@@ -338,7 +358,7 @@ class NetworkService: NSObject {
 //    NSLog(@"get backup dir entries error : %@", request.error);
 //    callback(request.error, nil);
 //    }];
-    }
+//    }
     
     // 获取 名为 “上传的照片”（任何name都可以） 的文件夹， 没有就创建
     func getDirUUID(name:String,driveUUID:String,dirUUID:String,callBack:@escaping ((_ error:Error?,_ directoryUUID:String?)->())) {

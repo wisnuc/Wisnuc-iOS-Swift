@@ -401,8 +401,8 @@ class WSShowBigimgViewController: UIViewController {
         let model = self.getCurrentPageModel()
         if model is EntriesModel{
             let filesModel = model as! EntriesModel
-            if filesModel.metadata?.type != nil{
-                if kVideoTypes.contains((filesModel.metadata?.type)!.lowercased()){
+            if let type = filesModel.metadata?.type{
+                if kVideoTypes.contains(where: {$0.caseInsensitiveCompare(type) == .orderedSame}){
                    return completion()
                 }
             }
@@ -1045,7 +1045,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
             var mtime:TimeInterval = 0
             if model is WSAsset{
             let assetModel = model as! WSAsset
-                mtime = model is NetAsset ? (model as! NetAsset).mtime ?? 0 : (assetModel.asset?.creationDate?.timeIntervalSince1970 ?? 0)
+                mtime = model is NetAsset ? (model as! NetAsset).mtime ?? 0 : ((assetModel.asset?.creationDate?.timeIntervalSince1970 ?? 0)*1000 )
             }else if model is EntriesModel{
                let filesModel = model as! EntriesModel
                 if let date = filesModel.metadata?.date{

@@ -24,6 +24,7 @@ let AppTokenManager =  MainServices().tokenManager
 class AppService: NSObject,ServiceProtocol{
     private var isRebuildingAutoBackupManager = false
     private static var privateShared : AppService?
+    var backupuuid:String?
     class func sharedInstance() -> AppService { // change class to final to prevent override
         guard let uwShared = privateShared else {
             privateShared = AppService()
@@ -287,7 +288,10 @@ class AppService: NSObject,ServiceProtocol{
                 if error == nil{
                self?.isRebuildingAutoBackupManager = false
                 self?.autoBackupManager.start(localAssets: (self?.assetService.allAssets)!, netAssets: [EntriesModel]())
-                self?.startAutoBackup(callBack: nil)
+                    guard let uuid = self?.backupuuid else{
+                        return
+                    }
+                    self?.startAutoBackup(uuid: uuid, callBack: nil)
                 }else{
                     print("--------->> Update User BackUp Dir Error <<------------- \n error: \(String(describing: error))")
                 }
@@ -403,7 +407,9 @@ class AppService: NSObject,ServiceProtocol{
     
     var isStartingUpload = false
     var needRestart  = false
-    func startAutoBackup(callBack:(()->())?){
+    func startAutoBackup(uuid:String,callBack:(()->())?){
+        self.backupuuid = uuid
+        self.autoBackupManager.uuid = uuid
         if  isStartingUpload {
             needRestart = true
             if((callBack) != nil){
@@ -412,9 +418,9 @@ class AppService: NSObject,ServiceProtocol{
             return
         }
         isStartingUpload = true
-        let isWIFIBackup = self.userService.currentUser?.isWIFIAutoBackup?.boolValue ?? true
+        let isWIFIBackup = self.userService.currentUser?.isWIFIAutoBackup?.boolValue ?? false
         if  (RealReachability.sharedInstance().currentReachabilityStatus() == ReachabilityStatus.RealStatusViaWiFi && isWIFIBackup) || (RealReachability.sharedInstance().currentReachabilityStatus() != ReachabilityStatus.RealStatusNotReachable && !isWIFIBackup){
-            self.networkService.getEntriesInUserBackupDirectory { [weak self](error, entries) in
+            self.networkService.getEntriesInUserBackupDirectory(uuid: uuid) { [weak self](error, entries) in
                 if error != nil {
                     self?.isStartingUpload = false
                     if error is BaseError{
@@ -430,6 +436,7 @@ class AppService: NSObject,ServiceProtocol{
                     var netEntries = Array<EntriesModel>.init()
                     netEntries.append(contentsOf: netEntries)
 //                    self?.autoBackupManager.setNetAssets(netAssets: netEntries)
+                    
                     self?.autoBackupManager.start(localAssets: (self?.assetService.allAssets)!, netAssets: netEntries)
                     self?.autoBackupManager.startAutoBcakup()
                     self?.isStartingUpload = false

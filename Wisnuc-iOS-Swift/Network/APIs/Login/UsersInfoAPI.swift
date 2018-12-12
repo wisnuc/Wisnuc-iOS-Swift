@@ -14,15 +14,19 @@ class UsersInfoAPI: BaseRequest {
       super.init()
     }
     
+    override func baseURL() -> String {
+        return kCloudBaseURL
+    }
+    
     override func requestURL() -> String {
-        switch AppNetworkService.networkState {
-        case .normal?:
+//        switch AppNetworkService.networkState {
+//        case .normal?:
             return "/user"
-        case .local?:
-            return "/user"
-        default:
-            return ""
-        }
+//        case .local?:
+//            return "/user"
+//        default:
+//            return ""
+//        }
     }
     
     override func requestMethod() -> RequestHTTPMethod {
@@ -42,16 +46,16 @@ class UsersInfoAPI: BaseRequest {
 //    }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
-        switch AppNetworkService.networkState {
-        case .normal?:
+//        switch AppNetworkService.networkState {
+//        case .normal?:
             if let token = AppUserService.currentUser?.cloudToken{
                 return [kRequestAuthorizationKey:token]
             }
             return nil
-        case .local?:
-            return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
-        default:
-            return nil
-        }
+//        case .local?:
+//            return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
+//        default:
+//            return nil
+//        }
     }
 }

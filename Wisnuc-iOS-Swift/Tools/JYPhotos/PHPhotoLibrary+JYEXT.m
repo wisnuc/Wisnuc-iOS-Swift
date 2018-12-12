@@ -441,6 +441,7 @@
     if (asset.mediaType == PHAssetMediaTypeVideo || asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive) {
         PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
         options.version = PHImageRequestOptionsVersionCurrent;
+        options.networkAccessAllowed = true;
         options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         if (resource == nil) {
              result([[NSError alloc]initWithDomain:@"not video" code:555 userInfo:nil], nil);

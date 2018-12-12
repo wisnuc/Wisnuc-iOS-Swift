@@ -12,9 +12,11 @@ import Alamofire
 class GetMediaAPI: BaseRequest {
     var classType:String?
     var placesUUID:String?
-    init(classType:String,placesUUID:String) {
+    var types:String?
+    init(classType:String? = nil,placesUUID:String,types:String? = nil) {
         self.classType = classType
         self.placesUUID = placesUUID
+        self.types = types
     }
     
     override func requestMethod() -> RequestHTTPMethod {
@@ -40,13 +42,29 @@ class GetMediaAPI: BaseRequest {
     }
     
     override func requestParameters() -> RequestParameters? {
+        guard let placesUUID = self.placesUUID else {
+            return nil
+        }
         switch AppNetworkService.networkState {
         case .normal?:
             let urlPath = "/files"
-            let params  = [kRequestClassKey:self.classType!,kRequestPlacesKey:self.placesUUID!]
+            var params = [String:String]()
+            if let classType = self.classType{
+               params  = [kRequestClassKey:classType,kRequestPlacesKey:placesUUID]
+            }
+            if let types = self.types{
+                params  = [kRequestTypesKey:types,kRequestPlacesKey:placesUUID]
+            }
             return [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params as Dictionary<String,String>]
         case .local?:
-            return [kRequestClassKey:self.classType!,kRequestPlacesKey:self.placesUUID!]
+            var params:[String:String]?
+            if let classType = self.classType{
+                params  = [kRequestClassKey:classType,kRequestPlacesKey:placesUUID]
+            }
+            if let types = self.types{
+                params  = [kRequestTypesKey:types,kRequestPlacesKey:placesUUID]
+            }
+            return params
         default:
             return nil
         }

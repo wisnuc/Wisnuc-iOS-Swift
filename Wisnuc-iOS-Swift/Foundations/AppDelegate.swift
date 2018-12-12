@@ -64,8 +64,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             userDefaults.synchronize()
         } else{
             if AppUserService.isUserLogin && AppUserService.isStationSelected{
-                setRootViewController()
                 setAppNetworkState()
+                setRootViewController()
                 fetchCookie()
                 if let language = AppUserService.currentUser?.language?.intValue{
                     let languageType = LanguageType(number: language)

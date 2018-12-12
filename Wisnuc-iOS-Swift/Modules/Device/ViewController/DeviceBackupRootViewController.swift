@@ -53,38 +53,56 @@ class DeviceBackupRootViewController: BaseViewController {
     
     func loadData(){
         ActivityIndicator.startActivityIndicatorAnimation()
-        AppNetworkService.getUserAllBackupDrive { (error, models) in
+        AppNetworkService.getUserAllBackupDrive { [weak self](error, models) in
             ActivityIndicator.stopActivityIndicatorAnimation()
             if let error = error{
                 Message.message(text: error.localizedDescription)
             }else{
                 if let models = models{
-                    self.dataSource.removeAll()
-                    var pcArray = [DriveModel]()
-                    var mobileArray = [DriveModel]()
-                    for model in models{
-                        switch BackupPlatformType(rawValue: model.client?.type ?? "") {
-                        case .WinPC?,.MacPC?,.LinuxPC?:
-                            pcArray.append(model)
-                        case .AndroidMobile?,.iOSMobile?:
-                            mobileArray.append(model)
-                        default:
-                            break
+                    if  models.count>0{
+                        self?.dataSource.removeAll()
+                        var pcArray = [DriveModel]()
+                        var mobileArray = [DriveModel]()
+                        for model in models{
+                            switch BackupPlatformType(rawValue: model.client?.type ?? "") {
+                            case .WinPC?,.MacPC?,.LinuxPC?:
+                                pcArray.append(model)
+                            case .AndroidMobile?,.iOSMobile?:
+                                mobileArray.append(model)
+                            default:
+                                break
+                            }
                         }
+                        
+                        if pcArray.count > 0{
+                            self?.dataSource.append(pcArray)
+                            self?.capacity(array: pcArray)
+                        }
+                        if mobileArray.count > 0{
+                            self?.dataSource.append(mobileArray)
+                            self?.capacity(array: mobileArray)
+                        }
+                        self?.backupTableView.reloadData()
+                    }else{
+                        self?.creatBackupDrive()
                     }
-                    
-                    if pcArray.count > 0{
-                       self.dataSource.append(pcArray)
-                        self.capacity(array: pcArray)
-                    }
-                    if mobileArray.count > 0{
-                       self.dataSource.append(mobileArray)
-                        self.capacity(array: mobileArray)
-                    }
-                    self.backupTableView.reloadData()
+                }else{
+                    self?.creatBackupDrive()
                 }
             }
         }
+    }
+    
+    func creatBackupDrive(){
+        AppNetworkService.creactBackupDrive(callBack: { [weak self](error, driveModel) in
+            if let error = error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                if driveModel != nil{
+                    self?.loadData()
+                }
+            }
+        })
     }
     
     func capacity(array:[DriveModel]){

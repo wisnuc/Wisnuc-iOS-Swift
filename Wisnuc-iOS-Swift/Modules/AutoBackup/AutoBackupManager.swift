@@ -14,6 +14,7 @@ class AutoBackupManager: NSObject {
     private var isDestroying = false
     private var shouldNotify = false
     private var needRetry = true
+    var uuid:String?
 
     lazy var hashwaitingQueue = Array<WSAsset>.init()
     
@@ -184,23 +185,25 @@ class AutoBackupManager: NSObject {
         
         self.managerQueue.async { [weak self] in
             while((self?.hashWorkingQueue.count)! < (self?.hashLimitCount!)! && (self?.hashwaitingQueue.count)! > 0) {
-                let asset = self?.hashwaitingQueue.first
-                let location = self?.hashwaitingQueue.index(of: asset!)
+                guard let asset = self?.hashwaitingQueue.first else{
+                    return
+                }
+                let location = self?.hashwaitingQueue.index(of: asset)
                 if let eLocation = location{
                     self?.hashwaitingQueue.remove(at: eLocation)
                 }
-                self?.hashWorkingQueue.append(asset!)
+                self?.hashWorkingQueue.append(asset)
                 self?.workingQueue.async {
-                    self?.getAssetSha256(asset: asset!, callback: { [weak self] (error, sha256) in
+                    self?.getAssetSha256(asset: asset, callback: { [weak self] (error, sha256) in
                         self?.managerQueue.async {
                             if (error != nil) {
-                                self?.hashFailQueue.append(asset!)
+                                self?.hashFailQueue.append(asset)
                             }else{
-                                asset?.digest = sha256
-                                self?.uploadPaddingQueue.append(asset!)
+                                asset.digest = sha256
+                                self?.uploadPaddingQueue.append(asset)
                             }
                             
-                            let location = self?.hashWorkingQueue.index(of: asset!)
+                            let location = self?.hashWorkingQueue.index(of: asset)
                             if let eLocation = location{
                                 self?.hashWorkingQueue.remove(at: eLocation)
                             }
@@ -212,13 +215,23 @@ class AutoBackupManager: NSObject {
             
             if !(self?.shouldUpload!)! {return}
             while((self?.uploadPaddingQueue.count)! > 0 && (self?.uploadingQueue.count)! < (self?.uploadLimitCount)!) {
-                let asset = self?.uploadPaddingQueue.first
-                let location = self?.uploadPaddingQueue.index(of: asset!)
+                guard let asset = self?.uploadPaddingQueue.first else{
+                    return
+                }
+                let location = self?.uploadPaddingQueue.index(of: asset)
                 if let eLocation = location{
                      self?.uploadPaddingQueue.remove(at: eLocation)
                 }
-                let model = WSUploadModel.init(asset: asset!, manager: (self?.sessionManager)!)
-                if (self?.uploadedNetHashSet.contains((asset?.digest)!))! || (self?.uploadedLocalHashSet.contains((asset?.digest)!))! {
+                
+                guard let manager = self?.sessionManager,let drive = self?.uuid else{
+                    return
+                }
+                let model = WSUploadModel.init(asset: asset, manager: manager ,driveUUID: drive)
+                guard let digest = asset.digest else{
+                    return
+                }
+                
+                if (self?.uploadedNetHashSet.contains(digest))! || (self?.uploadedLocalHashSet.contains(digest))! {
                     self?.uploadedQueue.append(model)
                     print("发现一个已上传的，直接跳过, error: \(String(describing: (self?.uploadErrorQueue.count)!)) finish:\(String(describing: (self?.uploadedQueue.count)!))")
                     defaultNotificationCenter().post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
@@ -240,7 +253,7 @@ class AutoBackupManager: NSObject {
 //    __weak typeof(self) weakSelf = self;
 //    __weak typeof(WB_AppServices) weak_AppService = WB_AppServices;
         self.workingQueue.async { [weak self] in
-            model.start(useTimeStamp:useTimeStamp , callback: { [weak self](error, response) in
+            model.start(useTimeStamp:useTimeStamp , callback: { [weak self](error, responseString) in
                 self?.managerQueue.async {
                     if error != nil{
                         if error is BaseError{
@@ -290,6 +303,7 @@ class AutoBackupManager: NSObject {
 //
     func stop(){
         self.shouldUpload = false
+        AppService.sharedInstance().isStartingUpload = false
         //TODO: hash queue should stop?
         
         for model in self.uploadingQueue {
@@ -440,10 +454,13 @@ class WSUploadModel: NSObject {
     var requestFileID:PHImageRequestID?
     
     var manager:SessionManager?
-    init(asset:WSAsset,manager:SessionManager) {
+    
+    var driveUUID:String?
+    init(asset:WSAsset,manager:SessionManager,driveUUID:String) {
         super.init()
         self.asset = asset
         self.manager = manager
+        self.driveUUID = driveUUID
         self.shouldStop = false
     }
     
@@ -461,7 +478,7 @@ class WSUploadModel: NSObject {
     }
 
     
-    func start(useTimeStamp:Bool,callback:@escaping (_ error:Error?,_ any:Any?)->()){
+    func start(useTimeStamp:Bool,callback:@escaping (_ error:Error?,_ responseString:String?)->()){
     /*
      * WISNUC API:UPLOAD A FILE
      */
@@ -469,12 +486,12 @@ class WSUploadModel: NSObject {
     let invaildChars = ["/", "?", "<", ">", "\\", ":", "*", "|", "\""]
         self.requestFileID =  self.asset?.asset?.getFile(callBack: { [weak self] (error, filePath) in
             if error != nil{
-              return callback(error,nil)
+                return callback(error,nil)
             }
             if (self?.shouldStop!)! {
                 return callback(BaseError(localizedDescription: ErrorLocalizedDescription.Backup.BackupCancel, code: ErrorCode.Backup.BackupCancel), nil)
             }
-       print("==========================开始上传==============================")
+            print("==========================开始上传==============================")
             let hashString = self?.asset?.digest
             let sizeNumber = FileTools.fileSizeAtPath(filePath: filePath!)
             let exestr = filePath?.lastPathComponent
@@ -483,9 +500,9 @@ class WSUploadModel: NSObject {
                 fileName = exestr
             }
             
-//            let requestTempPath = "\(filePath!)_temp"
-//            let requestFileTempPathUrl = NSURL.init(fileURLWithPath: requestTempPath)
-           
+            //            let requestTempPath = "\(filePath!)_temp"
+            //            let requestFileTempPathUrl = NSURL.init(fileURLWithPath: requestTempPath)
+            
             
             let  tempFileName = NSMutableString.init(string: fileName!)
             for i in 0..<tempFileName.length{
@@ -502,40 +519,71 @@ class WSUploadModel: NSObject {
             let requestHTTPHeaders = [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
             var mutableDic:Dictionary<String, Any>? = Dictionary<String, Any>.init()
             if AppUserService.currentUser?.isLocalLogin == nil {return}
+            guard let driveUUID = self?.driveUUID else{
+                Message.message(text: "上传错误：No drive")
+                return
+            }
             if AppNetworkService.networkState == .local {
-                urlString = "\((RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: (AppUserService.currentUser?.userHome!)!))/dirs/\(String(describing: (AppUserService.currentUser?.backUpDirectoryUUID!)!))/entries/"
+                urlString = "\((RequestConfig.sharedInstance.baseURL!))/drives/\(driveUUID)/dirs/\(driveUUID)/entries/"
                 mutableDic = nil
                 mutableDic = Dictionary<String, Any>.init()
             }else {
-                    urlString = "\(kCloudAddr)\(kCloudCommonPipeUrl)"
-                let requestUrl = "/drives/\((AppUserService.currentUser?.userHome!)!)/dirs/\((AppUserService.currentUser?.backUpDirectoryUUID!)!)/entries"
-//                    let resource = requestUrl.toBase64()
+                urlString = "\(kCloudAddr)\(kCloudCommonPipeUrl)"
+                let requestUrl = "/drives/\(driveUUID)/dirs/\(driveUUID)/entries/"
+                //                    let resource = requestUrl.toBase64()
                 var manifestDic  = Dictionary<String, Any>.init()
-                    manifestDic[kRequestOpKey] = kRequestOpNewFileValue
-                    manifestDic[kRequestVerbKey] = RequestMethodValue.POST
-                    manifestDic[kRequestToNameKey] = fileName!
-                    manifestDic[kRequestUrlPathKey] = requestUrl
-                    manifestDic["sha256"]  = hashString!
-                    manifestDic["size"] = NSNumber.init(value: sizeNumber)
-                    let josnData = jsonToData(jsonDic: manifestDic as NSDictionary)
-    
-                    let result = String.init(data: josnData!, encoding: String.Encoding.utf8)
-                    mutableDic!["manifest"] = result
+                manifestDic[kRequestOpKey] = kRequestOpNewFileValue
+                manifestDic[kRequestVerbKey] = RequestMethodValue.POST
+                manifestDic[kRequestToNameKey] = fileName!
+                manifestDic[kRequestUrlPathKey] = requestUrl
+                manifestDic[kRequestImageSHA256Key]  = hashString!
+                manifestDic[kRequestImageSizeKey] = NSNumber.init(value: sizeNumber)
+                if let ctime = self?.fetchAssetCtime(){
+                     manifestDic[kRequestBctimeKey] = NSNumber.init(value: ctime)
+                }
+                
+                if let mtime = self?.fetchAssetMtime(){
+                    manifestDic[kRequestBmtimeKey] = NSNumber.init(value: mtime)
+                }
+               
+                let josnData = jsonToData(jsonDic: manifestDic as NSDictionary)
+                
+                let result = String.init(data: josnData!, encoding: String.Encoding.utf8)
+                mutableDic!["manifest"] = result
             }
             var originalRequest: URLRequest?
             do {
                 originalRequest = try URLRequest(url: URL.init(string: urlString!)! , method:.post, headers: requestHTTPHeaders)
                 originalRequest?.timeoutInterval = TimeInterval(30)
                 let encodedURLRequest = try  URLEncoding.default.encode(originalRequest!, with: nil)
-                
+                guard let exestr = exestr else{
+                    return
+                }
+                var mimeType = "image/jpeg"
+                if kVideoTypes.contains(where: {$0.caseInsensitiveCompare(exestr) == .orderedSame}) {
+                   mimeType = "video/\(exestr.lowercased())"
+                }
+//                else if kImageTypes.contains(where: {$0.caseInsensitiveCompare(exestr) == .orderedSame}){
+//                    self.imageGifView.loadImage(filesModel: filesModel)
+//                }
                 self?.manager?.upload(multipartFormData: { (formData) in
+                   
                     if AppNetworkService.networkState == .normal{
-                        formData.append(URL.init(fileURLWithPath: filePath!), withName: fileName!, fileName: fileName!, mimeType: "image/jpeg")
+                        formData.append(URL.init(fileURLWithPath: filePath!), withName: fileName!, fileName: fileName!, mimeType: mimeType)
                     }else{
-                        let dic = ["size":NSNumber.init(value: sizeNumber) ,"sha256":hashString!, kRequestOpKey:kRequestOpNewFileValue] as NSDictionary
-                        let jsonData =  jsonToData(jsonDic: dic)
-                        let jsonString = String.init(data: jsonData!, encoding: String.Encoding.utf8)
-                        formData.append(URL.init(fileURLWithPath: filePath!), withName: fileName!, fileName: jsonString!, mimeType: "image/jpeg")
+                        var dic = [kRequestImageSizeKey: sizeNumber,kRequestImageSHA256Key:hashString!, kRequestOpKey:kRequestOpNewFileValue] as [String : Any]
+                        if let ctime = self?.fetchAssetCtime(){
+                            dic[kRequestBctimeKey] = ctime
+                        }
+                        
+                        if let mtime = self?.fetchAssetMtime(){
+                             dic[kRequestBmtimeKey] = mtime
+                        }
+                       
+                        if let jsonData =  jsonToData(jsonDictionary: dic){
+                            let jsonString = String.init(data: jsonData, encoding: String.Encoding.utf8)
+                            formData.append(URL.init(fileURLWithPath: filePath!), withName: fileName!, fileName: jsonString!, mimeType: mimeType)
+                        }
                     }
                 }, usingThreshold: SessionManager.multipartFormDataEncodingMemoryThreshold, with: encodedURLRequest, encodingCompletion: { (encodingResult) in
                     switch (encodingResult) {
@@ -547,13 +595,13 @@ class WSUploadModel: NSObject {
                             print("upload progress: \(progress.fractionCompleted)")
                             // here you can send out to a delegate or via notifications the upload progress to interested parties
                         })
-                        request.validate(statusCode: 200..<500)
+                        request.validate(statusCode: 200..<503)
                         // response handler
-                        request.responseJSON(completionHandler: { response in
+                        request.responseString(completionHandler: { response in
                             switch response.result {
-                            case .success(let jsonData):
+                            case .success(let jsonString):
                                 // do any parsing on your request's response if needed
-                                callback(nil,(jsonData as AnyObject).value)
+                                callback(nil,jsonString)
                             case .failure(let error):
                                 print(error)
                                 return callback(error,nil)
@@ -650,6 +698,41 @@ class WSUploadModel: NSObject {
         })
     }
     
+    func fetchAssetCtime()->Int64? {
+        if let netAsset = self.asset as? NetAsset{
+            if let ctime = PhotoHelper.fetchPhotoTime(model: netAsset){
+                let bctime = Int64(ctime*1000)
+                return bctime
+            }
+        }else{
+            if let localAsset = self.asset?.asset{
+                if let ctime = localAsset.creationDate?.timeIntervalSince1970{
+                   return Int64(ctime*1000)
+                }
+            }
+        }
+        return nil
+    }
+    
+    func fetchAssetMtime()->Int64?{
+        if let netAsset = self.asset as? NetAsset{
+            if let mtime = netAsset.mtime{
+                return Int64(mtime)
+            }else{
+                if let time = PhotoHelper.fetchPhotoTime(model: netAsset){
+                    let bmtime = Int64(time*1000)
+                    return bmtime
+                }
+            }
+        }else{
+            if let localAsset = self.asset?.asset{
+                if let mtime = localAsset.modificationDate?.timeIntervalSince1970{
+                    return Int64(mtime*1000)
+                }
+            }
+        }
+        return nil
+    }
     
 //    @property (nonatomic, copy) void(^callback)(NSError * , id);
 }

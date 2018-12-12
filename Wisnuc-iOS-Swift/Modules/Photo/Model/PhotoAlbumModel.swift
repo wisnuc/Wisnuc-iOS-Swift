@@ -13,10 +13,17 @@ enum PhotoAlbumType:String,HandyJSONEnum{
     case my
 }
 
+enum PhotoAlbumCollecionType:String,HandyJSONEnum{
+    case normal
+    case backup
+}
+
 class PhotoAlbumModel:HandyJSON{
     var type:PhotoAlbumType?
+    var detailType:PhotoAlbumCollecionType?
     var name:String?
     var describe:String?
+    var drive:String?
     var coverThumbnilhash:String?
     var coverThumbnilAsset:PHAsset?
     var dataSource:[WSAsset]?

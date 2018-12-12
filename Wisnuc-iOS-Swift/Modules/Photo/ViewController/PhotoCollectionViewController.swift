@@ -579,16 +579,22 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headView:FMHeadView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! FMHeadView
+        if let dataSource = self.dataSource{
+            let model =  dataSource[indexPath.section][indexPath.row]
+            if let creatDate = model.createDate{
+                headView.headTitle = PhotoTools.getDateString(date: creatDate)
+            }
+            headView.fmIndexPath = indexPath
+            headView.isSelectMode = isSelectMode ?? false
+            headView.isChoose =  self.choosePhotos.contains(array:self.dataSource![indexPath.section])
+            headView.fmDelegate = self
+        }
       
-        headView.headTitle =  PhotoTools.getDateString(date: dataSource![indexPath.section][indexPath.row].createDate!)
-        headView.fmIndexPath = indexPath
-        headView.isSelectMode = isSelectMode ?? false
-        headView.isChoose =  self.choosePhotos.contains(array:self.dataSource![indexPath.section])
 //        let listSet = Set(self.dataSource![indexPath.section])
 //        let findSet = Set(self.choosePhotos)
 //        headView.isChoose = listSet.isSubset(of: findSet)
 //        headView.isChoose = self.chooseSection.contains(indexPath)
-        headView.fmDelegate = self
+
         return headView
     }
     

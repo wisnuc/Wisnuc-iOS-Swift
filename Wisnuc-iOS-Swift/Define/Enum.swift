@@ -14,7 +14,7 @@ enum FilesType:String{
     case directory = "directory"
 }
 
-public let kVideoTypes:Array<String> = [FilesFormatType.MP4.rawValue,FilesFormatType.RMVB.rawValue,FilesFormatType.RM.rawValue,FilesFormatType.AVI.rawValue,FilesFormatType.MKV.rawValue,FilesFormatType.WMV.rawValue,FilesFormatType.SWF.rawValue,FilesFormatType.FLV.rawValue,FilesFormatType.MOV.rawValue]
+public let kVideoTypes:Array<String> = [FilesFormatType.MP4.rawValue,FilesFormatType.RMVB.rawValue,FilesFormatType.RM.rawValue,FilesFormatType.AVI.rawValue,FilesFormatType.MKV.rawValue,FilesFormatType.WMV.rawValue,FilesFormatType.SWF.rawValue,FilesFormatType.FLV.rawValue,FilesFormatType.MOV.rawValue,FilesFormatType.ThreeGP.rawValue]
 
 public let kImageTypes:Array<String> = [FilesFormatType.PNG.rawValue,FilesFormatType.JPG.rawValue,FilesFormatType.JPEG.rawValue,FilesFormatType.GIF.rawValue]
 public let kMediaTypes:Array<String> = {
@@ -27,32 +27,33 @@ public let kMediaTypes:Array<String> = {
 
 enum FilesFormatType:String {
 
-    case EXE = "exe"
-    case PDF = "pdf"
-    case PNG = "png"
-    case JPG = "jpg"
-    case JPEG = "jpeg"
-    case GIF = "gif"
-    case MP4 = "mp4"
-    case RMVB = "rmvb"
-    case RM = "rm"
-    case AVI = "avi"
-    case MKV = "mkv"
-    case WMV = "wmv"
-    case SWF = "swf"
-    case FLV = "flv"
-    case MOV = "mov"
-    case MP3 = "mp3"
-    case AAC = "aac"
-    case WAV = "wav"
-    case FLAC = "flac"
-    case APE = "ape"
-    case TXT = "txt"
-    case PPT = "ppt"
-    case PPTX = "pptx"
-    case DOC = "doc"
-    case DOCX = "docx"
-    case XLS = "xls"
-    case XLSX = "xlsx"
+    case EXE
+    case PDF
+    case PNG
+    case JPG
+    case JPEG
+    case GIF
+    case MP4
+    case RMVB
+    case RM
+    case AVI
+    case MKV
+    case WMV
+    case SWF
+    case FLV
+    case MOV
+    case ThreeGP = "3GP"
+    case MP3
+    case AAC
+    case WAV
+    case FLAC
+    case APE
+    case TXT
+    case PPT
+    case PPTX
+    case DOC
+    case DOCX
+    case XLS
+    case XLSX
     case DEFAULT
 }

@@ -86,7 +86,7 @@ class WSAsset: NSObject,NSCopying{
     var createDate:Date?{
         get{
             if self is NetAsset{
-                return Date.init(timeIntervalSince1970: PhotoHelper.fetchPhotoTime(model: self as? NetAsset) ?? Date.distantPast.timeIntervalSince1970)
+                return Date.init(timeIntervalSince1970: PhotoHelper.fetchPhotoTime(model: self as? NetAsset) ?? Date.distantPast.timeIntervalSince1970*1000)
             }else{
                return self.asset?.creationDate
             }

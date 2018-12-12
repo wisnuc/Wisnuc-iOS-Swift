@@ -59,9 +59,18 @@ public let kRequestImageThumbnailValue = "thumbnail"
 public let kRequestImageDataValue = "data"
 public let kRequestImageRandomValue = "random"
 public let kRequestImageParamsKey = "params"
+public let kRequestImageSizeKey = "size"
+public let kRequestImageSHA256Key = "sha256"
 
 public let kRequestClassKey = "class"
+public let kRequestTypesKey = "types"
+
 public let kRequestPlacesKey = "places"
+
+public let kRequestBctimeKey = "bctime"
+public let kRequestBmtimeKey = "bmtime"
+
+
 
 public let kRequestBodyKey = "body"
 

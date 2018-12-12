@@ -16,6 +16,7 @@ private let keyPath:String = "sliderState"
 private let headerHeight:CGFloat = 42
 
 class PhotoMediaContainerViewController: BaseViewController {
+    var driveUUID:String?
     var currentItemSize:CGSize = CGSize.zero
     var isAnimation = false
     var isDecelerating = false
@@ -24,7 +25,11 @@ class PhotoMediaContainerViewController: BaseViewController {
     var sortedAssetsArray:Array<WSAsset>?
     var isSelectMode = false{
         didSet{
-            
+            if isSelectMode{
+                selectModeAction()
+            }else{
+                unselectModeAction()
+            }
         }
     }
     
@@ -34,9 +39,10 @@ class PhotoMediaContainerViewController: BaseViewController {
         }
     }
     
-    init(style: NavigationStyle ,state:PhotoRootViewControllerState) {
+    init(style: NavigationStyle ,state:PhotoRootViewControllerState,driveUUID:String? = nil) {
         super.init(style: style)
         self.setState(state: state)
+        self.driveUUID = driveUUID
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -93,26 +99,45 @@ class PhotoMediaContainerViewController: BaseViewController {
         }
     }
     
-        func getMatchVC(model:WSAsset) -> UIViewController?{
-            let arr = self.sortedAssetsArray
-            let index = arr?.index(of: model)
-            if index != nil {
-                return self.getBigImageVC(data: arr!, index:index!)
-            }else{
-                return nil
-            }
-        }
+    func selectModeAction(){
+        self.style = .select
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_:)))
+        let shareButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "share_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightShareBarButtonItemTap(_:)))
+        //        let addButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "plus_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightAddBarButtonItemTap(_:)))
+        let deleteButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "delete_photo.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightDeleteBarButtonItemTap(_:)))
+        self.navigationItem.rightBarButtonItems = [deleteButtonItem,shareButtonItem]
+    }
     
-        func getBigImageVC(data:Array<WSAsset>,index:Int) -> UIViewController{
-            let vc = WSShowBigimgViewController.init()
-            vc.delegate = self
-            vc.models = data
-            vc.selectIndex = index
-            let cell:PhotoCollectionViewCell = self.mediaCollectionView.cellForItem(at: (self.mediaCollectionView.indexPathsForSelectedItems?.first)!) as! PhotoCollectionViewCell
-            vc.senderViewForAnimation = cell
-            vc.scaleImage = cell.image
-            return vc
+    func unselectModeAction(){
+        self.style = .whiteWithoutShadow
+        self.navigationItem.leftBarButtonItem = nil
+        self.navigationItem.rightBarButtonItems = nil
+        self.navigationItem.rightBarButtonItem = nil
+        self.title = LocalizedString(forKey: "所有相片")
+        self.choosePhotos.removeAll()
+        self.chooseSection.removeAll()
+    }
+    
+    func getMatchVC(model:WSAsset) -> UIViewController?{
+        let arr = self.sortedAssetsArray
+        let index = arr?.index(of: model)
+        if index != nil {
+            return self.getBigImageVC(data: arr!, index:index!)
+        }else{
+            return nil
         }
+    }
+
+    func getBigImageVC(data:Array<WSAsset>,index:Int) -> UIViewController{
+        let vc = WSShowBigimgViewController.init()
+        vc.delegate = self
+        vc.models = data
+        vc.selectIndex = index
+        let cell:PhotoCollectionViewCell = self.mediaCollectionView.cellForItem(at: (self.mediaCollectionView.indexPathsForSelectedItems?.first)!) as! PhotoCollectionViewCell
+        vc.senderViewForAnimation = cell
+        vc.scaleImage = cell.image
+        return vc
+    }
     
     func addNetAssets(assetsArr:Array<NetAsset>) {
         //        DispatchQueue.global(qos: .default).async {
@@ -253,6 +278,158 @@ class PhotoMediaContainerViewController: BaseViewController {
             self.mediaCollectionView.reloadData()
         }
     }
+    
+    @objc func leftBarButtonItemTap(_ sender:UIBarButtonItem){
+        if self.state == .select || self.state == .creat{
+            if let presentingViewController  = self.presentingViewController{
+                var dismissViewController = presentingViewController.childViewControllers.last
+                dismissViewController = dismissViewController?.childViewControllers.last
+                
+                dismissViewController?.dismiss(animated: true, completion: {
+                    
+                })
+            }
+            return
+        }
+        self.isSelectMode = false
+        self.mediaCollectionView.reloadData()
+    }
+    
+    @objc func rightShareBarButtonItemTap(_ sender:UIBarButtonItem){
+        
+    }
+    
+    @objc func rightAddBarButtonItemTap(_ sender:UIBarButtonItem){
+        
+    }
+    
+    @objc func rightDeleteBarButtonItemTap(_ sender:UIBarButtonItem){
+        if self.choosePhotos.count > 0{
+            let title = "\(self.choosePhotos.count) 个照片\(LocalizedString(forKey: "将被删除"))"
+            alertController(title: title, message: LocalizedString(forKey: "照片删除后将无法恢复"), cancelActionTitle: LocalizedString(forKey: "Cancel"), okActionTitle: LocalizedString(forKey: "Confirm"), okActionHandler: { (AlertAction1) in
+                self.deleteSelectPhotos(photos: self.choosePhotos)
+            }) { (AlertAction2) in
+                
+            }
+        }
+    }
+    
+    func deleteSelectPhotos(photos:[WSAsset]){
+        self.isSelectMode = false
+        self.mediaCollectionView.reloadData()
+        var localAssets:Array<PHAsset> = Array.init()
+        var netAssets:Array<NetAsset> = Array.init()
+        for asset in photos{
+            if asset is NetAsset{
+                #warning("删除NAS照片")
+                if let netAsset = asset as? NetAsset{
+                    netAssets.append(netAsset)
+                }
+            }else{
+                if let localAsset = asset.asset{
+                    localAssets.append(localAsset)
+                }
+            }
+        }
+        
+        if netAssets.count > 0{
+            photoRemoveOptionRequest(photos:netAssets)
+        }
+        
+        if localAssets.count > 0{
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.deleteAssets(localAssets as NSFastEnumeration)
+            }) { (finish, error) in
+                if error != nil{
+                    print(error as Any)
+                }
+            }
+            self.mediaCollectionView.reloadData()
+        }
+    }
+    //
+    func photoRemoveOptionRequest(photos:[NetAsset]){
+        var index:Int = 0
+        ActivityIndicator.startActivityIndicatorAnimation()
+        for photo in photos {
+            self.photoRemoveOptionRequest(photo: photo) { [weak self] in
+                index = index + 1
+                //                print("🌶\(index)")
+                if index == photos.count{
+                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    self?.dataSource  = self?.assetDataSources
+                    self?.mediaCollectionView.reloadData()
+                }
+            }
+        }
+    }
+    
+    func photoRemoveOptionRequest(photo: NetAsset,closure:@escaping ()->()){
+        let drive = self.driveUUID != nil ? self.driveUUID! : photo.place == 0 ? AppUserService.currentUser?.userHome : AppUserService.currentUser?.shareSpace ?? ""
+        let dir = photo.pdir ?? ""
+        DirOprationAPI.init(driveUUID: drive ?? "", directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
+            var dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
+            if let uuid = photo.uuid,let hash = photo.fmhash{
+                dic = [kRequestOpKey: FilesOptionType.remove.rawValue,"uuid":uuid,"hash":hash]
+            }
+            do {
+                let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
+                formData.append(data, withName: photo.name ?? "")
+            }catch{
+                Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
+                return closure()
+            }
+        }, { [weak self] (response) in
+            mainThreadSafe {
+                if response.error == nil{
+                    if let errorMessage = ErrorTools.responseErrorData(response.data){
+                        Message.message(text: errorMessage)
+                        return closure()
+                    }
+                    if let time = PhotoHelper.fetchPhotoTime(model: photo),let assetDataSources =  self?.assetDataSources {
+                        let date = Date.init(timeIntervalSince1970: time)
+                        for (i,assetArray) in assetDataSources.enumerated(){
+                            if let creatDate = assetArray.first?.createDate {
+                                if  Calendar.current.isDate(creatDate , inSameDayAs: date){
+                                    var removeArray = assetArray
+                                    removeArray.removeAll(where: { (asset) -> Bool in
+                                        if let netAsset = asset as? NetAsset{
+                                            return netAsset.fmhash == photo.fmhash && netAsset.uuid == photo.uuid
+                                        }else{
+                                            return false
+                                        }
+                                    })
+                                    self?.assetDataSources[i] = removeArray
+                                    return closure()
+                                }
+                            }
+                        }
+                    }else{
+                        return closure()
+                    }
+                }else{
+                    if response.data != nil {
+                        let errorDict =  dataToNSDictionary(data: response.data!)
+                        if errorDict != nil{
+                            Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                            return closure()
+                        }else{
+                            let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                            Message.message(text: backToString ?? "error")
+                            return closure()
+                        }
+                    }else{
+                        Message.message(text: (response.error?.localizedDescription)!)
+                        return closure()
+                    }
+                }
+            }
+            }, errorHandler: { (error) -> (Void) in
+                Message.message(text: error.localizedDescription)
+                return closure()
+        })
+    }
+    
     
     func changeFlowLayout(isSmall:Bool){
         if ((!isSmall && currentScale == 1) || (isSmall && currentScale == 6)){

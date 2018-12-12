@@ -78,6 +78,7 @@ class PhotoAlbumViewController: BaseViewController {
         self.dataSource.append(collectionAlbumArray)
         allPhotoAlbumData()
         allVideoAlbumData()
+        getAllBackup()
     }
     
     func allPhotoAlbumData(){
@@ -168,19 +169,27 @@ class PhotoAlbumViewController: BaseViewController {
         return  nil
     }
     
-    func searchAny(text:String? = nil,types:String? = nil,sClass:String? = nil,complete:@escaping (_ mdoels: [NetAsset]?,_ error:Error?)->()){
+    func searchAny(places:String? = nil,text:String? = nil,types:String? = nil,sClass:String? = nil,complete:@escaping (_ mdoels: [NetAsset]?,_ error:Error?)->()){
         var array:Array<NetAsset> =  Array.init()
         var order:String?
         
         order = !isNilString(types) || !isNilString(sClass) ? nil : SearhOrder.newest.rawValue
-        var placesArray:Array<String> = Array.init()
-        let uuid = AppUserService.currentUser?.userHome
-        placesArray.append(uuid!)
-        self.placesArray = placesArray
-        let places = placesArray.joined(separator: ".")
-        let request = SearchAPI.init(order:order, places: places,class:sClass, types:types, name:text)
+        var place = places
+        if places == nil{
+            var placesArray:Array<String> = Array.init()
+            let uuid = AppUserService.currentUser?.userHome
+            placesArray.append(uuid!)
+            self.placesArray = placesArray
+            let placesPlaceholder = placesArray.joined(separator: ".")
+            place = placesPlaceholder
+        }
+        let request = SearchAPI.init(order:order, places: place!,class:sClass, types:types, name:text)
         request.startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.Request.CloudRequstError, userInfo: [NSLocalizedDescriptionKey:errorMessage])
+                    return complete(nil,error as! CustomNSError)
+                }
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let result = (isLocalRequest ? response.value as? NSArray : (response.value as! NSDictionary)["data"]) as? NSArray
                 if result != nil{
@@ -223,6 +232,10 @@ class PhotoAlbumViewController: BaseViewController {
             }else{
                 photoAlbumModel1.count = count
             }
+        }else{
+            if let allAssets = AppAssetService.allAssets{
+                photoAlbumModel1.count =  allAssets.count
+            }
         }
     
         if var array = dataSource.first{
@@ -249,7 +262,6 @@ class PhotoAlbumViewController: BaseViewController {
         if let loacalAsset = loacalAsset{
             photoAlbumModel.coverThumbnilAsset = loacalAsset
         }
-        
         if let count = models?.count{
             if let allVideoAssets = AppAssetService.allVideoAssets{
                 photoAlbumModel.count = count + allVideoAssets.count
@@ -259,7 +271,6 @@ class PhotoAlbumViewController: BaseViewController {
         }else{
             photoAlbumModel.count = AppAssetService.allVideoAssets?.count
         }
-        
         if var array = dataSource.first{
             if array.count > 0{
                array.insert(photoAlbumModel, at: 1)
@@ -268,27 +279,107 @@ class PhotoAlbumViewController: BaseViewController {
             }
             dataSource[0] = array
         }
-//        }else{
-//            var array:[PhotoAlbumModel] = Array.init()
-//            array.append(photoAlbumModel)
-//            dataSource.append(array)
-//        }
         self.albumCollectionView.reloadData()
     }
     
     func getAllBackup(){
-        AppNetworkService.getUserAllBackupDrive { (error,driveModels) in
+        AppNetworkService.getUserAllBackupDrive { [weak self](error,driveModels) in
             if let error = error{
                 Message.message(text: error.localizedDescription)
             }else{
-                
+                if driveModels?.count ?? 0 > 0{
+                    self?.setBackupData(models: driveModels)
+                }else{
+                    self?.creatBackupDrive()
+                }
             }
         }
     }
-
-    func setVideoData(models:[DriveModel]?){
-        
+    
+    func creatBackupDrive(){
+        AppNetworkService.creactBackupDrive(callBack: { [weak self](error, driveModel) in
+            if let error = error{
+                Message.message(text: error.localizedDescription)
+            }else{
+                if driveModel != nil{
+                  self?.getAllBackup()
+                }
+            }
+        })
     }
+    
+
+//    func getBackupDriveContent(placeUUID:String) {
+//        let types = kMediaTypes.joined(separator: ".")
+//        let request = GetMediaAPI.init( placesUUID:placeUUID,types:types)
+//        request.startRequestJSONCompletionHandler { (response) in
+//            if response.error == nil{
+//                let isLocalRequest = AppNetworkService.networkState == .local
+//                let result = (isLocalRequest ? response.value as? NSArray : (response.value as! NSDictionary)["data"]) as? NSArray
+//                if result != nil{
+//                    let rootArray = result
+//                    for (_ , value) in (rootArray?.enumerated())!{
+//                        if value is NSDictionary{
+//                            let dic = value as! NSDictionary
+//                            if let model = NetAsset.deserialize(from: dic) {
+//                                array.append(model)
+//                            }else{
+//                                return  complete(nil,BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
+//                            }
+//                        }
+//                    }
+//                    return complete(array,nil)
+//                }
+//            }else{
+//                return complete(nil,response.error)
+//            }
+//        }
+//    }
+//
+    func setBackupData(models:[DriveModel]?){
+        guard let driveModels = models else {
+            return
+        }
+        self.albumCollectionView.mj_header.endRefreshing()
+        var index:Int = 2
+        for (i,model) in driveModels.enumerated(){
+            guard let place = model.uuid else{
+                return
+            }
+            let types = kMediaTypes.joined(separator: ".")
+            self.searchAny(places: place, types: types) { [weak self](assets, error) in
+                if let error = error{
+                
+                }else{
+                    guard let assets = assets else{
+                        return
+                    }
+                    let photoAlbumModel = PhotoAlbumModel.init()
+                    photoAlbumModel.type  = PhotoAlbumType.collecion
+                    photoAlbumModel.name = model.label
+                    photoAlbumModel.describe = nil
+                    photoAlbumModel.dataSource = assets
+                    photoAlbumModel.drive = model.uuid
+                    photoAlbumModel.detailType = .backup
+                    if let photoHash = assets.first?.fmhash {
+                        photoAlbumModel.coverThumbnilhash = photoHash
+                    }
+                    photoAlbumModel.count = assets.count
+                    index = index + i
+                    if var array = self?.dataSource.first{
+                        if array.count > 0{
+                            array.insert(photoAlbumModel, at: index)
+                        }else{
+                            array.append(photoAlbumModel)
+                        }
+                        self?.dataSource[0] = array
+                    }
+                    self?.albumCollectionView.reloadData()
+                }
+            }
+        }
+    }
+    
     @objc func rightButtonItemTap(_ sender:UIBarButtonItem){
         let photosVC = PhotoRootViewController.init(style: NavigationStyle.select, state: PhotoRootViewControllerState.creat)
         photosVC.delegate = self
@@ -360,14 +451,13 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
         if let tabbar = retrieveTabbarController(){
             tabbar.setTabBarHidden(true, animated: true)
         }
+
         let model = dataSource[indexPath.section][indexPath.row]
         if indexPath.section == 0{
             switch indexPath.item {
             case 0:
                 let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal)
-                if let cell = collectionView.cellForItem(at: indexPath) as? PhotoAlbumCollectionViewCell{
-                    photosVC.title = cell.nameLabel.text
-                }
+                photosVC.title = model.name
                 DispatchQueue.global(qos: .default).async {
                     let assets = AppAssetService.allAssets!
                     DispatchQueue.main.async {
@@ -391,9 +481,7 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                 
             case 1:
                 let photosVC = PhotoMediaContainerViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal)
-                if let cell = collectionView.cellForItem(at: indexPath) as? PhotoAlbumCollectionViewCell{
-                    photosVC.title = cell.nameLabel.text
-                }
+                 photosVC.title = model.name
                 DispatchQueue.global(qos: .default).async {
                     if let assets = AppAssetService.allVideoAssets{
                         DispatchQueue.main.async {
@@ -423,7 +511,16 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                 }
                  self.navigationController?.pushViewController(photosVC, animated: true)
             default:
-                break
+                if  model.detailType == .backup  && model.drive != nil{
+                    let photosVC = PhotoMediaContainerViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal,driveUUID:model.drive!)
+                        photosVC.title = model.name
+                    if let dataSource = model.dataSource{
+                        DispatchQueue.main.async {
+                            photosVC.addNetAssets(assetsArr: dataSource as! Array<NetAsset>)
+                        }
+                    }
+                     self.navigationController?.pushViewController(photosVC, animated: true)
+                }
             }
         }else{
             let model = dataSource[indexPath.section][indexPath.row]

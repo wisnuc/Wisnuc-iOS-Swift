@@ -213,7 +213,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
     func metadataType(metadata:Metadata?)->FilesFormatType?{
        if let type = metadata?.type{
-        return FilesFormatType(rawValue:type.lowercased())
+        return FilesFormatType(rawValue:type)
        }
        return nil
     }
@@ -439,7 +439,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 if !isNilString(model.name){
                     let exestr = (model.name! as NSString).pathExtension
                     
-                    let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr.lowercased()))
+                    let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr))
 
                     cell.leftImageView.image = UIImage.init(named: imageName)
                 }
@@ -646,7 +646,11 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     }
                     
                     let resultArray = array.filter { (model) -> Bool in
-                        return kMediaTypes.contains(model.metadata?.type?.lowercased() ?? "")
+                        if let type = model.metadata?.type{
+                        return kMediaTypes.contains(where: {$0.caseInsensitiveCompare(type) == .orderedSame})
+                         
+                        }
+                        return false
                     }
                     //                for (i,value) in sectionArray.enumerated(){
                     //                    let modelIndexPath = IndexPath(item: i, section: indexPath.section)
