@@ -43,6 +43,10 @@ class DeviceNetworkSettingViewController: BaseViewController {
         tab?.setTabBarHidden(true, animated: true)
     }
     
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
     
     
 //    func loadData(){

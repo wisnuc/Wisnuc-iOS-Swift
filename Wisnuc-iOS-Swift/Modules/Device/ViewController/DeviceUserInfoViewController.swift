@@ -23,6 +23,11 @@ class DeviceUserInfoViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareNavigationBar()

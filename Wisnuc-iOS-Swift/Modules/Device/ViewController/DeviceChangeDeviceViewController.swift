@@ -179,7 +179,7 @@ extension DeviceChangeDeviceViewController:UITableViewDataSource{
         if stationInfoModel.sn == AppUserService.currentUser?.stationId{
             cell.isCurrentDevice = true
         }else{
-            cell.isCurrentDevice = true
+            cell.isCurrentDevice = false
         }
         
         if let online = stationInfoModel.online{

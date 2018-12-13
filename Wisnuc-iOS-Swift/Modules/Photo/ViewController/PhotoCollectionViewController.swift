@@ -728,7 +728,7 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
             let cell = collectionView.cellForItem(at: indexPath)
             if cell != nil{
               let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
-              photoCell.imageView?.layer.contents  = nil
+                photoCell.imageView?.layer.contents  = nil
             }
         }
     }

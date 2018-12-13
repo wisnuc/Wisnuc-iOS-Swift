@@ -39,20 +39,15 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     var model:WSAsset?{
         didSet{
             switch model?.type {
-            case .Image?:
-                self.videoImageView.isHidden = true
-                self.videoBottomView.isHidden = true
-                self.liveImageView.isHidden = true
-                self.videoBottomView.isHidden = false
-                self.liveImageView.isHidden = true
-                self.timeLabel.isHidden = true
+            case .Image?: break
+//                self.videoImageView.isHidden = true
+//                self.videoBottomView.isHidden = true
+//                self.timeLabel.isHidden = true
             case .NetImage?:
                 self.videoImageView.isHidden = false
-                self.videoBottomView.isHidden = true
                 self.liveImageView.isHidden = true
                 self.videoImageView.image = UIImage.init(named: "ic_cloud_white")
                 self.videoBottomView.isHidden = false
-                self.liveImageView.isHidden = true
                 self.timeLabel.isHidden = true
             case .Video?,.NetVideo?:
                 self.videoBottomView.isHidden = false
@@ -60,7 +55,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                 self.liveImageView.isHidden = true
                 self.timeLabel.text = model?.duration
                 self.timeLabel.isHidden = false
-                self.videoImageView.image = UIImage.init(named: "ic_play")
+                self.videoImageView.image = UIImage.init(named: "ic_play.png")
             case .LivePhoto? :
                 self.videoBottomView.isHidden = false
                 self.videoImageView.isHidden = true
@@ -68,25 +63,25 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                 self.liveImageView.image = UIImage.init(named: "livePhoto")
                 self.timeLabel.text = "Live"
             case .GIF? :
-                self.videoBottomView.isHidden = false
-                self.videoImageView.isHidden = true
-                self.liveImageView.isHidden = false
+//                self.videoBottomView.isHidden = false
+//                self.videoImageView.isHidden = true
+//                self.liveImageView.isHidden = false
                 self.liveImageView.image = UIImage .init(named: "gif_photo")
                 self.timeLabel.text = ""
-            default:
+            default: break
                 self.videoImageView.isHidden = true
                 self.videoBottomView.isHidden = true
                 self.liveImageView.isHidden = true
             }
 
-            if model?.type == .Image && model?.type != .NetImage {
-                self.videoImageView.isHidden = true
-                self.videoBottomView.isHidden = true
-                self.liveImageView.isHidden = true
-                self.videoBottomView.isHidden = false
-                self.liveImageView.isHidden = true
-                self.timeLabel.isHidden = true
-            }
+//            if model?.type == .Image && model?.type != .NetImage {
+//                self.videoImageView.isHidden = true
+//                self.videoBottomView.isHidden = true
+//                self.liveImageView.isHidden = true
+//                self.videoBottomView.isHidden = false
+//                self.liveImageView.isHidden = true
+//                self.timeLabel.isHidden = true
+//            }
 //            if self.imageRequestID != nil {
 //                if self.imageRequestID! >= PHInvalidImageRequestID{
 //                PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
@@ -173,6 +168,9 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         self.isOpaque = false
     
         self.contentView.clipsToBounds = true
+        self.videoBottomView.addSubview(videoImageView)
+        self.videoBottomView.addSubview(liveImageView)
+        self.videoBottomView.addSubview(timeLabel)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -183,25 +181,38 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.imageView?.backgroundColor = UIColor.colorFromRGB(rgbValue: 0xf5f5f5)
-        self.imageView?.snp.makeConstraints { [weak self] (make) in
+        self.imageView?.frame = self.bounds
+//        self.imageView?.snp.makeConstraints { [weak self] (make) in
+//            make.left.equalTo((self?.contentView.snp.left)!)
+//            make.right.equalTo((self?.contentView.snp.right)!)
+//            make.top.equalTo((self?.contentView.snp.top)!)
+//            make.bottom.equalTo((self?.contentView.snp.bottom)!)
+//        }
+
+// _videoBottomView.frame = CGRectMake(0, GetViewHeight(self.contentView)-20, GetViewWidth(self.contentView), 20);
+        self.videoBottomView.snp.makeConstraints { [weak self] (make) in
             make.left.equalTo((self?.contentView.snp.left)!)
             make.right.equalTo((self?.contentView.snp.right)!)
-            make.top.equalTo((self?.contentView.snp.top)!)
+            make.top.equalTo((self?.contentView.snp.bottom)!).offset(-20)
             make.bottom.equalTo((self?.contentView.snp.bottom)!)
         }
 
-
-        self.videoBottomView.snp.makeConstraints { [weak self] (make) in
-            make.left.equalTo((self?.contentView.left)!)
-            make.right.equalTo((self?.contentView.right)!)
-            make.top.equalTo((self?.contentView.bottom)!).offset(-20)
-            make.bottom.equalTo((self?.contentView.bottom)!)
-        }
-
         self.videoImageView.snp.makeConstraints { [weak self] (make) in
-            make.left.equalTo((self?.videoBottomView.left)!).offset(5)
-            make.top.equalTo((self?.videoBottomView.top)!).offset(2)
+            make.left.equalTo((self?.videoBottomView.snp.left)!).offset(5)
+            make.top.equalTo((self?.videoBottomView.snp.top)!).offset(2)
             make.size.equalTo(CGSize(width: 16, height: 16))
+        }
+        
+        self.liveImageView.snp.makeConstraints { [weak self] (make) in
+            make.left.equalTo((self?.videoBottomView.snp.left)!).offset(5)
+            make.top.equalTo((self?.videoBottomView.snp.top)!).offset(2)
+            make.size.equalTo(CGSize(width: 16, height: 16))
+        }
+        
+        self.timeLabel.snp.makeConstraints { [weak self] (make) in
+            make.left.equalTo((self?.videoBottomView.snp.left)!).offset(30)
+            make.top.equalTo((self?.videoBottomView.snp.top)!).offset(4)
+            make.size.equalTo(CGSize(width:(self?.snp.width - 35)!, height: 12))
         }
 
         self.contentView.bringSubview(toFront: self.videoBottomView)
@@ -212,29 +223,38 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     func setImagView(indexPath:IndexPath){
         self.indexPath = indexPath
-        var imageView = self.contentView.subviews.first
-        if imageView == nil && imageView?.tag != Int(NSIntegerMax) {
+        if let orginimageView = self.contentView.subviews.first(where: {$0.tag == Int(NSIntegerMax)}){
+            self.imageView = orginimageView
+            self.imageView?.layer.contents =  nil
+        }else{
             imageView = UIView.init(frame: self.bounds)
             imageView?.contentMode = UIViewContentMode.scaleAspectFill
             imageView?.clipsToBounds = true
             imageView?.tag = Int(NSIntegerMax)
-            self.contentView.addSubview(imageView!)
+            imageView?.backgroundColor = UIColor.colorFromRGB(rgbValue: 0xf5f5f5)
+            if self.contentView.subviews.count>0{
+                self.contentView.insertSubview(imageView!, at: self.contentView.subviews.count-1)
+            }else{
+                self.contentView.addSubview(imageView!)
+            }
         }
-        self.imageView = imageView
-         self.imageView?.layer.contents =  nil
     }
     
     func setSelectButton(indexPath:IndexPath){
         if self.contentView.subviews.count>1 {//如果是重用cell，则不用再添加button
-            if self.contentView.subviews[1] is UIButton{
-            self.btnSelect = self.contentView.subviews[1] as? UIButton
+            if self.contentView.subviews.contains(where: {$0 is UIButton}) {
+                if let button = self.contentView.subviews.first(where: {$0 is UIButton}) as? Button{
+                     self.btnSelect = button
+                    self.contentView.insertSubview(self.btnSelect!, at: 1)
+                }
             }
         } else {
             self.btnSelect = UIButton.init()
             self.btnSelect?.frame = CGRect.init(x: 5, y: 5, width: btnFrame, height: btnFrame)
             self.btnSelect?.addTarget(self, action: #selector(btnSelectClick(_ :)), for: UIControlEvents.touchUpInside)
+            self.contentView.addSubview(self.btnSelect!)
         }
-        self.contentView.addSubview(self.btnSelect!)
+       
    
     }
     
@@ -298,6 +318,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     lazy var videoBottomView: UIImageView = {
         let imgView = UIImageView.init()
         imgView.frame = CGRect(x: 0, y: self.height - 20, width: self.width, height: 20)
+//        imgView.backgroundColor = .red
         self.contentView.addSubview(imgView)
         return imgView
     }()
@@ -305,8 +326,8 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     lazy var videoImageView: UIImageView = {
         let imgView = UIImageView.init()
         imgView.frame = CGRect(x: 5, y: 2, width: 16, height: 16)
-        imgView.image = UIImage.init(named: "ic_play")
-        videoBottomView.addSubview(imgView)
+        imgView.image = UIImage.init(named: "ic_play.png")
+//        imgView.backgroundColor = UIColor.black
         return imgView
     }()
 
@@ -314,7 +335,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         let imgView = UIImageView.init()
         imgView.frame = CGRect(x: 5, y: 2, width: 16, height: 16)
         imgView.image = UIImage.init(named: "livePhoto")
-        videoBottomView.addSubview(imgView)
+//        imgView.backgroundColor = UIColor.black
         return imgView
     }()
 
@@ -325,7 +346,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         label.textAlignment = NSTextAlignment.right
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = UIColor.white
-        videoBottomView.addSubview(label)
         return label
     }()
 

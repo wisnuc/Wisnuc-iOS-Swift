@@ -29,6 +29,11 @@ class DeviceSambaSettingViewController: BaseViewController {
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.infoSettingTableView, viewController: self)
     }
     
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
+    
     func headerContentLayout(){
         barMaximumHeight = 170
         appBar.headerViewController.headerView.maximumHeight = barMaximumHeight

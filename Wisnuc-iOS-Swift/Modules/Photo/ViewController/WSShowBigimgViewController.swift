@@ -280,11 +280,11 @@ class WSShowBigimgViewController: UIViewController {
         if model is WSAsset{
             let assetModel = model as! WSAsset
             if (assetModel.asset != nil) {
-                w = CGFloat((assetModel.asset?.pixelWidth)!)
-                h = CGFloat((assetModel.asset?.pixelHeight)!)
+                w = CGFloat((assetModel.asset?.pixelWidth) ?? Int(__kWidth))
+                h = CGFloat((assetModel.asset?.pixelHeight) ?? Int(__kHeight))
             } else if assetModel is NetAsset {
-                w = CGFloat(((assetModel as! NetAsset).metadata?.w!)!)
-                h = CGFloat(((assetModel as! NetAsset).metadata?.h!)!)
+                w = CGFloat(((assetModel as! NetAsset).metadata?.w) ?? Float(__kWidth))
+                h = CGFloat(((assetModel as! NetAsset).metadata?.h) ?? Float(__kHeight))
             } else {
                 w = __kWidth
                 h = __kHeight
@@ -337,11 +337,12 @@ class WSShowBigimgViewController: UIViewController {
                 cell?.reloadGifLivePhoto()
             }
         }else{
-            let fileModel = model as! EntriesModel
-            if (fileModel.metadata?.type == "GIF") {
-                let indexP = IndexPath.init(item: currentPage - 1, section: 0)
-                let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
-                cell?.reloadGifLivePhoto()
+            if let fileModel = model as? EntriesModel{
+                if (fileModel.metadata?.type == "GIF") {
+                    let indexP = IndexPath.init(item: currentPage - 1, section: 0)
+                    let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
+                    cell?.reloadGifLivePhoto()
+                }
             }
         }
       
@@ -1019,6 +1020,10 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
 
 extension WSShowBigimgViewController:SWPreviewVideoPlayerDelegate{
     func playVideo(viewController: AVPlayerViewController) {
+        self.present(viewController, animated: true) {
+            
+        }
+        
         let indexP = IndexPath.init(item: currentPage - 1, section: 0)
         let  cell =  collectionView.cellForItem(at: indexP)
         if cell != nil {

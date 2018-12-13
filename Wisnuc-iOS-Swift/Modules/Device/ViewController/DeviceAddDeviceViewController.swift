@@ -48,6 +48,8 @@ class DeviceAddDeviceViewController: BaseViewController {
     deinit {
         LLBlueTooth.instance.disConnectPeripherals(dataPeripheralList)
         LLBlueTooth.instance.dispose()
+            // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
     }
     
     override func viewWillAppear(_ animated: Bool) {

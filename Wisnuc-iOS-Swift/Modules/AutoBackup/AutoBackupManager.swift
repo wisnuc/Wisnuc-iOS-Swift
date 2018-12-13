@@ -601,6 +601,18 @@ class WSUploadModel: NSObject {
                             switch response.result {
                             case .success(let jsonString):
                                 // do any parsing on your request's response if needed
+                                if let data = jsonString.data(using: .utf8){
+                                    do {
+                                        guard let stringDic = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] else{
+                                            return callback(error,nil)
+                                        }
+                                        if let code = stringDic["code"] as? String{
+                                             return callback(error,nil)
+                                        }
+                                    } catch {
+                                        return callback(error,nil)
+                                    }
+                                }
                                 callback(nil,jsonString)
                             case .failure(let error):
                                 print(error)

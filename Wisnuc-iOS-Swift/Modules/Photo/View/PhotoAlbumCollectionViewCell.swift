@@ -33,9 +33,10 @@ class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     }
     
     func setCoverImage(indexPath:IndexPath,hash:String? = nil,asset:PHAsset? = nil){
-        if indexPath != self.indexPath{
-            return
-        }
+//        if indexPath != self.indexPath{
+//            return
+//        }
+
         let size = CGSize.init(width: 200, height: 200)
         if let hash = hash{
             loadNetCover(hash,size)

@@ -34,6 +34,7 @@ class NetworkService: NSObject {
     }
     
     func changeNet(_ status:WSNetworkStatus){
+        #warning("切换网络")
         if !AppUserService.isUserLogin{
             return
         }
@@ -41,27 +42,28 @@ class NetworkService: NSObject {
         case .WIFI:
             if networkState == .normal || networkState == nil {
                  self.networkState = .normal
-//                getLocalInCloudLogin { [weak self] (error, localToken) in
-//                    if error == nil {
                         guard let ip = AppUserService.currentUser?.lanIP else{
                             return
                         }
                         self.checkIP(address:ip, { (isLocal) in
                             if isLocal{
-//                                AppUserService.currentUser?.localToken = localToken
-//                                AppUserService.synchronizedCurrentUser()
                                 if AppUserService.currentUser?.localToken != nil{
                                     self.networkState = .local
                                 }else{
+                                    self.getLocalInCloudLogin { [weak self] (error, localToken) in
+                                        if error == nil {
+                                            AppUserService.currentUser?.localToken = localToken
+                                            AppUserService.synchronizedCurrentUser()
+                                             self?.networkState = .local
+                                        }else{
+                                            //                                  Message.message(text: (error?.localizedDescription)!)
+                                            self?.networkState = .normal
+                                        }
+                                    }
                                     self.networkState = .normal
                                 }
                             }
                         })
-//                    }else{
-////                        Message.message(text: (error?.localizedDescription)!)
-//                        self?.networkState = .normal
-//                    }
-//                }
             }else{
 //                 self.networkState = .normal
                 guard let ip = AppUserService.currentUser?.lanIP else{
@@ -150,8 +152,11 @@ class NetworkService: NSObject {
         
         LocalTokenInCloudAPI.init().startRequestJSONCompletionHandler({ [weak self] (response) in
             if response.error == nil{
-                let isLocalRequest = self?.networkState == .local
-                let dic = isLocalRequest ? response.value as! NSDictionary : (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.Request.CloudRequstError, userInfo: [NSLocalizedDescriptionKey:errorMessage])
+                    return closure(error as! CustomNSError,nil)
+                }
+                let dic = (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
                 if let token = dic.value(forKey: "token") as? String,let type = dic.value(forKey: "type") as? String{
                     if type == "JWT"{
                        closure(nil,token)
@@ -204,6 +209,9 @@ class NetworkService: NSObject {
                     let dic = obj as! NSDictionary
                     if let driveModel = DriveModel.deserialize(from: dic) {
                         if driveModel.type == DriveType.backup.rawValue{
+                            if !AppUserService.backupArray.contains(where: {$0.uuid == driveModel.uuid}){
+                                AppUserService.backupArray.append(driveModel)
+                            }
                             models.append(driveModel)
                         }
                     }
@@ -265,6 +273,9 @@ class NetworkService: NSObject {
                 }
                
                 if let driveModel = DriveModel.deserialize(from: responseDic) {
+                    if !AppUserService.backupArray.contains(where: {$0.uuid == driveModel.uuid}){
+                        AppUserService.backupArray.append(driveModel)
+                    }
                     return callBack(nil, driveModel)
                 }
               

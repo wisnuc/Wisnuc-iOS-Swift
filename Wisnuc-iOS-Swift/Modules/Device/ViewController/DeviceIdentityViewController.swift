@@ -29,6 +29,11 @@ class DeviceIdentityViewController: BaseViewController {
         self.view.bringSubview(toFront: appBar.appBarViewController.headerView)
     }
     
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.headerViewController.headerView.trackingScrollView = self.infoSettingTableView

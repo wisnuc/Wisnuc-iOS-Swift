@@ -212,23 +212,23 @@ class AppService: NSObject,ServiceProtocol{
             }
     
             self?.userService.synchronizedCurrentUser()
-            if self?.userService.backupArray.count == 0{
+            if self?.userService.backupArray.count == 0 || !((self?.userService.backupArray.contains(where: {$0.client?.id == getUniqueDevice()}))!){
                 self?.networkService.creactBackupDrive(callBack: { [weak self](error, driveModel) in
                     if driveModel != nil && error == nil{
                         if let driveModel = driveModel{
                             if let uuid = driveModel.uuid{
-                                if !(self?.userService.backupArray.contains(where: {$0.uuid == uuid}))!{
+                                if !(self?.userService.backupArray.contains(where: {$0.client?.id == uuid}))!{
                                     self?.userService.backupArray.append(driveModel)
                                 }
                             }
                         }
-                        return callback(nil, currentUser)
                     }
+                    return callback(error, currentUser)
                 })
             }else{
-                 return callback(nil, currentUser)
+                return callback(nil, currentUser)
             }
-           
+            return callback(nil, currentUser)
 //            self?.networkService.getUserBackupDir(name: kBackUpAssetDirName, { [weak self](userBackupDirError, entryUUID) in
 //                if userBackupDirError != nil{
 //                    self?.userService.logoutUser()

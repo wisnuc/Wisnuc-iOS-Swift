@@ -46,6 +46,11 @@ class LoginSelectionDeviceViewController: BaseViewController {
         confirmButton.layer.borderWidth = 1
     }
     
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

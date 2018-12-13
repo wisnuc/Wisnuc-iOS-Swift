@@ -25,6 +25,11 @@ class DeviceReductionSettingViewController: BaseViewController {
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.infoSettingTableView, viewController: self)
     }
     
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
+    
     lazy var infoSettingTableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)
         tableView.dataSource = self

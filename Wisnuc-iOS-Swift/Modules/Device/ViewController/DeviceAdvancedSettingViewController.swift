@@ -25,6 +25,11 @@ class DeviceAdvancedSettingViewController: BaseViewController {
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
     }
+    
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
 
     lazy var advancedSettingTableView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)

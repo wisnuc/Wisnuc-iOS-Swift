@@ -14,7 +14,8 @@ enum PhotoAlbumType:String,HandyJSONEnum{
 }
 
 enum PhotoAlbumCollecionType:String,HandyJSONEnum{
-    case normal
+    case allPhoto
+    case video
     case backup
 }
 

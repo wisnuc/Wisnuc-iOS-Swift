@@ -25,6 +25,11 @@ class DeviceBackupRootViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadData()
@@ -83,6 +88,9 @@ class DeviceBackupRootViewController: BaseViewController {
                             self?.capacity(array: mobileArray)
                         }
                         self?.backupTableView.reloadData()
+                        if !AppUserService.backupArray.contains(where: {$0.client?.id == getUniqueDevice()}){
+                             self?.creatBackupDrive()
+                        }
                     }else{
                         self?.creatBackupDrive()
                     }
@@ -318,8 +326,9 @@ extension DeviceBackupRootViewController:UITableViewDataSource,UITableViewDelega
             }
         }else{
             switch BackupPlatformType(rawValue: model.client?.type ?? "") {
-            case .WinPC?,.LinuxPC?,.MacPC?: break
-                
+            case .WinPC?,.LinuxPC?,.MacPC?: 
+                let deviceBackupPhoneDtailsViewController = DeviceBackupPhoneDtailsViewController.init(style:.highHeight,model:model,isCurrent:false)
+                self.navigationController?.pushViewController(deviceBackupPhoneDtailsViewController, animated: true)
             case .iOSMobile?,.AndroidMobile?:
             let isCurrent = getUniqueDevice() == model.client?.id ? true : true
             let deviceBackupPhoneDtailsViewController = DeviceBackupPhoneDtailsViewController.init(style:.highHeight,model:model,isCurrent:isCurrent)

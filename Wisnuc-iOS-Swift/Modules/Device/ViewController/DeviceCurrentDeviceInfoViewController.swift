@@ -26,6 +26,11 @@ class DeviceCurrentDeviceInfoViewController: BaseViewController {
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.infoSettingTableView, viewController: self)
     }
     
+    deinit {
+            // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
+    
     func loadData(){
         DeviceHelper.fetchInasdInfo(closure:  { [weak self](model) in
             self?.model = model

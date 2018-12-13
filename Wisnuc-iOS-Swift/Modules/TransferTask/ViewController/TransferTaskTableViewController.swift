@@ -115,6 +115,28 @@ class TransferTaskTableViewController: BaseViewController {
                 }
         }
     }
+    
+    func removeTask(model:FilesTasksModel){
+        if let uuid = model.uuid {
+            DeleteTasksAPI.init(taskUUID: uuid).startRequestJSONCompletionHandler({ [weak self](response) in
+                if response.error == nil {
+                    //                        mainThreadSafe {
+                    self?.taskDataSource?.removeAll(where: { (any) -> Bool in
+                        if let anModel = any as? FilesTasksModel{
+                            return anModel.uuid == uuid
+                        }else{
+                            return false
+                        }
+                    })
+                    self?.tableView.reloadData()
+                    //                        }
+                }else{
+                    Message.message(text: (response.error?.localizedDescription)!)
+                }
+            })
+        }
+    }
+
 
     override func viewWillAppear(_ animated: Bool) {
         self.appBar.headerViewController.headerView.isHidden = false
@@ -419,10 +441,11 @@ extension TransferTaskTableViewController:UITableViewDelegate{
         if (taskDataSource?.count)! >= indexPath.row {
             return
         }
-        let any = taskDataSource![indexPath.row]
-        if any is TRTask {
-            let task = taskDataSource?.safeObjectAtIndex(indexPath.row) as! TRTask
-            task.progress { _ in }.success({ _ in }).failure({ _ in})
+        if let any = taskDataSource?[indexPath.row]{
+            if any is TRTask {
+                let task = taskDataSource?.safeObjectAtIndex(indexPath.row) as! TRTask
+                task.progress { _ in }.success({ _ in }).failure({ _ in})
+            }
         }
     }
 }
@@ -458,8 +481,19 @@ extension TransferTaskTableViewController:TransferTaskBottomSheetContentVCDelega
                 let array:NSArray = self.taskDataSource! as NSArray
                 for value in array{
                     if value is TRTask{
-                        let index = array.index(of:value)
-                        self.taskDataSource?.remove(at: index)
+                        if let task = value as? TRTask{
+                            self.taskDataSource?.removeAll(where: { (any) -> Bool in
+                                if let anTask = any as? TRTask{
+                                    return anTask.url == task.url
+                                }else{
+                                    return false
+                                }
+                            })
+                        }
+                    }else if value is FilesTasksModel {
+                        if let model = value as? FilesTasksModel{
+                            self.removeTask(model: model)
+                        }
                     }
                 }
                 tableView.reloadData()

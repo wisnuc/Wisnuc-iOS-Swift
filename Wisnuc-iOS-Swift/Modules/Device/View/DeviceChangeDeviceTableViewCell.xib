@@ -23,7 +23,7 @@
                         <rect key="frame" x="32" y="8" width="256" height="160.5"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPc-wU-7Xi">
-                                <rect key="frame" x="16" y="48" width="0.0" height="27"/>
+                                <rect key="frame" x="16" y="48" width="224" height="27"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -47,8 +47,8 @@
                                     <constraint firstAttribute="height" constant="32" id="ZGa-oZ-jbW"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="saY-42-BnL">
-                                <rect key="frame" x="226.5" y="28" width="26.5" height="12"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="saY-42-BnL">
+                                <rect key="frame" x="253" y="34" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -68,6 +68,7 @@
                             <constraint firstItem="cjC-21-Jiu" firstAttribute="top" secondItem="I8n-G3-NfV" secondAttribute="bottom" constant="18" id="nOO-dD-xqb"/>
                             <constraint firstItem="I8n-G3-NfV" firstAttribute="leading" secondItem="HPc-wU-7Xi" secondAttribute="leading" id="sF7-5i-lcc"/>
                             <constraint firstItem="8LQ-4L-Xid" firstAttribute="top" secondItem="1nZ-VT-NAO" secondAttribute="top" constant="18" id="vSi-as-tJL"/>
+                            <constraint firstAttribute="trailing" secondItem="HPc-wU-7Xi" secondAttribute="trailing" constant="16" id="y38-UA-AJB"/>
                         </constraints>
                     </view>
                 </subviews>

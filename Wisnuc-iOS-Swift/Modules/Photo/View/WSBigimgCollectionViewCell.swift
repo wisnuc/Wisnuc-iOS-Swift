@@ -197,6 +197,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         if let requestImageUrl = self.requestImageUrl(hash: (asset as! NetAsset).fmhash){
             ImageCache.default.retrieveImage(forKey: requestImageUrl.absoluteString, options: nil) { [weak self]
                 image, cacheType in
+                self?.indicator.stopAnimating()
                 if let image = image {
                     self?.loadOK = true
                     self?.imageView.image = image
@@ -227,6 +228,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                 }
             }
         }else{
+            self.indicator.stopAnimating()
             Message.message(text: "图片加载失败", duration: 1.4)
         }
     }
@@ -244,7 +246,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             ImageCache.default.retrieveImage(forKey: requestImageUrl.absoluteString, options: nil) { [weak self]
                 image, cacheType in
                 if let image = image {
-                
+                    self?.indicator.stopAnimating()
                     self?.loadOK = true
                     self?.imageView.image = image
                     if(filesModel.metadata?.type?.caseInsensitiveCompare(FilesFormatType.GIF.rawValue) == .orderedSame){
@@ -252,7 +254,6 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                     }
 
                     self?.resetSubviewSize(image)
-                self?.indicator.stopAnimating()
                     print("Get image \(image), cacheType: \(cacheType).")
                     //In this code snippet, the `cacheType` is .disk
                 } else {
@@ -278,6 +279,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                 }
             }
         }else{
+            self.indicator.stopAnimating()
             Message.message(text: "图片加载失败", duration: 1.4)
         }
     }
@@ -556,6 +558,7 @@ class WSPreviewVideo: WSBasePreviewView {
     }
     
     deinit {
+        defaultNotificationCenter().removeObserver(self)
         if let request = request{
             request.cancel()
         }
@@ -564,7 +567,7 @@ class WSPreviewVideo: WSBasePreviewView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.imageView.frame = self.bounds
-        self.playLayer?.frame = self.bounds
+        self.playLayer.frame = self.bounds
         self.playBtn.center = self.center
     }
     
@@ -613,26 +616,28 @@ class WSPreviewVideo: WSBasePreviewView {
         self.playBtn.isHidden = false
         self.imageView.isHidden = false
         let time = CMTime.init(seconds: 0, preferredTimescale: 600)
-        self.playLayer?.player?.seek(to: time)
+        self.playLayer.player?.seek(to: time)
     }
     
     @objc func playEnd(_ notification: Notification) {
     }
     
     func loadNetNormalImage(asset:WSAsset){
+        if AppNetworkService.networkState == .normal{
+            SVProgressHUD.showError(withStatus: "暂不支持远程视频播放")
+            return
+        }
         if (self.wsAsset?.asset != nil && self.imageRequestID != nil) {
             if self.imageRequestID! >= 0{
                 PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
             }
         }
         self.wsAsset = asset
-        if (playLayer != nil) {
-            playLayer?.player = nil
-            playLayer?.removeFromSuperlayer()
-            playLayer?.removeObserverBlocks(forKeyPath: "status")
-            hasObserverStatus = false
-            playLayer = nil
-        }
+        playLayer.player = nil
+        playLayer.removeFromSuperlayer()
+//        playLayer.removeObserverBlocks(forKeyPath: "status")
+        hasObserverStatus = false
+    
         self.imageView.image = nil
         self.playBtn.isEnabled = true
         self.playBtn.isHidden = false
@@ -652,25 +657,35 @@ class WSPreviewVideo: WSBasePreviewView {
             self?.indicator.stopAnimating()
             if response.error == nil{
                 DispatchQueue.main.async {
-//                    if response.result == nil{
-//                        self?.initVideoLoadFailedFromiCloudUI()
-//                        return
-//                    }
-                    var url: URL? = nil
-                    if let anURL = RequestConfig.sharedInstance.baseURL {
-                        url = URL(string: "\(anURL)media/random/\(String(describing: (response.value as! NSDictionary)["key"]))")
-                        let player = AVPlayer(url: url!)
+                    if response.result == nil{
+                        self?.initVideoLoadFailedFromiCloudUI()
+                        return
+                    }
+//                    var url: URL? = nil
+                    if let anURL = AppUserService.currentUser?.localAddr {
+                        guard let dataDic = response.value as? NSDictionary else {
+                            return
+                        }
+                        
+                        guard let random = dataDic["random"] as? String else {
+                            return
+                        }
+                        
+                        guard let url = URL(string: "\(anURL)/media/\(random)") else{
+                            return
+                        }
+                        let player = AVPlayer(url: url)
                         self?.layer.addSublayer((self?.playLayer)!)
-                        self?.playLayer?.player = player
-                        self?.switchVideoStatus()
-                        self?.playLayer?.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
-                            do {
-                                try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-                            }catch{
-                                
-                            }
-
-                        self?.hasObserverStatus = true
+                        self?.playLayer.player = player
+//                        self?.switchVideoStatus()
+//                        self?.playLayer.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
+//                            do {
+//                                try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+//                            }catch{
+//
+//                            }
+//
+//                        self?.hasObserverStatus = true
                         NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
 //                        NotificationCenter.default.addObserver(self, selector: #selector(playEnd(_:)), name: Notification.Name.mpmove, object: player)
                         self?.indicator.stopAnimating()
@@ -694,7 +709,7 @@ class WSPreviewVideo: WSBasePreviewView {
 ////                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeVR];
 ////
 ////                        // start playing
-//                        self?.player?.play()
+//                        self?.
                     }
                 }
             }else{
@@ -769,7 +784,7 @@ class WSPreviewVideo: WSBasePreviewView {
                             self?.initVideoLoadFailedFromiCloudUI()
                             return
                         }
-                        let urlPath = "/media/random"
+                        let urlPath = "/media/"
 //                        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
 //                            return nil
 //                        }
@@ -781,17 +796,17 @@ class WSPreviewVideo: WSBasePreviewView {
                         guard  let normalUrl = URL.init(string:urlString) else {
                             return
                         }
-                        url =  AppNetworkService.networkState == .normal ? normalUrl : URL(string: "\(anURL)/media/random/\(String(describing: randomKey))")
+                        url =  AppNetworkService.networkState == .normal ? normalUrl : URL(string: "\(anURL)/media/\(String(describing: randomKey))")
                         let player = AVPlayer(url: url!)
                         self?.layer.addSublayer((self?.playLayer)!)
-                        self?.playLayer?.player = player
+                        self?.playLayer.player = player
                         self?.switchVideoStatus()
-                        self?.playLayer?.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
-                        do {
-                            try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-                        }catch{
-                            
-                        }
+//                        self?.playLayer.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
+//                        do {
+//                            try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+//                        }catch{
+//
+//                        }
                         
                         self?.hasObserverStatus = true
                         NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
@@ -853,13 +868,13 @@ class WSPreviewVideo: WSBasePreviewView {
     }
     
     func haveLoadVideo()->Bool{
-    return playLayer != nil ? true : false
+        return playLayer.player == nil ? true : false
     }
     
     func stopPlayVideo(){
-        if (playLayer == nil) {
-            return
-        }
+//        if (playLayer == nil) {
+//            return
+//        }
         self.playBtn.isHidden = false
         
     }
@@ -870,7 +885,7 @@ class WSPreviewVideo: WSBasePreviewView {
     }
     
     func startPlayVideo(){
-        if self.playLayer?.player == nil {
+        if self.playLayer.player == nil {
             if self.wsAsset?.type == .Video{
                 PHPhotoLibrary.requestVideo(for: self.wsAsset?.asset, completion: { (item, info) in
                     DispatchQueue.main.async {
@@ -879,45 +894,45 @@ class WSPreviewVideo: WSBasePreviewView {
                             return
                         }
                         let player = AVPlayer.init(playerItem: item)
-                        self.layer.addSublayer(self.playLayer!)
-                        self.playLayer?.player = player
+                        self.layer.addSublayer(self.playLayer)
+                        self.playLayer.player = player
                         self.switchVideoStatus()
                         do {
                            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
                         }catch{
                             
                         }
-                        self.playLayer?
-                            .rx
-                            .observe(AVPlayerItem.self, "status")
-                            .subscribe(onNext: { [weak self] (newValue) in
-                                
-                                if let playerItem:AVPlayerItem = newValue {
-                                    switch playerItem.status{
-                                    case .readyToPlay : self?.imageView.isHidden = true
-                                    case .unknown : Message.message(text: LocalizedString(forKey: "Error:Unkown error"))
-                                    case .failed: Message.message(text: LocalizedString(forKey: "Error"))
-                                        
-                                    }
-                                }
-                            })
-                            .disposed(by: self.disposeBag)
-                        self.hasObserverStatus = true
+//                        self.playLayer
+//                            .rx
+//                            .observe(AVPlayerItem.self, "status")
+//                            .subscribe(onNext: { [weak self] (newValue) in
+//
+//                                if let playerItem:AVPlayerItem = newValue {
+//                                    switch playerItem.status{
+//                                    case .readyToPlay : self?.imageView.isHidden = true
+//                                    case .unknown : Message.message(text: LocalizedString(forKey: "Error:Unkown error"))
+//                                    case .failed: Message.message(text: LocalizedString(forKey: "Error"))
+//
+//                                    }
+//                                }
+//                            })
+//                            .disposed(by: self.disposeBag)
+//                        self.hasObserverStatus = true
                         defaultNotificationCenter()
                             .rx
                             .notification(NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
                             .subscribe(onNext: { (notification) in
                                 self.playBtn.isHidden = false
                                 self.imageView.isHidden = false
-                                self.playLayer?.player?.seek(to: kCMTimeZero)
+                                self.playLayer.player?.seek(to: kCMTimeZero)
                             })
                           .disposed(by: self.disposeBag)
                     }
                 })
             }else {
-//                if AppNetworkService.networkState == .normal{
-//                 Message.message(text: LocalizedString(forKey: "Operation not support"))
-//                }
+                if AppNetworkService.networkState == .normal{
+                 Message.message(text: LocalizedString(forKey: "Operation not support"))
+                }
             }
         } else {
             self.switchVideoStatus()
@@ -925,7 +940,7 @@ class WSPreviewVideo: WSBasePreviewView {
     }
 
     func switchVideoStatus(){
-        let player = self.playLayer?.player
+        let player = self.playLayer.player
         let stop = player?.currentItem?.currentTime
         let duration = player?.currentItem?.duration
         if player?.rate == 0.0 {
@@ -978,7 +993,7 @@ class WSPreviewVideo: WSBasePreviewView {
         return button
     }()
     
-    lazy var playLayer: AVPlayerLayer? = {
+    lazy var playLayer: AVPlayerLayer = {
         let player = AVPlayerLayer.init()
         player.frame = self.bounds
         return player
@@ -1081,7 +1096,7 @@ class WSPreviewView: UIView {
                     return self.livePhotoView.lpView.frame
                 }
             case .Video?,.NetVideo?:
-                return self.videoView.playLayer?.frame ?? CGRect.zero
+                return self.videoView.playLayer.frame
             default:
                 break
             }
@@ -1143,9 +1158,17 @@ class WSPreviewView: UIView {
             let assetModel = model as! WSAsset
             switch assetModel.type {
             case .GIF?:
-                if  (self.imageGifView.imageView.image?.isKind(of: NSClassFromString("_UIAnimatedImage")!))!{
-                    self.imageGifView.loadNormalImage(asset: assetModel)
+                if let image = self.imageGifView.imageView.image{
+                    if let obj =  NSClassFromString("_UIAnimatedImage"){
+                        if  image.isKind(of:obj){
+                            self.imageGifView.loadNormalImage(asset: assetModel)
+                        }
+                    }
                 }
+//                "_UIAnimatedImage".
+//                if  (self.imageGifView.imageView.image?.isKind(of: NSClassFromString("_UIAnimatedImage")!))!{
+//                    self.imageGifView.loadNormalImage(asset: assetModel)
+//                }
             case .Video?:
                 if self.videoView.haveLoadVideo() {
                     self.videoView.loadNormalImage(asset: assetModel)

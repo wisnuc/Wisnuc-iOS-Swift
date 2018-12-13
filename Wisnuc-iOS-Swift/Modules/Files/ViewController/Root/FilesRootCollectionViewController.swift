@@ -190,10 +190,12 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         vc.delegate = self
         vc.models = data
         vc.selectIndex = index
-        let cell:FilesFileCollectionViewCell = self.collectionView?.cellForItem(at: indexPath) as! FilesFileCollectionViewCell
-        vc.senderViewForAnimation = cell
-        
-        vc.scaleImage = cell.image
+        if let cell = self.collectionView?.cellForItem(at: indexPath) as? FilesFileCollectionViewCell{
+             vc.senderViewForAnimation = cell
+             vc.scaleImage = cell.image
+        }else if let cell = self.collectionView?.cellForItem(at: indexPath) as? FilesListCollectionViewCell{
+            vc.senderViewForAnimation = cell
+        }
         return vc
     }
     
@@ -663,8 +665,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         self.present(presentVC, animated: true) {
                         }
                     }
+                    return
                 }
-                return
             }
         }
        

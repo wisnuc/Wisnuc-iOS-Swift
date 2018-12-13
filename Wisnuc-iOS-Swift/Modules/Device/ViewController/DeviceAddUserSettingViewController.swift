@@ -28,6 +28,11 @@ class DeviceAddUserSettingViewController: BaseViewController {
         ViewTools.automaticallyAdjustsScrollView(scrollView: self.backupTableView, viewController: self)
     }
     
+    deinit {
+        // Required for pre-iOS 11 devices because we've enabled observesTrackingScrollViewScrollEvents.
+        appBar.appBarViewController.headerView.trackingScrollView = nil
+    }
+    
     @objc func switchBtnHandleForUSB(_ sender:UISwitch){
         
     }
