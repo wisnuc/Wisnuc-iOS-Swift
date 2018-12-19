@@ -22,6 +22,7 @@ enum PhotoRootViewControllerState{
     case normal
     case select
     case creat
+    case container
 }
 
 class PhotoRootViewController: BaseViewController {
@@ -32,6 +33,8 @@ class PhotoRootViewController: BaseViewController {
     var driveUUID:String?
     var requset:BaseRequest?
     var timer:Timer?
+    var video:Bool = false
+    var backupDriveUUID:String?
     var state:PhotoRootViewControllerState?{
         didSet{
             switch state {
@@ -63,13 +66,24 @@ class PhotoRootViewController: BaseViewController {
         setNotification()
     }
     
-    init(state:PhotoRootViewControllerState,localDataSource:Array<WSAsset>?) {
-        super.init()
-        self.state = state
+    init(style: NavigationStyle,state:PhotoRootViewControllerState,localDataSource:Array<WSAsset>? = nil,netDataSource:Array<NetAsset>? = nil,video:Bool? = nil,backupDriveUUID:String? = nil) {
+        super.init(style: style)
+        self.setState(state: state)
+        if let video = video{
+             self.video = video
+        }
+        self.backupDriveUUID = backupDriveUUID
+        self.photoCollcectionViewController.drive = backupDriveUUID
         setNotification()
         if localDataSource != nil {
             localAssetDataSources.append(contentsOf: localDataSource!)
         }
+        
+        if netDataSource != nil {
+            netAssetDataSource.append(contentsOf: netDataSource!)
+        }
+        
+        
     }
     
     deinit {
@@ -164,85 +178,167 @@ class PhotoRootViewController: BaseViewController {
         self.requset = request
     }
     
-    
-    func pollingAssetData() {
+    func reloadAllAssetData(){
+        DispatchQueue.global(qos: .background).async {
         let request = AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
             if error == nil{
-             DispatchQueue.global(qos: .background).async {
-                if let assetDataSource = assetDataSource{
-//                    var replaceDataSource = assetDataSource
-//                    for asset in assetDataSource{
-//                        if let netAsset = self?.netAssetDataSource.first(where: {$0.name = asset.name && $0.uuid = asset.uuid && $0.fmhash = asset.fmhash && $0.pdir == asset.pdir && $0.mtime == asset.mtime && $0.metadata?.date == asset.metadata?.date}){
-//                            replaceDataSource.removeAll(where: {$0.name == asset.name && $0.uuid == asset.uuid && $0.fmhash == asset.fmhash && $0.pdir == asset.pdir && $0.mtime == asset.mtime && $0.metadata?.date == asset.metadata?.date})
-//                        }
-//                        self?.netAssetDataSource.
-//                    }
-                    
-                    let requsetHashArray = assetDataSource.map({$0.fmhash})
-                    guard let currentHashArray = self?.netAssetDataSource.map({$0.fmhash}) else {
-                        return
-                    }
-                    
-                    let set1:Set<String?> = Set(requsetHashArray)
-                    let set2:Set<String?> = Set(currentHashArray)
-
-                    let diffSet = set1.subtracting(set2)
-                    let resultHashArray = Array(diffSet)
-                    var assetArray = Array<WSAsset>.init()
-                    for hash in resultHashArray{
-                        if let asset = assetDataSource.first(where: {$0.fmhash == hash}){
-                            assetArray.append(asset)
-                        }
-                    }
-                    guard let allDataSource = self?.assetDataSources else{
-                        return
-                    }
-                    if assetArray.count > 0{
-                        print("😈😈😈😈😈😈😈😈😈😈")
-                        self?.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
-                        self?.sort(self?.merge() ?? Array<WSAsset>.init())
-//                        self?.addNetAssets(assetsArr: assetArray)
-//                        for asset in assetArray{
-//                            for (i,assetDataArray) in allDataSource.enumerated(){
-//                                 var replaceArray = assetDataArray
-//                                if Calendar.current.isDate(asset.createDateB!, inSameDayAs: (assetDataArray.first?.createDateB)!){
-//                                    replaceArray.append(asset)
-//                                    self?.assetDataSources[i] = replaceArray
-//                                }else{
-//
-//                                }
-//                            }
-//                        }
+            
+                    if let assetDataSource = assetDataSource{
+                        //                    var replaceDataSource = assetDataSource
+                        //                    for asset in assetDataSource{
+                        //                        if let netAsset = self?.netAssetDataSource.first(where: {$0.name = asset.name && $0.uuid = asset.uuid && $0.fmhash = asset.fmhash && $0.pdir == asset.pdir && $0.mtime == asset.mtime && $0.metadata?.date == asset.metadata?.date}){
+                        //                            replaceDataSource.removeAll(where: {$0.name == asset.name && $0.uuid == asset.uuid && $0.fmhash == asset.fmhash && $0.pdir == asset.pdir && $0.mtime == asset.mtime && $0.metadata?.date == asset.metadata?.date})
+                        //                        }
+                        //                        self?.netAssetDataSource.
+                        //                    }
                         
-//                        self?.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
-//                        self?.sort(self?.merge() ?? Array<WSAsset>.init())
-        
-//                        DispatchQueue.main.async {
-//                            self?.photoCollcectionViewController.dataSource = self?.assetDataSources
-//                            self?.photoCollcectionViewController.collectionView?.reloadData()
-//                        }
+                        let requsetHashArray = assetDataSource.map({$0.fmhash})
+                        guard let currentHashArray = self?.netAssetDataSource.map({$0.fmhash}) else {
+                            return
+                        }
+                        
+                        let set1:Set<String?> = Set(requsetHashArray)
+                        let set2:Set<String?> = Set(currentHashArray)
+                        
+                        let diffSet = set1.subtracting(set2)
+                        let resultHashArray = Array(diffSet)
+                        var assetArray = Array<WSAsset>.init()
+                        for hash in resultHashArray{
+                            if let asset = assetDataSource.first(where: {$0.fmhash == hash}){
+                                assetArray.append(asset)
+                            }
+                        }
+                        guard let allDataSource = self?.assetDataSources else{
+                            return
+                        }
+                        if assetArray.count > 0{
+                            print("😈😈😈😈😈😈😈😈😈😈")
+                            self?.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
+                            if let  allAssets = AppAssetService.allAssets{
+                             self?.localAssetDataSources.append(contentsOf:allAssets)
+                            }
+                            
+                            self?.sort(self?.merge() ?? Array<WSAsset>.init())
+                            //                        self?.addNetAssets(assetsArr: assetArray)
+                            //                        for asset in assetArray{
+                            //                            for (i,assetDataArray) in allDataSource.enumerated(){
+                            //                                 var replaceArray = assetDataArray
+                            //                                if Calendar.current.isDate(asset.createDateB!, inSameDayAs: (assetDataArray.first?.createDateB)!){
+                            //                                    replaceArray.append(asset)
+                            //                                    self?.assetDataSources[i] = replaceArray
+                            //                                }else{
+                            //
+                            //                                }
+                            //                            }
+                            //                        }
+                            
+                            //                        self?.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
+                            //                        self?.sort(self?.merge() ?? Array<WSAsset>.init())
+                            
+                            //                        DispatchQueue.main.async {
+                            //                            self?.photoCollcectionViewController.dataSource = self?.assetDataSources
+                            //                            self?.photoCollcectionViewController.collectionView?.reloadData()
+                            //                        }
+                        }
+                        //                    let assetArray = Array<WSAsset>.init()
+                        //                    for asset in assetDataSource{
+                        //                        let array =  self?.netAssetDataSource.filter({$0.fmhash == asset.fmhash && $0.uuid == asset.fmhash && $0.pdir == asset.pdir && $0.name == asset.name && $0.mtime == asset.mtime})
+                        //                        assetArray.append(contentsOf: array)
+                        //                    }
+                        
                     }
-//                    let assetArray = Array<WSAsset>.init()
-//                    for asset in assetDataSource{
-//                        let array =  self?.netAssetDataSource.filter({$0.fmhash == asset.fmhash && $0.uuid == asset.fmhash && $0.pdir == asset.pdir && $0.name == asset.name && $0.mtime == asset.mtime})
-//                        assetArray.append(contentsOf: array)
-//                    }
-               
-                }
                 
-               
-                   }
+                
                 self?.isSelectMode = self?.isSelectMode
                 
             }else{
                 
             }
             
-//            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
-//            self?.photoCollcectionViewController.collectionView?.reloadData()
+            //            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
+            //            self?.photoCollcectionViewController.collectionView?.reloadData()
         }
-        self.requset = request
-     
+              self.requset = request
+        }
+      
+    }
+    
+    func reloadVideoAssetData(){
+        DispatchQueue.global(qos: .background).async {
+            PhotoHelper.searchAny(sClass:SclassType.video.rawValue, complete: { (videoAssets, error) in
+                if error == nil{
+                    if let videoAssets = videoAssets{
+                        let requsetHashArray = videoAssets.map({$0.fmhash})
+                        let currentHashArray = self.netAssetDataSource.map({$0.fmhash})
+                        
+                        let set1:Set<String?> = Set(requsetHashArray)
+                        let set2:Set<String?> = Set(currentHashArray)
+                        
+                        let diffSet = set1.subtracting(set2)
+                        let resultHashArray = Array(diffSet)
+                        var assetArray = Array<WSAsset>.init()
+                        for hash in resultHashArray{
+                            if let asset = videoAssets.first(where: {$0.fmhash == hash}){
+                                assetArray.append(asset)
+                            }
+                        }
+                        
+                        if assetArray.count > 0{
+                            print("😈😈😈😈😈😈😈😈😈😈")
+                            self.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
+                            if let  allAssets = AppAssetService.allVideoAssets{
+                                self.localAssetDataSources.append(contentsOf:allAssets)
+                            }
+                            
+                            self.sort(self.merge() )
+                        }
+                    }
+                }
+            })
+        }
+    }
+    
+    func relaodBackUpAssetData(){
+        guard let uuid = self.backupDriveUUID else {
+            return
+        }
+        let types = kMediaTypes.joined(separator: ".")
+        PhotoHelper.searchAny(places: uuid, types: types) {(assets, error) in
+            if  error == nil && assets != nil{
+                if let backUpAssets = assets{
+                    let requsetHashArray = backUpAssets.map({$0.fmhash})
+                    let currentHashArray = self.netAssetDataSource.map({$0.fmhash})
+                    
+                    let set1:Set<String?> = Set(requsetHashArray)
+                    let set2:Set<String?> = Set(currentHashArray)
+                    
+                    let diffSet = set1.subtracting(set2)
+                    let resultHashArray = Array(diffSet)
+                    var assetArray = Array<WSAsset>.init()
+                    for hash in resultHashArray{
+                        if let asset = backUpAssets.first(where: {$0.fmhash == hash}){
+                            assetArray.append(asset)
+                        }
+                    }
+                    
+                    if assetArray.count > 0{
+                        print("😈😈😈😈😈😈😈😈😈😈")
+                        self.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
+                        self.sort(self.merge() )
+                    }
+                }
+            }
+        }
+    }
+    
+    func pollingAssetData() {
+        if self.video{
+            reloadVideoAssetData()
+        }else if self.backupDriveUUID != nil{
+            relaodBackUpAssetData()
+        }else{
+            reloadAllAssetData()
+        }
     }
     
     func setState(state:PhotoRootViewControllerState){

@@ -40,6 +40,7 @@ class WSShowBigimgViewController: UIViewController {
     var disposeBag = DisposeBag()
     var appearResizableImageView:UIImageView?
     var mapView:MKMapView?
+    var drive:String?
     var isHiddenNavigationBar = false{
         didSet{
             hiddenNavigationBarAction()
@@ -935,7 +936,7 @@ extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDa
         
         cell.showGif = true
         cell.showLivePhoto = true
-        
+        cell.drive = self.drive
         cell.model = model
         
         cell.loadImageCompleteCallback = { [weak self] in

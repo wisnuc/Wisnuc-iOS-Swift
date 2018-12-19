@@ -92,7 +92,7 @@ class PhotoAlbumViewController: BaseViewController {
         let collectionAlbumArray = Array<PhotoAlbumModel>.init()
         self.dataSource.append(collectionAlbumArray)
         DispatchQueue.global(qos: .default).async(execute: {
-            print("接见接见军军军军军军军军军军军军军军军军军军军军")
+//            print("接见接见军军军军军军军军军军军军军军军军军军军军")
             self.allPhotoAlbumData()
             self.allVideoAlbumData()
             self.getAllBackup()
@@ -292,29 +292,29 @@ class PhotoAlbumViewController: BaseViewController {
         }
       
 //        self.photosVC = photosVC
-        DispatchQueue.global(qos: .default).async {
+ 
+        DispatchQueue.main.async {
+            self.albumCollectionView.reloadData()
+        }
+        DispatchQueue.global(qos: .background).async {
             for  model in models{
-//                let queue = DispatchQueue.init(label: "backgroudDownload")
+                //                let queue = DispatchQueue.init(label: "backgroudDownload")
                 //            queue
                 DispatchQueue.global(qos: .background).async {
                     guard let fmhash =  (model as? NetAsset)?.fmhash else {
                         return
                     }
                     let size = CGSize(width: 64, height: 64)
-                        YYImageCache.shared().getImageData(forKey: fmhash, with: { (data) in
-                            if  data == nil{
-                                let _ = AppNetworkService.getThumbnailBackgroud(hash: fmhash, size: size) { (error, image, url) in
-//                                    if let image = image ,let url = url{
-//                                        
-//                                    }
+                    YYImageCache.shared().getImageData(forKey: fmhash, with: { (data) in
+                        if  data == nil{
+                            let _ = AppNetworkService.getThumbnailBackgroud(hash: fmhash, size: size) { (error, image, url) in
+                                if let image = image {
                                 }
                             }
-                        })
+                        }
+                    })
                 }
             }
-        }
-        DispatchQueue.main.async {
-            self.albumCollectionView.reloadData()
         }
     }
     
@@ -576,48 +576,56 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
 //              }
            
             }else if model.detailType == .video{
-                let photosVC = PhotoMediaContainerViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal)
+                let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow,state: .normal, localDataSource: AppAssetService.allVideoAssets, netDataSource: model.dataSource as? Array<NetAsset>, video: true)
                 photosVC.title = model.name
-                DispatchQueue.global(qos: .default).async {
-                    if let assets = AppAssetService.allVideoAssets{
-                        DispatchQueue.main.async {
-                            photosVC.localAssetDataSources.append(contentsOf:assets)
-                            photosVC.localDataSouceSort()
-                            self.getAllVideoAlbumData(sclass: SclassType.video.rawValue, closure: {[weak self](hash, asset,models) in
-                                if let models = models{
-                                    let changeModel = model
-                                    changeModel.count = models.count + assets.count
-                                    self?.dataSource[indexPath.section][indexPath.row] = changeModel
-                                    self?.albumCollectionView.reloadData()
-                                    photosVC.addNetAssets(assetsArr: models)
-                                }
-                            })
-                        }
-                    }
+                var dataSource = Array<WSAsset>.init()
+                if let allLocalVideoAssets = AppAssetService.allVideoAssets{
+                    dataSource.append(contentsOf: allLocalVideoAssets)
                 }
+                
+                if let allNetVideoAssets = model.dataSource{
+                    dataSource.append(contentsOf: allNetVideoAssets)
+                }
+              
+                photosVC.sort(dataSource)
+                
+//                DispatchQueue.global(qos: .default).async {
+//                    if let assets = {
+//                        DispatchQueue.main.async {
+//                            photosVC.localAssetDataSources.append(contentsOf:assets)
+//                            photosVC.localDataSouceSort()
+//                            self.getAllVideoAlbumData(sclass: SclassType.video.rawValue, closure: {[weak self](hash, asset,models) in
+//                                if let models = models{
+//                                    let changeModel = model
+//                                    changeModel.count = models.count + assets.count
+//                                    self?.dataSource[indexPath.section][indexPath.row] = changeModel
+//                                    self?.albumCollectionView.reloadData()
+//                                    photosVC.addNetAssets(assetsArr: models)
+//                                }
+//                            })
+//                        }
+//                    }
+//                }
                   self.navigationController?.pushViewController(photosVC, animated: true)
             }else
             if  model.detailType == .backup  && model.drive != nil{
-                let photosVC = PhotoMediaContainerViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal,driveUUID:model.drive!)
+                let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow, state: .normal, netDataSource: model.dataSource as? Array<NetAsset>, backupDriveUUID: model.drive)
                 photosVC.title = model.name
-                
-                DispatchQueue.main.async {
-                    guard let uuid = model.drive else{
-                        return
-                    }
-                    let types = kMediaTypes.joined(separator: ".")
-                    self.searchAny(places: uuid, types: types) { [weak self](assets, error) in
-                        if  error == nil && assets != nil{
-                            let changeModel = model
-                            changeModel.count = assets?.count
-                            self?.dataSource[indexPath.section][indexPath.row] = changeModel
-                            self?.albumCollectionView.reloadData()
-                            photosVC.addNetAssets(assetsArr: assets!)
-                        }
-                    }
+                if let backUpDataSource = model.dataSource{
+                     photosVC.sort(backUpDataSource)
                 }
+                
+//                let types = kMediaTypes.joined(separator: ".")
+//                self.searchAny(places: uuid, types: types) { [weak self](assets, error) in
+//                    if  error == nil && assets != nil{
+//                        let changeModel = model
+//                        changeModel.count = assets?.count
+//                        self?.dataSource[indexPath.section][indexPath.row] = changeModel
+//                        self?.albumCollectionView.reloadData()
+//                        photosVC.addNetAssets(assetsArr: assets!)
+//                    }
+//                }
                 self.navigationController?.pushViewController(photosVC, animated: true)
-            }
         }else{
             let model = dataSource[indexPath.section][indexPath.row]
             let newAlbumVC = NewAlbumViewController.init(style: NavigationStyle.whiteWithoutShadow, photos: model.dataSource)
@@ -627,6 +635,7 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
             self.navigationController?.pushViewController(newAlbumVC, animated: true)
             self.index = indexPath.row
         }
+    }
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {

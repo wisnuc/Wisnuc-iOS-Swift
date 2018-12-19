@@ -71,6 +71,46 @@ class PhotoHelper: NSObject {
         
         return  nil
     }
+    
+    class func searchAny(places:String? = nil,text:String? = nil,types:String? = nil,sClass:String? = nil,complete:@escaping (_ mdoels: [NetAsset]?,_ error:Error?)->()){
+        var array:Array<NetAsset> =  Array.init()
+        var order:String?
+        
+        order = !isNilString(types) || !isNilString(sClass) ? nil : SearhOrder.newest.rawValue
+        var place = places
+        if places == nil{
+            var placesArray:Array<String> = Array.init()
+            if let uuid = AppUserService.currentUser?.userHome{
+                placesArray.append(uuid)
+            }
+            let placesPlaceholder = placesArray.joined(separator: ".")
+            place = placesPlaceholder
+        }
+        let request = SearchAPI.init(order:order, places: place!,class:sClass, types:types, name:text)
+        request.startRequestJSONCompletionHandler { (response) in
+            if response.error == nil{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.Request.CloudRequstError, userInfo: [NSLocalizedDescriptionKey:errorMessage])
+                    return complete(nil,error as! CustomNSError)
+                }
+                let isLocalRequest = AppNetworkService.networkState == .local
+                let result = (isLocalRequest ? response.value as? NSArray : (response.value as! NSDictionary)["data"]) as? NSArray
+                if result != nil{
+                    let rootArray = result
+                    for (_ , value) in (rootArray?.enumerated())!{
+                        if value is NSDictionary{
+                            let dic = value as! NSDictionary
+                            let model = NetAsset.init(dict:dic)
+                            array.append(model)
+                        }
+                    }
+                    return complete(array,nil)
+                }
+            }else{
+                return complete(nil,response.error)
+            }
+        }
+    }
 
     class func sort(_ assetsArray:Array<WSAsset>,clousure:@escaping (_ sortedAssets:Array<WSAsset>,_ dataSouce:Array<Array<WSAsset>>)->()){
         autoreleasepool {

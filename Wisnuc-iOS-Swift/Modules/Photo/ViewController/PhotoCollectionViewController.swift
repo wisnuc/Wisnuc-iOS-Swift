@@ -40,7 +40,8 @@ class PhotoCollectionViewController: UICollectionViewController {
     lazy var imageRequestIDDataSources:Array<PHImageRequestID> = Array.init()
     lazy var imageDownloadTasks:Array<RetrieveImageDownloadTask> = Array.init()
     lazy var imageDiskTasks:Array<RetrieveImageDiskTask> = Array.init()
-    
+    lazy var imageDic:[String:UIImage] = Dictionary.init()
+    var drive:String?
     var currentItemSize:CGSize = CGSize.zero
     var showIndicator:Bool = true
     var sortedAssetsBackupArray:Array<WSAsset>?
@@ -391,6 +392,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     func getBigImageVC(data:Array<WSAsset>,index:Int) -> UIViewController{
         let vc = WSShowBigimgViewController.init()
+        vc.drive = self.drive
         vc.delegate = self
         vc.models = data
         vc.selectIndex = index
@@ -456,6 +458,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         
     }
     
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
     }
@@ -475,7 +478,17 @@ class PhotoCollectionViewController: UICollectionViewController {
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:PhotoCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotoCollectionViewCell
-         let model = self.dataSource![indexPath.section][indexPath.row]
+        guard let dataSource = self.dataSource else {
+            return cell
+        }
+        if indexPath.section >= dataSource.count{
+            return cell
+        }
+        
+        if indexPath.row >= dataSource[indexPath.section].count{
+            return cell
+        }
+         let model = dataSource[indexPath.section][indexPath.row]
         weak var weakCell = cell
         cell.selectedBlock = { [weak self] (selected) in
             if !(self?.isSelectMode)! { return}
@@ -589,10 +602,15 @@ class PhotoCollectionViewController: UICollectionViewController {
         cell.setImagView(indexPath:indexPath)
         cell.setSelectButton(indexPath: indexPath)
         cell.isSelectMode = self.isSelectMode
-       
+        cell.imageView?.layer.contents =  imageDic["\(indexPath.section)_\(indexPath.row)"]?.cgImage
         cell.setSelectAnimation(isSelect: self.isSelectMode ?? false ? self.choosePhotos.contains(model) : false, animation: false)
+//        if let image = model.image{
+//            cell.image = image
+//            cell.model?.image = image
+//            //                        DispatchQueue.main.async {
+//            cell.imageView?.layer.contents = image.cgImage
+//        }
         cell.model = model
-
 //        ImageAsyncTaskObject.setCoverImage(model: model, indexPath: indexPath, delegate: self)
         let tagString = "\(indexPath.section)\(indexPath.item)"
         cell.tag = (NSNumber.init(string: tagString)?.intValue)!
@@ -605,6 +623,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         if cell.indexPath != model.indexPath{
             return
         }
+//        cell.imageView?.layer.contents = model.image?.cgImage
         if model.asset != nil {
             let asset = model.asset
             let contentMode = PHImageContentMode.default
@@ -617,20 +636,28 @@ class PhotoCollectionViewController: UICollectionViewController {
 //                    if let cell = self.collectionView?.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
                 cell.imageView?.layer.contents = image?.cgImage
                 cell.image = image
+                cell.model?.image = image
 //                    }
                 }
             })
             imageRequestIDDataSources.append(imageRequestID)
         }else if model is NetAsset{
-            if let hash = (model as? NetAsset)?.fmhash{
-                DispatchQueue.global(qos: .userInteractive).async {
-                    if let image = YYImageCache.shared().getImageForKey(hash){
-                        DispatchQueue.main.async {
-                            cell.imageView?.layer.contents = image.cgImage
-                        }
-                    }
-                }
-            }
+//            if let hash = (model as? NetAsset)?.fmhash{
+//                DispatchQueue.global(qos: .default).async {
+//                YYImageCache.shared().getImageData(forKey: hash, with: { (data) in
+//                    if let data = data{
+//                        if cell.indexPath == model.indexPath{
+//                            if let image = UIImage.init(data: data){
+//                                cell.image = image
+//                                cell.model?.image = image
+//                                //                        DispatchQueue.main.async {
+//                                cell.imageView?.layer.contents = image.cgImage
+//                            }
+//                        }
+//                    }
+//                })
+//                }
+//            }
             let netAsset = model as! NetAsset
                DispatchQueue.global(qos: .default).async {
                 if let image =  YYImageCache.shared().getImageForKey("\(netAsset.fmhash!)_big"){
@@ -690,11 +717,26 @@ class PhotoCollectionViewController: UICollectionViewController {
     }()
     
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let model = self.dataSource![indexPath.section][indexPath.row]
+        guard let dataSource = self.dataSource else {
+            return
+        }
+        if indexPath.section >= dataSource.count{
+            return
+        }
+        
+        if indexPath.row >= dataSource[indexPath.section].count{
+            return
+        }
+        
+         let model = dataSource[indexPath.section][indexPath.row]
+        
         if let cell = cell as? PhotoCollectionViewCell{
+            cell.imageView?.layer.contents =  imageDic["\(indexPath.section)_\(indexPath.row)"]?.cgImage
             self.setCellImage(model: model,cell:cell)
         }
     }
+    
+
 
     // MARK: UICollectionViewDelegate
     
@@ -702,16 +744,25 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headView:FMHeadView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! FMHeadView
-        if let dataSource = self.dataSource{
-            let model =  dataSource[indexPath.section][indexPath.row]
-            if let creatDate = model.createDate{
-                headView.headTitle = PhotoTools.getDateString(date: creatDate)
-            }
-            headView.fmIndexPath = indexPath
-            headView.isSelectMode = isSelectMode ?? false
-            headView.isChoose =  self.choosePhotos.contains(array:self.dataSource![indexPath.section])
-            headView.fmDelegate = self
+        guard let dataSource = self.dataSource else {
+            return headView
         }
+        if indexPath.section >= dataSource.count{
+            return headView
+        }
+        
+        if indexPath.row >= dataSource[indexPath.section].count{
+            return headView
+        }
+        let model =  dataSource[indexPath.section][indexPath.row]
+        if let creatDate = model.createDate{
+            headView.headTitle = PhotoTools.getDateString(date: creatDate)
+        }
+        headView.fmIndexPath = indexPath
+        headView.isSelectMode = isSelectMode ?? false
+        headView.isChoose =  self.choosePhotos.contains(array:self.dataSource![indexPath.section])
+        headView.fmDelegate = self
+
       
 //        let listSet = Set(self.dataSource![indexPath.section])
 //        let findSet = Set(self.choosePhotos)
@@ -729,11 +780,21 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let dataSource = self.dataSource else {
+            return
+        }
+        if indexPath.section >= dataSource.count{
+            return
+        }
+        
+        if indexPath.row >= dataSource[indexPath.section].count{
+            return
+        }
         if isSelectMode! {
             let cell:PhotoCollectionViewCell = collectionView.cellForItem(at: indexPath) as! PhotoCollectionViewCell
             cell.btnSelectClick(nil)
         }else{
-            let model = self.dataSource![indexPath.section][indexPath.row]
+            let model = dataSource[indexPath.section][indexPath.row]
             model.indexPath = IndexPath(row: indexPath.row, section: indexPath.section)
             let vc = self.getMatchVC(model: model)
             if let presentVC = vc{
@@ -816,11 +877,40 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            if let cell = collectionView.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
-            let model = self.dataSource![indexPath.section][indexPath.row]
-                model.indexPath = indexPath
-                self.setCellImage(model: model,cell:cell)
+            guard let dataSource = self.dataSource else {
+                return
             }
+            if indexPath.section >= dataSource.count{
+                return
+            }
+            
+            if indexPath.row >= dataSource[indexPath.section].count{
+                return
+            }
+            
+           
+//            if let cell = collectionView.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
+            let model = dataSource[indexPath.section][indexPath.row]
+                model.indexPath = indexPath
+                if let hash = (model as? NetAsset)?.fmhash{
+                    DispatchQueue.global(qos: .background).async {
+                    YYImageCache.shared().getImageData(forKey: hash, with: { (data) in
+                            if let data = data{
+//                                if indexPath == model.indexPath{
+                                    if let image = UIImage.init(data: data){
+                                        self.imageDic["\(indexPath.section)_\(indexPath.row)"] = image
+//                                        cell.image = image
+//                                        cell.model?.image = image
+//                                        cell.imageView?.layer.contents = image.cgImage
+                                    }
+                                }
+//
+                    })
+                }
+            }
+//                self.setCellImage(model: model,cell:cell)
+            
+//            }
 //            if cell != nil{
 //            let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
 //                let model = self.dataSource![indexPath.section][indexPath.row]
@@ -852,8 +942,18 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
     
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
+            guard let dataSource = self.dataSource else {
+                return
+            }
+            if indexPath.section >= dataSource.count{
+                return
+            }
+            
+            if indexPath.row >= dataSource[indexPath.section].count{
+                return
+            }
             let cell = collectionView.cellForItem(at: indexPath)
-            let model = self.dataSource?[indexPath.section][indexPath.row]
+            let model = dataSource[indexPath.section][indexPath.row]
             if cell != nil{
                if let photoCell = cell as? PhotoCollectionViewCell{
                 let size = CGSize.init(width: 186 , height: 186 )

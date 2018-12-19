@@ -715,7 +715,7 @@ class NetworkService: NSObject {
             return dic
         }
         
-        YYImageCache.shared().memoryCache.countLimit = 100
+        YYImageCache.shared().memoryCache.countLimit = 3000
         let task = SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.lowPriority, progress: nil) { (image, data, error, finish) in
             if let image = image {
                 YYImageCache.shared().setImage(image, imageData: data, forKey: hash, with: .disk)

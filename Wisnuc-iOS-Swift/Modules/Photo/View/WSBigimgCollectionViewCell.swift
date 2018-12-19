@@ -35,6 +35,8 @@ class WSBasePreviewView: UIView {
     
     var imageDownloadTask:RetrieveImageDownloadTask?
     
+    var drive:String?
+    
     func image()->UIImage?
     {return imageView.image}
     
@@ -266,9 +268,6 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                     }
                     self?.imageDownloadTask = AppNetworkService.getHighWebImage(url: imageUrl, callback: { [weak self] (error, img) in
                         
-                        if let completeCallback = self?.loadCompleteCallback{
-                            completeCallback()
-                        }
                         if error != nil {
                             Message.message(text: "图片加载失败", duration: 1.4)
                             // TODO: Load Error Image
@@ -282,6 +281,10 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                         }
                         self?.imageDownloadTask = nil
                         self?.indicator.stopAnimating()
+                        
+                        if let completeCallback = self?.loadCompleteCallback{
+                            completeCallback()
+                        }
                     })
                 }
             }
@@ -348,8 +351,11 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             return nil
         }
         
-        let driveUUID = placesArray[place]
-            
+        var driveUUID = placesArray[place]
+        
+        if let drive = self.drive{
+            driveUUID = drive
+        }
         
         guard let directoryUUID = model.pdir else {
             return nil
@@ -366,6 +372,10 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             let urlPath = "/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))"
             var params = ["name":name]
             if backArray.contains(driveUUID){
+                if let hash = model.fmhash{
+                    params = ["hash":hash]
+                }
+            }else if self.drive != nil{
                 if let hash = model.fmhash{
                     params = ["hash":hash]
                 }
@@ -391,6 +401,10 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             
             var localUrl = "\(String(describing: baseURL))/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))?name=\(String(describing: name))"
             if backArray.contains(driveUUID){
+                if let hash = model.fmhash{
+                   localUrl = "\(String(describing: baseURL))/drives/\(driveUUID)/dirs/\( directoryUUID)/entries/\(uuid)?hash=\(hash)"
+                }
+            }else if self.drive != nil{
                 if let hash = model.fmhash{
                    localUrl = "\(String(describing: baseURL))/drives/\(driveUUID)/dirs/\( directoryUUID)/entries/\(uuid)?hash=\(hash)"
                 }
@@ -1293,6 +1307,7 @@ class WSPreviewView: UIView {
     var showGif:Bool?
     var singleTapCallBack:(()->())?
     var showLivePhoto = false
+    var drive:String?
     var model:Any?{
         didSet{
             for view in self.subviews{
@@ -1303,12 +1318,14 @@ class WSPreviewView: UIView {
                 switch assetModel.type {
                 case .Image?,.GIF?:
                     self.addSubview(self.imageGifView)
-                    
+                    self.imageGifView.drive = self.drive
                     if assetModel is NetAsset {
                         return self.imageGifView.loadImage(asset:assetModel)
                     }
+                    
                     self.imageGifView.loadNormalImage(asset: assetModel)
                 case .LivePhoto?:
+                    self.livePhotoView.drive = self.drive
                     if (self.showLivePhoto) {
                         self.addSubview(self.livePhotoView)
                         self.livePhotoView.loadNormalImage(asset:assetModel)
@@ -1317,14 +1334,17 @@ class WSPreviewView: UIView {
                         self.imageGifView.loadNormalImage(asset: assetModel)
                     }
                 case .Video?:
+                    self.videoView.drive = self.drive
                     self.addSubview(self.videoView)
                     self.videoView.loadNormalImage(asset: assetModel)
                     
                 case .NetImage?:
+                    self.imageGifView.drive = self.drive
                     self.addSubview(self.imageGifView)
                     self.imageGifView.loadImage(asset: assetModel)
                     
                 case .NetVideo? :
+                    self.videoView.drive = self.drive
                     self.addSubview(self.videoView)
                     self.videoView.loadNetNormalImage(asset: assetModel)
                 default:
@@ -1486,18 +1506,21 @@ class WSPreviewView: UIView {
 
     lazy var imageGifView: WSPreviewImageAndGif = {
         let imageView = WSPreviewImageAndGif.init(frame: self.bounds)
+        imageView.drive = self.drive
         imageView.singleTapCallback = self.singleTapCallBack
         return imageView
     }()
 
     lazy var livePhotoView: WSPreviewLivePhoto = {
         let imageView = WSPreviewLivePhoto.init(frame: self.bounds)
+        imageView.drive = self.drive
         imageView.singleTapCallback = self.singleTapCallBack
         return imageView
     }()
     
     lazy var videoView: WSPreviewVideo = {
         let imageView = WSPreviewVideo.init(frame: self.bounds)
+        imageView.drive = self.drive
         imageView.singleTapCallback = self.singleTapCallBack
         return imageView
     }()
@@ -1507,10 +1530,12 @@ class WSBigimgCollectionViewCell: UICollectionViewCell {
     var singleTapCallBack:(()->())?
     var loadImageCompleteCallback:(()->())?
     var showGif:Bool = false
+    var drive:String?
     var showLivePhoto:Bool = false
     var willDisplaying:Bool = false
     var model:Any?{
         didSet{
+            self.previewView.drive = self.drive
             self.previewView.showGif = self.showGif
             self.previewView.showLivePhoto = self.showLivePhoto
             self.previewView.model = model
