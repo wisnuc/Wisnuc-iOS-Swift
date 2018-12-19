@@ -8,6 +8,7 @@
 
 import UIKit
 import Photos
+import Kingfisher
 
 enum WSAssetType{
     case Image
@@ -29,7 +30,6 @@ class WSAsset: NSObject,NSCopying{
     //asset类型
     var type:WSAssetType?
     //视频时长
-    var duration:String?
     //是否被选择
     var selected:Bool?
     
@@ -38,6 +38,7 @@ class WSAsset: NSObject,NSCopying{
     
     //图片
     var image:UIImage?
+   
     
     var digest:String?
     
@@ -48,7 +49,9 @@ class WSAsset: NSObject,NSCopying{
     
     override init() {
         super.init()
+//        createDateB = createDate
     }
+    
     
     
     init(asset:PHAsset?,type:WSAssetType?,duration:String?) {
@@ -57,7 +60,6 @@ class WSAsset: NSObject,NSCopying{
         self.type = type
         self.duration = duration
         self.selected = false
-        self.createDate = self.createDateB
         if (asset) != nil {
             self.assetLocalIdentifier = asset?.localIdentifier
         }
@@ -76,7 +78,6 @@ class WSAsset: NSObject,NSCopying{
         model.type = type
         model.duration = duration
         model.selected = false
-        model.createDate = model.createDateB
         if (asset) != nil {
             model.assetLocalIdentifier = asset?.localIdentifier;
         }
@@ -86,21 +87,38 @@ class WSAsset: NSObject,NSCopying{
     var createDate:Date?{
         get{
             if self is NetAsset{
-                return Date.init(timeIntervalSince1970: PhotoHelper.fetchPhotoTime(model: self as? NetAsset) ?? Date.distantPast.timeIntervalSince1970*1000)
+                let date = (self as? NetAsset)?.netDate
+                return date
             }else{
-               return self.asset?.creationDate
+                guard let creationDate = self.asset?.creationDate else{
+                    return  Date.init(timeIntervalSinceNow: 0)
+                }
+    
+                return creationDate
             }
         }
         set(newValue){
-        
+            
         }
+    
     }
     
+    var duration:String?
     
-    lazy var createDateB: Date? = {
-        return self.asset?.creationDate
-        }()
+    
+    var createDateB:Date?
+    
 }
+
+//extension WSAsset {
+//    static func ==(m1:WSAsset,m2:WSAsset) -> Bool{
+//        return m1.asset == m2.asset && m1.type == m2.type
+//    }
+//    override var hash: Int{//hashValue的实现
+//        return self.duration.hashValue ^ self.createDateB.hashValue
+//    }
+//}
+
 
 @objc class WSAssetList: NSObject {
     var title:String?

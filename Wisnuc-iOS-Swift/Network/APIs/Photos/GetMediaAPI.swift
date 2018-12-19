@@ -13,10 +13,12 @@ class GetMediaAPI: BaseRequest {
     var classType:String?
     var placesUUID:String?
     var types:String?
-    init(classType:String? = nil,placesUUID:String,types:String? = nil) {
+    var metadata:Bool?
+    init(classType:String? = nil,placesUUID:String,types:String? = nil,metadata:Bool? = nil) {
         self.classType = classType
         self.placesUUID = placesUUID
         self.types = types
+        self.metadata = metadata
     }
     
     override func requestMethod() -> RequestHTTPMethod {
@@ -48,21 +50,41 @@ class GetMediaAPI: BaseRequest {
         switch AppNetworkService.networkState {
         case .normal?:
             let urlPath = "/files"
-            var params = [String:String]()
+            var params = [String:Any]()
             if let classType = self.classType{
-               params  = [kRequestClassKey:classType,kRequestPlacesKey:placesUUID]
+               params  = [kRequestClassKey:classType,kRequestPlacesKey:placesUUID,"order":SearhOrder.newest.rawValue]
+//                if let metadata = self.metadata{
+//                    if  metadata{
+//                        params["metadata"] = true
+//                    }
+//                }
             }
             if let types = self.types{
-                params  = [kRequestTypesKey:types,kRequestPlacesKey:placesUUID]
+                params  = [kRequestTypesKey:types,kRequestPlacesKey:placesUUID,"order":SearhOrder.newest.rawValue]
+//                if let metadata = self.metadata{
+//                    if  metadata{
+//                        params["metadata"] = true
+//                    }
+//                }
             }
-            return [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params as Dictionary<String,String>]
+            return [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params]
         case .local?:
-            var params:[String:String]?
+            var params:[String:Any]?
             if let classType = self.classType{
-                params  = [kRequestClassKey:classType,kRequestPlacesKey:placesUUID]
+                params  = [kRequestClassKey:classType,kRequestPlacesKey:placesUUID,"order":SearhOrder.newest.rawValue]
+//                if let metadata = self.metadata{
+//                    if  metadata{
+//                        params?["metadata"] = true
+//                    }
+//                }
             }
             if let types = self.types{
-                params  = [kRequestTypesKey:types,kRequestPlacesKey:placesUUID]
+                params  = [kRequestTypesKey:types,kRequestPlacesKey:placesUUID,"order":SearhOrder.newest.rawValue]
+//                if let metadata = self.metadata{
+//                    if  metadata{
+//                        params?["metadata"] = true
+//                    }
+//                }
             }
             return params
         default:
@@ -77,9 +99,17 @@ class GetMediaAPI: BaseRequest {
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:
-            return [kRequestAuthorizationKey:AppTokenManager.token!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
+            if let token = AppUserService.currentUser?.cloudToken,let cookie = AppUserService.currentUser?.cookie{
+                let header =  [kRequestAuthorizationKey:token,kRequestSetCookieKey:cookie]
+                return header
+            }
+            return nil
         case .local?:
-            return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
+            if let token = AppUserService.currentUser?.localToken{
+                let header = [kRequestAuthorizationKey:JWTTokenString(token: token)]
+                return header
+            }
+            return nil
         default:
             return nil
         }

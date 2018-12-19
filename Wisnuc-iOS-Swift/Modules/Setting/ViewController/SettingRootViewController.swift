@@ -22,7 +22,7 @@ class SettingRootViewController: BaseViewController {
         appBar.headerViewController.headerView.trackingScrollView = settingTabelView
         self.view.addSubview(settingTabelView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
-        AppService.sharedInstance().updateCurrentUserInfo {
+        AppUserService.updateCurrentUserInfo {
             self.setAvatar()
             self.setHeaderTitle()
         }
@@ -310,11 +310,13 @@ extension SettingRootViewController:UITableViewDelegate{
             }
         case 2:
             YYImageCache.shared().diskCache.removeAllObjects {
-               
+                SDImageCache.shared().clearDisk(onCompletion: {
+                    KingfisherManager.shared.cache.clearDiskCache()
+                    DispatchQueue.main.async {
+                        self.settingTabelView.reloadData()
+                    }
+                })
             }
-            
-            KingfisherManager.shared.cache.clearDiskCache()
-            self.settingTabelView.reloadData()
 
         case 3:
             let myAboutViewController = MyAboutViewController.init(style:NavigationStyle.whiteWithoutShadow)
@@ -369,7 +371,9 @@ extension SettingRootViewController:UITableViewDataSource{
             
             var i =  YYImageCache.shared().diskCache.totalCost()
              KingfisherManager.shared.cache.calculateDiskCacheSize(completion: { [weak self] (size) in
-                i = i + Int(size)
+                SDImageCache.shared().calculateSize(completionBlock: { (count, totalSize) in
+                  i = i + Int(size) + Int(totalSize)
+                })
                 self?.cacheLabel.text = sizeString(Int64(i))
             })
             print(String(format: "%ld", Int(YYImageCache.shared().diskCache.totalCost())))

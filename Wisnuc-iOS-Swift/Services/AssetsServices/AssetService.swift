@@ -16,25 +16,6 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     lazy var allNetAssets:Array<NetAsset>? = Array.init()
     var assetChangeBlock: ((_ removeObjs: [WSAsset]?, _ insertObjs: [WSAsset]?) -> Void)?
     var allAssets:Array<WSAsset>?
-    {
-        get{
-            var all:Array<WSAsset> = Array.init()
-            PHPhotoLibrary.getAllAsset { [weak self] (result, assets) in
-                for (_,value) in assets.enumerated(){
-                    let type = value.getWSAssetType()
-                    let duration = value.getDurationString()
-                    let asset = WSAsset.init(asset: value, type: type, duration: duration)
-                    all.append(asset)
-                }
-                self?.lastResult = result
-            }
-        
-            return  all
-        }
-        set{
-          
-        }
-    }
     
     var allVideoAssets:Array<WSAsset>?
     {
@@ -82,23 +63,42 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
             places.append(shareSpace)
         }
         
+        if AppUserService.backupArray.count > 0 {
+          let array = AppUserService.backupArray.map({$0.uuid})
+            for uuid in array{
+                if let uuid = uuid{
+                    places.append(uuid)
+                }
+            }
+        }
         let placesUUID = places.joined(separator: ".")
         let types = kMediaTypes.joined(separator: ".")
        let request = GetMediaAPI.init(placesUUID: placesUUID,types: types)
+      
        request.startRequestJSONCompletionHandler { [weak self] (response) in
+     
             if response.error == nil{
-//                print("😆\(String(describing: response.value))")
-                let isLocalRequest = AppNetworkService.networkState == .local
-                let medias:NSArray = (isLocalRequest ? response.value as? NSArray : (response.value as! NSDictionary)["data"]) as! NSArray
+//                print("😆\(String(describing: sizeString(Int64(response.data!.count))))")
+                
+                var medias:NSArray = NSArray.init()
+                if let datas = (response.value as? NSDictionary)?.object(forKey: "data") as? NSArray{
+                    medias = datas
+                }else if let dataValues = response.value as? NSArray{
+                    medias = dataValues
+                }
+              
                 DispatchQueue.global(qos: .default).async {
                     var array = Array<NetAsset>.init()
+                    let start = CFAbsoluteTimeGetCurrent()
                     medias.enumerateObjects({ (object, idx, stop) in
                         if object is NSDictionary{
-                            if let model = NetAsset.deserialize(from: object as? NSDictionary) {
-                                array.append(model)
-                            }
+                            let dict =  object as! NSDictionary
+                            let model = NetAsset.init(dict:dict)
+                            array.append(model)
                         }
                     })
+                    let last = CFAbsoluteTimeGetCurrent()
+                    print("🍄\(last - start)")
                     DispatchQueue.main.async {
                         self?.allNetAssets = array
                         callback(nil,array)
@@ -112,6 +112,51 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
                     }else{
                         let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
 //                        print(backToString ?? "error")
+                    }
+                }
+                callback(response.error,nil)
+            }
+        }
+        return request
+    }
+
+    
+    func getNetAssetsMetadata(callback:@escaping (_ error:Error?,_ assets:Array<NetAsset>?)->()) -> BaseRequest? {
+        if AppUserService.currentUser?.userHome == nil{
+            return nil
+        }
+        
+        var places = [String]()
+        if let userHome = AppUserService.currentUser?.userHome{
+            places.append(userHome)
+        }
+        
+        if let shareSpace = AppUserService.currentUser?.shareSpace{
+            places.append(shareSpace)
+        }
+        
+        if AppUserService.backupArray.count > 0 {
+            let array = AppUserService.backupArray.map({$0.uuid})
+            for uuid in array{
+                if let uuid = uuid{
+                    places.append(uuid)
+                }
+            }
+        }
+        let placesUUID = places.joined(separator: ".")
+        let types = kMediaTypes.joined(separator: ".")
+        let request = GetMediaAPI.init(placesUUID: placesUUID,types: types,metadata:true)
+        request.startRequestJSONCompletionHandler { [weak self] (response) in
+            if response.error == nil{
+               
+            }else{
+                if response.data != nil {
+                    let errorDict =  dataToNSDictionary(data: response.data!)
+                    if errorDict != nil{
+                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
+                    }else{
+                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
+                        //                        print(backToString ?? "error")
                     }
                 }
                 callback(response.error,nil)
@@ -143,6 +188,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
             break
         }
     }
+    
     
     func saveAsset(localId:String,digest:String){
         var oldAsset = self.getAsset(localId: localId)

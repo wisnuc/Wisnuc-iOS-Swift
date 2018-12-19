@@ -181,7 +181,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
     }
     
     func loadImage(asset:WSAsset){
-        self.imageView.image = nil
+//        self.imageView.image = asset.image
         if (self.wsAsset?.asset != nil && self.imageRequestID != nil) {
             if self.imageRequestID! >= 0{
                 PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
@@ -194,11 +194,11 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         }
         self.wsAsset = asset
         self.indicator.startAnimating()
-        if let requestImageUrl = self.requestImageUrl(hash: (asset as! NetAsset).fmhash){
-            ImageCache.default.retrieveImage(forKey: requestImageUrl.absoluteString, options: nil) { [weak self]
+        if let requestImageUrl = self.requestImageUrl(model: asset as! NetAsset){
+            ImageCache.default.retrieveImage(forKey: requestImageUrl, options: nil) { [weak self]
                 image, cacheType in
-                self?.indicator.stopAnimating()
                 if let image = image {
+                    self?.indicator.stopAnimating()
                     self?.loadOK = true
                     self?.imageView.image = image
                     if asset.type == WSAssetType.GIF{
@@ -208,7 +208,10 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                     print("Get image \(image), cacheType: \(cacheType).")
                     //In this code snippet, the `cacheType` is .disk
                 } else {
-                    self?.imageDownloadTask = AppNetworkService.getHighWebImage(url: requestImageUrl, callback: { [weak self] (error, img) in
+                    guard let imageUrl =  URL.init(string: requestImageUrl) else{
+                        return
+                    }
+                    self?.imageDownloadTask = AppNetworkService.getHighWebImage(url: imageUrl, callback: { [weak self] (error, img) in
                         self?.indicator.stopAnimating()
                         if let completeCallback = self?.loadCompleteCallback{
                             completeCallback()
@@ -242,8 +245,9 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         }
         self.filesModel = filesModel
         self.indicator.startAnimating()
-        if let requestImageUrl = self.requestImageUrl(hash: filesModel.hash){
-            ImageCache.default.retrieveImage(forKey: requestImageUrl.absoluteString, options: nil) { [weak self]
+      
+        if let requestImageUrl = self.requestImageUrl(filesModel: filesModel){
+            ImageCache.default.retrieveImage(forKey: requestImageUrl, options: nil) { [weak self]
                 image, cacheType in
                 if let image = image {
                     self?.indicator.stopAnimating()
@@ -257,7 +261,10 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                     print("Get image \(image), cacheType: \(cacheType).")
                     //In this code snippet, the `cacheType` is .disk
                 } else {
-                    self?.imageDownloadTask = AppNetworkService.getHighWebImage(url: requestImageUrl, callback: { [weak self] (error, img) in
+                    guard let imageUrl =  URL.init(string: requestImageUrl) else{
+                        return
+                    }
+                    self?.imageDownloadTask = AppNetworkService.getHighWebImage(url: imageUrl, callback: { [weak self] (error, img) in
                         
                         if let completeCallback = self?.loadCompleteCallback{
                             completeCallback()
@@ -280,43 +287,196 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             }
         }else{
             self.indicator.stopAnimating()
-            Message.message(text: "图片加载失败", duration: 1.4)
+//            Message.message(text: "图片加载失败", duration: 1.4)
         }
     }
 
-    func requestImageUrl(hash:String?)->URL?{
-        guard let digest = hash else {
+//    func requestImageUrl(hash:String?)->URL?{
+//        guard let digest = hash else {
+//            return nil
+//        }
+//        let detailURL = "media"
+//        let resource = "/media/\(digest)"
+//        let param = "\(kRequestImageAltKey)=\(kRequestImageDataValue)"
+//        ImageDownloader.default.downloadTimeout = 20000
+//
+//        let params:[String:String] = [kRequestImageAltKey:kRequestImageDataValue]
+//        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+//        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+//            return nil
+//        }
+//
+//        guard let dataString = String.init(data: data, encoding: .utf8) else {
+//            return nil
+//        }
+//
+//        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+//            return nil
+//        }
+//
+//        guard  let normalUrl = URL.init(string:urlString) else {
+//            return nil
+//        }
+//        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+//        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(digest)?\(param)") : normalUrl else {
+//            return nil
+//        }
+//
+//        return url
+//    }
+    
+    func requestImageUrl(model:NetAsset) -> String?{
+        guard let userHome = AppUserService.currentUser?.userHome else{
             return nil
         }
-        let detailURL = "media"
-        let resource = "/media/\(digest)"
-        let param = "\(kRequestImageAltKey)=\(kRequestImageDataValue)"
-        ImageDownloader.default.downloadTimeout = 20000
         
-        let params:[String:String] = [kRequestImageAltKey:kRequestImageDataValue]
-        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
-        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+        var placesArray = Array<String>.init()
+        placesArray.append(userHome)
+        
+        if let shareSpace = AppUserService.currentUser?.shareSpace{
+             placesArray.append(shareSpace)
+        }
+        
+         let backArray = AppUserService.backupArray.map({$0.uuid})
+        for uuid in backArray{
+            if let uuid = uuid{
+                 placesArray.append(uuid)
+            }
+        }
+        
+        guard let place = model.place else {
             return nil
         }
         
-        guard let dataString = String.init(data: data, encoding: .utf8) else {
+        let driveUUID = placesArray[place]
+            
+        
+        guard let directoryUUID = model.pdir else {
             return nil
         }
         
-        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+        guard let uuid = model.uuid else {
             return nil
         }
         
-        guard  let normalUrl = URL.init(string:urlString) else {
-            return nil
-        }
-        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(digest)?\(param)") : normalUrl else {
-            return nil
-        }
+        let name = model.name ?? ""
         
-        return url
+        switch AppNetworkService.networkState {
+        case .normal?:
+            let urlPath = "/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))"
+            var params = ["name":name]
+            if backArray.contains(driveUUID){
+                if let hash = model.fmhash{
+                    params = ["hash":hash]
+                }
+            }
+            let dataDic = [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+            guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+                return nil
+            }
+            
+            guard let dataString = String.init(data: data, encoding: .utf8) else {
+                return nil
+            }
+            
+            guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+                return nil
+            }
+            
+            return urlString
+        case .local?:
+            guard let baseURL = RequestConfig.sharedInstance.baseURL else {
+                return nil
+            }
+            
+            var localUrl = "\(String(describing: baseURL))/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))?name=\(String(describing: name))"
+            if backArray.contains(driveUUID){
+                if let hash = model.fmhash{
+                   localUrl = "\(String(describing: baseURL))/drives/\(driveUUID)/dirs/\( directoryUUID)/entries/\(uuid)?hash=\(hash)"
+                }
+            }
+            return localUrl.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        default:
+            break
+        }
+        return nil
     }
+    
+    
+    func requestImageUrl(filesModel:EntriesModel) -> String?{
+        guard let userHome = AppUserService.currentUser?.userHome else{
+            return nil
+        }
+        
+        var placesArray = Array<String>.init()
+        placesArray.append(userHome)
+        
+        if let shareSpace = AppUserService.currentUser?.shareSpace{
+            placesArray.append(shareSpace)
+        }
+        
+        let backArray = AppUserService.backupArray.map({$0.uuid})
+        for uuid in backArray{
+            if let uuid = uuid{
+                placesArray.append(uuid)
+            }
+        }
+        
+        
+        guard let place = filesModel.place else {
+            return nil
+        }
+        
+        let driveUUID = placesArray[place]
+        
+        
+        guard let directoryUUID = filesModel.pdir else {
+            return nil
+        }
+        
+        guard let uuid = filesModel.uuid else {
+            return nil
+        }
+        
+        let name = filesModel.name ?? ""
+        
+        switch AppNetworkService.networkState {
+        case .normal?:
+            let urlPath = "/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))"
+            var params = ["name":name]
+            if let hash = filesModel.hash, filesModel.bname != nil{
+                params = ["hash":hash]
+            }
+            let dataDic = [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
+            guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+                return nil
+            }
+            
+            guard let dataString = String.init(data: data, encoding: .utf8) else {
+                return nil
+            }
+            
+            guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+                return nil
+            }
+            
+            return urlString
+        case .local?:
+            guard let baseURL = RequestConfig.sharedInstance.baseURL else {
+                return nil
+            }
+            
+            var localUrl = "\(String(describing: baseURL))/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))?name=\(String(describing: name))"
+            if let hash = filesModel.hash, filesModel.bname != nil{
+                localUrl = "\(String(describing: baseURL))/drives/\(driveUUID)/dirs/\( directoryUUID)/entries/\(uuid)?hash=\(hash)"
+            }
+            return localUrl.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        default:
+            break
+        }
+        return nil
+    }
+    
 
     @objc func doubleTapAction(_ sender:UITapGestureRecognizer?){
         var scale:CGFloat = 1
@@ -543,14 +703,19 @@ class WSPreviewLivePhoto: WSBasePreviewView {
 }
 
 class WSPreviewVideo: WSBasePreviewView {
+    private var kVideoCover = "https://upload-images.jianshu.io/upload_images/635942-14593722fe3f0695.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"
     var disposeBag = DisposeBag()
-//    var player:SGPlayer?
+    var player: ZFPlayerController?
     var request:BaseRequest?
     weak var delegate:SWPreviewVideoPlayerDelegate?
     private var hasObserverStatus:Bool = false
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.initUI()
+        if let containerView = self.containerView{
+            self.addSubview(containerView)
+        }
+//containerView.addSubview(playBtn)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -568,7 +733,29 @@ class WSPreviewVideo: WSBasePreviewView {
         super.layoutSubviews()
         self.imageView.frame = self.bounds
         self.playLayer.frame = self.bounds
-        self.playBtn.center = self.center
+//        self.playBtn.center = self.center
+        let w: CGFloat = self.frame.width
+
+        let h: CGFloat = w * 9 / 16
+        let x: CGFloat = 0
+        let y: CGFloat = self.height/2 - h/2
+       
+        containerView?.frame = CGRect(x: x, y: y, width: w, height: h)
+//        w = 44
+//        h = w
+//        x = (containerView.frame.width - w) / 2
+//        y = (containerView.frame.height - h) / 2
+//        playBtn.frame = CGRect(x: x, y: y, width: w, height: h)
+//        w = 100
+//        h = 30
+//        x = (view.frame.width - w) / 2
+//        y = containerView.frame.maxY + 50
+//        changeBtn.frame = CGRect(x: x, y: y, width: w, height: h)
+//        w = 100
+//        h = 30
+//        x = (view.frame.width - w) / 2
+//        y = changeBtn.frame.maxY + 50
+//        nextBtn.frame = CGRect(x: x, y: y, width: w, height: h)
     }
     
     override func loadNormalImage(asset: WSAsset) {
@@ -609,6 +796,45 @@ class WSPreviewVideo: WSBasePreviewView {
                 self?.indicator.stopAnimating()
             }
         })
+        let playerManager = ZFAVPlayerManager()
+        //    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
+        //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
+        /// 播放器相关
+  
+        
+        self.player = ZFPlayerController.player(withPlayerManager: playerManager, containerView: (self.containerView)!)
+        self.player?.disableGestureTypes = ZFPlayerDisableGestureTypes.pan
+        //                        self?.player?.
+        self.player?.controlView = (self.controlView)!
+        /// 设置退到后台继续播放
+        self.player?.pauseWhenAppResignActive = false
+        self.player?.orientationWillChange = { [weak self](player, isFullScreen) in
+            if isFullScreen{
+                player.disableGestureTypes = ZFPlayerDisableGestureTypes.init(rawValue: 0)
+            }else{
+                player.disableGestureTypes = ZFPlayerDisableGestureTypes.pan
+            }
+        }
+        
+        /// 播放完成
+        self.player?.playerDidToEnd = { [weak self] (asset) in
+            if let replay = self?.player?.currentPlayerManager.replay{
+                replay()
+            }
+   
+        }
+        self.player?.playerReadyToPlay = { asset, assetURL in
+            print("======开始播放了")
+        }
+        PHPhotoLibrary.requestVideo(for: asset.asset) { (aVPlayerItem, dict) in
+            if let urlAsset = aVPlayerItem?.asset as? AVURLAsset{
+                DispatchQueue.main.async {
+                    self.player?.assetURLs = [urlAsset.url]
+                    self.player?.playTheIndex(0)
+                }
+            }
+        }
+    
     }
     
     @objc func playFinished(_ item: AVPlayerItem) {
@@ -627,6 +853,17 @@ class WSPreviewVideo: WSBasePreviewView {
             SVProgressHUD.showError(withStatus: "暂不支持远程视频播放")
             return
         }
+        
+        guard let hash = (asset as? NetAsset)?.fmhash else{
+            return
+        }
+        
+        let _ = AppNetworkService.getThumbnail(hash: hash, size: CGSize(width: self.width, height: self.frame.width * 9 / 16)) { (error, image, url) in
+            if let image = image{
+                self.containerView?.image = image
+            }
+        }
+        
         if (self.wsAsset?.asset != nil && self.imageRequestID != nil) {
             if self.imageRequestID! >= 0{
                 PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
@@ -635,7 +872,6 @@ class WSPreviewVideo: WSBasePreviewView {
         self.wsAsset = asset
         playLayer.player = nil
         playLayer.removeFromSuperlayer()
-//        playLayer.removeObserverBlocks(forKeyPath: "status")
         hasObserverStatus = false
     
         self.imageView.image = nil
@@ -643,25 +879,15 @@ class WSPreviewVideo: WSBasePreviewView {
         self.playBtn.isHidden = false
         self.icloudLoadFailedLabel.isHidden = true
         self.imageView.isHidden = false
-//        if AppNetworkService.networkState == .normal{
-//            Message.message(text: LocalizedString(forKey: "Operation not support"))
-//        }
-//
         self.indicator.startAnimating()
-        if (asset as! NetAsset).fmhash == nil{
-            return
-        }
-        let request = MediaRandomAPI.init(hash: (asset as! NetAsset).fmhash!)
+       
+        
+        let request = MediaRandomAPI.init(hash: hash)
         self.request = request
         request.startRequestJSONCompletionHandler { [weak self](response) in
             self?.indicator.stopAnimating()
             if response.error == nil{
                 DispatchQueue.main.async {
-                    if response.result == nil{
-                        self?.initVideoLoadFailedFromiCloudUI()
-                        return
-                    }
-//                    var url: URL? = nil
                     if let anURL = AppUserService.currentUser?.localAddr {
                         guard let dataDic = response.value as? NSDictionary else {
                             return
@@ -674,9 +900,54 @@ class WSPreviewVideo: WSBasePreviewView {
                         guard let url = URL(string: "\(anURL)/media/\(random)") else{
                             return
                         }
-                        let player = AVPlayer(url: url)
-                        self?.layer.addSublayer((self?.playLayer)!)
-                        self?.playLayer.player = player
+                        
+                        self?.indicator.stopAnimating()
+                        let playerManager = ZFAVPlayerManager()
+                        //    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
+                        //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
+                        /// 播放器相关
+//                        playerManager.play()
+                
+                        
+                        self?.player = ZFPlayerController.player(withPlayerManager: playerManager, containerView: (self?.containerView)!)
+                        self?.player?.disableGestureTypes = ZFPlayerDisableGestureTypes.pan
+//                        self?.player?.
+                        self?.player?.controlView = (self?.controlView)!
+                        /// 设置退到后台继续播放
+                        self?.player?.pauseWhenAppResignActive = false
+                        self?.player?.orientationWillChange = { [weak self](player, isFullScreen) in
+                            if isFullScreen{
+                                player.disableGestureTypes = ZFPlayerDisableGestureTypes.init(rawValue: 0)
+                            }else{
+                                player.disableGestureTypes = ZFPlayerDisableGestureTypes.pan
+                            }
+                        }
+                        
+
+                        /// 播放完成
+                        self?.player?.playerDidToEnd = { [weak self] (asset) in
+                            if let replay = self?.player?.currentPlayerManager.replay{
+                                replay()
+                            }
+                            //        [self.player playTheNext];
+                            //        if (!self.player.isLastAssetURL) {
+                            //            NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
+                            //            [self.controlView showTitle:title coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeLandscape];
+                            //        } else {
+                            //            [self.player stop];
+                            //        }
+                            //        [self.player stop];
+                        }
+                        self?.player?.playerReadyToPlay = { asset, assetURL in
+                            print("======开始播放了")
+                        }
+                
+                        self?.player?.assetURLs = [url]
+                        
+                        self?.player?.playTheIndex(0)
+
+//                        let player = AVPlayer(url: url)
+//                        self?.playLayer.player = player
 //                        self?.switchVideoStatus()
 //                        self?.playLayer.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
 //                            do {
@@ -686,30 +957,9 @@ class WSPreviewVideo: WSBasePreviewView {
 //                            }
 //
 //                        self?.hasObserverStatus = true
-                        NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+//                        NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
 //                        NotificationCenter.default.addObserver(self, selector: #selector(playEnd(_:)), name: Notification.Name.mpmove, object: player)
-                        self?.indicator.stopAnimating()
-                        
-//                        self?.player = SGPlayer()
-//
-//                        // register callback handle.
-//
-//                        self?.player?.registerNotificationTarget(self!, stateAction: #selector(self?.stateAction(_:)), progressAction: #selector(self?.progressAction(_:)), playableAction: #selector(self?.playableAction(_:)), errorAction: #selector(self?.errorAction(_:)))
-//
-////                        // display view tap action.
-//
-//                        self?.player?.viewTapAction = { player, view in
-//                                print("player display view did click!")
-//                            }
-////                        // playback plane video.
-//                        self?.player?.replaceVideo(with: url!)
-////                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeNormal]; // 方式2
-////
-////                        // playback 360° panorama video.
-////                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeVR];
-////
-////                        // start playing
-//                        self?.
+
                     }
                 }
             }else{
@@ -760,10 +1010,11 @@ class WSPreviewVideo: WSBasePreviewView {
 //        }
         //
         self.indicator.startAnimating()
-        if filesModel.hash == nil{
-            return
+        guard let hash = filesModel.hash  else {
+           return
         }
-        let request = MediaRandomAPI.init(hash: filesModel.hash!)
+        
+        let request = MediaRandomAPI.init(hash: hash)
         self.request = request
         request.startRequestJSONCompletionHandler { [weak self](response) in
             self?.indicator.stopAnimating()
@@ -798,7 +1049,7 @@ class WSPreviewVideo: WSBasePreviewView {
                         }
                         url =  AppNetworkService.networkState == .normal ? normalUrl : URL(string: "\(anURL)/media/\(String(describing: randomKey))")
                         let player = AVPlayer(url: url!)
-                        self?.layer.addSublayer((self?.playLayer)!)
+//                        self?.layer.addSublayer((self?.playLayer)!)
                         self?.playLayer.player = player
                         self?.switchVideoStatus()
 //                        self?.playLayer.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
@@ -894,7 +1145,6 @@ class WSPreviewVideo: WSBasePreviewView {
                             return
                         }
                         let player = AVPlayer.init(playerItem: item)
-                        self.layer.addSublayer(self.playLayer)
                         self.playLayer.player = player
                         self.switchVideoStatus()
                         do {
@@ -963,7 +1213,9 @@ class WSPreviewVideo: WSBasePreviewView {
     }
     
     @objc func playBtnClick(_ sender:UIButton?){
-        self.startPlayVideo()
+        self.player?.playTheIndex(0)
+//        self.controlView?.showTitle("视频标题", coverURLString: kVideoCover, fullScreenMode: ZFFullScreenMode.landscape)
+////        self.startPlayVideo()
     }
     
     
@@ -992,6 +1244,38 @@ class WSPreviewVideo: WSBasePreviewView {
         self.bringSubview(toFront: button)
         return button
     }()
+    
+    private var _containerView: UIImageView? = nil
+    var containerView: UIImageView?{
+        get{
+            if self._containerView == nil {
+                _containerView = UIImageView()
+                return _containerView
+            }
+            return  _containerView
+        }
+        
+        set(newValue){
+            self._containerView = newValue
+        }
+    }
+    private var _controlView: ZFPlayerControlView? = nil
+    var controlView : ZFPlayerControlView? {
+        get{
+            if self._controlView == nil {
+                _controlView = ZFPlayerControlView()
+                _controlView?.fastViewAnimated = true
+//                controllerView.autoHiddenTimeInterval = 5
+//                controllerView.autoFadeTimeInterval = 0.5
+                return _controlView
+            }
+            return  _controlView
+        }
+        set(newValue){
+            self._controlView = newValue
+        }
+    }
+    
     
     lazy var playLayer: AVPlayerLayer = {
         let player = AVPlayerLayer.init()
@@ -1190,7 +1474,10 @@ class WSPreviewView: UIView {
             let assetModel = model as! WSAsset
             if  assetModel.type == .Image {
                 return self.imageGifView.imageView.image
+            } else if  assetModel.type == .NetImage {
+                return self.imageGifView.imageView.image
             }
+            
         }else{
              return self.imageGifView.imageView.image
         }

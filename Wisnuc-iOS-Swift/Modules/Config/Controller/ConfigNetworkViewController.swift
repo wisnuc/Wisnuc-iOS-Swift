@@ -25,6 +25,7 @@ class ConfigNetworkViewController: BaseViewController {
     var isNetworkNameTrue = false
     var deviceModel:DeviceBLEModel?
     var infoModel:WinasdInfoModel?
+    var user:User?
     var methodStart:Date?
     var methodFinish:Date?
     var wifiBLEDataArray:[String] = Array.init()
@@ -81,9 +82,10 @@ class ConfigNetworkViewController: BaseViewController {
         // Do any additional setup after loading the view.
     }
     
-    init(style:NavigationStyle,state:ConfigNetworkViewControllerState) {
+    init(style:NavigationStyle,state:ConfigNetworkViewControllerState,user:User? = nil) {
         super.init(style: style)
         setState(state)
+        self.user = user
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -368,7 +370,7 @@ class ConfigNetworkViewController: BaseViewController {
     
     func stationFetchAction(_ userId:String){
         ActivityIndicator.startActivityIndicatorAnimation()
-        guard let token = AppUserService.currentUser?.cloudToken else {
+        guard let token = user?.cloudToken else {
             ActivityIndicator.stopActivityIndicatorAnimation()
             Message.message(text: LocalizedString(forKey:"error:No token"))
             return
@@ -408,9 +410,14 @@ class ConfigNetworkViewController: BaseViewController {
     
     func loginAction(userId:String,model:StationsInfoModel){
         ActivityIndicator.startActivityIndicatorAnimation()
-        if let user = AppUserService.user(uuid: userId){
+        guard let user = self.user else {
+            return
+        }
+        
+        if user.uuid != userId{
+            return
+        }
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
-                ActivityIndicator.stopActivityIndicatorAnimation()
                 if error == nil && userData != nil{
                     AppUserService.isUserLogin = true
                     AppUserService.isStationSelected = true
@@ -436,12 +443,7 @@ class ConfigNetworkViewController: BaseViewController {
                     }
                 }
             }
-            //
-        }else{
-//            AppUserService.logoutUser()
-            Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
-            ActivityIndicator.stopActivityIndicatorAnimation()
-        }
+
     }
     
     
@@ -703,6 +705,14 @@ class ConfigNetworkViewController: BaseViewController {
                     let bleArray:[String] = [String]()
                     return bleArray
                 }
+            }else if let userId = self.user?.uuid{
+                if let array = userDefaults.array(forKey: "\(kBLEUsedKey)_\(userId)") as? [String]{
+                    return array
+                }else{
+                    let bleArray:[String] = [String]()
+                    return bleArray
+                }
+               
             }else{
                 let bleArray:[String] = [String]()
                 return bleArray
@@ -889,6 +899,10 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
                     if currentStationId.contains(stationId){
                         deviceModel = model
                     }
+                }else if let currentStationId = self.user?.stationId,let stationId = model.stationId{
+                    if currentStationId.contains(stationId){
+                        deviceModel = model
+                    }
                 }
             }
             self.seekNewDeviceState = .found
@@ -969,6 +983,9 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
                                 usedBles = bleUsedArray
                             }
                             if let userId = AppUserService.currentUser?.uuid{
+                                userDefaults.set(usedBles, forKey: "\(kBLEUsedKey)_\(userId)")
+                                userDefaults.synchronize()
+                            }else if let userId = self.user?.uuid{
                                 userDefaults.set(usedBles, forKey: "\(kBLEUsedKey)_\(userId)")
                                 userDefaults.synchronize()
                             }

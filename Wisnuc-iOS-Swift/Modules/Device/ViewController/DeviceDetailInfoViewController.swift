@@ -60,7 +60,7 @@ class DeviceDetailInfoViewController: BaseViewController {
         usedSize = usedSize * 1024
         let statsTotalSize = documentSize + imageSize + videoSize + otherSize
         
-        var totalProportion:Float = 0.0
+        var totalProportion:Float = 1.0
         
         if statsTotalSize != 0 && statsTotalSize > usedSize {
             totalProportion = Float(usedSize)/Float(statsTotalSize)

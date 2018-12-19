@@ -41,12 +41,14 @@ class LoginNextStepViewController: BaseViewController {
     private var safety:Int?
     private var safetyStep:Int?
     private var mailTicket:String?
+    private var phoneTicket:String?
     
     private var sendCodeType:SendCodeType?
     let phoneNumberLimitCount = 11
     let verifyCodeLimitCount = 4
     let passwordLimitCount = 8
     var alertView:TipsAlertView?
+    var user:User?
     var textFieldController:MDCTextInputControllerUnderline?
     var state:LoginNextStepViewControllerState?{
         didSet{
@@ -75,7 +77,7 @@ class LoginNextStepViewController: BaseViewController {
         NotificationCenter.default.removeObserver(self)
     }
   
-    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState,phoneNumber:String? = nil,password:String? = nil,verifyCode:String? = nil,requestToken:String? = nil,userExist:Bool? = nil,smsCodeType:SendCodeType? = nil,mail:String? = nil,safety:Int? = nil,mailTicket:String? = nil,safetyStep:Int? = nil) {
+    init(titleString:String,detailTitleString:String?,state:LoginNextStepViewControllerState,phoneNumber:String? = nil,password:String? = nil,verifyCode:String? = nil,requestToken:String? = nil,userExist:Bool? = nil,smsCodeType:SendCodeType? = nil,mail:String? = nil,safety:Int? = nil,phoneTicket:String? = nil,mailTicket:String? = nil,safetyStep:Int? = nil,user:User? = nil) {
         super.init()
         titleLabel.text = titleString
         detailTitleLabel.text = detailTitleString
@@ -88,8 +90,10 @@ class LoginNextStepViewController: BaseViewController {
         self.sendCodeType = smsCodeType
         self.mail = mail
         self.safety = safety
+        self.phoneTicket = phoneTicket
         self.mailTicket = mailTicket
         self.safetyStep = safetyStep
+        self.user = user
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -357,7 +361,9 @@ class LoginNextStepViewController: BaseViewController {
         case .verifyEmailCode?:
             resetPwdPushUseMail()
         case .creatAccountFinish?:
-            firstConfigAction()
+            if let user = self.user{
+                firstConfigAction(user:user)
+            }
         case .inputEmail?:
             inputEmailPush()
         case .inputPhone?:
@@ -744,7 +750,11 @@ class LoginNextStepViewController: BaseViewController {
                 }
             }
         }else{
-            self.nextViewControllerForPassword(phone:phone,titleString: titleString, state: state, requestToken: self.requestToken)
+            getTicket(type: .register) { (tiket) in
+                if let tiket = tiket{
+                    self.nextViewControllerForPassword(phone:phone,titleString: titleString, state: state, requestToken: self.requestToken,phoneTicket:tiket)
+                }
+            }
         }
     }
     
@@ -791,8 +801,8 @@ class LoginNextStepViewController: BaseViewController {
         }
     }
     
-    func nextViewControllerForPassword(phone:String? = nil,mail:String? = nil, titleString:String,state:LoginNextStepViewControllerState,requestToken:String?,mailTicket:String? = nil){
-        let nextViewController = LoginNextStepViewController.init(titleString:titleString , detailTitleString: LocalizedString(forKey: "您的密码必须包含至少1个符号，长度至少为8个字符"), state: state,phoneNumber:phone,verifyCode:self.inputTextField.text!,requestToken:requestToken,userExist:self.userExist,mail:mail,mailTicket:mailTicket)
+    func nextViewControllerForPassword(phone:String? = nil,mail:String? = nil, titleString:String,state:LoginNextStepViewControllerState,requestToken:String?,phoneTicket:String? = nil,mailTicket:String? = nil){
+        let nextViewController = LoginNextStepViewController.init(titleString:titleString , detailTitleString: LocalizedString(forKey: "您的密码必须包含至少1个符号，长度至少为8个字符"), state: state,phoneNumber:phone,verifyCode:self.inputTextField.text!,requestToken:requestToken,userExist:self.userExist,mail:mail,phoneTicket:phoneTicket,mailTicket:mailTicket)
         nextViewController.modalTransitionStyle = .crossDissolve
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
@@ -884,7 +894,7 @@ class LoginNextStepViewController: BaseViewController {
         }
     }
 
-    func getTicket(closure:@escaping (_ ticket:String?)->()) {
+    func getTicket(type:SendCodeType? = nil,closure:@escaping (_ ticket:String?)->()) {
         guard let phone = self.phoneNumber else {
             return
         }
@@ -893,6 +903,7 @@ class LoginNextStepViewController: BaseViewController {
         }
         
         ActivityIndicator.startActivityIndicatorAnimation()
+        let requestType = type == nil ? .password : type!
         let request = SmsCodeTicket.init(phone:phone, code: code,type:.password)
         request.startRequestJSONCompletionHandler { (response) in
             ActivityIndicator.stopActivityIndicatorAnimation()
@@ -958,7 +969,10 @@ class LoginNextStepViewController: BaseViewController {
     
     func creatAccountFinish(){
         ActivityIndicator.startActivityIndicatorAnimation()
-        let request = SighUpAPI.init(phoneNumber: self.phoneNumber! , code:self.verifyCode!, password:self.inputTextField.text!)
+        guard let ticket = self.phoneTicket else {
+            return
+        }
+        let request = SighUpAPI.init(phoneNumber: self.phoneNumber! , ticket:ticket, password:self.inputTextField.text!)
         request.startRequestDataCompletionHandler { [weak self](response) in
             if  response.error == nil{
                     do {
@@ -971,21 +985,31 @@ class LoginNextStepViewController: BaseViewController {
                                         return
                                     }
                                     self?.wechatBindUserAction(wechatToken: wechatToken, loginToken: token, closure: { [weak self] in
-                                        self?.pushToFinishView()
+                                        guard (model.data?.id) != nil else{
+                                            return
+                                        }
+                                        guard let header = response.response?.allHeaderFields else {
+                                            return
+                                        }
+                                        guard let cookie = header["Set-Cookie"] as? String else {
+                                            return
+                                        }
+                                        let user = AppUserService.synchronizedUserInLogin(model, cookie)
+                                        self?.pushToFinishView(user:user)
                                     })
                                 }else{
-                                    self?.pushToFinishView()
+                                    guard (model.data?.id) != nil else{
+                                        return
+                                    }
+                                    guard let header = response.response?.allHeaderFields else {
+                                        return
+                                    }
+                                    guard let cookie = header["Set-Cookie"] as? String else {
+                                        return
+                                    }
+                                    let user = AppUserService.synchronizedUserInLogin(model, cookie)
+                                    self?.pushToFinishView(user:user)
                                 }
-                                guard (model.data?.id) != nil else{
-                                    return
-                                }
-                                guard let header = response.response?.allHeaderFields else {
-                                    return
-                                }
-                                guard let cookie = header["Set-Cookie"] as? String else {
-                                    return
-                                }
-                                AppUserService.synchronizedUserInLogin(model, cookie)
                             }
                         }else{
                             if let errorMessage = ErrorTools.responseErrorData(response.data){
@@ -1006,15 +1030,15 @@ class LoginNextStepViewController: BaseViewController {
         }
     }
     
-    func firstConfigAction() {
+    func firstConfigAction(user:User) {
          self.navigationController?.delegate = nil
-        let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
+        let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow,user:user)
          cofigVC.modalTransitionStyle = .coverVertical
         self.navigationController?.pushViewController(cofigVC, animated: true)
     }
     
-    func pushToFinishView(){
-        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "账号创建成功"), detailTitleString: LocalizedString(forKey: "欢迎使用闻上云盘"), state: .creatAccountFinish)
+    func pushToFinishView(user:User){
+        let nextViewController = LoginNextStepViewController.init(titleString: LocalizedString(forKey: "账号创建成功"), detailTitleString: LocalizedString(forKey: "欢迎使用闻上云盘"), state: .creatAccountFinish,user:user)
         nextViewController.modalTransitionStyle = .crossDissolve
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
@@ -1046,14 +1070,14 @@ class LoginNextStepViewController: BaseViewController {
                             guard let cookie = header["Set-Cookie"] as? String else {
                                 return
                             }
-                            AppUserService.synchronizedUserInLogin(model,cookie)
+                            let user = AppUserService.synchronizedUserInLogin(model,cookie)
                             guard let wechatToken = self?.requestToken else{
                                 Message.message(text:LocalizedString(forKey: "发生错误"))
                                 return
                             }
                             self?.wechatBindUserAction(wechatToken: wechatToken, loginToken: token, closure: { [weak self] in
-                                LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!, lastDeviceClosure: { [weak self ](userId,stationModel) in
-                                    self?.loginAction(userId: userId, model: stationModel)
+                                LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure: { [weak self ](user,stationModel) in
+                                    self?.loginAction(user: user, model: stationModel)
                                 })
                             })
                         }
@@ -1086,11 +1110,9 @@ class LoginNextStepViewController: BaseViewController {
         }
     }
     
-    func loginAction(userId:String,model:StationsInfoModel){
+    func loginAction(user:User,model:StationsInfoModel){
         ActivityIndicator.startActivityIndicatorAnimation()
-        if let user = AppUserService.user(uuid: userId){
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
-                ActivityIndicator.stopActivityIndicatorAnimation()
                 if error == nil && userData != nil{
                     AppUserService.isUserLogin = true
                     AppUserService.isStationSelected = true
@@ -1117,12 +1139,6 @@ class LoginNextStepViewController: BaseViewController {
                         ActivityIndicator.stopActivityIndicatorAnimation()
                     }
                 }
-            }
-            //
-        }else{
-            //            AppUserService.logoutUser()
-            Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
-            ActivityIndicator.stopActivityIndicatorAnimation()
         }
     }
     

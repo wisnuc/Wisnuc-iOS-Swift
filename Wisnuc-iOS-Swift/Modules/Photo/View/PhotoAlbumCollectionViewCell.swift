@@ -50,6 +50,7 @@ class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     }
     
     func loadLocalCover(_ asset:PHAsset,_ size:CGSize){
+        self.imageView.image =  UIImage.init(color: UIColor.black.withAlphaComponent(0.04))
         let contentMode = PHImageContentMode.default
         self.imageManager.startCachingImages(for: [asset], targetSize: size, contentMode: contentMode, options:self.imageRequestOptions)
         _ = self.imageManager.requestImage(for: asset, targetSize: size, contentMode: contentMode, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
@@ -58,6 +59,7 @@ class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     }
     
     func loadNetCover(_ hash:String,_ size:CGSize){
+        self.imageView.image =  UIImage.init(color: UIColor.black.withAlphaComponent(0.04))
         if let requestUrl =  PhotoHelper.requestImageUrl(size:size,hash:hash){
             ImageCache.default.retrieveImage(forKey: requestUrl.absoluteString, options: nil) { [weak self]
                 image, cacheType in

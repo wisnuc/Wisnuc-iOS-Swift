@@ -48,7 +48,7 @@ func jsonToData(jsonDic:NSDictionary) ->Data?{
     
     //输出json字符串
     
-    print("Json Str:\(str!)")
+//    print("Json Str:\(str!)")
     
     return data
 }
@@ -75,7 +75,7 @@ func jsonToData(jsonDictionary:Dictionary<String, Any>) ->Data?{
     
     //输出json字符串
     
-    print("Json Str:\(str!)")
+//    print("Json Str:\(str!)")
     
     return data
 }

@@ -43,6 +43,10 @@
 "Folder name" = "Folder name";
 "Offline available" = "Offline available";
 "Open with other apps" = "Open with other apps";
+"will be moved" = "will be moved";
+"Modified time" = "Modified time";
+"Created time" = "Created time";
+"Capacity" = "Capacity";
 
 //Task
 "Delete" = "Delete";
@@ -50,6 +54,11 @@
 "Weak" = "Weak";
 "Medium" = "Medium";
 "Strong" = "Strong";
+"Clear all task" = "Clear all task";
+"Start all task" = "Start all task";
+"Suspend all task" = "Suspend all task";
+
+"Transfer task" = "Transfer task";
 
 //Photo
 "Video" = "Video";

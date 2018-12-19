@@ -264,9 +264,10 @@
                                         guard let cookie = header["Set-Cookie"] as? String else {
                                             return
                                         }
-                                        AppUserService.synchronizedUserInLogin(model, cookie)
-                                        LoginCommonHelper.instance.stationAction(token: token,userId:userId, viewController: self!, lastDeviceClosure: { [weak self](userId,stationModel) in
-                                            self?.loginFinish(userId: userId, stationModel: stationModel)
+                                        
+                                        let user = AppUserService.synchronizedUserInLogin(model, cookie)
+                                        LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure: { [weak self](userId,stationModel) in
+                                            self?.loginFinish(user: user, stationModel: stationModel)
                                         })
                                     }
                             } catch {
@@ -869,9 +870,8 @@
  }
  
  extension LoginRootViewController:LoginSelectionDeviceViewControllerDelegte{
-    func loginFinish(userId: String, stationModel: Any) {
+    func loginFinish(user: User, stationModel: Any) {
         ActivityIndicator.startActivityIndicatorAnimation()
-        if let user = AppUserService.user(uuid: userId){
             let model = stationModel as! StationsInfoModel
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
                 if error == nil && userData != nil{
@@ -880,32 +880,23 @@
                     AppUserService.setCurrentUser(userData)
                     AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
                     AppUserService.synchronizedCurrentUser()
-                    if let sn = model.sn,let cloudToken = userData?.cloudToken{
-                        AppService.sharedInstance().saveUserUsedDeviceInfo(sn: sn, token: cloudToken, closure: {})
-                    }
                     appDelegate.initRootVC()
-                }else{
-                    if error != nil{
-                        switch error {
-                        case is LoginError:
-                            let loginError = error as! LoginError
-                            Message.message(text: loginError.localizedDescription, duration: 2.0)
-                        case is BaseError:
-                            let baseError = error as! BaseError
-                            Message.message(text: baseError.localizedDescription, duration: 2.0)
-                        default:
-                            Message.message(text: (error?.localizedDescription)!, duration: 2.0)
-                        }
-                        AppUserService.logoutUser()
-                        ActivityIndicator.stopActivityIndicatorAnimation()
+            }else{
+                if error != nil{
+                    switch error {
+                    case is LoginError:
+                        let loginError = error as! LoginError
+                        Message.message(text: loginError.localizedDescription, duration: 2.0)
+                    case is BaseError:
+                        let baseError = error as! BaseError
+                        Message.message(text: baseError.localizedDescription, duration: 2.0)
+                    default:
+                        Message.message(text: (error?.localizedDescription)!, duration: 2.0)
                     }
+                    AppUserService.logoutUser()
+                    ActivityIndicator.stopActivityIndicatorAnimation()
                 }
             }
-            //
-        }else{
-            AppUserService.logoutUser()
-            Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
-            ActivityIndicator.stopActivityIndicatorAnimation()
         }
     }
  }

@@ -65,7 +65,7 @@ class UserService: NSObject,ServiceProtocol{
         
     }
     
-    func synchronizedUserInLogin(_ model:SighInTokenModel,_ cookie:String){
+    func synchronizedUserInLogin(_ model:SighInTokenModel,_ cookie:String)->User{
         let user = self.createUser(uuid: (model.data?.id)!)
         user.cloudToken = model.data?.token!
         if let avatarUrl = model.data?.avatarUrl{
@@ -89,8 +89,7 @@ class UserService: NSObject,ServiceProtocol{
             user.safety = NSNumber.init(value: safety)
         }
         
-        self.setCurrentUser(user)
-        self.synchronizedCurrentUser()
+        return user
     }
 
     func setCurrentUser(_ currentUser:User?){
@@ -117,6 +116,51 @@ class UserService: NSObject,ServiceProtocol{
         userDefaults.synchronize()
         NetEngine.sharedInstance.cancleAllRequest()
         defaultNotificationCenter().removeObserver(self)
+    }
+    
+    func updateCurrentUserInfo(complete:@escaping ()->()){
+        UsersInfoAPI.init().startRequestDataCompletionHandler { (response) in
+            if  response.error == nil{
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    return
+                }
+                
+                guard let rootDic = dataToNSDictionary(data: response.data)else {
+                    return
+                }
+                
+                guard let dataDic = rootDic["data"] as? NSDictionary else {
+                    return
+                }
+                
+                guard let data = jsonToData(jsonDic: dataDic) else {
+                    return
+                }
+                
+                do {
+                    let userModel = try JSONDecoder().decode(UserModel.self, from: data)
+                    if userModel.id == AppUserService.currentUser?.uuid{
+                        AppUserService.currentUser?.userName = userModel.username
+                        AppUserService.currentUser?.avaterURL = userModel.avatarUrl
+                        AppUserService.currentUser?.nickName = userModel.nickName
+                        AppUserService.currentUser?.userName = userModel.username
+                        AppUserService.synchronizedCurrentUser()
+                        complete()
+                    }
+                } catch {
+                    Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
+                }
+            }else{
+                switch response.error {
+                case is BaseError:
+                    let baseError = response.error as! BaseError
+                    Message.message(text: baseError.localizedDescription)
+                default:
+                    Message.message(text: (response.error?.localizedDescription)!)
+                }
+            }
+        }
     }
     
     func user(uuid:String) ->User?{

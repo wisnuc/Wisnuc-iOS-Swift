@@ -104,7 +104,9 @@ class DeviceBackupPhoneDtailsViewController: BaseViewController {
                         var array = Array<NetAsset>.init()
                         medias.enumerateObjects({ (object, idx, stop) in
                             if object is NSDictionary{
-                                if let model = NetAsset.deserialize(from: object as? NSDictionary) {
+                                if object is NSDictionary{
+                                    let dict =  object as! NSDictionary
+                                    let model = NetAsset.init(dict:dict)
                                     array.append(model)
                                 }
                             }

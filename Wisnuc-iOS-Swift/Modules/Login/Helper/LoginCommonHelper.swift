@@ -32,30 +32,30 @@ class LoginCommonHelper: NSObject {
         print("LoginCommonHelper Disposed Singleton instance")
     }
     
-    func stationAction(token:String,userId:String,viewController:UIViewController,lastDeviceClosure:@escaping (_ userId:String,_ stationModel:StationsInfoModel)->()) {
+    func stationAction(token:String,user:User,viewController:UIViewController,lastDeviceClosure:@escaping (_ user:User,_ stationModel:StationsInfoModel)->()) {
         self.getStations(token: token, closure: { [weak self](error, models,lastSn) in
             if error == nil{
                 if let models = models{
                     if models.count > 0{
                         if let lastSn = lastSn{
                             guard let model = models.first(where: {$0.sn == lastSn}) else{
-                                self?.selectStation(models: models, userId: userId, viewController: viewController)
+                                self?.selectStation(models: models, user: user, viewController: viewController)
                                 return
                             }
                             guard let online = model.online else{
-                                self?.selectStation(models: models, userId: userId, viewController: viewController)
+                                self?.selectStation(models: models, user: user, viewController: viewController)
                                 return
                             }
                             if online == 1{
-                                lastDeviceClosure(userId,model)
+                                lastDeviceClosure(user,model)
                             }else{
-                                self?.selectStation(models: models, userId: userId, viewController: viewController)
+                                self?.selectStation(models: models, user: user, viewController: viewController)
                             }
                         }else{
-                          self?.selectStation(models: models, userId: userId, viewController: viewController)
+                          self?.selectStation(models: models, user: user, viewController: viewController)
                         }
                     }else{
-                        let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow)
+                        let cofigVC = FirstConfigViewController.init(style: NavigationStyle.whiteWithoutShadow,user:user)
                         if viewController is LoginRootViewController{
                           let navi = UINavigationController.init(rootViewController: cofigVC)
                             viewController.present(navi, animated: true, completion: {
@@ -90,8 +90,8 @@ class LoginCommonHelper: NSObject {
         })
     }
     
-    func selectStation(models:[StationsInfoModel],userId:String,viewController:UIViewController){
-        let deviceViewController = LoginSelectionDeviceViewController.init(style: .whiteWithoutShadow,devices:models,userId:userId)
+    func selectStation(models:[StationsInfoModel],user:User,viewController:UIViewController){
+        let deviceViewController = LoginSelectionDeviceViewController.init(style: .whiteWithoutShadow,devices:models,user:user)
         deviceViewController.delegate = viewController as? LoginSelectionDeviceViewControllerDelegte
         let navigationController =  UINavigationController.init(rootViewController: deviceViewController)
         viewController.present(navigationController, animated: true) {

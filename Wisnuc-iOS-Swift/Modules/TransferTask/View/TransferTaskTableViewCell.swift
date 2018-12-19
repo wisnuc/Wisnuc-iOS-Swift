@@ -62,18 +62,26 @@ class TransferTaskTableViewCell: UITableViewCell {
         switch task.status {
         case .running:
             progress.isHidden = false
+            progress.theme.completedColor = COR1
+            progress.theme.incompletedColor = COR1.withAlphaComponent(0.12)
+            suspendButton.isHidden = true
+            progress.label.isHidden = false
         case .completed:
             progress.isHidden = true
             self.controlButton.setImage(#imageLiteral(resourceName: "file_finish.png"), for: .normal)
         case .failed:
             self.controlButton.setImage(UIImage.init(named: "files_error.png"), for: .normal)
         case .suspend,.preSuspend:
+            progress.progressTotal = UInt(task.progress.totalUnitCount)
+            progress.progressCounter = UInt(task.progress.completedUnitCount)
             progress.theme.completedColor = UIColor.black.withAlphaComponent(0.54)
             progress.theme.incompletedColor = UIColor.black.withAlphaComponent(0.12)
             progress.label.isHidden = true
+            progress.isHidden = false
             suspendButton.isHidden = false
+            suspendButton.setImage(#imageLiteral(resourceName: "task_suspend.png"), for: .normal)
         default:
-            progress.isHidden = true
+            progress.isHidden = false
             progress.theme.completedColor = COR1
             progress.theme.incompletedColor = COR1.withAlphaComponent(0.12)
             progress.label.isHidden = false

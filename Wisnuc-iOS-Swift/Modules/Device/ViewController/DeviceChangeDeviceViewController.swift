@@ -117,17 +117,18 @@ extension DeviceChangeDeviceViewController:UITableViewDelegate{
         
         if online == 0 {return}
         
-        switch indexPath.row {
-        case 0:
-            break
-        case 1:
             //初始化提示框
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             //按钮：从相册选择，类型：UIAlertActionStyleDefault
             alert.addAction(UIAlertAction(title: LocalizedString(forKey: "切换到当前设备") , style: .default, handler: { action in
                 self.presentingViewController?.dismiss(animated: true, completion: {
-                    AppService.sharedInstance().loginAction(stationModel: stationInfoModel, orginTokenUser: AppUserService.currentUser!, complete: { (error, user) in
+                    guard let user = AppUserService.currentUser else{
+                        Message.message(text: LocalizedString(forKey: "切换设备失败"))
+                        return
+                    }
+                    AppService.sharedInstance().loginAction(stationModel: stationInfoModel, orginTokenUser: user, complete: { (error, user) in
                         if  error == nil &&  user != nil{
+                            AppUserService.logoutUser()
                             AppUserService.isUserLogin = true
                             AppUserService.isStationSelected = true
                             AppUserService.setCurrentUser(user)
@@ -138,16 +139,16 @@ extension DeviceChangeDeviceViewController:UITableViewDelegate{
                                     
                                 })
                             }
+                            ActivityIndicator.stopActivityIndicatorAnimation()
                             appDelegate.initRootVC()
+                        }else{
+                            Message.message(text: LocalizedString(forKey: "切换设备失败"))
                         }
                     })
                 })
             }))
             alert.addAction(UIAlertAction(title:  LocalizedString(forKey: "取消"), style: .cancel, handler: nil))
             present(alert, animated: true)
-        default: break
-            
-        }
     }
 }
 

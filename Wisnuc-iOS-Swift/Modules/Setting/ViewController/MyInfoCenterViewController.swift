@@ -27,7 +27,7 @@ class MyInfoCenterViewController: BaseViewController {
         
         avatarImageView.clipsToBounds = true
         
-        AppService.sharedInstance().updateCurrentUserInfo(complete: { [weak self] in
+        AppUserService.updateCurrentUserInfo(complete: { [weak self] in
             self?.infoTabelView.reloadData()
         })
     }

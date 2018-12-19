@@ -19,7 +19,7 @@ class FilesDownloadAlertViewController: UIViewController {
     @IBOutlet weak var cancelButton: MDCFlatButton!
     override func viewDidLoad() {
         super.viewDidLoad()
-        titleLabel.text = LocalizedString(forKey: "Downloading...")
+        titleLabel.text = LocalizedString(forKey: "正在加载")
         cancelButton.setTitle(LocalizedString(forKey: "Cancel"), for: UIControlState.normal)
         cancelButton.setTitleColor(COR1, for: UIControlState.normal)
         downloadProgressView.progressTintColor = COR1

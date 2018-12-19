@@ -11,8 +11,10 @@
 #import "UIScrollView+EmptyDataSet.h"
 #import "MJRefresh.h"
 #import <RxCocoa/RxCocoa.h>
-//#import <MLeaksFinder/MLeaksFinder.h>
+#import <MLeaksFinder/MLeaksFinder.h>
 #import "SVProgressHUD.h"
+#import <SDWebImage/SDWebImageDownloader.h>
+#import <SDWebImage/SDImageCache.h>
 
 #import "TYDecorationSectionLayout.h"
 #import "FMHeadView.h"
@@ -32,3 +34,6 @@
 //#import <SGPlayer/SGPlayer.h>
 #import <SAMKeychain/SAMKeychain.h>
 #import "Zxcvbn/DBZxcvbn.h"
+#import <ZFPlayer/ZFPlayer.h>
+#import <ZFPlayer/ZFAVPlayerManager.h>
+#import <ZFPlayer/ZFPlayerControlView.h>

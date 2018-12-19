@@ -144,7 +144,9 @@ class DeviceViewController: BaseViewController {
                   }
                   let model = try JSONDecoder().decode(BootSpaceModel.self, from: data)
                   if let total = model.total,let used = model.used{
-                     self?.setLabelFrame(text:"已使用\(sizeString(used*1024)) / \(sizeString(total*1024))")
+                     if let usedString = self?.devieceString(base: used*1024),let totalString = self?.devieceString(base: total*1024){
+                     self?.setLabelFrame(text:"已使用\(usedString) / \(totalString)")
+                     }
                   }
                   self?.getFruitmixStatsData(closure: { (statsModel) in
                      self?.setHeaderContentFrame(statsModel: statsModel,bootSpaceModel:model)
@@ -158,6 +160,19 @@ class DeviceViewController: BaseViewController {
             }
          }
       })
+   }
+   
+   func devieceString(base:Int64) -> String {
+      let length = Double(base)
+      if length >= pow(1024, 3) {
+         return "\(String(format: "%.2f", length / pow(1024, 3)))GB"
+      } else if length >= pow(1024, 2) {
+         return "\(String(format: "%.2f", length / pow(1024, 2)))MB"
+      } else if length >= 1024 {
+         return "\(String(format: "%.0f", length / 1024))KB"
+      } else {
+         return "\(base)B"
+      }
    }
    
    func renameStation(originName:String){
@@ -183,7 +198,7 @@ class DeviceViewController: BaseViewController {
    func setHeaderContentFrame(statsModel:StatsModel,bootSpaceModel:BootSpaceModel){
 //      print("😆\(statsModel)")
 //      print("🍄\(bootSpaceModel)")
-      guard  let documentSize = statsModel.document?.totalSize ,let imageSize = statsModel.image?.totalSize,let videoSize = statsModel.video?.totalSize,let otherSize = statsModel.others?.totalSize else {
+      guard  let documentSize = statsModel.document?.totalSize ,let imageSize = statsModel.image?.totalSize,let audioSize = statsModel.audio?.totalSize,let videoSize = statsModel.video?.totalSize,let otherSize = statsModel.others?.totalSize else {
          return
       }
       
@@ -200,39 +215,43 @@ class DeviceViewController: BaseViewController {
       }
       totalSize = totalSize * 1024
       usedSize = usedSize * 1024
-      let statsTotalSize = documentSize + imageSize + videoSize + otherSize
+      let statsTotalSize = documentSize + imageSize + videoSize + otherSize + audioSize
       
-      var totalProportion:CGFloat = 0.0
+      var totalProportion:CGFloat = 1
       
       if statsTotalSize != 0 && statsTotalSize > usedSize {
          totalProportion = CGFloat(usedSize)/CGFloat(statsTotalSize)
       }
       
       var filesProportion:CGFloat = 0.0
-      filesProportion = CGFloat(documentSize)/CGFloat(totalSize) * totalProportion
+      filesProportion = CGFloat(documentSize)/CGFloat(statsTotalSize) * totalProportion
    
       
       var imageProportion:CGFloat = 0.0
-      imageProportion = CGFloat(imageSize)/CGFloat(totalSize) * totalProportion
+      imageProportion = CGFloat(imageSize)/CGFloat(statsTotalSize) * totalProportion
      
+      var audioProportion:CGFloat = 0.0
+      audioProportion = CGFloat(audioSize)/CGFloat(statsTotalSize) * totalProportion
       
       var videoProportion:CGFloat = 0.0
-      videoProportion = CGFloat(videoSize)/CGFloat(totalSize) * totalProportion
+      videoProportion = CGFloat(videoSize)/CGFloat(statsTotalSize) * totalProportion
      
       var othersProportion:CGFloat = 0.0
-      othersProportion = CGFloat(otherSize)/CGFloat(totalSize) * totalProportion
+      othersProportion = CGFloat(otherSize)/CGFloat(statsTotalSize) * totalProportion
       
       let minProportion:CGFloat  = 0.01
       let minWidth:CGFloat  = 2
-      let baseWith = (capacityProgressBackgroudView.width - 3*2)
+      let baseWith = (capacityProgressBackgroudView.width - 20)
       let capacityFilesProgressViewWidth:CGFloat = baseWith * filesProportion
       let capacityPhotoProgressViewWidth:CGFloat = baseWith * imageProportion
+      let capacityAudioProgressViewWidth:CGFloat = baseWith * audioProportion
       let capacityVideoProgressViewWidth:CGFloat = baseWith * videoProportion
       let capacityOtherProgressViewWidth:CGFloat = baseWith * othersProportion
       let minProportionWidth:CGFloat = baseWith * minProportion
       
       let capacityFilesWidth:CGFloat = capacityFilesProgressViewWidth <= minWidth ? 0 : capacityFilesProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityFilesProgressViewWidth
-      let capacityPhotoWidth:CGFloat = capacityPhotoProgressViewWidth == minWidth ? 0 : capacityPhotoProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityFilesProgressViewWidth
+      let capacityPhotoWidth:CGFloat = capacityPhotoProgressViewWidth == minWidth ? 0 : capacityPhotoProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityPhotoProgressViewWidth
+      let capacityAudioWidth:CGFloat = capacityAudioProgressViewWidth == minWidth ? 0 : capacityPhotoProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityAudioProgressViewWidth
       let capacityVideoWidth:CGFloat = capacityVideoProgressViewWidth == minWidth ? 0 : capacityVideoProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityVideoProgressViewWidth
       let capacityOtherWidth:CGFloat = capacityOtherProgressViewWidth == 0 ? 0 : capacityOtherProgressViewWidth <= minProportionWidth ? minProportionWidth : capacityOtherProgressViewWidth
       
@@ -252,9 +271,17 @@ class DeviceViewController: BaseViewController {
          make.width.equalTo(capacityPhotoWidth)
       }
       
-      capacityVideoProgressView.snp.makeConstraints { (make) in
+      capacityAudioProgressView.snp.makeConstraints { (make) in
          make.centerY.equalTo(capacityProgressBackgroudView.snp.centerY)
          make.left.equalTo(capacityPhotoProgressView.snp.right).offset(capacityPhotoWidth < minProportionWidth ? 0 : 2)
+         make.top.equalTo(capacityProgressBackgroudView.snp.top)
+         make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
+         make.width.equalTo(capacityAudioWidth)
+      }
+      
+      capacityVideoProgressView.snp.makeConstraints { (make) in
+         make.centerY.equalTo(capacityProgressBackgroudView.snp.centerY)
+         make.left.equalTo(capacityAudioProgressView.snp.right).offset(capacityAudioWidth < minProportionWidth ? 0 : 2)
          make.top.equalTo(capacityProgressBackgroudView.snp.top)
          make.bottom.equalTo(capacityProgressBackgroudView.snp.bottom)
          make.width.equalTo(capacityVideoWidth)
@@ -294,9 +321,20 @@ class DeviceViewController: BaseViewController {
          make.size.equalTo(CGSize(width: labelWidthFrom(title: LocalizedString(forKey: capacityPhotoLegendLabel.text!), font: capacityPhotoLegendLabel.font), height: legendHeight))
       }
       
+      capacityAudioLegendView.snp.makeConstraints { (make) in
+         make.left.equalTo(capacityPhotoLegendLabel.snp.right).offset(MarginsWidth)
+         make.top.equalTo(capacityPhotoLegendView.snp.top)
+         make.size.equalTo(CGSize(width: 12, height: legendHeight))
+      }
+      
+      capacityAudioLegendLabel.snp.makeConstraints { (make) in
+         make.left.equalTo(capacityAudioLegendView.snp.right).offset(MarginsCloseWidth)
+         make.top.equalTo(capacityPhotoLegendView.snp.top)
+         make.size.equalTo(CGSize(width: labelWidthFrom(title: LocalizedString(forKey: capacityPhotoLegendLabel.text!), font: capacityPhotoLegendLabel.font), height: legendHeight))
+      }
       
       capacityVideoLegendView.snp.makeConstraints { (make) in
-         make.left.equalTo(capacityPhotoLegendLabel.snp.right).offset(MarginsWidth)
+         make.left.equalTo(capacityAudioLegendLabel.snp.right).offset(MarginsWidth)
           make.top.equalTo(capacityFilesLegendView.snp.top)
          make.size.equalTo(CGSize(width: 12, height: legendHeight))
       }
@@ -496,6 +534,7 @@ class DeviceViewController: BaseViewController {
       progressView.backgroundColor = UIColor.colorFromRGB(rgbValue: 0x0eceff1)
       progressView.addSubview((self?.capacityFilesProgressView)!)
       progressView.addSubview((self?.capacityPhotoProgressView)!)
+      progressView.addSubview((self?.capacityAudioProgressView)!)
       progressView.addSubview((self?.capacityVideoProgressView)!)
       progressView.addSubview((self?.capacityOtherProgressView)!)
       return progressView
@@ -515,6 +554,12 @@ class DeviceViewController: BaseViewController {
    lazy var capacityPhotoProgressView: UIView = {
       let progressView = UIView.init()
       progressView.backgroundColor = UIColor.colorFromRGB(rgbValue: 0x0aa00ff)
+      return progressView
+   }()
+   
+   lazy var capacityAudioProgressView: UIView = {
+      let progressView = UIView.init()
+      progressView.backgroundColor = UIColor.red
       return progressView
    }()
    
@@ -543,6 +588,14 @@ class DeviceViewController: BaseViewController {
       view.layer.cornerRadius = 2
       view.clipsToBounds = true
       view.backgroundColor = UIColor.colorFromRGB(rgbValue: 0x0aa00ff)
+      return view
+   }()
+   
+   lazy var capacityAudioLegendView: UIView = {
+      let view = UIView.init()
+      view.layer.cornerRadius = 2
+      view.clipsToBounds = true
+      view.backgroundColor = UIColor.red
       return view
    }()
    
@@ -578,6 +631,14 @@ class DeviceViewController: BaseViewController {
       return label
    }()
    
+   lazy var capacityAudioLegendLabel: UILabel = {
+      let label = UILabel.init()
+      label.text = LocalizedString(forKey: "音乐")
+      label.textColor = DarkGrayColor
+      label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+      return label
+   }()
+   
    lazy var capacityVideoLegendLabel: UILabel = {
       let label = UILabel.init()
       label.text = LocalizedString(forKey: "视频")
@@ -600,6 +661,8 @@ class DeviceViewController: BaseViewController {
       view.addSubview(capacityFilesLegendLabel)
       view.addSubview(capacityPhotoLegendView)
       view.addSubview(capacityPhotoLegendLabel)
+      view.addSubview(capacityAudioLegendView)
+      view.addSubview(capacityAudioLegendLabel)
       view.addSubview(capacityVideoLegendView)
       view.addSubview(capacityVideoLegendLabel)
       view.addSubview(capacityOtherLegendView)

@@ -17,6 +17,7 @@ enum SeekNewDeviceState {
 class SeekNewDeviceViewController: BaseViewController {
     private let headerViewHeight:CGFloat = 64
     let cellReuseIdentifier = "cell"
+    var user:User?
     lazy var dataSource:Array<DeviceBLEModel> = [DeviceBLEModel]()
     lazy var dataPeripheralList:Array<CBPeripheral> = [CBPeripheral]()
     var state:SeekNewDeviceState?{
@@ -47,6 +48,15 @@ class SeekNewDeviceViewController: BaseViewController {
          defaultNotificationCenter().addObserver(self, selector: #selector(confirmFinish(_:)), name: NSNotification.Name.Config.DiskFormaConfirmDismissKey, object: nil)
 //        self.title = "发现设备"
 //        appBar.navigationBar.ti
+    }
+    
+    init(style: NavigationStyle,user:User? = nil) {
+        super.init(style: style)
+        self.user = user
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     deinit {
@@ -110,7 +120,7 @@ class SeekNewDeviceViewController: BaseViewController {
     }
     
     @objc func confirmFinish(_ noti:Notification){
-        let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
+        let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization,user:self.user)
         self.navigationController?.pushViewController(configNetVC, animated: true)
     }
     
@@ -184,7 +194,10 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
         let model = dataSource[indexPath.row]
         switch model.type {
         case .NeedConfig?:
-            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
+            guard let user = self.user else {
+                return
+            }
+            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization,user:user)
             configNetVC.deviceModel = model
             self.navigationController?.pushViewController(configNetVC, animated: true)
             LLBlueTooth.instance.stopScan()

@@ -7,19 +7,19 @@
 //
 
 import UIKit
-import HandyJSON
-enum PhotoAlbumType:String,HandyJSONEnum{
+
+enum PhotoAlbumType:String{
     case collecion
     case my
 }
 
-enum PhotoAlbumCollecionType:String,HandyJSONEnum{
+enum PhotoAlbumCollecionType:String{
     case allPhoto
     case video
     case backup
 }
 
-class PhotoAlbumModel:HandyJSON{
+class PhotoAlbumModel:NSObject{
     var type:PhotoAlbumType?
     var detailType:PhotoAlbumCollecionType?
     var name:String?
@@ -28,8 +28,13 @@ class PhotoAlbumModel:HandyJSON{
     var coverThumbnilhash:String?
     var coverThumbnilAsset:PHAsset?
     var dataSource:[WSAsset]?
+    var netDataSource:[NetAsset]?
     var count:Int?
-    required init() {
-        
+    
+    override init() {
+        super.init()
     }
+//    required init() {
+//
+//    }
 }

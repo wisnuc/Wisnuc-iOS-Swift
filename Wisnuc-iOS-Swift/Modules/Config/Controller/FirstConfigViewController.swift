@@ -9,7 +9,7 @@
 import UIKit
 
 class FirstConfigViewController: BaseViewController {
-
+    var user:User?
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavigationBar()
@@ -22,6 +22,15 @@ class FirstConfigViewController: BaseViewController {
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
         return .default
+    }
+    
+    init(style: NavigationStyle,user:User) {
+        super.init(style: style)
+        self.user = user
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,7 +57,10 @@ class FirstConfigViewController: BaseViewController {
     }
     
     @objc func newDeviceButtonClick(_ sender:MDBaseButton){
-        let seekNewDeviceVC = SeekNewDeviceViewController.init(style: NavigationStyle.whiteWithoutShadow)
+        guard let user = self.user else {
+            return
+        }
+        let seekNewDeviceVC = SeekNewDeviceViewController.init(style: NavigationStyle.whiteWithoutShadow,user:user)
         self.navigationController?.pushViewController(seekNewDeviceVC, animated: true)
     }
     

@@ -36,7 +36,8 @@ class FilesHelper: NSObject {
         if !(selectFilesArray?.contains(where: { $0.uuid == model.uuid }))! {
              self.addTrueFiles(model: model)
         }else{
-            if !(FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))!{
+            let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
+            if !(FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == name}))!{
                self.addTrueFiles(model: model)
             }
         }
@@ -61,9 +62,10 @@ class FilesHelper: NSObject {
     }
     
     func removeSelectFiles(model:EntriesModel){
-        if (selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (selectFilesArray?.contains(where:{$0.name == model.name}))!{
+        let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
+        if (selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (selectFilesArray?.contains(where:{$0.name == name}))!{
             synced(self) {
-                let index = selectFilesArray?.index(where: {$0.uuid == model.uuid && $0.name == model.name})
+                let index = selectFilesArray?.index(where: {$0.uuid == model.uuid && $0.name == name})
                 if index != nil{
                     selectFilesArray?.remove(at: index!)
                 }

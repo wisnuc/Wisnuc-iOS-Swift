@@ -172,12 +172,8 @@ class NetworkService: NSObject {
         })
     }
     
-    func getUserAllDrive(_ callBack:@escaping (_ error:Error?, _ driveModels:[DriveModel]?)->()) {
-        if !AppUserService.isUserLogin {
-            return callBack(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)
-        }
-        
-        DriveAPI.init(type: .fetchInfo).startRequestJSONCompletionHandler { (response) in
+    func getUserAllDrive(user:User, _ callBack:@escaping (_ error:Error?, _ driveModels:[DriveModel]?)->()) {
+        DriveAPI.init(type: .fetchInfo,user:user).startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let responseArr = isLocalRequest ? response.value as! NSArray : (response.value as! NSDictionary).object(forKey: "data") as! NSArray
@@ -203,7 +199,13 @@ class NetworkService: NSObject {
         DriveAPI.init(type: .fetchInfo).startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
-                let responseArr = isLocalRequest ? response.value as! NSArray : (response.value as! NSDictionary).object(forKey: "data") as! NSArray
+                var responseArr:NSArray = NSArray.init()
+                if let dataArray = (response.value as? NSDictionary)?.object(forKey: "data") as? NSArray{
+                    responseArr = dataArray
+                }else if let array = (response.value as? NSArray){
+                    responseArr = array
+                }
+                
                 var models:[DriveModel] = [DriveModel]()
                 responseArr.enumerateObjects({ (obj, idx, stop) in
                     let dic = obj as! NSDictionary
@@ -253,8 +255,8 @@ class NetworkService: NSObject {
         }
     }
     
-    func creactBackupDrive(callBack:@escaping (_ error:Error?,_ model:DriveModel?)->()){
-        DriveAPI.init(type: .creatBackup).startRequestJSONCompletionHandler { (response) in
+    func creactBackupDrive(user:User? = nil,callBack:@escaping (_ error:Error?,_ model:DriveModel?)->()){
+        DriveAPI.init(type: .creatBackup,user:user).startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
                 if let errorMessage = ErrorTools.responseErrorData(response.data){
                     let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.Request.CloudRequstError, userInfo: [NSLocalizedDescriptionKey:errorMessage])
@@ -582,19 +584,21 @@ class NetworkService: NSObject {
             return req
         }
         ImageDownloader.default.downloadTimeout = 20000
-        let task =  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier),.targetCache(ImageCache.default)], progressBlock: nil) { (image, error, reqUrl, data) in
+        ImageCache.default.maxMemoryCost = 20
+        let task =  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier),.forceRefresh,.backgroundDecode], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
-                if let image =  image, let url = reqUrl {
+                if let image =  image, let url = reqUrl ,let data = data{
                     ImageCache.default.store(image,
-                                             original: nil,
+                                             original: data,
                                              forKey: url.absoluteString,
                                              toDisk: true)
+                      callback(nil, image,reqUrl)
                 }
-                callback(nil, image,reqUrl)
+              
             }else{
                 callback(error, nil,reqUrl)
             }
-            }!
+            }
         return task
         //        return SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.useNSURLCache, progress: nil, completed: { (image, data, error, finished) in
         //            if (image != nil) {
@@ -603,6 +607,125 @@ class NetworkService: NSObject {
         //            callback(error, nil)
         //            }
         //        })!
+    }
+    
+    func getThumbnailx(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->SDWebImageDownloadToken?{
+        
+        let detailURL = "media"
+        var frameWidth = size?.width
+        var frameHeight = size?.height
+        if size == nil ||  size == CGSize.zero{
+            frameWidth = 200
+            frameHeight = 200
+        }
+        let resource = "/media/\(hash)"
+        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+        
+        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
+        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
+        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+            return nil
+        }
+        
+        guard let dataString = String.init(data: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+            return nil
+        }
+        
+        guard  let normalUrl = URL.init(string:urlString) else {
+            return nil
+        }
+        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+            return nil
+        }
+        
+        SDWebImageDownloader.shared().headersFilter = { (requsetUrl,header) in
+            var dic = header
+            if let token = AppTokenManager.token{
+                dic?[kRequestAuthorizationKey] = self.networkState == .normal ? token : JWTTokenString(token: token)
+            }
+            if let cookie = AppUserService.currentUser?.cookie{
+                if self.networkState == .normal{
+                    dic?[kRequestSetCookieKey] =  cookie
+                }
+            }
+            return dic
+        }
+      
+        let task = SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.highPriority, progress: nil) { (image, data, error, finish) in
+            if let image = image {
+                 YYImageCache.shared().setImage(image, imageData: data, forKey: "\(hash)_big", with: .disk)
+                callback(nil, image, url)
+            }else{
+                callback(error, nil, url)
+            }
+        }
+        
+        return task
+    }
+    
+    func getThumbnailBackgroud(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->SDWebImageDownloadToken?{
+     
+        let detailURL = "media"
+        var frameWidth = size?.width
+        var frameHeight = size?.height
+        if size == nil ||  size == CGSize.zero{
+            frameWidth = 200
+            frameHeight = 200
+        }
+        let resource = "/media/\(hash)"
+        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+        
+        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
+        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
+        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+            return nil
+        }
+        
+        guard let dataString = String.init(data: data, encoding: .utf8) else {
+            return nil
+        }
+        
+        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+            return nil
+        }
+        
+        guard  let normalUrl = URL.init(string:urlString) else {
+            return nil
+        }
+        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+            return nil
+        }
+        
+        SDWebImageDownloader.shared().headersFilter = { (requsetUrl,header) in
+            var dic = header
+            if let token = AppTokenManager.token{
+                dic?[kRequestAuthorizationKey] = self.networkState == .normal ? token : JWTTokenString(token: token)
+            }
+            if let cookie = AppUserService.currentUser?.cookie{
+                if self.networkState == .normal{
+                    dic?[kRequestSetCookieKey] =  cookie
+                }
+            }
+            return dic
+        }
+        
+        YYImageCache.shared().memoryCache.countLimit = 100
+        let task = SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.lowPriority, progress: nil) { (image, data, error, finish) in
+            if let image = image {
+                YYImageCache.shared().setImage(image, imageData: data, forKey: hash, with: .disk)
+                callback(nil, image, url)
+            }else{
+                callback(error, nil, url)
+            }
+        }
+    
+        return task
     }
     
     
@@ -626,14 +749,16 @@ class NetworkService: NSObject {
             
             return req
         }
-        ImageDownloader.default.downloadTimeout = 20000
-        return  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
+        let imageDownloader = ImageDownloader.init(name: "orginImageDownloader")
+        imageDownloader.downloadTimeout = 20000
+        ImageCache.default.maxMemoryCost = 50 * 1024 * 1024
+        return imageDownloader.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl {
-                    ImageCache.default.store(image,
-                                             original: nil,
-                                             forKey: url.absoluteString,
-                                             toDisk: true)
+//                    ImageCache.default.store(image,
+//                                             original: nil,
+//                                             forKey: url.absoluteString,
+//                                             toDisk: true)
                 }
                 callback(nil, image)
             }else{

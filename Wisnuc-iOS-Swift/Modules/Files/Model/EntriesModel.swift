@@ -22,7 +22,13 @@ public struct EntriesModel:Codable {
     var metadata:Metadata?
     var pdir:String?
     var place:Int?
+    var bname:String?
+    var bctime:Int64?
+    var bmtime:Int64?
+    var otime:Int64?
     var indexPath:IndexPath?
+    var backupRoot = false
+    
     
     enum CodingKeys : String, CodingKey {
         case name
@@ -35,6 +41,10 @@ public struct EntriesModel:Codable {
         case metadata
         case pdir
         case place
+        case bname
+        case bctime
+        case bmtime
+        case otime
     }
 //    required public init() {}
 //
@@ -61,5 +71,10 @@ struct Metadata: Codable {
     var model: String?
     var date: String?
     var datec:String?
+    var localPath:String?
+    var disabled:Bool?
+    var status:String?
+    var lastBackupTime:Int64?
+ 
 //    required init() {}
 }

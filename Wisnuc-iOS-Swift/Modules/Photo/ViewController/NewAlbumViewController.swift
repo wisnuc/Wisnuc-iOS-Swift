@@ -168,7 +168,9 @@ class NewAlbumViewController: BaseViewController {
         let photosVC = PhotoRootViewController.init(style: NavigationStyle.select, state: PhotoRootViewControllerState.select)
         photosVC.delegate = self
         DispatchQueue.global(qos: .default).async {
-            let assets = AppAssetService.allAssets!
+            guard  let assets = AppAssetService.allAssets else{
+                return
+            }
             DispatchQueue.main.async {
                 photosVC.localAssetDataSources.append(contentsOf:assets)
                 photosVC.localDataSouceSort()

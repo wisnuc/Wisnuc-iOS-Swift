@@ -19,7 +19,7 @@ class FileTools: NSObject {
             switch format {
             case .PDF?:
                 name = "files_pdf_small.png"
-            case .PNG?,.JPG?,.JPEG?:
+            case .PNG?,.JPG?,.JPEG?,.GIF?:
                 name = "files_photo_normal.png"
             case .DOC?,.DOCX?:
                 name = "files_word_small.png"
@@ -45,7 +45,7 @@ class FileTools: NSObject {
             switch format {
             case .PDF?:
                 return  "files_pdf_normal.png"
-            case .PNG?,.JPG?,.JPEG?:
+            case .PNG?,.JPG?,.JPEG?,.GIF?:
               return  "files_photo_normal.png"
             case .DOC?,.DOCX?:
                return  "files_word_normal.png"

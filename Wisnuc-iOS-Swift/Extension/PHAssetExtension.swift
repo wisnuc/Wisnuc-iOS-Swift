@@ -112,12 +112,24 @@ extension PHAsset{
     
     func getAssetPath() -> URL? {
         let option = PHImageRequestOptions.init()
-        option.isNetworkAccessAllowed = false
+        option.isNetworkAccessAllowed = true
         option.isSynchronous = true
         var path:URL?
-        PHImageManager.default().requestImageData(for: self, options: option, resultHandler: { imageData, dataUTI, orientation, info in
-            path =  info!["PHImageFileURLKey"] as? URL
-        })
+        if self.mediaType == .video{
+            let videoOptions =  PHVideoRequestOptions.init()
+            videoOptions.version = PHVideoRequestOptionsVersion.current
+            videoOptions.deliveryMode = PHVideoRequestOptionsDeliveryMode.automatic
+            PHImageManager.default().requestAVAsset(forVideo: self, options: nil) { (avurlAsset, audioMix, dict) in
+                if let newObj = avurlAsset as? AVURLAsset{
+                    path = newObj.url
+                    print(path as Any)
+                }
+            }
+        }else if self.mediaType == .image{
+            PHImageManager.default().requestImageData(for: self, options: option, resultHandler: { imageData, dataUTI, orientation, info in
+                path =  info!["PHImageFileURLKey"] as? URL
+            })
+        }
         return path
     }
     

@@ -8,7 +8,7 @@
 
 import UIKit
 @objc protocol LoginSelectionDeviceViewControllerDelegte {
-    func loginFinish(userId:String,stationModel:Any)
+    func loginFinish(user:User,stationModel:Any)
 }
 
 class LoginSelectionDeviceViewController: BaseViewController {
@@ -18,7 +18,7 @@ class LoginSelectionDeviceViewController: BaseViewController {
     let headerHeight:CGFloat = 56 + 16 + 32
     let footerHeight:CGFloat = 16 + 49
     var devices:[StationsInfoModel]?
-    var userId:String?
+    var user:User?
     var selectedModel:StationsInfoModel?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +28,10 @@ class LoginSelectionDeviceViewController: BaseViewController {
         // Do any additional setup after loading the view.
     }
     
-    init(style: NavigationStyle,devices:[StationsInfoModel],userId:String) {
+    init(style: NavigationStyle,devices:[StationsInfoModel],user:User) {
         super.init(style: style)
         self.devices = devices
-        self.userId = userId
+        self.user = user
     }
     
     func confirmButtonNormal(){
@@ -80,9 +80,9 @@ class LoginSelectionDeviceViewController: BaseViewController {
     }
     
     @objc func confirmButtonTap(_ sender:UIButton){
-        if let userId = self.userId ,let model = self.selectedModel{
+        if let user = self.user ,let model = self.selectedModel{
             self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
-                 self?.delegate?.loginFinish(userId: userId, stationModel: model)
+                self?.delegate?.loginFinish(user: user, stationModel: model)
             }) 
         }else{
             Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)

@@ -9,6 +9,7 @@
 import UIKit
 import MaterialComponents.MaterialCollections
 import RxSwift
+import Kingfisher
 
 private let reuseIdentifier = "PhotoCell"
 private let headerReuseIdentifier = "headView"
@@ -23,9 +24,9 @@ private let headerHeight:CGFloat = 42
 }
 
 class PhotoCollectionViewController: UICollectionViewController {
-//    override func willDealloc() -> Bool {
-//        return false
-//    }
+    override func willDealloc() -> Bool {
+        return false
+    }
     weak var delegate:PhotoCollectionViewControllerDelegate?
     var isSelectMode:Bool?{
         didSet{
@@ -36,6 +37,10 @@ class PhotoCollectionViewController: UICollectionViewController {
             }
         }
     }
+    lazy var imageRequestIDDataSources:Array<PHImageRequestID> = Array.init()
+    lazy var imageDownloadTasks:Array<RetrieveImageDownloadTask> = Array.init()
+    lazy var imageDiskTasks:Array<RetrieveImageDiskTask> = Array.init()
+    
     var currentItemSize:CGSize = CGSize.zero
     var showIndicator:Bool = true
     var sortedAssetsBackupArray:Array<WSAsset>?
@@ -49,7 +54,6 @@ class PhotoCollectionViewController: UICollectionViewController {
     var dataSource:Array<Array<WSAsset>>?{
         didSet{
             mainThreadSafe {
-                self.collectionView?.reloadData()
                 if let isSelectMode = self.isSelectMode{
                     if !isSelectMode{
                         self.dataSourceHasValue()
@@ -71,7 +75,9 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+       super.viewDidLoad()
+       imageDownloadTasks.removeAll()
+        imageDiskTasks.removeAll()
       dataSource = Array.init()
       initCollectionViewLayout()
       initGuestrue()
@@ -80,6 +86,22 @@ class PhotoCollectionViewController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        let cache = KingfisherManager.shared.cache
+        cache.clearMemoryCache()
+        for imageRequestID in imageRequestIDDataSources{
+            PHCachingImageManager.default().cancelImageRequest(imageRequestID)
+        }
+         imageRequestIDDataSources.removeAll()
+        
+        imageDownloadTasks.map({$0.cancel()})
+//        imageDownloadTasks.removeAll()
+        imageDiskTasks.map({$0.cancel()})
+//        imageDiskTasks.removeAll()
+        ImageCache.default.clearMemoryCache()
     }
     
     func dataSourceHasValue(){
@@ -157,9 +179,11 @@ class PhotoCollectionViewController: UICollectionViewController {
 //                            print("🌶\(i)")
                            
                         }else{
+                            if yearsAsset.count > 0{
                             if photoScale >= CGFloat(floorf(Float(allAssetArray.count/yearsAsset.count))){
                                 self.view.addSubview(timelineView)
                                 self.timeViewArray?.append(timelineView)
+                            }
                             }
                         }
                     }
@@ -565,13 +589,112 @@ class PhotoCollectionViewController: UICollectionViewController {
         cell.setImagView(indexPath:indexPath)
         cell.setSelectButton(indexPath: indexPath)
         cell.isSelectMode = self.isSelectMode
+       
         cell.setSelectAnimation(isSelect: self.isSelectMode ?? false ? self.choosePhotos.contains(model) : false, animation: false)
         cell.model = model
+
+//        ImageAsyncTaskObject.setCoverImage(model: model, indexPath: indexPath, delegate: self)
         let tagString = "\(indexPath.section)\(indexPath.item)"
         cell.tag = (NSNumber.init(string: tagString)?.intValue)!
+        self.setCellImage(model: model,cell:cell)
         return cell
     }
     
+    func setCellImage(model:WSAsset,cell:PhotoCollectionViewCell){
+        let size = CGSize.init(width: 186 , height: 186 )
+        if cell.indexPath != model.indexPath{
+            return
+        }
+        if model.asset != nil {
+            let asset = model.asset
+            let contentMode = PHImageContentMode.default
+            self.imageManager.startCachingImages(for: [asset!], targetSize: size, contentMode: contentMode, options:self.imageRequestOptions)
+            let imageRequestID = self.imageManager.requestImage(for: (asset)!, targetSize: size, contentMode: contentMode, options: self.imageRequestOptions, resultHandler: { (image, info) in
+//                if  cell.imageView?.layer.contents != nil{
+//                    cell.imageView?.layer.contents = nil
+//                }
+                if cell.indexPath == model.indexPath{
+//                    if let cell = self.collectionView?.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
+                cell.imageView?.layer.contents = image?.cgImage
+                cell.image = image
+//                    }
+                }
+            })
+            imageRequestIDDataSources.append(imageRequestID)
+        }else if model is NetAsset{
+            if let hash = (model as? NetAsset)?.fmhash{
+                DispatchQueue.global(qos: .userInteractive).async {
+                    if let image = YYImageCache.shared().getImageForKey(hash){
+                        DispatchQueue.main.async {
+                            cell.imageView?.layer.contents = image.cgImage
+                        }
+                    }
+                }
+            }
+            let netAsset = model as! NetAsset
+               DispatchQueue.global(qos: .default).async {
+                if let image =  YYImageCache.shared().getImageForKey("\(netAsset.fmhash!)_big"){
+                         if cell.indexPath == model.indexPath{
+                                cell.model?.image = image
+                             DispatchQueue.main.async {
+                                cell.imageView?.layer.contents = image.cgImage
+                            }
+                                cell.image = image
+//                                print("Get image \(image), cacheType: \(cacheType).")
+//                            }
+                        }
+                        //In this code snippet, the `cacheType` is .disk
+                    } else {
+                        print("Not exist in cache.")
+             
+                        let _ = AppNetworkService.getThumbnailx(hash: netAsset.fmhash!,size:size) { (error, image,reqUrl)  in
+                            if error == nil {
+                                if let image =  image, let url = reqUrl {
+//                                    ImageCache.default.store(image,
+//                                                             original: nil,
+//                                                             forKey: requestUrl.absoluteString,
+//                                                             toDisk: true)
+                                }
+                                if let indexPath = model.indexPath{
+                                    if let cell = self.collectionView?.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
+                                        DispatchQueue.main.async {
+                                            cell.model?.image = image
+                                            cell.imageView?.layer.contents = image?.cgImage
+                                            cell.image = image
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        //                        if let task = task{
+                        //                            self.imageDownloadTasks.append(task)
+                        //                        }
+                    }
+        }
+//                if  let imageDiskTask = imageDiskTask{
+//                    imageDiskTasks.append(imageDiskTask)
+//                }
+            }
+    }
+    
+    lazy var imageManager = PHCachingImageManager.init()
+    
+    lazy var imageRequestOptions: PHImageRequestOptions = {
+        let option = PHImageRequestOptions.init()
+        
+        option.resizeMode = PHImageRequestOptionsResizeMode.fast//控制照片尺寸
+        option.deliveryMode = PHImageRequestOptionsDeliveryMode.opportunistic //控制照片质量
+        option.isNetworkAccessAllowed = true
+        option.version = PHImageRequestOptionsVersion.current
+        return option
+    }()
+    
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let model = self.dataSource![indexPath.section][indexPath.row]
+        if let cell = cell as? PhotoCollectionViewCell{
+            self.setCellImage(model: model,cell:cell)
+        }
+    }
 
     // MARK: UICollectionViewDelegate
     
@@ -693,42 +816,58 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            let cell = collectionView.cellForItem(at: indexPath)
-            if cell != nil{
-            let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
-                let model = self.dataSource![indexPath.section][indexPath.row]
-                if (self.collectionView!.indicator != nil) {
-                    self.collectionView?.indicator.slider.timeLabel.text = PhotoTools.getMouthDateString(date: model.createDate!)
-                }
-                photoCell.isSelectMode = self.isSelectMode
-                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
-                photoCell.model = model
-                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
-                if model.asset != nil{
-                    DispatchQueue.global(qos: .default).async {
-                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
-                        if (photoCell?.identifier == model.asset?.localIdentifier) {
-                            DispatchQueue.main.async {
-//                                   photoCell?.imageView.layer.contents = nil
-                            }
-                        }
-                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
-                            photoCell?.imageRequestID = -1
-                        }
-                })
-
-                    }
-                }
+            if let cell = collectionView.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
+            let model = self.dataSource![indexPath.section][indexPath.row]
+                model.indexPath = indexPath
+                self.setCellImage(model: model,cell:cell)
             }
+//            if cell != nil{
+//            let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
+//                let model = self.dataSource![indexPath.section][indexPath.row]
+//                if (self.collectionView!.indicator != nil) {
+//                    self.collectionView?.indicator.slider.timeLabel.text = PhotoTools.getMouthDateString(date: model.createDate!)
+//                }
+//                photoCell.isSelectMode = self.isSelectMode
+//                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
+//                photoCell.model = model
+//                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
+//                if model.asset != nil{
+//                    DispatchQueue.global(qos: .default).async {
+//                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
+//                        if (photoCell?.identifier == model.asset?.localIdentifier) {
+//                            DispatchQueue.main.async {
+////                                   photoCell?.imageView.layer.contents = nil
+//                            }
+//                        }
+//                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
+//                            photoCell?.imageRequestID = -1
+//                        }
+//                })
+//
+//                    }
+//                }
+//            }
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             let cell = collectionView.cellForItem(at: indexPath)
+            let model = self.dataSource?[indexPath.section][indexPath.row]
             if cell != nil{
-              let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
-                photoCell.imageView?.layer.contents  = nil
+               if let photoCell = cell as? PhotoCollectionViewCell{
+                let size = CGSize.init(width: 186 , height: 186 )
+                if let fmhash = (model as? NetAsset)?.fmhash{
+                    if let url = PhotoHelper.requestImageUrl(size: size, hash: fmhash){
+                        let task = self.imageDownloadTasks.first(where: {$0.url == url})
+                        task?.cancel()
+                        self.imageDownloadTasks.removeAll(where: {$0.url == url})
+                    }
+                }
+               
+                    photoCell.imageView?.layer.contents  = nil
+                    photoCell.image = nil
+                }
             }
         }
     }
@@ -829,6 +968,18 @@ extension PhotoCollectionViewController : WSShowBigImgViewControllerDelegate {
     func photoBrowser(browser: WSShowBigimgViewController, willDismiss indexPath: IndexPath) -> UIView? {
         let cell = self.collectionView?.cellForItem(at: indexPath)
         return cell
+    }
+}
+
+extension PhotoCollectionViewController : ImageAsyncTaskObjectDelegate {
+    func imageAsyncTaskObjectDidFinishAsyncTask(_ aTaskObject: ImageAsyncTaskObject?) {
+        if let indexPath = aTaskObject?.indexPath {
+            if let cell = self.collectionView?.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
+                cell.model?.image = aTaskObject?.image
+                cell.imageView?.layer.contents = aTaskObject?.image?.cgImage
+                cell.image = aTaskObject?.image
+            }
+        }
     }
 }
 

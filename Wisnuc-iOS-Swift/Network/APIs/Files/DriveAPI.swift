@@ -16,13 +16,41 @@ enum  DrivesAPIType {
 
 class DriveAPI: BaseRequest {
     var type:DrivesAPIType?
-    init(type:DrivesAPIType) {
+    var ouser:User?
+    init(type:DrivesAPIType,user:User? = nil) {
         self.type = type
+        if user != nil{
+            self.ouser = user
+        }
+    }
+    
+    override func baseURL() -> String {
+        switch AppNetworkService.networkState {
+        case .normal?:
+            return  kCloudBaseURL
+        case .local?:
+            if let user = self.ouser{
+                if let addr = user.localAddr{
+                    return addr
+                }
+            }
+            if let addr = AppUserService.currentUser?.localAddr{
+                return addr
+            }
+            return  ""
+        default:
+            return ""
+        }
     }
     
     override func requestURL() -> String {
         switch AppNetworkService.networkState {
         case .normal?:
+            if let user = self.ouser{
+                if let stationId = user.stationId{
+                    return "/station/\(stationId)/json"
+                }
+            }
             return kCloudCommonJsonUrl
         case .local?:
             return "/\(kRquestDrivesURL)"
@@ -92,12 +120,25 @@ class DriveAPI: BaseRequest {
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {
         case .normal?:
+            if let user = self.ouser{
+                if let token = user.cloudToken,let cookie = user.cookie{
+                    return [kRequestAuthorizationKey:token,kRequestSetCookieKey:cookie]
+                }
+            }
             if let token = AppUserService.currentUser?.cloudToken{
                return [kRequestAuthorizationKey:token,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
             }
              return nil
         case .local?:
-            return [kRequestAuthorizationKey:JWTTokenString(token: AppTokenManager.token!)]
+            if let user = self.ouser{
+                if let token = user.localToken{
+                    return [kRequestAuthorizationKey:JWTTokenString(token:token)]
+                }
+            }
+            if let token = AppUserService.currentUser?.localToken{
+                return [kRequestAuthorizationKey:JWTTokenString(token:token)]
+            }
+            return nil
         default:
             return nil
         }

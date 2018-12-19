@@ -74,7 +74,7 @@ class AppService: NSObject,ServiceProtocol{
                 self?.userService.setCurrentUser(user)
                 self?.userService.synchronizedCurrentUser()
                 AppNetworkService.networkState = .local
-                self?.nextStepForLogin(callback: callBackClosure)
+                self?.nextStepForLogin(user: user, callback: callBackClosure)
             }else{
                 if response.data != nil {
                     let errorDict =  dataToNSDictionary(data: response.data!)
@@ -113,8 +113,7 @@ class AppService: NSObject,ServiceProtocol{
             let urlString  = "http://\(String(describing: model.LANIP!)):3000"
             user.localAddr = urlString
         }
-        self.userService.setCurrentUser(user)
-        self.userService.synchronizedCurrentUser()
+       
         if user.localAddr != nil{
             networkService.checkIP(address: user.localAddr!) { [weak self] (success) in
                 if success{
@@ -125,17 +124,17 @@ class AppService: NSObject,ServiceProtocol{
                             self?.networkService.networkState = .local
                             self?.userService.setCurrentUser(user)
                             self?.userService.synchronizedCurrentUser()
-                            self?.nextStepForLogin(callback: callBackClosure)
+                            self?.nextStepForLogin(user: user, callback: callBackClosure)
                         }else{
-                          self?.nextStepForLogin(callback: callBackClosure)
+                            self?.nextStepForLogin(user: user, callback: callBackClosure)
                         }
                     })
                 }else{
-                    self?.nextStepForLogin(callback: callBackClosure)
+                    self?.nextStepForLogin(user: user, callback: callBackClosure)
                 }
             }
         }else{
-            nextStepForLogin(callback: callBackClosure)
+            nextStepForLogin(user: user, callback: callBackClosure)
         }
     }
     
@@ -159,10 +158,7 @@ class AppService: NSObject,ServiceProtocol{
             orginTokenUser.localAddr = urlString
             orginTokenUser.lanIP = lanIP
         }
-        self.userService.setCurrentUser(orginTokenUser)
-        self.updateCurrentUserInfo(complete: {})
-        self.userService.synchronizedCurrentUser()
-        
+      
         if orginTokenUser.localAddr != nil{
             networkService.checkIP(address: orginTokenUser.lanIP!) { [weak self] (success) in
                 if success{
@@ -171,36 +167,32 @@ class AppService: NSObject,ServiceProtocol{
                             orginTokenUser.isLocalLogin = NSNumber.init(value: true)
                             orginTokenUser.localToken = localToken
                             self?.networkService.networkState = .local
-                            self?.userService.setCurrentUser(orginTokenUser)
-                            self?.userService.synchronizedCurrentUser()
-                            self?.nextStepForLogin(callback: callBackClosure)
+                            self?.nextStepForLogin(user: orginTokenUser, callback: callBackClosure)
                         }else{
-                            self?.nextStepForLogin(callback: callBackClosure)
+                            self?.nextStepForLogin(user: orginTokenUser, callback: callBackClosure)
                         }
                     })
                 }else{
-                    self?.nextStepForLogin(callback: callBackClosure)
+                    self?.nextStepForLogin(user: orginTokenUser, callback: callBackClosure)
                 }
             }
         }else{
-            nextStepForLogin(callback: callBackClosure)
+            nextStepForLogin(user: orginTokenUser, callback: callBackClosure)
         }
     }
     
-    func nextStepForLogin(callback: @escaping (_ error:Error?,_ user:User?)->()) {
-        let currentUser = self.userService.currentUser
-        self.networkService.getUserAllDrive { [weak self] (userHomeError, driveModels) in
+    func nextStepForLogin(user:User,callback: @escaping (_ error:Error?,_ user:User?)->()) {
+        self.networkService.getUserAllDrive(user: user) { [weak self] (userHomeError, driveModels) in
             if userHomeError != nil{
-                self?.userService.logoutUser()
-                return callback(userHomeError, currentUser);
+                return callback(userHomeError, user)
             }
         
             if let driveModels = driveModels{
                 for model in driveModels{
                     if model.tag == DriveType.home.rawValue &&  model.type ==  "classic"{
-                        currentUser?.userHome = model.uuid
+                        user.userHome = model.uuid
                     }else if model.tag == DriveType.share.rawValue{
-                        currentUser?.shareSpace = model.uuid
+                        user.shareSpace = model.uuid
                     }else if model.type == DriveType.backup.rawValue{
                         if let uuid = model.uuid{
                             if !(self?.userService.backupArray.contains(where: {$0.uuid == uuid}))!{
@@ -211,55 +203,24 @@ class AppService: NSObject,ServiceProtocol{
                 }
             }
     
-            self?.userService.synchronizedCurrentUser()
-            if self?.userService.backupArray.count == 0 || !((self?.userService.backupArray.contains(where: {$0.client?.id == getUniqueDevice()}))!){
-                self?.networkService.creactBackupDrive(callBack: { [weak self](error, driveModel) in
-                    if driveModel != nil && error == nil{
-                        if let driveModel = driveModel{
-                            if let uuid = driveModel.uuid{
-                                if !(self?.userService.backupArray.contains(where: {$0.client?.id == uuid}))!{
-                                    self?.userService.backupArray.append(driveModel)
-                                }
+            self?.loginCreatBackupDriveStep(user:user)
+            return callback(nil, user)
+        }
+    }
+    
+    func loginCreatBackupDriveStep(user:User){
+        if self.userService.backupArray.count == 0 || !(self.userService.backupArray.contains(where: {$0.client?.id == getUniqueDevice()})){
+            self.networkService.creactBackupDrive(user:user,callBack: { [weak self](error, driveModel) in
+                if driveModel != nil && error == nil{
+                    if let driveModel = driveModel{
+                        if let uuid = driveModel.uuid{
+                            if !(self?.userService.backupArray.contains(where: {$0.uuid == uuid}))!{
+                                self?.userService.backupArray.append(driveModel)
                             }
                         }
                     }
-                    return callback(error, currentUser)
-                })
-            }else{
-                return callback(nil, currentUser)
-            }
-            return callback(nil, currentUser)
-//            self?.networkService.getUserBackupDir(name: kBackUpAssetDirName, { [weak self](userBackupDirError, entryUUID) in
-//                if userBackupDirError != nil{
-//                    self?.userService.logoutUser()
-//                    return callback(userBackupDirError, currentUser);
-//                }else{
-//                    currentUser?.backUpDirectoryUUID = entryUUID;
-//                    AppUserService.synchronizedCurrentUser()
-//                }
-            
-               
-                // MARK:Upload Opration
-                //===================
-//                if(!user.askForBackup)
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                [weak_self requestForBackupPhotos:^(BOOL shouldUpload) {
-//                user.askForBackup = YES;
-//                user.autoBackUp = shouldUpload;
-//                [WB_UserService synchronizedCurrentUser];
-//                if(shouldUpload) {
-//                [weak_self startUploadAssets:nil];
-//                }
-//                }];
-//                });
-//                else if(user.autoBackUp && WB_NetService.status == AFNetworkReachabilityStatusReachableViaWiFi)
-//                [weak_self startUploadAssets:nil];
-//                dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//                [weak_self updateCurrentUserInfoWithCompleteBlock:nil];
-//                });
-//                self?.updateCurrentUserInfo()
-            
-//            })
+                }
+            })
         }
     }
     
@@ -319,50 +280,7 @@ class AppService: NSObject,ServiceProtocol{
 //        }
     }
     
-    func updateCurrentUserInfo(complete:@escaping ()->()){
-        UsersInfoAPI.init().startRequestDataCompletionHandler { (response) in
-            if  response.error == nil{
-                if let errorMessage = ErrorTools.responseErrorData(response.data){
-                    Message.message(text: errorMessage)
-                    return
-                }
-                
-                guard let rootDic = dataToNSDictionary(data: response.data)else {
-                    return
-                }
-                
-                guard let dataDic = rootDic["data"] as? NSDictionary else {
-                    return
-                }
-                
-                guard let data = jsonToData(jsonDic: dataDic) else {
-                    return
-                }
-                
-                do {
-                    let userModel = try JSONDecoder().decode(UserModel.self, from: data)
-                    if userModel.id == AppUserService.currentUser?.uuid{
-                        AppUserService.currentUser?.userName = userModel.username
-                        AppUserService.currentUser?.avaterURL = userModel.avatarUrl
-                        AppUserService.currentUser?.nickName = userModel.nickName
-                        AppUserService.currentUser?.userName = userModel.username
-                        AppUserService.synchronizedCurrentUser()
-                        complete()
-                    }
-                } catch {
-                    Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
-                }
-            }else{
-                switch response.error {
-                case is BaseError:
-                    let baseError = response.error as! BaseError
-                    Message.message(text: baseError.localizedDescription)
-                default:
-                    Message.message(text: (response.error?.localizedDescription)!)
-                }
-            }
-        }
-    }
+    
     
     func logoutAction(){
         AppUserService.logoutUser()

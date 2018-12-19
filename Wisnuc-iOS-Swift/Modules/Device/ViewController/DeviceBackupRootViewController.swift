@@ -320,7 +320,7 @@ extension DeviceBackupRootViewController:UITableViewDataSource,UITableViewDelega
         let model = dataSource[indexPath.section][indexPath.row]
         if self.type == .files{
             if let uuid = model.uuid {
-                let nextViewController = FilesRootViewController.init(driveUUID: uuid, directoryUUID: uuid,style:.white)
+                let nextViewController = FilesRootViewController.init(driveUUID: uuid, directoryUUID: uuid,style:.white,backupRoot:true)
                 nextViewController.title = LocalizedString(forKey: model.label ?? "")
                 self.navigationController?.pushViewController(nextViewController, animated: true)
             }

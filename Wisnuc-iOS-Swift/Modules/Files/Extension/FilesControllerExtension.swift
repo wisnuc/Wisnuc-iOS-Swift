@@ -59,8 +59,12 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
             
             if let sectionArray:Array<EntriesModel> = dataSource[indexPath.section] as? Array{
                 let model  = sectionArray[indexPath.item]
+                let driveUUID = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
+                guard let uuid = model.uuid else{
+                    return
+                }
                 if model.type == FilesType.directory.rawValue{
-                    let nextViewController = FilesRootViewController.init(driveUUID: (AppUserService.currentUser?.userHome!)!, directoryUUID: model.uuid!,style:.white)
+                    let nextViewController = FilesRootViewController.init(driveUUID: driveUUID, directoryUUID: uuid,style:.white)
                     if self.selfState == .movecopy{
                         nextViewController.moveModelArray = moveModelArray
                         nextViewController.srcDictionary = srcDictionary
@@ -70,24 +74,34 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                     }
                     let tab = retrieveTabbarController()
                     tab?.setTabBarHidden(true, animated: true)
-                    nextViewController.title = model.name ?? ""
+                    nextViewController.title = model.backupRoot ? model.bname ?? model.name : model.name ?? ""
                     
                     self.navigationController?.pushViewController(nextViewController, animated: true)
                     defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
             }else{
-                if FilesRootViewController.downloadManager.cache.fileExists(fileName: model.name ?? ""){
-                    self.readFile(filePath: FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
+                let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
+                if FilesRootViewController.downloadManager.cache.fileExists(fileName: name){
+                    if let filePath = FilesRootViewController.downloadManager.cache.filePtah(fileName: name){
+                        self.readFile(filePath:filePath)
+                    }else{
+                        Message.message(text: LocalizedString(forKey: "\(name)读取失败"))
+                    }
                 }else{
                     self.downloadFile(model: model, complete: { [weak self] (error, task) in
                         if error == nil{
-                            Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载完成"))
+                            let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
+                            Message.message(text: LocalizedString(forKey: "\(name)下载完成"))
                             DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 0.5) {
                                 DispatchQueue.main.async {
-                                    self?.readFile(filePath:FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
+                                    if let filePath = FilesRootViewController.downloadManager.cache.filePtah(fileName: name){
+                                        self?.readFile(filePath:filePath)
+                                    }else{
+                                       Message.message(text: LocalizedString(forKey: "\(name)读取失败"))
+                                    }
                                 }
                             }
                         }else{
-                            Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载失败"))
+                            Message.message(text: LocalizedString(forKey: "\(name)下载失败"))
                         }
                     })
                 }
@@ -124,7 +138,8 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         guard let requestURL = downloadRequestURL(model:model) else {
            return complete(NSError(domain: "requestURL error", code: 200001, userInfo: nil) as! CustomNSError,nil)
         }
-        let task =  FilesRootViewController.downloadManager.download(requestURL, fileName: model.name!, filesModel: model)
+        let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
+        let task =  FilesRootViewController.downloadManager.download(requestURL, fileName: name, filesModel: model)
         
         task?.progressHandler = { (taskP)in
             let float:Float = Float(taskP.progress.completedUnitCount)/Float(taskP.progress.totalUnitCount)
@@ -161,8 +176,9 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         
         if  let sectionArray:Array<EntriesModel> = dataSource[indexPath.section] as? Array{
             let model  = sectionArray[indexPath.item]
-            let exestr = (model.name! as NSString).pathExtension
-            filesBottomVC.headerTitleLabel.text = model.name ?? ""
+            let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
+            let exestr = (name as NSString).pathExtension
+            filesBottomVC.headerTitleLabel.text = name
             filesBottomVC.headerImageView.image = UIImage.init(named: FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type!), format: FilesFormatType(rawValue: exestr)))
             filesBottomVC.filesModel = model
             self.present(bottomSheet, animated: true, completion: {
@@ -403,19 +419,21 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             guard let requestURL = downloadRequestURL(model:model as! EntriesModel) else {
                return
             }
-            let _ =  FilesRootViewController.downloadManager.download(requestURL, fileName: filesModel.name!, filesModel: filesModel, successHandler: { (task) in
+            let name = filesModel.backupRoot ? filesModel.bname ?? filesModel.name ?? "" : filesModel.name ?? ""
+            let _ =  FilesRootViewController.downloadManager.download(requestURL, fileName: name, filesModel: filesModel, successHandler: { (task) in
                 //                Message.message(text: LocalizedString(forKey: "\(filesModel.name!)离线可用完成"))
             }) { (task) in
-                Message.message(text: LocalizedString(forKey: "\(filesModel.name!)离线可用失败"))
+                Message.message(text: LocalizedString(forKey: "\(name)离线可用失败"))
             }
-            Message.message(text: LocalizedString(forKey: "正在使\(filesModel.name!)离线可用"))
+            Message.message(text: LocalizedString(forKey: "正在使\(name)离线可用"))
         }else{
-            if FilesRootViewController.downloadManager.cache.fileExists(fileName: filesModel.name!){
+            let name = filesModel.backupRoot ? filesModel.bname ?? filesModel.name ?? "" : filesModel.name ?? ""
+            if FilesRootViewController.downloadManager.cache.fileExists(fileName: name){
                 for task in FilesRootViewController.downloadManager.completedTasks{
-                    if task.fileName == filesModel.name{
+                    if task.fileName == name{
                         FilesRootViewController.downloadManager.remove(task.URLString, completely: true)
                         FilesRootViewController.downloadManager.cache.remove(task as! TRDownloadTask, completely: true)
-                        Message.message(text: LocalizedString(forKey: "\(filesModel.name!) 离线已不可用"))
+                        Message.message(text: LocalizedString(forKey: "\(name) 离线已不可用"))
                     }
                 }
             }
@@ -481,7 +499,8 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             return
         }
         let existModel = model as! EntriesModel
-        let names = existModel.name != nil ? [existModel.name!] : []
+        let name = existModel.backupRoot ? existModel.bname ?? existModel.name ?? "" : existModel.name ?? ""
+        let names = [name]
         TasksAPI.init(type: FilesTasksType.copy.rawValue, names: names, srcDrive:self.existDrive(), srcDir: self.existDir(), dstDrive:self.existDrive(), dstDir: self.existDir()).startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
                 let rootDic = response.value as! NSDictionary
@@ -599,15 +618,16 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             }
             
         case 3 :
+            let name = filesModel.backupRoot ? filesModel.bname ?? filesModel.name ?? "" : filesModel.name ?? ""
             if filesModel.type == FilesType.file.rawValue{
-                if FilesRootViewController.downloadManager.cache.fileExists(fileName: filesModel.name!){
+                if FilesRootViewController.downloadManager.cache.fileExists(fileName: name){
                     self.openForOtherApp(filesModel: filesModel)
                 }else{
                     self.downloadFile(model: filesModel) { [weak self](error, task) in
                         if error == nil{
                             self?.openForOtherApp(filesModel: filesModel)
                         }else{
-                            Message.message(text: LocalizedString(forKey: "\(filesModel.name ?? "文件")下载失败"))
+                            Message.message(text: LocalizedString(forKey: "\(name)下载失败"))
                         }
                     }
                 }
@@ -644,9 +664,14 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     }
     
     func openForOtherApp(filesModel:EntriesModel){
-        let documentController = UIDocumentInteractionController.init(url: URL.init(fileURLWithPath: FilesRootViewController.downloadManager.cache.filePtah(fileName: filesModel.name!)!))
-        documentController.delegate = self
-        documentController.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
+        let name = filesModel.backupRoot ? filesModel.bname ?? filesModel.name ?? "" : filesModel.name ?? ""
+        if let filePath = FilesRootViewController.downloadManager.cache.filePtah(fileName: name){
+            let documentController = UIDocumentInteractionController.init(url: URL.init(fileURLWithPath: filePath))
+            documentController.delegate = self
+            documentController.presentOpenInMenu(from: CGRect.zero, in: self.view, animated: true)
+        }else{
+            Message.message(text: LocalizedString(forKey: "无法打开"))
+        }
     }
     
     func copyToAction(model:Any?,isShare:Bool? = nil){
@@ -659,8 +684,8 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
 //        }
         
         filesRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
-       
         self.registerNotification()
+        filesRootViewController.isCopy = true
         filesRootViewController.selfState = .movecopy
         if let isShare = isShare{
             if isShare{
@@ -669,9 +694,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 filesRootViewController.selfState = .share
             }
         }
-        filesRootViewController.isCopy = true
-       
-        
+ 
         let navi = UINavigationController.init(rootViewController: filesRootViewController)
         self.present(navi, animated: true, completion: nil)
     }
@@ -680,7 +703,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         let type = model.type
         let typeString = type == FilesType.directory.rawValue ? LocalizedString(forKey: "folder") : LocalizedString(forKey: "file")
         let title = "\(LocalizedString(forKey: "Remove")) \(typeString)"
-        let name = model.name ?? ""
+        let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
         let messageString =  "\(name) \(LocalizedString(forKey: "will be moved"))"
         
         let alertController = MDCAlertController(title: title, message: messageString)
@@ -766,13 +789,13 @@ extension FilesRootViewController:DZNEmptyDataSetSource{
     }
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        let text = LocalizedString(forKey: "No Data")
+        let text = LocalizedString(forKey: "没有发现文件")
         let attributes = [NSAttributedStringKey.font : MiddleTitleFont,NSAttributedStringKey.foregroundColor : LightGrayColor]
         return NSAttributedString.init(string: text, attributes: attributes)
     }
     
     func buttonTitle(forEmptyDataSet scrollView: UIScrollView!, for state: UIControlState) -> NSAttributedString! {
-        let text = LocalizedString(forKey: "Reload data")
+        let text = LocalizedString(forKey: "重新加载")
         let attributes = [NSAttributedStringKey.font :MiddleTitleFont,NSAttributedStringKey.foregroundColor : COR1]
         return NSAttributedString.init(string: text, attributes: attributes)
     }
@@ -784,7 +807,7 @@ extension FilesRootViewController:DZNEmptyDataSetDelegate{
     }
     
     func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
-        if self.dataSource?.count == 0 && self.isRequesting == false{
+        if self.collcectionViewController.dataSource?.count == 0 && self.isRequesting == false{
             return true
         }else{
             return false

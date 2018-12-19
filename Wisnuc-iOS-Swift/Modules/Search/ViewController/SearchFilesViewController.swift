@@ -103,7 +103,27 @@ class SearchFilesViewController: BaseViewController {
         mainTableView.reloadEmptyDataSet()
         order = !isNilString(types) || !isNilString(sClass) ? nil : SearhOrder.find.rawValue
         var placesArray:Array<String> = Array.init()
-        placesArray.append(uuid!)
+        if let uuid = self.uuid{
+            placesArray.append(uuid)
+        }else{
+            if let userHome = AppUserService.currentUser?.userHome{
+                placesArray.append(userHome)
+            }
+            
+            if let shareSpace = AppUserService.currentUser?.shareSpace{
+                placesArray.append(shareSpace)
+            }
+            
+            if AppUserService.backupArray.count > 0{
+                let backupArray = AppUserService.backupArray.map({$0.uuid})
+                for uuid in backupArray{
+                    if let uuid = uuid{
+                        placesArray.append(uuid)
+                    }
+                }
+            }
+        }
+        
         self.placesArray = placesArray
         let places = placesArray.joined(separator: ".")
         let request = SearchAPI.init(order:order, places: places,class:sClass, types:types, name:text)
@@ -232,7 +252,7 @@ class SearchFilesViewController: BaseViewController {
             
             let localUrl = "\(String(describing: baseURL))/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))?name=\(String(describing: name))"
             
-            return localUrl.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+            return localUrl
         default:
             break
         }

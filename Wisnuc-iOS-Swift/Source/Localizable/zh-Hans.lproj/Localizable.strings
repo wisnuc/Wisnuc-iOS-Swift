@@ -46,6 +46,10 @@
 "Folder name" = "文件夹名";
 "Offline available" = "离线可用";
 "Open with other apps" = "使用其他应用打开";
+"will be moved" = "将被删除";
+"Modified time" = "修改时间";
+"Created time" = "创建时间";
+"Capacity" = "容量大小";
 
 //任务
 "Delete" = "删除";
@@ -53,7 +57,11 @@
 "Weak" = "弱";
 "Medium" = "中";
 "Strong" = "强";
+"Clear all task" = "清除所有任务";
+"Start all task" = "开始所有任务";
+"Suspend all task" = "暂停所有任务";
 
+"Transfer task" = "传输任务";
 
 //照片
 "Video" = "视频";

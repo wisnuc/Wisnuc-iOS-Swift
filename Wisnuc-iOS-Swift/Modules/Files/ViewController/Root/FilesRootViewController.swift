@@ -58,6 +58,7 @@ class FilesRootViewController: BaseViewController{
     var moveModelArray: Array<EntriesModel>?
     var isCopy:Bool = false
     var model:EntriesModel?
+    var backupRoot:Bool = false
     var cellStyle:CellStyle?{
         didSet{
             switch cellStyle {
@@ -125,18 +126,24 @@ class FilesRootViewController: BaseViewController{
     
     override init(style: NavigationStyle) {
         super.init(style: style)
+          prepareData(animation: true)
     }
     
     override init() {
         super.init()
-        selfState = .root
+        self.setState(state: .root)
+        prepareData(animation: true)
     }
     
-    init(driveUUID:String,directoryUUID:String,style: NavigationStyle) {
+    init(driveUUID:String,directoryUUID:String,style: NavigationStyle,backupRoot:Bool? = nil) {
         super.init(style: style)
-        selfState = .next
+        self.setState(state: .next)
         self.directoryUUID = directoryUUID
         self.driveUUID = driveUUID
+        if let backupRoot = backupRoot{
+           self.backupRoot = backupRoot
+        }
+        prepareData(animation: true)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -146,7 +153,6 @@ class FilesRootViewController: BaseViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = lightGrayBackgroudColor
-        prepareData(animation: true)
         prepareCollectionView()
         setCellStyle()
         switch selfState {
@@ -214,6 +220,10 @@ class FilesRootViewController: BaseViewController{
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
    
+    }
+    
+    func setState(state:RootControllerState){
+         selfState = state
     }
     
     func popBackRefresh(){
@@ -302,10 +312,14 @@ class FilesRootViewController: BaseViewController{
                     var finishArray = Array<Any>.init()
                     if let entries = model.entries{
                         for (_,value) in entries.enumerated(){
+                            var model = value
+                            if let backupRoot = self?.backupRoot{
+                                model.backupRoot = backupRoot
+                            }
                             if value.type == FilesType.directory.rawValue{
-                                filesArray.append(value)
+                                filesArray.append(model)
                             }else if value.type == FilesType.file.rawValue{
-                                directoryArray.append(value)
+                                directoryArray.append(model)
                             }
                         }
                     }
@@ -323,6 +337,7 @@ class FilesRootViewController: BaseViewController{
                         let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
                         self?.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
                         self?.isRequesting = false
+                        self?.collcectionViewController.collectionView?.reloadData()
                         self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
                     }
                 }catch{
@@ -648,10 +663,11 @@ class FilesRootViewController: BaseViewController{
             if let uuid = model.uuid,let hash = model.hash {
                 dic = [kRequestOpKey: FilesOptionType.remove.rawValue,"uuid":uuid,"hash":hash]
             }
-          
             do {
                 let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
-                formData.append(data, withName: model.name ?? LocalizedString(forKey: "未命名文件"))
+                let placeholder = LocalizedString(forKey: "未命名文件")
+                let name = model.backupRoot ? model.bname ?? model.name ?? placeholder : model.name ?? placeholder
+                formData.append(data, withName: name)
             }catch{
                 Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
             }
@@ -687,7 +703,9 @@ class FilesRootViewController: BaseViewController{
         let searchVC = SearchFilesViewController.init(style: NavigationStyle.white)
         searchVC.modalPresentationStyle = .custom
         searchVC.modalTransitionStyle = .crossDissolve
-        searchVC.uuid = directoryUUID
+        if self.selfState != .root{
+          searchVC.uuid = directoryUUID
+        }
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
         self.navigationController?.pushViewController(searchVC, animated: true)
@@ -725,14 +743,16 @@ class FilesRootViewController: BaseViewController{
             return nil
         }
         
-        guard let name = model.name else {
-            return nil
-        }
+        
+        let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
         
         switch AppNetworkService.networkState {
         case .normal?:
               let urlPath = "/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))"
-              let params = ["name":name]
+              var params = ["name":name]
+              if let hash = model.hash, model.bname != nil{
+                    params = ["hash":hash]
+              }
               let dataDic = [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
               guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
                 return nil
@@ -752,8 +772,10 @@ class FilesRootViewController: BaseViewController{
                 return nil
             }
            
-            let localUrl = "\(String(describing: baseURL))/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))?name=\(String(describing: name))"
-            
+            var localUrl = "\(String(describing: baseURL))/drives/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries/\(String(describing: uuid))?name=\(String(describing: name))"
+            if let hash = model.hash, model.bname != nil{
+                localUrl = "\(String(describing: baseURL))/drives/\(driveUUID)/dirs/\( directoryUUID)/entries/\(uuid)?hash=\(hash)"
+            }
             return localUrl.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         default:
             break
@@ -783,12 +805,28 @@ class FilesRootViewController: BaseViewController{
         TRManager.logLevel = .high
         for value in  FilesHelper.sharedInstance().selectFilesArray!{
             let model = value
-            let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
-            let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?name=\(String(describing: model.name!))"
-            let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?resource=\(resource.toBase64())&method=\(RequestMethodValue.GET)&name=\(model.name!)" : localUrl
-            urlStrings.append(requestURL)
-            nameStrings.append(model.name!)
+            if let  requestURL = self.downloadRequestURL(model: model){
+                
+            let placeholder = LocalizedString(forKey: "未命名文件")
+            let name = model.backupRoot ? model.bname ?? model.name ?? placeholder : model.name ?? placeholder
+//            let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
+//
+            var paramKey = "name"
+            var paramValue = name
+            if let hash = model.hash,model.bname != nil{
+                paramKey = "hash"
+                paramValue = hash
+            }
+                let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?\(paramKey)=\(paramValue)"
+                //            let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestUrlPathKey)=\(resource)&\(kRequestVerbKey)=\(RequestMethodValue.GET)&\(paramKey)=\(paramValue)" : localUrl
+                if AppNetworkService.networkState == .local{
+                    urlStrings.append(localUrl)
+                }else{
+                    urlStrings.append(requestURL)
+                }
+            nameStrings.append(name)
             fileModels.append(model)
+            }
         }
         if urlStrings.count > 0 {
             FilesRootViewController.downloadManager.multiDownload(urlStrings, fileNames: nameStrings, filesModels: fileModels)

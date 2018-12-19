@@ -1000,6 +1000,9 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
             //!!!!!: change Title
             titleLabel.text = "\(currentPage)/\(String(describing: (self.models?.count)!))"
             if m is WSAsset{
+                if self.mapView != nil{
+                    self.mapView =  nil
+                }
                 let assetModel = m as! WSAsset
                 if (assetModel.type == .GIF ||
                     assetModel.type == .LivePhoto ||
@@ -1074,10 +1077,13 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                     }
                 }
             }else{
-                if let fileName = (model as! EntriesModel).name{
-                    cell.titleLabel.text = fileName
+                if let fileModel = model as? EntriesModel{
+                    if let name = fileModel.name{
+                        cell.titleLabel.text = name
+                    }
                 }
             }
+            
             var infoArray:Array<String> = Array.init()
             if model is WSAsset{
                 if let exifDic = self.fetchAssetEXIFInfo(model: model as? WSAsset){
@@ -1103,14 +1109,15 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                     infoArray.append(size)
                 }
             }else{
-                let filesModel = model as! EntriesModel
-                if let pixelWidth = filesModel.metadata?.w,let pixelHeight = filesModel.metadata?.h{
-                    let pixel = "\(pixelWidth)x\(pixelHeight)"
-                    infoArray.append(pixel)
+                if  let filesModel = model as? EntriesModel{
+                    if let pixelWidth = filesModel.metadata?.w,let pixelHeight = filesModel.metadata?.h{
+                        let pixel = "\(pixelWidth)x\(pixelHeight)"
+                        infoArray.append(pixel)
+                    }
+                    let filesSize = filesModel.size
+                    let size = sizeString(filesSize ?? 0)
+                    infoArray.append(size)
                 }
-                let filesSize = filesModel.size
-                let size = sizeString(filesSize ?? 0)
-                infoArray.append(size)
             }
             cell.detailLabel.text = infoArray.joined(separator: "  ")
         case 2:
@@ -1257,7 +1264,6 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
         }
         return self.mapView
     }
-    
 }
 
 extension WSShowBigimgViewController:MKMapViewDelegate{

@@ -25,12 +25,13 @@ enum PhotoRootViewControllerState{
 }
 
 class PhotoRootViewController: BaseViewController {
-//    override func willDealloc() -> Bool {
-//        return false
-//    }
+    override func willDealloc() -> Bool {
+        return false
+    }
     weak var delegate:PhotoRootViewControllerDelegate?
     var driveUUID:String?
     var requset:BaseRequest?
+    var timer:Timer?
     var state:PhotoRootViewControllerState?{
         didSet{
             switch state {
@@ -93,7 +94,7 @@ class PhotoRootViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ActivityIndicator.startActivityIndicatorAnimation()
+//        ActivityIndicator.startActivityIndicatorAnimation()
         prepareCollectionView()
         prepareNavigationBar()
 //        prepareSearchBar()
@@ -103,8 +104,12 @@ class PhotoRootViewController: BaseViewController {
         self.photoCollcectionViewController.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
             self?.reloadAssetData()
         })
+        
+       
+//        self.timer?.fire()
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
         NotificationCenter.default.addObserver(self, selector: #selector(assetDidChangeHandle(_:)), name: NSNotification.Name.Change.AssetChangeNotiKey, object: nil)
+      
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -112,6 +117,10 @@ class PhotoRootViewController: BaseViewController {
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
         appBar.headerViewController.preferredStatusBarStyle = .default
         appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
+        self.timer = nil
+        self.timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
+        RunLoop.current.add(self.timer!, forMode: RunLoopMode.commonModes)
+        self.timer?.fire()
     }
     
     
@@ -119,6 +128,8 @@ class PhotoRootViewController: BaseViewController {
         super.viewDidDisappear(animated)
         defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: nil)
         self.requset?.cancel()
+        timer?.invalidate()
+        timer = nil
     }
     
     override func didReceiveMemoryWarning() {
@@ -129,22 +140,109 @@ class PhotoRootViewController: BaseViewController {
         
     }
     
+    
+    
     func reloadAssetData() {
+    
       let request = AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
+         self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
             if error == nil{
-                self?.localAssetDataSources = AppAssetService.allAssets!
+                if  let assets = AppAssetService.allAssets{
+                    self?.localAssetDataSources = assets
+                }
                 self?.addNetAssets(assetsArr: assetDataSource!)
+                    
                 self?.isSelectMode = self?.isSelectMode
              
             }else{
                 
             }
         
-            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
-           self?.photoCollcectionViewController.collectionView?.reloadData()
+//            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
+//           self?.photoCollcectionViewController.collectionView?.reloadData()
         }
-        
         self.requset = request
+    }
+    
+    
+    func pollingAssetData() {
+        let request = AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
+            if error == nil{
+             DispatchQueue.global(qos: .background).async {
+                if let assetDataSource = assetDataSource{
+//                    var replaceDataSource = assetDataSource
+//                    for asset in assetDataSource{
+//                        if let netAsset = self?.netAssetDataSource.first(where: {$0.name = asset.name && $0.uuid = asset.uuid && $0.fmhash = asset.fmhash && $0.pdir == asset.pdir && $0.mtime == asset.mtime && $0.metadata?.date == asset.metadata?.date}){
+//                            replaceDataSource.removeAll(where: {$0.name == asset.name && $0.uuid == asset.uuid && $0.fmhash == asset.fmhash && $0.pdir == asset.pdir && $0.mtime == asset.mtime && $0.metadata?.date == asset.metadata?.date})
+//                        }
+//                        self?.netAssetDataSource.
+//                    }
+                    
+                    let requsetHashArray = assetDataSource.map({$0.fmhash})
+                    guard let currentHashArray = self?.netAssetDataSource.map({$0.fmhash}) else {
+                        return
+                    }
+                    
+                    let set1:Set<String?> = Set(requsetHashArray)
+                    let set2:Set<String?> = Set(currentHashArray)
+
+                    let diffSet = set1.subtracting(set2)
+                    let resultHashArray = Array(diffSet)
+                    var assetArray = Array<WSAsset>.init()
+                    for hash in resultHashArray{
+                        if let asset = assetDataSource.first(where: {$0.fmhash == hash}){
+                            assetArray.append(asset)
+                        }
+                    }
+                    guard let allDataSource = self?.assetDataSources else{
+                        return
+                    }
+                    if assetArray.count > 0{
+                        print("😈😈😈😈😈😈😈😈😈😈")
+                        self?.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
+                        self?.sort(self?.merge() ?? Array<WSAsset>.init())
+//                        self?.addNetAssets(assetsArr: assetArray)
+//                        for asset in assetArray{
+//                            for (i,assetDataArray) in allDataSource.enumerated(){
+//                                 var replaceArray = assetDataArray
+//                                if Calendar.current.isDate(asset.createDateB!, inSameDayAs: (assetDataArray.first?.createDateB)!){
+//                                    replaceArray.append(asset)
+//                                    self?.assetDataSources[i] = replaceArray
+//                                }else{
+//
+//                                }
+//                            }
+//                        }
+                        
+//                        self?.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
+//                        self?.sort(self?.merge() ?? Array<WSAsset>.init())
+        
+//                        DispatchQueue.main.async {
+//                            self?.photoCollcectionViewController.dataSource = self?.assetDataSources
+//                            self?.photoCollcectionViewController.collectionView?.reloadData()
+//                        }
+                    }
+//                    let assetArray = Array<WSAsset>.init()
+//                    for asset in assetDataSource{
+//                        let array =  self?.netAssetDataSource.filter({$0.fmhash == asset.fmhash && $0.uuid == asset.fmhash && $0.pdir == asset.pdir && $0.name == asset.name && $0.mtime == asset.mtime})
+//                        assetArray.append(contentsOf: array)
+//                    }
+               
+                }
+                
+               
+                   }
+                self?.isSelectMode = self?.isSelectMode
+                
+            }else{
+                
+            }
+            
+//            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
+//            self?.photoCollcectionViewController.collectionView?.reloadData()
+        }
+        self.requset = request
+     
     }
     
     func setState(state:PhotoRootViewControllerState){
@@ -295,6 +393,10 @@ class PhotoRootViewController: BaseViewController {
 //        }
 //    }
     
+    @objc func timerAction(){
+        self.pollingAssetData()
+    }
+    
     func deleteSelectPhotos(photos:[WSAsset]){
         self.isSelectMode = false
         self.photoCollcectionViewController.isSelectMode = false
@@ -413,7 +515,9 @@ class PhotoRootViewController: BaseViewController {
     func setNotification(){
         defaultNotificationCenter().addObserver(forName: Notification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: nil, queue: nil) {  [weak self] (noti) in
             var allPhotos = Array<WSAsset>.init()
-            allPhotos.append(contentsOf: AppAssetService.allAssets!)
+            if  let assets = AppAssetService.allAssets{
+                 allPhotos.append(contentsOf: assets)
+            }
             self?.localAssetDataSources = allPhotos;
             self?.sort((self?.merge())!)
             self?.photoCollcectionViewController.dataSource  = self?.assetDataSources
@@ -442,14 +546,21 @@ class PhotoRootViewController: BaseViewController {
     
     func sort(_ assetsArray:Array<WSAsset>){
         autoreleasepool {
+            DispatchQueue.global(qos: .default).async {
+            let start = CFAbsoluteTimeGetCurrent();
             var array:Array<WSAsset>  = Array.init()
             array.append(contentsOf: assetsArray)
-            array.sort { (item1, item2) -> Bool in
-                let t1 = item1.createDate ?? Date.distantPast
-                let t2 = item2.createDate ?? Date.distantPast
-                return t1 > t2
-            }
-            sortedAssetsBackupArray = array
+                  let s = CFAbsoluteTimeGetCurrent();
+                array = array.filter({$0.createDate != nil})
+                array.sort(by: {$0.createDate!>$1.createDate!})
+//                array.sort(by: { (item1, item2) -> Bool in
+//                    return item1.createDate! >  item2.createDate!{
+////                        return t1 > t2
+//                })
+    
+                let l = CFAbsoluteTimeGetCurrent();
+                print("😆\(l - s)")
+            self.sortedAssetsBackupArray = array
             let timeArray:NSMutableArray = NSMutableArray.init()
             let photoGroupArray:NSMutableArray = NSMutableArray.init()
             if array.count>0 {
@@ -466,7 +577,7 @@ class PhotoRootViewController: BaseViewController {
                     return
                 }
                 var photoDateGroup2:NSMutableArray? = photoDateGroup1 //最近的一组
-                
+              
                 for i in 1..<array.count {
                     let photo1 =  array[i]
                     let photo2 = array[i-1]
@@ -484,17 +595,30 @@ class PhotoRootViewController: BaseViewController {
                         photoGroupArray.add(photoDateGroup2!)
                     }
                 }
-            }
-            
-            self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
-            self.photoCollcectionViewController.dataSource = self.assetDataSources
-            self.photoCollcectionViewController.sortedAssetsBackupArray = self.sortedAssetsBackupArray
-        }
 
+            }
+                let last = CFAbsoluteTimeGetCurrent()
+                print("🌶\(last - start)")
+                self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
+                
+                DispatchQueue.main.async {
+                    self.photoCollcectionViewController.dataSource = self.assetDataSources
+                    UIView.performWithoutAnimation({
+                        //刷新界面
+                        self.photoCollcectionViewController.collectionView?.reloadData()
+                    })
+                   
+//                    CATransaction.commit()
+                    self.photoCollcectionViewController.sortedAssetsBackupArray = self.sortedAssetsBackupArray
+                }
+            }
+        }
     }
     
     func merge()->Array<WSAsset> {
+    let start = CFAbsoluteTimeGetCurrent()
     let localHashs = NSMutableArray.init(capacity: 0)
+        
         for asset in self.localAssetDataSources {
             if !isNilString(asset.digest){
                 localHashs.add(asset.digest!)
@@ -512,6 +636,8 @@ class PhotoRootViewController: BaseViewController {
    
         let mergedAssets =  NSMutableArray.init(array: self.localAssetDataSources)
         mergedAssets.addObjects(from: netTmpArr as! [Any])
+        let last = CFAbsoluteTimeGetCurrent()
+        print("😈\(last - start)")
         return mergedAssets as! Array<WSAsset>
     }
     
@@ -519,7 +645,7 @@ class PhotoRootViewController: BaseViewController {
 //        DispatchQueue.global(qos: .default).async {
            self.netAssetDataSource = assetsArr
             self.sort(self.merge())
-            ActivityIndicator.stopActivityIndicatorAnimation()
+//            ActivityIndicator.stopActivityIndicatorAnimation()
 //            DispatchQueue.main.async {
         
 //            }
@@ -529,7 +655,7 @@ class PhotoRootViewController: BaseViewController {
     
     func localDataSouceSort() {
         self.sort(self.merge())
-        ActivityIndicator.stopActivityIndicatorAnimation()
+//        ActivityIndicator.stopActivityIndicatorAnimation()
     }
     
     func prepareCollectionView(){
@@ -668,5 +794,21 @@ extension PhotoRootViewController:FABBottomSheetDisplayVCDelegte{
 extension PhotoRootViewController:MDCBottomSheetControllerDelegate{
     func bottomSheetControllerDidDismissBottomSheet(_ controller: MDCBottomSheetController) {
         
+    }
+}
+
+extension Array {
+    var decompose : (head: Element, tail: [Element])? {
+        return (count > 0) ? (self[0], Array(self[1..<count])) : nil
+    }
+}
+
+func qsortDemo(input: [WSAsset]) -> [WSAsset] {
+    if let (pivot, rest) = input.decompose {
+        let lesser = rest.filter { $0.createDate! < pivot.createDate!  }//这里是小于于pivot基数的分成一个数组
+        let greater = rest.filter { $0.createDate! >= pivot.createDate!}//这里是大于等于pivot基数的分成一个数组
+        return qsortDemo(input: lesser) + [pivot] + qsortDemo(input: greater)//递归 拼接数组
+    } else {
+        return []
     }
 }

@@ -39,21 +39,25 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     var model:WSAsset?{
         didSet{
             switch model?.type {
-            case .Image?: break
-//                self.videoImageView.isHidden = true
-//                self.videoBottomView.isHidden = true
-//                self.timeLabel.isHidden = true
+            case .Image?:
+                self.videoImageView.isHidden = true
+                self.videoBottomView.isHidden = true
+                self.timeLabel.isHidden = true
             case .NetImage?:
-                self.videoImageView.isHidden = false
+                self.videoImageView.isHidden = true
                 self.liveImageView.isHidden = true
-                self.videoImageView.image = UIImage.init(named: "ic_cloud_white")
-                self.videoBottomView.isHidden = false
+//                self.videoImageView.image = UIImage.init(named: "ic_cloud_white")
+                self.videoBottomView.isHidden = true
                 self.timeLabel.isHidden = true
             case .Video?,.NetVideo?:
                 self.videoBottomView.isHidden = false
                 self.videoImageView.isHidden = false
                 self.liveImageView.isHidden = true
                 self.timeLabel.text = model?.duration
+                if let netAsset = model as? NetAsset{
+                    self.timeLabel.text = netAsset.duration
+                }
+                
                 self.timeLabel.isHidden = false
                 self.videoImageView.image = UIImage.init(named: "ic_play.png")
             case .LivePhoto? :
@@ -63,86 +67,81 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                 self.liveImageView.image = UIImage.init(named: "livePhoto")
                 self.timeLabel.text = "Live"
             case .GIF? :
-//                self.videoBottomView.isHidden = false
-//                self.videoImageView.isHidden = true
-//                self.liveImageView.isHidden = false
+                self.videoBottomView.isHidden = false
+                self.videoImageView.isHidden = true
+                self.liveImageView.isHidden = false
                 self.liveImageView.image = UIImage .init(named: "gif_photo")
                 self.timeLabel.text = ""
-            default: break
+            default:
                 self.videoImageView.isHidden = true
                 self.videoBottomView.isHidden = true
                 self.liveImageView.isHidden = true
             }
 
-//            if model?.type == .Image && model?.type != .NetImage {
-//                self.videoImageView.isHidden = true
-//                self.videoBottomView.isHidden = true
-//                self.liveImageView.isHidden = true
-//                self.videoBottomView.isHidden = false
-//                self.liveImageView.isHidden = true
-//                self.timeLabel.isHidden = true
-//            }
+            if model?.type == .Image && model?.type != .NetImage {
+                self.videoImageView.isHidden = true
+                self.videoBottomView.isHidden = true
+                self.liveImageView.isHidden = true
+                self.liveImageView.isHidden = true
+                self.timeLabel.isHidden = true
+            }
 //            if self.imageRequestID != nil {
 //                if self.imageRequestID! >= PHInvalidImageRequestID{
 //                PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
 //                }
 //            }
         
-            if model?.asset != nil {
-                self.identifier = model?.asset?.localIdentifier
-            }else if model is NetAsset{
-              self.identifier =  (model as! NetAsset).fmhash
-            }
+//            if model?.asset != nil {
+//                self.identifier = model?.asset?.localIdentifier
+//            }else if model is NetAsset{
+//              self.identifier =  (model as! NetAsset).fmhash
+//            }
 
-            let size = CGSize.init(width: self.width + 50 , height: self.height + 50 )
-            if let cellIndexPath = model?.cellIndexPath , let indexPath = self.indexPath{
-                if cellIndexPath != indexPath{
-                    return
-                }
-            }
-            if model?.asset != nil {
-                let asset = self.model?.asset
-                let contentMode = PHImageContentMode.default
-                self.imageManager.startCachingImages(for: [asset!], targetSize: size, contentMode: contentMode, options:self.imageRequestOptions)
-                self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: contentMode, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
-                    if  self?.imageView?.layer.contents != nil{
-                        self?.imageView?.layer.contents = nil
-                    }
-                    self?.imageView?.layer.contents = image?.cgImage
-                    self?.image = image
-                })
-            }else if model is NetAsset{
-                let netAsset = model as! NetAsset
-                if let requestUrl =  PhotoHelper.requestImageUrl(size: size,hash: netAsset.fmhash!){
-                    ImageCache.default.retrieveImage(forKey: requestUrl.absoluteString, options: nil) { [weak self]
-                        image, cacheType in
-                        if let image = image {
-                            self?.model?.image = image
-                            self?.imageView?.layer.contents = image.cgImage
-                            self?.image = image
-                            print("Get image \(image), cacheType: \(cacheType).")
-                            //In this code snippet, the `cacheType` is .disk
-                        } else {
-                            print("Not exist in cache.")
-                            _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image,reqUrl)  in
-                                if error == nil {
-                                    if let image =  image, let url = reqUrl {
-                                        ImageCache.default.store(image,
-                                                                 original: nil,
-                                                                 forKey: url.absoluteString,
-                                                                 toDisk: true)
-                                    }
-                                    self?.model?.image = image
-                                    self?.imageView?.layer.contents = image?.cgImage
-                                    self?.image = image
-                                }else{
-                                
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+//            let size = CGSize.init(width: self.width + 50 , height: self.height + 50 )
+//
+//            if model?.asset != nil {
+//                let asset = self.model?.asset
+//                let contentMode = PHImageContentMode.default
+//                self.imageManager.startCachingImages(for: [asset!], targetSize: size, contentMode: contentMode, options:self.imageRequestOptions)
+//                self.imageRequestID = self.imageManager.requestImage(for: (self.model?.asset!)!, targetSize: size, contentMode: contentMode, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
+//                    if  self?.imageView?.layer.contents != nil{
+//                        self?.imageView?.layer.contents = nil
+//                    }
+//                    self?.imageView?.layer.contents = image?.cgImage
+//                    self?.image = image
+//                })
+//            }else if model is NetAsset{
+//                let netAsset = model as! NetAsset
+//                if let requestUrl =  PhotoHelper.requestImageUrl(size: size,hash: netAsset.fmhash!){
+//                    ImageCache.default.retrieveImage(forKey: requestUrl.absoluteString, options: nil) { [weak self]
+//                        image, cacheType in
+//                        if let image = image {
+//                            self?.model?.image = image
+//                            self?.imageView?.layer.contents = image.cgImage
+//                            self?.image = image
+//                            print("Get image \(image), cacheType: \(cacheType).")
+//                            //In this code snippet, the `cacheType` is .disk
+//                        } else {
+//                            print("Not exist in cache.")
+//                            _ = AppNetworkService.getThumbnail(hash: netAsset.fmhash!,size:size) { [weak self]  (error, image,reqUrl)  in
+//                                if error == nil {
+//                                    if let image =  image, let url = reqUrl {
+//                                        ImageCache.default.store(image,
+//                                                                 original: nil,
+//                                                                 forKey: url.absoluteString,
+//                                                                 toDisk: true)
+//                                    }
+//                                    self?.model?.image = image
+//                                    self?.imageView?.layer.contents = image?.cgImage
+//                                    self?.image = image
+//                                }else{
+//
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
     }
     
@@ -153,8 +152,10 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        self.image = nil
         self.imageView?.layer.contents =  nil
         self.imageView?.layer.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5).cgColor
+        self.imageView?.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5)
 //        self.contentView.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5)
     }
     override init(frame: CGRect) {
@@ -181,7 +182,13 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.imageView?.backgroundColor = UIColor.colorFromRGB(rgbValue: 0xf5f5f5)
-        self.imageView?.frame = self.bounds
+        if  let isSelect = self.isSelect{
+            if !isSelect{
+             self.imageView?.frame = self.bounds
+            }
+        }
+//        self.imageView?.center = self.center
+//
 //        self.imageView?.snp.makeConstraints { [weak self] (make) in
 //            make.left.equalTo((self?.contentView.snp.left)!)
 //            make.right.equalTo((self?.contentView.snp.right)!)
@@ -212,7 +219,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         self.timeLabel.snp.makeConstraints { [weak self] (make) in
             make.left.equalTo((self?.videoBottomView.snp.left)!).offset(30)
             make.top.equalTo((self?.videoBottomView.snp.top)!).offset(4)
-            make.size.equalTo(CGSize(width:(self?.snp.width - 35)!, height: 12))
+            make.size.equalTo(CGSize(width:(self?.videoBottomView.width)! - 35, height: 12))
         }
 
         self.contentView.bringSubview(toFront: self.videoBottomView)
@@ -223,14 +230,16 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     func setImagView(indexPath:IndexPath){
         self.indexPath = indexPath
-        if let orginimageView = self.contentView.subviews.first(where: {$0.tag == Int(NSIntegerMax)}){
+        if let orginimageView = self.contentView.subviews.first(where: {$0.tag == Int(100010)}){
+            if self.imageView == nil{
             self.imageView = orginimageView
             self.imageView?.layer.contents =  nil
+            }
         }else{
             imageView = UIView.init(frame: self.bounds)
             imageView?.contentMode = UIViewContentMode.scaleAspectFill
             imageView?.clipsToBounds = true
-            imageView?.tag = Int(NSIntegerMax)
+            imageView?.tag = Int(100010)
             imageView?.backgroundColor = UIColor.colorFromRGB(rgbValue: 0xf5f5f5)
             if self.contentView.subviews.count>0{
                 self.contentView.insertSubview(imageView!, at: self.contentView.subviews.count-1)
@@ -244,9 +253,16 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         if self.contentView.subviews.count>1 {//如果是重用cell，则不用再添加button
             if self.contentView.subviews.contains(where: {$0 is UIButton}) {
                 if let button = self.contentView.subviews.first(where: {$0 is UIButton}) as? Button{
-                     self.btnSelect = button
-                    self.contentView.insertSubview(self.btnSelect!, at: 1)
+                    if self.btnSelect == nil{
+                        self.btnSelect = button
+                        self.contentView.insertSubview(self.btnSelect!, at: 1)
+                    }
                 }
+            }else{
+                self.btnSelect = UIButton.init()
+                self.btnSelect?.frame = CGRect.init(x: 5, y: 5, width: btnFrame, height: btnFrame)
+                self.btnSelect?.addTarget(self, action: #selector(btnSelectClick(_ :)), for: UIControlEvents.touchUpInside)
+                self.contentView.insertSubview(self.btnSelect!, at: 1)
             }
         } else {
             self.btnSelect = UIButton.init()
@@ -254,8 +270,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
             self.btnSelect?.addTarget(self, action: #selector(btnSelectClick(_ :)), for: UIControlEvents.touchUpInside)
             self.contentView.addSubview(self.btnSelect!)
         }
-       
-   
     }
     
     func setSelectAnimation(isSelect:Bool,animation:Bool){

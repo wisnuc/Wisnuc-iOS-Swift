@@ -338,7 +338,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 if let cell = cell as? FilesFolderCollectionViewCell {
                     cell.moreButton.isEnabled = isSelectModel! ? false : true
                     cell.moreButton.isHidden = self.state == .movecopy ? true : false
-                    cell.titleLabel.text = model.name
+                    cell.titleLabel.text = model.backupRoot ? model.bname ??  model.name ?? "" : model.name
                     cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
                         if let delegateOK = self?.delegate{
                             delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
@@ -355,7 +355,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                   
                     cell.isSelectModel = isSelectModel
                     if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                        if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))!{
+                        let name = model.backupRoot ? model.bname ??  model.name ?? "" : model.name ?? ""
+                        if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == name}))!{
                             cell.isSelect = true
                         }else{
                             cell.isSelect = false
@@ -369,7 +370,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 if let cell = cell as? FilesFileCollectionViewCell {
                     cell.moreButton.isEnabled = isSelectModel! ? false : true
                     cell.moreButton.isHidden = self.state == .movecopy ? true : false
-                    cell.titleLabel.text = model.name
+                    cell.titleLabel.text = model.backupRoot ? model.bname ??  model.name ?? "" : model.name
                     cell.cellCallBack = { [weak self] (callbackCell,callbackButton) in
                         if let delegateOK = self?.delegate{
                             delegateOK.cellButtonCallBack(callbackCell, callbackButton,indexPath)
@@ -395,8 +396,9 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     }
                     
                     cell.isSelectModel = isSelectModel
+                    let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
                     if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                       cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))! ? true : false
+                       cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == name}))! ? true : false
             
                     }
              
@@ -413,7 +415,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             if let cell = cell as? FilesListCollectionViewCell {
                 cell.moreButton.isEnabled = isSelectModel! ? false : true
                 cell.moreButton.isHidden = self.state == .movecopy ? true : false
-                cell.titleLabel.text = model.name
+                cell.titleLabel.text = model.backupRoot ? model.bname ??  model.name ?? "" : model.name
                 let time = model.mtime != nil ? TimeTools.timeString(TimeInterval(model.mtime!/1000),formatterString:"yyyy.MM.dd") : LocalizedString(forKey: "No time")
                 let size = model.size != nil ? sizeString(Int64(model.size!)) : ""
                 if let  mtime = time{
@@ -434,18 +436,35 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 }
                 
                 cell.isSelectModel = self.isSelectModel
+                let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
                 if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-                    cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))! ? true : false
+                    cell.isSelect = (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == name}))! ? true : false
                 }
-                
-                if !isNilString(model.name){
-                    let exestr = (model.name! as NSString).pathExtension
-                    
-                    let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: FilesFormatType(rawValue: exestr))
-
-                    cell.leftImageView.image = UIImage.init(named: imageName)
+                if model.backupRoot {
+                    if !isNilString(model.bname){
+                        let exestr = (model.bname! as NSString).pathExtension
+                        
+                        let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: self.metadataType(metadata: model.metadata))
+                        
+                        cell.leftImageView.image = UIImage.init(named: imageName)
+                    }else{
+                        if !isNilString(model.name){
+                            let exestr = (model.name! as NSString).pathExtension
+                            
+                            let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: self.metadataType(metadata: model.metadata))
+                            
+                            cell.leftImageView.image = UIImage.init(named: imageName)
+                        }
+                    }
+                }else{
+                    if !isNilString(model.name){
+                        let exestr = (model.name! as NSString).pathExtension
+                        
+                        let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: self.metadataType(metadata: model.metadata))
+                        
+                        cell.leftImageView.image = UIImage.init(named: imageName)
+                    }
                 }
-                
                 if  model.type == FilesType.file.rawValue{
                     if self.state == .movecopy {
                         cell.alpha = 0.5
@@ -473,7 +492,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
             }
         }else{
              return CGSize(width: __kWidth, height: CellSmallHeight)
-           
         }
         
     }
@@ -540,7 +558,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 case 0: buttonTitleText = "NAME"
                 case 1: buttonTitleText = "Modified time"
                 case 2: buttonTitleText = "Created time"
-                case 3: buttonTitleText = "Capacity time"
+                case 3: buttonTitleText = "Capacity"
                 default:
                     break
                 }
@@ -628,7 +646,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         var model  = sectionArray[indexPath.item]
         var exitSelectModel = false
           if (self.isSelectModel)! == NSNumber.init(value: FilesStatus.select.rawValue).boolValue {
-            if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == model.name}))!{
+            let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
+            if (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.uuid == model.uuid}))! && (FilesHelper.sharedInstance().selectFilesArray?.contains(where:{$0.name == name}))!{
                 FilesHelper.sharedInstance().removeSelectFiles(model: model)
                 if FilesHelper.sharedInstance().selectFilesArray?.count == 0{
                     exitSelectModel = true

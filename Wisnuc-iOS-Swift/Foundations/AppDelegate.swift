@@ -52,6 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     
     func initRootVC(){
         self.window?.rootViewController = nil
+        
         // 取出之前保存的版本号
         let userDefaults = UserDefaults.standard
         let appVersion = userDefaults.string(forKey:kappVersionKey)
@@ -64,13 +65,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             userDefaults.synchronize()
         } else{
             if AppUserService.isUserLogin && AppUserService.isStationSelected{
-                setAppNetworkState()
-                setRootViewController()
+                self.getAllAsset()
                 fetchCookie()
+                setAppNetworkState()
+                getAllBackup()
+                setRootViewController()
                 if let language = AppUserService.currentUser?.language?.intValue{
                     let languageType = LanguageType(number: language)
                     LocalizeHelper.instance.setLanguage(languageType.rawValue)
                 }
+                
+                
             }else{
 //                let type:LoginState?
 //                type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
@@ -86,6 +91,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     func registerWeChat(){
         WXApi.registerApp(KWxAppID)
     }
+    
+    func getAllBackup(){
+        AppNetworkService.getUserAllBackupDrive { [weak self](error,driveModels) in
+
+        }
+    }
+    func getAllAsset(){
+        var all:Array<WSAsset> = Array.init()
+        PHPhotoLibrary.getAllAsset { (result, assets) in
+            for (_,value) in assets.enumerated(){
+                let type = value.getWSAssetType()
+                let duration = value.getDurationString()
+                let asset = WSAsset.init(asset: value, type: type, duration: duration)
+                all.append(asset)
+            }
+        }
+        
+        AppAssetService.allAssets = all
+    }
+    
 
     func registerCoreDataContext(){
         
@@ -179,7 +204,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         if loginController != nil {
             loginController = nil
         }
-        MainServices().backupAseetsAction()
+//        MainServices().backupAseetsAction()
     }
     
     func setAppNetworkState(){

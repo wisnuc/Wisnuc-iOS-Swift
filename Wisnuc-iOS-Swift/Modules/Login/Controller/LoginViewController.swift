@@ -356,9 +356,8 @@ extension LoginViewController:UINavigationControllerDelegate{
 }
 
 extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
-    func loginFinish(userId: String, stationModel: Any) {
-         ActivityIndicator.startActivityIndicatorAnimation()
-        if let user = AppUserService.user(uuid: userId){
+    func loginFinish(user: User, stationModel: Any) {
+        ActivityIndicator.startActivityIndicatorAnimation()
             let model = stationModel as! StationsInfoModel
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
                 if error == nil && userData != nil{
@@ -388,11 +387,5 @@ extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
                     }
                 }
             }
-//
-        }else{
-            AppUserService.logoutUser()
-            Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
-            ActivityIndicator.stopActivityIndicatorAnimation()
-        }
     }
 }

@@ -422,6 +422,7 @@
 		1F537A0A2122816400A555C5 /* FilesDownloadAlertViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */; };
 		1F537A0D212412A600A555C5 /* SettingRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F537A0C212412A500A555C5 /* SettingRootViewController.swift */; };
 		1F537A102125150D00A555C5 /* AutoBackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F537A0F2125150D00A555C5 /* AutoBackupManager.swift */; };
+		1F5657FD21C7852200CBDAAA /* ImageAsyncTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F5657FC21C7852100CBDAAA /* ImageAsyncTask.swift */; };
 		1F5659F320D0E35B00D86FDB /* share@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F220D0E35900D86FDB /* share@3x.png */; };
 		1F5659F520D0E36200D86FDB /* share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F420D0E36200D86FDB /* share@2x.png */; };
 		1F5659F720D0E36B00D86FDB /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5659F620D0E36A00D86FDB /* share.png */; };
@@ -1505,6 +1506,7 @@
 		1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FilesDownloadAlertViewController.storyboard; sourceTree = "<group>"; };
 		1F537A0C212412A500A555C5 /* SettingRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingRootViewController.swift; sourceTree = "<group>"; };
 		1F537A0F2125150D00A555C5 /* AutoBackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoBackupManager.swift; sourceTree = "<group>"; };
+		1F5657FC21C7852100CBDAAA /* ImageAsyncTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAsyncTask.swift; sourceTree = "<group>"; };
 		1F5659F220D0E35900D86FDB /* share@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@3x.png"; sourceTree = "<group>"; };
 		1F5659F420D0E36200D86FDB /* share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share@2x.png"; sourceTree = "<group>"; };
 		1F5659F620D0E36A00D86FDB /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
@@ -4003,6 +4005,7 @@
 			isa = PBXGroup;
 			children = (
 				1F99863921B6802900174FCC /* PhotoHelper.swift */,
+				1F5657FC21C7852100CBDAAA /* ImageAsyncTask.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -7164,6 +7167,9 @@
 				"${BUILT_PRODUCTS_DIR}/BEMCheckBox/BEMCheckBox.framework",
 				"${BUILT_PRODUCTS_DIR}/CatalogByConvention/CatalogByConvention.framework",
 				"${BUILT_PRODUCTS_DIR}/DZNEmptyDataSet/DZNEmptyDataSet.framework",
+				"${BUILT_PRODUCTS_DIR}/FBAllocationTracker/FBAllocationTracker.framework",
+				"${BUILT_PRODUCTS_DIR}/FBMemoryProfiler/FBMemoryProfiler.framework",
+				"${BUILT_PRODUCTS_DIR}/FBRetainCycleDetector/FBRetainCycleDetector.framework",
 				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
@@ -7171,6 +7177,7 @@
 				"${BUILT_PRODUCTS_DIR}/MDFTextAccessibility/MDFTextAccessibility.framework",
 				"${BUILT_PRODUCTS_DIR}/MDRadialProgress/MDRadialProgress.framework",
 				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
+				"${BUILT_PRODUCTS_DIR}/MLeaksFinder/MLeaksFinder.framework",
 				"${BUILT_PRODUCTS_DIR}/MagicalRecord/MagicalRecord.framework",
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
 				"${BUILT_PRODUCTS_DIR}/Material/Material.framework",
@@ -7185,10 +7192,12 @@
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SAMKeychain/SAMKeychain.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SugarRecord/SugarRecord.framework",
 				"${BUILT_PRODUCTS_DIR}/YYKit/YYKit.framework",
+				"${BUILT_PRODUCTS_DIR}/ZFPlayer/ZFPlayer.framework",
 				"${BUILT_PRODUCTS_DIR}/zxcvbn-ios/zxcvbn_ios.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -7197,6 +7206,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BEMCheckBox.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CatalogByConvention.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DZNEmptyDataSet.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBAllocationTracker.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBMemoryProfiler.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBRetainCycleDetector.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
@@ -7204,6 +7216,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDFTextAccessibility.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MDRadialProgress.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MLeaksFinder.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MagicalRecord.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Material.framework",
@@ -7218,10 +7231,12 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SAMKeychain.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SugarRecord.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/YYKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZFPlayer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/zxcvbn_ios.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7363,6 +7378,7 @@
 				1F362F8621351FAC000B3384 /* LoginViewController.swift in Sources */,
 				1F16B35521AE322300178143 /* StationUserAPI.swift in Sources */,
 				1F16B35221AD1A0400178143 /* AvatarAPI.swift in Sources */,
+				1F5657FD21C7852200CBDAAA /* ImageAsyncTask.swift in Sources */,
 				1F307C7A20BFEBC900AE105C /* LocalUserAPI.swift in Sources */,
 				1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */,
 				1F16B37821B13C4900178143 /* DeviceHelper.swift in Sources */,

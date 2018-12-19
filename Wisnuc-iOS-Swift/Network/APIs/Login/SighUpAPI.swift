@@ -10,11 +10,11 @@ import UIKit
 import Alamofire
 class SighUpAPI: BaseRequest {
     var phoneNumber:String?
-    var code:String?
+    var ticket:String?
     var password:String?
-    init(phoneNumber:String,code:String,password:String) {
+    init(phoneNumber:String,ticket:String,password:String) {
         self.phoneNumber = phoneNumber
-        self.code = code
+        self.ticket = ticket
         self.password = password
     }
     
@@ -38,7 +38,7 @@ class SighUpAPI: BaseRequest {
     }
     
     override func requestParameters() -> RequestParameters? {
-        let requestParameters:RequestParameters = ["phone":self.phoneNumber!,"code":self.code!,"password":self.password! ,"clientId":getUniqueDevice() ?? "","type":"iOS"]
+        let requestParameters:RequestParameters = ["phone":self.phoneNumber!,"ticket":ticket!,"password":self.password! ,"clientId":getUniqueDevice() ?? "","type":"iOS"]
         return requestParameters
     }
 }
