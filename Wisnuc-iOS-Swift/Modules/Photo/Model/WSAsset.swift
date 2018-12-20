@@ -102,8 +102,21 @@ class WSAsset: NSObject,NSCopying{
         }
     
     }
-    
-    var duration:String?
+    var _duration:String?
+    var duration:String?{
+        get{
+            if self is NetAsset{
+                if let dur = (self as? NetAsset)?.metadata?.dur{
+                    _duration = "\(dur)"
+                }
+                return _duration
+            }
+            return _duration
+        }
+        set(newValue){
+            _duration = newValue
+        }
+    }
     
     
     var createDateB:Date?

@@ -42,40 +42,44 @@ class PhotoCollectionViewCell: UICollectionViewCell {
             case .Image?:
                 self.videoImageView.isHidden = true
                 self.videoBottomView.isHidden = true
-                self.timeLabel.isHidden = true
+                self.timeLabel = nil
             case .NetImage?:
                 self.videoImageView.isHidden = true
                 self.liveImageView.isHidden = true
 //                self.videoImageView.image = UIImage.init(named: "ic_cloud_white")
                 self.videoBottomView.isHidden = true
-                self.timeLabel.isHidden = true
+                self.timeLabel = nil
             case .Video?,.NetVideo?:
                 self.videoBottomView.isHidden = false
                 self.videoImageView.isHidden = false
                 self.liveImageView.isHidden = true
-                self.timeLabel.text = model?.duration
-                if let netAsset = model as? NetAsset{
-                    self.timeLabel.text = netAsset.duration
-                }
                 
-                self.timeLabel.isHidden = false
+                if let timeLabel = timeLabel{
+                    self.timeLabel?.text = model?.duration
+                    self.videoBottomView.addSubview(timeLabel)
+                }
                 self.videoImageView.image = UIImage.init(named: "ic_play.png")
             case .LivePhoto? :
                 self.videoBottomView.isHidden = false
                 self.videoImageView.isHidden = true
                 self.liveImageView.isHidden = false
                 self.liveImageView.image = UIImage.init(named: "livePhoto")
-                self.timeLabel.text = "Live"
+               
+                if let timeLabel = timeLabel{
+                    timeLabel.text = "Live"
+                    self.videoBottomView.addSubview(timeLabel)
+                }
             case .GIF? :
                 self.videoBottomView.isHidden = false
                 self.videoImageView.isHidden = true
                 self.liveImageView.isHidden = false
                 self.liveImageView.image = UIImage .init(named: "gif_photo")
-                self.timeLabel.text = ""
+                self.timeLabel = nil
             default:
                 self.videoImageView.isHidden = true
                 self.videoBottomView.isHidden = true
                 self.liveImageView.isHidden = true
+                self.timeLabel = nil
             }
 
             if model?.type == .Image && model?.type != .NetImage {
@@ -83,7 +87,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                 self.videoBottomView.isHidden = true
                 self.liveImageView.isHidden = true
                 self.liveImageView.isHidden = true
-                self.timeLabel.isHidden = true
+                self.timeLabel = nil
             }
 //            if self.imageRequestID != nil {
 //                if self.imageRequestID! >= PHInvalidImageRequestID{
@@ -156,6 +160,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         self.imageView?.layer.contents =  nil
         self.imageView?.layer.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5).cgColor
         self.imageView?.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5)
+        
 //        self.contentView.backgroundColor = UIColor.colorFromRGB(rgbValue:0xf5f5f5)
     }
     override init(frame: CGRect) {
@@ -171,7 +176,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         self.contentView.clipsToBounds = true
         self.videoBottomView.addSubview(videoImageView)
         self.videoBottomView.addSubview(liveImageView)
-        self.videoBottomView.addSubview(timeLabel)
+       
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -216,11 +221,11 @@ class PhotoCollectionViewCell: UICollectionViewCell {
             make.size.equalTo(CGSize(width: 16, height: 16))
         }
         
-        self.timeLabel.snp.makeConstraints { [weak self] (make) in
-            make.left.equalTo((self?.videoBottomView.snp.left)!).offset(30)
-            make.top.equalTo((self?.videoBottomView.snp.top)!).offset(4)
-            make.size.equalTo(CGSize(width:(self?.videoBottomView.width)! - 35, height: 12))
-        }
+//        self.timeLabel.snp.makeConstraints { [weak self] (make) in
+//            make.left.equalTo((self?.videoBottomView.snp.left)!).offset(30)
+//            make.top.equalTo((self?.videoBottomView.snp.top)!).offset(4)
+//            make.size.equalTo(CGSize(width:(self?.videoBottomView.width)! - 35, height: 12))
+//        }
 
         self.contentView.bringSubview(toFront: self.videoBottomView)
         if self.btnSelect != nil {
@@ -353,15 +358,24 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         return imgView
     }()
 
-
-    lazy var timeLabel: UILabel = {
-        let label = UILabel.init()
-        label.frame = CGRect(x: 30, y: 4, width: self.width - 35, height: 12)
-        label.textAlignment = NSTextAlignment.right
-        label.font = UIFont.systemFont(ofSize: 13)
-        label.textColor = UIColor.white
-        return label
-    }()
+    var _timeLabel:UILabel?
+    var timeLabel: UILabel?{
+        get{
+            if self._timeLabel == nil {
+                _timeLabel = UILabel.init()
+                _timeLabel?.frame = CGRect(x: 30, y: 4, width: self.width - 35, height: 12)
+                _timeLabel?.textAlignment = NSTextAlignment.right
+                _timeLabel?.font = UIFont.systemFont(ofSize: 13)
+                _timeLabel?.textColor = UIColor.white
+                return _timeLabel
+            }
+            return  _timeLabel
+        }
+        
+        set(newValue){
+            self._timeLabel = newValue
+        }
+    }
 
     lazy var topView: UIView = {
         let view = UIView.init()

@@ -67,6 +67,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     var dispose = DisposeBag()
     var isAnimation = false
     var isDecelerating = false
+    var driveUUID:String?
+    var dirUUID:String?
     
     var dataSource:Array<Any>?{
         didSet{
@@ -189,6 +191,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         let vc = WSShowBigimgViewController.init()
         vc.delegate = self
         vc.models = data
+        vc.drive = self.driveUUID
+        vc.dir = self.dirUUID
         vc.selectIndex = index
         if let cell = self.collectionView?.cellForItem(at: indexPath) as? FilesFileCollectionViewCell{
              vc.senderViewForAnimation = cell
@@ -442,15 +446,12 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 }
                 if model.backupRoot {
                     if !isNilString(model.bname){
-                        let exestr = (model.bname! as NSString).pathExtension
-                        
                         let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: self.metadataType(metadata: model.metadata))
                         
                         cell.leftImageView.image = UIImage.init(named: imageName)
                     }else{
                         if !isNilString(model.name){
-                            let exestr = (model.name! as NSString).pathExtension
-                            
+                          
                             let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: self.metadataType(metadata: model.metadata))
                             
                             cell.leftImageView.image = UIImage.init(named: imageName)
@@ -458,8 +459,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                     }
                 }else{
                     if !isNilString(model.name){
-                        let exestr = (model.name! as NSString).pathExtension
-                        
+    
                         let imageName = FileTools.switchFilesFormatType(type: FilesType(rawValue: model.type ?? FilesType.file.rawValue), format: self.metadataType(metadata: model.metadata))
                         
                         cell.leftImageView.image = UIImage.init(named: imageName)
@@ -736,7 +736,6 @@ class CommonCollectionReusableView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         convenientEntranceView.viewDelegate = self
-    
         self.addSubview(titleLabel)
         self.addSubview(rightButton)
     }
@@ -745,6 +744,10 @@ class CommonCollectionReusableView: UICollectionReusableView {
     override func layoutSubviews() {
         super.layoutSubviews()
        
+    }
+    
+    deinit {
+        print("dismiss")
     }
     
     func convenientHeaderStateAction(){
@@ -765,12 +768,13 @@ class CommonCollectionReusableView: UICollectionReusableView {
         return label
     }()
 
-    lazy var rightButton: SortButton = {
+    lazy var rightButton: SortButton = { [weak self] in
         let text = LocalizedString(forKey: "NAME")
         let labelwidth = labelWidthFrom(title: text, font: SmallTitleFont)
         let image = UIImage.init(named: "files_up.png")
         let buttonWidth = labelwidth + (image?.size.width)! + MarginsWidth - 4 + MarginsCloseWidth
-        let button = SortButton.init(frame: CGRect(x: self.width - MarginsWidth - buttonWidth, y: self.height/2 - MarginsWidth/2, width: buttonWidth, height: MarginsWidth + 4))
+        let button = SortButton.init(frame: CGRect(x: self?.width ?? __kWidth - MarginsWidth - buttonWidth, y: (self?.height)!/2 - MarginsWidth/2, width: buttonWidth, height: MarginsWidth + 4))
+        button.backgroundColor = .clear
         return button
     }()
     required init?(coder aDecoder: NSCoder) {
@@ -823,9 +827,11 @@ class SortButton: MDBaseButton{
             make.centerY.equalTo(self.snp.centerY)
             make.right.equalTo(self.snp.right).offset(MarginsCloseWidth/2)
         }
-        let mdcColorScheme = MDCButtonScheme.init()
-        MDCTextButtonThemer.applyScheme(mdcColorScheme, to: self)
         self.inkColor = COR1.withAlphaComponent(0.3)
+    }
+    
+    deinit {
+        print("dismiss")
     }
     
     lazy var leftImageView: UIImageView = {

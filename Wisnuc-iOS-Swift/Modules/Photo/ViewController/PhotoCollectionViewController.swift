@@ -24,9 +24,9 @@ private let headerHeight:CGFloat = 42
 }
 
 class PhotoCollectionViewController: UICollectionViewController {
-    override func willDealloc() -> Bool {
-        return false
-    }
+//    override func willDealloc() -> Bool {
+//        return false
+//    }
     weak var delegate:PhotoCollectionViewControllerDelegate?
     var isSelectMode:Bool?{
         didSet{
@@ -40,7 +40,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     lazy var imageRequestIDDataSources:Array<PHImageRequestID> = Array.init()
     lazy var imageDownloadTasks:Array<RetrieveImageDownloadTask> = Array.init()
     lazy var imageDiskTasks:Array<RetrieveImageDiskTask> = Array.init()
-    lazy var imageDic:[String:UIImage] = Dictionary.init()
+//    lazy var imageDic:[String:UIImage] = Dictionary.init()
     var drive:String?
     var currentItemSize:CGSize = CGSize.zero
     var showIndicator:Bool = true
@@ -75,6 +75,12 @@ class PhotoCollectionViewController: UICollectionViewController {
 //         appBar.appBarViewController.headerView.trackingScrollView = nil
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        clearChache()
+        // Dispose of any resources that can be recreated.
+    }
+    
     override func viewDidLoad() {
        super.viewDidLoad()
        imageDownloadTasks.removeAll()
@@ -91,18 +97,23 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        clearChache()
+    }
+    
+    func clearChache(){
         let cache = KingfisherManager.shared.cache
         cache.clearMemoryCache()
         for imageRequestID in imageRequestIDDataSources{
             PHCachingImageManager.default().cancelImageRequest(imageRequestID)
         }
-         imageRequestIDDataSources.removeAll()
+        imageRequestIDDataSources.removeAll()
         
         imageDownloadTasks.map({$0.cancel()})
-//        imageDownloadTasks.removeAll()
+        //        imageDownloadTasks.removeAll()
         imageDiskTasks.map({$0.cancel()})
-//        imageDiskTasks.removeAll()
+        //        imageDiskTasks.removeAll()
         ImageCache.default.clearMemoryCache()
+        YYImageCache.shared().memoryCache.removeAllObjects()
     }
     
     func dataSourceHasValue(){
@@ -250,11 +261,6 @@ class PhotoCollectionViewController: UICollectionViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         updateIndicatorFrame()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func initGuestrue(){
@@ -602,7 +608,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         cell.setImagView(indexPath:indexPath)
         cell.setSelectButton(indexPath: indexPath)
         cell.isSelectMode = self.isSelectMode
-        cell.imageView?.layer.contents =  imageDic["\(indexPath.section)_\(indexPath.row)"]?.cgImage
+//        cell.imageView?.layer.contents =  imageDic["\(indexPath.section)_\(indexPath.row)"]?.cgImage
         cell.setSelectAnimation(isSelect: self.isSelectMode ?? false ? self.choosePhotos.contains(model) : false, animation: false)
 //        if let image = model.image{
 //            cell.image = image
@@ -611,6 +617,10 @@ class PhotoCollectionViewController: UICollectionViewController {
 //            cell.imageView?.layer.contents = image.cgImage
 //        }
         cell.model = model
+        cell.imageView?.layer.contents = nil
+        if indexPath == cell.model?.cellIndexPath {
+            cell.imageView?.layer.contents = model.image
+        }
 //        ImageAsyncTaskObject.setCoverImage(model: model, indexPath: indexPath, delegate: self)
         let tagString = "\(indexPath.section)\(indexPath.item)"
         cell.tag = (NSNumber.init(string: tagString)?.intValue)!
@@ -629,79 +639,106 @@ class PhotoCollectionViewController: UICollectionViewController {
             let contentMode = PHImageContentMode.default
             self.imageManager.startCachingImages(for: [asset!], targetSize: size, contentMode: contentMode, options:self.imageRequestOptions)
             let imageRequestID = self.imageManager.requestImage(for: (asset)!, targetSize: size, contentMode: contentMode, options: self.imageRequestOptions, resultHandler: { (image, info) in
-//                if  cell.imageView?.layer.contents != nil{
-//                    cell.imageView?.layer.contents = nil
-//                }
                 if cell.indexPath == model.indexPath{
-//                    if let cell = self.collectionView?.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
+                cell.imageView?.layer.contents = nil
                 cell.imageView?.layer.contents = image?.cgImage
                 cell.image = image
                 cell.model?.image = image
-//                    }
                 }
             })
             imageRequestIDDataSources.append(imageRequestID)
+            if cell.indexPath != model.indexPath{
+                return
+            }
         }else if model is NetAsset{
-//            if let hash = (model as? NetAsset)?.fmhash{
-//                DispatchQueue.global(qos: .default).async {
-//                YYImageCache.shared().getImageData(forKey: hash, with: { (data) in
-//                    if let data = data{
-//                        if cell.indexPath == model.indexPath{
-//                            if let image = UIImage.init(data: data){
-//                                cell.image = image
-//                                cell.model?.image = image
-//                                //                        DispatchQueue.main.async {
-//                                cell.imageView?.layer.contents = image.cgImage
-//                            }
-//                        }
-//                    }
-//                })
-//                }
-//            }
-            let netAsset = model as! NetAsset
-               DispatchQueue.global(qos: .default).async {
-                if let image =  YYImageCache.shared().getImageForKey("\(netAsset.fmhash!)_big"){
-                         if cell.indexPath == model.indexPath{
-                                cell.model?.image = image
-                             DispatchQueue.main.async {
-                                cell.imageView?.layer.contents = image.cgImage
-                            }
-                                cell.image = image
-//                                print("Get image \(image), cacheType: \(cacheType).")
-//                            }
-                        }
-                        //In this code snippet, the `cacheType` is .disk
-                    } else {
-                        print("Not exist in cache.")
-             
-                        let _ = AppNetworkService.getThumbnailx(hash: netAsset.fmhash!,size:size) { (error, image,reqUrl)  in
-                            if error == nil {
-                                if let image =  image, let url = reqUrl {
-//                                    ImageCache.default.store(image,
-//                                                             original: nil,
-//                                                             forKey: requestUrl.absoluteString,
-//                                                             toDisk: true)
+            if cell.indexPath != model.indexPath{
+                return
+            }
+            guard let hash = (model as? NetAsset)?.fmhash else{
+                return
+            }
+            if let image = YYImageCache.shared().getImageForKey(hash){
+                if cell.indexPath == model.indexPath{
+                    cell.imageView?.layer.contents = image.cgImage
+                    YYImageCache.shared().getImageForKey("\(hash)_big", with: .disk) { (image, type) in
+                        if let image = image{
+                            cell.imageView?.layer.contents = nil
+                            cell.image = image
+                            cell.model?.image = image
+                            cell.imageView?.layer.contents = image.cgImage
+                        }else{
+                            let task = self.fetchNormalPic(hash: hash, callback: { (error, image, url) in
+                                if cell.indexPath == model.indexPath{
+                                    cell.imageView?.layer.contents = nil
+                                    cell.image = image
+                                    cell.model?.image = image
+                                    cell.imageView?.layer.contents = image?.cgImage
                                 }
-                                if let indexPath = model.indexPath{
-                                    if let cell = self.collectionView?.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
-                                        DispatchQueue.main.async {
-                                            cell.model?.image = image
-                                            cell.imageView?.layer.contents = image?.cgImage
-                                            cell.image = image
+                            })
+                            if let task = task{
+                                self.imageDownloadTasks.append(task)
+                            }
+                        }
+                    }
+                }
+                  }else{
+                let queue = DispatchQueue.init(label: "download", qos: DispatchQoS.userInitiated, attributes: DispatchQueue.Attributes.concurrent, target: nil)
+                queue.async(execute: {
+            
+//                YYImageCache.shared().getImageData(forKey: hash, with: { (data) in
+                  
+                        if let image =  YYImageCache.shared().getImageForKey("\(hash)_big"){
+                            if cell.indexPath == model.indexPath{
+                                DispatchQueue.main.async {
+                                    cell.imageView?.layer.contents = nil
+                                    cell.imageView?.layer.contents = image.cgImage
+                                }
+                            }
+                            //In this code snippet, the `cacheType` is .disk
+                        } else {
+                            print("Not exist in cache.")
+                            if cell.indexPath != model.indexPath{
+                                return
+                            }
+                            let task = AppNetworkService.getThumbnail(hash: hash,size:size) { (error, image,reqUrl)  in
+                                if error == nil {
+                                    if let indexPath = model.indexPath{
+                                        if let cell = self.collectionView?.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
+                                            DispatchQueue.main.async {
+                                                 cell.imageView?.layer.contents = nil
+                                                cell.model?.image = image
+                                                cell.imageView?.layer.contents = image?.cgImage
+                                                cell.image = image
+                                            }
                                         }
                                     }
                                 }
                             }
+//                            if let task = task{
+//                                self.imageDownloadTasks.append(task)
+//                            }
                         }
-                        //                        if let task = task{
-                        //                            self.imageDownloadTasks.append(task)
-                        //                        }
-                    }
-        }
-//                if  let imageDiskTask = imageDiskTask{
-//                    imageDiskTasks.append(imageDiskTask)
-//                }
+                    
+//                })
+                 })
             }
+        }
+    }
+    
+    func fetchSmallPic(hash:String,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->RetrieveImageDownloadTask?{
+        let size = CGSize(width: 64, height: 64)
+        let task = AppNetworkService.getThumbnail(hash: hash,size:size) { (error, downloadImage,reqUrl)  in
+            callback(error,downloadImage,reqUrl)
+        }
+        return task
+    }
+    
+    func fetchNormalPic(hash:String,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->RetrieveImageDownloadTask?{
+        let size = CGSize(width: 186, height: 186)
+        let task = AppNetworkService.getThumbnail(hash: hash,size:size) { (error, downloadImage,reqUrl)  in
+            callback(error,downloadImage,reqUrl)
+        }
+        return task
     }
     
     lazy var imageManager = PHCachingImageManager.init()
@@ -731,12 +768,11 @@ class PhotoCollectionViewController: UICollectionViewController {
          let model = dataSource[indexPath.section][indexPath.row]
         
         if let cell = cell as? PhotoCollectionViewCell{
-            cell.imageView?.layer.contents =  imageDic["\(indexPath.section)_\(indexPath.row)"]?.cgImage
+//            cell.imageView?.layer.contents =  imageDic["\(indexPath.section)_\(indexPath.row)"]?.cgImage
             self.setCellImage(model: model,cell:cell)
         }
     }
     
-
 
     // MARK: UICollectionViewDelegate
     
@@ -779,6 +815,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         return itemSize
     }
     
+
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let dataSource = self.dataSource else {
             return
@@ -808,6 +845,37 @@ class PhotoCollectionViewController: UICollectionViewController {
     var isDecelerating = false
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         isDecelerating = true
+//        if let cells = self.collectionView?.visibleCells{
+//            autoreleasepool {
+//               let queue = DispatchQueue.init(label: "scrollingDowload", qos: .default)
+//                queue.async(execute: {
+//                    for cell in cells{
+//                         DispatchQueue.main.async {
+//                            if let indexPath = self.collectionView?.indexPath(for: cell){
+//                                let model = self.dataSource?[indexPath.section][indexPath.row]
+//                                let queue = DispatchQueue.init(label: "scrollingDowloading", qos: .default)
+//                                queue.async(execute: {
+//                                    if let hash = (model as? NetAsset)?.fmhash {
+//                                        let index = indexPath
+//                                        self.fetchSmallPic(hash: hash, callback: { (error, image, url) in
+//                                            if let resultCell = cell as? PhotoCollectionViewCell{
+//                                                if let image = image,index == indexPath{
+//                                                    DispatchQueue.main.async {
+//                                                        resultCell.imageView?.layer.contents = image.cgImage
+//                                                    }
+//                                                }
+//                                            }
+//                                        })
+//                                    }
+//                                })
+//                            }
+//                         }
+//                    }
+//                })
+//
+//            }
+//        }
+//
         
         if self.showIndicator {
             if self.collectionView?.indicator == nil {
@@ -859,7 +927,46 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         self.hiddenIndicator()
+        
     }
+    
+//    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+//         loadImageForVisibleCells()
+//    }
+//
+//    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+//        loadImageForVisibleCells()
+//    }
+//
+//    func loadImageForVisibleCells() {
+//        let visibleCells = collectionView?.visibleCells
+//        guard let collectionViewVisibleCells = visibleCells else{
+//            return
+//        }
+//        autoreleasepool {
+//            let queue = DispatchQueue.init(label: "scrollingDowload", qos: .default)
+//            queue.async(execute: {
+//                for visible in collectionViewVisibleCells {
+//                    guard let cell = visible as? PhotoCollectionViewCell else{
+//                        return
+//                    }
+//                    if let indexPath = self.collectionView?.indexPath(for: cell) {
+//                        guard let model = self.dataSource?[indexPath.section][indexPath.row] else{
+//                            return
+//                        }
+//
+//                        if let hash = (model as? NetAsset)?.fmhash {
+//                            self.fetchSmallPic(hash: hash) { (error, image, url) in
+//                                cell.imageView?.layer.contents = image?.cgImage
+//                            }
+//                        }
+//                    }
+//                }
+//            })
+//        }
+//    }
+//
+
 
     lazy var choosePhotos:Array<WSAsset> = {
         let array = Array<WSAsset>.init()
@@ -877,7 +984,7 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
-            guard let dataSource = self.dataSource else {
+            guard var dataSource = self.dataSource else {
                 return
             }
             if indexPath.section >= dataSource.count{
@@ -890,22 +997,32 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
             
            
 //            if let cell = collectionView.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
-            let model = dataSource[indexPath.section][indexPath.row]
+                let model = dataSource[indexPath.section][indexPath.row]
                 model.indexPath = indexPath
                 if let hash = (model as? NetAsset)?.fmhash{
-                    DispatchQueue.global(qos: .background).async {
-                    YYImageCache.shared().getImageData(forKey: hash, with: { (data) in
+                    let queue = DispatchQueue.init(label: "Prefetching", qos: .background)
+                        queue.async {
+                        YYImageCache.shared().getImageData(forKey: hash, with: { (data) in
                             if let data = data{
-//                                if indexPath == model.indexPath{
-                                    if let image = UIImage.init(data: data){
-                                        self.imageDic["\(indexPath.section)_\(indexPath.row)"] = image
-//                                        cell.image = image
-//                                        cell.model?.image = image
-//                                        cell.imageView?.layer.contents = image.cgImage
-                                    }
+                                //                                if indexPath == model.indexPath{
+                                if let image = UIImage.init(data: data){
+                                    //                                        self.imageDic["\(indexPath.section)_\(indexPath.row)"] = image
+//                                    cell.image = image
+                                    model.image = image
+                                   dataSource[indexPath.section][indexPath.row] = model
+//                                    cell.imageView?.layer.contents = image.cgImage
                                 }
-//
-                    })
+                            }else{
+                                self.fetchSmallPic(hash: hash, callback: { (error, image, url) in
+                                    if let image = image{
+                        
+                                        model.image = image
+                                        dataSource[indexPath.section][indexPath.row] = model
+                                    }
+                                })
+                            }
+                        })
+//                    }
                 }
             }
 //                self.setCellImage(model: model,cell:cell)

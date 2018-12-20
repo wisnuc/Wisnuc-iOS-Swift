@@ -39,6 +39,7 @@ class NetAsset: WSAsset {
         self.bctime = dict.object(forKey: "bctime") as? Int64
         self.bmtime = dict.object(forKey: "bmtime") as? Int64
         self.otime = dict.object(forKey: "otime") as? Int64
+        
         if let metadataDic = dict.object(forKey: "metadata") as? NSDictionary{
             let metadata = HJMetadata.init(dict:metadataDic)
             self.metadata = metadata
@@ -118,6 +119,7 @@ class HJMetadata:NSObject {
     var disabled:Bool?
     var status:String?
     var lastBackupTime:Int64?
+    var dur:Double?
     
     init(dict:NSDictionary) {
         self.date = dict.object(forKey: "date") as? String
@@ -131,13 +133,14 @@ class HJMetadata:NSObject {
         self.disabled = dict.object(forKey: "disabled") as? Bool
         self.status = dict.object(forKey: "status") as? String
         self.lastBackupTime = dict.object(forKey: "lastBackupTime") as? Int64
+        self.dur = dict.object(forKey: "dur") as? Double
     }
     
     override var hash: Int{//hashValue的实现
-        return self.date.hashValue ^ self.h.hashValue ^ self.w.hashValue ^ self.make.hashValue ^ self.model.hashValue ^ self.datec.hashValue ^ self.type.hashValue ^ self.localPath.hashValue ^ self.disabled.hashValue ^ self.status.hashValue ^ self.lastBackupTime.hashValue
+        return self.date.hashValue ^ self.h.hashValue ^ self.w.hashValue ^ self.make.hashValue ^ self.model.hashValue ^ self.datec.hashValue ^ self.type.hashValue ^ self.localPath.hashValue ^ self.disabled.hashValue ^ self.status.hashValue ^ self.lastBackupTime.hashValue ^ self.dur.hashValue
     }
     
     static func ==(m1:HJMetadata,m2:HJMetadata) -> Bool{
-        return m1.date == m2.date && m1.h == m2.h && m1.w == m2.w && m1.make == m2.make && m1.model == m2.model && m1.type == m2.type && m1.datec == m2.datec && m1.localPath == m2.localPath && m1.disabled == m2.disabled && m1.status == m2.status && m1.lastBackupTime == m2.lastBackupTime
+        return m1.date == m2.date && m1.h == m2.h && m1.w == m2.w && m1.make == m2.make && m1.model == m2.model && m1.type == m2.type && m1.datec == m2.datec && m1.localPath == m2.localPath && m1.disabled == m2.disabled && m1.status == m2.status && m1.lastBackupTime == m2.lastBackupTime && m1.dur == m2.dur
     }
 }

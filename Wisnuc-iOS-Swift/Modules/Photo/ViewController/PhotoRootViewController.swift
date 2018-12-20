@@ -26,9 +26,9 @@ enum PhotoRootViewControllerState{
 }
 
 class PhotoRootViewController: BaseViewController {
-    override func willDealloc() -> Bool {
-        return false
-    }
+//    override func willDealloc() -> Bool {
+//        return false
+//    }
     weak var delegate:PhotoRootViewControllerDelegate?
     var driveUUID:String?
     var requset:BaseRequest?
@@ -154,28 +154,67 @@ class PhotoRootViewController: BaseViewController {
         
     }
     
+    func refreshingVideoAssetData(){
+        DispatchQueue.global(qos: .background).async {
+            PhotoHelper.searchAny(sClass:SclassType.video.rawValue, complete: { (videoAssets, error) in
+                self.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
+                if error == nil{
+                    if let videoAssets = videoAssets{
+                        self.netAssetDataSource = videoAssets
+                        if let  allAssets = AppAssetService.allVideoAssets{
+                            self.localAssetDataSources = allAssets
+                        }
+                        
+                        self.sort(self.merge() )
+                    }
+                }
+            })
+        }
+    }
     
-    
-    func reloadAssetData() {
-    
-      let request = AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
-         self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
+    func  refreshingAssetData(){
+        let request = AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
+            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
             if error == nil{
                 if  let assets = AppAssetService.allAssets{
                     self?.localAssetDataSources = assets
                 }
                 self?.addNetAssets(assetsArr: assetDataSource!)
-                    
+                
                 self?.isSelectMode = self?.isSelectMode
-             
+                
             }else{
                 
             }
-        
-//            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
-//           self?.photoCollcectionViewController.collectionView?.reloadData()
         }
         self.requset = request
+    }
+    
+    func refreshingBackUpAssetData(){
+        guard let uuid = self.backupDriveUUID else {
+            return
+        }
+        let types = kMediaTypes.joined(separator: ".")
+        PhotoHelper.searchAny(places: uuid, types: types) {(assets, error) in
+            self.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
+            if  error == nil && assets != nil{
+                if let backUpAssets = assets{
+                    self.netAssetDataSource = backUpAssets
+                    self.sort(self.merge() )
+                }
+            }
+        }
+    }
+    
+    func reloadAssetData() {
+        if self.video{
+            refreshingVideoAssetData()
+        }else if self.backupDriveUUID != nil{
+            refreshingBackUpAssetData()
+        }else{
+            refreshingAssetData()
+        }
+      
     }
     
     func reloadAllAssetData(){
@@ -490,7 +529,7 @@ class PhotoRootViewController: BaseViewController {
 //    }
     
     @objc func timerAction(){
-        self.pollingAssetData()
+//        self.pollingAssetData()
     }
     
     func deleteSelectPhotos(photos:[WSAsset]){
@@ -776,7 +815,7 @@ class PhotoRootViewController: BaseViewController {
         searchBar.textField.delegate = self
     }
     
-    lazy var photoCollcectionViewController : PhotoCollectionViewController = {
+    lazy var photoCollcectionViewController : PhotoCollectionViewController = { [weak self] in
         let layout = MDCCollectionViewFlowLayout()
        //     layout.itemSize = CGSize(width: size.width, height:CellHeight)
         let collectVC = PhotoCollectionViewController.init(collectionViewLayout: layout)

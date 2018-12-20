@@ -387,10 +387,10 @@ extension FilesRootViewController:SearchMoreBottomSheetVCDelegate{
             self.sequenceButtonTap(nil)
         case 1:
             self.isSelectModel = true
-            self.collcectionViewController.isSelectModel = self.isSelectModel
+            self.collcectionViewController?.isSelectModel = self.isSelectModel
         case 2:
             self.isSelectModel = true
-            self.collcectionViewController.isSelectModel = self.isSelectModel
+            self.collcectionViewController?.isSelectModel = self.isSelectModel
             FilesHelper.sharedInstance().addAllSelectFiles(array: self.originDataSource ?? Array<EntriesModel>.init())
             self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
         default:break
@@ -807,7 +807,7 @@ extension FilesRootViewController:DZNEmptyDataSetDelegate{
     }
     
     func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
-        if self.collcectionViewController.dataSource?.count == 0 && self.isRequesting == false{
+        if self.collcectionViewController?.dataSource?.count == 0 && self.isRequesting == false{
             return true
         }else{
             return false

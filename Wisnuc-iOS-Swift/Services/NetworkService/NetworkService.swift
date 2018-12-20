@@ -352,7 +352,7 @@ class NetworkService: NSObject {
         }
 //        else{
 //
-//            callback(BaseError(localizedDescription: ErrorLocalizedDescription.Backup.BackupDirNotFound, code: ErrorCode.Backup.BackupDirNotFound), nil)
+//            callback(BaseError(localizedDescription: ErrorLocalizedDescription.Backup.BackupD  irNotFound, code: ErrorCode.Backup.BackupDirNotFound), nil)
 //        }
        
 //    FLGetDriveDirAPI *api = [FLGetDriveDirAPI apiWithDrive:WB_UserService.currentUser.userHome dir:WB_UserService.currentUser.backUpDir];
@@ -584,14 +584,14 @@ class NetworkService: NSObject {
             return req
         }
         ImageDownloader.default.downloadTimeout = 20000
-        ImageCache.default.maxMemoryCost = 20
-        let task =  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier),.forceRefresh,.backgroundDecode], progressBlock: nil) { (image, error, reqUrl, data) in
+        ImageCache.default.maxMemoryCost = 20 * 100
+        let task =  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier),.originalCache(ImageCache.default),.backgroundDecode], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl ,let data = data{
-                    ImageCache.default.store(image,
-                                             original: data,
-                                             forKey: url.absoluteString,
-                                             toDisk: true)
+//                    ImageCache.default.store(image,
+//                                             original: data,
+//                                             forKey: url.absoluteString,
+//                                             toDisk: true)
                       callback(nil, image,reqUrl)
                 }
               
@@ -755,10 +755,10 @@ class NetworkService: NSObject {
         return imageDownloader.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl {
-//                    ImageCache.default.store(image,
-//                                             original: nil,
-//                                             forKey: url.absoluteString,
-//                                             toDisk: true)
+                    ImageCache.default.store(image,
+                                             original: nil,
+                                             forKey: url.absoluteString,
+                                             toDisk: true)
                 }
                 callback(nil, image)
             }else{

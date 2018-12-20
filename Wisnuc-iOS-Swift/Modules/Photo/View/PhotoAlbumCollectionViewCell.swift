@@ -33,49 +33,56 @@ class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     }
     
     func setCoverImage(indexPath:IndexPath,hash:String? = nil,asset:PHAsset? = nil){
-//        if indexPath != self.indexPath{
-//            return
-//        }
+       
 
         let size = CGSize.init(width: 200, height: 200)
         if let hash = hash{
-            loadNetCover(hash,size)
+            loadNetCover(hash,size,indexPath)
             return
         }
         
         if let asset = asset{
-            loadLocalCover(asset,size)
+            loadLocalCover(asset,size,indexPath)
             return
         }
     }
     
-    func loadLocalCover(_ asset:PHAsset,_ size:CGSize){
+    func loadLocalCover(_ asset:PHAsset,_ size:CGSize,_ indexPath:IndexPath){
         self.imageView.image =  UIImage.init(color: UIColor.black.withAlphaComponent(0.04))
         let contentMode = PHImageContentMode.default
         self.imageManager.startCachingImages(for: [asset], targetSize: size, contentMode: contentMode, options:self.imageRequestOptions)
         _ = self.imageManager.requestImage(for: asset, targetSize: size, contentMode: contentMode, options: self.imageRequestOptions, resultHandler: { [weak self] (image, info) in
+            if indexPath != self?.indexPath{
+                return
+            }
             self?.imageView.image = image
         })
     }
     
-    func loadNetCover(_ hash:String,_ size:CGSize){
+    func loadNetCover(_ hash:String,_ size:CGSize,_ indexPath:IndexPath){
         self.imageView.image =  UIImage.init(color: UIColor.black.withAlphaComponent(0.04))
         if let requestUrl =  PhotoHelper.requestImageUrl(size:size,hash:hash){
-            ImageCache.default.retrieveImage(forKey: requestUrl.absoluteString, options: nil) { [weak self]
+            ImageCache.default.retrieveImage(forKey: requestUrl.absoluteString, options: nil) {
                 image, cacheType in
                 if let image = image {
-                    self?.imageView.image = image
+                    if indexPath != self.indexPath{
+                    return
+                    }
+                    self.imageView.image = image
                     print("Get image \(image), cacheType: \(cacheType).")
                     //In this code snippet, the `cacheType` is .disk
                 } else {
                     print("Not exist in cache.")
-                    _ = AppNetworkService.getThumbnail(hash: hash, size:size) { [weak self]  (error, image,reqUrl)  in
+                    _ = AppNetworkService.getThumbnail(hash: hash, size:size) { (error, image,reqUrl)  in
                         if let image =  image, let url = reqUrl {
                             ImageCache.default.store(image,
                                                      original: nil,
                                                      forKey: url.absoluteString,
                                                      toDisk: true)
-                             self?.imageView.image = image
+                            if indexPath != self.indexPath{
+                                return
+                            }
+                            self.imageView.image = image
                         }
                     }
                 }

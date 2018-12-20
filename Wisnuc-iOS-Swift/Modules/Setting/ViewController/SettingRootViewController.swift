@@ -30,6 +30,8 @@ class SettingRootViewController: BaseViewController {
         if  AppUserService.currentUser?.mail != nil{
             self.setHeaderTipsSecureHighView(isHidden: true)
         }
+        
+        setCacheSize()
     }
 
     override func didReceiveMemoryWarning() {
@@ -72,6 +74,24 @@ class SettingRootViewController: BaseViewController {
     func setSwitchState(){
         autoBackupSwitchOn = AppUserService.currentUser?.autoBackUp?.boolValue ?? false
         wifiSwitchOn = AppUserService.currentUser?.isWIFIAutoBackup?.boolValue ?? true
+    }
+    
+    func setCacheSize(){
+        DispatchQueue.global(qos: .default).async {
+            var i =  YYImageCache.shared().diskCache.totalCost()
+            KingfisherManager.shared.cache.calculateDiskCacheSize(completion: {(size) in
+                SDImageCache.shared().calculateSize(completionBlock: { (count, totalSize) in
+                    i = i + Int(size) + Int(totalSize)
+                    DispatchQueue.main.async {
+                        self.cacheLabel.text = sizeString(Int64(i))
+                    }
+                })
+            })
+            //                print(String(format: "%ld", Int(YYImageCache.shared().diskCache.totalCost())))
+            DispatchQueue.main.async {
+                self.cacheLabel.text = sizeString(Int64(i))
+            }
+        }
     }
     
     @objc func switchBtnHandleForSync(_ sender:UISwitch){
@@ -222,6 +242,7 @@ class SettingRootViewController: BaseViewController {
             }
         }
     }
+
     
     lazy var settingTabelView: UITableView = {
         let tableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style: UITableViewStyle.plain)
@@ -309,15 +330,20 @@ extension SettingRootViewController:UITableViewDelegate{
                 tab.setTabBarHidden(true, animated: true)
             }
         case 2:
+            SVProgressHUD.setDefaultStyle(.dark)
+            SVProgressHUD.show(withStatus: LocalizedString(forKey: "正在清除缓存"))
             YYImageCache.shared().diskCache.removeAllObjects {
                 SDImageCache.shared().clearDisk(onCompletion: {
                     KingfisherManager.shared.cache.clearDiskCache()
-                    DispatchQueue.main.async {
-                        self.settingTabelView.reloadData()
+                    DispatchQueue.global(qos: .default).async {
+                        self.setCacheSize()
+                        DispatchQueue.main.async {
+                            SVProgressHUD.dismiss()
+                            self.settingTabelView.reloadData()
+                        }
                     }
                 })
             }
-
         case 3:
             let myAboutViewController = MyAboutViewController.init(style:NavigationStyle.whiteWithoutShadow)
             self.navigationController?.pushViewController(myAboutViewController, animated: true)
@@ -368,27 +394,6 @@ extension SettingRootViewController:UITableViewDataSource{
             cell.textLabel?.text = LocalizedString(forKey: "清除缓存")
           
             cell.contentView.addSubview(cacheLabel)
-            
-            var i =  YYImageCache.shared().diskCache.totalCost()
-             KingfisherManager.shared.cache.calculateDiskCacheSize(completion: { [weak self] (size) in
-                SDImageCache.shared().calculateSize(completionBlock: { (count, totalSize) in
-                  i = i + Int(size) + Int(totalSize)
-                })
-                self?.cacheLabel.text = sizeString(Int64(i))
-            })
-            print(String(format: "%ld", Int(YYImageCache.shared().diskCache.totalCost())))
-           cacheLabel.text = sizeString(Int64(i))
-           
-         
-            
-//            let switchBtn = UISwitch.init()
-//            switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
-//            switchBtn.isOn = autoBackupSwitchOn
-//            switchBtn.addTarget(self, action: #selector(switchBtnHandleForSync(_ :)), for: UIControlEvents.valueChanged)
-//            if(!AppUserService.isUserLogin)
-//            {switchBtn.isEnabled = false}
-//            cell.contentView.addSubview(switchBtn)
-            
             
         case 3:
             cell.textLabel?.text = LocalizedString(forKey: "About")

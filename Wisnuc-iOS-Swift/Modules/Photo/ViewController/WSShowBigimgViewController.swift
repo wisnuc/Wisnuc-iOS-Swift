@@ -41,6 +41,7 @@ class WSShowBigimgViewController: UIViewController {
     var appearResizableImageView:UIImageView?
     var mapView:MKMapView?
     var drive:String?
+    var dir:String?
     var isHiddenNavigationBar = false{
         didSet{
             hiddenNavigationBarAction()
@@ -77,6 +78,9 @@ class WSShowBigimgViewController: UIViewController {
     deinit {
         self.mapView?.removeFromSuperview()
         self.mapView = nil
+        NotificationCenter.default.removeObserver(self)
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+
         print("show big image deinit")
     }
     
@@ -100,6 +104,12 @@ class WSShowBigimgViewController: UIViewController {
         }
         collectionView.setContentOffset(CGPoint(x: (__kWidth+CGFloat(kItemMargin))*CGFloat(indexBeforeRotation), y: 0), animated: false)
         self.performPresentAnimation()
+        //开启和监听 设备旋转的通知（不开启的话，设备方向一直是UIInterfaceOrientationUnknown）
+        if !UIDevice.current.isGeneratingDeviceOrientationNotifications {
+            UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleDeviceOrientationChange(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
@@ -585,6 +595,29 @@ class WSShowBigimgViewController: UIViewController {
         return nil
     }
     
+    //设备方向改变的处理
+    @objc func handleDeviceOrientationChange(_ notification: Notification) {
+        let deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation
+        var isLandscape:Bool?
+        switch deviceOrientation {
+        case UIDeviceOrientation.landscapeLeft,UIDeviceOrientation.landscapeRight:
+//                print("屏幕向左横置")
+                isLandscape = true
+            case UIDeviceOrientation.portraitUpsideDown,UIDeviceOrientation.portrait:
+//                print("屏幕直立，上下顛倒")
+                isLandscape = false
+            default:
+                print("无法辨识")
+        }
+        
+        guard let scape = isLandscape else { return }
+        if scape{
+            self.view.frame = CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight)
+        }else{
+            self.view.frame = CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight)
+        }
+    }
+    
     @objc func viewTap(_ sender:UIGestureRecognizer){
         isHiddenNavigationBar = !isHiddenNavigationBar
     }
@@ -937,6 +970,7 @@ extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDa
         cell.showGif = true
         cell.showLivePhoto = true
         cell.drive = self.drive
+        cell.dir = self.dir
         cell.model = model
         
         cell.loadImageCompleteCallback = { [weak self] in

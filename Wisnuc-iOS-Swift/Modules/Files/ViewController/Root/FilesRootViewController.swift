@@ -112,13 +112,13 @@ class FilesRootViewController: BaseViewController{
             default:
                 break
             }
-            self.collcectionViewController.state = selfState
+            self.collcectionViewController?.state = selfState
         }
     }
     
     deinit {
         print("\(className()) deinit")
-
+        self.collcectionViewController = nil
         removeCollectionView()
 //        FilesRootViewController.downloadManager.invalidate()
         defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
@@ -159,6 +159,8 @@ class FilesRootViewController: BaseViewController{
         case .root?:
             prepareRootAppNavigtionBar()
             prepareSearchBar()
+            self.driveUUID = AppUserService.currentUser?.userHome
+            self.directoryUUID = AppUserService.currentUser?.userHome
 //            self.view.addSubview(fabButton)
         case .movecopy?,.share?:
             prepareMoveCopyAppNavigtionBar()
@@ -174,7 +176,7 @@ class FilesRootViewController: BaseViewController{
         }
         FilesRootViewController.downloadManager.isStartDownloadImmediately = false
         self.navigationTitle = title
-        self.collcectionViewController.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
+        self.collcectionViewController?.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
             self?.prepareData(animation: false)
         })
         self.appBar.headerViewController.inferPreferredStatusBarStyle = false
@@ -203,7 +205,7 @@ class FilesRootViewController: BaseViewController{
         let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
         if dataSource != nil {
             self.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
-            self.collcectionViewController.collectionView?.reloadData()
+            self.collcectionViewController?.collectionView?.reloadData()
         }
         
         let isListStyle = AppUserService.currentUser?.isListStyle == nil ? CellStyle(rawValue: 0) : CellStyle(rawValue: (AppUserService.currentUser?.isListStyle?.intValue)!)
@@ -242,13 +244,13 @@ class FilesRootViewController: BaseViewController{
         }else{
                 cellStyle = .card
         }
-        self.collcectionViewController.cellStyle = cellStyle
+        self.collcectionViewController?.cellStyle = cellStyle
         AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
         AppUserService.synchronizedCurrentUser()
     }
     
     func setMoveToCollectionViewFrame(){
-        collcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height - moveFilesBottomBar.height)
+        collcectionViewController?.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height - moveFilesBottomBar.height)
     }
     
     func setSelectModel(){
@@ -257,7 +259,7 @@ class FilesRootViewController: BaseViewController{
     
     func listCellStyleAction(){
         self.listStyleButton.isSelected = true
-        self.collcectionViewController.cellStyle = cellStyle
+        self.collcectionViewController?.cellStyle = cellStyle
         AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
         AppUserService.synchronizedCurrentUser()
         styleItem.image  = UIImage.init(named: "gridstyle.png")
@@ -265,7 +267,7 @@ class FilesRootViewController: BaseViewController{
     
     func gridCellStyleAction(){
         self.listStyleButton.isSelected = false
-        self.collcectionViewController.cellStyle = cellStyle
+        self.collcectionViewController?.cellStyle = cellStyle
         AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
         AppUserService.synchronizedCurrentUser()
         styleItem.image = UIImage.init(named: "liststyle.png")
@@ -276,14 +278,14 @@ class FilesRootViewController: BaseViewController{
         if animation{
            ActivityIndicator.startActivityIndicatorAnimation()
         }
-        self.collcectionViewController.collectionView?.reloadEmptyDataSet()
+        self.collcectionViewController?.collectionView?.reloadEmptyDataSet()
         let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
         let requestDriveUUID = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let requestDirectoryUUID = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         DriveDirAPI.init(driveUUID: requestDriveUUID, directoryUUID: requestDirectoryUUID).startRequestJSONCompletionHandler(queue) {[weak self] (response) in
             self?.dataSource = Array.init()
-            if self?.collcectionViewController.collectionView?.mj_header != nil {
-                self?.collcectionViewController.collectionView?.mj_header.endRefreshing()
+            if self?.collcectionViewController?.collectionView?.mj_header != nil {
+                self?.collcectionViewController?.collectionView?.mj_header.endRefreshing()
             }
             if response.error == nil{
                 let isLocalRequest = AppNetworkService.networkState == .local
@@ -296,8 +298,8 @@ class FilesRootViewController: BaseViewController{
                         let messageText = error.localizedDescription
                         Message.message(text: messageText)
                         ActivityIndicator.stopActivityIndicatorAnimation()
-                        self?.collcectionViewController.collectionView?.reloadData()
-                        self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
+                        self?.collcectionViewController?.collectionView?.reloadData()
+                        self?.collcectionViewController?.collectionView?.reloadEmptyDataSet()
                         self?.isRequesting = false
                         return
                     }
@@ -332,13 +334,15 @@ class FilesRootViewController: BaseViewController{
                     }
                     DispatchQueue.main.async {
                         self?.dataSource = finishArray
-                        self?.collcectionViewController.dataSource = self?.dataSource
+                        self?.collcectionViewController?.dataSource = self?.dataSource
+                        self?.collcectionViewController?.driveUUID = self?.driveUUID
+                        self?.collcectionViewController?.dirUUID = self?.directoryUUID
                         let sortType = AppUserService.currentUser?.sortType == nil ? SortType(rawValue: 0) : SortType(rawValue: (AppUserService.currentUser?.sortType?.int64Value)!)
                         let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
                         self?.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
                         self?.isRequesting = false
-                        self?.collcectionViewController.collectionView?.reloadData()
-                        self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
+                        self?.collcectionViewController?.collectionView?.reloadData()
+                        self?.collcectionViewController?.collectionView?.reloadEmptyDataSet()
                     }
                 }catch{
                     print(error.localizedDescription)
@@ -354,8 +358,9 @@ class FilesRootViewController: BaseViewController{
                     self?.isRequesting = false
                     Message.message(text: messageText!)
                     ActivityIndicator.stopActivityIndicatorAnimation()
-                    self?.collcectionViewController.collectionView?.reloadData()
-                    self?.collcectionViewController.collectionView?.reloadEmptyDataSet()
+                    
+                    self?.collcectionViewController?.collectionView?.reloadData()
+                    self?.collcectionViewController?.collectionView?.reloadEmptyDataSet()
                 }
             }
         }
@@ -365,9 +370,9 @@ class FilesRootViewController: BaseViewController{
         self.sortType = sortType
         self.sortIsDown = sortIsDown
         sortData(sortType: sortType, sortIsDown: sortIsDown)
-        self.collcectionViewController.sortType = sortType
-        self.collcectionViewController.sortIsDown = sortIsDown
-        self.collcectionViewController.dataSource = dataSource
+        self.collcectionViewController?.sortType = sortType
+        self.collcectionViewController?.sortIsDown = sortIsDown
+        self.collcectionViewController?.dataSource = dataSource
     }
     
     func sortData(sortType:SortType,sortIsDown:Bool) {
@@ -423,6 +428,9 @@ class FilesRootViewController: BaseViewController{
     }
     
     func prepareCollectionView(){
+        guard let collcectionViewController = collcectionViewController else {
+            return
+        }
         self.addChildViewController(collcectionViewController)
         collcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height)
         self.view.addSubview(collcectionViewController.view)
@@ -488,7 +496,7 @@ class FilesRootViewController: BaseViewController{
         
         self.appBar.headerViewController.preferredStatusBarStyle = .default
         self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
-        collcectionViewController.isSelectModel = isSelectModel
+        collcectionViewController?.isSelectModel = isSelectModel
 //        fabButton.expand(true) {
 //        }
         
@@ -864,7 +872,7 @@ class FilesRootViewController: BaseViewController{
         }else{
             cellStyle = .card
         }
-        self.collcectionViewController.cellStyle = cellStyle
+        self.collcectionViewController?.cellStyle = cellStyle
         AppUserService.currentUser?.isListStyle = NSNumber.init(value:(cellStyle?.rawValue)!)
         AppUserService.synchronizedCurrentUser()
     }
@@ -963,19 +971,32 @@ class FilesRootViewController: BaseViewController{
     }
     
     //MARK : Lazy Property
+    private var _collcectionViewController: FilesRootCollectionViewController? = nil
+    var collcectionViewController: FilesRootCollectionViewController?{
+        get{
+            if self._collcectionViewController == nil {
+                let layout = MDCCollectionViewFlowLayout()
+                //        layout.itemSize = CGSize(width: size.width, height:CellHeight)
+                _collcectionViewController = FilesRootCollectionViewController.init(collectionViewLayout: layout)
+                _collcectionViewController?.collectionView?.isScrollEnabled = true
+                _collcectionViewController?.collectionView?.emptyDataSetSource = self
+                _collcectionViewController?.collectionView?.emptyDataSetDelegate = self
+                _collcectionViewController?.delegate = self
+                return _collcectionViewController
+            }
+            return  _collcectionViewController
+        }
+        
+        set(newValue){
+            self._collcectionViewController = newValue
+        }
+    }
+//    lazy var collcectionViewController : FilesRootCollectionViewController = { [weak self] in
+//
+//        return collectVC
+//    }()
     
-    lazy var collcectionViewController : FilesRootCollectionViewController = {
-        let layout = MDCCollectionViewFlowLayout()
-        //        layout.itemSize = CGSize(width: size.width, height:CellHeight)
-        let collectVC = FilesRootCollectionViewController.init(collectionViewLayout: layout)
-        collectVC.collectionView?.isScrollEnabled = true
-        collectVC.collectionView?.emptyDataSetSource = self
-        collectVC.collectionView?.emptyDataSetDelegate = self
-        collectVC.delegate = self
-        return collectVC
-    }()
-    
-    lazy var searchBar: BaseSearchBar = {
+    lazy var searchBar: BaseSearchBar = { [weak self] in
 //        let statusBarHeight:CGFloat = isX ? 44 : 20
         let searchBar = BaseSearchBar.init(frame: CGRect(x: MarginsCloseWidth, y: kStatusBarHeight + MarginsCloseWidth, width: __kWidth - MarginsWidth, height: searchBarHeight))
         searchBar.delegate = self
@@ -1057,24 +1078,24 @@ class FilesRootViewController: BaseViewController{
         return button
     }()
     
-    lazy var movetoButton: MDCFlatButton = {
-        let button = MDCFlatButton.init(frame: CGRect(x: self.moveFilesBottomBar.width - moveButtonWidth - MarginsWidth, y: self.moveFilesBottomBar.height/2 - moveButtonHeight/2, width: moveButtonWidth, height: moveButtonHeight))
+    lazy var movetoButton: MDCFlatButton = { [weak self] in
+        let button = MDCFlatButton.init(frame: CGRect(x: self!.moveFilesBottomBar.width - moveButtonWidth - MarginsWidth, y: self!.moveFilesBottomBar.height/2 - moveButtonHeight/2, width: moveButtonWidth, height: moveButtonHeight))
         button.setTitle(LocalizedString(forKey: "Save Here"), for: UIControlState.normal)
         button.setTitleColor(COR1, for: UIControlState.normal)
         button.setTitleColor(LightGrayColor, for: UIControlState.disabled)
         button.addTarget(self, action: #selector(movetoButtonTap(_ :)), for: UIControlEvents.touchUpInside)
         button.sizeToFit()
-        button.frame = CGRect(x: self.moveFilesBottomBar.width - button.width - MarginsWidth, y: self.moveFilesBottomBar.height/2 - button.height/2, width: button.width, height: button.height)
+        button.frame = CGRect(x: self!.moveFilesBottomBar.width - button.width - MarginsWidth, y: self!.moveFilesBottomBar.height/2 - button.height/2, width: button.width, height: button.height)
         return button
     }()
     
-    lazy var cancelMovetoButton: MDCFlatButton = {
-        let button = MDCFlatButton.init(frame: CGRect(x: self.moveFilesBottomBar.width - movetoButton.left - MarginsCloseWidth, y: movetoButton.top, width: moveButtonWidth, height: moveButtonHeight))
+    lazy var cancelMovetoButton: MDCFlatButton = { [weak self] in
+        let button = MDCFlatButton.init(frame: CGRect(x: self!.moveFilesBottomBar.width - movetoButton.left - MarginsCloseWidth, y: movetoButton.top, width: moveButtonWidth, height: moveButtonHeight))
         button.setTitle(LocalizedString(forKey: "Cancel"), for: UIControlState.normal)
         button.setTitleColor(COR1, for: UIControlState.normal)
         button.addTarget(self, action: #selector(cancelMovetoButtonTap(_ :)), for: UIControlEvents.touchUpInside)
         button.sizeToFit()
-        button.frame = CGRect(x: self.moveFilesBottomBar.width - ( MarginsCloseWidth + button.width*2 + MarginsWidth), y: self.moveFilesBottomBar.height/2 - button.height/2, width: button.width, height: button.height)
+        button.frame = CGRect(x: self!.moveFilesBottomBar.width - ( MarginsCloseWidth + button.width*2 + MarginsWidth), y: self!.moveFilesBottomBar.height/2 - button.height/2, width: button.width, height: button.height)
         return button
     }()
     

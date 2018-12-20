@@ -296,11 +296,10 @@ class PhotoAlbumViewController: BaseViewController {
         DispatchQueue.main.async {
             self.albumCollectionView.reloadData()
         }
-        DispatchQueue.global(qos: .background).async {
+        let backgroundDispatchQueue = DispatchQueue.init(label: "64picDownload", qos: .background)
+        backgroundDispatchQueue.async {
+            autoreleasepool {
             for  model in models{
-                //                let queue = DispatchQueue.init(label: "backgroudDownload")
-                //            queue
-                DispatchQueue.global(qos: .background).async {
                     guard let fmhash =  (model as? NetAsset)?.fmhash else {
                         return
                     }
@@ -308,8 +307,6 @@ class PhotoAlbumViewController: BaseViewController {
                     YYImageCache.shared().getImageData(forKey: fmhash, with: { (data) in
                         if  data == nil{
                             let _ = AppNetworkService.getThumbnailBackgroud(hash: fmhash, size: size) { (error, image, url) in
-                                if let image = image {
-                                }
                             }
                         }
                     })
@@ -513,13 +510,15 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                 let model = dataSource[indexPath.section][indexPath.row]
                 cell.indexPath = indexPath
                 cell.imageView.image = UIImage.init(color: UIColor.black.withAlphaComponent(0.04))
-                ImageAsyncTaskObject.setCoverImage(indexPath: indexPath, delegate: self, hash: model.coverThumbnilhash, asset: model.coverThumbnilAsset)
+              
                 cell.nameLabel.text = model.name
                 if  let count = model.count{
                     cell.countLabel.text = String(describing: count)
                 }else{
                     cell.countLabel.text = "0"
                 }
+                cell.setCoverImage(indexPath: indexPath, hash: model.coverThumbnilhash, asset: model.coverThumbnilAsset)
+//                ImageAsyncTaskObject.setCoverImage(indexPath: indexPath, delegate: self, hash: model.coverThumbnilhash, asset: model.coverThumbnilAsset)
             }
         }
         return cell
