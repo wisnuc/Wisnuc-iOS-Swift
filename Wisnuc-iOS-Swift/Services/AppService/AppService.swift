@@ -142,42 +142,42 @@ class AppService: NSObject,ServiceProtocol{
 //        if model.uuid == nil || isNilString(model.uuid){
 //            complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
 //        }
-        
+        let resultUser = orginTokenUser.copy() as! User
         let callBackClosure = { (callBackError:Error? , callBackUser:User?)->() in
             complete(callBackError,callBackUser)
         }
 
-        orginTokenUser.stationId = stationModel.sn
+        resultUser.stationId = stationModel.sn
         if let isShare  = stationModel.isShareStation{
-            orginTokenUser.isAdmin = NSNumber.init(value: !isShare)
+            resultUser.isAdmin = NSNumber.init(value: !isShare)
         }
-        orginTokenUser.isLocalLogin = NSNumber.init(value: false)
+        resultUser.isLocalLogin = NSNumber.init(value: false)
         
         if let lanIP = stationModel.LANIP {
             let urlString  = "http://\(String(describing: lanIP)):3000"
-            orginTokenUser.localAddr = urlString
-            orginTokenUser.lanIP = lanIP
+            resultUser.localAddr = urlString
+            resultUser.lanIP = lanIP
         }
-      
-        if orginTokenUser.localAddr != nil{
-            networkService.checkIP(address: orginTokenUser.lanIP!) { [weak self] (success) in
+        self?.networkService.networkState = .normal
+        if resultUser.localAddr != nil{
+            networkService.checkIP(address: resultUser.lanIP!) { [weak self] (success) in
                 if success{
-                    self?.networkService.getLocalInCloudLogin({ [weak self](localTokenError, localToken) in
+                    self?.networkService.getLocalInCloudLogin(cloudToken: resultUser.cloudToken, { [weak self](localTokenError, localToken) in
                         if localTokenError == nil{
-                            orginTokenUser.isLocalLogin = NSNumber.init(value: true)
-                            orginTokenUser.localToken = localToken
+                            resultUser.isLocalLogin = NSNumber.init(value: true)
+                            resultUser.localToken = localToken
                             self?.networkService.networkState = .local
-                            self?.nextStepForLogin(user: orginTokenUser, callback: callBackClosure)
+                            self?.nextStepForLogin(user: resultUser, callback: callBackClosure)
                         }else{
-                            self?.nextStepForLogin(user: orginTokenUser, callback: callBackClosure)
+                            self?.nextStepForLogin(user: resultUser, callback: callBackClosure)
                         }
                     })
                 }else{
-                    self?.nextStepForLogin(user: orginTokenUser, callback: callBackClosure)
+                    self?.nextStepForLogin(user: resultUser, callback: callBackClosure)
                 }
             }
         }else{
-            nextStepForLogin(user: orginTokenUser, callback: callBackClosure)
+            nextStepForLogin(user: resultUser, callback: callBackClosure)
         }
     }
     

@@ -71,6 +71,7 @@ class TransferTaskTableViewCell: UITableViewCell {
             self.controlButton.setImage(#imageLiteral(resourceName: "file_finish.png"), for: .normal)
         case .failed:
             self.controlButton.setImage(UIImage.init(named: "files_error.png"), for: .normal)
+            progress.isHidden = true
         case .suspend,.preSuspend:
             progress.progressTotal = UInt(task.progress.totalUnitCount)
             progress.progressCounter = UInt(task.progress.completedUnitCount)

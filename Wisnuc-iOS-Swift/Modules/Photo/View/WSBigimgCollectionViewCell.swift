@@ -1125,73 +1125,115 @@ class WSPreviewVideo: WSBasePreviewView {
            return
         }
         
+        let scale = UIScreen.main.scale
+        let width = MIN(x: __kWidth, y: CGFloat(kMaxImageWidth))
+        
+        let w = filesModel.metadata?.w
+        let h = filesModel.metadata?.h
+        let size = CGSize(width: width*scale, height: width*scale*CGFloat(w ?? Float(__kWidth))/CGFloat(h ?? Float(__kHeight)))
+        
+        let _ = AppNetworkService.getThumbnail(hash: hash, size: CGSize(width: CGFloat(w ?? Float(__kWidth)), height: CGFloat( h ?? Float(self.frame.width * 9 / 16)))) { (error, image, url) in
+            if let image = image{
+                self.containerView?.image = image
+            }
+        }
+        
+        playLayer.player = nil
+        playLayer.removeFromSuperlayer()
+        hasObserverStatus = false
+        
+        self.imageView.image = nil
+        //        self.playBtn.isEnabled = true
+        //        self.playBtn.isHidden = false
+        self.icloudLoadFailedLabel.isHidden = true
+        self.imageView.isHidden = false
+        self.indicator.startAnimating()
+        
+        
         let request = MediaRandomAPI.init(hash: hash)
         self.request = request
         request.startRequestJSONCompletionHandler { [weak self](response) in
             self?.indicator.stopAnimating()
             if response.error == nil{
                 DispatchQueue.main.async {
-                    //                    if response.result == nil{
-                    //                        self?.initVideoLoadFailedFromiCloudUI()
-                    //                        return
-                    //                    }
-                    var url: URL? = nil
-                    if let anURL = RequestConfig.sharedInstance.baseURL {
-                        guard let dic = response.value as? NSDictionary else{
-                            self?.initVideoLoadFailedFromiCloudUI()
+                    if let anURL = AppUserService.currentUser?.localAddr {
+                        guard let dataDic = response.value as? NSDictionary else {
                             return
                         }
                         
-                        guard let randomKey = dic["random"] else {
-                            self?.initVideoLoadFailedFromiCloudUI()
+                        guard let random = dataDic["random"] as? String else {
                             return
                         }
-                        let urlPath = "/media/"
-//                        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-//                            return nil
-//                        }
                         
-                        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestUrlPathKey)=\(urlPath)&\(kRequestVerbKey)=\(RequestMethodValue.GET)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+                        guard let url = URL(string: "\(anURL)/media/\(random)") else{
                             return
                         }
-//
-                        guard  let normalUrl = URL.init(string:urlString) else {
-                            return
-                        }
-                        url =  AppNetworkService.networkState == .normal ? normalUrl : URL(string: "\(anURL)/media/\(String(describing: randomKey))")
-                        let player = AVPlayer(url: url!)
-//                        self?.layer.addSublayer((self?.playLayer)!)
-                        self?.playLayer.player = player
-                        self?.switchVideoStatus()
-//                        self?.playLayer.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
-//                        do {
-//                            try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-//                        }catch{
-//
-//                        }
                         
-                        self?.hasObserverStatus = true
-                        NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-                         self?.indicator.stopAnimating()
-//                        self?.player = SGPlayer.init()
-//                        self?.player?.decoder = SGPlayerDecoder.byDefault()
-//
-//                        self?.player?.registerNotificationTarget(self!, stateAction: #selector(self?.stateAction(_:)), progressAction: #selector(self?.progressAction(_:)), playableAction: #selector(self?.playableAction(_:)), errorAction: #selector(self?.errorAction(_:)))
-//
-//                        //                        // display view tap action.
-//
-//                        self?.player?.viewTapAction = { player, view in
-//                            print("player display view did click!")
-//                        }
-//                        //                        // playback plane video.
-//                        self?.player?.replaceVideo(with: url, videoType: SGVideoType.normal)
-//                        //                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeNormal]; // 方式2
-//                        //
-//                        //                        // playback 360° panorama video.
-//                        //                        [self.player replaceVideoWithURL:contentURL videoType:SGVideoTypeVR];
-//                        //
-//                        //                        // start playing
-//                        self?.player?.play()
+                        self?.indicator.stopAnimating()
+                        let playerManager = ZFAVPlayerManager()
+                        //    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
+                        //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
+                        /// 播放器相关
+                        //                        playerManager.play()
+                        
+                        let videoSize = self?.screenDisplaySize(size: size)
+                        //        let w: CGFloat = self.frame.width
+                        //
+                        //        let h: CGFloat = w * 9 / 16
+                        //        let x: CGFloat = 0
+                        //        let y: CGFloat = self.height/2 - h/2
+                        
+                        self?.containerView?.frame = CGRect(x: 0, y: 0, width: (videoSize?.width)!, height: (videoSize?.height)!)
+                        self?.player = ZFPlayerController.player(withPlayerManager: playerManager, containerView: (self?.containerView)!)
+                        self?.player?.disableGestureTypes = ZFPlayerDisableGestureTypes.pan
+                        //                        self?.player?.
+                        self?.player?.controlView = (self?.controlView)!
+                        /// 设置退到后台继续播放
+                        self?.player?.pauseWhenAppResignActive = false
+                        self?.player?.orientationWillChange = { [weak self](player, isFullScreen) in
+                            if isFullScreen{
+                                player.disableGestureTypes = ZFPlayerDisableGestureTypes.init(rawValue: 0)
+                            }else{
+                                player.disableGestureTypes = ZFPlayerDisableGestureTypes.pan
+                            }
+                        }
+                        
+                        /// 播放完成
+                        self?.player?.playerDidToEnd = { [weak self] (asset) in
+                            if let replay = self?.player?.currentPlayerManager.replay{
+                                replay()
+                            }
+                            //        [self.player playTheNext];
+                            //        if (!self.player.isLastAssetURL) {
+                            //            NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
+                            //            [self.controlView showTitle:title coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeLandscape];
+                            //        } else {
+                            //            [self.player stop];
+                            //        }
+                            //        [self.player stop];
+                        }
+                        self?.player?.playerReadyToPlay = { asset, assetURL in
+                            print("======开始播放了")
+                        }
+                        
+                        self?.player?.assetURLs = [url]
+                        
+                        self?.player?.playTheIndex(0)
+                        
+                        //                        let player = AVPlayer(url: url)
+                        //                        self?.playLayer.player = player
+                        //                        self?.switchVideoStatus()
+                        //                        self?.playLayer.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
+                        //                            do {
+                        //                                try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+                        //                            }catch{
+                        //
+                        //                            }
+                        //
+                        //                        self?.hasObserverStatus = true
+                        //                        NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+                        //                        NotificationCenter.default.addObserver(self, selector: #selector(playEnd(_:)), name: Notification.Name.mpmove, object: player)
+                        
                     }
                 }
             }else{

@@ -91,9 +91,9 @@ class PhotoAlbumViewController: BaseViewController {
         self.dataSource.removeAll()
         let collectionAlbumArray = Array<PhotoAlbumModel>.init()
         self.dataSource.append(collectionAlbumArray)
-        DispatchQueue.global(qos: .default).async(execute: {
-//            print("接见接见军军军军军军军军军军军军军军军军军军军军")
+        DispatchQueue.global(qos: .userInitiated).async(execute: {
             self.allPhotoAlbumData()
+             print("接见接见军军军军军军军军军军军军军军军hhhaddsadadas军军军军军")
             self.allVideoAlbumData()
             self.getAllBackup()
         })

@@ -9,7 +9,11 @@
 import UIKit
 
 class LocalTokenInCloudAPI: BaseRequest {
-
+    var cloudToken:String?
+    init(cloudToken:String? = nil) {
+        self.cloudToken = cloudToken
+    }
+    
     override func requestURL() -> String {
         return "\(kCloudBaseURL)\(kCloudCommonJsonUrl)"
     }
@@ -25,7 +29,10 @@ class LocalTokenInCloudAPI: BaseRequest {
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
-        let dic = [kRequestAuthorizationKey:AppUserService.currentUser?.cloudToken!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
+        var dic = [kRequestAuthorizationKey:AppUserService.currentUser?.cloudToken!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
+        if let token = self.cloudToken{
+            dic = [kRequestAuthorizationKey:token,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
+        }
         return dic as? RequestHTTPHeaders
     }
 }

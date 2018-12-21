@@ -483,7 +483,7 @@ extension TransferTaskTableViewController:TransferTaskBottomSheetContentVCDelega
                     let task = any as! TRTask
                     switch indexPath.row {
                     case 0:
-                        if task.status == .suspend || task.status == .preSuspend{
+                        if task.status == .suspend || task.status == .preSuspend  ||  task.status == .failed {
                             downloadManager.start(task.URLString)
                         }
                     case 1:
@@ -495,7 +495,7 @@ extension TransferTaskTableViewController:TransferTaskBottomSheetContentVCDelega
                     }
                 }
             }
-             self.tableView.reloadData()
+            self.tableView.reloadData()
             if indexPath.row == 2{
             guard let downloadManager = self.downloadManager
                 else { return  }

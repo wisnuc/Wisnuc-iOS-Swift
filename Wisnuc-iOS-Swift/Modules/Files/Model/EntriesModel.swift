@@ -63,8 +63,8 @@ public struct EntriesModel:Codable {
 
 
 struct Metadata: Codable {
-    var w: Int?
-    var h: Int?
+    var w: Float?
+    var h: Float?
     var type: String?
     var orient: Int?
     var make: String?

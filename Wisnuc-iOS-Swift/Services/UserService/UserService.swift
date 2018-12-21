@@ -49,6 +49,11 @@ class UserService: NSObject,ServiceProtocol{
             
             self.isUserLogin = true
             self.isStationSelected = true
+//            if let uuid = self.currentUser?.uuid{
+//                if let backupArray = userDefaults.array(forKey: "\(kBackupDrives)_\(uuid)") as? [DriveModel]{
+//                    self.backupArray = backupArray
+//                }
+//            }
         }else{
             self.currentUser = nil
             self.isStationSelected = false

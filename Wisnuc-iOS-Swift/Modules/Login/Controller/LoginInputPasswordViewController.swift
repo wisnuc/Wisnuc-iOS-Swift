@@ -334,8 +334,9 @@ extension LoginInputPasswordViewController:UITextFieldDelegate{
 extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDelegte{
     func loginFinish(user: User, stationModel: Any) {
         let model = stationModel as! StationsInfoModel
+        ActivityIndicator.startActivityIndicatorAnimation()
         AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
-              ActivityIndicator.stopActivityIndicatorAnimation()
+            
             if error == nil && userData != nil{
                 AppUserService.isUserLogin = true
                 AppUserService.isStationSelected = true
@@ -343,6 +344,7 @@ extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDel
                 AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
                 AppUserService.synchronizedCurrentUser()
                 appDelegate.initRootVC()
+                ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 if error != nil{
                     switch error {

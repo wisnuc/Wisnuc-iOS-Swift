@@ -608,20 +608,12 @@ class PhotoCollectionViewController: UICollectionViewController {
         cell.setImagView(indexPath:indexPath)
         cell.setSelectButton(indexPath: indexPath)
         cell.isSelectMode = self.isSelectMode
-//        cell.imageView?.layer.contents =  imageDic["\(indexPath.section)_\(indexPath.row)"]?.cgImage
         cell.setSelectAnimation(isSelect: self.isSelectMode ?? false ? self.choosePhotos.contains(model) : false, animation: false)
-//        if let image = model.image{
-//            cell.image = image
-//            cell.model?.image = image
-//            //                        DispatchQueue.main.async {
-//            cell.imageView?.layer.contents = image.cgImage
-//        }
         cell.model = model
         cell.imageView?.layer.contents = nil
         if indexPath == cell.model?.cellIndexPath {
             cell.imageView?.layer.contents = model.image
         }
-//        ImageAsyncTaskObject.setCoverImage(model: model, indexPath: indexPath, delegate: self)
         let tagString = "\(indexPath.section)\(indexPath.item)"
         cell.tag = (NSNumber.init(string: tagString)?.intValue)!
         self.setCellImage(model: model,cell:cell)
@@ -633,101 +625,127 @@ class PhotoCollectionViewController: UICollectionViewController {
         if cell.indexPath != model.indexPath{
             return
         }
-//        cell.imageView?.layer.contents = model.image?.cgImage
         if model.asset != nil {
-            let asset = model.asset
-            let contentMode = PHImageContentMode.default
-            self.imageManager.startCachingImages(for: [asset!], targetSize: size, contentMode: contentMode, options:self.imageRequestOptions)
-            let imageRequestID = self.imageManager.requestImage(for: (asset)!, targetSize: size, contentMode: contentMode, options: self.imageRequestOptions, resultHandler: { (image, info) in
-                if cell.indexPath == model.indexPath{
-                cell.imageView?.layer.contents = nil
-                cell.imageView?.layer.contents = image?.cgImage
-                cell.image = image
-                cell.model?.image = image
-                }
-            })
-            imageRequestIDDataSources.append(imageRequestID)
-            if cell.indexPath != model.indexPath{
-                return
-            }
+            loadLocalImage(cell: cell, model: model,size:size)
         }else if model is NetAsset{
-            if cell.indexPath != model.indexPath{
-                return
-            }
             guard let hash = (model as? NetAsset)?.fmhash else{
                 return
             }
+            if cell.indexPath != model.indexPath{
+                return
+            }
             if let image = YYImageCache.shared().getImageForKey(hash){
-                if cell.indexPath == model.indexPath{
-                    cell.imageView?.layer.contents = image.cgImage
-                    YYImageCache.shared().getImageForKey("\(hash)_big", with: .disk) { (image, type) in
-                        if let image = image{
-                            cell.imageView?.layer.contents = nil
-                            cell.image = image
-                            cell.model?.image = image
-                            cell.imageView?.layer.contents = image.cgImage
-                        }else{
-                            let task = self.fetchNormalPic(hash: hash, callback: { (error, image, url) in
-                                if cell.indexPath == model.indexPath{
-                                    cell.imageView?.layer.contents = nil
-                                    cell.image = image
-                                    cell.model?.image = image
-                                    cell.imageView?.layer.contents = image?.cgImage
-                                }
-                            })
-                            if let task = task{
-                                self.imageDownloadTasks.append(task)
-                            }
-                        }
+                cell.imageView?.layer.contents = image.cgImage
+                self.checkSmallImage(model: model, size: size) { (image) in
+                    if cell.indexPath == model.indexPath{
+                        cell.imageView?.layer.contents = nil
+                        cell.model?.image = image
+                        cell.imageView?.layer.contents = image.cgImage
+                        cell.image = image
                     }
                 }
-                  }else{
-                let queue = DispatchQueue.init(label: "download", qos: DispatchQoS.userInitiated, attributes: DispatchQueue.Attributes.concurrent, target: nil)
+            }else{
+                let queue = DispatchQueue.init(label: "download", qos: DispatchQoS.default, attributes: DispatchQueue.Attributes.concurrent, target: nil)
                 queue.async(execute: {
-            
-//                YYImageCache.shared().getImageData(forKey: hash, with: { (data) in
-                  
-                        if let image =  YYImageCache.shared().getImageForKey("\(hash)_big"){
-                            if cell.indexPath == model.indexPath{
-                                DispatchQueue.main.async {
-                                    cell.imageView?.layer.contents = nil
-                                    cell.imageView?.layer.contents = image.cgImage
-                                }
-                            }
-                            //In this code snippet, the `cacheType` is .disk
-                        } else {
-                            print("Not exist in cache.")
-                            if cell.indexPath != model.indexPath{
-                                return
-                            }
-                            let task = AppNetworkService.getThumbnail(hash: hash,size:size) { (error, image,reqUrl)  in
-                                if error == nil {
-                                    if let indexPath = model.indexPath{
-                                        if let cell = self.collectionView?.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
-                                            DispatchQueue.main.async {
-                                                 cell.imageView?.layer.contents = nil
-                                                cell.model?.image = image
-                                                cell.imageView?.layer.contents = image?.cgImage
-                                                cell.image = image
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-//                            if let task = task{
-//                                self.imageDownloadTasks.append(task)
-//                            }
+                    self.fetchNormalCachePicDispay(cell: cell, model: model, size: size, closure: { (image) in
+                        if cell.indexPath == model.indexPath{
+                            cell.imageView?.layer.contents = nil
+                            cell.model?.image = image
+                            cell.imageView?.layer.contents = image.cgImage
+                            cell.image = image
                         }
-                    
-//                })
-                 })
+                    })
+                })
             }
         }
     }
     
-    func fetchSmallPic(hash:String,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->RetrieveImageDownloadTask?{
+    func loadLocalImage(cell:PhotoCollectionViewCell,model:WSAsset,size:CGSize){
+        let asset = model.asset
+        let contentMode = PHImageContentMode.default
+        self.imageManager.startCachingImages(for: [asset!], targetSize: size, contentMode: contentMode, options:self.imageRequestOptions)
+        let imageRequestID = self.imageManager.requestImage(for: (asset)!, targetSize: size, contentMode: contentMode, options: self.imageRequestOptions, resultHandler: { (image, info) in
+            if cell.indexPath == model.indexPath{
+                cell.imageView?.layer.contents = nil
+                cell.imageView?.layer.contents = image?.cgImage
+                cell.image = image
+                cell.model?.image = image
+            }
+        })
+        imageRequestIDDataSources.append(imageRequestID)
+    }
+    
+    func checkSmallImage(model:WSAsset,size:CGSize,closure:@escaping (_ image:UIImage)->()){
+        guard let hash = (model as? NetAsset)?.fmhash else{
+            return
+        }
+    
+        if let requset = PhotoHelper.requestImageUrl(size: size, hash: hash){
+            ImageCache.default.retrieveImage(forKey: requset.absoluteString, options: nil, completionHandler: { (image, type) in
+                if let image = image{
+                   return closure(image)
+                }
+            })
+        }
+        
+        let queue = DispatchQueue.init(label: "downloadReady", qos: DispatchQoS.userInitiated, attributes: DispatchQueue.Attributes.concurrent, target: nil)
+        queue.async(execute: {
+            let _ = self.fetchSmallPic(hash: hash, callback: { (error, image, url) in
+                if let image = image{
+                    let _ = self.fetchNormalPic(hash: hash, callback: { (error, image, url) in
+                        if let image = image{
+                            return closure(image)
+                        }
+                    })
+                    return closure(image)
+                }
+            })
+        })
+    }
+    
+    func fetchSmallCachePicDispay(model:WSAsset,callback:@escaping (_ image:UIImage?)->()){
+        guard let hash = (model as? NetAsset)?.fmhash else {
+           return
+        }
+        if let requset = PhotoHelper.requestImageUrl(size: CGSize(width: 64, height: 64), hash: hash){
+            ImageCache.default.retrieveImage(forKey: requset.absoluteString, options: nil, completionHandler: { (image, type) in
+                if let image = image{
+                    return callback(image)
+            }
+         })
+       }
+    }
+    
+    func fetchNormalCachePicDispay(cell:PhotoCollectionViewCell,model:WSAsset,size:CGSize,closure:@escaping (_ image:UIImage)->()){
+        guard let hash = (model as? NetAsset)?.fmhash else {
+            return
+        }
+        if let image = YYImageCache.shared().getImageForKey(hash){
+            return closure(image)
+        }
+        if let requsetBig = PhotoHelper.requestImageUrl(size: size, hash: hash){
+            ImageCache.default.retrieveImage(forKey: requsetBig.absoluteString, options: nil, completionHandler: { (image, type) in
+                if let image = image{
+                   return closure(image)
+                }
+            })
+        }
+        
+        let _ = self.fetchSmallPic(hash: hash, callback: { (error, image, url) in
+            if let image = image{
+                let _ = self.fetchNormalPic(hash: hash, callback: { (error, image, url) in
+                    if let image = image{
+                        return closure(image)
+                    }
+                })
+                return closure(image)
+            }
+        })
+    }
+    
+    func fetchSmallPic(hash:String,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->SDWebImageDownloadToken?{
         let size = CGSize(width: 64, height: 64)
-        let task = AppNetworkService.getThumbnail(hash: hash,size:size) { (error, downloadImage,reqUrl)  in
+        let task = AppNetworkService.getSDThumbnail(hash: hash,size:size) { (error, downloadImage,reqUrl)  in
             callback(error,downloadImage,reqUrl)
         }
         return task
@@ -735,7 +753,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     func fetchNormalPic(hash:String,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->RetrieveImageDownloadTask?{
         let size = CGSize(width: 186, height: 186)
-        let task = AppNetworkService.getThumbnail(hash: hash,size:size) { (error, downloadImage,reqUrl)  in
+        let task = AppNetworkService.getThumbnail(hash: hash,size:size,downloadPriority:1) { (error, downloadImage,reqUrl)  in
             callback(error,downloadImage,reqUrl)
         }
         return task
@@ -1013,13 +1031,13 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
 //                                    cell.imageView?.layer.contents = image.cgImage
                                 }
                             }else{
-                                self.fetchSmallPic(hash: hash, callback: { (error, image, url) in
-                                    if let image = image{
-                        
-                                        model.image = image
-                                        dataSource[indexPath.section][indexPath.row] = model
-                                    }
-                                })
+//                                self.fetchSmallPic(hash: hash, callback: { (error, image, url) in
+//                                    if let image = image{
+//
+//                                        model.image = image
+//                                        dataSource[indexPath.section][indexPath.row] = model
+//                                    }
+//                                })
                             }
                         })
 //                    }
@@ -1075,11 +1093,11 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
                if let photoCell = cell as? PhotoCollectionViewCell{
                 let size = CGSize.init(width: 186 , height: 186 )
                 if let fmhash = (model as? NetAsset)?.fmhash{
-                    if let url = PhotoHelper.requestImageUrl(size: size, hash: fmhash){
-                        let task = self.imageDownloadTasks.first(where: {$0.url == url})
-                        task?.cancel()
-                        self.imageDownloadTasks.removeAll(where: {$0.url == url})
-                    }
+//                    if let url = PhotoHelper.requestImageUrl(size: size, hash: fmhash){
+//                        let task = self.imageDownloadTasks.first(where: {$0.url == url})
+//                        task?.cancel()
+//                        self.imageDownloadTasks.removeAll(where: {$0.url == url})
+//                    }
                 }
                
                     photoCell.imageView?.layer.contents  = nil
