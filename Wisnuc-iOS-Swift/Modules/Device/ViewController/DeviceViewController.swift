@@ -225,7 +225,6 @@ class DeviceViewController: BaseViewController {
       
       var filesProportion:CGFloat = 0.0
       filesProportion = CGFloat(documentSize)/CGFloat(statsTotalSize) * totalProportion
-   
       
       var imageProportion:CGFloat = 0.0
       imageProportion = CGFloat(imageSize)/CGFloat(statsTotalSize) * totalProportion

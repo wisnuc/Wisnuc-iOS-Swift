@@ -48,9 +48,8 @@ struct ErrorCode {
         public static let MobileError:Int = 60701
         public static let CodeLimitOut:Int =  60702
         public static let ShareUserExist:Int =  60107
-       
+        public static let EExist:Int =  60108
     }
-    
 }
 
 
@@ -74,8 +73,11 @@ struct LoginError: Error,Equatable{
 
 struct BaseError:Error {
     var localizedDescription: String
+    
     var code: Int
 }
+
+
 
 
 struct ErrorLocalizedDescription{
@@ -107,6 +109,7 @@ struct ErrorLocalizedDescription{
     
     struct Request {
         public static let UserAlreadyExist = "user already exist"
+        public static let EExist = "already exist"
         public static let MobileError = "mobile is error"
         public static let CodeLimitOut = "code limit out"
         public static let ShareUserExist = "user already exist"

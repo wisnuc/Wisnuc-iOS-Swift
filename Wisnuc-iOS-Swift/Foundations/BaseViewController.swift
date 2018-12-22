@@ -8,6 +8,7 @@
 
 import UIKit
 import MaterialComponents
+import MaterialComponents.MDCActivityIndicator
 enum NavigationStyle:Int{
     case mainTheme = 0
     case white
@@ -17,8 +18,10 @@ enum NavigationStyle:Int{
     case select
     case highHeight
 }
+
 class BaseViewController: UIViewController {
     var barMaximumHeight:CGFloat = kStatusBarHeight + 116
+  
     var style:NavigationStyle?{
         didSet{
             switch style {
@@ -243,6 +246,8 @@ class BaseViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 21)
         return label
     }()
+    
+   
 
     /*
     // MARK: - Navigation
@@ -275,3 +280,60 @@ extension BaseViewController:MDCFlexibleHeaderViewDelegate{
     }
 }
 
+extension UIViewController{
+    var activityIndicatorTag: Int { return 999999 }
+    struct MDCPalette {
+        static let blue: UIColor = UIColor(red: 0.129, green: 0.588, blue: 0.953, alpha: 1.0)
+        static let red: UIColor = UIColor(red: 0.957, green: 0.263, blue: 0.212, alpha: 1.0)
+        static let green: UIColor = UIColor(red: 0.298, green: 0.686, blue: 0.314, alpha: 1.0)
+        static let yellow: UIColor = UIColor(red: 1.0, green: 0.922, blue: 0.231, alpha: 1.0)
+    }
+    func startActivityIndicator(location: CGPoint? = nil) {
+        
+        //Set the position - defaults to `center` if no`location`
+        
+        //argument is provided
+        
+        let loc = location ?? self.view.center
+        
+        //Ensure the UI is updated from the main thread
+        
+        //in case this method is called from a closure
+        DispatchQueue.main.async {
+            let width: CGFloat = __kWidth / 2
+            let height: CGFloat = __kHeight / 2
+            
+            let activityIndicator = MDCActivityIndicator(frame:CGRect(x: 0, y: 0, width: 48, height: 48))
+            //Initialize single color progress indicator
+            activityIndicator.tag = self.activityIndicatorTag
+            //Set the location
+            #warning("center set")
+            activityIndicator.center = CGPoint(x: width, y: height)
+
+            // Pass colors you want to indicator to cycle through
+            activityIndicator.cycleColors = [MDCPalette.blue, MDCPalette.red, MDCPalette.green, MDCPalette.yellow]
+            activityIndicator.radius = 18.0
+            activityIndicator.strokeWidth = 3.0
+            activityIndicator.indicatorMode = .indeterminate
+            activityIndicator.sizeToFit()
+            activityIndicator.startAnimating()
+            self.view.addSubview(activityIndicator)
+            self.view.bringSubview(toFront: activityIndicator)
+            self.view.isUserInteractionEnabled = false
+        }
+    }
+    
+    func stopActivityIndicator() {
+        //Again, we need to ensure the UI is updated from the main thread!
+        
+        DispatchQueue.main.async {
+            //Here we find the `UIActivityIndicatorView` and remove it from the view
+            if let activityIndicator = self.view.subviews.filter(
+                { $0.tag == self.activityIndicatorTag}).first as? MDCActivityIndicator {
+                activityIndicator.stopAnimating()
+                activityIndicator.removeFromSuperview()
+                self.view.isUserInteractionEnabled = true
+            }
+        }
+    }
+}

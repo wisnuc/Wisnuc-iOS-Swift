@@ -154,7 +154,7 @@ class NetworkService: NSObject {
             if response.error == nil{
                 if let errorMessage = ErrorTools.responseErrorData(response.data){
                     let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.Request.CloudRequstError, userInfo: [NSLocalizedDescriptionKey:errorMessage])
-                    return closure(error as! CustomNSError,nil)
+                    return closure(error,nil)
                 }
                 let dic = (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
                 if let token = dic.value(forKey: "token") as? String,let type = dic.value(forKey: "type") as? String{
@@ -264,7 +264,7 @@ class NetworkService: NSObject {
             if response.error == nil{
                 if let errorMessage = ErrorTools.responseErrorData(response.data){
                     let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.Request.CloudRequstError, userInfo: [NSLocalizedDescriptionKey:errorMessage])
-                    return callBack(error as! CustomNSError,nil)
+                    return callBack(error,nil)
                 }
                 let isLocalRequest = AppNetworkService.networkState == .local
                 var responseDic = NSDictionary.init()
@@ -273,7 +273,8 @@ class NetworkService: NSObject {
                 }else{
                     guard let rootDic = response.value as? NSDictionary else {
                         let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.JsonModel.SwitchTOModelFail, userInfo: [NSLocalizedDescriptionKey:ErrorLocalizedDescription.JsonModel.SwitchTOModelFail])
-                        return callBack(error as! CustomNSError,nil)
+                    
+                        return callBack(error,nil)
                     }
                     responseDic = rootDic["data"] as! NSDictionary
                 }

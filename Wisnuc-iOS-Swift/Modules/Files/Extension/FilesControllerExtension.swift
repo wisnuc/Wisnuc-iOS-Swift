@@ -136,7 +136,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         }
         FilesRootViewController.downloadManager.isStartDownloadImmediately = true
         guard let requestURL = downloadRequestURL(model:model) else {
-           return complete(NSError(domain: "requestURL error", code: 200001, userInfo: nil) as! CustomNSError,nil)
+           return complete(NSError(domain: "requestURL error", code: 200001, userInfo: nil),nil)
         }
         let name = model.backupRoot ? model.bname ?? model.name ?? "" : model.name ?? ""
         let task =  FilesRootViewController.downloadManager.download(requestURL, fileName: name, filesModel: model)
@@ -443,8 +443,13 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     func patchNodes(taskUUID:String,nodeUUID:String,policySameValue:String? = nil , policyDiffValue:String? = nil ,callback:@escaping ((_ error:Error?)->())){
         TasksAPI.init(taskUUID: taskUUID, nodeUUID: nodeUUID, policySameValue: policySameValue, policyDiffValue: policyDiffValue).startRequestJSONCompletionHandler { [weak self] (response) in
             if response.error == nil{
-                self?.prepareData(animation: false)
-                callback(nil)
+//                if let taskModel = FilesTasksModel.deserialize(from: modelDic){
+                    return callback(nil)
+//                }
+//                else{
+//                    let error = NSError(domain: response.request?.url?.absoluteString ?? "", code: ErrorCode.JsonModel.SwitchTOModelFail, userInfo: [NSLocalizedDescriptionKey:ErrorLocalizedDescription.JsonModel.SwitchTOModelFail])
+//                   return callback(taskModel)
+//                }
             }else{
                 if response.data != nil {
                     let errorDict =  dataToNSDictionary(data: response.data!)
@@ -547,16 +552,45 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                         return
                     }
                     self?.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { [weak self] (error)in
+//                        self?.renameStateRequest(oldName: <#T##String?#>, newName: <#T##String#>)
                         ActivityIndicator.stopActivityIndicatorAnimation()
                             Message.message(text: LocalizedString(forKey: "创建副本成功"))
                             self?.prepareData(animation: false)
-                        
                     })
                 }else if model.nodes?.first?.state == .Working{
                     self?.taskHandle(taskModel: taskModel)
                 }
             }
         })
+    }
+    
+    func renamePrepare(model:EntriesModel){
+        let filesType = model.type ?? ""
+        let name = model.name ?? ""
+        let bundle = Bundle.init(for: NewFolderViewController.self)
+        let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
+        let identifier = "inputNewFolderDialogID"
+        
+        let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+        viewController.modalPresentationStyle = UIModalPresentationStyle.custom
+        viewController.transitioningDelegate = self.transitionController
+        
+        let vc =  viewController as! NewFolderViewController
+        vc.type = InputAlertType.rename
+        vc.theFilesName = name
+        vc.titleString = "\(LocalizedString(forKey:"Rename")) \(LocalizedString(forKey: filesType == FilesType.directory.rawValue ? "Folder" : "File"))"
+        vc.inputString =  name
+        vc.inputPlaceholder =  "\(LocalizedString(forKey:filesType == FilesType.directory.rawValue ? "Folder" : "File")) \(LocalizedString(forKey:"name"))"
+        vc.confirmButtonName =  LocalizedString(forKey: "Rename")
+        vc.delegate = self
+        self.present(viewController, animated: true, completion: {
+            vc.inputTextField.becomeFirstResponder()
+        })
+        let presentationController =
+            viewController.mdc_dialogPresentationController
+        if presentationController != nil{
+            presentationController?.dismissOnBackgroundTap = false
+        }
     }
     
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, models: [Any]?){
@@ -575,48 +609,13 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         let filesModel = model as! EntriesModel
         switch indexPath.row {
         case 0:
-            let filesType =  model != nil ? (model as! EntriesModel).type : ""
-            let name =  model != nil ? (model as! EntriesModel).name : ""
-            let bundle = Bundle.init(for: NewFolderViewController.self)
-            let storyboard = UIStoryboard.init(name: "NewFolderViewController", bundle: bundle)
-            let identifier = "inputNewFolderDialogID"
-            
-            let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
-            viewController.modalPresentationStyle = UIModalPresentationStyle.custom
-            viewController.transitioningDelegate = self.transitionController
-            
-            let vc =  viewController as! NewFolderViewController
-            vc.type = InputAlertType.rename
-            vc.theFilesName = name
-            vc.titleString = "\(LocalizedString(forKey:"Rename")) \(LocalizedString(forKey: filesType == FilesType.directory.rawValue ? "Folder" : "File"))"
-            vc.inputString =  name
-            vc.inputPlaceholder =  "\(LocalizedString(forKey:filesType == FilesType.directory.rawValue ? "Folder" : "File")) \(LocalizedString(forKey:"name"))"
-            vc.confirmButtonName =  LocalizedString(forKey: "Rename")
-            vc.delegate = self
-            self.present(viewController, animated: true, completion: {
-                vc.inputTextField.becomeFirstResponder()
-            })
-            let presentationController =
-                viewController.mdc_dialogPresentationController
-            if presentationController != nil{
-                presentationController?.dismissOnBackgroundTap = false
-            }
+            renamePrepare(model:filesModel)
         case 1:
-            let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.white)
-            filesRootViewController.title = LocalizedString(forKey: "My Drive")
-            filesRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
-            filesRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
-            self.registerNotification()
-            filesRootViewController.isCopy = isCopy
-            filesRootViewController.selfState = .movecopy
-            
-            let navi = UINavigationController.init(rootViewController: filesRootViewController)
-            self.present(navi, animated: true, completion: nil)
+            moveToAction(model:filesModel)
         case 2:
             if filesModel.type != FilesType.file.rawValue{
                 self.makeCopyTaskCreate(model: model)
             }
-            
         case 3 :
             let name = filesModel.backupRoot ? filesModel.bname ?? filesModel.name ?? "" : filesModel.name ?? ""
             if filesModel.type == FilesType.file.rawValue{
@@ -633,25 +632,23 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 }
             }else{
 //                #warning("分享到共享空间")
-                self.copyToAction(model: model, isShare:true)
+                self.copyToAction(model: filesModel, isShare:true)
             }
         case 4:
             if filesModel.type == FilesType.file.rawValue{
                 self.makeCopyTaskCreate(model: model)
             }else{
-                self.copyToAction(model:model)
+                self.copyToAction(model:filesModel)
             }
         case 5:
             if filesModel.type == FilesType.file.rawValue{
-                self.copyToAction(model: model,isShare:true)
+                self.copyToAction(model: filesModel,isShare:true)
             }else{
                 self.removeFileOrDirectory(model: filesModel)
             }
         case 6:
             if filesModel.type == FilesType.file.rawValue{
-                self.copyToAction(model:model)
-            }else{
-                
+                self.copyToAction(model:filesModel)
             }
         case 7:
             self.removeFileOrDirectory(model: filesModel)
@@ -659,8 +656,6 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         default:
             break
         }
-       
-        //        })
     }
     
     func openForOtherApp(filesModel:EntriesModel){
@@ -674,27 +669,28 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
     }
     
-    func copyToAction(model:Any?,isShare:Bool? = nil){
-        let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.white)
+    func moveToAction(model:EntriesModel){
+        let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.white, srcDictionary: [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()], moveModelArray:  [model], isCopy: isCopy)
         filesRootViewController.title = LocalizedString(forKey: "My Drive")
-        filesRootViewController.srcDictionary = [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()]
-//        if let srcDrive = srcDrive, let srcDir = srcDir{
-//             filesRootViewController.srcDictionary = [kRequestTaskDriveKey : srcDrive,kRequestTaskDirKey:srcDir]
-//
-//        }
+        self.registerNotification()
+        let navi = UINavigationController.init(rootViewController: filesRootViewController)
+        self.present(navi, animated: true, completion: nil)
+    }
+    
+    func copyToAction(model:EntriesModel,isShare:Bool? = nil){
+        var share:Bool = false
+        if let isShare = isShare{
+            if isShare{
+                share = true
+            }
+        }
+        let filesRootViewController =  FilesRootViewController.init(style: NavigationStyle.white, srcDictionary: [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()], moveModelArray:  [model], isCopy: true,isShare:share)
         
-        filesRootViewController.moveModelArray =  model != nil ? [model as! EntriesModel] : Array.init()
+        filesRootViewController.title = LocalizedString(forKey: "My Drive")
         self.registerNotification()
         filesRootViewController.isCopy = true
         filesRootViewController.selfState = .movecopy
-        if let isShare = isShare{
-            if isShare{
-                filesRootViewController.driveUUID = AppUserService.currentUser?.shareSpace
-                filesRootViewController.directoryUUID = AppUserService.currentUser?.shareSpace
-                filesRootViewController.selfState = .share
-            }
-        }
- 
+        
         let navi = UINavigationController.init(rootViewController: filesRootViewController)
         self.present(navi, animated: true, completion: nil)
     }
@@ -837,48 +833,23 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
             let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
             createNewFolderRequest(name: inputText, drive: drive, dir: dir)
         case .rename:
-            renameStateRequest(oldName:theFilesName, newName: inputText)
+            renameStateRequest(oldName:theFilesName, newName: inputText, callback: { [weak self](error) in
+                if error == nil{
+                    Message.message(text: "\(theFilesName ?? "") \(LocalizedString(forKey: "renamed to")) \(inputText)")
+                    self?.prepareData(animation: false)
+                }else{
+                    if let message =  error?.localizedDescription{
+                        Message.message(text:message)
+                    }else{
+                        Message.message(text:LocalizedString(forKey: "error"))
+                    }
+                }
+            })
         default:
             break
         }
     }
-    
-//    func localNetStateRenameRequest(oldName:String?,newName:String){
-//        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
-//        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
-//        let op = FilesOptionType.rename.rawValue
-//        let name = "\(oldName ?? "")|\(newName)"
-//        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: op).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
-//            let dic = [kRequestOpKey: op]
-//            do {
-//                let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
-//                formData.append(data, withName:name)
-//            }catch{
-//                Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
-//            }
-//        }, {  [weak self] (response) in
-//            if response.error == nil{
-//                Message.message(text: "\(oldName ?? "") \(LocalizedString(forKey: "renamed to")) \(newName)")
-//                self?.prepareData(animation: false)
-//            }else{
-//                if response.data != nil {
-//                    let errorDict =  dataToNSDictionary(data: response.data!)
-//                    if errorDict != nil{
-//                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-//                    }else{
-//                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-//                        Message.message(text: backToString ?? "error")
-//                    }
-//                }else{
-//                    Message.message(text: (response.error?.localizedDescription)!)
-//                }
-//            }
-//        }) { (error) -> (Void) in
-//            Message.message(text: error.localizedDescription)
-//        }
-//    }
-    
-    func renameStateRequest(oldName:String?,newName:String){
+    func renameStateRequest(oldName:String?,newName:String,callback:@escaping (_ error:Error?)->()){
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
         let op = FilesOptionType.rename.rawValue
@@ -893,58 +864,28 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
             }
         }, {  [weak self] (response) in
             if response.error == nil{
-                Message.message(text: "\(oldName ?? "") \(LocalizedString(forKey: "renamed to")) \(newName)")
-                self?.prepareData(animation: false)
+               return callback(nil)
             }else{
-                if response.data != nil {
-                    let errorDict =  dataToNSDictionary(data: response.data!)
-                    if errorDict != nil{
-                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-                    }else{
-                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-                        Message.message(text: backToString ?? "error")
+                if let errorDic = ErrorTools.dictResponseErrorData(response.data){
+                    let message = (errorDic[kRequestResponseMessageKey] as? String) ?? ""
+                    var code:Int = 0
+                    let responseCode = errorDic[kRequestResponseCodeKey] as? Int
+                    let codeString = errorDic[kRequestResponseCodeKey] as? String
+                    if responseCode != nil{
+                        code = responseCode ?? 0
                     }
-                }else{
-                    Message.message(text: (response.error?.localizedDescription)!)
+                    if codeString == kRequestResponseErrorEExistKey{
+                        code = ErrorCode.Request.EExist
+                    }
+                    let error  = NSError(domain: response.request?.url?.absoluteString ?? "", code: code, userInfo: [NSLocalizedDescriptionKey:message])
+                    return callback(error)
                 }
             }
         }) { (error) -> (Void) in
-            Message.message(text: error.localizedDescription)
+             return callback(error)
         }
     }
     
-//    func localNetStateCreateNewFolderRequest(name:String) {
-//        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
-//        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
-//        MkdirAPI.init(driveUUID: drive, directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: {  (formData) in
-//            let dic = [kRequestOpKey: kRequestMkdirValue]
-//            do {
-//                let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
-//                formData.append(data, withName:name)
-//            }catch{
-//                Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
-//            }
-//        }, { [weak self] (response) in
-//            if response.error == nil{
-//                Message.message(text: LocalizedString(forKey: "Folder created"))
-//                self?.prepareData(animation: false)
-//            }else{
-//                if response.data != nil {
-//                    let errorDict =  dataToNSDictionary(data: response.data!)
-//                    if errorDict != nil{
-//                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-//                    }else{
-//                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-//                        Message.message(text: backToString ?? "error")
-//                    }
-//                }else{
-//                    Message.message(text: (response.error?.localizedDescription)!)
-//                }
-//            }
-//            }, errorHandler: { (error) -> (Void) in
-//                Message.message(text: error.localizedDescription)
-//        })
-//    }
     
     func createNewFolderRequest(name:String,drive:String,dir:String){
         MkdirAPI.init(driveUUID: drive, directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: {  (formData) in

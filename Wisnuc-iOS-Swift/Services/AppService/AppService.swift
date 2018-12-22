@@ -158,7 +158,7 @@ class AppService: NSObject,ServiceProtocol{
             resultUser.localAddr = urlString
             resultUser.lanIP = lanIP
         }
-        self?.networkService.networkState = .normal
+      
         if resultUser.localAddr != nil{
             networkService.checkIP(address: resultUser.lanIP!) { [weak self] (success) in
                 if success{

@@ -92,7 +92,7 @@ class FilesRootViewController: BaseViewController{
                 let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
                 let title = isCopy ? LocalizedString(forKey: "复制到") : LocalizedString(forKey: "移动到")
                 self.movetoButton.setTitle(title, for: UIControlState.normal)
-                if drive ==  self.srcDictionary![kRequestTaskDriveKey]! &&  dir == self.srcDictionary![kRequestTaskDirKey]!{
+                if drive ==  self.srcDictionary![kRequestTaskDriveKey]! && dir == self.srcDictionary![kRequestTaskDirKey]!{
                    self.movetoButton.isEnabled = false
                 }
                 if  (self.moveModelArray?.contains(where: {$0.uuid == model?.uuid}))!{
@@ -142,6 +142,21 @@ class FilesRootViewController: BaseViewController{
         self.driveUUID = driveUUID
         if let backupRoot = backupRoot{
            self.backupRoot = backupRoot
+        }
+        prepareData(animation: true)
+    }
+    
+    init(style: NavigationStyle,srcDictionary:Dictionary<String, String>?,moveModelArray:Array<EntriesModel>?,isCopy:Bool?,isShare:Bool = false) {
+        super.init(style: style)
+        self.srcDictionary = srcDictionary
+        self.moveModelArray = moveModelArray
+        self.isCopy = isCopy ?? false
+        self.setState(state: .movecopy)
+        if isShare{
+            self.driveUUID = AppUserService.currentUser?.shareSpace
+            self.directoryUUID = AppUserService.currentUser?.shareSpace
+            self.setState(state: .share)
+            
         }
         prepareData(animation: true)
     }
@@ -276,94 +291,75 @@ class FilesRootViewController: BaseViewController{
     func prepareData(animation:Bool) {
         isRequesting = true
         if animation{
-           ActivityIndicator.startActivityIndicatorAnimation()
+            self.startActivityIndicator()
         }
-        self.collcectionViewController?.collectionView?.reloadEmptyDataSet()
-        let queue = DispatchQueue.init(label: "com.backgroundQueue.api", qos: .background, attributes: .concurrent)
         let requestDriveUUID = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let requestDirectoryUUID = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
-        DriveDirAPI.init(driveUUID: requestDriveUUID, directoryUUID: requestDirectoryUUID).startRequestJSONCompletionHandler(queue) {[weak self] (response) in
+        DriveDirAPI.init(driveUUID: requestDriveUUID, directoryUUID: requestDirectoryUUID).startRequestJSONCompletionHandler {[weak self] (response) in
+            self?.isRequesting = false
             self?.dataSource = Array.init()
-            if self?.collcectionViewController?.collectionView?.mj_header != nil {
-                self?.collcectionViewController?.collectionView?.mj_header.endRefreshing()
+            if let mj_header = self?.collcectionViewController?.collectionView?.mj_header  {
+                mj_header.endRefreshing()
             }
+            self?.stopActivityIndicator()
             if response.error == nil{
-                let isLocalRequest = AppNetworkService.networkState == .local
-                let responseDic = isLocalRequest ? response.value as! NSDictionary: (response.value as! NSDictionary).object(forKey: "data") as! NSDictionary
-                if responseDic.value(forKey: "code") != nil{
-                    let code = responseDic["code"] as! NSNumber
-                    let message = responseDic["message"] as! NSString
-                    if code.intValue != 1 && code.intValue > 200 {
-                        let error = BaseError.init(localizedDescription: message as String, code: Int(code.int64Value))
-                        let messageText = error.localizedDescription
-                        Message.message(text: messageText)
-                        ActivityIndicator.stopActivityIndicatorAnimation()
-                        self?.collcectionViewController?.collectionView?.reloadData()
-                        self?.collcectionViewController?.collectionView?.reloadEmptyDataSet()
-                        self?.isRequesting = false
-                        return
-                    }
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    Message.message(text: errorMessage)
+                    self?.isRequesting = false
+                    return
                 }
-                   let data = jsonToData(jsonDic: responseDic)
+                var responseDic =  response.value as? NSDictionary ?? (response.value as? NSDictionary)?.object(forKey: "data") as? NSDictionary ?? NSDictionary.init()
+                let data = jsonToData(jsonDic: responseDic)
                 do{
                     let model = try JSONDecoder().decode(FilesModel.self, from: data!)
                     self?.originDataSource = model.entries
-//                if let model = FilesModel.deserialize(from: responseDic){
-                    var filesArray = Array<EntriesModel>.init()
-                    var directoryArray = Array<EntriesModel>.init()
-                    var finishArray = Array<Any>.init()
-                    if let entries = model.entries{
-                        for (_,value) in entries.enumerated(){
-                            var model = value
-                            if let backupRoot = self?.backupRoot{
-                                model.backupRoot = backupRoot
-                            }
-                            if value.type == FilesType.directory.rawValue{
-                                filesArray.append(model)
-                            }else if value.type == FilesType.file.rawValue{
-                                directoryArray.append(model)
-                            }
-                        }
-                    }
-                    if filesArray.count != 0{
-                        finishArray.append(filesArray)
-                    }
-                    
-                    if directoryArray.count != 0{
-                        finishArray.append(directoryArray)
-                    }
-                    DispatchQueue.main.async {
-                        self?.dataSource = finishArray
-                        self?.collcectionViewController?.dataSource = self?.dataSource
-                        self?.collcectionViewController?.driveUUID = self?.driveUUID
-                        self?.collcectionViewController?.dirUUID = self?.directoryUUID
-                        let sortType = AppUserService.currentUser?.sortType == nil ? SortType(rawValue: 0) : SortType(rawValue: (AppUserService.currentUser?.sortType?.int64Value)!)
-                        let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
-                        self?.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
-                        self?.isRequesting = false
-                        self?.collcectionViewController?.collectionView?.reloadData()
-                        self?.collcectionViewController?.collectionView?.reloadEmptyDataSet()
-                    }
+                    self?.dataSource = self?.displayDataSource(model:model)
+                    self?.loadDataSouce()
                 }catch{
-                    print(error.localizedDescription)
+                    Message.message(text: LocalizedString(forKey: "error"))
                 }
-//                }
-                ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
-                mainThreadSafe {
-                    var messageText = response.error?.localizedDescription
-                    if response.error is BaseError{
-                       messageText =  (response.error as! BaseError).localizedDescription
-                    }
-                    self?.isRequesting = false
-                    Message.message(text: messageText!)
-                    ActivityIndicator.stopActivityIndicatorAnimation()
-                    
-                    self?.collcectionViewController?.collectionView?.reloadData()
-                    self?.collcectionViewController?.collectionView?.reloadEmptyDataSet()
+                if let messageText = response.error?.localizedDescription{
+                    Message.message(text: messageText)
                 }
             }
         }
+    }
+    
+    func displayDataSource(model:FilesModel)->Array<Any>{
+        var filesArray = Array<EntriesModel>.init()
+        var directoryArray = Array<EntriesModel>.init()
+        var finishArray = Array<Any>.init()
+        guard let entries = model.entries else { return Array<Any>.init()}
+        for value in entries{
+            var filesModel = value
+            filesModel.backupRoot = backupRoot
+            if value.type == FilesType.directory.rawValue{
+                filesArray.append(filesModel)
+            }else if value.type == FilesType.file.rawValue{
+                directoryArray.append(filesModel)
+            }
+        }
+        if filesArray.count != 0{
+            finishArray.append(filesArray)
+        }
+        
+        if directoryArray.count != 0{
+            finishArray.append(directoryArray)
+        }
+        return finishArray
+    }
+    
+    func loadDataSouce(){
+        self.collcectionViewController?.dataSource = self.dataSource
+        self.collcectionViewController?.driveUUID = self.driveUUID
+        self.collcectionViewController?.dirUUID = self.directoryUUID
+        let sortType = AppUserService.currentUser?.sortType == nil ? SortType(rawValue: 0) : SortType(rawValue: (AppUserService.currentUser?.sortType?.int64Value)!)
+        let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
+        self.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
+        self.isRequesting = false
+        self.collcectionViewController?.collectionView?.reloadData()
+        self.collcectionViewController?.collectionView?.reloadEmptyDataSet()
     }
     
     func setSortParameters(sortType:SortType,sortIsDown:Bool){
@@ -616,47 +612,6 @@ class FilesRootViewController: BaseViewController{
         return self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
     }
     
-//    func localNetStateFilesRemoveOptionRequest(names:[String]){
-//        for name in names {
-//            localNetStateFilesRemoveOptionRequest(name: name)
-//        }
-//    }
-    
-//    func localNetStateFilesRemoveOptionRequest(name:String){
-//        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
-//        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
-//        DirOprationAPI.init(driveUUID: drive, directoryUUID: dir, name: name, op: FilesOptionType.remove.rawValue).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
-//            let dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
-//            do {
-//                let data = try JSONSerialization.data(withJSONObject: dic, options: JSONSerialization.WritingOptions.prettyPrinted)
-//                    formData.append(data, withName: name)
-//            }catch{
-//                Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
-//            }
-//        }, { [weak self] (response) in
-//            mainThreadSafe {
-//                if response.error == nil{
-//                    Message.message(text: LocalizedString(forKey: "Folder removed"))
-//                    self?.prepareData(animation: false)
-//                }else{
-//                    if response.data != nil {
-//                        let errorDict =  dataToNSDictionary(data: response.data!)
-//                        if errorDict != nil{
-//                            Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-//                        }else{
-//                            let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-//                            Message.message(text: backToString ?? "error")
-//                        }
-//                    }else{
-//                        Message.message(text: (response.error?.localizedDescription)!)
-//                    }
-//                }
-//            }
-//        }, errorHandler: { (error) -> (Void) in
-//            Message.message(text: error.localizedDescription)
-//        })
-//    }
-    
     func filesRemoveOptionRequest(models:[EntriesModel]){
         for model in models {
             filesRemoveOptionRequest(model: model)
@@ -680,24 +635,18 @@ class FilesRootViewController: BaseViewController{
                 Message.message(text: LocalizedString(forKey: ErrorLocalizedDescription.JsonModel.SwitchTODataFail))
             }
         }, { [weak self] (response) in
-            mainThreadSafe {
-                if response.error == nil{
-                    Message.message(text: LocalizedString(forKey: "文件/文件夹已删除"))
-                    self?.prepareData(animation: false)
-                }else{
-                    if response.data != nil {
-                        let errorDict =  dataToNSDictionary(data: response.data!)
-                        if errorDict != nil{
-                            Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-                        }else{
-                            let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-                            Message.message(text: backToString ?? "error")
-                        }
-                    }else{
-                        Message.message(text: (response.error?.localizedDescription)!)
-                    }
-                }
+            if let errorMessage = ErrorTools.responseErrorData(response.data){
+                Message.message(text: errorMessage)
+                return
             }
+            
+            if let error = response.error{
+                Message.message(text: error.localizedDescription)
+                return
+            }
+            
+            Message.message(text: LocalizedString(forKey: "文件/文件夹已删除"))
+            self?.prepareData(animation: false)
             }, errorHandler: { (error) -> (Void) in
                 Message.message(text: error.localizedDescription)
         })
@@ -719,13 +668,8 @@ class FilesRootViewController: BaseViewController{
         self.navigationController?.pushViewController(searchVC, animated: true)
     }
     
-    
     private func prepareSearchBar() {
         self.view.addSubview(searchBar)
-//        let menuImage = UIImage.init(named:"menu.png")
-//        menuButton = IconButton(image: menuImage)
-//        menuButton.addTarget(self, action: #selector(menuButtonTap(_:)), for: UIControlEvents.touchUpInside)
-      
         if self.cellStyle == .list{
              listStyleButton.isSelected = true
         }else{
@@ -793,13 +737,12 @@ class FilesRootViewController: BaseViewController{
     
     // ojbc function (Selector)
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
-        let filesMoveToRootViewController = FilesMoveToRootViewController.init(style: NavigationStyle.white)
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
-        filesMoveToRootViewController.srcDictionary = [kRequestTaskDriveKey : drive,kRequestTaskDirKey:dir]
-        filesMoveToRootViewController.moveModelArray =  FilesHelper.sharedInstance().selectFilesArray
+        let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.white, srcDictionary: [kRequestTaskDriveKey : drive,kRequestTaskDirKey:dir], moveModelArray: FilesHelper.sharedInstance().selectFilesArray, isCopy: false)
+        filesRootViewController.title = LocalizedString(forKey: "My Drive")
         self.registerNotification()
-        let navi = UINavigationController.init(rootViewController: filesMoveToRootViewController)
+        let navi = UINavigationController.init(rootViewController: filesRootViewController)
         self.present(navi, animated: true, completion: nil)
     }
     
@@ -991,13 +934,9 @@ class FilesRootViewController: BaseViewController{
             self._collcectionViewController = newValue
         }
     }
-//    lazy var collcectionViewController : FilesRootCollectionViewController = { [weak self] in
-//
-//        return collectVC
-//    }()
     
     lazy var searchBar: BaseSearchBar = { [weak self] in
-//        let statusBarHeight:CGFloat = isX ? 44 : 20
+
         let searchBar = BaseSearchBar.init(frame: CGRect(x: MarginsCloseWidth, y: kStatusBarHeight + MarginsCloseWidth, width: __kWidth - MarginsWidth, height: searchBarHeight))
         searchBar.delegate = self
         return searchBar
@@ -1027,23 +966,6 @@ class FilesRootViewController: BaseViewController{
         return barButtonItem
     }()
 
-//    lazy var fabButton: MDCFloatingButton = {
-//        let plusImage = #imageLiteral(resourceName: "Plus")
-//        let buttonWidth:CGFloat = 56
-//        let defaultFloatingButton = MDCFloatingButton.init(frame: CGRect.init(x: __kWidth - 30 - buttonWidth, y: __kHeight - TabBarHeight - 16 - buttonWidth, width: buttonWidth, height: buttonWidth))
-//
-//        let plusImage36 = UIImage(named: "plus_white_36", in: Bundle(for: type(of: self)),
-//                                  compatibleWith: traitCollection)
-//
-////        defaultFloatingButton.sizeToFit()
-////        defaultFloatingButton.translatesAutoresizingMaskIntoConstraints = false
-//        defaultFloatingButton.setImage(plusImage, for: .normal)
-//        let mdcColorScheme = MDCButtonScheme.init()
-//        MDCButtonColorThemer.apply(appDelegate.colorScheme, to: defaultFloatingButton)
-//        defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
-//        return defaultFloatingButton
-//    }()
-    
     lazy var moveFilesBottomBar: UIView = {
         let height:CGFloat = 56.0
         let view = UIView.init(frame: CGRect(x: 0, y: __kHeight - height, width: __kWidth, height: height))
@@ -1099,21 +1021,6 @@ class FilesRootViewController: BaseViewController{
         return button
     }()
     
-//    lazy var fabBottomVC: FilesFABBottomSheetDisplayViewController = {
-//        let fabBottom = FilesFABBottomSheetDisplayViewController()
-//        fabBottom.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
-//        fabBottom.transitioningDelegate = self.transitionController
-//        fabBottom.delegate =  self
-//        return fabBottom
-//    }()
-    
-//    lazy var sequenceBottomVC: FilesSequenceBottomSheetContentTableViewController = {
-//        let bottomVC = FilesSequenceBottomSheetContentTableViewController()
-//        bottomVC.delegate = self
-//        return bottomVC
-//    }()
-    
-    
     lazy var transitionController: MDCDialogTransitionController = {
         let controller = MDCDialogTransitionController.init()
         return controller
@@ -1138,11 +1045,4 @@ class FilesRootViewController: BaseViewController{
           let barItem = UIBarButtonItem.init(image: UIImage.init(named: "liststyle.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(listStyleBarButtonItemTap(_ :)))
         return barItem
     }()
-
-//    lazy var documentController: UIDocumentInteractionController = {
-//        let doucumentController = UIDocumentInteractionController.init()
-//        doucumentController.delegate = self
-//        return doucumentController
-//    }()
 }
-

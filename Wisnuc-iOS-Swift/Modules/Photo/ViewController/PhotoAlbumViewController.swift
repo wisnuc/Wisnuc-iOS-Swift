@@ -229,7 +229,7 @@ class PhotoAlbumViewController: BaseViewController {
             if response.error == nil{
                 if let errorMessage = ErrorTools.responseErrorData(response.data){
                     let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.Request.CloudRequstError, userInfo: [NSLocalizedDescriptionKey:errorMessage])
-                    return complete(nil,error as! CustomNSError)
+                    return complete(nil,error)
                 }
                 let isLocalRequest = AppNetworkService.networkState == .local
                 let result = (isLocalRequest ? response.value as? NSArray : (response.value as! NSDictionary)["data"]) as? NSArray

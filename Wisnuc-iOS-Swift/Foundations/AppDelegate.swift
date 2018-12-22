@@ -36,16 +36,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     var coreDataContext: NSManagedObjectContext?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-//        let x =  FSOpenSSL.genCsr()
-//        print(x)
-// 
+        redirectNSlogToDocumentFolder()
         IQKeyboardManager.shared.enable = true
         registerCoreDataContext()
         registerWeChat()   // Wechat
         colorScheme = MDCBasicColorScheme(primaryColor: COR1)
         startNotifierNetworkStutas() // networkObserveNotification
-//        MDCAlertColorThemer.apply(colorScheme)
-//        self.window = UIWindow.init(frame: UIScreen.main.bounds)
         initRootVC()
         return true
     }
@@ -65,27 +61,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             userDefaults.synchronize()
         } else{
             if AppUserService.isUserLogin && AppUserService.isStationSelected{
-                self.getAllAsset()
-                fetchCookie()
-                setAppNetworkState()
-                getAllBackup()
-                setRootViewController()
-                if let language = AppUserService.currentUser?.language?.intValue{
-                    let languageType = LanguageType(number: language)
-                    LocalizeHelper.instance.setLanguage(languageType.rawValue)
-                }
-                
-                
+                didFinishLaunchingToMainScreen()
             }else{
-//                let type:LoginState?
-//                type = TokenManager.wechatLoginToken() != nil && (TokenManager.wechatLoginToken()?.count)!>0 ? .token:.wechat
-                let loginController = LoginRootViewController.init(.wechat)
-                self.loginController = loginController;
-                let navigationController = UINavigationController.init(rootViewController:loginController)
-                self.window?.rootViewController = navigationController
+                didFinishLaunchingToLogin()
             }
         }
          self.window?.makeKeyAndVisible()
+    }
+    
+    func didFinishLaunchingToLogin(){
+        let loginController = LoginRootViewController.init(.wechat)
+        self.loginController = loginController;
+        let navigationController = UINavigationController.init(rootViewController:loginController)
+        self.window?.rootViewController = navigationController
+    }
+    
+    func didFinishLaunchingToMainScreen(){
+        self.getAllAsset()
+        fetchCookie()
+        setAppNetworkState()
+        getAllBackup()
+        setRootViewController()
+        if let language = AppUserService.currentUser?.language?.intValue{
+            let languageType = LanguageType(number: language)
+            LocalizeHelper.instance.setLanguage(languageType.rawValue)
+        }
     }
     
     func registerWeChat(){
@@ -97,6 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
 
         }
     }
+    
     func getAllAsset(){
         var all:Array<WSAsset> = Array.init()
         PHPhotoLibrary.getAllAsset { (result, assets) in
@@ -146,33 +147,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     }
     
     func setRootViewController(){
-   
         let tabBarController = WSTabBarController ()
         
         let filesVC = FilesRootViewController()
         filesVC.selfState = .root
         filesVC.title = LocalizedString(forKey: "云盘")
         let photosVC = PhotoAlbumViewController.init(style: NavigationStyle.whiteWithoutShadow)
-//        photosVC.localAssetDataSources.append(contentsOf:AppAssetService.allAssets!)
-//        AppAssetService.getNetAssets { (error, netAssets) in
-//            if error == nil{
-//                DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 1.0){
-//                    DispatchQueue.main.async {
-//                        photosVC.addNetAssets(assetsArr: netAssets!)
-//                    }
-//                }
-//            }else{
-//                photosVC.localDataSouceSort()
-//            }
-//        }
         photosVC.title = LocalizedString(forKey: "相簿")
         let devieceVC = DeviceViewController.init(style: NavigationStyle.whiteWithoutShadow)
         devieceVC.title = LocalizedString(forKey: "设备")
+        
         let settingVC = SettingRootViewController.init(style: NavigationStyle.whiteWithoutShadow)
         let filesNavi = BaseNavigationController.init(rootViewController: filesVC)
         let photosNavi = BaseNavigationController.init(rootViewController: photosVC)
         let deviceNavi = BaseNavigationController.init(rootViewController: devieceVC)
         let settingNavi = BaseNavigationController.init(rootViewController: settingVC)
+        
         filesNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "云盘"), image: UIImage.init(named: "tab_files_selected.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 0)
         photosNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "相簿"), image: UIImage.init(named: "tab_photos.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 1)
         deviceNavi.tabBarItem = UITabBarItem(title:  LocalizedString(forKey: "设备"), image: UIImage.init(named: "tab_device.png")?.withRenderingMode(UIImageRenderingMode.alwaysOriginal), tag: 2)
@@ -198,13 +188,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         tabBarController.tabBar?.backgroundColor = UIColor.white
         tabBarController.tabBar?.selectedItemTintColor = COR1
         tabBarController.tabBar?.unselectedItemTintColor = LightGrayColor
-//        let drawerVC = FilesDrawerTableViewController.init(style: UITableViewStyle.grouped)
-//        let naviNavigationDrawer = AppNavigationDrawerController(rootViewController: tabBarController, leftViewController: drawerVC, rightViewController: nil)
+
         window?.rootViewController = tabBarController
         if loginController != nil {
             loginController = nil
         }
-//        MainServices().backupAseetsAction()
     }
     
     func setAppNetworkState(){
@@ -303,35 +291,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
         case Int((WXSuccess).rawValue): //用户同意
             Message.message(text: "授权成功")
             if resp is SendAuthResp{
-                let aresp = resp as! SendAuthResp
-                if let controller = UIViewController.currentViewController(){
-                    if  controller.isKind(of: LoginRootViewController.self){
-                        let loginVC = UIViewController.currentViewController() as! LoginRootViewController
-                        loginVC.weChatCallBackRespCode(code: aresp.code)
-                    }
-                    if  controller.isKind(of: MyBindWechatViewController.self){
-                        let bindVC = UIViewController.currentViewController() as! MyBindWechatViewController
-                        bindVC.weChatCallBackRespCode(code: aresp.code)
-                    }
-                }
+                wechatCallBackControllerAction(resp)
             }
-//            SendAuthResp *aresp = (SendAuthResp *)resp;
-//            NSLog(@"%@",NSStringFromClass([[UIViewController getCurrentVC] class]));
-//            if ([[UIViewController getCurrentVC] isKindOfClass:[FMLoginViewController class]]) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [(FMLoginViewController *)[UIViewController getCurrentVC] weChatCallBackRespCode:aresp.code];
-//                    });
-//            }else  if([[UIViewController getCurrentVC] isKindOfClass:[FMUserEditVC class]]){
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [(FMUserEditVC *)[UIViewController getCurrentVC] weChatCallBackRespCode:aresp.code];
-//                    });
-//            }else  if([[UIViewController getCurrentVC] isKindOfClass:[WBInitializationViewController class]]){
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [(WBInitializationViewController *)[UIViewController getCurrentVC] weChatCallBackRespCode:aresp.code];
-//                    });
-//            }else{
-//                [SXLoadingView hideProgressHUD];
-//            }
         case Int(WXErrCodeAuthDeny.rawValue)://用户拒绝授权
             Message.message(text: "用户拒绝授权")
         case Int(WXErrCodeSentFail.rawValue)://发送失败
@@ -346,6 +307,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     }
     
     
+    func wechatCallBackControllerAction(_ resp:BaseResp){
+        let aresp = resp as! SendAuthResp
+        if let controller = UIViewController.currentViewController(){
+            if  controller.isKind(of: LoginRootViewController.self){
+                let loginVC = UIViewController.currentViewController() as! LoginRootViewController
+                loginVC.weChatCallBackRespCode(code: aresp.code)
+            }
+            if  controller.isKind(of: MyBindWechatViewController.self){
+                let bindVC = UIViewController.currentViewController() as! MyBindWechatViewController
+                bindVC.weChatCallBackRespCode(code: aresp.code)
+            }
+        }
+    }
+    
+    func redirectNSlogToDocumentFolder() {
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentDirectory = paths[0]
+        let fileName = "winsun.log" // 注意不是NSData!
+        let logFilePath = URL(fileURLWithPath: documentDirectory).appendingPathComponent(fileName).absoluteString
+        // 先删除已经存在的文件
+        //    NSFileManager *defaultManager = [NSFileManager defaultManager];
+        //    [defaultManager removeItemAtPath:logFilePath error:nil];
+
+        // 将log输入到文件
+        freopen(logFilePath.cString(using: String.Encoding(rawValue: String.Encoding.ascii.rawValue)), "a+", stdout)
+        freopen(logFilePath.cString(using: String.Encoding(rawValue: String.Encoding.ascii.rawValue)), "a+", stderr)
+    }
     
     // MARK: - Core Data stack
     

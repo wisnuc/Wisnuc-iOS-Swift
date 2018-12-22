@@ -83,5 +83,8 @@ public let kRequestWechatKey = "wechat"
 
 public let kRequestResponseMessageKey = "message"
 
+public let kRequestResponseCodeKey = "code"
+
+public let kRequestResponseErrorEExistKey = "EExist"
 
 

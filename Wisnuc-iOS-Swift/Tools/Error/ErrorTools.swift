@@ -21,13 +21,38 @@ class ErrorTools: NSObject {
             return nil
         }
         
-        guard let code =  errorDict["code"] as? Int else{
+        guard let code =  errorDict["code"] else{
             return nil
         }
         
-        if code == 1 || message == "ok"{
+        if (code as? Int) == 1 || message == "ok"{
             return nil
         }
         return message
     }
+    
+    class func dictResponseErrorData(_ data:Data?) -> [String:Any?]?{
+        guard let errorData = data else {
+            return nil
+        }
+        
+        guard let errorDict =  dataToNSDictionary(data:errorData) else{
+            return nil
+        }
+        
+        guard let message =  errorDict[kRequestResponseMessageKey] as? String else{
+            return nil
+        }
+        
+        guard let code =  errorDict[kRequestResponseCodeKey] else{
+            return nil
+        }
+        
+        if (code as? Int) == 1 || message == "ok"{
+            return nil
+        }
+        let dict = [kRequestResponseCodeKey:code,kRequestResponseMessageKey:message]
+        return dict
+    }
 }
+
