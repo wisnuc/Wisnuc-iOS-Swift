@@ -84,7 +84,6 @@ class LoginCommonHelper: NSObject {
                 default:
                     Message.message(text: LocalizedString(forKey:"\(String(describing: (error?.localizedDescription)!))"),duration:2.0)
                 }
-                ActivityIndicator.startActivityIndicatorAnimation()
                 print(error as Any)
             }
         })

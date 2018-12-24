@@ -971,6 +971,8 @@
 		1FE9EF8D20EF5DEA00732728 /* CocoaSecurity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF8720EF5DE900732728 /* CocoaSecurity.m */; };
 		1FE9EF8F20EF61A200732728 /* PHPhotoLibraryExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF8E20EF61A200732728 /* PHPhotoLibraryExtension.swift */; };
 		1FE9EF9120EF6AC700732728 /* PHAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF9020EF6AC700732728 /* PHAssetExtension.swift */; };
+		1FE9FAC021D0C9D200B11F5A /* FilesConflictAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9FABE21D0C9D000B11F5A /* FilesConflictAlertViewController.swift */; };
+		1FE9FAC621D0CA2900B11F5A /* FilesConflictAlertViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FE9FAC521D0CA2900B11F5A /* FilesConflictAlertViewController.storyboard */; };
 		1FEABB5320A14B6300824448 /* files_word_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5220A14B6300824448 /* files_word_small.png */; };
 		1FEABB5520A14B6C00824448 /* files_word_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5420A14B6C00824448 /* files_word_small@2x.png */; };
 		1FEABB5720A14B7700824448 /* files_word_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5620A14B7700824448 /* files_word_small@3x.png */; };
@@ -2694,6 +2696,8 @@
 		1FE9EF8720EF5DE900732728 /* CocoaSecurity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaSecurity.m; sourceTree = "<group>"; };
 		1FE9EF8E20EF61A200732728 /* PHPhotoLibraryExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHPhotoLibraryExtension.swift; sourceTree = "<group>"; };
 		1FE9EF9020EF6AC700732728 /* PHAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetExtension.swift; sourceTree = "<group>"; };
+		1FE9FABE21D0C9D000B11F5A /* FilesConflictAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesConflictAlertViewController.swift; sourceTree = "<group>"; };
+		1FE9FAC521D0CA2900B11F5A /* FilesConflictAlertViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FilesConflictAlertViewController.storyboard; sourceTree = "<group>"; };
 		1FEABB5220A14B6300824448 /* files_word_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_word_small.png; sourceTree = "<group>"; };
 		1FEABB5420A14B6C00824448 /* files_word_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_word_small@2x.png"; sourceTree = "<group>"; };
 		1FEABB5620A14B7700824448 /* files_word_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_word_small@3x.png"; sourceTree = "<group>"; };
@@ -6065,6 +6069,8 @@
 				1F537A092122816400A555C5 /* FilesDownloadAlertViewController.storyboard */,
 				1FFD12BF20EB0F310053A3F7 /* NewFolderViewController.swift */,
 				1FFD12C320EB175E0053A3F7 /* NewFolderViewController.storyboard */,
+				1FE9FABE21D0C9D000B11F5A /* FilesConflictAlertViewController.swift */,
+				1FE9FAC521D0CA2900B11F5A /* FilesConflictAlertViewController.storyboard */,
 			);
 			path = AlertController;
 			sourceTree = "<group>";
@@ -7081,6 +7087,7 @@
 				1F38E2BF2182FD33003FCAEE /* MyAccountSecurityVerificationTableViewCell.xib in Resources */,
 				1F38E2A82181CA19003FCAEE /* photo_icon_device_detail.png in Resources */,
 				1FE08965217479870049F44B /* add_gray@3x.png in Resources */,
+				1FE9FAC621D0CA2900B11F5A /* FilesConflictAlertViewController.storyboard in Resources */,
 				1F38E2532179B5EE003FCAEE /* share_box_icon.png in Resources */,
 				1FE089BD21772A5D0049F44B /* finished@2x.png in Resources */,
 				1F5882432085F07000394BD6 /* offline@3x.png in Resources */,
@@ -7338,6 +7345,7 @@
 				1F169DD820805B2000860F31 /* Message.swift in Sources */,
 				1FFD12B520E61B4D0053A3F7 /* FilesTasksModel.swift in Sources */,
 				1FE674DC20D21B11006F97DB /* TRCommon.swift in Sources */,
+				1FE9FAC021D0C9D200B11F5A /* FilesConflictAlertViewController.swift in Sources */,
 				1FBB7089213FC5630090FA57 /* FSOpenSSL.m in Sources */,
 				1F16B35D21AE609900178143 /* DeviceUserManagerTableViewCell.swift in Sources */,
 				1F4242A720F33BAB0085E2F0 /* PhotoCollectionViewCell.swift in Sources */,

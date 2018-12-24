@@ -296,23 +296,23 @@ class PhotoAlbumViewController: BaseViewController {
         DispatchQueue.main.async {
             self.albumCollectionView.reloadData()
         }
-        let backgroundDispatchQueue = DispatchQueue.init(label: "64picDownload", qos: .background)
-        backgroundDispatchQueue.async {
-            autoreleasepool {
-            for  model in models{
-                    guard let fmhash =  (model as? NetAsset)?.fmhash else {
-                        return
-                    }
-                    let size = CGSize(width: 64, height: 64)
-                    YYImageCache.shared().getImageData(forKey: fmhash, with: { (data) in
-                        if  data == nil{
-                            let _ = AppNetworkService.getThumbnailBackgroud(hash: fmhash, size: size) { (error, image, url) in
-                            }
-                        }
-                    })
-                }
-            }
-        }
+//        let backgroundDispatchQueue = DispatchQueue.init(label: "64picDownload", qos: .background)
+//        backgroundDispatchQueue.async {
+//            autoreleasepool {
+//            for  model in models{
+//                    guard let fmhash =  (model as? NetAsset)?.fmhash else {
+//                        return
+//                    }
+//                    let size = CGSize(width: 64, height: 64)
+//                    YYImageCache.shared().getImageData(forKey: fmhash, with: { (data) in
+//                        if  data == nil{
+//                            let _ = AppNetworkService.getThumbnailBackgroud(hash: fmhash, size: size) { (error, image, url) in
+//                            }
+//                        }
+//                    })
+//                }
+//            }
+//        }
     }
     
     func setVideoData(hash:String? = nil,loacalAsset:PHAsset? = nil,models:[NetAsset]?){

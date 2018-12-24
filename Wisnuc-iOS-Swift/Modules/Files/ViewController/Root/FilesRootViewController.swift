@@ -146,17 +146,17 @@ class FilesRootViewController: BaseViewController{
         prepareData(animation: true)
     }
     
-    init(style: NavigationStyle,srcDictionary:Dictionary<String, String>?,moveModelArray:Array<EntriesModel>?,isCopy:Bool?,isShare:Bool = false) {
+    init(style: NavigationStyle,srcDictionary:Dictionary<String, String>?,moveModelArray:Array<EntriesModel>?,isCopy:Bool?,isShare:Bool = false,driveUUID:String? = nil,directoryUUID:String? = nil) {
         super.init(style: style)
+        self.directoryUUID = directoryUUID
+        self.driveUUID = driveUUID
         self.srcDictionary = srcDictionary
         self.moveModelArray = moveModelArray
         self.isCopy = isCopy ?? false
-        self.setState(state: .movecopy)
         if isShare{
-            self.driveUUID = AppUserService.currentUser?.shareSpace
-            self.directoryUUID = AppUserService.currentUser?.shareSpace
             self.setState(state: .share)
-            
+        }else{
+             self.setState(state: .movecopy)
         }
         prepareData(animation: true)
     }
@@ -308,7 +308,7 @@ class FilesRootViewController: BaseViewController{
                     self?.isRequesting = false
                     return
                 }
-                var responseDic =  response.value as? NSDictionary ?? (response.value as? NSDictionary)?.object(forKey: "data") as? NSDictionary ?? NSDictionary.init()
+                let responseDic =  response.value as? NSDictionary ?? (response.value as? NSDictionary)?.object(forKey: "data") as? NSDictionary ?? NSDictionary.init()
                 let data = jsonToData(jsonDic: responseDic)
                 do{
                     let model = try JSONDecoder().decode(FilesModel.self, from: data!)
@@ -760,8 +760,7 @@ class FilesRootViewController: BaseViewController{
                 
             let placeholder = LocalizedString(forKey: "未命名文件")
             let name = model.backupRoot ? model.bname ?? model.name ?? placeholder : model.name ?? placeholder
-//            let resource = "/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))"
-//
+
             var paramKey = "name"
             var paramValue = name
             if let hash = model.hash,model.bname != nil{
@@ -769,7 +768,6 @@ class FilesRootViewController: BaseViewController{
                 paramValue = hash
             }
                 let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?\(paramKey)=\(paramValue)"
-                //            let requestURL = AppNetworkService.networkState == .normal ? "\(kCloudBaseURL)\(kCloudCommonPipeUrl)?\(kRequestUrlPathKey)=\(resource)&\(kRequestVerbKey)=\(RequestMethodValue.GET)&\(paramKey)=\(paramValue)" : localUrl
                 if AppNetworkService.networkState == .local{
                     urlStrings.append(localUrl)
                 }else{
@@ -883,26 +881,39 @@ class FilesRootViewController: BaseViewController{
                 return
         }
         let type = isCopy ? FilesTasksType.copy.rawValue : FilesTasksType.move.rawValue
+        let copy = isCopy == true ? true : false
         let task = TasksAPI.init(type: type, names: names, srcDrive: self.srcDictionary![kRequestTaskDriveKey]!, srcDir: self.srcDictionary![kRequestTaskDirKey]!, dstDrive: drive, dstDir: dir)
-        task.startRequestJSONCompletionHandler { (response) in
+        self.startActivityIndicator()
+        task.startRequestJSONCompletionHandler { [weak self](response) in
             if response.error == nil{
-                self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
-                    let messageDetail = self?.selfState == .share ? LocalizedString(forKey: "已分享到") : (self?.isCopy)! ? LocalizedString(forKey: "已复制到") : LocalizedString(forKey: "已移动到")
-                    let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) \(messageDetail) \(self?.title ?? "files")") : LocalizedString(forKey: "\(names.count) 个文件 \(messageDetail) \(self?.title ?? "files")")
-                     Message.message(text: message)
-                     defaultNotificationCenter().post(name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
-                })
-            }else{
-                if response.data != nil {
-                    let errorDict =  dataToNSDictionary(data: response.data!)
-                    if errorDict != nil{
-                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-                    }else{
-                        Message.message(text: (response.error?.localizedDescription)!)
-                    }
-                }else{
-                     Message.message(text: (response.error?.localizedDescription)!)
+                let messageDetail = self?.selfState == .share ? LocalizedString(forKey: "已分享到") : (self?.isCopy)! ? LocalizedString(forKey: "已复制到") : LocalizedString(forKey: "已移动到")
+                let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) \(messageDetail) \(self?.title ?? "files")") : LocalizedString(forKey: "\(names.count) 个文件 \(messageDetail) \(self?.title ?? "files")")
+                
+                guard let dic = ((response.value) as? NSDictionary)?.object(forKey: "data") as? NSDictionary ?? (response.value) as? NSDictionary else {
+                    return
                 }
+                if let model = FilesTasksModel.deserialize(from: dic){
+                   
+                    self?.taskHandle(isCopy:copy,taskModel: model, callback: {[weak self](error) in
+                        if let error = error{
+                            self?.presentingViewController?.dismiss(animated: true, completion: {
+                                Message.message(text:error.localizedDescription)
+                            })
+                            return
+                        }
+                        
+                        defaultNotificationCenter().post(name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
+                        self?.stopActivityIndicator()
+                        self?.presentingViewController?.dismiss(animated: true, completion: {
+                           Message.message(text: message)
+                        })
+                    })
+                }
+            }else{
+                 Message.message(text: (response.error?.localizedDescription)!)
+                self?.presentingViewController?.dismiss(animated: true, completion: {
+                    
+                })
             }
         }
     }

@@ -357,7 +357,7 @@ extension LoginViewController:UINavigationControllerDelegate{
 
 extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
     func loginFinish(user: User, stationModel: Any) {
-        ActivityIndicator.startActivityIndicatorAnimation()
+            self.startActivityIndicator()
             let model = stationModel as! StationsInfoModel
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
                 if error == nil && userData != nil{
@@ -370,6 +370,7 @@ extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
                         AppService.sharedInstance().saveUserUsedDeviceInfo(sn: sn, token: cloudToken, closure: {})
                     }
                     appDelegate.initRootVC()
+                    self.stopActivityIndicator()
                 }else{
                     if error != nil{
                         switch error {
@@ -383,7 +384,7 @@ extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
                             Message.message(text: (error?.localizedDescription)!, duration: 2.0)
                         }
                         AppUserService.logoutUser()
-                        ActivityIndicator.stopActivityIndicatorAnimation()
+                        self.stopActivityIndicator()
                     }
                 }
             }

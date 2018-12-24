@@ -871,7 +871,7 @@
  
  extension LoginRootViewController:LoginSelectionDeviceViewControllerDelegte{
     func loginFinish(user: User, stationModel: Any) {
-        ActivityIndicator.startActivityIndicatorAnimation()
+        self.startActivityIndicator()
             let model = stationModel as! StationsInfoModel
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
                 if error == nil && userData != nil{
@@ -880,6 +880,7 @@
                     AppUserService.setCurrentUser(userData)
                     AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
                     AppUserService.synchronizedCurrentUser()
+                    self.stopActivityIndicator()
                     appDelegate.initRootVC()
             }else{
                 if error != nil{
@@ -894,7 +895,7 @@
                         Message.message(text: (error?.localizedDescription)!, duration: 2.0)
                     }
                     AppUserService.logoutUser()
-                    ActivityIndicator.stopActivityIndicatorAnimation()
+                    self.stopActivityIndicator()
                 }
             }
         }

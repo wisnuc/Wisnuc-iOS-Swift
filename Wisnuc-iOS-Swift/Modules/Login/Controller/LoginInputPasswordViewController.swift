@@ -40,6 +40,11 @@ class LoginInputPasswordViewController: BaseViewController {
         self.passwordTextFiled.becomeFirstResponder()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.stopActivityIndicator()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if self.alertView != nil {
@@ -192,11 +197,12 @@ class LoginInputPasswordViewController: BaseViewController {
             return
         }
         
-        ActivityIndicator.startActivityIndicatorAnimation()
+        self.startActivityIndicator()
         let request = SighInTokenAPI.init(phoneNumber: phone, password: password)
         request.startRequestDataCompletionHandler{ [weak self](response) in
             ActivityIndicator.stopActivityIndicatorAnimation()
             if  response.error == nil{
+                self?.stopActivityIndicator()
                 do {
                     let model = try JSONDecoder().decode(SighInTokenModel.self, from: response.value!)
                     if model.code == 1 {
@@ -211,9 +217,10 @@ class LoginInputPasswordViewController: BaseViewController {
                             guard (model.data?.id) != nil else{
                                 return
                             }
-                            ActivityIndicator.startActivityIndicatorAnimation()
+                            self?.startActivityIndicator()
                              let user = AppUserService.synchronizedUserInLogin(model, cookie)
                             LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure:{ [weak self](user,stationModel) in
+                                self?.stopActivityIndicator()
                                 self?.loginFinish(user: user, stationModel: stationModel)
                             })
                         }
@@ -232,6 +239,7 @@ class LoginInputPasswordViewController: BaseViewController {
                  ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 // error
+                self?.stopActivityIndicator()
                 self?.nextButtonDisableStyle()
                 if response.data != nil {
                     let errorDict =  dataToNSDictionary(data: response.data!)
@@ -242,9 +250,8 @@ class LoginInputPasswordViewController: BaseViewController {
                         Message.message(text: backToString ?? "error")
                     }
                 }else{
-                    Message.message(text: "error code :\(String(describing: response.response?.statusCode ?? -0)) error:\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
+                    Message.message(text: "\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
                 }
-               ActivityIndicator.stopActivityIndicatorAnimation()
             }
         }
     }
@@ -334,19 +341,19 @@ extension LoginInputPasswordViewController:UITextFieldDelegate{
 extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDelegte{
     func loginFinish(user: User, stationModel: Any) {
         let model = stationModel as! StationsInfoModel
-        ActivityIndicator.startActivityIndicatorAnimation()
+        self.startActivityIndicator()
         AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
-            
             if error == nil && userData != nil{
                 AppUserService.isUserLogin = true
                 AppUserService.isStationSelected = true
+                userData?.isSelectStation = NSNumber.init(value: true)
                 AppUserService.setCurrentUser(userData)
-                AppUserService.currentUser?.isSelectStation = NSNumber.init(value: AppUserService.isStationSelected)
                 AppUserService.synchronizedCurrentUser()
+                self.stopActivityIndicator()
                 appDelegate.initRootVC()
-                ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 if error != nil{
+                    self.stopActivityIndicator()
                     switch error {
                     case is LoginError:
                         let loginError = error as! LoginError
@@ -358,7 +365,6 @@ extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDel
                         Message.message(text: (error?.localizedDescription)!, duration: 2.0)
                     }
                     AppUserService.logoutUser()
-                    ActivityIndicator.stopActivityIndicatorAnimation()
                 }
             }
         }

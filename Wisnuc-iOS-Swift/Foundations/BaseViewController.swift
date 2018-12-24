@@ -300,6 +300,12 @@ extension UIViewController{
         
         //in case this method is called from a closure
         DispatchQueue.main.async {
+            if let activityIndicator = self.view.subviews.filter(
+                { $0.tag == self.activityIndicatorTag}).first as? MDCActivityIndicator {
+                activityIndicator.stopAnimating()
+                activityIndicator.removeFromSuperview()
+                self.view.isUserInteractionEnabled = true
+            }
             let width: CGFloat = __kWidth / 2
             let height: CGFloat = __kHeight / 2
             

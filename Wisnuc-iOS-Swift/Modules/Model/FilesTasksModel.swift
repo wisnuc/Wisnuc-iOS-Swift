@@ -22,6 +22,11 @@ enum FilesTasksType:String,HandyJSONEnum{
 enum FilesTaskState:String,HandyJSONEnum{
     case Conflict
     case Working
+    case Finish
+    case Failed
+    case Preparing
+    case Parent
+    
 }
 
 enum FilesTaskErrorCode:String,HandyJSONEnum{

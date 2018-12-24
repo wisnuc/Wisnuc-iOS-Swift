@@ -904,7 +904,7 @@ class LoginNextStepViewController: BaseViewController {
         
         ActivityIndicator.startActivityIndicatorAnimation()
         let requestType = type == nil ? .password : type!
-        let request = SmsCodeTicket.init(phone:phone, code: code,type:.password)
+        let request = SmsCodeTicket.init(phone:phone, code: code,type:requestType)
         request.startRequestJSONCompletionHandler { (response) in
             ActivityIndicator.stopActivityIndicatorAnimation()
             if let error = response.error{

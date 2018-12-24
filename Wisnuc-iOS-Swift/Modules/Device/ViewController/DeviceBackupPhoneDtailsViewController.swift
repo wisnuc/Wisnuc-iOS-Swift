@@ -32,6 +32,9 @@ class DeviceBackupPhoneDtailsViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let autoBackupSwitchOn = AppUserService.currentUser?.autoBackUp?.boolValue{
+            self.autoBackupSwitchOn = autoBackupSwitchOn
+        }
         self.view.addSubview(backupTableView)
         self.view.bringSubview(toFront: appBar.appBarViewController.headerView)
     }
@@ -150,10 +153,14 @@ class DeviceBackupPhoneDtailsViewController: BaseViewController {
                 return
             }
             AppService.sharedInstance().startAutoBackup(uuid: uuid) {
+               
             }
+             AppUserService.currentUser?.autoBackUp = NSNumber.init(value: true)
         } else{
             AppService.sharedInstance().autoBackupManager.stop()
+            AppUserService.currentUser?.autoBackUp = NSNumber.init(value: false)
         }
+        AppUserService.synchronizedCurrentUser()
     }
     
     lazy var backupTableView: UITableView = {

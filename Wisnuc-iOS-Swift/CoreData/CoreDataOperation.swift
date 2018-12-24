@@ -8,6 +8,8 @@
 
 import Foundation
 import SugarRecord
+import CoreData
+
 class CoreDataOperation: NSObject {
     func coreDataStorage(name:String) -> CoreDataDefaultStorage {
         let store = CoreDataStore.named(name)
@@ -17,17 +19,35 @@ class CoreDataOperation: NSObject {
         return defaultStorage
     }
     
-//    func save(x:Void,){
-//        let db = coreDataStorage(name: <#String#>)
-//        do {
-//            try db.operation { (context, save) throws in
-//                // Do your operations here
-//                x
-//                save()
-//            }
-//        } catch {
-//            // There was an error in the operation
-//        }
-//    }
+ 
+   
+    static func cloneObject(source :NSManagedObject, context :NSManagedObjectContext) -> NSManagedObject{
+        let entityName = source.entity.name
+        let cloned = NSEntityDescription.insertNewObject(forEntityName: entityName!, into: context)
+        
+        let attributes = NSEntityDescription.entity(forEntityName: entityName!, in: context)?.attributesByName
+        
+        for (key,_) in attributes! {
+            cloned.setValue(source.value(forKey: key), forKey: key)
+        }
+        
+        let relationships = NSEntityDescription.entity(forEntityName: entityName!, in: context)?.relationshipsByName
+        for (key,_) in relationships! {
+            let sourceSet = source.mutableSetValue(forKey: key)
+            let clonedSet = cloned.mutableSetValue(forKey: key)
+            let e = sourceSet.objectEnumerator()
+            
+            var relatedObj = e.nextObject() as? NSManagedObject
+            
+            while ((relatedObj) != nil) {
+                let clonedRelatedObject = CoreDataOperation.cloneObject(source: relatedObj!, context: context)
+                clonedSet.add(clonedRelatedObject)
+                relatedObj = e.nextObject() as? NSManagedObject
+            }
+        }
+        
+        return cloned
+    }
+
 }
 

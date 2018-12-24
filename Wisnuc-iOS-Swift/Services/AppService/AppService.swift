@@ -8,6 +8,8 @@
 
 import UIKit
 import MaterialComponents.MDCAlertController
+import MagicalRecord
+ 
  enum DriveType:String{
     case home
     case share = "bulit-in"
@@ -142,9 +144,14 @@ class AppService: NSObject,ServiceProtocol{
 //        if model.uuid == nil || isNilString(model.uuid){
 //            complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
 //        }
-        let resultUser = orginTokenUser.copy() as! User
+        
+        let resultUser = orginTokenUser
         let callBackClosure = { (callBackError:Error? , callBackUser:User?)->() in
-            complete(callBackError,callBackUser)
+            if callBackError != nil{
+                complete(callBackError,orginTokenUser.shallowCopy() as? User)
+            }else{
+                complete(callBackError,callBackUser)
+            }
         }
 
         resultUser.stationId = stationModel.sn
@@ -344,10 +351,10 @@ class AppService: NSObject,ServiceProtocol{
                     if error is BaseError{
                         let baseErrot = error as! BaseError
                         if  baseErrot.code == ErrorCode.Backup.BackupDirNotFound{
-                               self?.rebuildAutoBackupManager()
+                            self?.rebuildAutoBackupManager()
                         }
                     }else{
-                        //retry
+                         self?.rebuildAutoBackupManager()
                     }
                 }else{
                     print("Start Upload ...")

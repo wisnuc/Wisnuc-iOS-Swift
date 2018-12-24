@@ -63,14 +63,12 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                 guard let uuid = model.uuid else{
                     return
                 }
+                
                 if model.type == FilesType.directory.rawValue{
-                    let nextViewController = FilesRootViewController.init(driveUUID: driveUUID, directoryUUID: uuid,style:.white)
+                    var nextViewController = FilesRootViewController.init(driveUUID: driveUUID, directoryUUID: uuid,style:.white)
                     if self.selfState == .movecopy{
-                        nextViewController.moveModelArray = moveModelArray
-                        nextViewController.srcDictionary = srcDictionary
+                        nextViewController = FilesRootViewController.init(style: .white, srcDictionary: srcDictionary, moveModelArray: moveModelArray, isCopy: isCopy,driveUUID:driveUUID,directoryUUID:uuid)
                         nextViewController.model = model
-                        nextViewController.isCopy = isCopy
-                        nextViewController.selfState = self.selfState
                     }
                     let tab = retrieveTabbarController()
                     tab?.setTabBarHidden(true, animated: true)
@@ -101,7 +99,12 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                                 }
                             }
                         }else{
-                            Message.message(text: LocalizedString(forKey: "\(name)下载失败"))
+                            if let error = error {
+                                 Message.message(text: error.localizedDescription)
+                        
+                            }else{
+                                Message.message(text: LocalizedString(forKey: "\(name)下载失败"))
+                            }
                         }
                     })
                 }
@@ -441,28 +444,15 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     }
     
     func patchNodes(taskUUID:String,nodeUUID:String,policySameValue:String? = nil , policyDiffValue:String? = nil ,callback:@escaping ((_ error:Error?)->())){
-        TasksAPI.init(taskUUID: taskUUID, nodeUUID: nodeUUID, policySameValue: policySameValue, policyDiffValue: policyDiffValue).startRequestJSONCompletionHandler { [weak self] (response) in
+        TasksAPI.init(taskUUID: taskUUID, nodeUUID: nodeUUID, policySameValue: policySameValue, policyDiffValue: policyDiffValue).startRequestJSONCompletionHandler {(response) in
             if response.error == nil{
-//                if let taskModel = FilesTasksModel.deserialize(from: modelDic){
-                    return callback(nil)
-//                }
-//                else{
-//                    let error = NSError(domain: response.request?.url?.absoluteString ?? "", code: ErrorCode.JsonModel.SwitchTOModelFail, userInfo: [NSLocalizedDescriptionKey:ErrorLocalizedDescription.JsonModel.SwitchTOModelFail])
-//                   return callback(taskModel)
-//                }
-            }else{
-                if response.data != nil {
-                    let errorDict =  dataToNSDictionary(data: response.data!)
-                    if errorDict != nil{
-                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-                    }else{
-                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-                        Message.message(text: backToString ?? "error")
-                    }
-                }else{
-                    //                    Message.message(text: (response.error?.localizedDescription)!)
-                    callback(response.error)
+                if let errorMessage = ErrorTools.responseErrorData(response.data){
+                    let error = NSError(domain: response.request?.url?.absoluteString ?? "", code: 0, userInfo: [NSLocalizedDescriptionKey:errorMessage])
+                    return callback(error)
                 }
+                return callback(nil)
+            }else{
+               return callback(response.error)
             }
         }
     }
@@ -512,14 +502,30 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 switch AppNetworkService.networkState {
                 case .local?:
                     if let taskModel = FilesTasksModel.deserialize(from: rootDic){
-                        self?.taskHandle(taskModel: taskModel)
+                        self?.taskHandle(taskModel: taskModel, callback: { (error) in
+                            if let error = error{
+                                Message.message(text: error.localizedDescription)
+                            }else{
+                                ActivityIndicator.stopActivityIndicatorAnimation()
+                                Message.message(text: LocalizedString(forKey: "创建副本成功"))
+                                self?.prepareData(animation: false)
+                            }
+                        })
                     }
                 case .normal?:
                     if let dataCode = rootDic["code"] as? Int64{
                         if dataCode == 1{
                             if let dic =  rootDic["data"] as? NSDictionary{
                                 if let taskModel = FilesTasksModel.deserialize(from: dic){
-                                    self?.taskHandle(taskModel: taskModel)
+                                    self?.taskHandle(taskModel: taskModel, callback: { (error) in
+                                        if let error = error{
+                                            Message.message(text: error.localizedDescription)
+                                        }else{
+                                            ActivityIndicator.stopActivityIndicatorAnimation()
+                                            Message.message(text: LocalizedString(forKey: "创建副本成功"))
+                                            self?.prepareData(animation: false)
+                                        }
+                                    })
                                 }
                             }
                         }else{
@@ -543,27 +549,60 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
     }
     
-    func taskHandle(taskModel:FilesTasksModel){
-        self.getTask(taskUUID: taskModel.uuid!, callback: { [weak self](model) in
+    func taskHandle(isCopy:Bool = false,taskModel:FilesTasksModel,callback:@escaping (_ error:Error?)->()){
+        self.getTask(taskUUID: taskModel.uuid!, callback: {[unowned self](model) in
             if model.nodes?.count != 0 {
                 if model.nodes?.first?.state == .Conflict && model.nodes?.first?.error?.code == .EEXIST{
-                    guard let uuid = model.uuid,let srcuuid = model.nodes?.first?.src?.uuid else{
-                        Message.message(text: LocalizedString(forKey: "error"))
-                        return
+                    if let uuid = model.uuid,let srcuuid = model.nodes?.first?.src?.uuid {
+                        if !isCopy{
+                            self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { (error)in
+                                return callback(error)
+                            })
+                        }else{
+                            if let alertVC = self.filesConflictAlert(task: model){
+                                alertVC.confirmCallback = { [unowned self] (type) in
+                                    self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: type, callback: { (error)in
+                                        return callback(error)
+                                    })
+                                }
+                            }
+                        }
                     }
-                    self?.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { [weak self] (error)in
-//                        self?.renameStateRequest(oldName: <#T##String?#>, newName: <#T##String#>)
-                        ActivityIndicator.stopActivityIndicatorAnimation()
-                            Message.message(text: LocalizedString(forKey: "创建副本成功"))
-                            self?.prepareData(animation: false)
-                    })
-                }else if model.nodes?.first?.state == .Working{
-                    self?.taskHandle(taskModel: taskModel)
+                }else if model.nodes?.first?.state == .Working || model.nodes?.first?.state == .Preparing{
+                    self.taskHandle(isCopy:isCopy,taskModel: taskModel, callback: callback)
+                }else if model.nodes?.first?.state == .Finish {
+                    return callback(nil)
+                }else if model.nodes?.first?.state == .Failed{
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "error:failed")])
+                    return callback(error)
                 }
             }
         })
     }
     
+    func filesConflictAlert(task:FilesTasksModel)->FilesConflictAlertViewController?{
+        let bundle = Bundle.init(for: FilesConflictAlertViewController.self)
+        let storyboard = UIStoryboard.init(name: "FilesConflictAlertViewController", bundle: bundle)
+        let identifier = "FilesConflictAlertViewController"
+        
+        let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+        viewController.modalPresentationStyle = UIModalPresentationStyle.custom
+        viewController.transitioningDelegate = self.transitionController
+        
+        weak var vc =  (viewController as? FilesConflictAlertViewController)
+        vc?.model = task
+        vc?.delegate = self
+        self.present(viewController, animated: true, completion: {
+            
+        })
+        let presentationController =
+            viewController.mdc_dialogPresentationController
+        if presentationController != nil{
+            presentationController?.dismissOnBackgroundTap = false
+        }
+        return vc
+    }
+
     func renamePrepare(model:EntriesModel){
         let filesType = model.type ?? ""
         let name = model.name ?? ""
@@ -679,12 +718,16 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     
     func copyToAction(model:EntriesModel,isShare:Bool? = nil){
         var share:Bool = false
+        var drive:String?
+        var dir:String?
         if let isShare = isShare{
             if isShare{
+                drive = AppUserService.currentUser?.shareSpace
+                dir = AppUserService.currentUser?.shareSpace
                 share = true
             }
         }
-        let filesRootViewController =  FilesRootViewController.init(style: NavigationStyle.white, srcDictionary: [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()], moveModelArray:  [model], isCopy: true,isShare:share)
+        let filesRootViewController =  FilesRootViewController.init(style: NavigationStyle.white, srcDictionary: [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()], moveModelArray:  [model], isCopy: true,isShare:share,driveUUID:drive,directoryUUID:dir)
         
         filesRootViewController.title = LocalizedString(forKey: "My Drive")
         self.registerNotification()
@@ -954,3 +997,9 @@ extension  FilesRootViewController:UIDocumentPickerDelegate{
     }
 }
 
+
+extension  FilesRootViewController:FilesConflictAlertViewControllerDelegate{
+    func conflictAction(action: String) {
+        
+    }
+}

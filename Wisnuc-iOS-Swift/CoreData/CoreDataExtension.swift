@@ -10,7 +10,15 @@ import Foundation
 import CoreData
 
 extension NSManagedObject{
-
+    func shallowCopy() -> NSManagedObject? {
+        guard let context = managedObjectContext, let entityName = entity.name else { return nil }
+        let copy = NSEntityDescription.insertNewObject(forEntityName: entityName, into: context)
+        let attributes = entity.attributesByName
+        for (attrKey, _) in attributes {
+            copy.setValue(value(forKey: attrKey), forKey: attrKey)
+        }
+        return copy
+    }
 }
 
 

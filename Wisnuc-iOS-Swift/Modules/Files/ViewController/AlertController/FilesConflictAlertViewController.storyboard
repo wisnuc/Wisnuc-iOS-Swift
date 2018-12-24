@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Files Conflict Alert View Controller-->
+        <scene sceneID="dVu-PC-0bT">
+            <objects>
+                <viewController storyboardIdentifier="FilesConflictAlertViewController" id="xjq-eh-rkl" customClass="FilesConflictAlertViewController" customModule="Wisnuc_iOS_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="UnO-tu-whd">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="345"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="R4U-ku-pqz">
+                                <rect key="frame" x="0.0" y="56" width="375" height="238"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DeR-6g-vIR">
+                                <rect key="frame" x="25" y="20" width="325" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wge-k4-UZs">
+                                <rect key="frame" x="25" y="36" width="325" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="DialogWithInputFieldDialogWithInputField" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8pn-K2-eJz" customClass="MDCFlatButton">
+                                <rect key="frame" x="275" y="308" width="30" height="29"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <connections>
+                                    <action selector="cancelButtonClick:" destination="xjq-eh-rkl" eventType="touchUpInside" id="Hhi-pc-P5b"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bDP-Np-Vlg" customClass="MDCFlatButton">
+                                <rect key="frame" x="321" y="308" width="30" height="29"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <connections>
+                                    <action selector="confirmButtonClick:" destination="xjq-eh-rkl" eventType="touchUpInside" id="jC7-Q2-3BR"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="DeR-6g-vIR" firstAttribute="leading" secondItem="tT1-mp-Xxd" secondAttribute="leading" constant="25" id="8Rm-eA-GZE"/>
+                            <constraint firstItem="R4U-ku-pqz" firstAttribute="leading" secondItem="tT1-mp-Xxd" secondAttribute="leading" id="Bb4-hz-G7W"/>
+                            <constraint firstItem="wge-k4-UZs" firstAttribute="top" secondItem="DeR-6g-vIR" secondAttribute="bottom" constant="16" id="F4B-3y-KXr"/>
+                            <constraint firstItem="tT1-mp-Xxd" firstAttribute="bottom" secondItem="8pn-K2-eJz" secondAttribute="bottom" constant="8" id="FS2-Ta-Xeh"/>
+                            <constraint firstItem="bDP-Np-Vlg" firstAttribute="leading" secondItem="8pn-K2-eJz" secondAttribute="trailing" constant="16" id="Pud-xy-qgp"/>
+                            <constraint firstItem="wge-k4-UZs" firstAttribute="leading" secondItem="UnO-tu-whd" secondAttribute="leading" constant="25" id="T0Y-E0-qwE"/>
+                            <constraint firstItem="tT1-mp-Xxd" firstAttribute="trailing" secondItem="bDP-Np-Vlg" secondAttribute="trailing" constant="24" id="Wbe-9j-n7E"/>
+                            <constraint firstItem="R4U-ku-pqz" firstAttribute="trailing" secondItem="tT1-mp-Xxd" secondAttribute="trailing" id="b7u-3E-0Hl"/>
+                            <constraint firstItem="tT1-mp-Xxd" firstAttribute="trailing" secondItem="wge-k4-UZs" secondAttribute="trailing" constant="25" id="bNv-7E-bNe"/>
+                            <constraint firstItem="R4U-ku-pqz" firstAttribute="top" secondItem="wge-k4-UZs" secondAttribute="bottom" constant="20" id="dkN-m0-S3n"/>
+                            <constraint firstItem="tT1-mp-Xxd" firstAttribute="trailing" secondItem="DeR-6g-vIR" secondAttribute="trailing" constant="25" id="nXi-AO-0aG"/>
+                            <constraint firstItem="DeR-6g-vIR" firstAttribute="top" secondItem="tT1-mp-Xxd" secondAttribute="top" constant="20" id="nbo-fh-Yww"/>
+                            <constraint firstItem="tT1-mp-Xxd" firstAttribute="bottom" secondItem="bDP-Np-Vlg" secondAttribute="bottom" constant="8" id="q21-rr-ifR"/>
+                            <constraint firstItem="tT1-mp-Xxd" firstAttribute="bottom" secondItem="R4U-ku-pqz" secondAttribute="bottom" constant="51" id="s8l-LR-MGc"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="tT1-mp-Xxd"/>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="375" height="345"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="345"/>
+                    <connections>
+                        <outlet property="actionSelectTableView" destination="R4U-ku-pqz" id="3M9-o6-ia1"/>
+                        <outlet property="cancelButton" destination="8pn-K2-eJz" id="e15-fq-jmy"/>
+                        <outlet property="confirmButton" destination="bDP-Np-Vlg" id="uMV-fl-Qau"/>
+                        <outlet property="detailLabel" destination="wge-k4-UZs" id="IPA-G1-Kcu"/>
+                        <outlet property="titleLabel" destination="DeR-6g-vIR" id="n6e-bl-RjO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ALG-OS-PLZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="48.799999999999997" y="96.7016491754123"/>
+        </scene>
+    </scenes>
+</document>

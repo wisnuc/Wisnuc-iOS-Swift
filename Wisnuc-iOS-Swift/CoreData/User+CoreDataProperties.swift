@@ -46,9 +46,4 @@ extension User {
     @NSManaged public var safety:NSNumber?
     @NSManaged public var shareSpace:String?
     
-    public override func copy() -> Any {
-        let copy = NSManagedObject.init(entity: self.entity, insertInto: self.managedObjectContext)
-        return copy
-    }
-    
 }

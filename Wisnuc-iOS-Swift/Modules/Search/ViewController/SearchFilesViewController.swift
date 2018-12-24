@@ -144,7 +144,9 @@ class SearchFilesViewController: BaseViewController {
                             do{
                                 let data = jsonToData(jsonDic: dic)
                                 let model = try JSONDecoder().decode(EntriesModel.self, from: data!)
-                                array.append(model)
+                                if model.type != FilesType.directory.rawValue{
+                                    array.append(model)
+                                }
                             }catch{
                                 return  complete(BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
                             }
@@ -277,6 +279,7 @@ class SearchFilesViewController: BaseViewController {
     
     @objc func clearButtonTap(_ sender:UIButton?){
         searchTextField.text = nil
+        searchTextField.rightView = nil
         cellType = .searchWill
         mainTableView.reloadData()
     }
@@ -309,23 +312,20 @@ class SearchFilesViewController: BaseViewController {
                clearButtonTap(nil)
             }
         }else{
-                NSObject.cancelPreviousPerformRequests(withTarget: self)
-                let subString:NSString = textField.text! as NSString
-                self.perform(#selector(goSearch(_ :)), with: subString, afterDelay: 1.0)
+            NSObject.cancelPreviousPerformRequests(withTarget: self)
+            let subString:NSString = textField.text! as NSString
+            self.perform(#selector(goSearch(_ :)), with: subString, afterDelay: 1.0)
         }
     }
     
-    lazy var searchTextField: UITextField = {
+    lazy var searchTextField: UITextField = { [weak self] in
         let left = MarginsWidth + 24 + MarginsWidth*2
         let height = MarginsSoFarWidth
         let textField = UITextField.init(frame: CGRect(x:left , y: (MDCAppNavigationBarHeight - StatusBarHeight)/2 - height/2, width: __kWidth - left - MarginsWidth, height: height))
         textField.borderStyle = .none
         textField.placeholder = LocalizedString(forKey: "Search Files")
-        textField.rightViewMode = .whileEditing
-        let clearButton = UIButton.init(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
-        clearButton.setImage(Icon.clear?.byTintColor(LightGrayColor), for: UIControlState.normal)
-        clearButton.addTarget(self, action: #selector(clearButtonTap(_ :)), for: UIControlEvents.touchUpInside)
-//        textField.rightView = clearButton
+        textField.rightViewMode = .always
+//        textField.rightView = self?.clearButton
         textField.delegate = self
         textField.addTarget(self, action: #selector(textFieldTextChange(_ :)), for: UIControlEvents.editingChanged)
 //        textField.backgroundColor = UIColor.cyan
@@ -363,6 +363,12 @@ class SearchFilesViewController: BaseViewController {
         return chips
     }()
     
+    lazy var clearButton: UIButton = {
+        let button = UIButton.init(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
+        button.setImage(Icon.clear?.byTintColor(LightGrayColor), for: UIControlState.normal)
+        button.addTarget(self, action: #selector(clearButtonTap(_ :)), for: UIControlEvents.touchUpInside)
+        return button
+    }()
 }
 
 extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
@@ -600,13 +606,16 @@ extension SearchFilesViewController:UITextFieldDelegate{
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        if textField.text?.count != 0 {
-//            NSObject.cancelPreviousPerformRequests(withTarget: self)
-//            var subString:NSString = textField.text! as NSString
-//            subString = subString.replacingCharacters(in: range, with: string) as NSString
-//            self.perform(#selector(goSearch(_ :)), with: subString, afterDelay: 0.7)
-//        }
-
+        guard let rawText = textField.text else {
+            return true
+        }
+        
+        let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
+        if fullString.count == 0{
+            textField.rightView = nil
+        }else{
+            textField.rightView = self.clearButton
+        }
         return true
     }
 }
