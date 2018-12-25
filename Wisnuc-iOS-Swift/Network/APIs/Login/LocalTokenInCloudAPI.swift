@@ -10,11 +10,19 @@ import UIKit
 
 class LocalTokenInCloudAPI: BaseRequest {
     var cloudToken:String?
-    init(cloudToken:String? = nil) {
+    var user:User?
+    init(user:User? = nil,cloudToken:String? = nil) {
+        if user != nil{
+            self.user = user
+        }
         self.cloudToken = cloudToken
     }
     
     override func requestURL() -> String {
+        if let stationId = user?.stationId{
+            let jsonURL = "/station/\(stationId)/json"
+            return "\(kCloudBaseURL)\(jsonURL)"
+        }
         return "\(kCloudBaseURL)\(kCloudCommonJsonUrl)"
     }
     

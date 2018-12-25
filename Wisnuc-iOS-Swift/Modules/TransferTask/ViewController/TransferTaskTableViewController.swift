@@ -167,7 +167,41 @@ class TransferTaskTableViewController: BaseViewController {
     }
     
     @objc func rightBarButtonItem(_ sender:UIBarButtonItem){
+        
        let bottomSheet = AppBottomSheetController.init(contentViewController: transferTaskBottomSheetContentVC)
+        var disables:[Int] = []
+//        case waiting
+//        case running
+//        case suspend
+//        case cancel
+//        case failed
+//        case remove
+//        case completed
+//
+//        // 预操作标记，解决操作运行中的任务是异步回调而导致的问题
+//        case preSuspend
+//        case preCancel
+//        case preRemove
+        if !(self.downloadManager?.tasks.contains(where: {$0.status == .waiting || $0.status == .suspend || $0.status == .failed || $0.status == .cancel }))!{
+            disables.append(0)
+        }
+        
+        if !(self.downloadManager?.tasks.contains(where: {$0.status == .running}))! {
+            disables.append(1)
+        }
+        
+        
+        if let tasks = self.downloadManager?.tasks{
+            if tasks.count == 0 && taskDataSource?.count == 0{
+                disables.append(2)
+            }
+        }else{
+            if taskDataSource?.count == 0{
+                disables.append(2)
+            }
+        }
+        
+        transferTaskBottomSheetContentVC.disables = disables
         self.present(bottomSheet, animated: true, completion: nil)
     }
     
@@ -198,7 +232,8 @@ class TransferTaskTableViewController: BaseViewController {
     }()
     
     lazy var transferTaskBottomSheetContentVC: TransferTaskBottomSheetContentTableViewController = {
-        let vc = TransferTaskBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        let disables:[Int] = []
+        let vc = TransferTaskBottomSheetContentTableViewController.init(style: UITableViewStyle.plain,disables:disables)
         vc.delegate = self
         return vc
     }()

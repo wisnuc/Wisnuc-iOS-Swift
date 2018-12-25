@@ -34,9 +34,6 @@ class FilesFileInfoTableViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareNavigationBar()
-        if self.model?.type == FilesType.directory.rawValue{
-           self.loadData()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,52 +62,6 @@ class FilesFileInfoTableViewController: BaseViewController {
         navigationBarBottomLabel.text = appBar.navigationBar.title
     }
     
-    func loadData(){
-        guard let driveUUID = self.driveUUID else {
-            return
-        }
-        
-//        guard let model = self.model else {
-//            return
-//        }
-        
-        guard let dirUUID = self.dirUUID else {
-            return
-        }
-        let request = FilesStats.init(driveUUID: driveUUID, directoryUUID: dirUUID)
-        request.startRequestJSONCompletionHandler { [weak self](response) in
-            if let error = response.error{
-                Message.message(text: error.localizedDescription)
-            }else{
-                if let errorMessage = ErrorTools.responseErrorData(response.data){
-                    Message.message(text: errorMessage)
-                }else{
-                    guard let dic = response.value as? NSDictionary else{
-                        Message.message(text: LocalizedString(forKey: "error"))
-                        return
-                    }
-                    
-                    let isLocal = AppNetworkService.networkState == .local ? true : false
-                    var modelDic:NSDictionary = dic
-                    if !isLocal{
-                        if let dataDic = dic["data"] as? NSDictionary{
-                            modelDic = dataDic
-                        }
-                    }
-                    if let data = jsonToData(jsonDic: modelDic){
-                        do{
-                            let model = try JSONDecoder().decode(FilesStatsModel.self, from: data)
-                            self?.filseDirModel = model
-                            self?.tableView.reloadData()
-                        }catch{
-                           Message.message(text: error.localizedDescription)
-                        }
-                    }
-                }
-            }
-        }
-        
-    }
 
     lazy var tableView: UITableView = {
         let contentTableView = UITableView.init(frame: CGRect.init(x: 0, y: 0, width: __kWidth, height: __kHeight), style:.plain)
@@ -160,7 +111,7 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if model?.type == FilesType.directory.rawValue {
-             return 6
+             return 3
         }else{
             return 4
         }
@@ -175,37 +126,44 @@ extension FilesFileInfoTableViewController:UITableViewDataSource{
             cell.leftLabel.text = LocalizedString(forKey: "类型")
             cell.rightLabel.text = model?.type == FilesType.directory.rawValue ? "文件夹" : model?.name?.pathExtension
         case 1:
-            cell.leftLabel.text = LocalizedString(forKey: "大小")
-            if model?.type == FilesType.directory.rawValue{
-                if let size = filseDirModel?.fileTotalSize{
-                    cell.rightLabel.text = sizeString(size)
-                }
-            }else{
+            if model?.type != FilesType.directory.rawValue{
+               cell.leftLabel.text = LocalizedString(forKey: "大小")
                cell.rightLabel.text = model?.size != nil ? sizeString((model?.size!)!) : ""
+            }else{
+                cell.leftLabel.text = LocalizedString(forKey: "位置")
+                cell.rightLabel.isHidden = true
+                cell.filesImageView.isHidden = false
+                cell.folderButton.isHidden = false
+                cell.folderButton.setTitle(self.location ?? "", for: UIControlState.normal)
             }
         case 2:
-            cell.leftLabel.text = LocalizedString(forKey: "位置")
-            cell.rightLabel.isHidden = true
-            cell.filesImageView.isHidden = false
-            cell.folderButton.isHidden = false
-            cell.folderButton.setTitle(self.location ?? "", for: UIControlState.normal)
-        case 3:
-            if model?.type == FilesType.directory.rawValue{
-                cell.leftLabel.text = LocalizedString(forKey: "文件数量")
-                cell.rightLabel.text = filseDirModel?.fileCount != nil ? String.init(describing: (filseDirModel?.fileCount)!) : "0"
+            if model?.type != FilesType.directory.rawValue{
+                cell.leftLabel.text = LocalizedString(forKey: "位置")
+                cell.rightLabel.isHidden = true
+                cell.filesImageView.isHidden = false
+                cell.folderButton.isHidden = false
+                cell.folderButton.setTitle(self.location ?? "", for: UIControlState.normal)
             }else{
                 cell.leftLabel.text = LocalizedString(forKey: "创建时间")
                 cell.rightLabel.text =  model?.mtime != nil ? TimeTools.timeString(TimeInterval((model?.mtime!)!/1000)) : LocalizedString(forKey: "No time")
             }
-        case 4:
-            cell.leftLabel.text = LocalizedString(forKey: "文件夹数量")
-            cell.rightLabel.text = filseDirModel?.dirCount != nil ? String.init(describing: (filseDirModel?.dirCount)!) : "0"
-        case 5:
-            cell.leftLabel.text = LocalizedString(forKey: "创建时间")
-            cell.rightLabel.text =  model?.mtime != nil ? TimeTools.timeString(TimeInterval((model?.mtime!)!/1000)) : LocalizedString(forKey: "No time")
-//        case 6:
-//            cell.leftLabel.text = LocalizedString(forKey: "Modify")
-//            cell.rightLabel.text = "30/12/2016 by Leo An"
+//            else{
+//                cell.leftLabel.text = LocalizedString(forKey: "文件数量")
+//                cell.rightLabel.text = filseDirModel?.fileCount != nil ? String.init(describing: (filseDirModel?.fileCount)!) : "0"
+//            }
+        case 3:
+            if model?.type != FilesType.directory.rawValue{
+//                cell.leftLabel.text = LocalizedString(forKey: "文件夹数量")
+//                cell.rightLabel.text = filseDirModel?.dirCount != nil ? String.init(describing: (filseDirModel?.dirCount)!) : "0"
+//            }else{
+                cell.leftLabel.text = LocalizedString(forKey: "创建时间")
+                cell.rightLabel.text =  model?.mtime != nil ? TimeTools.timeString(TimeInterval((model?.mtime!)!/1000)) : LocalizedString(forKey: "No time")
+            }
+//        case 4:
+//             if model?.type == FilesType.directory.rawValue{
+//                cell.leftLabel.text = LocalizedString(forKey: "创建时间")
+//                cell.rightLabel.text =  model?.mtime != nil ? TimeTools.timeString(TimeInterval((model?.mtime!)!/1000)) : LocalizedString(forKey: "No time")
+//             }
         default:
             break
         }

@@ -171,7 +171,7 @@ extension DeviceChangeDeviceViewController:UITableViewDataSource{
         let stationInfoModel = dataSource[indexPath.row]
         cell.titleLabel.text = stationInfoModel.name
         if let total = stationInfoModel.bootSpace?.total ,let used = stationInfoModel.bootSpace?.used{
-            cell.capacityLabel.text =  "\(sizeString(used*1024)) / \(sizeString(total*1024))"
+            cell.capacityLabel.text =  "\(sizeString(Int64(used*1024))) / \(sizeString(Int64(total*1024)))"
             cell.capacityProgressView.progress =  Float(used)/Float(total)
         }else{
             cell.capacityLabel.text =  LocalizedString(forKey: "Loading...")

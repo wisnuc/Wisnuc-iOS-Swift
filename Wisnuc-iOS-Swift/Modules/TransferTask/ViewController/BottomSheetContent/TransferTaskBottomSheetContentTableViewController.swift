@@ -14,13 +14,26 @@ import UIKit
 
 class TransferTaskBottomSheetContentTableViewController: UITableViewController {
    weak var delegate:TransferTaskBottomSheetContentVCDelegate?
-    
+    var disables:[Int]?{
+        didSet{
+            tableView.reloadData()
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
-
+    
+    init(style: UITableViewStyle,disables:[Int]?) {
+        super.init(style: style)
+        self.disables = disables
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -44,10 +57,25 @@ class TransferTaskBottomSheetContentTableViewController: UITableViewController {
         switch indexPath.row {
         case 0:
             cell.textLabel?.text = LocalizedString(forKey: "Start all task")
+            if (self.disables?.contains(0))!{
+                cell.textLabel?.textColor = LightGrayColor
+            }else{
+                cell.textLabel?.textColor = DarkGrayColor
+            }
         case 1:
             cell.textLabel?.text = LocalizedString(forKey: "Suspend all task")
+            if (self.disables?.contains(1))!{
+                cell.textLabel?.textColor = LightGrayColor
+            }else{
+                cell.textLabel?.textColor = DarkGrayColor
+            }
         case 2:
             cell.textLabel?.text = LocalizedString(forKey: "Clear all task")
+            if (self.disables?.contains(2))!{
+                cell.textLabel?.textColor = LightGrayColor
+            }else{
+                cell.textLabel?.textColor = DarkGrayColor
+            }
         default:
             break
         }
@@ -56,6 +84,10 @@ class TransferTaskBottomSheetContentTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if (self.disables?.contains(indexPath.row))!{
+            return
+        }
+      
         if let delegateOK = delegate {
             delegateOK.transferTaskBottomSheettableView(tableView, didSelectRowAt: indexPath)
         }

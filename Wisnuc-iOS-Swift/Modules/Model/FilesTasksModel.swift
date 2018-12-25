@@ -77,6 +77,7 @@ class NodesModel: HandyJSON {
     var parent:String?
     var state:FilesTaskState?
     var error:NodesErrorModel?
+    var type:String?
     required init() {
     }
 }

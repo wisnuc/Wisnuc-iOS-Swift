@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     var coreDataContext: NSManagedObjectContext?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-//        redirectNSlogToDocumentFolder()
+        redirectNSlogToDocumentFolder()
         IQKeyboardManager.shared.enable = true
         registerCoreDataContext()
         registerWeChat()   // Wechat
@@ -320,20 +320,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
             }
         }
     }
-    
+    #if DEBUG
     func redirectNSlogToDocumentFolder() {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentDirectory = paths[0]
-        let fileName = "winsun.log" // 注意不是NSData!
-        let logFilePath = URL(fileURLWithPath: documentDirectory).appendingPathComponent(fileName).absoluteString
-        // 先删除已经存在的文件
-        //    NSFileManager *defaultManager = [NSFileManager defaultManager];
-        //    [defaultManager removeItemAtPath:logFilePath error:nil];
-
-        // 将log输入到文件
-        freopen(logFilePath.cString(using: String.Encoding(rawValue: String.Encoding.ascii.rawValue)), "a+", stdout)
-        freopen(logFilePath.cString(using: String.Encoding(rawValue: String.Encoding.ascii.rawValue)), "a+", stderr)
+        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths[0]
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        let dateString = formatter.string(from: Date())
+        let fileName = "\(dateString).log"
+        let logFilePath = (documentsDirectory as NSString).appendingPathComponent(fileName)
+        var dump = ""
+        if FileManager.default.fileExists(atPath: logFilePath) {
+            dump =  try! String(contentsOfFile: logFilePath, encoding: String.Encoding.utf8)
+        }
+        do {
+            // Write to the file
+            try  "\(dump)\n\(Date())".write(toFile: logFilePath, atomically: true, encoding: String.Encoding.utf8)
+            
+        } catch let error as NSError {
+            print("Failed writing to log file: \(logFilePath), Error: " + error.localizedDescription)
+        }
+//        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+//        let documentDirectory = paths[0]
+//        let fileName = "winsun.log" // 注意不是NSData!
+//        let logFilePath = URL(fileURLWithPath: documentDirectory).appendingPathComponent(fileName).absoluteString
+//        if FileManager.default.fileExists(atPath: logFilePath){
+//
+//        }
+//        // 先删除已经存在的文件
+//        //    NSFileManager *defaultManager = [NSFileManager defaultManager];
+//        //    [defaultManager removeItemAtPath:logFilePath error:nil];
+//
+//        // 将log输入到文件
+//        freopen(logFilePath.cString(using: String.Encoding(rawValue: String.Encoding.ascii.rawValue)), "a+", stdout)
+//        freopen(logFilePath.cString(using: String.Encoding(rawValue: String.Encoding.ascii.rawValue)), "a+", stderr)
     }
+    #endif
     
     // MARK: - Core Data stack
     

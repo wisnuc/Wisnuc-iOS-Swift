@@ -47,6 +47,11 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     
     func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath, isSelectModel: Bool) {
         if isSelectModel == NSNumber.init(value: FilesStatus.select.rawValue).boolValue{
+            if FilesHelper.sharedInstance().selectFilesArray?.count != 0 {
+                self.downloadBarButtonItem.isEnabled = true
+                self.moveBarButtonItem.isEnabled = true
+                self.moreBarButtonItem.isEnabled = true
+            }
             self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
         }else{
             guard let dataSource = self.dataSource else {
@@ -66,13 +71,14 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                 
                 if model.type == FilesType.directory.rawValue{
                     var nextViewController = FilesRootViewController.init(driveUUID: driveUUID, directoryUUID: uuid,style:.white)
+                    nextViewController.title = model.backupRoot ? model.bname ?? model.name : model.name ?? ""
                     if self.selfState == .movecopy{
                         nextViewController = FilesRootViewController.init(style: .white, srcDictionary: srcDictionary, moveModelArray: moveModelArray, isCopy: isCopy,driveUUID:driveUUID,directoryUUID:uuid)
                         nextViewController.model = model
                     }
                     let tab = retrieveTabbarController()
                     tab?.setTabBarHidden(true, animated: true)
-                    nextViewController.title = model.backupRoot ? model.bname ?? model.name : model.name ?? ""
+                  
                     
                     self.navigationController?.pushViewController(nextViewController, animated: true)
                     defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
@@ -489,7 +495,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     }
     
     func makeCopyTaskCreate(model:Any?){
-        ActivityIndicator.startActivityIndicatorAnimation()
+        self.startActivityIndicator()
         if !(model is EntriesModel) || model == nil {
             return
         }
@@ -502,11 +508,11 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 switch AppNetworkService.networkState {
                 case .local?:
                     if let taskModel = FilesTasksModel.deserialize(from: rootDic){
-                        self?.taskHandle(taskModel: taskModel, callback: { (error) in
+                        self?.taskHandle(creatCopy:true,taskModel: taskModel, callback: { (error) in
                             if let error = error{
                                 Message.message(text: error.localizedDescription)
                             }else{
-                                ActivityIndicator.stopActivityIndicatorAnimation()
+                                self?.stopActivityIndicator()
                                 Message.message(text: LocalizedString(forKey: "创建副本成功"))
                                 self?.prepareData(animation: false)
                             }
@@ -521,7 +527,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                                         if let error = error{
                                             Message.message(text: error.localizedDescription)
                                         }else{
-                                            ActivityIndicator.stopActivityIndicatorAnimation()
+                                            self?.stopActivityIndicator()
                                             Message.message(text: LocalizedString(forKey: "创建副本成功"))
                                             self?.prepareData(animation: false)
                                         }
@@ -545,15 +551,49 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             }else{
                 Message.message(text: (response.error?.localizedDescription)!)
             }
-             ActivityIndicator.stopActivityIndicatorAnimation()
+             self?.stopActivityIndicator()
         }
     }
     
-    func taskHandle(isCopy:Bool = false,taskModel:FilesTasksModel,callback:@escaping (_ error:Error?)->()){
+  
+    func taskHandle(isCopy:Bool = false,creatCopy:Bool = false,taskModel:FilesTasksModel,callback:@escaping (_ error:Error?)->()){
         self.getTask(taskUUID: taskModel.uuid!, callback: {[unowned self](model) in
+            if model.finished == true{
+                return callback(nil)
+            }
             if model.nodes?.count != 0 {
                 if model.nodes?.first?.state == .Conflict && model.nodes?.first?.error?.code == .EEXIST{
                     if let uuid = model.uuid,let srcuuid = model.nodes?.first?.src?.uuid {
+                        if creatCopy == true{
+                            self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { (error)in
+                                return callback(error)
+                            })
+                            return
+                        }
+                        if model.nodes?.first?.type == FilesType.directory.rawValue{
+//                            self.mergeTaskCount = self.mergeTaskCount + 1
+//                            if self.mergeTaskCount >= 2{
+//                                if let alertVC = self.filesConflictAlert(task: model){
+//                                    alertVC.confirmCallback = { [unowned self] (type) in
+//                                        if let type = type{
+//                                            self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: type, callback: { (error)in
+//                                                self.mergeTaskCount = 0
+//                                                return callback(error)
+//                                            })
+//                                        }else{
+//                                            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "Cancel")])
+//                                             return callback(error)
+//                                        }
+//                                    }
+//                                }
+//                                return
+//                            }
+                            self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.keep.rawValue, callback: { (error)in
+                                 self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,taskModel: taskModel, callback: callback)
+//                                return callback(error)
+                            })
+                            return
+                        }
                         if !isCopy{
                             self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { (error)in
                                 return callback(error)
@@ -561,15 +601,24 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                         }else{
                             if let alertVC = self.filesConflictAlert(task: model){
                                 alertVC.confirmCallback = { [unowned self] (type) in
+                                    if let type = type{
                                     self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: type, callback: { (error)in
                                         return callback(error)
                                     })
+                                    }else{
+                                        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "Cancel")])
+                                        return callback(error)
+                                    }
                                 }
                             }
                         }
                     }
                 }else if model.nodes?.first?.state == .Working || model.nodes?.first?.state == .Preparing{
-                    self.taskHandle(isCopy:isCopy,taskModel: taskModel, callback: callback)
+                    DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2) {
+                        DispatchQueue.main.async {
+                            self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,taskModel: taskModel, callback: callback)
+                        }
+                    }
                 }else if model.nodes?.first?.state == .Finish {
                     return callback(nil)
                 }else if model.nodes?.first?.state == .Failed{
@@ -578,6 +627,10 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 }
             }
         })
+    }
+    
+    func renameConflictAction(){
+        
     }
     
     func filesConflictAlert(task:FilesTasksModel)->FilesConflictAlertViewController?{
@@ -999,7 +1052,7 @@ extension  FilesRootViewController:UIDocumentPickerDelegate{
 
 
 extension  FilesRootViewController:FilesConflictAlertViewControllerDelegate{
-    func conflictAction(action: String) {
+    func conflictAction(action: String?) {
         
     }
 }

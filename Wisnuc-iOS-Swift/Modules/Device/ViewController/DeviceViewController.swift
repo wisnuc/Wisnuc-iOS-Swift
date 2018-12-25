@@ -144,7 +144,7 @@ class DeviceViewController: BaseViewController {
                   }
                   let model = try JSONDecoder().decode(BootSpaceModel.self, from: data)
                   if let total = model.total,let used = model.used{
-                     if let usedString = self?.devieceString(base: used*1024),let totalString = self?.devieceString(base: total*1024){
+                     if let usedString = self?.devieceString(base: Int64(used*1024)),let totalString = self?.devieceString(base: Int64(total*1024)){
                      self?.setLabelFrame(text:"已使用\(usedString) / \(totalString)")
                      }
                   }
@@ -219,7 +219,7 @@ class DeviceViewController: BaseViewController {
       
       var totalProportion:CGFloat = 1
       
-      if statsTotalSize != 0 && statsTotalSize > usedSize {
+      if statsTotalSize != 0 && statsTotalSize > Int64(usedSize) {
          totalProportion = CGFloat(usedSize)/CGFloat(statsTotalSize)
       }
       

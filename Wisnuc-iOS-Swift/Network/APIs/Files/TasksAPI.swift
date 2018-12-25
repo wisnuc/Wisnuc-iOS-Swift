@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 enum FilesTaskPolicy:String {
-    case skip, keep,replace, rename
+    case skip, keep,replace, rename,merge
 }
 
 class TasksAPI: BaseRequest {

@@ -44,6 +44,7 @@ class FilesRootViewController: BaseViewController{
 //    }
     static let downloadManager =  TRManager.init("Downloads", MaximumRunning: LONG_MAX, isStoreInfo: true)
     private var menuButton: IconButton!
+    var mergeTaskCount:Int = 0
     var isLoadingViewController = false
     var dataSource:Array<Any>?
     var originDataSource:Array<EntriesModel>?
@@ -190,7 +191,7 @@ class FilesRootViewController: BaseViewController{
             break
         }
         FilesRootViewController.downloadManager.isStartDownloadImmediately = false
-        self.navigationTitle = title
+       
         self.collcectionViewController?.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
             self?.prepareData(animation: false)
         })
@@ -206,7 +207,7 @@ class FilesRootViewController: BaseViewController{
                return
             }
         }
-    
+        self.navigationTitle = title
         switch selfState {
         case .root?:
             selfStateRootWillAppearAction()
@@ -305,7 +306,8 @@ class FilesRootViewController: BaseViewController{
             if response.error == nil{
                 if let errorMessage = ErrorTools.responseErrorData(response.data){
                     Message.message(text: errorMessage)
-                    self?.isRequesting = false
+                    self?.dataSource?.removeAll()
+                    self?.reloadDataSouce()
                     return
                 }
                 let responseDic =  response.value as? NSDictionary ?? (response.value as? NSDictionary)?.object(forKey: "data") as? NSDictionary ?? NSDictionary.init()
@@ -316,9 +318,13 @@ class FilesRootViewController: BaseViewController{
                     self?.dataSource = self?.displayDataSource(model:model)
                     self?.loadDataSouce()
                 }catch{
+                    self?.dataSource?.removeAll()
                     Message.message(text: LocalizedString(forKey: "error"))
                 }
+                self?.reloadDataSouce()
             }else{
+                self?.dataSource?.removeAll()
+                self?.reloadDataSouce()
                 if let messageText = response.error?.localizedDescription{
                     Message.message(text: messageText)
                 }
@@ -350,6 +356,12 @@ class FilesRootViewController: BaseViewController{
         return finishArray
     }
     
+    func reloadDataSouce(){
+        self.isRequesting = false
+        self.collcectionViewController?.collectionView?.reloadData()
+        self.collcectionViewController?.collectionView?.reloadEmptyDataSet()
+    }
+    
     func loadDataSouce(){
         self.collcectionViewController?.dataSource = self.dataSource
         self.collcectionViewController?.driveUUID = self.driveUUID
@@ -357,9 +369,6 @@ class FilesRootViewController: BaseViewController{
         let sortType = AppUserService.currentUser?.sortType == nil ? SortType(rawValue: 0) : SortType(rawValue: (AppUserService.currentUser?.sortType?.int64Value)!)
         let sortIsDown = AppUserService.currentUser?.sortIsDown == nil ? true : AppUserService.currentUser?.sortIsDown?.boolValue
         self.setSortParameters(sortType: sortType!, sortIsDown: sortIsDown!)
-        self.isRequesting = false
-        self.collcectionViewController?.collectionView?.reloadData()
-        self.collcectionViewController?.collectionView?.reloadEmptyDataSet()
     }
     
     func setSortParameters(sortType:SortType,sortIsDown:Bool){
@@ -468,18 +477,27 @@ class FilesRootViewController: BaseViewController{
 //        }
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
+        if FilesHelper.sharedInstance().selectFilesArray?.count == 0 {
+            self.downloadBarButtonItem.isEnabled = false
+            self.moveBarButtonItem.isEnabled = false
+            self.moreBarButtonItem.isEnabled = false
+        }
         
         if selfState != .root{
             selectedNavigationBarView.addSubviewsToParent()
             selectedNavigationBarView.headerViewController.didMove(toParentViewController: self)
+            if !self.childViewControllers.contains(appBar.headerViewController){
+                appBar.headerViewController.didMove(toParentViewController: self)
+            }
+           
             self.selectedNavigationBarView.headerViewController.headerView.top = -MDCAppNavigationBarHeight
             self.prepareSelectModelNextAppNavigtionBar()
             self.view.addSubview(selectedNavigationBarView.headerViewController.headerView)
             self.view.bringSubview(toFront: selectedNavigationBarView.headerViewController.headerView)
             self.transition(from: appBar.headerViewController, to: selectedNavigationBarView.headerViewController, duration: 0.3, options: UIViewAnimationOptions.beginFromCurrentState, animations: { [weak self] in
                 self?.selectedNavigationBarView.headerViewController.headerView.top = 0
-                self?.appBar.headerViewController.headerView.removeFromSuperview()
-                self?.appBar.headerViewController.removeFromParentViewController()
+//                self?.appBar.headerViewController.headerView.removeFromSuperview()
+//                self?.appBar.headerViewController.removeFromParentViewController()
 //                self?.title =  self?.navigationTitle
             }) {(finish) in
             }
@@ -547,6 +565,7 @@ class FilesRootViewController: BaseViewController{
     }
     
     func selfStateOtherWillAppearAction(){
+        
         self.appBar.headerViewController.headerView.isHidden = false
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
         self.appBar.headerViewController.preferredStatusBarStyle = .default
@@ -893,7 +912,6 @@ class FilesRootViewController: BaseViewController{
                     return
                 }
                 if let model = FilesTasksModel.deserialize(from: dic){
-                   
                     self?.taskHandle(isCopy:copy,taskModel: model, callback: {[weak self](error) in
                         if let error = error{
                             self?.presentingViewController?.dismiss(animated: true, completion: {

@@ -84,9 +84,9 @@ class PhotoAlbumViewController: BaseViewController {
     
     
     func getData(animation:Bool){
-        if animation{
-            ActivityIndicator.startActivityIndicatorAnimation()
-        }
+//        if animation{
+//            ActivityIndicator.startActivityIndicatorAnimation()
+//        }
         
         self.dataSource.removeAll()
         let collectionAlbumArray = Array<PhotoAlbumModel>.init()
@@ -101,32 +101,36 @@ class PhotoAlbumViewController: BaseViewController {
     
     
     func allPhotoAlbumData(){
+        let allAssets = AppAssetService.allAssets ?? [WSAsset]()
+        self.setAllPhotoData(models:[WSAsset](), hash:nil, allLocalAssets: allAssets,loacalAsset:allAssets.first?.asset,count:nil)
         getAlbumPhotoData(sclass: SclassType.image.rawValue, closure: {[weak self](hash, asset,count,assets) in
             if let hash = hash{
                 if let assets = assets{
-                    self?.setAllPhotoData(models:assets, hash:hash,count:count)
+                    self?.setAllPhotoData(models:assets, hash:hash, allLocalAssets: allAssets,count:count)
                 }
             }else if let asset = asset{
                 if let assets = assets{
-                    self?.setAllPhotoData(models:assets, loacalAsset:asset,count:count)
+                    self?.setAllPhotoData(models:assets, allLocalAssets: allAssets, loacalAsset:asset,count:count)
                 }
             }
         })
     }
         
     func allVideoAlbumData(){
+        let allAssets = AppAssetService.allVideoAssets ?? [WSAsset]()
+        self.setVideoData(models: nil,allVideoAssets: allAssets)
         getAllVideoAlbumData(sclass: SclassType.video.rawValue, closure: {[weak self](hash, asset,models) in
             if let hash = hash{
-                self?.setVideoData(hash:hash, models: models)
+                self?.setVideoData(hash:hash, models: models, allVideoAssets: allAssets)
             }else{
-                self?.setVideoData(loacalAsset:asset!,models: models)
+                self?.setVideoData(loacalAsset:asset!,models: models, allVideoAssets: allAssets)
             }
         })
     }
     
     func getAlbumPhotoData(sclass:String,closure:@escaping (_ hash:String?,_ localAsset:PHAsset?,_ count:Int?,_ assets:[WSAsset]?)->()){
         let _ = AppAssetService.getNetAssets(callback: { (error, models) in
-            ActivityIndicator.stopActivityIndicatorAnimation()
+//            ActivityIndicator.stopActivityIndicatorAnimation()
             if error == nil && models != nil{
                 let sortedModels = models!
                 
@@ -250,8 +254,7 @@ class PhotoAlbumViewController: BaseViewController {
         }
     }
     
-    func setAllPhotoData(models:[WSAsset],hash:String? = nil,loacalAsset:PHAsset? = nil,count:Int?){
-    
+    func setAllPhotoData(models:[WSAsset],hash:String? = nil,allLocalAssets:[WSAsset],loacalAsset:PHAsset? = nil,count:Int?){
         let photoAlbumModel1 = PhotoAlbumModel.init()
         photoAlbumModel1.type = PhotoAlbumType.collecion
         photoAlbumModel1.name = LocalizedString(forKey: "所有相片")
@@ -265,26 +268,25 @@ class PhotoAlbumViewController: BaseViewController {
         }
         
         if let count = count{
-            if let allAssets = AppAssetService.allAssets{
-                photoAlbumModel1.count = count + allAssets.count
-                var assetArray = Array<WSAsset>.init()
-                assetArray.append(contentsOf: allAssets)
-                assetArray.append(contentsOf: models)
-                photoAlbumModel1.dataSource = assetArray
-            }else{
-                photoAlbumModel1.count = count
-                photoAlbumModel1.dataSource = models
-            }
+            photoAlbumModel1.count = count + allLocalAssets.count
+            var assetArray = Array<WSAsset>.init()
+            assetArray.append(contentsOf: allLocalAssets)
+            assetArray.append(contentsOf: models)
+            photoAlbumModel1.dataSource = assetArray
         }else{
-            if let allAssets = AppAssetService.allAssets{
-                photoAlbumModel1.count =  allAssets.count
-                photoAlbumModel1.dataSource = allAssets
-            }
+            photoAlbumModel1.count =  allLocalAssets.count
+            photoAlbumModel1.dataSource = allLocalAssets
         }
         photoAlbumModel1.netDataSource = models as? [NetAsset]
         if var array = dataSource.first{
             if array.count > 0{
-                array.insert(photoAlbumModel1, at: 0)
+                if let index = array.firstIndex(where: {$0.detailType == .allPhoto}){
+                    if index < array.count{
+                         array[index] = photoAlbumModel1
+                    }
+                }else{
+                    array.insert(photoAlbumModel1, at: 0)
+                }
             }else{
                 array.append(photoAlbumModel1)
             }
@@ -315,32 +317,38 @@ class PhotoAlbumViewController: BaseViewController {
 //        }
     }
     
-    func setVideoData(hash:String? = nil,loacalAsset:PHAsset? = nil,models:[NetAsset]?){
+    func setVideoData(hash:String? = nil,loacalAsset:PHAsset? = nil,models:[NetAsset]?,allVideoAssets:[WSAsset]){
 //        self.albumCollectionView.mj_header.endRefreshing()
         let photoAlbumModel = PhotoAlbumModel.init()
         photoAlbumModel.type  = PhotoAlbumType.collecion
         photoAlbumModel.name = LocalizedString(forKey: "Video")
         photoAlbumModel.detailType = .video
         photoAlbumModel.describe = nil
-        photoAlbumModel.dataSource = models
         if let photoHash = hash{
             photoAlbumModel.coverThumbnilhash = photoHash
         }
         if let loacalAsset = loacalAsset{
             photoAlbumModel.coverThumbnilAsset = loacalAsset
         }
-        if let count = models?.count{
-            if let allVideoAssets = AppAssetService.allVideoAssets{
-                photoAlbumModel.count = count + allVideoAssets.count
-            }else{
-                photoAlbumModel.count = count
-            }
+        if let models = models{
+            var assetArray = Array<WSAsset>.init()
+            assetArray.append(contentsOf: allVideoAssets)
+            assetArray.append(contentsOf: models)
+            photoAlbumModel.dataSource = assetArray
+            photoAlbumModel.count = models.count + allVideoAssets.count
         }else{
-            photoAlbumModel.count = AppAssetService.allVideoAssets?.count
+            photoAlbumModel.count = allVideoAssets.count
+            photoAlbumModel.dataSource = allVideoAssets
         }
         if var array = dataSource.first{
             if array.count >= 2{
-                array.insert(photoAlbumModel, at: 1)
+                if let index = array.firstIndex(where: {$0.detailType == .video}){
+                    if index < array.count{
+                        array[index] = photoAlbumModel
+                    }
+                }else{
+                     array.insert(photoAlbumModel, at: 1)
+                }
             } else{
                 array.append(photoAlbumModel)
             }

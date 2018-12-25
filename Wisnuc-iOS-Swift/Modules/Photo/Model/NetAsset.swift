@@ -23,6 +23,7 @@ class NetAsset: WSAsset {
     var otime:Int64?
     var metadata:HJMetadata?
     var netDate:Date?
+    var netDateTime:TimeInterval?
     
     init(dict:NSDictionary) {
         super.init()
@@ -52,8 +53,11 @@ class NetAsset: WSAsset {
             self.type = WSAssetType.GIF
         }
         
-        self.netDate = Date.init(timeIntervalSince1970: PhotoHelper.fetchPhotoTime(model: self) ?? Date.init(timeIntervalSinceNow: 0).timeIntervalSince1970*1000)
-    
+//        DispatchQueue.global(qos: .default).async {
+            self.netDate = Date.init(timeIntervalSince1970: PhotoHelper.fetchPhotoTime(model: self) ?? Date.init(timeIntervalSinceNow: 0).timeIntervalSince1970)
+//        }
+      
+//        self.netDateTime = PhotoHelper.fetchPhotoTime(model: self) ?? 0
 //        if let fmhash = self.fmhash {
 ////            if let requestImageUrl = PhotoHelper.requestImageUrl(size: CGSize(width: 64, height: 64), hash: fmhash){
 //            AppNetworkService.getThumbnailBackgroud(hash: fmhash, size: CGSize(width: 64, height: 64)) { (error, image, url) in
@@ -94,15 +98,15 @@ class NetAsset: WSAsset {
 //    }
     
     
-    override var hash: Int{//hashValue的实现
-        return (self.fmhash?.hash)!
-//            ^ self.mtime.hashValue ^ self.size.hashValue ^ self.uuid.hashValue ^ self.fmhash.hashValue ^ self.place.hashValue ^ self.pdir.hashValue ^ self.namepath.hashValue ^ self.bname.hashValue ^ self.bctime.hashValue ^ self.bmtime.hashValue ^ self.otime.hashValue ^ self.type.hashValue ^ self.metadata.hashValue
-    }
-    
-    static func ==(m1:NetAsset,m2:NetAsset) -> Bool{
-        return m1.fmhash == m2.fmhash
-//            && m1.mtime == m2.mtime && m1.size == m2.size && m1.uuid == m2.uuid && m1.fmhash == m2.fmhash && m1.place == m2.place && m1.pdir == m2.pdir && m1.namepath == m2.namepath && m1.bname == m2.bname && m1.bctime == m2.bctime && m1.bmtime == m2.bmtime && m1.otime == m2.otime && m1.type == m2.type && m1.metadata == m2.metadata
-    }
+//    override var hash: Int{//hashValue的实现
+//        return (self.fmhash?.hash)!
+////            ^ self.mtime.hashValue ^ self.size.hashValue ^ self.uuid.hashValue ^ self.fmhash.hashValue ^ self.place.hashValue ^ self.pdir.hashValue ^ self.namepath.hashValue ^ self.bname.hashValue ^ self.bctime.hashValue ^ self.bmtime.hashValue ^ self.otime.hashValue ^ self.type.hashValue ^ self.metadata.hashValue
+//    }
+//    
+//    static func ==(m1:NetAsset,m2:NetAsset) -> Bool{
+//        return m1.fmhash == m2.fmhash
+////            && m1.mtime == m2.mtime && m1.size == m2.size && m1.uuid == m2.uuid && m1.fmhash == m2.fmhash && m1.place == m2.place && m1.pdir == m2.pdir && m1.namepath == m2.namepath && m1.bname == m2.bname && m1.bctime == m2.bctime && m1.bmtime == m2.bmtime && m1.otime == m2.otime && m1.type == m2.type && m1.metadata == m2.metadata
+//    }
 }
  
 
@@ -136,11 +140,11 @@ class HJMetadata:NSObject {
         self.dur = dict.object(forKey: "dur") as? Double
     }
     
-    override var hash: Int{//hashValue的实现
-        return self.date.hashValue ^ self.h.hashValue ^ self.w.hashValue ^ self.make.hashValue ^ self.model.hashValue ^ self.datec.hashValue ^ self.type.hashValue ^ self.localPath.hashValue ^ self.disabled.hashValue ^ self.status.hashValue ^ self.lastBackupTime.hashValue ^ self.dur.hashValue
-    }
-    
-    static func ==(m1:HJMetadata,m2:HJMetadata) -> Bool{
-        return m1.date == m2.date && m1.h == m2.h && m1.w == m2.w && m1.make == m2.make && m1.model == m2.model && m1.type == m2.type && m1.datec == m2.datec && m1.localPath == m2.localPath && m1.disabled == m2.disabled && m1.status == m2.status && m1.lastBackupTime == m2.lastBackupTime && m1.dur == m2.dur
-    }
+//    override var hash: Int{//hashValue的实现
+//        return self.date.hashValue ^ self.h.hashValue ^ self.w.hashValue ^ self.make.hashValue ^ self.model.hashValue ^ self.datec.hashValue ^ self.type.hashValue ^ self.localPath.hashValue ^ self.disabled.hashValue ^ self.status.hashValue ^ self.lastBackupTime.hashValue ^ self.dur.hashValue
+//    }
+//
+//    static func ==(m1:HJMetadata,m2:HJMetadata) -> Bool{
+//        return m1.date == m2.date && m1.h == m2.h && m1.w == m2.w && m1.make == m2.make && m1.model == m2.model && m1.type == m2.type && m1.datec == m2.datec && m1.localPath == m2.localPath && m1.disabled == m2.disabled && m1.status == m2.status && m1.lastBackupTime == m2.lastBackupTime && m1.dur == m2.dur
+//    }
 }

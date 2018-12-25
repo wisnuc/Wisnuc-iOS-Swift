@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol FilesConflictAlertViewControllerDelegate {
-    func conflictAction(action:String)
+    func conflictAction(action:String?)
 }
 
 class FilesConflictAlertViewController: UIViewController {
@@ -24,7 +24,7 @@ class FilesConflictAlertViewController: UIViewController {
     let actions = [FilesTaskPolicy.rename, FilesTaskPolicy.replace, FilesTaskPolicy.skip]
     var model:FilesTasksModel?
     var selectType:String?
-    var confirmCallback:((_ selectType:String)->())?
+    var confirmCallback:((_ selectType:String?)->())?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,6 +56,10 @@ class FilesConflictAlertViewController: UIViewController {
         })
     }
     @IBAction func cancelButtonClick(_ sender: MDCFlatButton) {
+        delegate?.conflictAction(action:nil)
+         if let callback = self.confirmCallback{
+            callback(nil)
+        }
         self.presentingViewController?.dismiss(animated: true, completion: {
             
         })

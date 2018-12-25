@@ -118,8 +118,26 @@ class WSAsset: NSObject,NSCopying{
         }
     }
     
-    
+    var _createDateB:TimeInterval?
     var createDateB:Date?
+//    {
+//        get{
+//            if self is NetAsset{
+//                if let time = (self as? NetAsset)?.netDateTime{
+//                    _createDateB = time
+//                }
+//                return _createDateB
+//            }else{
+//                 if let time = self.asset?.creationDate {
+//                     _createDateB = time.timeIntervalSince1970
+//                }
+//                return _createDateB
+//            }
+//        }
+//        set(newValue){
+//            _createDateB = newValue
+//        }
+//    }
     
 }
 

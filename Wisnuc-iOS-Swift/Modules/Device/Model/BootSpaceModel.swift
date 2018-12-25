@@ -8,7 +8,7 @@
 
 import Foundation
 struct BootSpaceModel:Codable {
-    var total:Int64?
-    var used:Int64?
-    var available:Int64?
+    var total:Double?
+    var used:Double?
+    var available:Double?
 }

@@ -141,7 +141,7 @@ class NetworkService: NSObject {
         }
     }
     
-    func getLocalInCloudLogin(cloudToken:String? = nil, _ closure:@escaping (( _ error:Error?,_ token:String?)->())){
+    func getLocalInCloudLogin(user:User? = nil,cloudToken:String? = nil, _ closure:@escaping (( _ error:Error?,_ token:String?)->())){
 //        if  !AppUserService.isUserLogin {
 //            return closure(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NotLogin)), nil)
 //        }
@@ -150,7 +150,7 @@ class NetworkService: NSObject {
             return closure(LoginError(code: ErrorCode.Login.NoToken, kind: LoginError.ErrorKind.LoginNoToken, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NoToken)), nil)
         }
         
-        LocalTokenInCloudAPI.init(cloudToken:cloudToken).startRequestJSONCompletionHandler({ [weak self] (response) in
+        LocalTokenInCloudAPI.init(user:user,cloudToken:cloudToken).startRequestJSONCompletionHandler({ [weak self] (response) in
             if response.error == nil{
                 if let errorMessage = ErrorTools.responseErrorData(response.data){
                     let error = NSError(domain: response.response?.url?.absoluteString ?? "", code: ErrorCode.Request.CloudRequstError, userInfo: [NSLocalizedDescriptionKey:errorMessage])
@@ -327,8 +327,11 @@ class NetworkService: NSObject {
                         Message.message(text: errorMessage)
                         return
                     }
-                    let dic = self?.networkState == .normal ? (response.value as! NSDictionary)["data"] as! NSDictionary: response.value as! NSDictionary
-                    let array = NSArray.init(array: dic.object(forKey: "entries") as! NSArray)
+                    let dic = (response.value as? NSDictionary)?.object(forKey: "data")as? NSDictionary ?? response.value as? NSDictionary
+                    guard let array = dic?.object(forKey: "entries") as? NSArray else {
+                        let error = NSError(domain: response.request?.url?.absoluteString ?? "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "Data error")])
+                        return callback(error,nil)
+                    }
                     var entries = Array<EntriesModel>.init()
                     array.enumerateObjects({ (obj, idx, stop) in
                         let dic = obj as! NSDictionary
@@ -578,7 +581,7 @@ class NetworkService: NSObject {
             return req
         }
         ImageDownloader.default.downloadTimeout = 20000
-
+        ImageCache.default.maxMemoryCost = 2000
         let task =  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [KingfisherOptionsInfoItem.requestModifier(modifier),KingfisherOptionsInfoItem.targetCache(ImageCache.default),.backgroundDecode], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl {
@@ -645,8 +648,8 @@ class NetworkService: NSObject {
       
         let task = SDWebImageDownloader.shared().downloadImage(with: url, options: SDWebImageDownloaderOptions.highPriority, progress: nil) { (image, data, error, finish) in
             if let image = image {
-                 YYImageCache.shared().memoryCache.costLimit = 100 * 1024 * 1024
-                 YYImageCache.shared().setImage(image, imageData: data, forKey: hash, with: .memory)
+                 YYImageCache.shared().memoryCache.costLimit = 100 * 100 * 1024
+                 YYImageCache.shared().setImage(image, imageData: data, forKey: hash, with: .disk)
                 callback(nil, image, url)
             }else{
                 callback(error, nil, url)

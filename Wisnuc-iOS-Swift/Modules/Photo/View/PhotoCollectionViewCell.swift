@@ -31,8 +31,10 @@ class PhotoCollectionViewCell: UICollectionViewCell {
                 self.btnSelect?.setImage(UIImage.init(named: "select.png"), for: UIControlState.selected)
                 self.btnSelect?.setImage(UIImage.init(named: "unselect_white.png"), for: UIControlState.normal)
             }else{
-                self.btnSelect?.setImage(UIImage.init(named: ""), for: UIControlState.selected)
-                self.btnSelect?.setImage(UIImage.init(named: ""), for: UIControlState.normal)
+                self.btnSelect?.setImage(nil, for: UIControlState.selected)
+                self.btnSelect?.setImage(nil, for: UIControlState.normal)
+//                self.btnSelect?.setImage(UIImage.init(named: ""), for: UIControlState.selected)
+//                self.btnSelect?.setImage(UIImage.init(named: ""), for: UIControlState.normal)
             }
         }
     }

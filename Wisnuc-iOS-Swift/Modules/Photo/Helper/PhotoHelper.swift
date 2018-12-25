@@ -119,8 +119,8 @@ class PhotoHelper: NSObject {
             var array:Array<WSAsset>  = Array.init()
             array.append(contentsOf: assetsArray)
                   let s = CFAbsoluteTimeGetCurrent();
-                array = array.filter({$0.createDateB != nil})
-                array.sort(by: {$0.createDateB!>$1.createDateB!})
+                array = array.filter({$0.createDate != nil})
+                array.sort(by: {$0.createDate!>$1.createDate!})
                 let l = CFAbsoluteTimeGetCurrent();
                 print("😆\(l - s)")
             let timeArray:NSMutableArray = NSMutableArray.init()

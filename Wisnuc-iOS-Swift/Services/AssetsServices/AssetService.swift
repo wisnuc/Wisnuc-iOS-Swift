@@ -74,9 +74,10 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         let placesUUID = places.joined(separator: ".")
         let types = kMediaTypes.joined(separator: ".")
        let request = GetMediaAPI.init(placesUUID: placesUUID,types: types)
-      
+       let start = CFAbsoluteTimeGetCurrent()
        request.startRequestJSONCompletionHandler { [weak self] (response) in
-     
+        let last = CFAbsoluteTimeGetCurrent()
+        print("🍄\(last - start)")
             if response.error == nil{
 //                print("😆\(String(describing: sizeString(Int64(response.data!.count))))")
                 
@@ -89,7 +90,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
               
                 DispatchQueue.global(qos: .default).async {
                     var array = Array<NetAsset>.init()
-                    let start = CFAbsoluteTimeGetCurrent()
+                   
                     medias.enumerateObjects({ (object, idx, stop) in
                         if object is NSDictionary{
                             let dict =  object as! NSDictionary
@@ -97,8 +98,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
                             array.append(model)
                         }
                     })
-                    let last = CFAbsoluteTimeGetCurrent()
-                    print("🍄\(last - start)")
+                   
                     DispatchQueue.main.async {
                         self?.allNetAssets = array
                         callback(nil,array)

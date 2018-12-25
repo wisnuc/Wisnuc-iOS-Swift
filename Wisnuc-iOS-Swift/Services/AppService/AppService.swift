@@ -169,7 +169,7 @@ class AppService: NSObject,ServiceProtocol{
         if resultUser.localAddr != nil{
             networkService.checkIP(address: resultUser.lanIP!) { [weak self] (success) in
                 if success{
-                    self?.networkService.getLocalInCloudLogin(cloudToken: resultUser.cloudToken, { [weak self](localTokenError, localToken) in
+                    self?.networkService.getLocalInCloudLogin(user:resultUser,cloudToken: resultUser.cloudToken, { [weak self](localTokenError, localToken) in
                         if localTokenError == nil{
                             resultUser.isLocalLogin = NSNumber.init(value: true)
                             resultUser.localToken = localToken

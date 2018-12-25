@@ -62,7 +62,7 @@ class DeviceDetailInfoViewController: BaseViewController {
         
         var totalProportion:Float = 1.0
         
-        if statsTotalSize != 0 && statsTotalSize > usedSize {
+        if statsTotalSize != 0 && statsTotalSize > Int64(usedSize) {
             totalProportion = Float(usedSize)/Float(statsTotalSize)
         }
         return totalProportion
