@@ -72,7 +72,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
     var dataSource:Array<Any>?{
         didSet{
-           self.collectionView?.reloadData()
+//           self.collectionView?.reloadData()
         }
     }
     

@@ -658,7 +658,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                     }
                 }
             }else{
-                DispatchQueue.global(qos: .userInitiated).async {
+//                DispatchQueue.global(qos: .userInitiated).async {
                     self.fetchNormalCachePicDispay(cell: cell, model: model, size: size, closure: { (image) in
                         if cell.indexPath == model.indexPath{
                             DispatchQueue.main.async {
@@ -670,7 +670,7 @@ class PhotoCollectionViewController: UICollectionViewController {
                         }
                     })
                 }
-            }
+//            }
         }
     }
     

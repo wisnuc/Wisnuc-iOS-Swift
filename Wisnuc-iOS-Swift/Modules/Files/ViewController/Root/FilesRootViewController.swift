@@ -310,7 +310,7 @@ class FilesRootViewController: BaseViewController{
                     self?.reloadDataSouce()
                     return
                 }
-                let responseDic =  response.value as? NSDictionary ?? (response.value as? NSDictionary)?.object(forKey: "data") as? NSDictionary ?? NSDictionary.init()
+                let responseDic = (response.value as? NSDictionary)?.object(forKey: "data") as? NSDictionary ?? response.value as? NSDictionary ??  NSDictionary.init()
                 let data = jsonToData(jsonDic: responseDic)
                 do{
                     let model = try JSONDecoder().decode(FilesModel.self, from: data!)
@@ -359,7 +359,6 @@ class FilesRootViewController: BaseViewController{
     func reloadDataSouce(){
         self.isRequesting = false
         self.collcectionViewController?.collectionView?.reloadData()
-        self.collcectionViewController?.collectionView?.reloadEmptyDataSet()
     }
     
     func loadDataSouce(){

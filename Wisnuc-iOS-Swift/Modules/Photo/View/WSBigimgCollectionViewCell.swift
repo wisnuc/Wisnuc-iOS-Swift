@@ -883,7 +883,7 @@ class WSPreviewVideo: WSBasePreviewView {
             }
    
         }
-        self.player?.playerReadyToPlay = { asset, assetURL in
+        self.player?.playerPrepareToPlay = { asset, assetURL in
             self.imageView.image = nil
             print("======开始播放了")
         }
@@ -1049,7 +1049,7 @@ class WSPreviewVideo: WSBasePreviewView {
                             //        }
                             //        [self.player stop];
                         }
-                        self?.player?.playerReadyToPlay = { asset, assetURL in
+                        self?.player?.playerPrepareToPlay = { asset, assetURL in
                             print("======开始播放了")
                         }
                 
@@ -1212,7 +1212,7 @@ class WSPreviewVideo: WSBasePreviewView {
                             //        }
                             //        [self.player stop];
                         }
-                        self?.player?.playerReadyToPlay = { asset, assetURL in
+                        self?.player?.playerPrepareToPlay = { asset, assetURL in
                             print("======开始播放了")
                         }
                         
