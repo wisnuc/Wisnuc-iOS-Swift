@@ -499,7 +499,7 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
                         Message.message(text: LocalizedString(forKey: "\(model.name ?? "文件")下载完成"))
                         DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 0.5) {
                             DispatchQueue.main.async {
-                                self?.readFile(filePath:FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
+                        self?.readFile(filePath:FilesRootViewController.downloadManager.cache.filePtah(fileName: model.name!)!)
                             }
                         }
                     })
@@ -507,7 +507,9 @@ extension SearchFilesViewController:UITableViewDelegate,UITableViewDataSource{
                 
                 task?.failureHandler  = { (taskF) in
                     vc?.dismiss(animated: true, completion: {
-    
+                        if let error = taskF.error{
+                             Message.message(text: LocalizedString(forKey: "\(error.localizedDescription)"))
+                        }
                     })
                 }
                 downloadTask = task

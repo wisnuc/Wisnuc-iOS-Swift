@@ -165,7 +165,7 @@ class PhotoRootViewController: BaseViewController {
                             self.localAssetDataSources = allAssets
                         }
                         
-                        self.sort(self.merge() )
+                        self.sort(self.merge())
                     }
                 }
             })
@@ -257,7 +257,7 @@ class PhotoRootViewController: BaseViewController {
                              self?.localAssetDataSources.append(contentsOf:allAssets)
                             }
                             
-                            self?.sort(self?.merge() ?? Array<WSAsset>.init())
+                            self?.sort(pollingSort:true,self?.merge() ?? Array<WSAsset>.init())
                             //                        self?.addNetAssets(assetsArr: assetArray)
                             //                        for asset in assetArray{
                             //                            for (i,assetDataArray) in allDataSource.enumerated(){
@@ -329,7 +329,7 @@ class PhotoRootViewController: BaseViewController {
                                 self.localAssetDataSources.append(contentsOf:allAssets)
                             }
                             
-                            self.sort(self.merge() )
+                            self.sort(pollingSort:true,self.merge())
                         }
                     }
                 }
@@ -363,7 +363,7 @@ class PhotoRootViewController: BaseViewController {
                     if assetArray.count > 0{
                         print("😈😈😈😈😈😈😈😈😈😈")
                         self.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
-                        self.sort(self.merge() )
+                        self.sort(pollingSort:true,self.merge() )
                     }
                 }
             }
@@ -529,7 +529,7 @@ class PhotoRootViewController: BaseViewController {
 //    }
     
     @objc func timerAction(){
-//        self.pollingAssetData()
+        self.pollingAssetData()
     }
     
     func deleteSelectPhotos(photos:[WSAsset]){
@@ -679,7 +679,8 @@ class PhotoRootViewController: BaseViewController {
         }
     }
     
-    func sort(_ assetsArray:Array<WSAsset>){
+    func sort(
+        pollingSort:Bool = false, _ assetsArray:Array<WSAsset>){
         autoreleasepool {
             DispatchQueue.global(qos: .default).async {
             let start = CFAbsoluteTimeGetCurrent();
@@ -734,9 +735,13 @@ class PhotoRootViewController: BaseViewController {
             }
                 let last = CFAbsoluteTimeGetCurrent()
                 print("🌶\(last - start)")
-                self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
                 
+    
                 DispatchQueue.main.async {
+                    if pollingSort == true &&  self.photoCollcectionViewController.isScrolling{
+                        return
+                    }
+                    self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
                     self.photoCollcectionViewController.dataSource = self.assetDataSources
                     UIView.performWithoutAnimation({
                         //刷新界面

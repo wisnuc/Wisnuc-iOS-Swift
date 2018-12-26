@@ -75,6 +75,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
                     if self.selfState == .movecopy{
                         nextViewController = FilesRootViewController.init(style: .white, srcDictionary: srcDictionary, moveModelArray: moveModelArray, isCopy: isCopy,driveUUID:driveUUID,directoryUUID:uuid)
                         nextViewController.model = model
+                       nextViewController.title = model.backupRoot ? model.bname ?? model.name : model.name ?? ""
                     }
                     let tab = retrieveTabbarController()
                     tab?.setTabBarHidden(true, animated: true)
@@ -571,26 +572,12 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                             return
                         }
                         if model.nodes?.first?.type == FilesType.directory.rawValue{
-//                            self.mergeTaskCount = self.mergeTaskCount + 1
-//                            if self.mergeTaskCount >= 2{
-//                                if let alertVC = self.filesConflictAlert(task: model){
-//                                    alertVC.confirmCallback = { [unowned self] (type) in
-//                                        if let type = type{
-//                                            self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: type, callback: { (error)in
-//                                                self.mergeTaskCount = 0
-//                                                return callback(error)
-//                                            })
-//                                        }else{
-//                                            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "Cancel")])
-//                                             return callback(error)
-//                                        }
-//                                    }
-//                                }
-//                                return
-//                            }
                             self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.keep.rawValue, callback: { (error)in
-                                 self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,taskModel: taskModel, callback: callback)
-//                                return callback(error)
+                                if let error = error{
+                                     return callback(error)
+                                }else{
+                                    self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,taskModel: taskModel, callback: callback)
+                                }
                             })
                             return
                         }
@@ -599,7 +586,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                                 return callback(error)
                             })
                         }else{
-                            if let alertVC = self.filesConflictAlert(task: model){
+                            if let alertVC = self.filesConflictAlert(name: model.nodes?.first?.src?.name){
                                 alertVC.confirmCallback = { [unowned self] (type) in
                                     if let type = type{
                                     self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: type, callback: { (error)in
@@ -622,18 +609,77 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 }else if model.nodes?.first?.state == .Finish {
                     return callback(nil)
                 }else if model.nodes?.first?.state == .Failed{
-                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "error:failed")])
+                    let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "Failed")])
                     return callback(error)
                 }
             }
+            
+//            else if model.nodes?.count ?? 0 > 1{
+//                let nodes = model.nodes!.filter({$0.state == .Conflict && $0.error?.code == .EEXIST})
+////                for node in model.nodes!{
+////                    self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,node:node, taskModel: model, callback: callback)
+////                }
+//            }
         })
+    }
+    
+     func taskHandle(isCopy:Bool = false,creatCopy:Bool = false,node:NodesModel,taskModel:FilesTasksModel,callback:@escaping (_ error:Error?)->()){
+        if node.state == .Conflict && node.error?.code == .EEXIST{
+            if let uuid = model?.uuid,let srcuuid = node.src?.uuid {
+                if creatCopy == true{
+                    self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { (error)in
+                        return callback(error)
+                    })
+                    return
+                }
+                if node.type == FilesType.directory.rawValue{
+                    self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.keep.rawValue, callback: { (error)in
+                        if let error = error{
+                            return callback(error)
+                        }else{
+                            self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,taskModel: taskModel, callback: callback)
+                        }
+                    })
+                    return
+                }
+                if !isCopy{
+                    self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { (error)in
+                        return callback(error)
+                    })
+                }else{
+                    if let alertVC = self.filesConflictAlert(name: node.src?.name){
+                        alertVC.confirmCallback = { [unowned self] (type) in
+                            if let type = type{
+                                self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: type, callback: { (error)in
+                                    return callback(error)
+                                })
+                            }else{
+                                let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "Cancel")])
+                                return callback(error)
+                            }
+                        }
+                    }
+                }
+            }
+        }else if node.state == .Working || node.state == .Preparing{
+            DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2) {
+                DispatchQueue.main.async {
+                    self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,taskModel: taskModel, callback: callback)
+                }
+            }
+        }else if node.state == .Finish {
+            return callback(nil)
+        }else if node.state == .Failed{
+            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "Failed")])
+            return callback(error)
+        }
     }
     
     func renameConflictAction(){
         
     }
     
-    func filesConflictAlert(task:FilesTasksModel)->FilesConflictAlertViewController?{
+    func filesConflictAlert(name:String?)->FilesConflictAlertViewController?{
         let bundle = Bundle.init(for: FilesConflictAlertViewController.self)
         let storyboard = UIStoryboard.init(name: "FilesConflictAlertViewController", bundle: bundle)
         let identifier = "FilesConflictAlertViewController"
@@ -643,7 +689,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         viewController.transitioningDelegate = self.transitionController
         
         weak var vc =  (viewController as? FilesConflictAlertViewController)
-        vc?.model = task
+        vc?.name = name
         vc?.delegate = self
         self.present(viewController, animated: true, completion: {
             

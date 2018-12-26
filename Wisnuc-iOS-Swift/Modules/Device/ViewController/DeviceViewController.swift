@@ -224,23 +224,23 @@ class DeviceViewController: BaseViewController {
       }
       
       var filesProportion:CGFloat = 0.0
-      filesProportion = CGFloat(documentSize)/CGFloat(statsTotalSize) * totalProportion
+      filesProportion = CGFloat(documentSize)/CGFloat(totalSize) * totalProportion
       
       var imageProportion:CGFloat = 0.0
-      imageProportion = CGFloat(imageSize)/CGFloat(statsTotalSize) * totalProportion
+      imageProportion = CGFloat(imageSize)/CGFloat(totalSize) * totalProportion
      
       var audioProportion:CGFloat = 0.0
-      audioProportion = CGFloat(audioSize)/CGFloat(statsTotalSize) * totalProportion
+      audioProportion = CGFloat(audioSize)/CGFloat(totalSize) * totalProportion
       
       var videoProportion:CGFloat = 0.0
-      videoProportion = CGFloat(videoSize)/CGFloat(statsTotalSize) * totalProportion
+      videoProportion = CGFloat(videoSize)/CGFloat(totalSize) * totalProportion
      
       var othersProportion:CGFloat = 0.0
-      othersProportion = CGFloat(otherSize)/CGFloat(statsTotalSize) * totalProportion
+      othersProportion = CGFloat(otherSize)/CGFloat(totalSize) * totalProportion
       
       let minProportion:CGFloat  = 0.01
       let minWidth:CGFloat  = 2
-      let baseWith = (capacityProgressBackgroudView.width - 20)
+      let baseWith = (capacityProgressBackgroudView.width - 8)
       let capacityFilesProgressViewWidth:CGFloat = baseWith * filesProportion
       let capacityPhotoProgressViewWidth:CGFloat = baseWith * imageProportion
       let capacityAudioProgressViewWidth:CGFloat = baseWith * audioProportion

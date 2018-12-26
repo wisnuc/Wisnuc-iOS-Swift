@@ -905,7 +905,7 @@ class FilesRootViewController: BaseViewController{
         task.startRequestJSONCompletionHandler { [weak self](response) in
             if response.error == nil{
                 let messageDetail = self?.selfState == .share ? LocalizedString(forKey: "已分享到") : (self?.isCopy)! ? LocalizedString(forKey: "已复制到") : LocalizedString(forKey: "已移动到")
-                let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) \(messageDetail) \(self?.title ?? "files")") : LocalizedString(forKey: "\(names.count) 个文件 \(messageDetail) \(self?.title ?? "files")")
+                let message = names.count > 0 ?  LocalizedString(forKey: "\(names.first!) \(messageDetail) \(self?.title ?? "")") : LocalizedString(forKey: "\(names.count) 个文件 \(messageDetail) \(self?.title ?? "")")
                 
                 guard let dic = ((response.value) as? NSDictionary)?.object(forKey: "data") as? NSDictionary ?? (response.value) as? NSDictionary else {
                     return

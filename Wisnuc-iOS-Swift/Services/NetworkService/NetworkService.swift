@@ -47,21 +47,19 @@ class NetworkService: NSObject {
                         }
                         self.checkIP(address:ip, { (isLocal) in
                             if isLocal{
-                                if AppUserService.currentUser?.localToken != nil{
-                                    self.networkState = .local
-                                }else{
-                                    self.getLocalInCloudLogin { [weak self] (error, localToken) in
-                                        if error == nil {
-                                            AppUserService.currentUser?.localToken = localToken
-                                            AppUserService.synchronizedCurrentUser()
-                                             self?.networkState = .local
-                                        }else{
-                                            //                                  Message.message(text: (error?.localizedDescription)!)
-                                            self?.networkState = .normal
-                                        }
+                                self.getLocalInCloudLogin { [weak self] (error, localToken) in
+                                    if error == nil {
+                                        AppUserService.currentUser?.localToken = localToken
+                                        AppUserService.synchronizedCurrentUser()
+                                         self?.networkState = .local
+                                    }else{
+                                        //                                  Message.message(text: (error?.localizedDescription)!)
+                                        self?.networkState = .normal
                                     }
-                                    self.networkState = .normal
                                 }
+                        
+                            }else{
+                                   self.networkState = .normal
                             }
                         })
             }else{
@@ -71,11 +69,19 @@ class NetworkService: NSObject {
                 }
                 self.checkIP(address:ip, { (isLocal) in
                     if isLocal{
-                        if AppUserService.currentUser?.localToken != nil{
-                            self.networkState = .local
-                        }else{
-                            self.networkState = .normal
+                        self.getLocalInCloudLogin { [weak self] (error, localToken) in
+                            if error == nil {
+                                AppUserService.currentUser?.localToken = localToken
+                                AppUserService.synchronizedCurrentUser()
+                                self?.networkState = .local
+                            }else{
+                                //                                  Message.message(text: (error?.localizedDescription)!)
+                                self?.networkState = .normal
+                            }
                         }
+                        
+                    }else{
+                        self.networkState = .normal
                     }
                 })
             }
@@ -145,11 +151,15 @@ class NetworkService: NSObject {
 //        if  !AppUserService.isUserLogin {
 //            return closure(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NotLogin)), nil)
 //        }
-        
-        if isNilString( AppUserService.currentUser?.cloudToken){
-            return closure(LoginError(code: ErrorCode.Login.NoToken, kind: LoginError.ErrorKind.LoginNoToken, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NoToken)), nil)
+        if user == nil{
+            if isNilString( AppUserService.currentUser?.cloudToken){
+                return closure(LoginError(code: ErrorCode.Login.NoToken, kind: LoginError.ErrorKind.LoginNoToken, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NoToken)), nil)
+            }
+        }else{
+            if isNilString(user?.cloudToken){
+                return closure(LoginError(code: ErrorCode.Login.NoToken, kind: LoginError.ErrorKind.LoginNoToken, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NoToken)), nil)
+            }
         }
-        
         LocalTokenInCloudAPI.init(user:user,cloudToken:cloudToken).startRequestJSONCompletionHandler({ [weak self] (response) in
             if response.error == nil{
                 if let errorMessage = ErrorTools.responseErrorData(response.data){
@@ -532,35 +542,37 @@ class NetworkService: NSObject {
     
     //Asset
     func getThumbnail(hash:String,size:CGSize? = nil,downloadPriority:Float? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->RetrieveImageDownloadTask?{
-    
-        let detailURL = "media"
-        let holdPlaceSize:CGFloat = 200
-        let frameWidth:Int = Int(size?.width ?? holdPlaceSize)
-        let frameHeight:Int = Int(size?.height ?? holdPlaceSize)
-        let resource = "/media/\(hash)"
-        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-     
-        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth),kRequestImageHeightKey:String(describing: frameHeight),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
-        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
-        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
-          return nil
-        }
-        
-        guard let dataString = String.init(data: data, encoding: .utf8) else {
+        guard let url = PhotoHelper.requestImageUrl(size: size, hash: hash) else {
             return nil
         }
-        
-        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-            return nil
-        }
-        
-        guard  let normalUrl = URL.init(string:urlString) else {
-            return nil
-        }
-//                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-       guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
-            return nil
-        }
+//        let detailURL = "media"
+//        let holdPlaceSize:CGFloat = 200
+//        let frameWidth:Int = Int(size?.width ?? holdPlaceSize)
+//        let frameHeight:Int = Int(size?.height ?? holdPlaceSize)
+//        let resource = "/media/\(hash)"
+//        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+//
+//        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth),kRequestImageHeightKey:String(describing: frameHeight),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
+//        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
+//        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+//          return nil
+//        }
+//
+//        guard let dataString = String.init(data: data, encoding: .utf8) else {
+//            return nil
+//        }
+//
+//        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+//            return nil
+//        }
+//
+//        guard  let normalUrl = URL.init(string:urlString) else {
+//            return nil
+//        }
+////                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+//       guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+//            return nil
+//        }
       
         let modifier = AnyModifier { request in
             var req = request
@@ -581,14 +593,10 @@ class NetworkService: NSObject {
             return req
         }
         ImageDownloader.default.downloadTimeout = 20000
-        ImageCache.default.maxMemoryCost = 2000
-        let task =  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [KingfisherOptionsInfoItem.requestModifier(modifier),KingfisherOptionsInfoItem.targetCache(ImageCache.default),.backgroundDecode], progressBlock: nil) { (image, error, reqUrl, data) in
+        ImageCache.default.maxMemoryCost = 20000
+        let task =  ImageDownloader.default.downloadImage(with: url, retrieveImageTask: nil, options: [KingfisherOptionsInfoItem.requestModifier(modifier),KingfisherOptionsInfoItem.originalCache(ImageCache.default),.backgroundDecode], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl {
-//                    ImageCache.default.store(image,
-//                                             original: data,
-//                                             forKey: url.absoluteString,
-//                                             toDisk: true)
                       callback(nil, image,url)
                 }else{
                     callback(error, nil,reqUrl)
@@ -601,37 +609,40 @@ class NetworkService: NSObject {
     
     func getSDThumbnail(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->SDWebImageDownloadToken?{
         
-        let detailURL = "media"
-        var frameWidth = size?.width
-        var frameHeight = size?.height
-        if size == nil ||  size == CGSize.zero{
-            frameWidth = 200
-            frameHeight = 200
-        }
-        let resource = "/media/\(hash)"
-        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-        
-        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
-        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
-        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+        guard let url = PhotoHelper.requestImageUrl(size: size, hash: hash) else {
             return nil
         }
-        
-        guard let dataString = String.init(data: data, encoding: .utf8) else {
-            return nil
-        }
-        
-        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-            return nil
-        }
-        
-        guard  let normalUrl = URL.init(string:urlString) else {
-            return nil
-        }
-        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
-            return nil
-        }
+//        let detailURL = "media"
+//        var frameWidth = size?.width
+//        var frameHeight = size?.height
+//        if size == nil ||  size == CGSize.zero{
+//            frameWidth = 200
+//            frameHeight = 200
+//        }
+//        let resource = "/media/\(hash)"
+//        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+//
+//        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
+//        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
+//        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+//            return nil
+//        }
+//
+//        guard let dataString = String.init(data: data, encoding: .utf8) else {
+//            return nil
+//        }
+//
+//        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+//            return nil
+//        }
+//
+//        guard  let normalUrl = URL.init(string:urlString) else {
+//            return nil
+//        }
+//        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+//        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+//            return nil
+//        }
         
         SDWebImageDownloader.shared().headersFilter = { (requsetUrl,header) in
             var dic = header
@@ -661,35 +672,38 @@ class NetworkService: NSObject {
     
     func getThumbnailBackgroud(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->SDWebImageDownloadToken?{
      
-        let detailURL = "media"
-        var frameWidth = size?.width
-        var frameHeight = size?.height
-        if size == nil ||  size == CGSize.zero{
-            frameWidth = 200
-            frameHeight = 200
-        }
-        let resource = "/media/\(hash)"
-        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-        
-        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
-        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
-        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
-            return nil
-        }
-        
-        guard let dataString = String.init(data: data, encoding: .utf8) else {
-            return nil
-        }
-        
-        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-            return nil
-        }
-        
-        guard  let normalUrl = URL.init(string:urlString) else {
-            return nil
-        }
-        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+//        let detailURL = "media"
+//        var frameWidth = size?.width
+//        var frameHeight = size?.height
+//        if size == nil ||  size == CGSize.zero{
+//            frameWidth = 200
+//            frameHeight = 200
+//        }
+//        let resource = "/media/\(hash)"
+//        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
+//        
+//        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
+//        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
+//        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
+//            return nil
+//        }
+//
+//        guard let dataString = String.init(data: data, encoding: .utf8) else {
+//            return nil
+//        }
+//
+//        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
+//            return nil
+//        }
+//        
+//        guard  let normalUrl = URL.init(string:urlString) else {
+//            return nil
+//        }
+//        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
+//        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
+//            return nil
+//        }
+        guard let url = PhotoHelper.requestImageUrl(size: size, hash: hash) else {
             return nil
         }
         

@@ -16,7 +16,8 @@ private let headerReuseIdentifier = "headView"
 private var currentScale:CGFloat = 0
 private let keyPath:String = "sliderState"
 private let headerHeight:CGFloat = 42
-
+private let kthumbnilNormalSize:CGFloat = 186
+private let kthumbnilSmallSize:CGFloat = 64
 
 @objc protocol PhotoCollectionViewControllerDelegate{
     func collectionView(_ collectionView: UICollectionView, isSelectMode:Bool)
@@ -631,7 +632,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     
     func setCellImage(model:WSAsset,cell:PhotoCollectionViewCell){
-        let size = CGSize.init(width: 186 , height: 186 )
+        let size = self.fetchRequestSize(origin: kthumbnilNormalSize, model: model)
         if cell.indexPath != model.indexPath{
             return
         }
@@ -698,11 +699,12 @@ class PhotoCollectionViewController: UICollectionViewController {
             if let requset = PhotoHelper.requestImageUrl(size: size, hash: hash){
                 ImageCache.default.retrieveImage(forKey: requset.absoluteString, options: nil, completionHandler: { (image, type) in
                     if let image = image{
+                        print("💗💗💗💗💗💗💗💗💗来自缓存，type:\(type)")
                         return closure(image)
                     }else{
-                        let _ = self.fetchSmallPic(hash: hash, callback: { [weak self] (error, image, url) in
+                        let _ = self.fetchSmallPic(model: model, callback: { [weak self] (error, image, url) in
                             if let image = image{
-                                let _ = self?.fetchNormalPic(hash: hash, callback: { (error, image, url) in
+                                let _ = self?.fetchNormalPic(model: model, callback: { (error, image, url) in
                                     if let image = image{
                                         return closure(image)
                                     }
@@ -721,9 +723,12 @@ class PhotoCollectionViewController: UICollectionViewController {
         guard let hash = (model as? NetAsset)?.fmhash else {
            return
         }
-        if let requset = PhotoHelper.requestImageUrl(size: CGSize(width: 64, height: 64), hash: hash){
+        
+        let size = self.fetchRequestSize(origin: kthumbnilSmallSize, model: model)
+        if let requset = PhotoHelper.requestImageUrl(size: size, hash: hash){
             ImageCache.default.retrieveImage(forKey: requset.absoluteString, options: nil, completionHandler: { (image, type) in
                 if let image = image{
+                    print("💗💗💗💗💗💗💗💗💗来自缓存，type:\(type)")
                     return callback(image)
             }
          })
@@ -737,14 +742,15 @@ class PhotoCollectionViewController: UICollectionViewController {
         if let image = YYImageCache.shared().getImageForKey(hash){
             return closure(image)
         }else{
-            let _ = self.fetchSmallPic(hash: hash, callback: { [weak self](error, image, url) in
+            let _ = self.fetchSmallPic(model: model, callback: { [weak self](error, image, url) in
                 if let image = image{
                     if let requsetBig = PhotoHelper.requestImageUrl(size: size, hash: hash){
                         ImageCache.default.retrieveImage(forKey: requsetBig.absoluteString, options: nil, completionHandler: { (image, type) in
                             if let image = image{
+                                print("💗💗💗💗💗💗💗💗💗来自缓存，type:\(type)")
                                 return closure(image)
                             }else{
-                                _ = self?.fetchNormalPic(hash: hash, callback: {(error, image, url) in
+                                _ = self?.fetchNormalPic(model: model, callback: {(error, image, url) in
                                     if let image = image{
                                         return closure(image)
                                     }
@@ -758,8 +764,11 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
     }
     
-    func fetchSmallPic(hash:String,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->SDWebImageDownloadToken?{
-        let size = CGSize(width: 64, height: 64)
+    func fetchSmallPic(model:WSAsset,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->SDWebImageDownloadToken?{
+        guard let hash = (model as? NetAsset)?.fmhash else {
+            return nil
+        }
+        let size = self.fetchRequestSize(origin: kthumbnilSmallSize, model: model)
         let task = AppNetworkService.getSDThumbnail(hash: hash,size:size) { (error, downloadImage,reqUrl)  in
             callback(error,downloadImage,reqUrl)
         }
@@ -769,8 +778,11 @@ class PhotoCollectionViewController: UICollectionViewController {
         return task
     }
     
-    func fetchNormalPic(hash:String,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->RetrieveImageDownloadTask?{
-        let size = CGSize(width: 186, height: 186)
+    func fetchNormalPic(model:WSAsset,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->RetrieveImageDownloadTask?{
+        guard let hash = (model as? NetAsset)?.fmhash else {
+            return nil
+        }
+        let size = self.fetchRequestSize(origin: kthumbnilNormalSize, model: model)
         let task = AppNetworkService.getThumbnail(hash: hash,size:size,downloadPriority:1) { (error, downloadImage,reqUrl)  in
             callback(error,downloadImage,reqUrl)
         }
@@ -778,6 +790,18 @@ class PhotoCollectionViewController: UICollectionViewController {
             self.imageDownloadTasks.append(task!)
         }
         return task
+    }
+    
+    func fetchRequestSize(origin:CGFloat,model:WSAsset)->CGSize{
+        var size = CGSize.init(width: origin , height: origin)
+        if let w = (model as? NetAsset)?.metadata?.w,let h = (model as? NetAsset)?.metadata?.h{
+            if w > h{
+                size = CGSize.init(width: CGFloat(w) * origin/CGFloat(h), height: origin)
+            }else{
+                size = CGSize.init(width: origin, height: (CGFloat(h) * origin/CGFloat(w)))
+            }
+        }
+        return size
     }
     
     lazy var imageManager = PHCachingImageManager.init()
@@ -882,7 +906,9 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     var isAnimation = false
     var isDecelerating = false
+    var isScrolling = false
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        isScrolling = true
         isDecelerating = true
 //        if let cells = self.collectionView?.visibleCells{
 //            autoreleasepool {
@@ -966,7 +992,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         self.hiddenIndicator()
-        
+        isScrolling = false
     }
     
 //    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
@@ -1108,23 +1134,23 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
             if indexPath.row >= dataSource[indexPath.section].count{
                 return
             }
-            let cell = collectionView.cellForItem(at: indexPath)
+//            let cell = collectionView.cellForItem(at: indexPath)
             let model = dataSource[indexPath.section][indexPath.row]
-            if cell != nil{
-               if let photoCell = cell as? PhotoCollectionViewCell{
-                let size = CGSize.init(width: 186 , height: 186 )
+//            if cell != nil{
+//               if let photoCell = cell as? PhotoCollectionViewCell{
+            let size = self.fetchRequestSize(origin: kthumbnilNormalSize, model: model)
                 if let fmhash = (model as? NetAsset)?.fmhash{
-//                    if let url = PhotoHelper.requestImageUrl(size: size, hash: fmhash){
-//                        let task = self.imageDownloadTasks.first(where: {$0.url == url})
-//                        task?.cancel()
-//                        self.imageDownloadTasks.removeAll(where: {$0.url == url})
-//                    }
+                    if let url = PhotoHelper.requestImageUrl(size: size, hash: fmhash){
+                        let task = self.imageDownloadTasks.first(where: {$0.url == url})
+                        task?.cancel()
+                        self.imageDownloadTasks.removeAll(where: {$0.url == url})
+//                        photoCell.imageView?.layer.contents  = nil
+//                        photoCell.image = nil
+                    }
                 }
-               
-                    photoCell.imageView?.layer.contents  = nil
-                    photoCell.image = nil
-                }
-            }
+        
+//                }
+//            }
         }
     }
 }

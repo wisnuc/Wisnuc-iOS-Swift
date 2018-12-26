@@ -154,97 +154,180 @@ class AutoBackupManager: NSObject {
     
     func schedule(){
         if isDestroying {return}
-        if(self.hashwaitingQueue.count == 0 && self.hashWorkingQueue.count == 0) {
+        if hashwaitingQueue.count == 0 && hashWorkingQueue.count == 0 {
             if shouldNotify {
                 shouldNotify = false
-                defaultNotificationCenter().post(name: Notification.Name.Backup.HashCalculateFinishedNotiKey, object: nil)
+                NotificationCenter.default.post(name: Notification.Name.Backup.HashCalculateFinishedNotiKey, object: nil)
             }
-            print("hash calculate finish. uploadPaddingQueue:\(String(describing: self.uploadPaddingQueue.count))");
+            print(String(format: "hash calculate finish. uploadPaddingQueue:%lu", UInt(uploadPaddingQueue.count)))
         }
         
-        
-        if(self.hashwaitingQueue.count == 0 && self.hashWorkingQueue.count == 0 && self.uploadPaddingQueue.count == 0 && self.uploadingQueue.count == 0){
-            print("backup asset finish ----=======>>>><<<<<<<<====-----  errorCount:\(uploadErrorQueue.count)  finishedCount:\(uploadedQueue.count)")
-            
-            DispatchQueue.main.async {
+        if hashwaitingQueue.count == 0 && hashWorkingQueue.count == 0 && uploadPaddingQueue.count == 0 && uploadingQueue.count == 0 {
+            print(String(format: "backup asset finish ----=======>>>><<<<<<<<====-----  errorCount:%lu  finishedCount:%lu", UInt(uploadErrorQueue.count), UInt(uploadedQueue.count)))
+            DispatchQueue.main.async(execute: {
                 UIApplication.shared.isIdleTimerDisabled = false
-            }
-            self.managerQueue.async { [weak self] in
-                if (self?.uploadErrorQueue.count)!>0 { // retry
-                    self?.needRetry = false
-                    for model in (self?.uploadErrorQueue)!{
-                        if model.asset != nil{
-                            self?.uploadPaddingQueue.append(model.asset!)
+            })
+            managerQueue.async(execute: {
+                if self.uploadErrorQueue.count != 0{
+                    // retry
+                    self.needRetry = false
+                    for obj in self.uploadErrorQueue{
+                        if let asset = obj.asset{
+                            self.uploadPaddingQueue.append(asset)
                         }
                     }
-                    self?.uploadErrorQueue.removeAll()
-                    self?.schedule()
+                    self.uploadErrorQueue.removeAll()
+                    self.schedule()
                 }
-            }
+            })
         }
         
-        self.managerQueue.async { [weak self] in
-            while((self?.hashWorkingQueue.count)! < (self?.hashLimitCount!)! && (self?.hashwaitingQueue.count)! > 0) {
-                guard let asset = self?.hashwaitingQueue.first else{
-                    return
+        managerQueue.async(execute: {
+            while self.hashWorkingQueue.count < self.hashLimitCount ?? 0 && self.hashwaitingQueue.count > 0 {
+                let asset = self.hashwaitingQueue.first
+                self.hashwaitingQueue.removeAll(where: { element in element == asset })
+                if let anAsset = asset {
+                    self.hashWorkingQueue.append(anAsset)
                 }
-                let location = self?.hashwaitingQueue.index(of: asset)
-                if let eLocation = location{
-                    self?.hashwaitingQueue.remove(at: eLocation)
-                }
-                self?.hashWorkingQueue.append(asset)
-                self?.workingQueue.async {
-                    self?.getAssetSha256(asset: asset, callback: { [weak self] (error, sha256) in
-                        self?.managerQueue.async {
-                            if (error != nil) {
-                                self?.hashFailQueue.append(asset)
-                            }else{
-                                asset.digest = sha256
-                                self?.uploadPaddingQueue.append(asset)
+                weak var weakSelf = self
+                self.workingQueue.async(execute: {
+                    self.getAssetSha256(asset: asset!, callback: { (error, sha256) in
+                        self.managerQueue.async(execute: {
+                            if error != nil {
+                                if let anAsset = asset {
+                                    weakSelf?.hashFailQueue.append(anAsset)
+                                }
+                            } else {
+                                asset?.digest = sha256
+                                if let anAsset = asset {
+                                    weakSelf?.uploadPaddingQueue.append(anAsset)
+                                }
                             }
-                            
-                            let location = self?.hashWorkingQueue.index(of: asset)
-                            if let eLocation = location{
-                                self?.hashWorkingQueue.remove(at: eLocation)
-                            }
-                            self?.schedule()
-                        }
+                            weakSelf?.hashWorkingQueue.removeAll(where: { element in element == asset })
+                            weakSelf?.schedule()
+                        })
                     })
-                }
+                })
             }
             
-            if !(self?.shouldUpload!)! {return}
-            while((self?.uploadPaddingQueue.count)! > 0 && (self?.uploadingQueue.count)! < (self?.uploadLimitCount)!) {
-                guard let asset = self?.uploadPaddingQueue.first else{
+            
+            if(!self.shouldUpload!) {return}
+            while self.uploadPaddingQueue.count > 0 && self.uploadingQueue.count < self.uploadLimitCount! {
+                let asset = self.uploadPaddingQueue.first
+                self.uploadPaddingQueue.removeAll(where: { element in element == asset })
+                guard let manager = self.sessionManager,let drive = self.uuid else{
                     return
                 }
-                let location = self?.uploadPaddingQueue.index(of: asset)
-                if let eLocation = location{
-                     self?.uploadPaddingQueue.remove(at: eLocation)
-                }
-                
-                guard let manager = self?.sessionManager,let drive = self?.uuid else{
-                    return
-                }
-                let model = WSUploadModel.init(asset: asset, manager: manager ,driveUUID: drive)
-                guard let digest = asset.digest else{
-                    return
-                }
-                
-                if (self?.uploadedNetHashSet.contains(digest))! || (self?.uploadedLocalHashSet.contains(digest))! {
-                    self?.uploadedQueue.append(model)
-                    print("发现一个已上传的，直接跳过, error: \(String(describing: (self?.uploadErrorQueue.count)!)) finish:\(String(describing: (self?.uploadedQueue.count)!))")
-                    defaultNotificationCenter().post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
-                    self?.schedule()
-                    
-                }else {
-                    self?.uploadingQueue.append(model)
-                    self?.workingQueue.async {
-                           self?.scheduleForUpload(model: model, useTimeStamp: false)
+                let model = WSUploadModel(asset: asset!, manager: manager, driveUUID: drive)
+                if let aDigest = asset?.digest {
+                    if self.uploadedNetHashSet.contains(aDigest) || self.uploadedLocalHashSet.contains(aDigest) {
+                        self.uploadedQueue.append(model)
+                        print(String(format: "发现一个已上传的，直接跳过, error: %lu  finish:%lu", UInt(self.uploadErrorQueue.count), UInt(self.uploadedQueue.count)))
+                        NotificationCenter.default.post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
+                        self.schedule()
+                    } else {
+                        self.uploadingQueue.append(model)
+                        self.workingQueue.async(execute: {
+                             self.scheduleForUpload(model: model, useTimeStamp: false)
+                        })
                     }
-                }
-            }
-        }
+                }}
+            
+        })
+        
+        
+//        if isDestroying {return}
+//        if(self.hashwaitingQueue.count == 0 && self.hashWorkingQueue.count == 0) {
+//            if shouldNotify {
+//                shouldNotify = false
+//                defaultNotificationCenter().post(name: Notification.Name.Backup.HashCalculateFinishedNotiKey, object: nil)
+//            }
+//            print("hash calculate finish. uploadPaddingQueue:\(String(describing: self.uploadPaddingQueue.count))");
+//        }
+//
+//
+//        if(self.hashwaitingQueue.count == 0 && self.hashWorkingQueue.count == 0 && self.uploadPaddingQueue.count == 0 && self.uploadingQueue.count == 0){
+//            print("backup asset finish ----=======>>>><<<<<<<<====-----  errorCount:\(uploadErrorQueue.count)  finishedCount:\(uploadedQueue.count)")
+//
+//            DispatchQueue.main.async {
+//                UIApplication.shared.isIdleTimerDisabled = false
+//            }
+//            self.managerQueue.async { [weak self] in
+//                if (self?.uploadErrorQueue.count)!>0 { // retry
+//                    self?.needRetry = false
+//                    for model in (self?.uploadErrorQueue)!{
+//                        if model.asset != nil{
+//                            self?.uploadPaddingQueue.append(model.asset!)
+//                        }
+//                    }
+//                    self?.uploadErrorQueue.removeAll()
+//                    self?.schedule()
+//                }
+//            }
+//        }
+//
+//        self.managerQueue.async { [weak self] in
+//            while((self?.hashWorkingQueue.count)! < (self?.hashLimitCount!)! && (self?.hashwaitingQueue.count)! > 0) {
+//                guard let asset = self?.hashwaitingQueue.first else{
+//                    return
+//                }
+//                let location = self?.hashwaitingQueue.index(of: asset)
+//                if let eLocation = location{
+//                    self?.hashwaitingQueue.remove(at: eLocation)
+//                }
+//                self?.hashWorkingQueue.append(asset)
+//                self?.workingQueue.async {
+//                    self?.getAssetSha256(asset: asset, callback: { [weak self] (error, sha256) in
+//                        self?.managerQueue.async {
+//                            if (error != nil) {
+//                                self?.hashFailQueue.append(asset)
+//                            }else{
+//                                asset.digest = sha256
+//                                self?.uploadPaddingQueue.append(asset)
+//                            }
+//
+//                            let location = self?.hashWorkingQueue.index(of: asset)
+//                            if let eLocation = location{
+//                                self?.hashWorkingQueue.remove(at: eLocation)
+//                            }
+//                            self?.schedule()
+//                        }
+//                    })
+//                }
+//            }
+//
+//            if !(self?.shouldUpload!)! {return}
+//            while((self?.uploadPaddingQueue.count)! > 0 && (self?.uploadingQueue.count)! < (self?.uploadLimitCount)!) {
+//                guard let asset = self?.uploadPaddingQueue.first else{
+//                    return
+//                }
+//                let location = self?.uploadPaddingQueue.index(of: asset)
+//                if let eLocation = location{
+//                     self?.uploadPaddingQueue.remove(at: eLocation)
+//                }
+//
+//                guard let manager = self?.sessionManager,let drive = self?.uuid else{
+//                    return
+//                }
+//                let model = WSUploadModel.init(asset: asset, manager: manager ,driveUUID: drive)
+//                guard let digest = asset.digest else{
+//                    return
+//                }
+//
+//                if (self?.uploadedNetHashSet.contains(digest))! || (self?.uploadedLocalHashSet.contains(digest))! {
+//                    self?.uploadedQueue.append(model)
+//                    print("发现一个已上传的，直接跳过, error: \(String(describing: (self?.uploadErrorQueue.count)!)) finish:\(String(describing: (self?.uploadedQueue.count)!))")
+//                    defaultNotificationCenter().post(name: NSNotification.Name.Backup.AutoBackupCountChangeNotiKey, object: nil)
+//                    self?.schedule()
+//
+//                }else {
+//                    self?.uploadingQueue.append(model)
+//                    self?.workingQueue.async {
+//                           self?.scheduleForUpload(model: model, useTimeStamp: false)
+//                    }
+//                }
+//            }
+//        }
     }
     
     

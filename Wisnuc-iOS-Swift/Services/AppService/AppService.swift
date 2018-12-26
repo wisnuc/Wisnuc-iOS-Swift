@@ -176,14 +176,17 @@ class AppService: NSObject,ServiceProtocol{
                             self?.networkService.networkState = .local
                             self?.nextStepForLogin(user: resultUser, callback: callBackClosure)
                         }else{
+                            self?.networkService.networkState = .normal
                             self?.nextStepForLogin(user: resultUser, callback: callBackClosure)
                         }
                     })
                 }else{
+                    self?.networkService.networkState = .normal
                     self?.nextStepForLogin(user: resultUser, callback: callBackClosure)
                 }
             }
         }else{
+            self.networkService.networkState = .normal
             nextStepForLogin(user: resultUser, callback: callBackClosure)
         }
     }
@@ -209,8 +212,6 @@ class AppService: NSObject,ServiceProtocol{
                     }
                 }
             }
-    
-            self?.loginCreatBackupDriveStep(user:user)
             return callback(nil, user)
         }
     }

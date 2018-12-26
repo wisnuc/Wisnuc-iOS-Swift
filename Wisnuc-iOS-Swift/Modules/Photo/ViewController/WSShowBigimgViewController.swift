@@ -550,15 +550,21 @@ class WSShowBigimgViewController: UIViewController {
             
         }
         activityViewController.completionWithItemsHandler = { (activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
+            if error != nil{
+    
+                SVProgressHUD.showError(withStatus: LocalizedString(forKey: "分享失败"))
+                return
+            }
+            
             if completed {
                 if activityType == UIActivityType.saveToCameraRoll {
-                   Message.message(text: LocalizedString(forKey: "已存入相册"))
+                   SVProgressHUD.showSuccess(withStatus: LocalizedString(forKey: "已存入本地相册"))
                 }else{
-                    Message.message(text: LocalizedString(forKey: "分享完成"))
+                    SVProgressHUD.showSuccess(withStatus: LocalizedString(forKey: "分享完成"))
                 }
             }
             else{
-                
+                 SVProgressHUD.showError(withStatus: LocalizedString(forKey: "分享未完成"))
             }
         }
     }

@@ -22,14 +22,14 @@ class FilesConflictAlertViewController: UIViewController {
     @IBOutlet weak var cancelButton: MDCFlatButton!
     @IBOutlet weak var confirmButton: MDCFlatButton!
     let actions = [FilesTaskPolicy.rename, FilesTaskPolicy.replace, FilesTaskPolicy.skip]
-    var model:FilesTasksModel?
+    var name:String?
     var selectType:String?
     var confirmCallback:((_ selectType:String?)->())?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.titleLabel.text = LocalizedString(forKey: "命名冲突")
-        let name = model?.nodes?.first?.src?.name
+        let name = self.name
         self.detailLabel.textColor = LightGrayColor
         self.detailLabel.text = LocalizedString(forKey: "\(name ?? "")已存在，请选择您要执行的操作")
         self.detailLabel.numberOfLines = 0

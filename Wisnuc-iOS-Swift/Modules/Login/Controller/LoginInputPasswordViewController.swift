@@ -198,6 +198,7 @@ class LoginInputPasswordViewController: BaseViewController {
         }
         
         self.startActivityIndicator()
+        self.nextButtonDisableStyle()
         let request = SighInTokenAPI.init(phoneNumber: phone, password: password)
         request.startRequestDataCompletionHandler{ [weak self](response) in
             ActivityIndicator.stopActivityIndicatorAnimation()
@@ -228,15 +229,15 @@ class LoginInputPasswordViewController: BaseViewController {
                         if let errorString = ErrorTools.responseErrorData(response.data){
                             Message.message(text: errorString)
                         }
-                        self?.nextButtonDisableStyle()
+                        self?.nextButtonEnableStyle()
                         print(response.error as Any)
                     }
 
                 } catch {
                     // 异常处理
+                     self?.nextButtonEnableStyle()
                     Message.message(text: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail)
                 }
-                 ActivityIndicator.stopActivityIndicatorAnimation()
             }else{
                 // error
                 self?.stopActivityIndicator()
@@ -252,6 +253,7 @@ class LoginInputPasswordViewController: BaseViewController {
                 }else{
                     Message.message(text: "\(String(describing: response.error?.localizedDescription ?? "未知错误"))")
                 }
+                self?.nextButtonEnableStyle()
             }
         }
     }
@@ -343,6 +345,7 @@ extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDel
         let model = stationModel as! StationsInfoModel
         self.startActivityIndicator()
         AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in
+             self.nextButton.isEnabled = true
             if error == nil && userData != nil{
                 AppUserService.isUserLogin = true
                 AppUserService.isStationSelected = true
@@ -366,6 +369,7 @@ extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDel
                     }
                     AppUserService.logoutUser()
                 }
+                self.nextButtonEnableStyle()
             }
         }
     }

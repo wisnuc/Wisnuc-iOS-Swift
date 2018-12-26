@@ -79,12 +79,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     func didFinishLaunchingToMainScreen(){
         self.getAllAsset()
         fetchCookie()
-        setAppNetworkState()
         getAllBackup()
+        setAppNetworkState()
         setRootViewController()
         if let language = AppUserService.currentUser?.language?.intValue{
             let languageType = LanguageType(number: language)
             LocalizeHelper.instance.setLanguage(languageType.rawValue)
+        }
+        if  RealReachability.sharedInstance().currentReachabilityStatus() == .RealStatusViaWiFi && AppUserService.currentUser?.autoBackUp?.boolValue == true{
+            guard let uuid = AppUserService.currentUser?.stationId else {
+                return
+            }
+            AppService.sharedInstance().startAutoBackup(uuid: uuid) {
+                
+            }
         }
     }
     

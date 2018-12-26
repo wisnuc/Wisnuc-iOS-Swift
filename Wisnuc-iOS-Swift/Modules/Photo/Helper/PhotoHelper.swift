@@ -11,7 +11,7 @@ import UIKit
 class PhotoHelper: NSObject {
     class func requestImageUrl(size:CGSize? = nil,hash:String)->URL?{
         let detailURL = "media"
-        let holdPlaceSize:CGFloat = 200
+        let holdPlaceSize:CGFloat = 186
         let frameWidth:Int = Int(size?.width ?? holdPlaceSize)
         let frameHeight:Int = Int(size?.height ?? holdPlaceSize)
         let resource = "/media/\(hash)"
