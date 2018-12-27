@@ -40,7 +40,7 @@ class WSBasePreviewView: UIView {
     var dir:String?
     
     func image()->UIImage?
-    {return imageView.image}
+    {return imageView?.image}
     
     func loadNormalImage(asset:WSAsset){
         
@@ -72,11 +72,21 @@ class WSBasePreviewView: UIView {
         return activityIndicator
     }()
     
-    lazy var imageView: UIImageView = {
-        let imgView = UIImageView.init()
-        imgView.contentMode = UIViewContentMode.scaleAspectFit
-        return imgView
-    }()
+    var _imageView:UIImageView?
+    var imageView: UIImageView?{
+        get{
+            if _imageView == nil{
+                _imageView = UIImageView.init()
+                _imageView?.contentMode = UIViewContentMode.scaleAspectFit
+                return _imageView
+            }
+             return _imageView
+        }
+        set(newValue){
+            _imageView = newValue
+        }
+    }
+    
     
     lazy var singleTap: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer.init(target: self, action: #selector(singleTapAction(_ :)))
@@ -88,7 +98,8 @@ class WSBasePreviewView: UIView {
 class WSPreviewImageAndGif: WSBasePreviewView {
     private var loadOK:Bool = false
     var loadCompleteCallback:(()->())?
-    
+    var retrieveImageDiskTask:RetrieveImageDiskTask?
+    var cleared = false
     override init(frame: CGRect) {
         super.init(frame: frame)
         initUI()
@@ -105,9 +116,9 @@ class WSPreviewImageAndGif: WSBasePreviewView {
 
         if (loadOK) {
             if wsAsset != nil {
-                self.resetSubviewSize(self.wsAsset!.asset != nil ? self.wsAsset : self.imageView.image ?? nil)
+                self.resetSubviewSize(self.wsAsset!.asset != nil ? self.wsAsset : self.imageView?.image ?? nil)
             }else if filesModel != nil{
-                self.resetSubviewSize(self.imageView.image ?? nil)
+                self.resetSubviewSize(self.imageView?.image ?? nil)
             }
         }
     }
@@ -117,12 +128,12 @@ class WSPreviewImageAndGif: WSBasePreviewView {
     }
     
     override func image() -> UIImage? {
-        return self.imageView.image
+        return self.imageView?.image
     }
     
     func resumeGif(){
         // 2.根据Data获取CGImageSource对象
-        guard let img = self.imageView.image else { return }
+        guard let img = self.imageView?.image else { return }
         guard let data = UIImagePNGRepresentation(img) as Data? else { return }
         guard let imageSource = CGImageSourceCreateWithData(data as CFData, nil) else { return }
         
@@ -142,27 +153,40 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             images.append(image)
             // 设置停止播放时现实的图片
             if i == frameCount - 1 {
-                imageView.image = image
+                imageView?.image = image
             }
         }
         // 4.播放图片
-        imageView.animationImages = images
+        imageView?.animationImages = images
         // 播放总时间
-        imageView.animationDuration = duration
+        imageView?.animationDuration = duration
         // 播放次数, 0为无限循环
-        imageView.animationRepeatCount = 1
+        imageView?.animationRepeatCount = 1
         // 开始播放
-        imageView.startAnimating()
+        imageView?.startAnimating()
         // 停止播放
-        // imageView.stopAnimating()
+        // imageView?.stopAnimating()
     }
     
     func pauseGif(){
-        let layer = self.imageView.layer
-        if (layer.speed == 0.00000) {return}
-        let pausedTime = layer.convertTime(CACurrentMediaTime(), from: nil)
-        layer.speed = 0.0
-        layer.timeOffset = pausedTime
+        let layer = self.imageView?.layer
+        if (layer?.speed == 0.00000) {return}
+        let pausedTime = layer?.convertTime(CACurrentMediaTime(), from: nil)
+        layer?.speed = 0.0
+        layer?.timeOffset = pausedTime ?? 0
+    }
+    
+    func removeContent(){
+        if let imageRequestID = self.imageRequestID {
+             PHCachingImageManager.default().cancelImageRequest(imageRequestID)
+        }
+        if let imageDownloadTask = self.imageDownloadTask{
+            imageDownloadTask.cancel()
+        }
+        self.imageView?.image = nil
+        retrieveImageDiskTask?.cancel()
+        self.imageView = nil
+        self.cleared = true
     }
     
     func loadGifImage(asset:WSAsset){
@@ -170,7 +194,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         self.indicator.startAnimating()
         PHPhotoLibrary.requestOriginalImageData(for: asset.asset) { (data, info) in
             if !(info![PHImageResultIsDegradedKey] as! Bool){
-                self.imageView.image = PHPhotoLibrary.animatedGIF(with: data!)
+                self.imageView?.image = PHPhotoLibrary.animatedGIF(with: data!)
                 self.resumeGif()
                 self.resetSubviewSize(asset)
                 self.indicator.stopAnimating()
@@ -201,7 +225,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         }
         
         self.imageRequestID = PHPhotoLibrary.requestImage(for: asset.asset, size: size, completion: { [weak self] (image, info) in
-            self?.imageView.image = image;
+            self?.imageView?.image = image;
             self?.resetSubviewSize(asset)
             if  !(info![PHImageResultIsDegradedKey] as! Bool){
                 self?.indicator.stopAnimating()
@@ -211,7 +235,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
     }
     
     func loadImage(asset:WSAsset){
-//        self.imageView.image = asset.image
+//        self.imageView?.image = asset.image
         if (self.wsAsset?.asset != nil && self.imageRequestID != nil) {
             if self.imageRequestID! >= 0{
                 PHCachingImageManager.default().cancelImageRequest(self.imageRequestID!)
@@ -224,42 +248,55 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         }
         self.wsAsset = asset
         self.indicator.startAnimating()
+        self.imageView?.image =  nil
         if let requestImageUrl = self.requestImageUrl(model: asset as! NetAsset){
-            ImageCache.default.retrieveImage(forKey: requestImageUrl, options: nil) { [weak self]
-                image, cacheType in
-                if let image = image {
-                    self?.indicator.stopAnimating()
-                    self?.loadOK = true
-                    self?.imageView.image = image
-                    if asset.type == WSAssetType.GIF{
-                        self?.resumeGif()
-                    }
-                    self?.resetSubviewSize(image)
-                    print("Get image \(image), cacheType: \(cacheType).")
-                    //In this code snippet, the `cacheType` is .disk
-                } else {
+//           let retrieveImageDiskTask = ImageCache.default.retrieveImage(forKey: requestImageUrl, options: nil) { [weak self]
+//                image, cacheType in
+//                if let image = image {
+//                    self?.indicator.stopAnimating()
+//                    self?.loadOK = true
+//                    self?.imageView?.image = image
+//                    if asset.type == WSAssetType.GIF{
+//                        self?.resumeGif()
+//                    }
+//                    self?.resetSubviewSize(image)
+//                    print("Get image \(image), cacheType: \(cacheType).")
+////                    //In this code snippet, the `cacheType` is .disk
+//                }
+//                    else {
                     guard let imageUrl =  URL.init(string: requestImageUrl) else{
                         return
                     }
-                    self?.imageDownloadTask = AppNetworkService.getHighWebImage(url: imageUrl, callback: { [weak self] (error, img) in
+                    if self.cleared == true{
+                        return
+                    }
+                    self.imageDownloadTask = AppNetworkService.getHighWebImage(url: imageUrl, callback: { [weak self] (error, img) in
                         self?.indicator.stopAnimating()
-                        if let completeCallback = self?.loadCompleteCallback{
-                            completeCallback()
-                        }
+                      
                         if error != nil {
+                            if let completeCallback = self?.loadCompleteCallback{
+                                completeCallback()
+                            }
 //                            Message.message(text: "图片加载失败", duration: 1.4)
                         } else {
+                            if self?.cleared == true{
+                                return
+                            }
                             self?.loadOK = true
-                            self?.imageView.image = img
+                            self?.imageView?.image =  nil
+                            self?.imageView?.image = img
                             if asset.type == WSAssetType.GIF{
                                 self?.resumeGif()
                             }
                             self?.resetSubviewSize(img)
+                            if let completeCallback = self?.loadCompleteCallback{
+                                completeCallback()
+                            }
                         }
-                        self?.imageDownloadTask = nil
                     })
-                }
-            }
+//                }
+//            }
+//             self.retrieveImageDiskTask = retrieveImageDiskTask
         }else{
             self.indicator.stopAnimating()
 //            Message.message(text: "图片加载失败", duration: 1.4)
@@ -267,7 +304,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
     }
     
     func loadImage(filesModel:EntriesModel){
-//        self.imageView.image = nil
+//        self.imageView?.image = nil
 
         if(self.imageDownloadTask != nil){
             imageDownloadTask?.cancel()
@@ -277,30 +314,34 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         self.indicator.startAnimating()
       
         if let requestImageUrl = self.requestImageUrl(filesModel: filesModel){
-            ImageCache.default.retrieveImage(forKey: requestImageUrl, options: nil) { [weak self]
-                image, cacheType in
-                if let image = image {
-                    self?.indicator.stopAnimating()
-                    self?.loadOK = true
-                    self?.imageView.image = image
-                    if(filesModel.metadata?.type?.caseInsensitiveCompare(FilesFormatType.GIF.rawValue) == .orderedSame){
-                        self?.resumeGif()
-                    }
-                    self?.resetSubviewSize(image)
-                    print("Get image \(image), cacheType: \(cacheType).")
-                    //In this code snippet, the `cacheType` is .disk
-                } else {
+//           let retrieveImageDiskTask = ImageCache.default.retrieveImage(forKey: requestImageUrl, options: nil) { [weak self]
+//                image, cacheType in
+//                if let image = image {
+//                    self?.indicator.stopAnimating()
+//                    self?.loadOK = true
+//                    self?.imageView?.image = image
+//                    if(filesModel.metadata?.type?.caseInsensitiveCompare(FilesFormatType.GIF.rawValue) == .orderedSame){
+//                        self?.resumeGif()
+//                    }
+//                    self?.resetSubviewSize(image)
+//                    print("Get image \(image), cacheType: \(cacheType).")
+//                    //In this code snippet, the `cacheType` is .disk
+//                } else {
                     guard let imageUrl =  URL.init(string: requestImageUrl) else{
                         return
                     }
-                    self?.imageDownloadTask = AppNetworkService.getHighWebImage(url: imageUrl, callback: { [weak self] (error, img) in
+                    self.imageDownloadTask = AppNetworkService.getHighWebImage(url: imageUrl, callback: { [weak self] (error, img) in
                         
                         if error != nil {
+                            
+                            if let completeCallback = self?.loadCompleteCallback{
+                                completeCallback()
+                            }
 //                            Message.message(text: "图片加载失败", duration: 1.4)
                             // TODO: Load Error Image
                         } else {
                             self?.loadOK = true
-                            self?.imageView.image = img
+                            self?.imageView?.image = img
                             if (filesModel.metadata?.type?.caseInsensitiveCompare(FilesFormatType.GIF.rawValue) == .orderedSame){
                                 self?.resumeGif()
                             }
@@ -313,8 +354,10 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                             completeCallback()
                         }
                     })
-                }
-            }
+//                }
+//            }
+            
+//           self.retrieveImageDiskTask = retrieveImageDiskTask
         }else{
             self.indicator.stopAnimating()
 //            Message.message(text: "图片加载失败", duration: 1.4)
@@ -550,7 +593,9 @@ class WSPreviewImageAndGif: WSBasePreviewView {
     func initUI(){
         self.addSubview(self.scrollView)
         self.scrollView.addSubview(self.containerView)
-        self.containerView.addSubview(self.imageView)
+        if let imageView = self.imageView{
+             self.containerView.addSubview(imageView)
+        }
         self.addSubview(self.indicator)
         
         let doubleTap = UITapGestureRecognizer.init(target: self, action: #selector(doubleTapAction(_ :)))
@@ -589,7 +634,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             let height = MIN(x: __kHeight, y: h)
             frame.origin = CGPoint.zero
             frame.size.height = height
-            let image = self.imageView.image
+            let image = self.imageView?.image
             
             let imageScale = (image?.size.width)!/(image?.size.height)!
             let screenScale = __kWidth/__kHeight
@@ -610,7 +655,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         }else{
             frame.origin = CGPoint.zero
             frame.size.width = width
-            let image = self.imageView.image
+            let image = self.imageView?.image
             
             let imageScale = (image?.size.height)!/(image?.size.width)!
             let screenScale = __kHeight/__kWidth
@@ -647,7 +692,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
             }
         }
         self.scrollView.contentSize = contentSize
-        self.imageView.frame = self.containerView.bounds
+        self.imageView?.frame = self.containerView.bounds
         self.scrollView.scrollRectToVisible(self.bounds, animated: false)
     }
     
@@ -708,7 +753,7 @@ class WSPreviewLivePhoto: WSBasePreviewView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.imageView.frame = self.bounds
+        self.imageView?.frame = self.bounds
         lpView.frame = self.bounds
     }
     
@@ -725,7 +770,7 @@ class WSPreviewLivePhoto: WSBasePreviewView {
         let width = MIN(x:__kWidth, y:CGFloat(kMaxImageWidth))
         let size = CGSize(width: width*scale, height: width*scale*CGFloat((asset.asset?.pixelHeight)!)/CGFloat((asset.asset?.pixelWidth)!))
         self.imageRequestID = PHPhotoLibrary.requestImage(for: asset.asset, size: size, completion: { [weak self] (image, info) in
-            self?.imageView.image = image;
+            self?.imageView?.image = image;
             if !(info![PHImageResultIsDegradedKey] as! Bool){
                 self?.indicator.stopAnimating()
             }
@@ -733,7 +778,10 @@ class WSPreviewLivePhoto: WSBasePreviewView {
     }
     
     func initUI(){
-        self.addSubview(self.imageView)
+        if let imageView = self.imageView{
+            self.addSubview(imageView)
+        }
+       
         self.addSubview(self.lpView)
         self.addSubview(self.indicator)
     }
@@ -781,6 +829,19 @@ class WSPreviewVideo: WSBasePreviewView {
     }
     
     deinit {
+        self.player?.stopWhileNotVisible = true
+//        self.player?.playerDidToE
+        if let stop = self.player?.currentPlayerManager.stop{
+            stop()
+        }
+        if self.player?.currentPlayerManager.isPlaying == true{
+            
+        }
+       
+        
+        self.player = nil
+//        self.player?.currentPlayerManager.stop()
+        
         defaultNotificationCenter().removeObserver(self)
         if let request = request{
             request.cancel()
@@ -790,7 +851,7 @@ class WSPreviewVideo: WSBasePreviewView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.imageView.frame = self.bounds
+        self.imageView?.frame = self.bounds
         self.playLayer.frame = self.bounds
 //        self.playBtn.center = self.center
     
@@ -827,7 +888,7 @@ class WSPreviewVideo: WSBasePreviewView {
 //            playLayer = nil
 //        }
         
-        self.imageView.image = nil;
+        self.imageView?.image = nil;
         
         if !(asset.asset?.isLocal())! {
             self.initVideoLoadFailedFromiCloudUI()
@@ -837,14 +898,14 @@ class WSPreviewVideo: WSBasePreviewView {
 //        self.playBtn.isEnabled = true
 //        self.playBtn.isHidden = false
         self.icloudLoadFailedLabel.isHidden = true
-        self.imageView.isHidden = false
+        self.imageView?.isHidden = false
         
         self.indicator.startAnimating()
         let scale = UIScreen.main.scale
         let width = MIN(x: __kWidth, y: CGFloat(kMaxImageWidth));
         let size = CGSize(width: width*scale, height: width*scale*CGFloat((asset.asset?.pixelHeight)!)/CGFloat((asset.asset?.pixelWidth)!))
         self.imageRequestID = PHPhotoLibrary.requestImage(for: asset.asset, size: size, completion: { [weak self] (image, info) in
-            self?.imageView.image = image
+            self?.imageView?.image = image
             if !(info![PHImageResultIsDegradedKey] as! Bool){
                 self?.indicator.stopAnimating()
             }
@@ -867,8 +928,10 @@ class WSPreviewVideo: WSBasePreviewView {
         //                        self?.player?.
         self.player?.controlView = (self.controlView)!
         /// 设置退到后台继续播放
-        self.player?.pauseWhenAppResignActive = false
-        self.player?.orientationWillChange = { [weak self](player, isFullScreen) in
+        self.player?.pauseWhenAppResignActive = true
+        self.player?.isPauseByEvent = true
+        
+        self.player?.orientationWillChange = {(player, isFullScreen) in
             if isFullScreen{
                 player.disableGestureTypes = ZFPlayerDisableGestureTypes.init(rawValue: 0)
             }else{
@@ -883,15 +946,20 @@ class WSPreviewVideo: WSBasePreviewView {
             }
    
         }
-        self.player?.playerPrepareToPlay = { asset, assetURL in
-            self.imageView.image = nil
+        
+        self.player?.playerPlayStateChanged = { [weak self](back,state) in
+            
+        }
+        self.player?.playerPrepareToPlay = { [weak self](asset, assetURL) in
+            self?.imageView?.image = nil
             print("======开始播放了")
         }
-        PHPhotoLibrary.requestVideo(for: asset.asset) { (aVPlayerItem, dict) in
+        
+        PHPhotoLibrary.requestVideo(for: asset.asset) { [weak self](aVPlayerItem, dict) in
             if let urlAsset = aVPlayerItem?.asset as? AVURLAsset{
                 DispatchQueue.main.async {
-                    self.player?.assetURLs = [urlAsset.url]
-                    self.player?.playTheIndex(0)
+                    self?.player?.assetURLs = [urlAsset.url]
+                    self?.player?.playTheIndex(0)
                 }
             }
         }
@@ -937,7 +1005,7 @@ class WSPreviewVideo: WSBasePreviewView {
     @objc func playFinished(_ item: AVPlayerItem) {
         //    [super singleTapAction];
 //        self.playBtn.isHidden = false
-        self.imageView.isHidden = false
+        self.imageView?.isHidden = false
         let time = CMTime.init(seconds: 0, preferredTimescale: 600)
         self.playLayer.player?.seek(to: time)
     }
@@ -979,11 +1047,11 @@ class WSPreviewVideo: WSBasePreviewView {
         playLayer.removeFromSuperlayer()
         hasObserverStatus = false
     
-        self.imageView.image = nil
+        self.imageView?.image = nil
 //        self.playBtn.isEnabled = true
 //        self.playBtn.isHidden = false
         self.icloudLoadFailedLabel.isHidden = true
-        self.imageView.isHidden = false
+        self.imageView?.isHidden = false
         self.indicator.startAnimating()
        
         
@@ -1026,7 +1094,8 @@ class WSPreviewVideo: WSBasePreviewView {
 //                        self?.player?.
                         self?.player?.controlView = (self?.controlView)!
                         /// 设置退到后台继续播放
-                        self?.player?.pauseWhenAppResignActive = false
+                        self?.player?.pauseWhenAppResignActive = true
+                        self?.player?.isPauseByEvent = true
                         self?.player?.orientationWillChange = { [weak self](player, isFullScreen) in
                             if isFullScreen{
                                 player.disableGestureTypes = ZFPlayerDisableGestureTypes.init(rawValue: 0)
@@ -1111,11 +1180,11 @@ class WSPreviewVideo: WSBasePreviewView {
         }
         self.filesModel = filesModel
 
-        self.imageView.image = nil
+        self.imageView?.image = nil
 //        self.playBtn.isEnabled = true
 //        self.playBtn.isHidden = false
         self.icloudLoadFailedLabel.isHidden = true
-        self.imageView.isHidden = false
+        self.imageView?.isHidden = false
 //        if AppNetworkService.networkState == .normal{
 //            Message.message(text: LocalizedString(forKey: "Operation not support"))
 //        }
@@ -1142,11 +1211,11 @@ class WSPreviewVideo: WSBasePreviewView {
         playLayer.removeFromSuperlayer()
         hasObserverStatus = false
         
-        self.imageView.image = nil
+        self.imageView?.image = nil
         //        self.playBtn.isEnabled = true
         //        self.playBtn.isHidden = false
         self.icloudLoadFailedLabel.isHidden = true
-        self.imageView.isHidden = false
+        self.imageView?.isHidden = false
         self.indicator.startAnimating()
         
         
@@ -1189,7 +1258,8 @@ class WSPreviewVideo: WSBasePreviewView {
                         //                        self?.player?.
                         self?.player?.controlView = (self?.controlView)!
                         /// 设置退到后台继续播放
-                        self?.player?.pauseWhenAppResignActive = false
+                        self?.player?.pauseWhenAppResignActive = true
+                        self?.player?.isPauseByEvent = true
                         self?.player?.orientationWillChange = { [weak self](player, isFullScreen) in
                             if isFullScreen{
                                 player.disableGestureTypes = ZFPlayerDisableGestureTypes.init(rawValue: 0)
@@ -1260,7 +1330,9 @@ class WSPreviewVideo: WSBasePreviewView {
     
     func initUI(){
         hasObserverStatus = false
-        self.addSubview(self.imageView)
+        if let imageView = self.imageView{
+            self.addSubview(imageView)
+        }
 //        self.addSubview(self.playBtn)
         self.addSubview(self.indicator)
         self.addSubview(self.icloudLoadFailedLabel)
@@ -1312,7 +1384,7 @@ class WSPreviewVideo: WSBasePreviewView {
 //
 //                                if let playerItem:AVPlayerItem = newValue {
 //                                    switch playerItem.status{
-//                                    case .readyToPlay : self?.imageView.isHidden = true
+//                                    case .readyToPlay : self?.imageView?.isHidden = true
 //                                    case .unknown : Message.message(text: LocalizedString(forKey: "Error:Unkown error"))
 //                                    case .failed: Message.message(text: LocalizedString(forKey: "Error"))
 //
@@ -1326,7 +1398,7 @@ class WSPreviewVideo: WSBasePreviewView {
                             .notification(NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
                             .subscribe(onNext: { (notification) in
 //                                self.playBtn.isHidden = false
-                                self.imageView.isHidden = false
+                                self.imageView?.isHidden = false
                                 self.playLayer.player?.seek(to: kCMTimeZero)
                             })
                           .disposed(by: self.disposeBag)
@@ -1611,7 +1683,7 @@ class WSPreviewView: UIView {
             let assetModel = model as! WSAsset
             switch assetModel.type {
             case .GIF?:
-                if let image = self.imageGifView.imageView.image{
+                if let image = self.imageGifView.imageView?.image{
                     if let obj =  NSClassFromString("_UIAnimatedImage"){
                         if  image.isKind(of:obj){
                             self.imageGifView.loadNormalImage(asset: assetModel)
@@ -1619,7 +1691,7 @@ class WSPreviewView: UIView {
                     }
                 }
 //                "_UIAnimatedImage".
-//                if  (self.imageGifView.imageView.image?.isKind(of: NSClassFromString("_UIAnimatedImage")!))!{
+//                if  (self.imageGifView.imageView?.image?.isKind(of: NSClassFromString("_UIAnimatedImage")!))!{
 //                    self.imageGifView.loadNormalImage(asset: assetModel)
 //                }
             case .Video?:
@@ -1634,6 +1706,43 @@ class WSPreviewView: UIView {
         }
     }
     
+    func removeContent(){
+        if model is WSAsset{
+            let assetModel = model as! WSAsset
+//            case
+//            case GIF
+//            case LivePhoto
+//            case Video
+//            case Audio
+//            case NetImage
+//            case NetVideo
+//            case Unknown
+            switch assetModel.type {
+            case .Image?,.NetImage?,.GIF?:
+                self.imageGifView.removeContent()
+            default:
+                break
+            }
+            
+            
+            
+            
+            
+//            if assetModel.type == .GIF {
+//                if assetModel is NetAsset {
+//                    self.imageGifView.loadImage(asset: assetModel)
+//                    return
+//                }
+//                self.imageGifView.loadGifImage(asset: assetModel)
+//            }
+//                assetModel.type == .LivePhoto {
+//                self.livePhotoView.loadLivePhoto(asset: assetModel)
+//            }
+        }else{
+            self.imageGifView.removeContent()
+        }
+    }
+    
     func resetScale(){
       self.imageGifView.resetScale()
     }
@@ -1642,13 +1751,13 @@ class WSPreviewView: UIView {
         if model is WSAsset{
             let assetModel = model as! WSAsset
             if  assetModel.type == .Image {
-                return self.imageGifView.imageView.image
+                return self.imageGifView.imageView?.image
             } else if  assetModel.type == .NetImage {
-                return self.imageGifView.imageView.image
+                return self.imageGifView.imageView?.image
             }
             
         }else{
-             return self.imageGifView.imageView.image
+             return self.imageGifView.imageView?.image
         }
         return nil
     }
@@ -1664,6 +1773,7 @@ class WSPreviewView: UIView {
         imageView.singleTapCallback = self.singleTapCallBack
         return imageView
     }()
+    
     
     lazy var videoView: WSPreviewVideo = {
         let imageView = WSPreviewVideo.init(frame: self.bounds)
@@ -1712,6 +1822,10 @@ class WSBigimgCollectionViewCell: UICollectionViewCell {
     
     func resetCellStatus(){
         self.previewView.resetScale()
+    }
+    
+    func removeContent(){
+        self.previewView.removeContent()
     }
     
     func reloadGifLivePhoto(){

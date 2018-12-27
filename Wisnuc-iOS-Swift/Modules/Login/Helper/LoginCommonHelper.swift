@@ -32,7 +32,7 @@ class LoginCommonHelper: NSObject {
         print("LoginCommonHelper Disposed Singleton instance")
     }
     
-    func stationAction(token:String,user:User,viewController:UIViewController,lastDeviceClosure:@escaping (_ user:User,_ stationModel:StationsInfoModel)->()) {
+    func stationAction(token:String,user:User,viewController:UIViewController,lastDeviceClosure:@escaping (_ user:User,_ stationModel:StationsInfoModel,_ stationModels:[StationsInfoModel])->()) {
         self.getStations(token: token, closure: { [weak self](error, models,lastSn) in
             if error == nil{
                 if let models = models{
@@ -47,7 +47,7 @@ class LoginCommonHelper: NSObject {
                                 return
                             }
                             if online == 1{
-                                lastDeviceClosure(user,model)
+                                lastDeviceClosure(user,model,models)
                             }else{
                                 self?.selectStation(models: models, user: user, viewController: viewController)
                             }

@@ -42,6 +42,7 @@ class LoginNextStepViewController: BaseViewController {
     private var safetyStep:Int?
     private var mailTicket:String?
     private var phoneTicket:String?
+    private var stationModels:[StationsInfoModel]?
     
     private var sendCodeType:SendCodeType?
     let phoneNumberLimitCount = 11
@@ -1076,7 +1077,8 @@ class LoginNextStepViewController: BaseViewController {
                                 return
                             }
                             self?.wechatBindUserAction(wechatToken: wechatToken, loginToken: token, closure: { [weak self] in
-                                LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure: { [weak self ](user,stationModel) in
+                                LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure: { [weak self ](user,stationModel,models)  in
+                                    self?.stationModels = models
                                     self?.loginAction(user: user, model: stationModel)
                                 })
                             })

@@ -46,6 +46,8 @@ class SeekNewDeviceViewController: BaseViewController {
         self.state = .searching
 //        self.setData()
          defaultNotificationCenter().addObserver(self, selector: #selector(confirmFinish(_:)), name: NSNotification.Name.Config.DiskFormaConfirmDismissKey, object: nil)
+        deviceTableView.addSubview(errorLabel)
+      
 //        self.title = "发现设备"
 //        appBar.navigationBar.ti
     }
@@ -83,11 +85,16 @@ class SeekNewDeviceViewController: BaseViewController {
     }
     
     func notFoundStateAction(){
-       titleLabel.text = LocalizedString(forKey: "未发现设备")
+        titleLabel.text = LocalizedString(forKey: "未发现设备")
+        dataSource.removeAll()
+        titleLabel.text = LocalizedString(forKey: "附近无可用设备")
+        errorLabel.isHidden = false
+        deviceTableView.reloadData()
     }
     
     func foundStateAction(){
         titleLabel.text = LocalizedString(forKey: "发现设备")
+         errorLabel.isHidden = true
 //        deviceTableView.removeAllSubviews()
     }
     
@@ -95,7 +102,7 @@ class SeekNewDeviceViewController: BaseViewController {
         dataSource.removeAll()
         titleLabel.text = LocalizedString(forKey: "未发现设备")
         deviceTableView.reloadData()
-        deviceTableView.addSubview(errorLabel)
+        errorLabel.isHidden = false
         errorLabel.eventCallback = { () in
             if kCurrentSystemVersion <= 10.0 {
                 UIApplication.shared.openURL(URL.init(string: "prefs:root=Bluetooth")!)
@@ -146,6 +153,7 @@ class SeekNewDeviceViewController: BaseViewController {
         let size = labelSizeToFit(title: LocalizedString(forKey: string), font: UIFont.systemFont(ofSize: 16))
         let label = AttributeTouchLabel.init(frame: CGRect(x: margin, y: __kHeight/2 - 50, width: __kWidth - margin*2, height: size.height + 4))
         label.content = string
+        label.isHidden = true
         return label
     }()
 }

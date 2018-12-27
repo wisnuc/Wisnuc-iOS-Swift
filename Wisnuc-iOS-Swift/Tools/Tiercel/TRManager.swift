@@ -357,7 +357,7 @@ extension TRManager {
         // 去掉重复, 无效的url
         var uniqueUrls = [URL]()
         URLStrings.forEach { (URLString) in
-            if let uniqueUrl = URL(string: URLString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!) {
+            if let uniqueUrl = URL(string: URLString) {
                 if !uniqueUrls.contains(uniqueUrl) {
                     uniqueUrls.append(uniqueUrl)
                 }

@@ -36,6 +36,7 @@
     var cloudLoginArray:Array<CloadLoginUserRemotModel>?
     var stationArray:Array<StationsInfoModel>?
     var loginModel:CloudLoginModel?
+    var stationModels:[StationsInfoModel]?
     var logintype:LoginState?{
         didSet{
             print("did set ")
@@ -266,7 +267,8 @@
                                         }
                                         
                                         let user = AppUserService.synchronizedUserInLogin(model, cookie)
-                                        LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure: { [weak self](userId,stationModel) in
+                                        LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure: { [weak self](userId,stationModel,models)  in
+                                            self?.stationModels = models
                                             self?.loginFinish(user: user, stationModel: stationModel)
                                         })
                                     }

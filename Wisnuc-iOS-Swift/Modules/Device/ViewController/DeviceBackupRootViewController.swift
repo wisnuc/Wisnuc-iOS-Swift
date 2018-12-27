@@ -280,40 +280,40 @@ extension DeviceBackupRootViewController:UITableViewDataSource,UITableViewDelega
         return cell
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
+//    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+//        return true
+//    }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title:
-           LocalizedString(forKey: "删除")) { [weak self](tableViewForAction, indexForAction) in
-            let index = indexForAction.row
-            let model = self?.dataSource[indexPath.section][indexPath.row]
-            guard let drive = model?.uuid else {
-                return
-            }
-            DriveOptionAPI.init(drive:drive,type: .delete).startRequestJSONCompletionHandler { [weak self](response) in
-                if response.error == nil{
-                    if let errorMessage = ErrorTools.responseErrorData(response.data){
-                       Message.message(text: errorMessage)
-                       return
-                    }
-                    AppUserService.backupArray.removeAll(where: { (driveModel) -> Bool in
-                        return driveModel.uuid == drive
-                    })
-                    self?.dataSource[indexPath.section].remove(at: index)
-                    tableView.deleteRows(at: [IndexPath(row: index, section: indexPath.section)], with: .automatic)
-                }else{
-                    if let error = response.error{
-                        Message.message(text: error.localizedDescription)
-                    }
-                }
-            }
-           
-        }
-        deleteRowAction.backgroundColor = UIColor.red
-        return [deleteRowAction]
-    }
+//    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+//        let deleteRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title:
+//           LocalizedString(forKey: "删除")) { [weak self](tableViewForAction, indexForAction) in
+//            let index = indexForAction.row
+//            let model = self?.dataSource[indexPath.section][indexPath.row]
+//            guard let drive = model?.uuid else {
+//                return
+//            }
+//            DriveOptionAPI.init(drive:drive,type: .delete).startRequestJSONCompletionHandler { [weak self](response) in
+//                if response.error == nil{
+//                    if let errorMessage = ErrorTools.responseErrorData(response.data){
+//                       Message.message(text: errorMessage)
+//                       return
+//                    }
+//                    AppUserService.backupArray.removeAll(where: { (driveModel) -> Bool in
+//                        return driveModel.uuid == drive
+//                    })
+//                    self?.dataSource[indexPath.section].remove(at: index)
+//                    tableView.deleteRows(at: [IndexPath(row: index, section: indexPath.section)], with: .automatic)
+//                }else{
+//                    if let error = response.error{
+//                        Message.message(text: error.localizedDescription)
+//                    }
+//                }
+//            }
+//
+//        }
+//        deleteRowAction.backgroundColor = UIColor.red
+//        return [deleteRowAction]
+//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

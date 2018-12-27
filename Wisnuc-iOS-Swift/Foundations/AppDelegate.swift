@@ -330,24 +330,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate ,WXApiDelegate{
     }
     #if DEBUG
     func redirectNSlogToDocumentFolder() {
+//        var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+//        let documentsDirectory = paths[0]
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "dd-MM-yyyy"
+//        let dateString = formatter.string(from: Date())
+//        let fileName = "\(dateString).log"
+//        let logFilePath = (documentsDirectory as NSString).appendingPathComponent(fileName)
+//        var dump = ""
+//
+//
+//        if FileManager.default.fileExists(atPath: logFilePath) {
+//            dump =  try! String(contentsOfFile: logFilePath, encoding: String.Encoding.utf8)
+//        }
+//        do {
+//            // Write to the file
+//            try  "\(dump)\n\(Date())".write(toFile: logFilePath, atomically: true, encoding: String.Encoding.utf8)
+//
+//        } catch let error as NSError {
+//            print("Failed writing to log file: \(logFilePath), Error: " + error.localizedDescription)
+//        }
         var paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0]
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
         let dateString = formatter.string(from: Date())
         let fileName = "\(dateString).log"
-        let logFilePath = (documentsDirectory as NSString).appendingPathComponent(fileName)
-        var dump = ""
-        if FileManager.default.fileExists(atPath: logFilePath) {
-            dump =  try! String(contentsOfFile: logFilePath, encoding: String.Encoding.utf8)
-        }
-        do {
-            // Write to the file
-            try  "\(dump)\n\(Date())".write(toFile: logFilePath, atomically: true, encoding: String.Encoding.utf8)
-            
-        } catch let error as NSError {
-            print("Failed writing to log file: \(logFilePath), Error: " + error.localizedDescription)
-        }
+        let logPath = documentsDirectory.appendingPathComponent(fileName)
+        let cstr = (logPath as NSString).utf8String
+        freopen(cstr, "a+", stderr)
+        
 //        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
 //        let documentDirectory = paths[0]
 //        let fileName = "winsun.log" // 注意不是NSData!

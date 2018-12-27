@@ -12,7 +12,7 @@ import MagicalRecord
  
  enum DriveType:String{
     case home
-    case share = "bulit-in"
+    case share = "built-in"
     case backup
  }
 
@@ -141,14 +141,11 @@ class AppService: NSObject,ServiceProtocol{
     }
     
     func loginAction(stationModel:StationsInfoModel,orginTokenUser:User,complete:@escaping ((_ error:Error?,_ user:User?)->())){
-//        if model.uuid == nil || isNilString(model.uuid){
-//            complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
-//        }
         
         let resultUser = orginTokenUser
         let callBackClosure = { (callBackError:Error? , callBackUser:User?)->() in
             if callBackError != nil{
-                complete(callBackError,orginTokenUser.shallowCopy() as? User)
+                complete(callBackError,orginTokenUser)
             }else{
                 complete(callBackError,callBackUser)
             }
@@ -201,7 +198,7 @@ class AppService: NSObject,ServiceProtocol{
                 for model in driveModels{
                     if model.tag == DriveType.home.rawValue &&  model.type ==  "classic"{
                         user.userHome = model.uuid
-                    }else if model.tag == DriveType.share.rawValue{
+                    }else if model.tag == "built-in"{
                         user.shareSpace = model.uuid
                     }else if model.type == DriveType.backup.rawValue{
                         if let uuid = model.uuid{
@@ -251,21 +248,27 @@ class AppService: NSObject,ServiceProtocol{
     func rebuildAutoBackupManager(){
         if isRebuildingAutoBackupManager  {return}
         isRebuildingAutoBackupManager = false
-        DispatchQueue.main.sync {
+//        DispatchQueue.main.sync {
             autoBackupManager.destroy()
             self.updateUserBackupDirectory(callback: { [weak self](error, user) in
                 if error == nil{
                self?.isRebuildingAutoBackupManager = false
-                self?.autoBackupManager.start(localAssets: (self?.assetService.allAssets)!, netAssets: [EntriesModel]())
-                    guard let uuid = self?.backupuuid else{
-                        return
+                if self?.backupuuid == nil{
+                    if let model = self?.userService.backupArray.first(where: {$0.client?.id == getUniqueDevice()}){
+                        self?.backupuuid = model.uuid
                     }
+                }
+                guard let uuid = self?.backupuuid else{
+                    return
+                }
+                self?.autoBackupManager.start(localAssets: (self?.assetService.allAssets)!, netAssets: [EntriesModel]())
+                   
                     self?.startAutoBackup(uuid: uuid, callBack: nil)
                 }else{
                     print("--------->> Update User BackUp Dir Error <<------------- \n error: \(String(describing: error))")
                 }
             })
-        }
+//        }
     }
     
     func updateUserBackupDirectory(callback:@escaping (_ error:Error?,_ user:User?)->()){

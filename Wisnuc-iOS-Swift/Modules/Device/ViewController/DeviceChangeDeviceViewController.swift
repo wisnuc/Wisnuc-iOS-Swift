@@ -12,6 +12,7 @@ class DeviceChangeDeviceViewController: BaseViewController {
     let identifier = "celled"
     let cellHeight:CGFloat = 173
     lazy var dataSource:[StationsInfoModel] = Array.init()
+    var error:Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
         loadStations()
@@ -58,6 +59,7 @@ class DeviceChangeDeviceViewController: BaseViewController {
                 request.startRequestJSONCompletionHandler { [weak self](response) in
                     if let error = response.error {
                         Message.message(text: error.localizedDescription)
+                        self?.deviveTabelView.reloadData()
                     }else{
                         if let errorMessage = ErrorTools.responseErrorData(response.data){
                             Message.message(text: errorMessage)
@@ -81,7 +83,7 @@ class DeviceChangeDeviceViewController: BaseViewController {
                                     self?.deviveTabelView.reloadData()
                                 }catch{
                                     print(error as Any)
-                                    //error
+                                    self?.deviveTabelView.reloadData()
                                 }
                             }
                         }
@@ -174,9 +176,10 @@ extension DeviceChangeDeviceViewController:UITableViewDataSource{
             cell.capacityLabel.text =  "\(sizeString(Int64(used*1024))) / \(sizeString(Int64(total*1024)))"
             cell.capacityProgressView.progress =  Float(used)/Float(total)
         }else{
-            cell.capacityLabel.text =  LocalizedString(forKey: "Loading...")
+            cell.capacityLabel.text =  LocalizedString(forKey: "未获取到数据")
         }
         cell.isDisable = true
+       
         if stationInfoModel.sn == AppUserService.currentUser?.stationId{
             cell.isCurrentDevice = true
         }else{
@@ -185,7 +188,9 @@ extension DeviceChangeDeviceViewController:UITableViewDataSource{
         
         if let online = stationInfoModel.online{
             if online == 1{
-              cell.isDisable = false
+               cell.isDisable = false
+            }else{
+                cell.capacityLabel.text =  LocalizedString(forKey: "离线")
             }
         }
         return cell

@@ -239,6 +239,47 @@ class WSShowBigimgViewController: UIViewController {
         self.infoTableView.alpha = 0
         self.view.backgroundColor = .black
     }
+    
+    func deleteSelectPhotos(photos:[WSAsset]){
+        var localAssets:Array<PHAsset> = Array.init()
+        var netAssets:Array<NetAsset> = Array.init()
+        for asset in photos{
+            if asset is NetAsset{
+                #warning("删除NAS照片")
+                if let netAsset = asset as? NetAsset{
+                    netAssets.append(netAsset)
+                }
+            }else{
+                if let localAsset = asset.asset{
+                    localAssets.append(localAsset)
+                }
+            }
+        }
+        
+        if netAssets.count > 0{
+//            photoRemoveOptionRequest(photos:netAssets)
+        }
+        
+        if localAssets.count > 0{
+            self.startActivityIndicator()
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.deleteAssets(localAssets as NSFastEnumeration)
+            }) { (finish, error) in
+                if error != nil{
+                    self.stopActivityIndicator()
+                    print(error as Any)
+                    return
+                }
+                if finish{
+                    
+                    self.models?.remove(at: self.currentPage - 1)
+                    self.collectionView.deleteItems(at: [IndexPath(item: self.currentPage - 1, section: 0)])
+                    self.stopActivityIndicator()
+//                    self.collectionView.scrollToItem(at:  [IndexPath(item: self.currentPage - 2, section: 0)], at: UICollectionViewScrollPosition.centeredVertically, animated: true)
+                }
+            }
+        }
+    }
 
     func infoStateAction(){
         self.collectionView.isScrollEnabled = false
@@ -357,7 +398,7 @@ class WSShowBigimgViewController: UIViewController {
             }
         }
       
-        self.infoTableView.reloadData()
+//        self.infoTableView.reloadData()
     }
 
     
@@ -840,7 +881,17 @@ class WSShowBigimgViewController: UIViewController {
     }
     
     @objc func moreItemTap(_ sender:UIButton){
-        
+        let moveBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain, type: FilesBottomSheetContentType.selectMore)
+        moveBottomVC.delegate = self
+        let bottomSheet = AppBottomSheetController.init(contentViewController: moveBottomVC)
+        bottomSheet.trackingScrollView = moveBottomVC.tableView
+        if let model = getCurrentPageModel() as? WSAsset{
+            moveBottomVC.assetModelArray = [model]
+        }else if let model = getCurrentPageModel() as? EntriesModel{
+            moveBottomVC.filesModelArray = [model]
+        }
+        self.present(bottomSheet, animated: true, completion: {
+        })
     }
     
     @objc func backViewTap(_ sender:UITapGestureRecognizer?){
@@ -1051,6 +1102,8 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
                     let cell = collectionView.cellForItem(at: IndexPath.init(item: currentPage-1 , section: 0))
                     if  cell != nil{
                         (cell as! WSBigimgCollectionViewCell).pausePlay()
+                        (cell as! WSBigimgCollectionViewCell).removeContent()
+                        self.mapView = nil
                     }
                 }
             }
@@ -1345,6 +1398,32 @@ extension WSShowBigimgViewController:PhotoShareViewDelegate{
     func didEndShare(){
         self.backViewTap(nil)
     }
+}
+
+extension WSShowBigimgViewController:FilesBottomSheetContentVCDelegate{
+    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath,models:[Any]?){
+        if let models = models as? [WSAsset]{
+            let title = "\(models.count) 个照片\(LocalizedString(forKey: "将被删除"))"
+            alertController(title: title, message: LocalizedString(forKey: "照片删除后将无法恢复"), cancelActionTitle: LocalizedString(forKey: "Cancel"), okActionTitle: LocalizedString(forKey: "Confirm"), okActionHandler: { (AlertAction1) in
+                self.deleteSelectPhotos(photos: models)
+            }) { (AlertAction2) in
+                
+            }
+        }
+    }
+    
+    func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
+        
+    }
+    
+    func filesBottomSheetContentInfoButtonTap(_ sender: UIButton, model: Any) {
+        
+    }
+    
+    func filesBottomSheetContentSwitch(_ sender: UISwitch, model: Any) {
+        
+    }
+ 
 }
 
 class MapPin : NSObject, MKAnnotation {

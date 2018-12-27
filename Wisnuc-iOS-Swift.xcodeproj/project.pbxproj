@@ -973,6 +973,9 @@
 		1FE9EF9120EF6AC700732728 /* PHAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9EF9020EF6AC700732728 /* PHAssetExtension.swift */; };
 		1FE9FAC021D0C9D200B11F5A /* FilesConflictAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9FABE21D0C9D000B11F5A /* FilesConflictAlertViewController.swift */; };
 		1FE9FAC621D0CA2900B11F5A /* FilesConflictAlertViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FE9FAC521D0CA2900B11F5A /* FilesConflictAlertViewController.storyboard */; };
+		1FE9FAF121D4CE7B00B11F5A /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1FE9FAF021D4CE7700B11F5A /* License.rtf */; };
+		1FE9FAF321D4DCD200B11F5A /* LoginLicenseAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE9FAF221D4DCD200B11F5A /* LoginLicenseAlertViewController.swift */; };
+		1FE9FAF521D4DCF500B11F5A /* LoginLicenseAlertViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FE9FAF421D4DCF500B11F5A /* LoginLicenseAlertViewController.storyboard */; };
 		1FEABB5320A14B6300824448 /* files_word_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5220A14B6300824448 /* files_word_small.png */; };
 		1FEABB5520A14B6C00824448 /* files_word_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5420A14B6C00824448 /* files_word_small@2x.png */; };
 		1FEABB5720A14B7700824448 /* files_word_small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FEABB5620A14B7700824448 /* files_word_small@3x.png */; };
@@ -2698,6 +2701,9 @@
 		1FE9EF9020EF6AC700732728 /* PHAssetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetExtension.swift; sourceTree = "<group>"; };
 		1FE9FABE21D0C9D000B11F5A /* FilesConflictAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesConflictAlertViewController.swift; sourceTree = "<group>"; };
 		1FE9FAC521D0CA2900B11F5A /* FilesConflictAlertViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = FilesConflictAlertViewController.storyboard; sourceTree = "<group>"; };
+		1FE9FAF021D4CE7700B11F5A /* License.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = License.rtf; sourceTree = "<group>"; };
+		1FE9FAF221D4DCD200B11F5A /* LoginLicenseAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLicenseAlertViewController.swift; sourceTree = "<group>"; };
+		1FE9FAF421D4DCF500B11F5A /* LoginLicenseAlertViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LoginLicenseAlertViewController.storyboard; sourceTree = "<group>"; };
 		1FEABB5220A14B6300824448 /* files_word_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = files_word_small.png; sourceTree = "<group>"; };
 		1FEABB5420A14B6C00824448 /* files_word_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_word_small@2x.png"; sourceTree = "<group>"; };
 		1FEABB5620A14B7700824448 /* files_word_small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "files_word_small@3x.png"; sourceTree = "<group>"; };
@@ -3281,6 +3287,8 @@
 		1F359FE72092BEDB00E2FF36 /* AlertController */ = {
 			isa = PBXGroup;
 			children = (
+				1FE9FAF221D4DCD200B11F5A /* LoginLicenseAlertViewController.swift */,
+				1FE9FAF421D4DCF500B11F5A /* LoginLicenseAlertViewController.storyboard */,
 			);
 			path = AlertController;
 			sourceTree = "<group>";
@@ -4523,6 +4531,7 @@
 		1FD9B7AB207E19EE00906D80 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				1FE9FAEA21D4C9A600B11F5A /* Document */,
 				1FD9B7B7207E1B4400906D80 /* Localizable */,
 				1FD9B7AC207E19F900906D80 /* Image */,
 			);
@@ -6018,6 +6027,14 @@
 			path = crypto;
 			sourceTree = "<group>";
 		};
+		1FE9FAEA21D4C9A600B11F5A /* Document */ = {
+			isa = PBXGroup;
+			children = (
+				1FE9FAF021D4CE7700B11F5A /* License.rtf */,
+			);
+			path = Document;
+			sourceTree = "<group>";
+		};
 		1FEABB6A20A14C9F00824448 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -6623,6 +6640,7 @@
 				1F8EC3CE21BF5DED000FD702 /* notebook_mac_icon_backup@3x.png in Resources */,
 				1F68450521C2578100C4DC89 /* livePhoto@2x.png in Resources */,
 				1FE08928216F17080049F44B /* avatar_placeholder@2x.png in Resources */,
+				1FE9FAF521D4DCF500B11F5A /* LoginLicenseAlertViewController.storyboard in Resources */,
 				1F0FD0C4214A4670003D7936 /* config_finish@2x.png in Resources */,
 				1F050E7320ABCE560037F00A /* files_edit.png in Resources */,
 				1FEABB5920A14BB900824448 /* files_word_normal.png in Resources */,
@@ -7036,6 +7054,7 @@
 				1FEABB5720A14B7700824448 /* files_word_small@3x.png in Resources */,
 				1F3C243E20A5AD0700E6B953 /* files_offline_file@3x.png in Resources */,
 				1FD1F2FE2153A47500C3E429 /* photo_placeholder@3x.png in Resources */,
+				1FE9FAF121D4CE7B00B11F5A /* License.rtf in Resources */,
 				1FA6A1BD20CFA727007A0AB2 /* files_pdf_normal@2x.png in Resources */,
 				1F1BAC6320CE709100D32C5A /* files_png_small@3x.png in Resources */,
 				1FBB6F5D2139232D0090FA57 /* 86@2x.png in Resources */,
@@ -7146,12 +7165,14 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Wisnuc-iOS-SwiftTests/Pods-Wisnuc-iOS-SwiftTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxBlocking/RxBlocking.framework",
 				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxBlocking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxTest.framework",
@@ -7189,6 +7210,7 @@
 				"${BUILT_PRODUCTS_DIR}/MotionTransitioning/MotionTransitioning.framework",
 				"${BUILT_PRODUCTS_DIR}/RealReachability/RealReachability.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SAMKeychain/SAMKeychain.framework",
@@ -7223,6 +7245,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionTransitioning.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealReachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SAMKeychain.framework",
@@ -7369,6 +7392,7 @@
 				1FE674DF20D21B11006F97DB /* TRDownloadTask.swift in Sources */,
 				1FD9B7A1207DA43C00906D80 /* ColorDefine.swift in Sources */,
 				1FFD132E20EF3DB50053A3F7 /* LocalAsset+CoreDataClass.swift in Sources */,
+				1FE9FAF321D4DCD200B11F5A /* LoginLicenseAlertViewController.swift in Sources */,
 				1FE9EF8B20EF5DEA00732728 /* FileHash.m in Sources */,
 				1F050E6020AAC8400037F00A /* FilesSequenceTableViewCell.swift in Sources */,
 				1F362F8621351FAC000B3384 /* LoginViewController.swift in Sources */,

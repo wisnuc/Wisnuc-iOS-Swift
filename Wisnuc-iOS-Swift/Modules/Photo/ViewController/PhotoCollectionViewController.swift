@@ -48,6 +48,7 @@ class PhotoCollectionViewController: UICollectionViewController {
     var showIndicator:Bool = true
     var sortedAssetsBackupArray:Array<WSAsset>?
     var dispose = DisposeBag()
+    var pollingCallback:((_ stop:Bool)->())?
     var state:PhotoRootViewControllerState?{
         didSet{
             
@@ -899,6 +900,10 @@ class PhotoCollectionViewController: UICollectionViewController {
             let vc = self.getMatchVC(model: model)
             if let presentVC = vc{
                 self.present(presentVC, animated: true) {
+                    
+                }
+                if let pollingCallback = self.pollingCallback{
+                    pollingCallback(true)
                 }
             }
         }
@@ -1243,6 +1248,14 @@ extension PhotoCollectionViewController : UIViewControllerPreviewingDelegate {
 
 extension PhotoCollectionViewController : WSShowBigImgViewControllerDelegate {
     func photoBrowser(browser: WSShowBigimgViewController, indexPath: IndexPath) {
+        guard let dataSource = self.dataSource else { return  }
+        if indexPath.section >= dataSource.count{
+            return
+        }
+        
+        if indexPath.item >= dataSource[indexPath.section].count{
+            return
+        }
         self.collectionView?.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.centeredVertically, animated: false)
         self.collectionView?.layoutIfNeeded()
     }

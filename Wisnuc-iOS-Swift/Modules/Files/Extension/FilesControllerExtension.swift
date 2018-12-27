@@ -172,7 +172,10 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
     }
     
     func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton, _ indexPath: IndexPath) {
-        let filesBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        var filesBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
+        if self.driveUUID == AppUserService.currentUser?.shareSpace{
+            filesBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain, type: .shareSpaceMore)
+        }
         filesBottomVC.delegate = self
         let bottomSheet = AppBottomSheetController.init(contentViewController: filesBottomVC)
         bottomSheet.trackingScrollView = filesBottomVC.tableView
@@ -757,6 +760,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         case 3 :
             let name = filesModel.backupRoot ? filesModel.bname ?? filesModel.name ?? "" : filesModel.name ?? ""
             if filesModel.type == FilesType.file.rawValue{
+                
                 if FilesRootViewController.downloadManager.cache.fileExists(fileName: name){
                     self.openForOtherApp(filesModel: filesModel)
                 }else{
@@ -768,7 +772,12 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                         }
                     }
                 }
+               
             }else{
+                if self.driveUUID == AppUserService.currentUser?.shareSpace || self.selfState == .share{
+                    self.makeCopyTaskCreate(model: model)
+                    return
+                }
 //                #warning("分享到共享空间")
                 self.copyToAction(model: filesModel, isShare:true)
             }
@@ -776,16 +785,28 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
             if filesModel.type == FilesType.file.rawValue{
                 self.makeCopyTaskCreate(model: model)
             }else{
+                if self.driveUUID == AppUserService.currentUser?.shareSpace || self.selfState == .share{
+                    self.removeFileOrDirectory(model: filesModel)
+                    return
+                }
                 self.copyToAction(model:filesModel)
             }
         case 5:
             if filesModel.type == FilesType.file.rawValue{
+                if self.driveUUID == AppUserService.currentUser?.shareSpace || self.selfState == .share{
+                    self.copyToAction(model:filesModel)
+                    return
+                }
                 self.copyToAction(model: filesModel,isShare:true)
             }else{
                 self.removeFileOrDirectory(model: filesModel)
             }
         case 6:
             if filesModel.type == FilesType.file.rawValue{
+                if self.driveUUID == AppUserService.currentUser?.shareSpace || self.selfState == .share{
+                     self.removeFileOrDirectory(model: filesModel)
+                    return
+                }
                 self.copyToAction(model:filesModel)
             }
         case 7:
@@ -819,16 +840,18 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         var share:Bool = false
         var drive:String?
         var dir:String?
+        var title = LocalizedString(forKey: "My Drive")
         if let isShare = isShare{
             if isShare{
                 drive = AppUserService.currentUser?.shareSpace
                 dir = AppUserService.currentUser?.shareSpace
                 share = true
+                title = LocalizedString(forKey: "共享空间")
             }
         }
         let filesRootViewController =  FilesRootViewController.init(style: NavigationStyle.white, srcDictionary: [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()], moveModelArray:  [model], isCopy: true,isShare:share,driveUUID:drive,directoryUUID:dir)
         
-        filesRootViewController.title = LocalizedString(forKey: "My Drive")
+        filesRootViewController.title = title
         self.registerNotification()
         filesRootViewController.isCopy = true
         filesRootViewController.selfState = .movecopy

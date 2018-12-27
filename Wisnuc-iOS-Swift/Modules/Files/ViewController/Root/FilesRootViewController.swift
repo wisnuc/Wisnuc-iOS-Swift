@@ -603,7 +603,8 @@ class FilesRootViewController: BaseViewController{
         if self.cellStyle == .list {
             styleItem.image = UIImage.init(named: "gridstyle.png")
         }
-        self.navigationItem.rightBarButtonItems = [moreItem,styleItem,searchItem]
+        let newFolderItem = UIBarButtonItem.init(image: UIImage.init(named: "files_new_folder_gray.png"), style: UIBarButtonItemStyle.done, target: self, action: #selector(newFolderButtonTap(_ :)))
+        self.navigationItem.rightBarButtonItems = [moreItem,styleItem,searchItem,newFolderItem]
     }
     
     func registerNotification(){
@@ -779,18 +780,18 @@ class FilesRootViewController: BaseViewController{
             let placeholder = LocalizedString(forKey: "未命名文件")
             let name = model.backupRoot ? model.bname ?? model.name ?? placeholder : model.name ?? placeholder
 
-            var paramKey = "name"
-            var paramValue = name
-            if let hash = model.hash,model.bname != nil{
-                paramKey = "hash"
-                paramValue = hash
-            }
-                let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?\(paramKey)=\(paramValue)"
-                if AppNetworkService.networkState == .local{
-                    urlStrings.append(localUrl)
-                }else{
-                    urlStrings.append(requestURL)
-                }
+//            var paramKey = "name"
+//            var paramValue = name
+//            if let hash = model.hash,model.bname != nil{
+//                paramKey = "hash"
+//                paramValue = hash
+//            }
+//                let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?\(paramKey)=\(paramValue)"
+//                if AppNetworkService.networkState == .local{
+//                    urlStrings.append(localUrl)
+//                }else{
+            urlStrings.append(requestURL)
+//                }
             nameStrings.append(name)
             fileModels.append(model)
             }

@@ -102,8 +102,11 @@ class PhotoRootViewController: BaseViewController {
     
     init(style: NavigationStyle ,state:PhotoRootViewControllerState,driveUUID:String? = nil) {
         super.init(style: style)
+        setNotification()
+        self.backupDriveUUID = driveUUID
+        self.photoCollcectionViewController.drive = backupDriveUUID
         self.setState(state: state)
-        self.driveUUID = driveUUID
+     
     }
     
     override func viewDidLoad() {
@@ -123,31 +126,45 @@ class PhotoRootViewController: BaseViewController {
 //        self.timer?.fire()
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
         NotificationCenter.default.addObserver(self, selector: #selector(assetDidChangeHandle(_:)), name: NSNotification.Name.Change.AssetChangeNotiKey, object: nil)
-      
+        self.photoCollcectionViewController.pollingCallback = { [weak self] (stop) in
+            if stop{
+               self?.stopPollingTimerSet()
+            }else{
+               self?.startPollingTimerSet()
+            }
+        }
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appBar.appBarViewController.headerView.trackingScrollView = self.photoCollcectionViewController.collectionView
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
         appBar.headerViewController.preferredStatusBarStyle = .default
         appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
-        self.timer = nil
-        self.timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
-        RunLoop.current.add(self.timer!, forMode: RunLoopMode.commonModes)
-        self.timer?.fire()
+        startPollingTimerSet()
     }
-    
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         defaultNotificationCenter().removeObserver(self, name: NSNotification.Name.Change.PhotoCollectionUserAuthChangeNotiKey, object: nil)
         self.requset?.cancel()
-        timer?.invalidate()
-        timer = nil
+        self.stopPollingTimerSet()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func startPollingTimerSet(){
+        stopPollingTimerSet()
+        self.timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
+        RunLoop.current.add(self.timer!, forMode: RunLoopMode.commonModes)
+        self.timer?.fire()
+    }
+    
+    func stopPollingTimerSet(){
+        timer?.invalidate()
+        timer = nil
     }
     
     func prepareNavigationBar(){
@@ -218,10 +235,10 @@ class PhotoRootViewController: BaseViewController {
     }
     
     func reloadAllAssetData(){
-        DispatchQueue.global(qos: .background).async {
+      
         let request = AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
             if error == nil{
-            
+              DispatchQueue.global(qos: .background).async {
                     if let assetDataSource = assetDataSource{
                         //                    var replaceDataSource = assetDataSource
                         //                    for asset in assetDataSource{
@@ -289,16 +306,16 @@ class PhotoRootViewController: BaseViewController {
                 
                 
                 self?.isSelectMode = self?.isSelectMode
-                
+                    }
             }else{
                 
             }
-            
+           
             //            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
             //            self?.photoCollcectionViewController.collectionView?.reloadData()
         }
               self.requset = request
-        }
+     
       
     }
     

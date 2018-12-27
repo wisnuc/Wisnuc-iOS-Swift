@@ -148,7 +148,7 @@ class DeviceViewController: BaseViewController {
                      self?.setLabelFrame(text:"已使用\(usedString) / \(totalString)")
                      }
                   }
-                  self?.getFruitmixStatsData(closure: { (statsModel) in
+                  self?.getFruitmixStatsData(closure: { [weak self](statsModel) in
                      self?.setHeaderContentFrame(statsModel: statsModel,bootSpaceModel:model)
                      self?.bootSpaceModel = model
                      self?.statsModel = statsModel

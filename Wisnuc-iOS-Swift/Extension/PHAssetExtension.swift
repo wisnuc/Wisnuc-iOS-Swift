@@ -253,6 +253,5 @@ extension PHAsset{
                 return 0
             }
         }
-        return 0
     }
 }

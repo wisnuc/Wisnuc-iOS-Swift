@@ -116,7 +116,7 @@ class NetworkService: NSObject {
         let requestURL = "http://\(address):3001/winasd/info"
         do {
             var urlRequest = try URLRequest.init(url: URL.init(string: requestURL)!, method: HTTPMethod.get)
-            urlRequest.timeoutInterval = TimeInterval.init(10)
+            urlRequest.timeoutInterval = TimeInterval.init(30)
             Alamofire.request(urlRequest).validate().response { (response) in
                 if response.error == nil{
                     guard let data = response.data else{
@@ -255,6 +255,8 @@ class NetworkService: NSObject {
                         if driveModel.tag == "built-in"{
                             find = true
                             stop.pointee = true
+                            AppUserService.currentUser?.shareSpace = driveModel.uuid
+                            AppUserService.synchronizedCurrentUser()
                             return callBack(nil, driveModel.uuid);
                         }
                     }
@@ -757,13 +759,13 @@ class NetworkService: NSObject {
         let imageDownloader = ImageDownloader.init(name: "orginImageDownloader")
         imageDownloader.downloadTimeout = 20000
         ImageCache.default.maxMemoryCost = 50 * 1024 * 1024
-        return imageDownloader.downloadImage(with: url, retrieveImageTask: nil, options: [.requestModifier(modifier)], progressBlock: nil) { (image, error, reqUrl, data) in
+        return imageDownloader.downloadImage(with: url, retrieveImageTask: nil, options: [KingfisherOptionsInfoItem.requestModifier(modifier),KingfisherOptionsInfoItem.originalCache(ImageCache.default),.backgroundDecode], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl {
-                    ImageCache.default.store(image,
-                                             original: nil,
-                                             forKey: url.absoluteString,
-                                             toDisk: true)
+//                    ImageCache.default.store(image,
+//                                             original: nil,
+//                                             forKey: url.absoluteString,
+//                                             toDisk: true)
                 }
                 callback(nil, image)
             }else{

@@ -9,8 +9,9 @@
 import UIKit
 
 class BindStationAPI: BaseRequest {
-    override init() {
-        super.init()
+    var user:User?
+    init(user:User?) {
+        self.user = user
     }
     
     override func requestURL() -> String {
@@ -27,6 +28,9 @@ class BindStationAPI: BaseRequest {
     
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
-        return [kRequestAuthorizationKey:AppTokenManager.token ?? AppUserService.currentUser?.cloudToken ?? ""]
+        if let token = self.user?.cloudToken{
+            return [kRequestAuthorizationKey:token]
+        }
+        return [kRequestAuthorizationKey:AppUserService.currentUser?.cloudToken ?? ""]
     }
 }

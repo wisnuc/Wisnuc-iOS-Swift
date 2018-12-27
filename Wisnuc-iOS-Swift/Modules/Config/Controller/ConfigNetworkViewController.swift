@@ -310,9 +310,10 @@ class ConfigNetworkViewController: BaseViewController {
     }
     
     func stationEncryptedAction(ipString:String){
+        SVProgressHUD.dismiss()
         ActivityIndicator.startActivityIndicatorAnimation()
         AppNetworkService.networkState = .normal
-        BindStationAPI.init().startRequestJSONCompletionHandler { [weak self] (response) in
+        BindStationAPI.init(user:self.user).startRequestJSONCompletionHandler { [weak self] (response) in
             if let error = response.error{
                 ActivityIndicator.stopActivityIndicatorAnimation()
                 var messageText = error.localizedDescription
@@ -336,7 +337,21 @@ class ConfigNetworkViewController: BaseViewController {
                         }
                         let userInfo:[String:String] = ["encrypted":encryptedString,"ip":ipString]
                         self?.methodStart = Date()
-                        Timer.scheduledTimer(timeInterval: 2, target: self!, selector: #selector(self?.timerFired(_:)), userInfo: userInfo, repeats: true)
+                        print("开始")
+                        if let header = response.response?.allHeaderFields  {
+                            if let cookie = header["Set-Cookie"] as? String  {
+                                self?.user?.cookie = cookie
+                            }
+                        }
+                       
+                        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 3) {
+                            print("结束")
+                            DispatchQueue.main.async {
+                                self?.timerFired(userInfo)
+//                                Timer.scheduledTimer(timeInterval: 3, target: self!, selector: #selector(self?.timerFired(_:)), userInfo: userInfo, repeats: true)
+                            }
+                        }
+                       
                     }
                 }
             }
@@ -550,10 +565,10 @@ class ConfigNetworkViewController: BaseViewController {
     }
     
     
-    @objc func timerFired(_ timer: Timer) {
-        guard let userInfo = timer.userInfo as? [String:String] else{
-            return
-        }
+     func timerFired(_ userInfo: [String:String]) {
+//        guard let userInfo = timer.userInfo as? [String:String] else{
+//            return
+//        }
         
         guard let ipString = userInfo["ip"] else{
             return
@@ -565,19 +580,22 @@ class ConfigNetworkViewController: BaseViewController {
         
         AppNetworkService.checkIP(address: ipString, { [weak self](success) in
             if success{
-                timer.fireDate = Date.distantFuture
-                timer.invalidate()
+//                timer.fireDate = Date.distantFuture
+//                timer.invalidate()
                 self?.stationBindAction(ipString: ipString, encryptedString:encryptedString)
             }else{
+                ActivityIndicator.stopActivityIndicatorAnimation()
+                Message.message(text: "error")
                 self?.methodFinish = Date()
                 guard let methodFinish = self?.methodFinish else{
                     return
                 }
                 if let methodStart = self?.methodStart{
+                    
                     let executionTime = methodFinish.timeIntervalSince(methodStart)
                     if executionTime > 30{
-                        timer.fireDate = Date.distantFuture
-                        timer.invalidate()
+//                        timer.fireDate = Date.distantFuture
+//                        timer.invalidate()
                     }
                 }
             }
@@ -930,15 +948,10 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
             if bleString.contains(find: "{") && bleString.contains(find: "}"){
                 ActivityIndicator.stopActivity(in: self.wifiTabelView)
                 if let wifiDic =  dataToNSDictionary(data: bleData){
-//                    if let error = wifiDic["error"] as? NSDictionary{
-//                        wifiBLEDataArray.removeAll()
-//                        Message.message(text: "error:\(error)")
-//                        return
-//                    }
                     if wifiDic.count == 0{
                         SVProgressHUD.dismiss()
                         wifiBLEDataArray.removeAll()
-//                        Message.message(text: "error")
+                        nextButton.isHidden = false
                     }
                     
                     if bleString.contains(find: "error"){
@@ -999,7 +1012,7 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
             }
             
             if bleString.contains(find: "error"){
-                 wifiBLEDataArray.removeAll()
+                wifiBLEDataArray.removeAll()
                 SVProgressHUD.dismiss()
                 ActivityIndicator.stopActivity(in: self.wifiTabelView)
                 Message.message(text: "error")

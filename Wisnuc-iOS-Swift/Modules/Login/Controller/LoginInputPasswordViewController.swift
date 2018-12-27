@@ -13,6 +13,7 @@ class LoginInputPasswordViewController: BaseViewController {
     var phone:String?
     var textFieldControllerPassword:MDCTextInputControllerUnderline?
     var alertView:TipsAlertView?
+    var stationModels:[StationsInfoModel]?
     
     init(style: NavigationStyle,phone:String) {
         super.init(style: style)
@@ -220,8 +221,9 @@ class LoginInputPasswordViewController: BaseViewController {
                             }
                             self?.startActivityIndicator()
                              let user = AppUserService.synchronizedUserInLogin(model, cookie)
-                            LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure:{ [weak self](user,stationModel) in
+                            LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure:{ [weak self](user,stationModel,models)  in
                                 self?.stopActivityIndicator()
+                                self?.stationModels = models
                                 self?.loginFinish(user: user, stationModel: stationModel)
                             })
                         }
@@ -328,7 +330,7 @@ extension LoginInputPasswordViewController:UITextFieldDelegate{
         guard let rawText = textField.text else {
             return true
         }
-        
+    
         let fullString = NSString(string: rawText).replacingCharacters(in: range, with: string)
 
         if fullString.count >= passwordLimitCount {
@@ -336,12 +338,25 @@ extension LoginInputPasswordViewController:UITextFieldDelegate{
         }else{
             self.nextButtonDisableStyle()
         }
+        
+        if textField.isSecureTextEntry == true {
+            textField.text = fullString
+            return false
+        }
         return true
     }
 }
 
 extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDelegte{
     func loginFinish(user: User, stationModel: Any) {
+        guard let stationModels = self.stationModels else{
+            return
+        }
+        if !stationModels.contains(where: {$0.sn == user.stationId}){
+            Message.message(text: LocalizedString(forKey: "您不拥有该设备，请重新登录"))
+            AppUserService.logoutUser()
+            return
+        }
         let model = stationModel as! StationsInfoModel
         self.startActivityIndicator()
         AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in

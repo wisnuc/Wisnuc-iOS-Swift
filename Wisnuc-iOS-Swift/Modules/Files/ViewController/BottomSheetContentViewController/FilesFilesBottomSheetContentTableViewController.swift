@@ -11,6 +11,7 @@ import UIKit
 enum FilesBottomSheetContentType {
     case selectMore
     case normalMore
+    case shareSpaceMore
 }
 
 @objc protocol FilesBottomSheetContentVCDelegate{
@@ -29,6 +30,7 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
     weak var delegate:FilesBottomSheetContentVCDelegate?
     var filesModel:EntriesModel?
     var filesModelArray:[EntriesModel]?
+    var assetModelArray:[WSAsset]?
     var type:FilesBottomSheetContentType?
     override init(style: UITableViewStyle) {
         super.init(style: style)
@@ -88,6 +90,12 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
                 return 8
             }else{
                 return 6
+            }
+        case .shareSpaceMore?:
+            if filesModel?.type == FilesType.file.rawValue{
+                return 7
+            }else{
+                return 5
             }
         case .selectMore?:
             return 1
@@ -178,7 +186,78 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
             default:
                 break
             }
+        }else if self.type == .shareSpaceMore{
+            switch indexPath.row {
+            case 0:
+                cell.leftImageView.image = UIImage.init(named: "files_edit.png")
+                cell.titleLabel.text = LocalizedString(forKey: "Rename")
+                cell.mainSwitch.isHidden = true
+            case 1:
+                cell.leftImageView.image = UIImage.init(named: "files_move_gray.png")
+                cell.titleLabel.text = LocalizedString(forKey: "移动到...")
+                cell.mainSwitch.isHidden = true
+            case 2:
+                if filesModel?.type == FilesType.file.rawValue{
+                    cell.leftImageView.image = UIImage.init(named: "files_offline_normal.png")
+                    cell.titleLabel.text = LocalizedString(forKey: "Offline available")
+                    cell.mainSwitch.isOn =  FilesRootViewController.downloadManager.cache.fileExists(fileName: (self.filesModel?.name)!) ? true : false
+                    cell.switchChangeCallback = { [weak self] (sender) in
+                        self?.dismiss(animated: true, completion: { [weak self] in
+                            if let delegateOK = self?.delegate{
+                                delegateOK.filesBottomSheetContentSwitch(sender, model: ((self?.filesModel)!)!)
+                            }
+                        })
+                    }
+                    
+                    if FilesRootViewController.downloadManager.runningTasks.contains(where: {$0.fileName == filesModel?.name}){
+                        cell.mainSwitch.isEnabled = false
+                    }
+                    
+                    cell.mainSwitch.isHidden = false
+                }else{
+                    cell.leftImageView.image = UIImage.init(named: "files_creat_copy.png")
+                    cell.titleLabel.text = LocalizedString(forKey: "Create a copy")
+                    cell.mainSwitch.isHidden = true
+                }
+            case 3:
+                if filesModel?.type == FilesType.file.rawValue{
+                    cell.leftImageView.image = UIImage.init(named: "files_share_other_app.png")
+                    cell.titleLabel.text = LocalizedString(forKey: "Open with other apps")
+                    cell.mainSwitch.isHidden = true
+                }else{
+                    cell.leftImageView.image = UIImage.init(named: "files_copy_to.png")
+                    cell.titleLabel.text = LocalizedString(forKey: "Copy to...")
+                    cell.mainSwitch.isHidden = true
+                }
+            case 4:
+                if filesModel?.type == FilesType.file.rawValue{
+                    cell.leftImageView.image = UIImage.init(named: "files_creat_copy.png")
+                    cell.titleLabel.text = LocalizedString(forKey: "Create a copy")
+                    cell.mainSwitch.isHidden = true
+                }else{
+                    cell.leftImageView.image = UIImage.init(named: "files_remove.png")
+                    cell.titleLabel.text = LocalizedString(forKey: "Remove")
+                    cell.mainSwitch.isHidden = true
+                }
+            case 5:
+                if filesModel?.type == FilesType.file.rawValue{
+                    cell.leftImageView.image = UIImage.init(named: "files_copy_to.png")
+                    cell.titleLabel.text = LocalizedString(forKey: "Copy to...")
+                    cell.mainSwitch.isHidden = true
+                }else{
+                    cell.leftImageView.image = UIImage.init(named: "files_remove.png")
+                    cell.titleLabel.text = LocalizedString(forKey: "Remove")
+                    cell.mainSwitch.isHidden = true
+                }
+            case 6:
+                cell.leftImageView.image = UIImage.init(named: "files_remove.png")
+                cell.titleLabel.text = LocalizedString(forKey: "Remove")
+                cell.mainSwitch.isHidden = true
+            default:
+                break
+            }
         }else{
+        
             switch indexPath.row {
             case 0:
                 cell.leftImageView.image = UIImage.init(named: "files_remove.png")
@@ -233,6 +312,8 @@ class FilesFilesBottomSheetContentTableViewController: UITableViewController {
             if let model = self.filesModel{
                 self.delegate?.filesBottomSheetContentTableView(tableView, didSelectRowAt: indexPath, model: model)
             }else if let models = self.filesModelArray{
+                self.delegate?.filesBottomSheetContentTableView!(tableView, didSelectRowAt: indexPath, models: models)
+            }else if let models = self.assetModelArray{
                 self.delegate?.filesBottomSheetContentTableView!(tableView, didSelectRowAt: indexPath, models: models)
             }
         })
