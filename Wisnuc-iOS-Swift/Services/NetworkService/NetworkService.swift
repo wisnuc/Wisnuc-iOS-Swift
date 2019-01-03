@@ -33,6 +33,7 @@ class NetworkService: NSObject {
         super.init()
     }
     
+    // 网络切换
     func changeNet(_ status:WSNetworkStatus){
         #warning("切换网络")
         if !AppUserService.isUserLogin{
@@ -98,6 +99,7 @@ class NetworkService: NSObject {
         }
     }
     
+//    更换为外网环境
     func networkStateNormalAction() {
         Message.message(text: "外网")
         
@@ -105,6 +107,7 @@ class NetworkService: NSObject {
         AppTokenManager.token = AppUserService.currentUser?.cloudToken
     }
     
+//    更换为本地环境
     func networkStateLocalAction() {
         Message.message(text: "内网")
         
@@ -112,6 +115,7 @@ class NetworkService: NSObject {
         AppTokenManager.token = AppUserService.currentUser?.localToken
     }
     
+//    尝试验证本地访问
     func checkIP(address:String, _ closure:@escaping (_ success:Bool)->()) {
         let requestURL = "http://\(address):3001/winasd/info"
         do {
@@ -147,10 +151,8 @@ class NetworkService: NSObject {
         }
     }
     
+//    在外网情况下获取本地Token
     func getLocalInCloudLogin(user:User? = nil,cloudToken:String? = nil, _ closure:@escaping (( _ error:Error?,_ token:String?)->())){
-//        if  !AppUserService.isUserLogin {
-//            return closure(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NotLogin)), nil)
-//        }
         if user == nil{
             if isNilString( AppUserService.currentUser?.cloudToken){
                 return closure(LoginError(code: ErrorCode.Login.NoToken, kind: LoginError.ErrorKind.LoginNoToken, localizedDescription: LocalizedString(forKey: ErrorLocalizedDescription.Login.NoToken)), nil)
@@ -182,6 +184,7 @@ class NetworkService: NSObject {
         })
     }
     
+//    获取所有Drive
     func getUserAllDrive(user:User, _ callBack:@escaping (_ error:Error?, _ driveModels:[DriveModel]?)->()) {
         DriveAPI.init(type: .fetchInfo,user:user).startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
@@ -239,6 +242,7 @@ class NetworkService: NSObject {
         }
     }
     
+//    获取共享盘
     func getShareSpaceBuiltIn(_ callBack:@escaping (_ error:Error?, _ uuid:String?)->()) {
         if !AppUserService.isUserLogin {
             return callBack(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)
@@ -271,6 +275,8 @@ class NetworkService: NSObject {
         }
     }
     
+    
+//    创建备份盘
     func creactBackupDrive(user:User? = nil,callBack:@escaping (_ error:Error?,_ model:DriveModel?)->()){
         DriveAPI.init(type: .creatBackup,user:user).startRequestJSONCompletionHandler { (response) in
             if response.error == nil{
@@ -304,7 +310,7 @@ class NetworkService: NSObject {
         }
     }
     
-    
+//    获取本地目录（已废弃）
     func getUserBackupDir(name:String ,_ callback:@escaping (_ error:Error?,_ entryUUID:String?)->()){
         if !AppUserService.isUserLogin {
             return callback(LoginError(code: ErrorCode.Login.NotLogin, kind: LoginError.ErrorKind.LoginFailure, localizedDescription: ErrorLocalizedDescription.Login.NotLogin), nil)
@@ -329,6 +335,7 @@ class NetworkService: NSObject {
             }
         }
     }
+    
     
     // 获取backup目录下的所有文件
     func getEntriesInUserBackupDirectory(uuid:String,callback:@escaping (_ error:Error?,_ entries:Array<EntriesModel>?)->()){
@@ -444,6 +451,7 @@ class NetworkService: NSObject {
         }
     }
     
+//    本地环境下创建文件夹
     func mkDirLocalIn(driveUUID:String,directoryUUID:String,name:String,closure:@escaping (_ callBackError:Error?, _ directoriesModel:DirectoriesModel?)->()) {
         let detailURL = "\(kRquestDrivesURL)/\(String(describing: driveUUID))/dirs/\(String(describing: directoryUUID))/entries"
         let requestURL = "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)"
@@ -527,6 +535,7 @@ class NetworkService: NSObject {
         
     }
     
+//    外网环境下创建文件夹
     func mkDirIn(dirveUUID:String,directoryUUID:String,name:String,closure:@escaping (_ callBackError:Error?, _ directoriesModel:DirectoriesModel?)->()) {
         MkdirAPI.init(driveUUID: dirveUUID, directoryUUID: directoryUUID, name: name).startRequestDataCompletionHandler { (response) in
             if response.error == nil{
@@ -542,40 +551,11 @@ class NetworkService: NSObject {
         }
     }
     
-    //Asset
+    //获取照片缩略图（kingsfisher）
     func getThumbnail(hash:String,size:CGSize? = nil,downloadPriority:Float? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->RetrieveImageDownloadTask?{
         guard let url = PhotoHelper.requestImageUrl(size: size, hash: hash) else {
             return nil
         }
-//        let detailURL = "media"
-//        let holdPlaceSize:CGFloat = 200
-//        let frameWidth:Int = Int(size?.width ?? holdPlaceSize)
-//        let frameHeight:Int = Int(size?.height ?? holdPlaceSize)
-//        let resource = "/media/\(hash)"
-//        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth))&\(kRequestImageHeightKey)=\(String(describing: frameHeight))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-//
-//        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth),kRequestImageHeightKey:String(describing: frameHeight),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
-//        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
-//        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
-//          return nil
-//        }
-//
-//        guard let dataString = String.init(data: data, encoding: .utf8) else {
-//            return nil
-//        }
-//
-//        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-//            return nil
-//        }
-//
-//        guard  let normalUrl = URL.init(string:urlString) else {
-//            return nil
-//        }
-////                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-//       guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
-//            return nil
-//        }
-      
         let modifier = AnyModifier { request in
             var req = request
             req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
@@ -585,13 +565,6 @@ class NetworkService: NSObject {
                 }
             }
            
-//            if self.networkState == .normal{
-//                if let data = jsonToData(jsonDic: dataDic as NSDictionary){
-//                    if let dataString = String.init(data: data, encoding: .utf8){
-//                        req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-//                    }
-//                }
-//            }
             return req
         }
         ImageDownloader.default.downloadTimeout = 20000
@@ -609,43 +582,12 @@ class NetworkService: NSObject {
         return task
     }
     
+    //获取照片缩略图（SDWebImageDownloader）
     func getSDThumbnail(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->SDWebImageDownloadToken?{
         
         guard let url = PhotoHelper.requestImageUrl(size: size, hash: hash) else {
             return nil
         }
-//        let detailURL = "media"
-//        var frameWidth = size?.width
-//        var frameHeight = size?.height
-//        if size == nil ||  size == CGSize.zero{
-//            frameWidth = 200
-//            frameHeight = 200
-//        }
-//        let resource = "/media/\(hash)"
-//        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-//
-//        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
-//        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
-//        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
-//            return nil
-//        }
-//
-//        guard let dataString = String.init(data: data, encoding: .utf8) else {
-//            return nil
-//        }
-//
-//        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-//            return nil
-//        }
-//
-//        guard  let normalUrl = URL.init(string:urlString) else {
-//            return nil
-//        }
-//        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-//        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
-//            return nil
-//        }
-        
         SDWebImageDownloader.shared().headersFilter = { (requsetUrl,header) in
             var dic = header
             if let token = AppTokenManager.token{
@@ -672,39 +614,8 @@ class NetworkService: NSObject {
         return task
     }
     
+//    后台线程获取缩略图（SDWebImageDownloader）
     func getThumbnailBackgroud(hash:String,size:CGSize? = nil,callback:@escaping (Error?,UIImage?,URL?)->())->SDWebImageDownloadToken?{
-     
-//        let detailURL = "media"
-//        var frameWidth = size?.width
-//        var frameHeight = size?.height
-//        if size == nil ||  size == CGSize.zero{
-//            frameWidth = 200
-//            frameHeight = 200
-//        }
-//        let resource = "/media/\(hash)"
-//        let param = "\(kRequestImageAltKey)=\(kRequestImageThumbnailValue)&\(kRequestImageWidthKey)=\(String(describing: frameWidth!))&\(kRequestImageHeightKey)=\(String(describing: frameHeight!))&\(kRequestImageModifierKey)=\(kRequestImageCaretValue)&\(kRequestImageAutoOrientKey)=true"
-//        
-//        let params:[String:String] = [kRequestImageAltKey:kRequestImageThumbnailValue,kRequestImageWidthKey:String(describing: frameWidth!),kRequestImageHeightKey:String(describing: frameHeight!),kRequestImageModifierKey:kRequestImageCaretValue,kRequestImageAutoOrientKey:"true"]
-//        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params] as [String : Any]
-//        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
-//            return nil
-//        }
-//
-//        guard let dataString = String.init(data: data, encoding: .utf8) else {
-//            return nil
-//        }
-//
-//        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-//            return nil
-//        }
-//        
-//        guard  let normalUrl = URL.init(string:urlString) else {
-//            return nil
-//        }
-//        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-//        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(hash)?\(param)") : normalUrl else {
-//            return nil
-//        }
         guard let url = PhotoHelper.requestImageUrl(size: size, hash: hash) else {
             return nil
         }
@@ -740,13 +651,6 @@ class NetworkService: NSObject {
      * WISNUC API:GET IMAGE(High Resolution)
      */
     func getHighWebImage(url:URL,callback:@escaping (Error?,UIImage?)->())->RetrieveImageDownloadTask?{
-        //        SDWebImageManager.shared().imageDownloader?.headersFilter = { [weak self] (url:URL?,headers:Dictionary<String,String>?) -> Dictionary<String,String>?  in
-        //            var dic = Dictionary<String, String>.init()
-        //            dic.merge(with: headers!)
-        //            dic = [kRequestAuthorizationKey : self?.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!)]
-        //            return dic
-        //        }
-        
         let modifier = AnyModifier { request in
             var req = request
             req.setValue(self.networkState == .normal ? AppTokenManager.token! : JWTTokenString(token: AppTokenManager.token!), forHTTPHeaderField: kRequestAuthorizationKey)
@@ -762,10 +666,6 @@ class NetworkService: NSObject {
         return imageDownloader.downloadImage(with: url, retrieveImageTask: nil, options: [KingfisherOptionsInfoItem.requestModifier(modifier),KingfisherOptionsInfoItem.originalCache(ImageCache.default),.backgroundDecode], progressBlock: nil) { (image, error, reqUrl, data) in
             if (image != nil) {
                 if let image =  image, let url = reqUrl {
-//                    ImageCache.default.store(image,
-//                                             original: nil,
-//                                             forKey: url.absoluteString,
-//                                             toDisk: true)
                 }
                 callback(nil, image)
             }else{

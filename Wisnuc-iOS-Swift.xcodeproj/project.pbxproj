@@ -177,7 +177,6 @@
 		1F2CE30E20B54A7A00D9E5BD /* CoreDataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30D20B54A7A00D9E5BD /* CoreDataExtension.swift */; };
 		1F2CE31020B559CC00D9E5BD /* CoreDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE30F20B559CC00D9E5BD /* CoreDataOperation.swift */; };
 		1F2CE39720B6A68E00D9E5BD /* RequestConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE39620B6A68E00D9E5BD /* RequestConfig.swift */; };
-		1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE39820B6B30C00D9E5BD /* TestAPI.swift */; };
 		1F2CE39C20B6D1B600D9E5BD /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE39B20B6D1B600D9E5BD /* UserModel.swift */; };
 		1F2CE39F20B6D22500D9E5BD /* CloudLoginAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE39E20B6D22500D9E5BD /* CloudLoginAPI.swift */; };
 		1F2CE3A120B7B76F00D9E5BD /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CE3A020B7B76F00D9E5BD /* BaseModel.swift */; };
@@ -560,7 +559,6 @@
 		1F99863A21B6802900174FCC /* PhotoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863921B6802900174FCC /* PhotoHelper.swift */; };
 		1F99863C21B7B34300174FCC /* UserDeviceInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863B21B7B34200174FCC /* UserDeviceInfoAPI.swift */; };
 		1F99863E21B8D0D600174FCC /* LoginInputPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F99863D21B8D0D600174FCC /* LoginInputPasswordViewController.swift */; };
-		1FA3B1D521884BEB00B68AA7 /* PhotoMediaContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D421884BEB00B68AA7 /* PhotoMediaContainerViewController.swift */; };
 		1FA3B1D721884DAB00B68AA7 /* PhotoTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D621884DAB00B68AA7 /* PhotoTools.swift */; };
 		1FA3B1DB218869BB00B68AA7 /* play_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D8218869BA00B68AA7 /* play_video@2x.png */; };
 		1FA3B1DC218869BB00B68AA7 /* play_video@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA3B1D9218869BA00B68AA7 /* play_video@3x.png */; };
@@ -1262,7 +1260,6 @@
 		1F2CE30D20B54A7A00D9E5BD /* CoreDataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataExtension.swift; sourceTree = "<group>"; };
 		1F2CE30F20B559CC00D9E5BD /* CoreDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataOperation.swift; sourceTree = "<group>"; };
 		1F2CE39620B6A68E00D9E5BD /* RequestConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestConfig.swift; sourceTree = "<group>"; };
-		1F2CE39820B6B30C00D9E5BD /* TestAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAPI.swift; sourceTree = "<group>"; };
 		1F2CE39B20B6D1B600D9E5BD /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		1F2CE39E20B6D22500D9E5BD /* CloudLoginAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudLoginAPI.swift; sourceTree = "<group>"; };
 		1F2CE3A020B7B76F00D9E5BD /* BaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
@@ -1649,7 +1646,6 @@
 		1F99863921B6802900174FCC /* PhotoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoHelper.swift; sourceTree = "<group>"; };
 		1F99863B21B7B34200174FCC /* UserDeviceInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDeviceInfoAPI.swift; sourceTree = "<group>"; };
 		1F99863D21B8D0D600174FCC /* LoginInputPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInputPasswordViewController.swift; sourceTree = "<group>"; };
-		1FA3B1D421884BEB00B68AA7 /* PhotoMediaContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMediaContainerViewController.swift; sourceTree = "<group>"; };
 		1FA3B1D621884DAB00B68AA7 /* PhotoTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTools.swift; sourceTree = "<group>"; };
 		1FA3B1D8218869BA00B68AA7 /* play_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_video@2x.png"; sourceTree = "<group>"; };
 		1FA3B1D9218869BA00B68AA7 /* play_video@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_video@3x.png"; sourceTree = "<group>"; };
@@ -3156,9 +3152,9 @@
 				1F307C5C20BBCB9900AE105C /* CloudGetStationsAPI.swift */,
 				1F307C6420BC001E00AE105C /* GetUsersAPI.swift */,
 				1F307C7920BFEBC900AE105C /* LocalUserAPI.swift */,
+				1F2A380920DCD90F0035EED5 /* LocalLoginTokenAPI.swift */,
 				1FC5702A20C1150B00D4499D /* LocalTokenInCloudAPI.swift */,
 				1F1BABAB20C62EC300D32C5A /* UsersInfoAPI.swift */,
-				1F2A380920DCD90F0035EED5 /* LocalLoginTokenAPI.swift */,
 				1FD1F2D82150FBA100C3E429 /* GetSmsCodeAPI.swift */,
 				1FD1F2DC2151092800C3E429 /* SighUpAPI.swift */,
 				1FD1F2DE2151FA7100C3E429 /* SighInTokenAPI.swift */,
@@ -4314,19 +4310,11 @@
 				1F5209432147B5680058A8D3 /* Transition */,
 				1F2CE39A20B6CBDB00D9E5BD /* Model */,
 				1F58825D2085FA4000394BD6 /* Helper */,
-				1FD9B783207CC6F400906D80 /* ViewModel */,
 				1FD9B784207CC6F400906D80 /* Controller */,
 				1FD9B786207CC6F400906D80 /* Model */,
 				1FD9B787207CC6F400906D80 /* View */,
 			);
 			path = Login;
-			sourceTree = "<group>";
-		};
-		1FD9B783207CC6F400906D80 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		1FD9B784207CC6F400906D80 /* Controller */ = {
@@ -4484,7 +4472,6 @@
 				1FA9C3DC210585C600E8411E /* Photos */,
 				1F307C7620BFC76D00AE105C /* Files */,
 				1F2CE39D20B6D20400D9E5BD /* Login */,
-				1F2CE39820B6B30C00D9E5BD /* TestAPI.swift */,
 			);
 			path = APIs;
 			sourceTree = "<group>";
@@ -6121,7 +6108,6 @@
 				1F4242B720F5CEC10085E2F0 /* WSShowBigimgViewController.swift */,
 				1FD1F2E92153414200C3E429 /* PhotoAlbumViewController.swift */,
 				060F91892157BE9400AD9F26 /* NewAlbumViewController.swift */,
-				1FA3B1D421884BEB00B68AA7 /* PhotoMediaContainerViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -7452,7 +7438,6 @@
 				1FA9C3E02105B76A00E8411E /* DictionaryExtension.swift in Sources */,
 				1FD9B7A5207DB49200906D80 /* WSNavigationController.swift in Sources */,
 				1FE089C1217731530049F44B /* DeviceAddDeviceViewController.swift in Sources */,
-				1FA3B1D521884BEB00B68AA7 /* PhotoMediaContainerViewController.swift in Sources */,
 				1F3293BE21A6A0FF00F075DD /* UserPhoneAPI.swift in Sources */,
 				1F2CE30320B4311000D9E5BD /* User+CoreDataClass.swift in Sources */,
 				1F1BABA420C50C7100D32C5A /* DriveDirAPI.swift in Sources */,
@@ -7570,7 +7555,6 @@
 				1FE0899D217701760049F44B /* DeviceCurrentDeviceInfoViewController.swift in Sources */,
 				1F17697B20AD2CA2003D955F /* FilesShareBottomSheetContentTableViewController.swift in Sources */,
 				1FAADEF120AC031100739220 /* FilesSearchMoreBottomSheetContentTableViewController.swift in Sources */,
-				1F2CE39920B6B30C00D9E5BD /* TestAPI.swift in Sources */,
 				1FBB6F532137D83E0090FA57 /* TipsAlertView.swift in Sources */,
 				1F16B36F21B1014D00178143 /* WechatInfoAPI.swift in Sources */,
 				1F38E29921816CB2003FCAEE /* ArrayDeppCopy.swift in Sources */,

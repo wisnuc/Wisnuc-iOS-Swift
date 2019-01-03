@@ -13,6 +13,7 @@ enum WechatActionType {
     case unbind
 }
 
+//用户微信绑定操作API
 class WechatActionAPI: BaseRequest {
     var type:WechatActionType?
     var code:String?

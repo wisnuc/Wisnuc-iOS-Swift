@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 
+//短信Ticket
 class SmsCodeTicket: BaseRequest {
     var phone:String?
     var code:String?

@@ -8,6 +8,8 @@
 
 import UIKit
 import Alamofire
+
+//station信息（3001）
 class WinasdInfoAPI: BaseRequest {
     override func baseURL() -> String{
         switch AppNetworkService.networkState {

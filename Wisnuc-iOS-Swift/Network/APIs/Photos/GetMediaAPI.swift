@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 
+//获取Media
 class GetMediaAPI: BaseRequest {
     var classType:String?
     var placesUUID:String?
@@ -53,38 +54,18 @@ class GetMediaAPI: BaseRequest {
             var params = [String:Any]()
             if let classType = self.classType{
                params  = [kRequestClassKey:classType,kRequestPlacesKey:placesUUID,"order":SearhOrder.newest.rawValue]
-//                if let metadata = self.metadata{
-//                    if  metadata{
-//                        params["metadata"] = true
-//                    }
-//                }
             }
             if let types = self.types{
                 params  = [kRequestTypesKey:types,kRequestPlacesKey:placesUUID,"order":SearhOrder.newest.rawValue]
-//                if let metadata = self.metadata{
-//                    if  metadata{
-//                        params["metadata"] = true
-//                    }
-//                }
             }
             return [kRequestUrlPathKey:urlPath,kRequestVerbKey:RequestMethodValue.GET,kRequestImageParamsKey:params]
         case .local?:
             var params:[String:Any]?
             if let classType = self.classType{
                 params  = [kRequestClassKey:classType,kRequestPlacesKey:placesUUID,"order":SearhOrder.newest.rawValue]
-//                if let metadata = self.metadata{
-//                    if  metadata{
-//                        params?["metadata"] = true
-//                    }
-//                }
             }
             if let types = self.types{
                 params  = [kRequestTypesKey:types,kRequestPlacesKey:placesUUID,"order":SearhOrder.newest.rawValue]
-//                if let metadata = self.metadata{
-//                    if  metadata{
-//                        params?["metadata"] = true
-//                    }
-//                }
             }
             return params
         default:

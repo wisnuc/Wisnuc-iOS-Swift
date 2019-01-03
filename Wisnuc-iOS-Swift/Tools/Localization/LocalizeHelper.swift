@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// 语言本地化-单例
 class LocalizeHelper: NSObject {
     struct Static
     {

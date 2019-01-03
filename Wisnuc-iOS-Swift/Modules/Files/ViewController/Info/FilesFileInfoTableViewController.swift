@@ -9,6 +9,8 @@
 import UIKit
 import MaterialComponents.MDCAppBar
 private let cellReuseIdentifier = "reuseIdentifier"
+
+//文件/文件夹详情页
 class FilesFileInfoTableViewController: BaseViewController {
     var model:EntriesModel?
     var location:String?

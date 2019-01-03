@@ -8,6 +8,7 @@
 
 import UIKit
 
+//用户微信绑定操作API
 class WechatInfoAPI: BaseRequest {
     override func requestURL() -> String {
         return "/wechat"

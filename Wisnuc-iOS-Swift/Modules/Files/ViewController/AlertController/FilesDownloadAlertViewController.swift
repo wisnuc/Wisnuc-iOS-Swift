@@ -12,6 +12,7 @@ import MaterialComponents.MaterialButtons
     func cancelButtonTap()
 }
 
+//下载提示弹窗
 class FilesDownloadAlertViewController: UIViewController {
     weak var delegate:FilesDownloadAlertViewControllerDelegate?
     @IBOutlet weak var titleLabel: UILabel!

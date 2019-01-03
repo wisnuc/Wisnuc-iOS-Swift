@@ -41,7 +41,6 @@ class SettingRootViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        appBar.headerViewController.headerView.isHidden = true
         if let controller = UIViewController.currentViewController(){
             if !(controller is SettingRootViewController){
                 return
@@ -87,23 +86,10 @@ class SettingRootViewController: BaseViewController {
                     }
                 })
             })
-            //                print(String(format: "%ld", Int(YYImageCache.shared().diskCache.totalCost())))
             DispatchQueue.main.async {
                 self.cacheLabel.text = sizeString(Int64(i))
             }
         }
-    }
-    
-    @objc func switchBtnHandleForSync(_ sender:UISwitch){
-//        AppUserService.currentUser?.autoBackUp = NSNumber.init(value: sender.isOn)
-//        AppUserService.synchronizedCurrentUser()
-//        autoBackupSwitchOn = sender.isOn
-//        if autoBackupSwitchOn {
-//            AppService.sharedInstance().startAutoBackup {
-//            }
-//        } else{
-//            AppService.sharedInstance().autoBackupManager.stop()
-//        }
     }
     
     @objc func switchBtnHandleForWIFISync(_ sender:UISwitch){
@@ -134,7 +120,7 @@ class SettingRootViewController: BaseViewController {
         self.navigationController?.pushViewController(secureStepVC, animated: true)
     }
     
-    
+    //设置头像
     func setAvatar(){
         let imageURL = URL.init(string: AppUserService.currentUser?.avaterURL ?? "")
         avatarImageView.setImageWith(imageURL, placeholder: UIImage.init(named: "avatar_placeholder_big.png"))
@@ -188,8 +174,6 @@ class SettingRootViewController: BaseViewController {
         headerTipsLabel.text = LocalizedString(forKey: "提高安全性还有1步")
         headerTipsLabel.font = UIFont.systemFont(ofSize: 18)
         headerTipsLabel.textColor = DarkGrayColor
-        
-//        headerTipsView.backgroundColor = .red
        
         headerTipsView.addSubview(headerTipsLabel)
         headerTipsView.addSubview(secureProgressView)
@@ -201,8 +185,7 @@ class SettingRootViewController: BaseViewController {
         secureProgressView.trackTintColor = Gray12Color
         secureProgressView.progress = 0.5
         headerView.addSubview(myInfoView)
-//        headerView.addSubview(headerTipsView)
-//        headerView.addSubview(secureHighView)
+
     }
     
     func getMail(complete:@escaping (_ isBind:Bool)->(),errorHandler:@escaping ()->()){
@@ -257,7 +240,6 @@ class SettingRootViewController: BaseViewController {
     
     lazy var headerView: UIView = {
         let view = UIView.init(frame: CGRect.zero)
-//        view.backgroundColor = .red
         return view
     }()
     
@@ -330,6 +312,7 @@ extension SettingRootViewController:UITableViewDelegate{
                 tab.setTabBarHidden(true, animated: true)
             }
         case 2:
+            //清除缓存
             SVProgressHUD.setDefaultStyle(.dark)
             SVProgressHUD.show(withStatus: LocalizedString(forKey: "正在清除缓存"))
             YYImageCache.shared().diskCache.removeAllObjects {
@@ -398,13 +381,6 @@ extension SettingRootViewController:UITableViewDataSource{
         case 3:
             cell.textLabel?.text = LocalizedString(forKey: "About")
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-//            let switchBtn = UISwitch.init()
-//            switchBtn.center = CGPoint.init(x: __kWidth - 16 - switchBtn.width/2, y: cell.height/2)
-//            switchBtn.isOn = wifiSwitchOn
-//            switchBtn.addTarget(self, action: #selector(switchBtnHandleForWIFISync(_ :)), for: UIControlEvents.valueChanged)
-//            if(!AppUserService.isUserLogin)
-//            {switchBtn.isEnabled = false}
-//            cell.contentView.addSubview(switchBtn)
         case 4:
             cell.textLabel?.text = LocalizedString(forKey: "Log out")
         default: break

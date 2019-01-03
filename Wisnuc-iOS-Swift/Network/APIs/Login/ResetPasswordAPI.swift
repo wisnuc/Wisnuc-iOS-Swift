@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 
+//忘记/修改密码
 class ResetPasswordAPI: BaseRequest {
     var mailTicket:String?
     var phoneTicket:String?

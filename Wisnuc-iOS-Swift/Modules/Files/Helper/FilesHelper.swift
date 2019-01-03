@@ -8,6 +8,7 @@
 
 import UIKit
 
+//文件选择操作
 class FilesHelper: NSObject {
     var selectFilesArray:Array<EntriesModel>?
     private static var privateShared : FilesHelper?

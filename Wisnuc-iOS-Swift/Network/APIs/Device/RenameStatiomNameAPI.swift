@@ -8,6 +8,7 @@
 
 import UIKit
 
+//更改station名称API
 class RenameStatiomNameAPI: BaseRequest {
     var name:String?
     init(name:String) {

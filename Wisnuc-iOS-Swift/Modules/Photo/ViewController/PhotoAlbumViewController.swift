@@ -39,14 +39,9 @@ class PhotoAlbumViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-//        prepareNavigationBar()
         self.view.addSubview(albumCollectionView)
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
-//        appBar.headerViewController.headerView.changeContentInsets { [weak self] in
-//            self?.appBar.headerViewController.headerView.trackingScrollView?.contentInset = UIEdgeInsets(top: (self?.appBar.headerViewController.headerView.trackingScrollView?.contentInset.top)! + kScrollViewTopMargin, left: 0, bottom: 0, right: 0)
-//        }
-//        self.albumCollectionView.reloadData()
+
     }
     
     deinit {
@@ -65,17 +60,14 @@ class PhotoAlbumViewController: BaseViewController {
         if let tabbar = retrieveTabbarController(){
             if tabbar.tabBarHidden {
                tabbar.setTabBarHidden(false, animated: true)
-//            tabbar.setTabBarHidden(false, animated: false)
             }
         }
         appBar.headerViewController.headerView.trackingScrollView = albumCollectionView
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
-//          self.albumCollectionView.reloadData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        self.albumCollectionView.reloadData()
     }
 
     func prepareNavigationBar(){
@@ -84,16 +76,11 @@ class PhotoAlbumViewController: BaseViewController {
     
     
     func getData(animation:Bool){
-//        if animation{
-//            ActivityIndicator.startActivityIndicatorAnimation()
-//        }
-        
         self.dataSource.removeAll()
         let collectionAlbumArray = Array<PhotoAlbumModel>.init()
         self.dataSource.append(collectionAlbumArray)
         DispatchQueue.global(qos: .userInitiated).async(execute: {
             self.allPhotoAlbumData()
-             print("接见接见军军军军军军军军军军军军军军军hhhaddsadadas军军军军军")
             self.allVideoAlbumData()
             self.getAllBackup()
         })
@@ -130,17 +117,8 @@ class PhotoAlbumViewController: BaseViewController {
     
     func getAlbumPhotoData(sclass:String,closure:@escaping (_ hash:String?,_ localAsset:PHAsset?,_ count:Int?,_ assets:[WSAsset]?)->()){
         let _ = AppAssetService.getNetAssets(callback: { (error, models) in
-//            ActivityIndicator.stopActivityIndicatorAnimation()
             if error == nil && models != nil{
                 let sortedModels = models!
-                
-//                let sortedModels = sortModels.sorted(by: { (firstObject, secondObject) -> Bool in
-//                    if let date1 = firstObject.createDate,let date2 = secondObject.createDate{
-//                        return date1 > date2
-//                    }else{
-//                        return false
-//                    }
-//                })
                 if let netTime =  sortedModels.first?.createDate?.timeIntervalSince1970,let localDate = PHAsset.latestAsset()?.creationDate{
                     let localTime = localDate.timeIntervalSince1970
                     if netTime > localTime{
@@ -293,11 +271,11 @@ class PhotoAlbumViewController: BaseViewController {
             dataSource[0] = array
         }
       
-//        self.photosVC = photosVC
- 
         DispatchQueue.main.async {
             self.albumCollectionView.reloadData()
         }
+        
+        //后台获取64*64缩略图并缓存
 //        let backgroundDispatchQueue = DispatchQueue.init(label: "64picDownload", qos: .background)
 //        backgroundDispatchQueue.async {
 //            autoreleasepool {
@@ -383,39 +361,10 @@ class PhotoAlbumViewController: BaseViewController {
         })
     }
     
-
-//    func getBackupDriveContent(placeUUID:String) {
-//        let types = kMediaTypes.joined(separator: ".")
-//        let request = GetMediaAPI.init( placesUUID:placeUUID,types:types)
-//        request.startRequestJSONCompletionHandler { (response) in
-//            if response.error == nil{
-//                let isLocalRequest = AppNetworkService.networkState == .local
-//                let result = (isLocalRequest ? response.value as? NSArray : (response.value as! NSDictionary)["data"]) as? NSArray
-//                if result != nil{
-//                    let rootArray = result
-//                    for (_ , value) in (rootArray?.enumerated())!{
-//                        if value is NSDictionary{
-//                            let dic = value as! NSDictionary
-//                            if let model = NetAsset.deserialize(from: dic) {
-//                                array.append(model)
-//                            }else{
-//                                return  complete(nil,BaseError(localizedDescription: ErrorLocalizedDescription.JsonModel.SwitchTOModelFail, code: ErrorCode.JsonModel.SwitchTOModelFail))
-//                            }
-//                        }
-//                    }
-//                    return complete(array,nil)
-//                }
-//            }else{
-//                return complete(nil,response.error)
-//            }
-//        }
-//    }
-//
     func setBackupData(models:[DriveModel]?){
         guard let driveModels = models else {
             return
         }
-//        self.albumCollectionView.mj_header.endRefreshing()
         var index:Int = 1
         for (i,model) in driveModels.enumerated(){
             guard let place = model.uuid else{
@@ -488,7 +437,6 @@ class PhotoAlbumViewController: BaseViewController {
     
     lazy var albumCollectionView: UICollectionView = {
         let collectionViewLayout = UICollectionViewFlowLayout.init()
-//        collectionViewLayout.itemSize
         let collectionView = UICollectionView.init(frame: CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight - TabBarHeight), collectionViewLayout: collectionViewLayout)
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -526,7 +474,6 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                     cell.countLabel.text = "0"
                 }
                 cell.setCoverImage(indexPath: indexPath, hash: model.coverThumbnilhash, asset: model.coverThumbnilAsset)
-//                ImageAsyncTaskObject.setCoverImage(indexPath: indexPath, delegate: self, hash: model.coverThumbnilhash, asset: model.coverThumbnilAsset)
             }
         }
         return cell
@@ -543,45 +490,12 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                 let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow,state:.normal)
                 if let dataSource = model.dataSource{
                     photosVC.sort(dataSource)
-                    //                    photosVC.assetDataSources = dataSource
                 }
                 photosVC.title = model.name
-                //                var count:Int = 0
                 if let netDataSource = model.netDataSource{
                     photosVC.netAssetDataSource = netDataSource
                 }
-                
                 self.navigationController?.pushViewController(photosVC, animated: true)
-                
-                
-//                DispatchQueue.global(qos: .default).async {
-//                    if let assets = AppAssetService.allAssets{
-//                    DispatchQueue.main.async {
-//                        photosVC.localAssetDataSources.append(contentsOf:assets)
-//                        photosVC.localDataSouceSort()
-//                    }
-//                     if
-//                    let requset = AppAssetService.getNetAssets { [weak self](error, netAssets) in
-//                        if let netAssets = netAssets,error == nil{
-//                            DispatchQueue.main.async {
-//                                photosVC.addNetAssets(assetsArr: netAssets)
-//                                count = netAssets.count + assets.count
-//                                let changeModel = model
-//                                changeModel.count = count
-//                                self?.dataSource[indexPath.section][indexPath.row] = changeModel
-//                                self?.albumCollectionView.reloadData()
-//                            }
-//                        }else{
-//                            DispatchQueue.main.async {
-//                                photosVC.localDataSouceSort()
-//                            }
-//                        }
-//                    }
-//
-//                    photosVC.requset = requset
-//                }
-//              }
-           
             }else if model.detailType == .video{
                 let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow,state: .normal, localDataSource: AppAssetService.allVideoAssets, netDataSource: model.dataSource as? Array<NetAsset>, video: true)
                 photosVC.title = model.name
@@ -595,25 +509,7 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                 }
               
                 photosVC.sort(dataSource)
-                
-//                DispatchQueue.global(qos: .default).async {
-//                    if let assets = {
-//                        DispatchQueue.main.async {
-//                            photosVC.localAssetDataSources.append(contentsOf:assets)
-//                            photosVC.localDataSouceSort()
-//                            self.getAllVideoAlbumData(sclass: SclassType.video.rawValue, closure: {[weak self](hash, asset,models) in
-//                                if let models = models{
-//                                    let changeModel = model
-//                                    changeModel.count = models.count + assets.count
-//                                    self?.dataSource[indexPath.section][indexPath.row] = changeModel
-//                                    self?.albumCollectionView.reloadData()
-//                                    photosVC.addNetAssets(assetsArr: models)
-//                                }
-//                            })
-//                        }
-//                    }
-//                }
-                  self.navigationController?.pushViewController(photosVC, animated: true)
+                self.navigationController?.pushViewController(photosVC, animated: true)
             }else
             if  model.detailType == .backup  && model.drive != nil{
                 let photosVC = PhotoRootViewController.init(style: NavigationStyle.whiteWithoutShadow, state: .normal, netDataSource: model.dataSource as? Array<NetAsset>, backupDriveUUID: model.drive)
@@ -621,17 +517,6 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
                 if let backUpDataSource = model.dataSource{
                      photosVC.sort(backUpDataSource)
                 }
-                
-//                let types = kMediaTypes.joined(separator: ".")
-//                self.searchAny(places: uuid, types: types) { [weak self](assets, error) in
-//                    if  error == nil && assets != nil{
-//                        let changeModel = model
-//                        changeModel.count = assets?.count
-//                        self?.dataSource[indexPath.section][indexPath.row] = changeModel
-//                        self?.albumCollectionView.reloadData()
-//                        photosVC.addNetAssets(assetsArr: assets!)
-//                    }
-//                }
                 self.navigationController?.pushViewController(photosVC, animated: true)
         }else{
             let model = dataSource[indexPath.section][indexPath.row]
@@ -647,7 +532,6 @@ extension PhotoAlbumViewController:UICollectionViewDelegate,UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headView:PhotoAlbumCollectionViewHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: reuseHeaderIdentifier, for: indexPath) as! PhotoAlbumCollectionViewHeaderView
-//        headView.setTitleLabelText(string: LocalizedString(forKey: "我的相册"))
         return headView
     }
 }
@@ -670,26 +554,6 @@ extension PhotoAlbumViewController :UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return  section == 0 ? UIEdgeInsets.init(top: 0, left: 16, bottom: 0, right: 16) : UIEdgeInsets.init(top: 16, left: 16, bottom: 0, right: 16)
     }
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        return section == 1 ? CGSize(width: __kWidth, height: 30 + MarginsWidth) : CGSize.zero
-//    }
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-//        return CGSize(width: cellContentSize, height: 8 + 14 + 8)
-//    }
-
-    
-}
-
-extension PhotoAlbumViewController:ImageAsyncTaskObjectDelegate{
-    func imageAsyncTaskObjectDidFinishAsyncTask(_ aTaskObject: ImageAsyncTaskObject?) {
-        if let indexPath = aTaskObject?.indexPath {
-            if let cell = albumCollectionView.cellForItem(at: indexPath) as? PhotoAlbumCollectionViewCell{
-                cell.imageView?.image = aTaskObject?.image
-            }
-        }
-    }
 }
 
 extension PhotoAlbumViewController:PhotoRootViewControllerDelegate{
@@ -702,24 +566,8 @@ extension PhotoAlbumViewController:PhotoRootViewControllerDelegate{
     }
 }
 
+//新建相册-旧设计
 extension PhotoAlbumViewController:NewAlbumViewControllerDelegate{
-//    func updateNewAlbumFinish(data: Dictionary<String, Any>) {
-//        var array = self.dataSource?[1]
-//        let albumModel = PhotoAlbumModel.init()
-//        albumModel.type = PhotoAlbumType.my
-//        albumModel.name = data["name"] as? String
-//        albumModel.describe = data["describe"] as? String
-//        albumModel.dataSource = data["photoData"] as? [WSAsset]
-//        if (array?.count)! == 0{
-//            array?.append(albumModel)
-//        }else{
-//            array?[self.index] = albumModel
-//        }
-//      
-//        self.dataSource?[1] = array!
-//        self.albumCollectionView.reloadData()
-//    }
-    
     func creatNewAlbumFinish(data: Dictionary<String, Any>) {
         var array = self.dataSource[1]
         let albumModel = PhotoAlbumModel.init()

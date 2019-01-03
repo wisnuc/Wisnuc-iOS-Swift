@@ -8,5 +8,6 @@
 
 import Foundation
 
+//备份临时文件夹
 public let JY_TMP_Folder = (NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first as NSString?)?.appendingPathComponent("JYTMP")
 

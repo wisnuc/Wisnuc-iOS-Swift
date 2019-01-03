@@ -20,10 +20,8 @@ import IQKeyboardManagerSwift
     func confirmButtonTap(_ sender: MDCFlatButton,type:InputAlertType ,inputText:String,theFilesName:String?)
 }
 
+//创建新文件夹确认弹窗
 class NewFolderViewController: UIViewController {
-//    override func willDealloc() -> Bool {
-//        return false
-//    }
     weak var delegate : NewFolderViewControllerDelegate?
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var inputTextField: MDCTextField!

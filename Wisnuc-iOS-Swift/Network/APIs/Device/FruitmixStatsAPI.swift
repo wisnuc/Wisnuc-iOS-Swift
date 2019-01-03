@@ -8,6 +8,7 @@
 
 import UIKit
 
+//获取磁盘使用情况
 class FruitmixStatsAPI: BaseRequest {
     override func requestURL() -> String {
         switch AppNetworkService.networkState {

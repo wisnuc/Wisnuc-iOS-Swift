@@ -16,6 +16,7 @@ enum StationUserActionType {
     case delete
 }
 
+//获取station下用户
 class StationUserAPI: BaseRequest {
     var type:StationUserActionType?
     var stationId:String?

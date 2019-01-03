@@ -8,6 +8,8 @@
 
 import UIKit
 import Alamofire
+
+//邮箱验证码Ticket
 class MailCodeTicket: BaseRequest {
     var mail:String?
     var code:String?

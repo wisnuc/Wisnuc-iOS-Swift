@@ -11,6 +11,8 @@ import UIKit
 @objc protocol SearchMoreBottomSheetVCDelegate {
     func searchMoreBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 }
+
+//我的云盘搜索栏 ...（更多） 按钮底部弹窗
 class FilesSearchMoreBottomSheetContentTableViewController: UITableViewController {
     weak var delegate:SearchMoreBottomSheetVCDelegate?
     override func viewDidLoad() {

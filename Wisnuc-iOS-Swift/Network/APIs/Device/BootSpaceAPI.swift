@@ -8,6 +8,8 @@
 
 import UIKit
 import Alamofire
+
+//获取磁盘使用情况
 class BootSpaceAPI: BaseRequest {
     var stationId:String?
     var address:String?

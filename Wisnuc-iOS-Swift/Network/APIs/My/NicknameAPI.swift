@@ -11,6 +11,7 @@
 import UIKit
 import Alamofire
 
+//用户昵称操作API
 class NicknameAPI: BaseRequest {
     var nickname:String?
     init(nickname:String) {

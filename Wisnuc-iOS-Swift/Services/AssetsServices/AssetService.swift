@@ -16,7 +16,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     lazy var allNetAssets:Array<NetAsset>? = Array.init()
     var assetChangeBlock: ((_ removeObjs: [WSAsset]?, _ insertObjs: [WSAsset]?) -> Void)?
     var allAssets:Array<WSAsset>?
-    
+    //获取所有本地视频
     var allVideoAssets:Array<WSAsset>?
     {
         get{
@@ -49,6 +49,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         print("\(className()) deinit")
     }
     
+//    获取所有网络照片
     func getNetAssets(callback:@escaping (_ error:Error?,_ assets:Array<NetAsset>?)->()) -> BaseRequest? {
         if AppUserService.currentUser?.userHome == nil{
             return nil
@@ -121,50 +122,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
     }
 
     
-    func getNetAssetsMetadata(callback:@escaping (_ error:Error?,_ assets:Array<NetAsset>?)->()) -> BaseRequest? {
-        if AppUserService.currentUser?.userHome == nil{
-            return nil
-        }
-        
-        var places = [String]()
-        if let userHome = AppUserService.currentUser?.userHome{
-            places.append(userHome)
-        }
-        
-        if let shareSpace = AppUserService.currentUser?.shareSpace{
-            places.append(shareSpace)
-        }
-        
-        if AppUserService.backupArray.count > 0 {
-            let array = AppUserService.backupArray.map({$0.uuid})
-            for uuid in array{
-                if let uuid = uuid{
-                    places.append(uuid)
-                }
-            }
-        }
-        let placesUUID = places.joined(separator: ".")
-        let types = kMediaTypes.joined(separator: ".")
-        let request = GetMediaAPI.init(placesUUID: placesUUID,types: types,metadata:true)
-        request.startRequestJSONCompletionHandler { [weak self] (response) in
-            if response.error == nil{
-               
-            }else{
-                if response.data != nil {
-                    let errorDict =  dataToNSDictionary(data: response.data!)
-                    if errorDict != nil{
-                        Message.message(text: errorDict!["message"] != nil ? errorDict!["message"] as! String :  (response.error?.localizedDescription)!)
-                    }else{
-                        let backToString = String(data: response.data!, encoding: String.Encoding.utf8) as String?
-                        //                        print(backToString ?? "error")
-                    }
-                }
-                callback(response.error,nil)
-            }
-        }
-        return request
-    }
-    
+//    检查User
     func checkAuth(callback:@escaping ((_ userAuth:Bool)->())){
         userAuth = false
         let status = PHPhotoLibrary.authorizationStatus()
@@ -189,7 +147,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         }
     }
     
-    
+//    Asset信息存入数据库
     func saveAsset(localId:String,digest:String){
         var oldAsset = self.getAsset(localId: localId)
         AppDBService.saveQueue.async {
@@ -214,15 +172,9 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         return asset
     }
     
-    
+//    本地照片Asset变化（增，删）
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         autoreleasepool {
-//            if let currentAssets = lastResult{
-//                var tmpDic = Dictionary<String,WSAsset>.init()
-//                for  asset in allAssets ?? [] {
-//                    tmpDic[asset.asset!.localIdentifier] = asset
-//                }
-                
                 var changeDic = Dictionary<String,Array<WSAsset>>.init()
                 
                 if lastResult != nil {

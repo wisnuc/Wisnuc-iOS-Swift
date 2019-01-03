@@ -120,7 +120,6 @@ class TransferTaskTableViewController: BaseViewController {
         if let uuid = model.uuid {
             DeleteTasksAPI.init(taskUUID: uuid).startRequestJSONCompletionHandler({ [weak self](response) in
                 if response.error == nil {
-                    //                        mainThreadSafe {
                     self?.taskDataSource?.removeAll(where: { (any) -> Bool in
                         if let anModel = any as? FilesTasksModel{
                             return anModel.uuid == uuid
@@ -129,7 +128,6 @@ class TransferTaskTableViewController: BaseViewController {
                         }
                     })
                     self?.tableView.reloadData()
-                    //                        }
                 }else{
                     Message.message(text: (response.error?.localizedDescription)!)
                 }
@@ -170,18 +168,6 @@ class TransferTaskTableViewController: BaseViewController {
         
        let bottomSheet = AppBottomSheetController.init(contentViewController: transferTaskBottomSheetContentVC)
         var disables:[Int] = []
-//        case waiting
-//        case running
-//        case suspend
-//        case cancel
-//        case failed
-//        case remove
-//        case completed
-//
-//        // 预操作标记，解决操作运行中的任务是异步回调而导致的问题
-//        case preSuspend
-//        case preCancel
-//        case preRemove
         if !(self.downloadManager?.tasks.contains(where: {$0.status == .waiting || $0.status == .suspend || $0.status == .failed || $0.status == .cancel }))!{
             disables.append(0)
         }
@@ -237,12 +223,6 @@ class TransferTaskTableViewController: BaseViewController {
         vc.delegate = self
         return vc
     }()
-    
-//    lazy var documentController: UIDocumentInteractionController = {
-//       let doucumentController = UIDocumentInteractionController.init()
-//        doucumentController.delegate = self
-//        return doucumentController
-//    }()
 }
 
  // MARK: - Table view data source
@@ -283,8 +263,6 @@ extension TransferTaskTableViewController:UITableViewDataSource{
             cell.progress.isHidden = false
             cell.progress.progressTotal = UInt(progressTask.progress.totalUnitCount)
             cell.progress.progressCounter = UInt(progressTask.progress.completedUnitCount)
-            //        print("😁\(task.progress.totalUnitCount)")
-            //        print("😈\(task.progress.completedUnitCount)")
             cell.progress.label.text = progressTask.speed.tr.convertSpeedToString()
             cell.updateProgress(task: downloadTask!)
         }
@@ -354,21 +332,14 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                 let model = any as? FilesTasksModel
                 DeleteTasksAPI.init(taskUUID: (model?.uuid!)!).startRequestJSONCompletionHandler({ (response) in
                     if response.error == nil {
-//                        mainThreadSafe {
-                            self?.taskDataSource?.remove(at: index)
-                            tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-//                        }
+                        self?.taskDataSource?.remove(at: index)
+                        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
                     }else{
                         Message.message(text: (response.error?.localizedDescription)!)
                     }
                 })
             }
         }
-//        deleteRowAction.backgroundColor = UIColor.red
-//        let priorityRowAction = UITableViewRowAction.init(style: UITableViewRowActionStyle.default, title: LocalizedString(forKey: "priority_transfer")) { (tableViewForAction, indexForAction) in
-//
-//        }
-//        priorityRowAction.backgroundColor = UIColor.purple
         return [deleteRowAction]
     }
     
@@ -425,10 +396,8 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                         cell.progress.isHidden = false
                         cell.progress.progressTotal = UInt(progressTask.progress.totalUnitCount)
                         cell.progress.progressCounter = UInt(progressTask.progress.completedUnitCount)
-                        //        print("😁\(task.progress.totalUnitCount)")
-                        //        print("😈\(task.progress.completedUnitCount)")
+
                         cell.progress.label.text = progressTask.speed.tr.convertSpeedToString()
-//                        cell.updateProgress(task: downloadTask!)
                     }
                 case .failed:
                     image = #imageLiteral(resourceName: "files_error.png")
@@ -445,9 +414,8 @@ extension TransferTaskTableViewController:UITableViewDelegate{
                 }
                 .success({ [weak cell] (task) in
                     guard let cell = cell as? TransferTaskTableViewCell else { return }
-                    //                cell.controlButton.setImage(#imageLiteral(resourceName: "suspend"), for: .normal)
+                
                     if task.status == .suspend {
-//                         cell.suspendButton.setImage(#imageLiteral(resourceName: "task_suspend.png"), for: .normal)
                         
                     }
                     if task.status == .completed {

@@ -64,7 +64,7 @@ class BaseRequest: NSObject{
         return ""
     }
     
-    
+    //请求返回JSON
     func startRequestJSONCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler) {
         networkState { (isConnect) in
             if isConnect{
@@ -87,6 +87,7 @@ class BaseRequest: NSObject{
         }
     }
     
+   //请求返回Data
     func startRequestDataCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseDataCompletionHandler) {
         networkState { (isConnect) in
             if isConnect{
@@ -98,6 +99,7 @@ class BaseRequest: NSObject{
         }
     }
     
+    //请求返回String
     func startRequestStringCompletionHandler(_ requestCompletionHandler:@escaping NetworkResonseStringCompletionHandler) {
         networkState { (isConnect) in
             if isConnect{
@@ -109,6 +111,7 @@ class BaseRequest: NSObject{
         }
     }
     
+    //FormData请求返回JSON
     func startFormDataRequestJSONCompletionHandler(_ queue: DispatchQueue? = nil ,multipartFormData:@escaping (MultipartFormData) -> Void,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler,errorHandler:@escaping FormDataErrorHandler) {
         networkState { (isConnect) in
             if isConnect{
@@ -120,6 +123,7 @@ class BaseRequest: NSObject{
         }
     }
     
+    //upload请求返回JSON
     func uploadRequestJSONCompletionHandler(_ queue: DispatchQueue? = nil ,requestData:Data,_ requestCompletionHandler:@escaping NetworkResonseJSONCompletionHandler) {
         networkState { (isConnect) in
             if isConnect{
@@ -131,6 +135,7 @@ class BaseRequest: NSObject{
         }
     }
     
+    //检查网络状态
     func networkState(_ closure:@escaping (_ isConnected:Bool)->()){
         NetworkStatus.getNetworkStatus { (status) in
             if status == .Disconnected{

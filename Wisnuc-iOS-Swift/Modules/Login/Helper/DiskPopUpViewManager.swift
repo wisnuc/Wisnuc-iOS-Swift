@@ -14,6 +14,7 @@ private let TableViewCellHeight:CGFloat = 112/2
 private let TableViewCellIdentifer = "celled"
 private let TableViewHeaderHeight:CGFloat = 80/2
 
+//旧版搜索设备弹窗（已废弃）
 class DiskPopUpViewManager: NSObject {
     var popupController:CNPPopupController?
     var diskArray:Array<DiskModel>?
@@ -74,24 +75,15 @@ class DiskPopUpViewManager: NSObject {
              let attributedString = NSMutableAttributedString.init(string: text)
              let strRange = NSRange.init(location: 0, length: attributedString.length)
              attributedString.setUnderlineStyle(NSUnderlineStyle.styleSingle, range: strRange)
-//             attributedString.addAttributes([], range: strRange)
              attributedString.setColor(LightGrayColor, range: strRange)
              attributedString.setUnderlineColor(LightGrayColor, range: strRange)
-//             [str addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:strRange];
-//             [_awardDisplayBtn setAttributedTitle:str forState:UIControlStateNormal];
              let leftButton = UIButton.init(frame: CGRect.init(x: MarginsSoFarWidth, y: 0, width: labelWidthFrom(title: text, font: SmallTitleFont) + 4 , height: 72/2 ))
              leftButton.setAttributedTitle(attributedString, for: UIControlState.normal)
              leftButton.setTitleColor(LightGrayColor, for: UIControlState.normal)
-//             leftButton.setTitle(text, for: UIControlState.normal)
              leftButton.titleLabel?.font = SmallTitleFont
              
              leftButton.addTarget(self, action: #selector(reinitButtonClick(_ :)), for: UIControlEvents.touchUpInside)
-//             let buttonLine = UIView.init(frame: CGRect.init(x: 0, y: 5, width: (leftButton.titleLabel?.width)!, height: 0.5))
-//             buttonLine.backgroundColor = LightGrayColor
-//             leftButton.addSubview(buttonLine)
              bgView.addSubview(leftButton)
-             
-             
              contentArray.append(popUpTableView)
              contentArray.append(line)
              contentArray.append(bgView)

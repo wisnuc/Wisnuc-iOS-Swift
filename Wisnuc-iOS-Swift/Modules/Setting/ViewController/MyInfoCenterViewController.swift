@@ -102,7 +102,6 @@ class MyInfoCenterViewController: BaseViewController {
     
     lazy var headerView: UIView = {
         let view = UIView.init(frame: CGRect.zero)
-//        view.backgroundColor = .red
         return view
     }()
 }
@@ -154,10 +153,7 @@ extension MyInfoCenterViewController:UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
-//        if cell == nil {
         let  cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: identifier)
-//        }
         switch indexPath.row {
             
         case 0:

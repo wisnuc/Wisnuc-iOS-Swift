@@ -8,6 +8,7 @@
 
 import UIKit
 
+//Random(用来本地播放视频)
 class MediaRandomAPI: BaseRequest {
     var  photoHash:String?
     init(hash: String) {

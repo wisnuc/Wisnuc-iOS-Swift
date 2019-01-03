@@ -15,6 +15,7 @@ enum  DriveOptionAPIType {
     case delete
 }
 
+//Drive 操作API
 class DriveOptionAPI: BaseRequest {
     var type:DriveOptionAPIType?
     var drive:String?

@@ -54,9 +54,6 @@ enum SortType:Int64{
 }
 
 class FilesRootCollectionViewController: MDCCollectionViewController {
-//    override func willDealloc() -> Bool {
-//        return false
-//    }
     weak var delegate:FilesRootCollectionViewControllerDelegate?
     var reusableView:UICollectionReusableView!
     var sortType:SortType?
@@ -72,7 +69,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
     var dataSource:Array<Any>?{
         didSet{
-//           self.collectionView?.reloadData()
         }
     }
     
@@ -104,14 +100,8 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                 break
             }
             
-//            self.collectionView?.performBatchUpdates({
-////               self.collectionView?.alpha = 0
-//            }, completion: { (finished) in
-//                if finished {
-//                 self.collectionView?.alpha = 1
-                  self.collectionView?.reloadData()
-//                }
-//            })
+            self.collectionView?.reloadData()
+
         }
     }
     
@@ -146,18 +136,9 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         // Do any additional setup after loading the view.
     
         self.styler.beginCellAppearanceAnimation()
-        
-//        let longPressGesture = UILongPressGestureRecognizer.init(target: self, action: #selector(longPressAction(_ :)))
-        
-//        longPressGesture.minimumPressDuration = 0.3
-//        longPressGesture.delaysTouchesBegan = true
-//        collectionView?.addGestureRecognizer(longPressGesture)
         isSelectModel = Bool(truncating: (FilesStatus.normal).rawValue as NSNumber)
         self.collectionView?.allowsMultipleSelection = true
         self.collectionView?.allowsSelection = true
-        
-//       self.collectionView?.mj_header.beginRefreshing()
-//        ViewTools.automaticallyAdjustsScrollView(scrollView: self.collectionView!, viewController: self)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -167,9 +148,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        defaultNotificationCenter().addObserver(forName: NSNotification.Name.Cell.SelectNotiKey, object: self, queue: OperationQueue.main) { [weak self] (sender) in
-//
-//        }
         defaultNotificationCenter().addObserver(self, selector: #selector(cellNotification(_ :)), name: NSNotification.Name.Cell.SelectNotiKey, object: nil)
     }
 
@@ -187,6 +165,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         }
     }
     
+//    云盘下查看大图
     func getBigImageVC(data:Array<EntriesModel>,index:Int,indexPath:IndexPath) -> UIViewController{
         let vc = WSShowBigimgViewController.init()
         vc.delegate = self
@@ -202,7 +181,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         }
         return vc
     }
-    
+//  排序
     @objc func sequenceButtonTap(_ sender: UIButton){
         if let delegateOK = self.delegate {
             delegateOK.sequenceButtonTap(sender)
@@ -233,6 +212,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         self.collectionView?.reloadData()
     }
 
+    //侧滑指示器观察
     func indictorObserve(){
         isDecelerating = true
         if self.showIndicator {
@@ -519,6 +499,7 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
         }
     }
     
+//    header
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if (kind == UICollectionElementKindSectionHeader) {
             let header:CommonCollectionReusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: reuseIdentifierHeader, for: indexPath) as! CommonCollectionReusableView
@@ -673,10 +654,6 @@ class FilesRootCollectionViewController: MDCCollectionViewController {
                         }
                         return false
                     }
-                    //                for (i,value) in sectionArray.enumerated(){
-                    //                    let modelIndexPath = IndexPath(item: i, section: indexPath.section)
-                    //                    value.indexPath = modelIndexPath
-                    //                }
                     model.indexPath = IndexPath(row: indexPath.row, section: indexPath.section)
                     let vc = self.getMatchVC(model: model,array: resultArray,indexPath:indexPath)
                     

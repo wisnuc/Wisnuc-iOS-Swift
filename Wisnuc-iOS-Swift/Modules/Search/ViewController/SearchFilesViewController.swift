@@ -88,7 +88,7 @@ class SearchFilesViewController: BaseViewController {
         searchTextField.text = nil
         mainTableView.reloadData()
         // 开启返回手势
-           self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     func setCellType(){
@@ -96,6 +96,7 @@ class SearchFilesViewController: BaseViewController {
         mainTableView.reloadData()
     }
     
+    //搜索请求
     func searchAny(text:String? = nil,types:String? = nil,sClass:String? = nil,complete:@escaping (_ error:Error?)->()){
         var array:Array<EntriesModel> =  Array.init()
         var order:String?
@@ -136,11 +137,6 @@ class SearchFilesViewController: BaseViewController {
                     for (_ , value) in (rootArray?.enumerated())!{
                         if value is NSDictionary{
                             let dic = value as! NSDictionary
-//
-//                            if let model = EntriesModel.deserialize(from: dic) {
-//                                array.append(model)
-//                            }
-                            
                             do{
                                 let data = jsonToData(jsonDic: dic)
                                 let model = try JSONDecoder().decode(EntriesModel.self, from: data!)
@@ -207,6 +203,7 @@ class SearchFilesViewController: BaseViewController {
         headerViewTitleLabel.removeFromSuperview()
         requests?.removeAll()
     }
+    
     
     func downloadRequestURL(model:EntriesModel) -> String?{
         guard let place = model.place else {
@@ -637,7 +634,6 @@ extension SearchFilesViewController:DZNEmptyDataSetSource{
 
 extension SearchFilesViewController:DZNEmptyDataSetDelegate{
     func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
-//        self.prepareData()
     }
     
     func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
@@ -666,8 +662,7 @@ extension SearchFilesViewController:FilesBottomSheetContentVCDelegate{
         guard let dir = filesModel.pdir else {
             return
         }
-//        let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
-//        let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
+
         let filesInfoVC = FilesFileInfoTableViewController.init(style: NavigationStyle.imagery,model: filesModel,driveUUID:drive,dirUUID: dir,location:self.title)
         self.navigationController?.pushViewController(filesInfoVC, animated: true)
     }

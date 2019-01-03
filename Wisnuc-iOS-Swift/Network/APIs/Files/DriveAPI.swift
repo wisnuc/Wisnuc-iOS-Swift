@@ -14,6 +14,7 @@ enum  DrivesAPIType {
     case creatPublic
 }
 
+//Drive相关操作
 class DriveAPI: BaseRequest {
     var type:DrivesAPIType?
     var ouser:User?

@@ -12,6 +12,7 @@ import UIKit
     func conflictAction(action:String?)
 }
 
+//文件冲突确认弹窗
 class FilesConflictAlertViewController: UIViewController {
     weak var delegate:FilesConflictAlertViewControllerDelegate?
     let identifier = "celled"

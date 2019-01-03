@@ -14,10 +14,9 @@ import UIKit
     func folderButtonTap(_ sender: UIButton)
     func uploadButtonTap(_ sender: UIButton)
 }
+
+//我的云盘搜索栏 + 按钮底部弹窗
 class FilesFABBottomSheetDisplayViewController: UIViewController {
-//    override func willDealloc() -> Bool {
-//        return false
-//    }
     weak var delegate:FABBottomSheetDisplayVCDelegte?
     @IBOutlet weak var folderButton: UIButton!
     @IBOutlet weak var uploadButton: UIButton!

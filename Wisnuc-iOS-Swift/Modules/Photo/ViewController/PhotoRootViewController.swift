@@ -26,9 +26,6 @@ enum PhotoRootViewControllerState{
 }
 
 class PhotoRootViewController: BaseViewController {
-//    override func willDealloc() -> Bool {
-//        return false
-//    }
     weak var delegate:PhotoRootViewControllerDelegate?
     var driveUUID:String?
     var requset:BaseRequest?
@@ -111,19 +108,11 @@ class PhotoRootViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        ActivityIndicator.startActivityIndicatorAnimation()
         prepareCollectionView()
         prepareNavigationBar()
-//        prepareSearchBar()
-//        self.sort(localAssetDataSources)
-//        self.photoCollcectionViewController.dataSource = assetDataSources
-//        view.addSubview(self.fabButton)
         self.photoCollcectionViewController.collectionView?.mj_header = MDCFreshHeader.init(refreshingBlock: { [weak self] in
             self?.reloadAssetData()
         })
-        
-       
-//        self.timer?.fire()
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
         NotificationCenter.default.addObserver(self, selector: #selector(assetDidChangeHandle(_:)), name: NSNotification.Name.Change.AssetChangeNotiKey, object: nil)
         self.photoCollcectionViewController.pollingCallback = { [weak self] (stop) in
@@ -155,6 +144,7 @@ class PhotoRootViewController: BaseViewController {
         super.didReceiveMemoryWarning()
     }
     
+    //定时器
     func startPollingTimerSet(){
         stopPollingTimerSet()
         self.timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
@@ -234,20 +224,12 @@ class PhotoRootViewController: BaseViewController {
       
     }
     
+    //    重新获取所有照片
     func reloadAllAssetData(){
-      
         let request = AppAssetService.getNetAssets { [weak self] (error, assetDataSource) in
             if error == nil{
-              DispatchQueue.global(qos: .background).async {
+                DispatchQueue.global(qos: .background).async {
                     if let assetDataSource = assetDataSource{
-                        //                    var replaceDataSource = assetDataSource
-                        //                    for asset in assetDataSource{
-                        //                        if let netAsset = self?.netAssetDataSource.first(where: {$0.name = asset.name && $0.uuid = asset.uuid && $0.fmhash = asset.fmhash && $0.pdir == asset.pdir && $0.mtime == asset.mtime && $0.metadata?.date == asset.metadata?.date}){
-                        //                            replaceDataSource.removeAll(where: {$0.name == asset.name && $0.uuid == asset.uuid && $0.fmhash == asset.fmhash && $0.pdir == asset.pdir && $0.mtime == asset.mtime && $0.metadata?.date == asset.metadata?.date})
-                        //                        }
-                        //                        self?.netAssetDataSource.
-                        //                    }
-                        
                         let requsetHashArray = assetDataSource.map({$0.fmhash})
                         guard let currentHashArray = self?.netAssetDataSource.map({$0.fmhash}) else {
                             return
@@ -271,54 +253,21 @@ class PhotoRootViewController: BaseViewController {
                             print("😈😈😈😈😈😈😈😈😈😈")
                             self?.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
                             if let  allAssets = AppAssetService.allAssets{
-                             self?.localAssetDataSources.append(contentsOf:allAssets)
+                                self?.localAssetDataSources.append(contentsOf:allAssets)
                             }
                             
                             self?.sort(pollingSort:true,self?.merge() ?? Array<WSAsset>.init())
-                            //                        self?.addNetAssets(assetsArr: assetArray)
-                            //                        for asset in assetArray{
-                            //                            for (i,assetDataArray) in allDataSource.enumerated(){
-                            //                                 var replaceArray = assetDataArray
-                            //                                if Calendar.current.isDate(asset.createDateB!, inSameDayAs: (assetDataArray.first?.createDateB)!){
-                            //                                    replaceArray.append(asset)
-                            //                                    self?.assetDataSources[i] = replaceArray
-                            //                                }else{
-                            //
-                            //                                }
-                            //                            }
-                            //                        }
-                            
-                            //                        self?.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
-                            //                        self?.sort(self?.merge() ?? Array<WSAsset>.init())
-                            
-                            //                        DispatchQueue.main.async {
-                            //                            self?.photoCollcectionViewController.dataSource = self?.assetDataSources
-                            //                            self?.photoCollcectionViewController.collectionView?.reloadData()
-                            //                        }
                         }
-                        //                    let assetArray = Array<WSAsset>.init()
-                        //                    for asset in assetDataSource{
-                        //                        let array =  self?.netAssetDataSource.filter({$0.fmhash == asset.fmhash && $0.uuid == asset.fmhash && $0.pdir == asset.pdir && $0.name == asset.name && $0.mtime == asset.mtime})
-                        //                        assetArray.append(contentsOf: array)
-                        //                    }
-                        
                     }
-                
-                
-                self?.isSelectMode = self?.isSelectMode
-                    }
-            }else{
-                
+                    
+                    self?.isSelectMode = self?.isSelectMode
+                }
             }
-           
-            //            self?.photoCollcectionViewController.collectionView?.mj_header.endRefreshing()
-            //            self?.photoCollcectionViewController.collectionView?.reloadData()
         }
-              self.requset = request
-     
-      
+        self.requset = request
     }
     
+//    重新获取网络视频
     func reloadVideoAssetData(){
         DispatchQueue.global(qos: .background).async {
             PhotoHelper.searchAny(sClass:SclassType.video.rawValue, complete: { (videoAssets, error) in
@@ -354,6 +303,7 @@ class PhotoRootViewController: BaseViewController {
         }
     }
     
+//    重新获取备份相册照片
     func relaodBackUpAssetData(){
         guard let uuid = self.backupDriveUUID else {
             return
@@ -431,7 +381,6 @@ class PhotoRootViewController: BaseViewController {
         self.style = .select
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "close_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(leftBarButtonItemTap(_:)))
         let shareButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "share_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightShareBarButtonItemTap(_:)))
-//        let addButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "plus_white.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightAddBarButtonItemTap(_:)))
         let deleteButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "delete_photo.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(rightDeleteBarButtonItemTap(_:)))
         self.navigationItem.rightBarButtonItems = [deleteButtonItem,shareButtonItem]
     }
@@ -500,10 +449,6 @@ class PhotoRootViewController: BaseViewController {
                     
                 })
             }
-//            while presentingViewController.presentingViewController {
-//                presentingViewController = presentingViewController.presentingViewController
-//            }
-
             return
         }
         self.isSelectMode = false
@@ -526,29 +471,15 @@ class PhotoRootViewController: BaseViewController {
     }
     
     @objc func moreButtonTap(_ sender:IconButton){
-//        let bottomSheet = AppBottomSheetController.init(contentViewController: self.filesSearchMoreBottomVC)
-//        bottomSheet.trackingScrollView = filesSearchMoreBottomVC.tableView
-//        self.present(bottomSheet, animated: true, completion: {
-//        })
+
     }
     
-//    @objc func fabButtonDidTap(_ sender:MDCFloatingButton){
-//        self.fabButton.collapse(true) { [weak self] in
-//            let fabBottomVC = FilesFABBottomSheetDisplayViewController()
-//            fabBottomVC.preferredContentSize = CGSize(width: __kWidth, height: 148.0)
-//            fabBottomVC.transitioningDelegate = self?.transitionController
-//            fabBottomVC.delegate =  self
-//            let bottomSheet = AppBottomSheetController.init(contentViewController: fabBottomVC)
-//            bottomSheet.delegate = self
-//            self?.present(bottomSheet, animated: true, completion: {
-//            })
-//        }
-//    }
-    
+//    polling 数据
     @objc func timerAction(){
         self.pollingAssetData()
     }
     
+    //照片删除
     func deleteSelectPhotos(photos:[WSAsset]){
         self.isSelectMode = false
         self.photoCollcectionViewController.isSelectMode = false
@@ -583,14 +514,14 @@ class PhotoRootViewController: BaseViewController {
             self.photoCollcectionViewController.collectionView?.reloadData()
         }
     }
-//
+
+    //照片删除
     func photoRemoveOptionRequest(photos:[NetAsset]){
         var index:Int = 0
         ActivityIndicator.startActivityIndicatorAnimation()
         for photo in photos {
             self.photoRemoveOptionRequest(photo: photo) { [weak self] in
                 index = index + 1
-//                print("🌶\(index)")
                 if index == photos.count{
                     ActivityIndicator.stopActivityIndicatorAnimation()
                     self?.photoCollcectionViewController.dataSource  = self?.assetDataSources
@@ -699,6 +630,7 @@ class PhotoRootViewController: BaseViewController {
         }
     }
     
+    //通过时间筛选排序照片
     func sort(
         pollingSort:Bool = false, _ assetsArray:Array<WSAsset>){
         autoreleasepool {
@@ -709,11 +641,6 @@ class PhotoRootViewController: BaseViewController {
                   let s = CFAbsoluteTimeGetCurrent();
                 array = array.filter({$0.createDate != nil})
                 array.sort(by: {$0.createDate!>$1.createDate!})
-//                array.sort(by: { (item1, item2) -> Bool in
-//                    return item1.createDate! >  item2.createDate!{
-////                        return t1 > t2
-//                })
-    
                 let l = CFAbsoluteTimeGetCurrent();
                 print("😆\(l - s)")
             self.sortedAssetsBackupArray = array
@@ -764,17 +691,16 @@ class PhotoRootViewController: BaseViewController {
                     self.assetDataSources = photoGroupArray as! Array<Array<WSAsset>>
                     self.photoCollcectionViewController.dataSource = self.assetDataSources
                     UIView.performWithoutAnimation({
-                        //刷新界面
+                        //无动画刷新界面
                         self.photoCollcectionViewController.collectionView?.reloadData()
                     })
-                   
-//                    CATransaction.commit()
                     self.photoCollcectionViewController.sortedAssetsBackupArray = self.sortedAssetsBackupArray
                 }
             }
         }
     }
     
+//    本地和网络照片合并
     func merge()->Array<WSAsset> {
     let start = CFAbsoluteTimeGetCurrent()
     let localHashs = NSMutableArray.init(capacity: 0)
@@ -802,31 +728,20 @@ class PhotoRootViewController: BaseViewController {
     }
     
     func addNetAssets(assetsArr:Array<NetAsset>) {
-//        DispatchQueue.global(qos: .default).async {
-           self.netAssetDataSource = assetsArr
-            self.sort(self.merge())
-//            ActivityIndicator.stopActivityIndicatorAnimation()
-//            DispatchQueue.main.async {
-        
-//            }
-//        }
+        self.netAssetDataSource = assetsArr
+        self.sort(self.merge())
     }
     
     
     func localDataSouceSort() {
         self.sort(self.merge())
-//        ActivityIndicator.stopActivityIndicatorAnimation()
     }
     
     func prepareCollectionView(){
-     
         self.addChildViewController(photoCollcectionViewController)
         photoCollcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height)
         self.view.addSubview(photoCollcectionViewController.view)
         photoCollcectionViewController.didMove(toParentViewController: self)
-        // self.view.top + searchBar.bottom + MarginsCloseWidth/2
-//        let topEdgeInsets:CGFloat = kCurrentSystemVersion >= 11.0 ? MDCAppNavigationBarHeight + MarginsCloseWidth/2-20 : MDCAppNavigationBarHeight + MarginsCloseWidth/2
-//        photoCollcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(topEdgeInsets, 0, 0 , 0)
     }
     
     private func prepareSearchBar() {
@@ -842,7 +757,6 @@ class PhotoRootViewController: BaseViewController {
     
     lazy var photoCollcectionViewController : PhotoCollectionViewController = { [weak self] in
         let layout = MDCCollectionViewFlowLayout()
-       //     layout.itemSize = CGSize(width: size.width, height:CellHeight)
         let collectVC = PhotoCollectionViewController.init(collectionViewLayout: layout)
         collectVC.collectionView?.emptyDataSetSource = self
         collectVC.collectionView?.emptyDataSetDelegate = self
@@ -877,23 +791,6 @@ class PhotoRootViewController: BaseViewController {
         let array:Array<Array<WSAsset>> = Array.init()
         return array
     }()
-    
-//    lazy var fabButton: MDCFloatingButton = {
-//        let plusImage = #imageLiteral(resourceName: "Plus")
-//        let buttonWidth:CGFloat = 56
-//        let defaultFloatingButton = MDCFloatingButton.init(frame: CGRect.init(x: __kWidth - 30 - buttonWidth, y: __kHeight - TabBarHeight - 16 - buttonWidth, width: buttonWidth, height: buttonWidth))
-//
-//        let plusImage36 = UIImage(named: "plus_white_36", in: Bundle(for: type(of: self)),
-//                                  compatibleWith: traitCollection)
-//
-//        //        defaultFloatingButton.sizeToFit()
-//        //        defaultFloatingButton.translatesAutoresizingMaskIntoConstraints = false
-//        defaultFloatingButton.setImage(plusImage, for: .normal)
-//        let mdcColorScheme = MDCButtonScheme.init()
-//        MDCButtonColorThemer.apply(appDelegate.colorScheme, to: defaultFloatingButton)
-//        defaultFloatingButton.addTarget(self, action: #selector(fabButtonDidTap(_ :)), for: UIControlEvents.touchUpInside)
-//        return defaultFloatingButton
-//    }()
     
     lazy var transitionController: MDCDialogTransitionController = {
         let controller = MDCDialogTransitionController.init()
@@ -931,7 +828,6 @@ extension PhotoRootViewController:SearchBarDelegate{
 
 extension PhotoRootViewController:TextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
-//        self.enterSearch()
     }
 }
 
@@ -954,21 +850,5 @@ extension PhotoRootViewController:FABBottomSheetDisplayVCDelegte{
 extension PhotoRootViewController:MDCBottomSheetControllerDelegate{
     func bottomSheetControllerDidDismissBottomSheet(_ controller: MDCBottomSheetController) {
         
-    }
-}
-
-extension Array {
-    var decompose : (head: Element, tail: [Element])? {
-        return (count > 0) ? (self[0], Array(self[1..<count])) : nil
-    }
-}
-
-func qsortDemo(input: [WSAsset]) -> [WSAsset] {
-    if let (pivot, rest) = input.decompose {
-        let lesser = rest.filter { $0.createDate! < pivot.createDate!  }//这里是小于于pivot基数的分成一个数组
-        let greater = rest.filter { $0.createDate! >= pivot.createDate!}//这里是大于等于pivot基数的分成一个数组
-        return qsortDemo(input: lesser) + [pivot] + qsortDemo(input: greater)//递归 拼接数组
-    } else {
-        return []
     }
 }

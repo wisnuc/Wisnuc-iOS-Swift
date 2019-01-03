@@ -356,6 +356,7 @@ extension LoginViewController:UINavigationControllerDelegate{
 }
 
 extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
+//    选定设备后登录操作
     func loginFinish(user: User, stationModel: Any, stationModels: [Any]?) {
             self.startActivityIndicator()
             let model = stationModel as! StationsInfoModel

@@ -10,6 +10,7 @@
 import UIKit
 import Alamofire
 
+//用户头像操作API
 class AvatarAPI: BaseRequest {
     override func requestURL() -> String {
         return "/user/avatar"

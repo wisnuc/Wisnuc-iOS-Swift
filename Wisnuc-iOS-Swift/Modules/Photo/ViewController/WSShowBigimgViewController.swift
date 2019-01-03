@@ -133,11 +133,6 @@ class WSShowBigimgViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-//        if (self.getCurrentPageModel()!.type == .Image && self.getCurrentPageModel()?.type != .NetImage) {
-//            rightImageView.isHidden = true
-//        }else if self.getCurrentPageModel()?.type == .NetImage {
-//            rightImageView.isHidden = false
-//        }
     }
     
     override var prefersStatusBarHidden: Bool{
@@ -166,8 +161,6 @@ class WSShowBigimgViewController: UIViewController {
         }
        
         leftNaviButton.setEnlargeEdgeWithTop(5, right: 5, bottom: 5, left: 5)
-
-//        titleLabel.text =  [NSString stringWithFormat:@"%ld/%ld", _currentPage, self.models.count];
         naviView.addSubview(titleLabel)
         
         titleLabel.snp.makeConstraints { [weak self] (make) in
@@ -191,21 +184,6 @@ class WSShowBigimgViewController: UIViewController {
             make.right.equalTo((self?.moreNaviButton.snp.left)!).offset(-MarginsWidth)
             make.size.equalTo(CGSize(width: 24, height: 24))
         }
-        
-       
-   
-//        naviView.addSubview(rightImageView)
-//
-//        rightImageView.snp.makeConstraints { [weak self] (make) in
-//            make.centerY.equalTo((self?.titleLabel.snp.centerY)!)
-//            make.right.equalTo((self?.rightNaviButton.snp.left)!).offset(-16)
-//            make.size.equalTo(CGSize(width: 24, height: 24))
-//        }
-        
-//        if (self.getCurrentPageModel()?.type != .NetImage ) {
-//            rightImageView.isHidden = true
-//        }
-        
         
         self.view.addSubview(naviView)
     }
@@ -257,7 +235,7 @@ class WSShowBigimgViewController: UIViewController {
         }
         
         if netAssets.count > 0{
-//            photoRemoveOptionRequest(photos:netAssets)
+
         }
         
         if localAssets.count > 0{
@@ -275,7 +253,6 @@ class WSShowBigimgViewController: UIViewController {
                     self.titleLabel.text = "\(self.currentPage)/\(String(describing: (self.models?.count)!))"
                     self.stopActivityIndicator()
                     self.collectionView.reloadData()
-//                    self.collectionView.scrollToItem(at:  IndexPath(item: self.currentPage + 1, section: 0), at: UICollectionViewScrollPosition.centeredVertically, animated: true)
                 }
             }
         }
@@ -397,28 +374,18 @@ class WSShowBigimgViewController: UIViewController {
                 }
             }
         }
-      
         self.infoTableView.reloadData()
     }
 
     
     func handlerSingleTap(){
-//    if sharing {
-//    [self dismissShareView];
-//    return;
-//    }
-        
         isHiddenNavigationBar = !isHiddenNavigationBar
     }
     
+    //查看大图进入动画
     func performPresentAnimation(){
         self.view.alpha = 0
         collectionView.alpha = 0
-//        let cell = senderViewForAnimation as! PhotoCollectionViewCell
-      
-//        let cgImage = cell.imageView.layer.contents
-        
-//        let image =
         let imageFromView = scaleImage != nil ? scaleImage : self.getImageFromView(view: senderViewForAnimation!)
     
         
@@ -433,22 +400,13 @@ class WSShowBigimgViewController: UIViewController {
         resizableImageView.clipsToBounds = true
         resizableImageView.contentMode =  UIViewContentMode.scaleAspectFill
         resizableImageView.backgroundColor = UIColor.clear
-//        if (cell.model is NetAsset){
-//            appearResizableImageView = resizableImageView
-//        }
         mainWindow?.addSubview(resizableImageView)
-        //
-        //    //jy
-        //    //    _senderViewForAnimation.hidden = YES;
-        //
         let completion:()->Void =  {
             self.view.alpha = 1.0
             self.collectionView.alpha = 1.0
             resizableImageView.backgroundColor = UIColor.init(white: 1, alpha: 1)
             fadeView.removeFromSuperview()
-//            if !(cell.model is NetAsset){
-               resizableImageView.removeFromSuperview()
-//            }
+            resizableImageView.removeFromSuperview()
         }
         // FIXME: net video animation error!
         let model = self.getCurrentPageModel()
@@ -481,13 +439,11 @@ class WSShowBigimgViewController: UIViewController {
             completion()
         }
     }
-  
+    
+   //查看大图退出动画
     func performDismissAnimation(){
         appearResizableImageView?.removeFromSuperview()
-   
         let fadeAlpha = 1 - fabs(collectionView.top)/collectionView.frame.size.height
-        
-        //    JYBigImgCell * cell = _collectionView.visibleCells[0];
         let indexP = IndexPath.init(item: currentPage - 1, section: 0)
         let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
         
@@ -500,9 +456,7 @@ class WSShowBigimgViewController: UIViewController {
         let mainWindow = UIApplication.shared.keyWindow
         var frame = cell?.previewView.imageViewFrame() ?? CGRect.zero
         if cell?.previewView.imageViewFrame() == CGRect.zero{
-//            if appearResizableImageView != nil {
-                frame = CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight)
-//            }
+            frame = CGRect(x: 0, y: 0, width: __kWidth, height: __kHeight)
         }
         let rect = cell?.previewView.convert(frame, to: self.view)
       
@@ -516,8 +470,6 @@ class WSShowBigimgViewController: UIViewController {
             return
         }
         
-
-//        let image = (senderViewForAnimation as! PhotoCollectionViewCell).image ?? self.getImageFromView(view: senderViewForAnimation!)
         var image:UIImage?
         if senderViewForAnimation is PhotoCollectionViewCell{
             image = (senderViewForAnimation as! PhotoCollectionViewCell).image
@@ -558,8 +510,7 @@ class WSShowBigimgViewController: UIViewController {
                 
             })
         }
-        
-//        let senderViewOriginalFrame = senderViewForAnimation?.superview?.convert((senderViewForAnimation?.frame)! , to: nil)
+
         UIView.animate(withDuration: 0.3, animations: {
             resizableImageView.frame = senderViewOriginalFrame!
             fadeView.alpha = 0
@@ -573,42 +524,37 @@ class WSShowBigimgViewController: UIViewController {
         share()
     }
     
+    //分享
     func share(){
-//        NSString *titleText = title;
-//        NSString *shareText = text;
-//        NSURL *URL = [NSURL URLWithString:siteurl];
-//        UIImage *image =[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url]]];
-//        UIActivityViewController *a = [[UIActivityViewController alloc] initWithActivityItems:[NSArray arrayWithObjects:titleText,shareText,URL,image, nil] applicationActivities:nil];
-//        self.presentViewController:a animated:true completion:nil];
         var array = Array<Any>.init()
         
         let indexP = IndexPath.init(item: currentPage - 1, section: 0)
         let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
         
         if cell?.previewView.image() != nil{
-           array.append((cell?.previewView.image())!)
+            array.append((cell?.previewView.image())!)
         }
-       
+        
         let activityViewController =  UIActivityViewController.init(activityItems: array, applicationActivities: nil)
         self.present(activityViewController, animated: true) {
             
         }
         activityViewController.completionWithItemsHandler = { (activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
             if error != nil{
-    
+                
                 SVProgressHUD.showError(withStatus: LocalizedString(forKey: "分享失败"))
                 return
             }
             
             if completed {
                 if activityType == UIActivityType.saveToCameraRoll {
-                   SVProgressHUD.showSuccess(withStatus: LocalizedString(forKey: "已存入本地相册"))
+                    SVProgressHUD.showSuccess(withStatus: LocalizedString(forKey: "已存入本地相册"))
                 }else{
                     SVProgressHUD.showSuccess(withStatus: LocalizedString(forKey: "分享完成"))
                 }
             }
             else{
-                 SVProgressHUD.showError(withStatus: LocalizedString(forKey: "分享未完成"))
+                SVProgressHUD.showError(withStatus: LocalizedString(forKey: "分享未完成"))
             }
         }
     }
@@ -637,7 +583,6 @@ class WSShowBigimgViewController: UIViewController {
         if imageSource != nil{
             let imageInfo = CGImageSourceCopyPropertiesAtIndex(imageSource!, 0, nil)
             if let dict = imageInfo as? [AnyHashable : Any] {
-//                print("EXIF:\(dict)")
                 return dict
             }
         }
@@ -707,7 +652,7 @@ class WSShowBigimgViewController: UIViewController {
             if translatedPoint.y < 0 {
                 isdraggingPhoto = true
                 self.setNeedsStatusBarAppearanceUpdate()
-                //                let newTranslatedPoint = CGPoint(x: firstX+translatedPoint.x, y: firstY+translatedPoint.y)
+
                 print(translatedPoint.y)
                 if scrollView.center.y <= scrollView.height/4 - scrollView.height/2{
                     if gesture.state == UIGestureRecognizerState.changed {
@@ -715,7 +660,6 @@ class WSShowBigimgViewController: UIViewController {
                         if translatedPoint.y > -35{
                             point = translatedPoint.y
                         }
-//                        print("😁\(point)")
                         UIView.animate(withDuration: 0.05, animations: {
                             scrollView.center = CGPoint(x: scrollView.center.x, y: scrollView.center.y+point)
                             self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom  - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
@@ -752,20 +696,6 @@ class WSShowBigimgViewController: UIViewController {
                         gesture.isEnabled = true
                         self.state = .info
                     })
-//                    UIView.animate(withDuration: 0.5, animations: {
-//                        self.infoTableView.alpha = 1
-//                        scrollView.center = CGPoint(x: scrollView.center.x, y: scrollView.height/4 - scrollView.height/2)
-//                        if rect.height < __kHeight - 2{
-//                             self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom - rect.height - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
-//                        }else{
-//                            self.infoTableView.frame =  CGRect(x: 0, y: scrollView.bottom - 0.5, width: __kWidth, height: __kHeight - scrollView.height/4)
-//
-//                        }
-//
-//                    }) { (finsih) in
-//                        gesture.isEnabled = true
-//                        self.state = .info
-//                    }
                 }
                 return
             } else {
@@ -932,8 +862,6 @@ class WSShowBigimgViewController: UIViewController {
         
         collection.setCollectionViewLayout(collectionViewlayout, animated: true)
         collection.frame = CGRect(x: -CGFloat(kItemMargin)/2, y: 0, width: __kWidth+CGFloat(kItemMargin), height: __kHeight)
-//        // TODO: rotation
-       
         return collection
     }()
     
@@ -943,7 +871,6 @@ class WSShowBigimgViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.isPagingEnabled = true
-//        tableView.backgroundColor = UIColor.clear
         tableView.bounces = false
         tableView.alpha = 0
         return tableView
@@ -1001,16 +928,8 @@ class WSShowBigimgViewController: UIViewController {
     }()
 
     lazy var shareView = PhotoShareView.init(frame: CGRect(x: 0, y: __kHeight, width: __kWidth, height: 266))
-    
-    
-//    lazy var rightImageView: UIImageView = {
-//        let imageView = UIImageView.init(image: UIImage.init(named: "ic_cloud_white"))
-//        return imageView
-//    }()
-
 
     lazy var describeTextField = UITextField.init()
- 
 }
 
 extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDataSource{
@@ -1054,6 +973,7 @@ extension WSShowBigimgViewController:UICollectionViewDelegate,UICollectionViewDa
 }
 
 extension WSShowBigimgViewController:UIScrollViewDelegate{
+//    照片滑动
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == collectionView  {
             if scrollView.center.y <= scrollView.height/4 - scrollView.height/2{
@@ -1076,13 +996,9 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
                     }
                 }
             }
-//             || currentModelForRecord == m){
-//                return
-//            }
+
             currentModelForRecord = m
             //改变导航标题
-            
-            
             if self.delegate != nil && !isFirstAppear{
                 var indexPath:IndexPath?
                 if m is WSAsset{
@@ -1095,17 +1011,13 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
             //!!!!!: change Title
             titleLabel.text = "\(currentPage)/\(String(describing: (self.models?.count)!))"
             if m is WSAsset{
-//                if self.mapView != nil{
-//                    self.mapView =  nil
-//                }
-              
                 let cell = collectionView.cellForItem(at: IndexPath.init(item: currentPage-1 , section: 0))
                 (cell as? WSBigimgCollectionViewCell)?.removeContent()
                 let assetModel = m as! WSAsset
                 if (assetModel.type == .GIF ||
                     assetModel.type == .LivePhoto ||
                     assetModel.type == .Video || assetModel.type == .NetVideo) {
-                   
+                    
                     if  cell != nil{
                         (cell as? WSBigimgCollectionViewCell)?.pausePlay()
                     }
@@ -1133,6 +1045,7 @@ extension WSShowBigimgViewController:SWPreviewVideoPlayerDelegate{
     }
 }
 
+//向上滑动详情信息
 extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
      
@@ -1140,7 +1053,6 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell:BigPhotoInfoTableViewCell = tableView.dequeueReusableCell(withIdentifier: infoCellReuseIdentifier, for: indexPath) as! BigPhotoInfoTableViewCell
         tableView.separatorStyle = .none
         let model = getCurrentPageModel()
@@ -1185,20 +1097,15 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
             var infoArray:Array<String> = Array.init()
             if model is WSAsset{
                 if let exifDic = self.fetchAssetEXIFInfo(model: model as? WSAsset){
-                    //                if  let compressedBitsPerPixel = exifDic[kCGImagePropertyExifCompressedBitsPerPixel] as? NSNumber{
-                    ////                    print(compressedBitsPerPixel)
-                    //                }
                     if  let pixelWidthNumber = exifDic[kCGImagePropertyPixelWidth] as? NSNumber,let pixelHeightNumber = exifDic[kCGImagePropertyPixelHeight] as? NSNumber{
                         let pixelWidth = pixelWidthNumber.stringValue
                         let pixelHeight = pixelHeightNumber.stringValue
                         let pixel = "\(pixelWidth)x\(pixelHeight)"
-                        //                    print(pixel)
                         infoArray.append(pixel)
                     }else if let pixelWidthNumber = exifDic["PixelWidth"] as? NSNumber,let pixelHeightNumber = exifDic["PixelHeight"] as? NSNumber{
                         let pixelWidth = pixelWidthNumber.stringValue
                         let pixelHeight = pixelHeightNumber.stringValue
                         let pixel = "\(pixelWidth)x\(pixelHeight)"
-                        //                    print(pixel)
                         infoArray.append(pixel)
                     }
                 }
@@ -1226,7 +1133,6 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                     if  let imageTIFFDictionary = exifDic[kCGImagePropertyTIFFDictionary] as? [AnyHashable : Any]{
                         if let imageTIFFModel = imageTIFFDictionary[kCGImagePropertyTIFFModel] as? String{
                             cell.titleLabel.text = imageTIFFModel
-                            //                    print(imageTIFFModel)
                         }
                         
                         if  let imageExifDictionary = exifDic[kCGImagePropertyExifDictionary] as? [AnyHashable : Any]{
@@ -1250,7 +1156,6 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                             }
                             
                             if  let imageISOSpeedRatings = imageExifDictionary[kCGImagePropertyExifISOSpeedRatings] as? [NSNumber]{
-                                //                            print(imageISOSpeedRatings)
                                 if imageISOSpeedRatings.count > 0{
                                     infoArray.append("ISO \(imageISOSpeedRatings[0].stringValue)")
                                 }
@@ -1297,7 +1202,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                             let span: MKCoordinateSpan = MKCoordinateSpanMake(0.1, 0.1)
                             let region: MKCoordinateRegion = MKCoordinateRegionMake(centerCoordinate, span)
                             if self.mapView == nil{
-//                                self.mapView = MKMapView.init()
+                                self.mapView = MKMapView.init()
                             }
                             mapView?.region = region
                             mapView?.showsTraffic = true
@@ -1306,7 +1211,6 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                             let latitude = String.init(format: "%.3f", imageLatitude.floatValue)
                             let longitude = String.init(format: "%.3f", imageLongitude.floatValue)
                             let coordinate = "\(latitude),\(longitude)"
-                            //                        print(coordinate)
                             infoArray.append(coordinate)
                         }
                     }
@@ -1349,7 +1253,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
             if let exifDic = self.fetchAssetEXIFInfo(model: model as? WSAsset){
                 if  exifDic[kCGImagePropertyGPSDictionary] != nil {
                     if self.mapView == nil{
-//                        self.mapView = MKMapView.init()
+                        self.mapView = MKMapView.init()
                     }
                     self.mapView?.isZoomEnabled = false
                     self.mapView?.isScrollEnabled = false
@@ -1367,15 +1271,6 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
 extension WSShowBigimgViewController:MKMapViewDelegate{
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//        let identifier = "annotationView"
-//        var annotationView: MKAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-//        if annotationView == nil {
-//            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-//        }
-//        annotationView?.backgroundColor = COR3
-//        annotationView?.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-//        annotationView?.layer.cornerRadius = 20/2
-//        annotationView?.canShowCallout = true
         return nil
     }
     func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
@@ -1430,6 +1325,7 @@ extension WSShowBigimgViewController:FilesBottomSheetContentVCDelegate{
  
 }
 
+//地图标记
 class MapPin : NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
     var title: String?

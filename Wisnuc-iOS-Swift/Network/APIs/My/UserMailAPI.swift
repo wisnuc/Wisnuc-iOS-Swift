@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 
+//用户邮箱操作API
 class UserMailAPI: BaseRequest {
     var method:RequestHTTPMethod?
     var mail:String?

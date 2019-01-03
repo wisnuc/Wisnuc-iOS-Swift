@@ -15,6 +15,7 @@ private let cellHeight:CGFloat = 48.0
     func sequenceBottomtableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath,isDown:Bool)
 }
 
+//我的云盘排序按钮底部弹窗
 class FilesSequenceBottomSheetContentTableViewController: UITableViewController {
     deinit {
         print("\(className()) deinit")

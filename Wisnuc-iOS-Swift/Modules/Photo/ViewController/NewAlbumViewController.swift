@@ -7,6 +7,7 @@
 //
 
 import UIKit
+
 enum NewAlbumViewControllerState {
     case normal
     case editing
@@ -26,6 +27,7 @@ let ChangePageDalay = 8
 let Distance = 2
 let NN:CGFloat = 3
 
+//新建相册-旧设计
 class NewAlbumViewController: BaseViewController {
     private let reuseIdentifier = "reuseIdentifierCell"
     private let reuseHeaderIdentifier = "reuseIdentifierHeader"
@@ -37,10 +39,10 @@ class NewAlbumViewController: BaseViewController {
     var dataDic:Dictionary<String,Any>?
     private var dataSource:Array<WSAsset>?{
         willSet{
-            print("😁🌶")
+          
         }
         didSet{
-           print("😁 set")
+       
         }
     }
     lazy var headerExtensionArray:Array<HeaderExtensionType> =  Array.init()
@@ -141,26 +143,14 @@ class NewAlbumViewController: BaseViewController {
         dic["name"] = albumTitleText ?? LocalizedString(forKey: "未命名相册")
         dic["describe"] = albumDescribeText ?? ""
         dic["photoData"] = dataSource
-       
-      
-        
-//        if  self.dataDic == nil {
-            self.delegate?.creatNewAlbumFinish(data: dic)
-//        }else{
-//            self.delegate?.updateNewAlbumFinish(data: dic)
-//        }
-        
+   
+        self.delegate?.creatNewAlbumFinish(data: dic)
         self.dataDic = dic
     }
     
     @objc func addTextBarButtonItemTap(_ sender:UIBarButtonItem){
         headerExtensionArray.append(.textView)
-//        self.photoCollectionView.performBatchUpdates({ [weak self] in
-            self.headView?.headerExtensionArray = headerExtensionArray
-            
-//        }) { (finished) in
-//
-//        }
+        self.headView?.headerExtensionArray = headerExtensionArray
         self.photoCollectionView.reloadData()
     }
     
@@ -229,7 +219,6 @@ class NewAlbumViewController: BaseViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "text_right.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(finishEditing(_:)))
         let addNewPhotoBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "add_new_photo_new_album.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(addNewPhotoBarButtonItemTap(_:)))
         let addTextBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "add_text_photo_new_album.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(addTextBarButtonItemTap(_:)))
-//        let addLocationBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "location_new_album.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(addLocationBarButtonItemTap(_:)))
         let sortPhotoBarButtonItem = UIBarButtonItem.init(image: UIImage.init(named: "sort_photo_new_album.png"), style: UIBarButtonItemStyle.plain, target: self, action: #selector(sortPhotoBarButtonItemTap(_:)))
         self.navigationItem.rightBarButtonItems = [sortPhotoBarButtonItem,addTextBarButtonItem,addNewPhotoBarButtonItem]
         if let header = self.photoCollectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: IndexPath.init(item: 0, section: 0)){
@@ -317,9 +306,6 @@ extension NewAlbumViewController:UICollectionViewDelegate,UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        let asset = dataSource[indexPath.row]
-//        asset.indexPath = indexPath
-//         dataSource[indexPath.row] = asset
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -460,18 +446,10 @@ extension NewAlbumViewController :UICollectionViewDelegateFlowLayout{
         return 3
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        return   UIEdgeInsets.init(top: 8, left: 0, bottom: 0, right: 0)
-//    }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return  CGSize(width: __kWidth, height: headerExtensionArray.contains(HeaderExtensionType.textView) ? 165 + MarginsWidth + 88 + MarginsWidth : 165 )
     }
-    
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-    //        return CGSize(width: cellContentSize, height: 8 + 14 + 8)
-    //    }
-    
+
 }
 
 extension NewAlbumViewController :PhotoRootViewControllerDelegate{
@@ -482,21 +460,12 @@ extension NewAlbumViewController :PhotoRootViewControllerDelegate{
             if let allAssetArray = copyArray as? Array<WSAsset>{
                  self?.dataSource?.append(contentsOf: allAssetArray)
             }
-           
-           
-//            self?.dataDic!["photoData"] = self?.dataSource
-//            self?.delegate?.updateNewAlbumFinish(data: (self?.dataDic)!)
            var arrayWithIndexPaths = [IndexPath]()
           
             for i in resultsSize!..<resultsSize! + assets.count {
                 print(i)
                 let indexPath = IndexPath(item: i, section: 0)
                 arrayWithIndexPaths.append(indexPath)
-//                let asset = self?.dataSource?[i]
-//                asset?.indexPath = indexPath
-//                if let asset = asset{
-//                    self?.dataSource![i] = asset
-//                }
             }
             self?.photoCollectionView.insertItems(at:arrayWithIndexPaths)
           

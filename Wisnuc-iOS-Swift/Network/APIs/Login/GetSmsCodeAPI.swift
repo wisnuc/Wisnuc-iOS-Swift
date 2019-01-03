@@ -19,6 +19,7 @@ enum SendCodeType:String{
     case mail
 }
 
+//获取短信验证码
 class GetSmsCodeAPI: BaseRequest {
     var phoneNumber:String?
     var wechatToken:String?

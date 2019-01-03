@@ -195,9 +195,8 @@ class DeviceViewController: BaseViewController {
       })
    }
    
+   //计算磁盘使用情况进度条
    func setHeaderContentFrame(statsModel:StatsModel,bootSpaceModel:BootSpaceModel){
-//      print("😆\(statsModel)")
-//      print("🍄\(bootSpaceModel)")
       guard  let documentSize = statsModel.document?.totalSize ,let imageSize = statsModel.image?.totalSize,let audioSize = statsModel.audio?.totalSize,let videoSize = statsModel.video?.totalSize,let otherSize = statsModel.others?.totalSize else {
          return
       }
@@ -482,7 +481,6 @@ class DeviceViewController: BaseViewController {
       self.present(navigationController, animated: true) {
          
       }
-//
    }
    
    lazy var deviceTableView: UITableView = {
@@ -498,8 +496,6 @@ class DeviceViewController: BaseViewController {
    lazy var headerView: UIView = {
       let view = UIView.init(frame: CGRect.zero)
       view.backgroundColor = .white
-//      view.isUserInteractionEnabled = true
-     
       return view
    }()
    

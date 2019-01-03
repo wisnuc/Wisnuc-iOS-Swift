@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 
+//用户双重验证操作API
 class UserSafetyChange: BaseRequest {
     var safety:Int?
     init(safety:Int) {

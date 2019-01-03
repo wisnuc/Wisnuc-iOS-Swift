@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 
+//获取邮箱验证码
 class GetMailCodeAPI: BaseRequest {
     var mail:String?
     var type:SendCodeType?

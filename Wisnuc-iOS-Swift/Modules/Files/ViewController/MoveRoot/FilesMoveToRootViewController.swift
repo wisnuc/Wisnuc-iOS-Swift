@@ -11,6 +11,8 @@ import Material
 import MaterialComponents.MaterialButtons
 private let moveButtonWidth:CGFloat = 64.0
 private let moveButtonHeight:CGFloat = 36.0
+
+//移动/复制到...旧设计（已废弃）
 class FilesMoveToRootViewController: BaseViewController {
     var srcDictionary: Dictionary<String, String>?
     var moveModelArray: Array<EntriesModel>?

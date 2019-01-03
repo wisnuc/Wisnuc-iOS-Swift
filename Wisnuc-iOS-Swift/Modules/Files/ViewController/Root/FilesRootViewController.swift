@@ -82,6 +82,7 @@ class FilesRootViewController: BaseViewController{
         }
     }
     
+    //不同state 显示
     var selfState:RootControllerState?{
         didSet{
             switch selfState {
@@ -244,6 +245,7 @@ class FilesRootViewController: BaseViewController{
          selfState = state
     }
     
+//    其他页面返回后刷新
     func popBackRefresh(){
         let fromViewController = self.navigationController?.transitionCoordinator?.viewController(forKey: UITransitionContextViewControllerKey.from)
         if fromViewController != nil{
@@ -288,7 +290,8 @@ class FilesRootViewController: BaseViewController{
         AppUserService.synchronizedCurrentUser()
         styleItem.image = UIImage.init(named: "liststyle.png")
     }
-     
+    
+//    获取云盘数据
     func prepareData(animation:Bool) {
         isRequesting = true
         if animation{
@@ -332,6 +335,7 @@ class FilesRootViewController: BaseViewController{
         }
     }
     
+//    数据显示
     func displayDataSource(model:FilesModel)->Array<Any>{
         var filesArray = Array<EntriesModel>.init()
         var directoryArray = Array<EntriesModel>.init()
@@ -379,6 +383,7 @@ class FilesRootViewController: BaseViewController{
         self.collcectionViewController?.dataSource = dataSource
     }
     
+    //排序
     func sortData(sortType:SortType,sortIsDown:Bool) {
         AppUserService.currentUser?.sortType =  NSNumber.init(value: Int8(sortType.rawValue))
         AppUserService.currentUser?.sortIsDown = NSNumber.init(value: sortIsDown)
@@ -439,7 +444,6 @@ class FilesRootViewController: BaseViewController{
         collcectionViewController.view.frame =  CGRect.init(x: self.view.left, y:0, width: self.view.width, height: self.view.height)
         self.view.addSubview(collcectionViewController.view)
         collcectionViewController.didMove(toParentViewController: self)
-        // self.view.top + searchBar.bottom + MarginsCloseWidth/2
         let topEdgeInsets:CGFloat = kCurrentSystemVersion >= 11.0 ? searchBar.bottom + MarginsCloseWidth/2-20 : searchBar.bottom + MarginsCloseWidth/2
         collcectionViewController.collectionView?.contentInset = UIEdgeInsetsMake(topEdgeInsets, 0, 0 , 0)
     }
@@ -455,8 +459,8 @@ class FilesRootViewController: BaseViewController{
         }
     }
     
+    //选择模式
     func selectAction(){
-        //        print(searchBar.bottom)
         DispatchQueue.main.async {
             self.selectSearchBarAction()
         }
@@ -471,9 +475,6 @@ class FilesRootViewController: BaseViewController{
         self.title = "\(String(describing: (FilesHelper.sharedInstance().selectFilesArray?.count)!))"
         self.appBar.headerViewController.preferredStatusBarStyle = .lightContent
         self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
-//        fabButton.collapse(true) {
-//
-//        }
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
         if FilesHelper.sharedInstance().selectFilesArray?.count == 0 {
@@ -495,24 +496,17 @@ class FilesRootViewController: BaseViewController{
             self.view.bringSubview(toFront: selectedNavigationBarView.headerViewController.headerView)
             self.transition(from: appBar.headerViewController, to: selectedNavigationBarView.headerViewController, duration: 0.3, options: UIViewAnimationOptions.beginFromCurrentState, animations: { [weak self] in
                 self?.selectedNavigationBarView.headerViewController.headerView.top = 0
-//                self?.appBar.headerViewController.headerView.removeFromSuperview()
-//                self?.appBar.headerViewController.removeFromParentViewController()
-//                self?.title =  self?.navigationTitle
             }) {(finish) in
             }
         }
     }
     
+    //退出选择模式
     func selectModelCloseAction(){
         self.appBar.headerViewController.headerView.isHidden = false
-//        if searchBar.bottom <= 0{
-        
         self.appBar.headerViewController.preferredStatusBarStyle = .default
         self.appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
         collcectionViewController?.isSelectModel = isSelectModel
-//        fabButton.expand(true) {
-//        }
-        
         if selfState == .root{
             let tab = retrieveTabbarController()
             tab?.setTabBarHidden(false, animated: true)
@@ -530,7 +524,6 @@ class FilesRootViewController: BaseViewController{
             }) {  (finish) in
                 
             }
-            
         }
         self.title =  self.navigationTitle
     }
@@ -549,22 +542,12 @@ class FilesRootViewController: BaseViewController{
         self.appBar.headerViewController.headerView.isHidden = true
         self.navigationDrawerController?.isLeftPanGestureEnabled = true
         navigationController?.delegate = self
-//        if (self.navigationDrawerController?.rootViewController) != nil {
-//        if let controller = UIViewController.currentViewController(){
-//            if  controller.isKind(of: FilesRootCollectionViewController.self) || controller.isKind(of: FilesRootViewController.self) {
-                let tab = retrieveTabbarController()
-                tab?.setTabBarHidden(false, animated: true)
-//            }
-//        }
-        
-//            let drawerController:FilesDrawerTableViewController = self.navigationDrawerController?.leftViewController as! FilesDrawerTableViewController
-//            drawerController.delegate = self
-//        }
+        let tab = retrieveTabbarController()
+        tab?.setTabBarHidden(false, animated: true)
         self.view.endEditing(true)
     }
     
     func selfStateOtherWillAppearAction(){
-        
         self.appBar.headerViewController.headerView.isHidden = false
         self.view.bringSubview(toFront: self.appBar.headerViewController.headerView)
         self.appBar.headerViewController.preferredStatusBarStyle = .default
@@ -576,16 +559,12 @@ class FilesRootViewController: BaseViewController{
     func prepareRootAppNavigtionBar(){
         self.view.bringSubview(toFront: appBar.headerViewController.headerView)
         let leftItem = UIBarButtonItem.init(image: Icon.close?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(closeSelectModelButtonTap(_ :)))
-//        let paceItem = UIBarButtonItem.init(customView: UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 20)))
-//        let labelBarButtonItem = UIBarButtonItem.init(customView: selectNumberAppNaviLabel)
         self.navigationItem.leftBarButtonItems = [leftItem]
         self.navigationItem.rightBarButtonItems = [moreBarButtonItem,downloadBarButtonItem,moveBarButtonItem]
     }
     
     func prepareSelectModelNextAppNavigtionBar(){
         let leftItem = UIBarButtonItem.init(image: Icon.close?.byTintColor(.white), style: UIBarButtonItemStyle.done, target: self, action: #selector(closeSelectModelButtonTap(_ :)))
-//        let paceItem = UIBarButtonItem.init(customView: UIView.init(frame: CGRect(x: 0, y: 0, width: 32, height: 20)))
-//        let labelBarButtonItem = UIBarButtonItem.init(customView: selectNumberAppNaviLabel)
         self.selectedNavigationBarView.navigationBar.leftBarButtonItems = [leftItem]
         self.selectedNavigationBarView.navigationBar.rightBarButtonItems = [moreBarButtonItem,downloadBarButtonItem,moveBarButtonItem]
     }
@@ -612,6 +591,7 @@ class FilesRootViewController: BaseViewController{
         defaultNotificationCenter().addObserver(self, selector: #selector(refreshNotification(_ :)), name: NSNotification.Name.Refresh.MoveRefreshNotiKey, object: nil)
     }
     
+//  打开下载文件
     func readFile(filePath:String){
         let documentController = UIDocumentInteractionController.init()
         documentController.delegate = self
@@ -631,12 +611,14 @@ class FilesRootViewController: BaseViewController{
         return self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
     }
     
+    //删除多个文件/文件夹
     func filesRemoveOptionRequest(models:[EntriesModel]){
         for model in models {
             filesRemoveOptionRequest(model: model)
         }
     }
     
+    //删除单个文件/文件夹
     func filesRemoveOptionRequest(model:EntriesModel){
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
@@ -701,6 +683,7 @@ class FilesRootViewController: BaseViewController{
         searchBar.textField.delegate = self
     }
     
+    //下载
     func downloadRequestURL(model:EntriesModel) -> String?{
         guard let driveUUID = self.driveUUID else {
             return nil
@@ -754,7 +737,7 @@ class FilesRootViewController: BaseViewController{
         return nil
     }
     
-    // ojbc function (Selector)
+//    选择模式navigtionBar 移动到...
     @objc func moveBarButtonItemTap(_ sender:UIBarButtonItem){
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
@@ -765,6 +748,7 @@ class FilesRootViewController: BaseViewController{
         self.present(navi, animated: true, completion: nil)
     }
     
+//    选择模式navigtionBar 下载...
     @objc func downloadBarButtonItemTap(_ sender:UIBarButtonItem){
         FilesRootViewController.downloadManager.isStartDownloadImmediately = true
         let driveUUID = self.driveUUID != nil ? self.driveUUID! : AppUserService.currentUser?.userHome
@@ -776,22 +760,8 @@ class FilesRootViewController: BaseViewController{
         for value in  FilesHelper.sharedInstance().selectFilesArray!{
             let model = value
             if let  requestURL = self.downloadRequestURL(model: model){
-                
             let placeholder = LocalizedString(forKey: "未命名文件")
             let name = model.backupRoot ? model.bname ?? model.name ?? placeholder : model.name ?? placeholder
-
-//            var paramKey = "name"
-//            var paramValue = name
-//            if let hash = model.hash,model.bname != nil{
-//                paramKey = "hash"
-//                paramValue = hash
-//            }
-//                let localUrl = "\(String(describing: RequestConfig.sharedInstance.baseURL!))/drives/\(String(describing: driveUUID!))/dirs/\(String(describing: directoryUUID!))/entries/\(String(describing: model.uuid!))?\(paramKey)=\(paramValue)"
-//                if AppNetworkService.networkState == .local{
-//                    urlStrings.append(localUrl)
-//                }else{
-            urlStrings.append(requestURL)
-//                }
             nameStrings.append(name)
             fileModels.append(model)
             }
@@ -802,7 +772,7 @@ class FilesRootViewController: BaseViewController{
         self.isSelectModel = false
         Message.message(text: LocalizedString(forKey: "\(urlStrings.count)个文件已加入下载队列"), duration: 1.6)
     }
-    
+//    选择模式navigtionBar 更多...
     @objc func moreBarButtonItemTap(_ sender:UIBarButtonItem){
         let filesBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain, type: FilesBottomSheetContentType.selectMore)
         filesBottomVC.delegate = self

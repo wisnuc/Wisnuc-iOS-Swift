@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+//绑定微信
 class BindStationAPI: BaseRequest {
     var user:User?
     init(user:User?) {

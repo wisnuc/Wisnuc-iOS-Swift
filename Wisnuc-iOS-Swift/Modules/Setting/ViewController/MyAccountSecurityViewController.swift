@@ -124,7 +124,6 @@ class MyAccountSecurityViewController: BaseViewController {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView == infoTabelView {
-//            var tableview = scrollView as? UITableView
             let sectionHeaderHeight: CGFloat = headerHeight
             if scrollView.contentOffset.y <= sectionHeaderHeight && scrollView.contentOffset.y >= 0 {
                 scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0)
@@ -276,7 +275,6 @@ extension MyAccountSecurityViewController:UITableViewDelegate{
                         }
                     }
                 }
-//                resetPasswordPushAction()
               
             case 2:
                 if let phoneArray = self.phoneDataSource{
@@ -361,14 +359,6 @@ extension MyAccountSecurityViewController:UITableViewDataSource{
                 
             case 1:
                 cell.textLabel?.text = LocalizedString(forKey: "密码")
-//                let secureLevelString = "低"
-//                let detailText = "安全性 \(secureLevelString)"
-//                let attributedText = NSMutableAttributedString.init(string:detailText )
-//                let font = UIFont.systemFont(ofSize: 12)
-//                attributedText.addAttribute(NSAttributedStringKey.font, value:font , range: NSRange.init(location: 0, length: attributedText.length))
-//                attributedText.addAttribute(NSAttributedStringKey.foregroundColor, value: LightGrayColor, range: NSRange.init(location: 0, length: 3))
-//                attributedText.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.red, range: NSRange.init(location: 4, length: 1))
-//                cell.detailTextLabel?.attributedText = attributedText
                 cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
                 
                 let label = self.rightLabel(LocalizedString(forKey: "去修改"))

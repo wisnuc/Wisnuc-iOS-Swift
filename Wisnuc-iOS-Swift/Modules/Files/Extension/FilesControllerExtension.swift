@@ -12,6 +12,7 @@ import Material
 //private let SearchBarBottom:CGFloat = 77.0
 var downloadTask:TRTask?
 extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
+    //进入共享空间
     func shareBoxTap() {
         AppNetworkService.getShareSpaceBuiltIn { [weak self](error, uuid) in
             if error == nil,let uuid = uuid{
@@ -24,6 +25,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         }
     }
     
+    //进入备份空间
     func backupBoxTap() {
         let deviceBackupRootViewController = DeviceBackupRootViewController.init(style:.highHeight,type:.files)
         let tab = retrieveTabbarController()
@@ -38,6 +40,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         self.navigationController?.pushViewController(peripheralDeviceViewController, animated: true)
     }
     
+    //进入传输任务
     func transferTaskTap() {
         let transferTaskTableViewController = TransferTaskTableViewController.init(style:NavigationStyle.white)
         let tab = retrieveTabbarController()
@@ -45,6 +48,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         self.navigationController?.pushViewController(transferTaskTableViewController, animated: true)
     }
     
+    //文件夹/文件点击操作
     func rootCollectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath, isSelectModel: Bool) {
         if isSelectModel == NSNumber.init(value: FilesStatus.select.rawValue).boolValue{
             if FilesHelper.sharedInstance().selectFilesArray?.count != 0 {
@@ -120,6 +124,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         }
     }
     
+//    下载文件
     func downloadFile(model:EntriesModel,complete:@escaping ((_ error:Error?, _ task: TRTask?)->())){
         let bundle = Bundle.init(for: FilesDownloadAlertViewController.self)
         let storyboard = UIStoryboard.init(name: "FilesDownloadAlertViewController", bundle: bundle)
@@ -171,6 +176,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         downloadTask = task
     }
     
+    //cell 更多按钮（...）点击操作
     func cellButtonCallBack(_ cell: MDCCollectionViewCell, _ button: UIButton, _ indexPath: IndexPath) {
         var filesBottomVC = FilesFilesBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
         if self.driveUUID == AppUserService.currentUser?.shareSpace{
@@ -199,6 +205,7 @@ extension FilesRootViewController:FilesRootCollectionViewControllerDelegate{
         }
     }
     
+//    排序按钮操作
     func sequenceButtonTap(_ sender: UIButton?) {
         let sequenceBottomVC = FilesSequenceBottomSheetContentTableViewController.init(style: UITableViewStyle.plain)
         sequenceBottomVC.delegate = self
@@ -283,6 +290,7 @@ extension FilesRootViewController:SearchBarDelegate{
     }
 }
 
+//旧设计（废弃）
 extension FilesRootViewController:FilesDrawerViewControllerDelegate{
     func settingButtonTap(_ sender: UIButton) {
         navigationDrawerController?.closeLeftView()
@@ -325,6 +333,7 @@ extension FilesRootViewController:MDCBottomSheetControllerDelegate{
     }
 }
 
+//旧设计（废弃）
 extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
     func folderButtonTap(_ sender: UIButton) {
 //        self.fabButton.expand(true, completion: { [weak self] in
@@ -386,13 +395,14 @@ extension FilesRootViewController:FABBottomSheetDisplayVCDelegte{
     }
 }
 
+//排序
 extension FilesRootViewController:SequenceBottomSheetContentVCDelegate{
     func sequenceBottomtableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, isDown: Bool) {
         self.setSortParameters(sortType:SortType(rawValue: Int64(indexPath.row))!, sortIsDown: isDown)
     }
 }
 
-
+//搜索栏更多按钮（...）
 extension FilesRootViewController:SearchMoreBottomSheetVCDelegate{
     func searchMoreBottomSheettableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
@@ -411,7 +421,9 @@ extension FilesRootViewController:SearchMoreBottomSheetVCDelegate{
     }
 }
 
+//cell更多按钮弹出选择选项后操作
 extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
+    //文件/文件夹详情
     func filesBottomSheetContentInfoButtonTap(_ sender: UIButton, model: Any) {
         let tab = retrieveTabbarController()
         tab?.setTabBarHidden(true, animated: true)
@@ -425,6 +437,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         self.navigationController?.pushViewController(filesInfoVC, animated: true)
     }
     
+    // 离线可用
     func filesBottomSheetContentSwitch(_ sender: UISwitch, model: Any) {
         let filesModel = model as! EntriesModel
         if sender.isOn{
@@ -453,6 +466,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
     }
     
+    //文件冲突解决请求
     func patchNodes(taskUUID:String,nodeUUID:String,policySameValue:String? = nil , policyDiffValue:String? = nil ,callback:@escaping ((_ error:Error?)->())){
         TasksAPI.init(taskUUID: taskUUID, nodeUUID: nodeUUID, policySameValue: policySameValue, policyDiffValue: policyDiffValue).startRequestJSONCompletionHandler {(response) in
             if response.error == nil{
@@ -467,6 +481,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
     }
     
+//    获取Task
     func getTask(taskUUID:String,callback:@escaping (_ task:FilesTasksModel)->()) {
         TasksAPI.init(taskUUID: taskUUID).startRequestJSONCompletionHandler {(response) in
             if response.error == nil{
@@ -498,6 +513,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
     }
     
+//    创建副本
     func makeCopyTaskCreate(model:Any?){
         self.startActivityIndicator()
         if !(model is EntriesModel) || model == nil {
@@ -559,7 +575,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
     }
     
-  
+    //文件冲突后操作
     func taskHandle(isCopy:Bool = false,creatCopy:Bool = false,taskModel:FilesTasksModel,callback:@escaping (_ error:Error?)->()){
         self.getTask(taskUUID: taskModel.uuid!, callback: {[unowned self](model) in
             if model.finished == true{
@@ -616,72 +632,10 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                     return callback(error)
                 }
             }
-            
-//            else if model.nodes?.count ?? 0 > 1{
-//                let nodes = model.nodes!.filter({$0.state == .Conflict && $0.error?.code == .EEXIST})
-////                for node in model.nodes!{
-////                    self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,node:node, taskModel: model, callback: callback)
-////                }
-//            }
         })
     }
     
-     func taskHandle(isCopy:Bool = false,creatCopy:Bool = false,node:NodesModel,taskModel:FilesTasksModel,callback:@escaping (_ error:Error?)->()){
-        if node.state == .Conflict && node.error?.code == .EEXIST{
-            if let uuid = model?.uuid,let srcuuid = node.src?.uuid {
-                if creatCopy == true{
-                    self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { (error)in
-                        return callback(error)
-                    })
-                    return
-                }
-                if node.type == FilesType.directory.rawValue{
-                    self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.keep.rawValue, callback: { (error)in
-                        if let error = error{
-                            return callback(error)
-                        }else{
-                            self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,taskModel: taskModel, callback: callback)
-                        }
-                    })
-                    return
-                }
-                if !isCopy{
-                    self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: FilesTaskPolicy.rename.rawValue, callback: { (error)in
-                        return callback(error)
-                    })
-                }else{
-                    if let alertVC = self.filesConflictAlert(name: node.src?.name){
-                        alertVC.confirmCallback = { [unowned self] (type) in
-                            if let type = type{
-                                self.patchNodes(taskUUID: uuid,nodeUUID: srcuuid, policySameValue: type, callback: { (error)in
-                                    return callback(error)
-                                })
-                            }else{
-                                let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "Cancel")])
-                                return callback(error)
-                            }
-                        }
-                    }
-                }
-            }
-        }else if node.state == .Working || node.state == .Preparing{
-            DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 2) {
-                DispatchQueue.main.async {
-                    self.taskHandle(isCopy:isCopy,creatCopy:creatCopy,taskModel: taskModel, callback: callback)
-                }
-            }
-        }else if node.state == .Finish {
-            return callback(nil)
-        }else if node.state == .Failed{
-            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey:LocalizedString(forKey: "Failed")])
-            return callback(error)
-        }
-    }
-    
-    func renameConflictAction(){
-        
-    }
-    
+    // 冲突用户选择弹窗
     func filesConflictAlert(name:String?)->FilesConflictAlertViewController?{
         let bundle = Bundle.init(for: FilesConflictAlertViewController.self)
         let storyboard = UIStoryboard.init(name: "FilesConflictAlertViewController", bundle: bundle)
@@ -705,6 +659,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         return vc
     }
 
+    //文件/文件夹重命名
     func renamePrepare(model:EntriesModel){
         let filesType = model.type ?? ""
         let name = model.name ?? ""
@@ -735,7 +690,6 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
     }
     
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, models: [Any]?){
-//        let filesModels =
         switch indexPath.row {
         case 0:
             self.removeFileOrDirectory(models: models as! [EntriesModel])
@@ -745,6 +699,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         self.isSelectModel = false
     }
     
+    //cell更多按钮弹出选择选项后操作
     func filesBottomSheetContentTableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath, model: Any?) {
         //        filesBottomVC.dismiss(animated: true, completion: { [weak self] in、
         let filesModel = model as! EntriesModel
@@ -817,6 +772,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
     }
     
+    //使用第三方打开
     func openForOtherApp(filesModel:EntriesModel){
         let name = filesModel.backupRoot ? filesModel.bname ?? filesModel.name ?? "" : filesModel.name ?? ""
         if let filePath = FilesRootViewController.downloadManager.cache.filePtah(fileName: name){
@@ -828,6 +784,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         }
     }
     
+    //移动到...
     func moveToAction(model:EntriesModel){
         let filesRootViewController = FilesRootViewController.init(style: NavigationStyle.white, srcDictionary: [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()], moveModelArray:  [model], isCopy: isCopy)
         filesRootViewController.title = LocalizedString(forKey: "My Drive")
@@ -836,6 +793,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         self.present(navi, animated: true, completion: nil)
     }
     
+    //复制到...
     func copyToAction(model:EntriesModel,isShare:Bool? = nil){
         var share:Bool = false
         var drive:String?
@@ -855,12 +813,11 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         filesRootViewController.title = title
         self.registerNotification()
         filesRootViewController.isCopy = true
-//        filesRootViewController.selfState = .movecopy
-        
         let navi = UINavigationController.init(rootViewController: filesRootViewController)
         self.present(navi, animated: true, completion: nil)
     }
     
+//    删除文件/文件夹(单个)
     func removeFileOrDirectory(model:EntriesModel){
         let type = model.type
         let typeString = type == FilesType.directory.rawValue ? LocalizedString(forKey: "folder") : LocalizedString(forKey: "file")
@@ -872,14 +829,6 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         
         let acceptAction = MDCAlertAction(title:LocalizedString(forKey: "Remove")) { [weak self] (_) in
             self?.filesRemoveOptionRequest(model:model)
-//            switch AppNetworkService.networkState {
-//            case .local?:
-//                self?.localNetStateFilesRemoveOptionRequest(name:name)
-//            case .normal?:
-//                self?.normalNetStateFilesRemoveOptionRequest(name:name)
-//            default:
-//                break
-//            }
         }
         alertController.addAction(acceptAction)
         
@@ -894,8 +843,8 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         self.present(alertController, animated: true, completion: nil)
     }
     
+//    删除文件/文件夹(多个)
     func removeFileOrDirectory(models:[EntriesModel]){
-      
         let title = "\(LocalizedString(forKey: "Remove"))"
         var message = "\(LocalizedString(forKey: "文件"))"
         if models.contains(where: {$0.type == FilesType.directory.rawValue}) && models.contains(where: {$0.type == FilesType.file.rawValue}){
@@ -909,14 +858,6 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         let alertController = MDCAlertController(title: title, message: messageString)
         
         let acceptAction = MDCAlertAction(title:LocalizedString(forKey: "Remove")) { [weak self] (_) in
-//            switch AppNetworkService.networkState {
-//            case .local?:
-//                self?.localNetStateFilesRemoveOptionRequest(names:models.map({$0.name!}))
-//            case .normal?:
-//                self?.normalNetStateFilesRemoveOptionRequest(names:models.map({$0.name!}))
-//            default:
-//                break
-//            }
             self?.filesRemoveOptionRequest(models:models)
         }
         alertController.addAction(acceptAction)
@@ -941,10 +882,12 @@ extension FilesRootViewController:UINavigationControllerDelegate{
 
 extension FilesRootViewController:TextFieldDelegate{
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        //进入搜索页
         self.enterSearch()
     }
 }
 
+// 无数据或者无网络下占位图
 extension FilesRootViewController:DZNEmptyDataSetSource{
     func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
         return UIImage.init(named: "logo_gray")
@@ -963,6 +906,7 @@ extension FilesRootViewController:DZNEmptyDataSetSource{
     }
 }
 
+// 无数据或者无网络文字描述（button）点击
 extension FilesRootViewController:DZNEmptyDataSetDelegate{
     func emptyDataSet(_ scrollView: UIScrollView!, didTap button: UIButton!) {
         self.prepareData(animation: true)
@@ -977,6 +921,7 @@ extension FilesRootViewController:DZNEmptyDataSetDelegate{
     }
 }
 
+//第三方应用打开
 extension FilesRootViewController:UIDocumentInteractionControllerDelegate{
     func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
         return self
@@ -990,6 +935,7 @@ extension FilesRootViewController:UIDocumentInteractionControllerDelegate{
         return self.view.frame
     }
 }
+
 
 extension FilesRootViewController:NewFolderViewControllerDelegate{
     func confirmButtonTap(_ sender: MDCFlatButton, type: InputAlertType, inputText: String,theFilesName:String?) {
@@ -1015,6 +961,8 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
             break
         }
     }
+    
+    //重命名请求
     func renameStateRequest(oldName:String?,newName:String,callback:@escaping (_ error:Error?)->()){
         let drive = self.driveUUID ?? AppUserService.currentUser?.userHome ?? ""
         let dir = self.directoryUUID ?? AppUserService.currentUser?.userHome ?? ""
@@ -1052,7 +1000,7 @@ extension FilesRootViewController:NewFolderViewControllerDelegate{
         }
     }
     
-    
+    //文件夹创建
     func createNewFolderRequest(name:String,drive:String,dir:String){
         MkdirAPI.init(driveUUID: drive, directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: {  (formData) in
             let dic = [kRequestOpKey: kRequestMkdirValue,kRequestTaskPolicyKey:[nil,FilesTaskPolicy.rename.rawValue],kRequestBctimeKey:Date.init().timeIntervalSince1970*1000,kRequestBmtimeKey:Date.init().timeIntervalSince1970] as [String : Any]

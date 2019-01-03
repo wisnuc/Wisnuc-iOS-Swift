@@ -95,7 +95,6 @@ class SeekNewDeviceViewController: BaseViewController {
     func foundStateAction(){
         titleLabel.text = LocalizedString(forKey: "发现设备")
          errorLabel.isHidden = true
-//        deviceTableView.removeAllSubviews()
     }
     
     func  bleNotOpenAction(){
@@ -104,26 +103,14 @@ class SeekNewDeviceViewController: BaseViewController {
         deviceTableView.reloadData()
         errorLabel.isHidden = false
         errorLabel.eventCallback = { () in
+            //进入系统设置打开蓝牙
             if kCurrentSystemVersion <= 10.0 {
                 UIApplication.shared.openURL(URL.init(string: "prefs:root=Bluetooth")!)
-            }else {//prefs:root=Bluetooth
+            }else {
                 let url = URL.init(string: "App-Prefs:root=General&path=Bluetooth")
                 UIApplication.shared.openURL(url!)
             }
         }
-    }
-    
-    func setData(){
-//        let data1 = DeviceBLEModel.init(name: "Device1", type: DeviceBLEModelType.configFinish)
-//        let data2 = DeviceBLEModel.init(name: "不知道什么名字的设备", type: DeviceBLEModelType.configWithData)
-//        let data3 = DeviceBLEModel.init(name: "新新新设备", type: DeviceBLEModelType.config)
-//        let data4 = DeviceBLEModel.init(name: "Error Device", type: DeviceBLEModelType.configErrorNoDisk)
-//        dataSource.append(data1)
-//        dataSource.append(data2)
-//        dataSource.append(data3)
-//        dataSource.append(data4)
-//        deviceTableView.reloadData()
-//        self.state = .found
     }
     
     @objc func confirmFinish(_ noti:Notification){
@@ -179,18 +166,6 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
         case .Done?:
             cell.detailLabel.text = LocalizedString(forKey: "已配置")
             cell.rightImageView.image =  UIImage.init(named: "config_finish.png")
-//        case .NeedConfigWithData?:
-//            cell.detailLabel.text = LocalizedString(forKey: "待配置，磁盘含有数据")
-//            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
-//        case .NoDisk?:
-//            cell.detailLabel.text = LocalizedString(forKey: "检测不到设备磁盘")
-//            cell.rightImageView.image =  UIImage.init(named: "config_error.png")
-//        case .Default?:
-//            cell.detailLabel.text = LocalizedString(forKey: "待配置")
-//            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
-//        case .NoData?:
-//            cell.detailLabel.text = LocalizedString(forKey: "待配置")
-//            cell.rightImageView.image =  UIImage.init(named: "disclosureIndicator.png")
         default:
             break
         }
@@ -209,16 +184,8 @@ extension SeekNewDeviceViewController:UITableViewDataSource,UITableViewDelegate{
             configNetVC.deviceModel = model
             self.navigationController?.pushViewController(configNetVC, animated: true)
             LLBlueTooth.instance.stopScan()
-//        case .configFinish?:
-//           break
         case .Done?:
             Message.message(text: LocalizedString(forKey: "已被绑定，无法使用"))
-//            let configNetVC = ConfigNetworkViewController.init(style: .whiteWithoutShadow,state:.initialization)
-//            configNetVC.deviceModel = model
-//            self.navigationController?.pushViewController(configNetVC, animated: true)
-//            LLBlueTooth.instance.stopScan()
-//        case .configErrorNoDisk?:
-//            break
         default:
             break
         }

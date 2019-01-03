@@ -10,7 +10,9 @@ import Foundation
 import UIKit
 
 
+//主题颜色
 public let COR1 = UIColor.colorFromRGB(rgbValue: 0x000695C)
+
 public let COR2 = UIColor.init(red: 13/225.0, green: 112/225.0, blue: 100/225.0, alpha: 1)
 public let COR3 = UIColor.colorFromRGB(rgbValue: 0x04527a0)
 public let COR4 = UIColor.colorFromRGB(rgbValue: 0x0512da8)

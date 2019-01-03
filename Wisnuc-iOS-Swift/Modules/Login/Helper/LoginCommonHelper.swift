@@ -32,6 +32,7 @@ class LoginCommonHelper: NSObject {
         print("LoginCommonHelper Disposed Singleton instance")
     }
     
+    //确定登录设备
     func stationAction(token:String,user:User,viewController:UIViewController,lastDeviceClosure:@escaping (_ user:User,_ stationModel:StationsInfoModel,_ stationModels:[StationsInfoModel])->()) {
         self.getStations(token: token, closure: { [weak self](error, models,lastSn) in
             if error == nil{
@@ -89,6 +90,7 @@ class LoginCommonHelper: NSObject {
         })
     }
     
+     //进入选择登录设备页
     func selectStation(models:[StationsInfoModel],user:User,viewController:UIViewController){
         let deviceViewController = LoginSelectionDeviceViewController.init(style: .whiteWithoutShadow,devices:models,user:user)
         deviceViewController.delegate = viewController as? LoginSelectionDeviceViewControllerDelegte
@@ -98,6 +100,7 @@ class LoginCommonHelper: NSObject {
         }
     }
     
+    //获取该用户下所有绑定设备
     func getStations(token:String?,closure: @escaping (Error?,[StationsInfoModel]?,_ lastSn:String?) -> Void){
         let requset = GetStationsAPI.init(token: token ?? "")
         requset.startRequestJSONCompletionHandler({ (response) in

@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 
+//user 下设备信息
 class UserDeviceInfoAPI: BaseRequest {
     var sn:String?
     var cloudToken:String?

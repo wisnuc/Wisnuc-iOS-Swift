@@ -183,7 +183,7 @@ class LoginInputPasswordViewController: BaseViewController {
         self.navigationController?.pushViewController(nextViewController, animated: true)
     }
     
-    
+    //登录操作
     @objc func nextButtontTap(_ sender:MDCFloatingButton){
         self.passwordTextFiled.resignFirstResponder()
         guard let password = self.passwordTextFiled.text else {
@@ -221,6 +221,7 @@ class LoginInputPasswordViewController: BaseViewController {
                             }
                             self?.startActivityIndicator()
                              let user = AppUserService.synchronizedUserInLogin(model, cookie)
+                            //选取设备
                             LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure:{ [weak self](user,stationModel,models)  in
                                 self?.stopActivityIndicator()
                                 self?.stationModels = models
@@ -348,15 +349,8 @@ extension LoginInputPasswordViewController:UITextFieldDelegate{
 }
 
 extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDelegte{
+//    选取设备后登录操作
     func loginFinish(user: User, stationModel: Any, stationModels: [Any]?) {
-//        guard let deviceModels = stationModels as? [StationsInfoModel] else{
-//            return
-//        }
-//        if !deviceModels.contains(where: {$0.sn == user.stationId}){
-//            Message.message(text: LocalizedString(forKey: "您不拥有该设备，请重新登录"))
-//            AppUserService.logoutUser()
-//            return
-//        }
         let model = stationModel as! StationsInfoModel
         self.startActivityIndicator()
         AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in

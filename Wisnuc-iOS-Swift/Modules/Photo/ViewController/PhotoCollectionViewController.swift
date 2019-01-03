@@ -25,9 +25,6 @@ private let kthumbnilSmallSize:CGFloat = 64
 }
 
 class PhotoCollectionViewController: UICollectionViewController {
-//    override func willDealloc() -> Bool {
-//        return false
-//    }
     weak var delegate:PhotoCollectionViewControllerDelegate?
     var isSelectMode:Bool?{
         didSet{
@@ -42,7 +39,6 @@ class PhotoCollectionViewController: UICollectionViewController {
     lazy var imageDownloadTasks:Array<RetrieveImageDownloadTask> = Array.init()
     lazy var imageSDDownloadTasks:Array<SDWebImageDownloadToken> = Array.init()
     lazy var imageDiskTasks:Array<RetrieveImageDiskTask> = Array.init()
-//    lazy var imageDic:[String:UIImage] = Dictionary.init()
     var drive:String?
     var currentItemSize:CGSize = CGSize.zero
     var showIndicator:Bool = true
@@ -75,7 +71,6 @@ class PhotoCollectionViewController: UICollectionViewController {
     }
     
     deinit {
-//         appBar.appBarViewController.headerView.trackingScrollView = nil
     }
     
     override func didReceiveMemoryWarning() {
@@ -103,6 +98,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         clearChache()
     }
     
+    //清除缓存
     func clearChache(){
         let cache = KingfisherManager.shared.cache
         cache.clearMemoryCache()
@@ -128,8 +124,8 @@ class PhotoCollectionViewController: UICollectionViewController {
         imageDownloadTasks.removeAll()
     }
     
+    //时间轴
     func dataSourceHasValue(){
-        
         if  let array = self.timeViewArray{
             if array.count != 0{
                 for view in array{
@@ -145,85 +141,66 @@ class PhotoCollectionViewController: UICollectionViewController {
         let copyArray = NSArray.init(array: sortedAssetsBackupArray!, copyItems: true)
         
         if let allAssetArray = copyArray as? Array<WSAsset>{
-           let yearArray = sort(allAssetArray)
-//            dataSource?.filter({$0.first?.createDate }})
-
-//            var limitCount = 1
-//            if yearArray.count > 7{
-//               limitCount  = Int(allAssetArray.count/7)
-//            }else{
-//                limitCount  = Int(allAssetArray.count/yearArray.count)
-//            }
-            
+            let yearArray = sort(allAssetArray)
             var originMargin:CGFloat = 0
             for (i,value) in yearArray.enumerated(){
-               
+                
                 let photos = value
                 let yearsAsset = dataSource?.filter({Calendar.current.isDate($0.first?.createDate ?? Date.distantPast, equalTo:  photos.first?.createDate ?? Date.distantPast, toGranularity: Calendar.Component.year)})
                 if let yearsAsset = yearsAsset{
                     var sum = 0
                     for (_,assets) in yearsAsset.enumerated(){
-                       sum += assets.count
+                        sum += assets.count
                     }
-//                    print("😆\(sum)")
-
-                var photoScale:CGFloat = 1
-                if sum > 3{
-                    photoScale = CGFloat(ceilf(Float(sum)/Float(currentScale)))
-                }
-//                  print("😆\(photoScale)")
-                if self.currentItemSize.height == 0 {
-                    self.currentItemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: (__kWidth - 2 * (currentScale - 1))/currentScale)
-                }
-                if let height = self.collectionView?.contentSize.height {
-                    if height>0 {
-                        let margin = ((photoScale * self.currentItemSize.height) + CGFloat(yearsAsset.count*Int(headerHeight)) - (photoScale*2) * 2 )/(height - MDCAppNavigationBarHeight) * (__kHeight - MDCAppNavigationBarHeight)
-                        //             imageView.frame = CGRectMake(index * (imageWithHeight + Width_Space) + Start_X,page * (imageWithHeight + Height_Space)+Start_Y, imageWithHeight, imageWithHeight);
-//                        print("😈\(i)")
-                        originMargin += margin
-//                        print(self.collectionView?.contentSize.height ?? 0)
-                       let timelineView = UIView.init(frame: CGRect(x: __kWidth - 35 - 58 - 40 , y: MDCAppNavigationBarHeight + originMargin, width: 58, height: 24))
-                       let label = UILabel.init(frame: timelineView.bounds)
-                        label.font = UIFont.boldSystemFont(ofSize: 12)
-                        label.textColor = LightGrayColor
-                        label.textAlignment = .center
-                        label.layer.cornerRadius = 24/2
-                        if let date = value.first?.createDate{
-                        label.text = "\(TimeTools.getYear(date:date))年"
-                        }
-//                        print("🐔\(originMargin)")
-                        timelineView.addSubview(label)
-                        timelineView.backgroundColor = .white
-                        timelineView.alpha = 0.87
-                        timelineView.layer.cornerRadius = 24/2
-                        timelineView.isHidden = true
-                        if i == 0 || value == yearArray.last{
-                            self.view.addSubview(timelineView)
-                            self.timeViewArray?.append(timelineView)
-//                            print("🌶\(i)")
-                           
-                        }else{
-                            if yearsAsset.count > 0{
-                            if photoScale >= CGFloat(floorf(Float(allAssetArray.count/yearsAsset.count))){
+                    var photoScale:CGFloat = 1
+                    if sum > 3{
+                        photoScale = CGFloat(ceilf(Float(sum)/Float(currentScale)))
+                    }
+                    
+                    if self.currentItemSize.height == 0 {
+                        self.currentItemSize = CGSize(width: (__kWidth - 2 * (currentScale - 1))/currentScale, height: (__kWidth - 2 * (currentScale - 1))/currentScale)
+                    }
+                    if let height = self.collectionView?.contentSize.height {
+                        if height>0 {
+                            let margin = ((photoScale * self.currentItemSize.height) + CGFloat(yearsAsset.count*Int(headerHeight)) - (photoScale*2) * 2 )/(height - MDCAppNavigationBarHeight) * (__kHeight - MDCAppNavigationBarHeight)
+                            let timelineView = UIView.init(frame: CGRect(x: __kWidth - 35 - 58 - 40 , y: MDCAppNavigationBarHeight + originMargin, width: 58, height: 24))
+                            let label = UILabel.init(frame: timelineView.bounds)
+                            label.font = UIFont.boldSystemFont(ofSize: 12)
+                            label.textColor = LightGrayColor
+                            label.textAlignment = .center
+                            label.layer.cornerRadius = 24/2
+                            if let date = value.first?.createDate{
+                                label.text = "\(TimeTools.getYear(date:date))年"
+                            }
+                            timelineView.addSubview(label)
+                            timelineView.backgroundColor = .white
+                            timelineView.alpha = 0.87
+                            timelineView.layer.cornerRadius = 24/2
+                            timelineView.isHidden = true
+                            if i == 0 || value == yearArray.last{
                                 self.view.addSubview(timelineView)
                                 self.timeViewArray?.append(timelineView)
-                            }
+                            }else{
+                                if yearsAsset.count > 0{
+                                    if photoScale >= CGFloat(floorf(Float(allAssetArray.count/yearsAsset.count))){
+                                        self.view.addSubview(timelineView)
+                                        self.timeViewArray?.append(timelineView)
+                                    }
+                                }
                             }
                         }
                     }
-                  }
                 }
             }
         }
-       
     }
     
+    //排序
     func sort(_ assetsArray:Array<WSAsset>) -> Array<Array<WSAsset>>{
         var finishArray:Array<Array<WSAsset>> = Array.init()
         autoreleasepool {
             var array:Array<WSAsset>  = Array.init()
             array.append(contentsOf: assetsArray)
-//            array.sort { $0.createDate > $1.createDate }
             array.sort { (item1, item2) -> Bool in
                 let t1 = item1.createDate ?? Date.distantPast
                 let t2 = item2.createDate ?? Date.distantPast
@@ -280,11 +257,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         let  pin = UIPinchGestureRecognizer.init(target: self, action: #selector(handlePinch(_ :)))
         self.collectionView?.addGestureRecognizer(pin)
     }
-//    func setSelectMode(mode:Bool){
-//        self.isSelectMode = mode
-//        self.collectionView?.reloadData()
-//    }
-    
+
     func selectModeAction(){
         if let delegateOK = self.delegate{
             delegateOK.collectionView(self.collectionView!, isSelectMode: self.isSelectMode!)
@@ -330,8 +303,6 @@ class PhotoCollectionViewController: UICollectionViewController {
         fmCollectionViewLayout.alternateDecorationViews = true
         fmCollectionViewLayout.decorationViewOfKinds = ["FMHeadView"]
         fmCollectionViewLayout.scrollDirection = UICollectionViewScrollDirection.vertical
-//        self.styler.cellLayoutType = MDCCollectionViewCellLayoutType.grid
-//        self.styler.cellStyle = MDCCollectionViewCellStyle.default
         self.collectionView?.collectionViewLayout = fmCollectionViewLayout
         self.collectionView?.backgroundColor = UIColor.white
         self.collectionView?.showsVerticalScrollIndicator = false
@@ -364,6 +335,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
     }
     
+//    侧面滑动指示器
     func initIndicator() {
         self.collectionView?.registerILSIndicator()
         if self.collectionView?.indicator == nil {
@@ -394,7 +366,6 @@ class PhotoCollectionViewController: UICollectionViewController {
                 }
             })
             .disposed(by: dispose)
-//        self.collectionView?.indicator.slider.addObserver(self, forKeyPath: "sliderState", options: NSKeyValueObservingOptions.init(rawValue: 0x01), context: nil)
         self.collectionView?.indicator.frame = CGRect(x: self.collectionView!.indicator.frame.origin.x, y:  self.collectionView!.indicator.frame.origin.y, width: 1, height: self.collectionView!.height - CGFloat(2 * kILSDefaultSliderMargin))
     }
     
@@ -408,6 +379,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
     }
     
+    //查看大图
     func getBigImageVC(data:Array<WSAsset>,index:Int) -> UIViewController{
         let vc = WSShowBigimgViewController.init()
         vc.drive = self.drive
@@ -418,11 +390,6 @@ class PhotoCollectionViewController: UICollectionViewController {
         vc.senderViewForAnimation = cell
        
         vc.scaleImage = cell.image
-        //    weakify(self);
-        //    [vc setBtnBackBlock:^(NSArray<JYAsset *> *selectedModels, BOOL isOriginal) {
-        //        strongify(weakSelf);
-        //        [strongSelf.collectionView reloadData];
-        //    }];
         return vc
     }
 
@@ -476,7 +443,6 @@ class PhotoCollectionViewController: UICollectionViewController {
         
     }
     
-    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
     }
@@ -508,6 +474,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
          let model = dataSource[indexPath.section][indexPath.row]
         weak var weakCell = cell
+        //more（...）
         cell.selectedBlock = { [weak self] (selected) in
             if !(self?.isSelectMode)! { return}
             var needReload = false
@@ -538,8 +505,6 @@ class PhotoCollectionViewController: UICollectionViewController {
             if(needReload){
                 self?.delegate?.collectionView(collectionView, selectArray: self?.choosePhotos ?? Array.init())
                 self?.collectionView?.reloadItems(at: [indexPath])
-//                let listSet = Set((self?.dataSource![indexPath.section])!)
-//                let findSet = Set((self?.choosePhotos)!)
                 if header != nil{
                     (header as! FMHeadView).isChoose =  (self?.choosePhotos.contains(array:(self?.dataSource![indexPath.section])!))!
                 }
@@ -555,7 +520,6 @@ class PhotoCollectionViewController: UICollectionViewController {
                             
                         }
                     }
-                    //                [weakSelf leftBtnClick:_leftBtn];
                     weakCell?.isSelectMode = self?.isSelectMode
                   
                     if let cellsIndexPath = self?.collectionView?.indexPathsForVisibleItems{
@@ -563,19 +527,13 @@ class PhotoCollectionViewController: UICollectionViewController {
                     }
                 }
             }
-
-//            _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)weakSelf.choosePhotos.count];
         }
         
+//      长按
         cell.longPressBlock = { [weak self] in
             if (self?.isSelectMode ?? false) { return}
-             self?.isSelectMode = true
-            
+            self?.isSelectMode = true
             self?.choosePhotos.append(model)
-            //
-            //            [weakSelf addLeftBtn];
-            //            weakSelf.addButton.hidden = NO;
-            //
             let dataCollect = (self?.dataSource![indexPath.section])!.filter { value in
                 (self?.choosePhotos.contains(value))!
             }
@@ -605,8 +563,6 @@ class PhotoCollectionViewController: UICollectionViewController {
             }
             
             let nowHeader = self?.collectionView?.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at:IndexPath.init(item: 0, section: indexPath.section))
-//                let listSet = Set((self?.dataSource![indexPath.section])!)
-//                let findSet = Set((self?.choosePhotos)!)
             if nowHeader != nil {
                 (nowHeader as! FMHeadView).isChoose =  (self?.choosePhotos.contains(array:(self?.dataSource![indexPath.section])!))!
             }
@@ -632,6 +588,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         return cell
     }
     
+//  加载缩略图
     func setCellImage(model:WSAsset,cell:PhotoCollectionViewCell){
         let size = self.fetchRequestSize(origin: kthumbnilNormalSize, model: model)
         if cell.indexPath != model.indexPath{
@@ -660,22 +617,22 @@ class PhotoCollectionViewController: UICollectionViewController {
                     }
                 }
             }else{
-//                DispatchQueue.global(qos: .userInitiated).async {
-                    self.fetchNormalCachePicDispay(cell: cell, model: model, size: size, closure: { (image) in
-                        if cell.indexPath == model.indexPath{
-                            DispatchQueue.main.async {
-                                cell.imageView?.layer.contents = nil
-                                cell.model?.image = image
-                                cell.imageView?.layer.contents = image.cgImage
-                                cell.image = image
-                            }
+                self.fetchNormalCachePicDispay(cell: cell, model: model, size: size, closure: { (image) in
+                    if cell.indexPath == model.indexPath{
+                        DispatchQueue.main.async {
+                            cell.imageView?.layer.contents = nil
+                            cell.model?.image = image
+                            cell.imageView?.layer.contents = image.cgImage
+                            cell.image = image
                         }
-                    })
-                }
-//            }
+                    }
+                })
+            }
         }
     }
     
+
+    //本地照片缩略图
     func loadLocalImage(cell:PhotoCollectionViewCell,model:WSAsset,size:CGSize){
         let asset = model.asset
         let contentMode = PHImageContentMode.default
@@ -691,6 +648,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         imageRequestIDDataSources.append(imageRequestID)
     }
     
+    //64*64小图
     func checkSmallImage(model:WSAsset,size:CGSize,closure:@escaping (_ image:UIImage)->()){
         guard let hash = (model as? NetAsset)?.fmhash else{
             return
@@ -700,7 +658,6 @@ class PhotoCollectionViewController: UICollectionViewController {
             if let requset = PhotoHelper.requestImageUrl(size: size, hash: hash){
                 ImageCache.default.retrieveImage(forKey: requset.absoluteString, options: nil, completionHandler: { (image, type) in
                     if let image = image{
-                        print("💗💗💗💗💗💗💗💗💗来自缓存，type:\(type)")
                         return closure(image)
                     }else{
                         let _ = self.fetchSmallPic(model: model, callback: { [weak self] (error, image, url) in
@@ -720,6 +677,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
     }
     
+    //从缓存中获取64*64小图
     func fetchSmallCachePicDispay(model:WSAsset,callback:@escaping (_ image:UIImage?)->()){
         guard let hash = (model as? NetAsset)?.fmhash else {
            return
@@ -729,13 +687,13 @@ class PhotoCollectionViewController: UICollectionViewController {
         if let requset = PhotoHelper.requestImageUrl(size: size, hash: hash){
             ImageCache.default.retrieveImage(forKey: requset.absoluteString, options: nil, completionHandler: { (image, type) in
                 if let image = image{
-                    print("💗💗💗💗💗💗💗💗💗来自缓存，type:\(type)")
-                    return callback(image)
+                return callback(image)
             }
          })
        }
     }
     
+    //从缓存中获取正常（186*186)缩略图
     func fetchNormalCachePicDispay(cell:PhotoCollectionViewCell,model:WSAsset,size:CGSize,closure:@escaping (_ image:UIImage)->()){
         guard let hash = (model as? NetAsset)?.fmhash else {
             return
@@ -765,6 +723,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         }
     }
     
+    //从网络获取64*64小图
     func fetchSmallPic(model:WSAsset,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->SDWebImageDownloadToken?{
         guard let hash = (model as? NetAsset)?.fmhash else {
             return nil
@@ -779,6 +738,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         return task
     }
     
+    //从网络获取正常（186*186)缩略图
     func fetchNormalPic(model:WSAsset,callback:@escaping (_ error:Error?, _ image:UIImage?,_ reqUrl:URL?)->())->RetrieveImageDownloadTask?{
         guard let hash = (model as? NetAsset)?.fmhash else {
             return nil
@@ -793,6 +753,7 @@ class PhotoCollectionViewController: UICollectionViewController {
         return task
     }
     
+    //动态计算缩略图大小
     func fetchRequestSize(origin:CGFloat,model:WSAsset)->CGSize{
         var size = CGSize.init(width: origin , height: origin)
         if let w = (model as? NetAsset)?.metadata?.w,let h = (model as? NetAsset)?.metadata?.h{
@@ -832,16 +793,12 @@ class PhotoCollectionViewController: UICollectionViewController {
          let model = dataSource[indexPath.section][indexPath.row]
         
         if let cell = cell as? PhotoCollectionViewCell{
-//            cell.imageView?.layer.contents =  imageDic["\(indexPath.section)_\(indexPath.row)"]?.cgImage
             self.setCellImage(model: model,cell:cell)
         }
     }
     
 
     // MARK: UICollectionViewDelegate
-    
-  
-    
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let headView:FMHeadView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerReuseIdentifier, for: indexPath) as! FMHeadView
         guard let dataSource = self.dataSource else {
@@ -862,13 +819,6 @@ class PhotoCollectionViewController: UICollectionViewController {
         headView.isSelectMode = isSelectMode ?? false
         headView.isChoose =  self.choosePhotos.contains(array:self.dataSource![indexPath.section])
         headView.fmDelegate = self
-
-      
-//        let listSet = Set(self.dataSource![indexPath.section])
-//        let findSet = Set(self.choosePhotos)
-//        headView.isChoose = listSet.isSubset(of: findSet)
-//        headView.isChoose = self.chooseSection.contains(indexPath)
-
         return headView
     }
     
@@ -914,38 +864,6 @@ class PhotoCollectionViewController: UICollectionViewController {
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         isScrolling = true
         isDecelerating = true
-//        if let cells = self.collectionView?.visibleCells{
-//            autoreleasepool {
-//               let queue = DispatchQueue.init(label: "scrollingDowload", qos: .default)
-//                queue.async(execute: {
-//                    for cell in cells{
-//                         DispatchQueue.main.async {
-//                            if let indexPath = self.collectionView?.indexPath(for: cell){
-//                                let model = self.dataSource?[indexPath.section][indexPath.row]
-//                                let queue = DispatchQueue.init(label: "scrollingDowloading", qos: .default)
-//                                queue.async(execute: {
-//                                    if let hash = (model as? NetAsset)?.fmhash {
-//                                        let index = indexPath
-//                                        self.fetchSmallPic(hash: hash, callback: { (error, image, url) in
-//                                            if let resultCell = cell as? PhotoCollectionViewCell{
-//                                                if let image = image,index == indexPath{
-//                                                    DispatchQueue.main.async {
-//                                                        resultCell.imageView?.layer.contents = image.cgImage
-//                                                    }
-//                                                }
-//                                            }
-//                                        })
-//                                    }
-//                                })
-//                            }
-//                         }
-//                    }
-//                })
-//
-//            }
-//        }
-//
-        
         if self.showIndicator {
             if self.collectionView?.indicator == nil {
                 //导航按钮
@@ -953,7 +871,6 @@ class PhotoCollectionViewController: UICollectionViewController {
                 if self.collectionView?.indicator == nil{
                     return
                 }
-//
                 self.collectionView?.indicator.slider.rx.observe(String.self, keyPath)
                     .subscribe(onNext: { [weak self] (newValue) in
                         if (self?.showIndicator)! {
@@ -999,44 +916,6 @@ class PhotoCollectionViewController: UICollectionViewController {
         isScrolling = false
     }
     
-//    override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-//         loadImageForVisibleCells()
-//    }
-//
-//    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-//        loadImageForVisibleCells()
-//    }
-//
-//    func loadImageForVisibleCells() {
-//        let visibleCells = collectionView?.visibleCells
-//        guard let collectionViewVisibleCells = visibleCells else{
-//            return
-//        }
-//        autoreleasepool {
-//            let queue = DispatchQueue.init(label: "scrollingDowload", qos: .default)
-//            queue.async(execute: {
-//                for visible in collectionViewVisibleCells {
-//                    guard let cell = visible as? PhotoCollectionViewCell else{
-//                        return
-//                    }
-//                    if let indexPath = self.collectionView?.indexPath(for: cell) {
-//                        guard let model = self.dataSource?[indexPath.section][indexPath.row] else{
-//                            return
-//                        }
-//
-//                        if let hash = (model as? NetAsset)?.fmhash {
-//                            self.fetchSmallPic(hash: hash) { (error, image, url) in
-//                                cell.imageView?.layer.contents = image?.cgImage
-//                            }
-//                        }
-//                    }
-//                }
-//            })
-//        }
-//    }
-//
-
-
     lazy var choosePhotos:Array<WSAsset> = {
         let array = Array<WSAsset>.init()
         return array
@@ -1063,66 +942,6 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
             if indexPath.row >= dataSource[indexPath.section].count{
                 return
             }
-            
-           
-//            if let cell = collectionView.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
-//                let model = dataSource[indexPath.section][indexPath.row]
-//                model.indexPath = indexPath
-//                if let hash = (model as? NetAsset)?.fmhash{
-//                    let queue = DispatchQueue.init(label: "Prefetching", qos: .background)
-//                        queue.async {
-//                        YYImageCache.shared().getImageData(forKey: hash, with: { (data) in
-//                            if let data = data{
-//                                //                                if indexPath == model.indexPath{
-//                                if let image = UIImage.init(data: data){
-//                                    //                                        self.imageDic["\(indexPath.section)_\(indexPath.row)"] = image
-////                                    cell.image = image
-//                                    model.image = image
-//                                   dataSource[indexPath.section][indexPath.row] = model
-////                                    cell.imageView?.layer.contents = image.cgImage
-//                                }
-//                            }else{
-////                                self.fetchSmallPic(hash: hash, callback: { (error, image, url) in
-////                                    if let image = image{
-////
-////                                        model.image = image
-////                                        dataSource[indexPath.section][indexPath.row] = model
-////                                    }
-////                                })
-//                            }
-//                        })
-////                    }
-//                }
-//            }
-//                self.setCellImage(model: model,cell:cell)
-            
-//            }
-//            if cell != nil{
-//            let photoCell:PhotoCollectionViewCell =  cell as! PhotoCollectionViewCell
-//                let model = self.dataSource![indexPath.section][indexPath.row]
-//                if (self.collectionView!.indicator != nil) {
-//                    self.collectionView?.indicator.slider.timeLabel.text = PhotoTools.getMouthDateString(date: model.createDate!)
-//                }
-//                photoCell.isSelectMode = self.isSelectMode
-//                photoCell.setSelectAnimation(isSelect: self.isSelectMode! ? self.choosePhotos.contains(model) : false, animation: false)
-//                photoCell.model = model
-//                let size = CGSize.init(width: photoCell.width * 1.7 , height: photoCell.height * 1.7)
-//                if model.asset != nil{
-//                    DispatchQueue.global(qos: .default).async {
-//                    photoCell.imageRequestID = PHPhotoLibrary.requestImage(for: model.asset!, size: size, completion: { [weak photoCell] (image, info) in
-//                        if (photoCell?.identifier == model.asset?.localIdentifier) {
-//                            DispatchQueue.main.async {
-////                                   photoCell?.imageView.layer.contents = nil
-//                            }
-//                        }
-//                        if !(info![PHImageResultIsDegradedKey] as! Bool) {
-//                            photoCell?.imageRequestID = -1
-//                        }
-//                })
-//
-//                    }
-//                }
-//            }
         }
     }
     
@@ -1138,23 +957,15 @@ extension PhotoCollectionViewController:UICollectionViewDataSourcePrefetching{
             if indexPath.row >= dataSource[indexPath.section].count{
                 return
             }
-//            let cell = collectionView.cellForItem(at: indexPath)
             let model = dataSource[indexPath.section][indexPath.row]
-//            if cell != nil{
-//               if let photoCell = cell as? PhotoCollectionViewCell{
             let size = self.fetchRequestSize(origin: kthumbnilNormalSize, model: model)
-                if let fmhash = (model as? NetAsset)?.fmhash{
-                    if let url = PhotoHelper.requestImageUrl(size: size, hash: fmhash){
-                        let task = self.imageDownloadTasks.first(where: {$0.url == url})
-                        task?.cancel()
-                        self.imageDownloadTasks.removeAll(where: {$0.url == url})
-//                        photoCell.imageView?.layer.contents  = nil
-//                        photoCell.image = nil
-                    }
+            if let fmhash = (model as? NetAsset)?.fmhash{
+                if let url = PhotoHelper.requestImageUrl(size: size, hash: fmhash){
+                    let task = self.imageDownloadTasks.first(where: {$0.url == url})
+                    task?.cancel()
+                    self.imageDownloadTasks.removeAll(where: {$0.url == url})
                 }
-        
-//                }
-//            }
+            }
         }
     }
 }
@@ -1181,9 +992,8 @@ extension PhotoCollectionViewController:FMHeadViewDelegate{
                     (header as! FMHeadView).isSelectMode = (self.isSelectMode)!
                 }
             }
-//            self leftBtnClick:_leftBtn];
         }
-//        _countLb.text = [NSString stringWithFormat:WBLocalizedString(@"select_count", nil),(unsigned long)self.choosePhotos.count];
+
         let indexSet = IndexSet.init(integer: headView.fmIndexPath.section)
         collectionView?.performBatchUpdates({
               self.collectionView?.reloadSections(indexSet)
@@ -1265,16 +1075,5 @@ extension PhotoCollectionViewController : WSShowBigImgViewControllerDelegate {
     }
 }
 
-extension PhotoCollectionViewController : ImageAsyncTaskObjectDelegate {
-    func imageAsyncTaskObjectDidFinishAsyncTask(_ aTaskObject: ImageAsyncTaskObject?) {
-        if let indexPath = aTaskObject?.indexPath {
-            if let cell = self.collectionView?.cellForItem(at: indexPath) as? PhotoCollectionViewCell{
-                cell.model?.image = aTaskObject?.image
-                cell.imageView?.layer.contents = aTaskObject?.image?.cgImage
-                cell.image = aTaskObject?.image
-            }
-        }
-    }
-}
 
 

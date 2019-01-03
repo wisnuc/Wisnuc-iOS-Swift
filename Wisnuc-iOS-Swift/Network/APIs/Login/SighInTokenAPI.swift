@@ -8,6 +8,7 @@
 
 import UIKit
 
+//登录
 class SighInTokenAPI: BaseRequest {
     var phoneNumber:String?
     var password:String?

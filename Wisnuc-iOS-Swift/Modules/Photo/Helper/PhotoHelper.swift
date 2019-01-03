@@ -164,11 +164,6 @@ class PhotoHelper: NSObject {
                 let dataSouce = photoGroupArray as! Array<Array<WSAsset>>
                 DispatchQueue.main.async {
                  return clousure(array,dataSouce)
-//                    self.photoCollcectionViewController.dataSource = self.assetDataSources
-//                    CATransaction.setDisableActions(true)
-//                    self.photoCollcectionViewController.collectionView?.reloadData()
-//                    CATransaction.commit()
-//                    self.photoCollcectionViewController.sortedAssetsBackupArray = self.sortedAssetsBackupArray
                 }
             }
         }

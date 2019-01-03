@@ -8,6 +8,7 @@
 
 import UIKit
 
+//用户账号（phone number）操作API
 class UserPhoneAPI: BaseRequest {
     var method:RequestHTTPMethod?
     var oldTicket:String?

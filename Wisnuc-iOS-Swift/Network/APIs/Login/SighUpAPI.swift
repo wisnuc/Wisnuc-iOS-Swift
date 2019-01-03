@@ -8,6 +8,8 @@
 
 import UIKit
 import Alamofire
+
+//注册
 class SighUpAPI: BaseRequest {
     var phoneNumber:String?
     var ticket:String?

@@ -8,6 +8,7 @@
 
 import UIKit
 
+//微信登录Token
 class SighInWechatTokenAPI: BaseRequest {
     var code:String?
     init(code:String) {

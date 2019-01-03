@@ -162,8 +162,6 @@ class ConfigNetworkViewController: BaseViewController {
     }
     
     func foundStateAction(){
-       
-        //        infoSettingTableView.removeAllSubviews()
     }
     
     func  bleNotOpenAction(){
@@ -211,12 +209,10 @@ class ConfigNetworkViewController: BaseViewController {
     func setTextFieldController(){
         self.textFieldControllerNetworkName = MDCTextInputControllerUnderline.init(textInput: networkNameTextFiled)
         self.textFieldControllerNetworkName?.isFloatingEnabled = false
-        //        self.textFieldControllerPhoneNumber?.placeholderText = LocalizedString(forKey: "password_text")
         self.textFieldControllerNetworkName?.normalColor = UIColor.black.withAlphaComponent(0.06)
         self.textFieldControllerNetworkName?.activeColor = COR1
         self.textFieldControllerPassword = MDCTextInputControllerUnderline.init(textInput: passwordTextFiled)
         self.textFieldControllerPassword?.isFloatingEnabled = false
-        //        self.textFieldControllerPhoneNumber?.placeholderText = LocalizedString(forKey: "password_text")
         self.textFieldControllerPassword?.normalColor = UIColor.black.withAlphaComponent(0.06)
         self.textFieldControllerPassword?.activeColor = COR1
     }
@@ -267,6 +263,7 @@ class ConfigNetworkViewController: BaseViewController {
         self.nextButton.isEnabled = true
     }
     
+    //打开下拉框
     func spreadOut(rightView:RightImageView?){
         rightView?.isSelect = true
         rightView?.image = UIImage.init(named: "down_arrow_gray.png")
@@ -276,6 +273,7 @@ class ConfigNetworkViewController: BaseViewController {
         ActivityIndicator.startActivityIndicatorAnimation(in: wifiTabelView)
     }
     
+    //关闭下拉框
     func spreadIn(rightView:RightImageView?){
          rightView?.isSelect = false
         rightView?.image = UIImage.init(named: "up_arrow_gray.png")
@@ -284,7 +282,8 @@ class ConfigNetworkViewController: BaseViewController {
         wifiBLEArray.removeAll()
         wifiBLEDataArray.removeAll()
     }
-    
+
+    //分包发送
     func sendData(_ param:[String:String]){
         guard let model = self.deviceModel else {
             return
@@ -305,11 +304,11 @@ class ConfigNetworkViewController: BaseViewController {
             let dataString = String.init(data: subData, encoding: .utf8)
             print(dataString ?? "No data")
             LLBlueTooth.instance.writeToPeripheral(peripheral: peripheral, characteristic: characteristic, data: subData, writeType: CBCharacteristicWriteType.withoutResponse)
-//            usleep(20)
             }
         }
     }
     
+    //验证
     func stationEncryptedAction(ipString:String){
         SVProgressHUD.dismiss()
         ActivityIndicator.startActivityIndicatorAnimation()
@@ -338,27 +337,23 @@ class ConfigNetworkViewController: BaseViewController {
                         }
                         let userInfo:[String:String] = ["encrypted":encryptedString,"ip":ipString]
                         self?.methodStart = Date()
-                        print("开始")
                         if let header = response.response?.allHeaderFields  {
                             if let cookie = header["Set-Cookie"] as? String  {
                                 self?.user?.cookie = cookie
                             }
                         }
-                       
                         DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 3) {
-                            print("结束")
                             DispatchQueue.main.async {
                                 self?.timerFired(userInfo)
-//                                Timer.scheduledTimer(timeInterval: 3, target: self!, selector: #selector(self?.timerFired(_:)), userInfo: userInfo, repeats: true)
                             }
                         }
-                       
                     }
                 }
             }
         }
     }
     
+    //绑定
     func stationBindAction(ipString:String,encryptedString:String){
         ActivityIndicator.startActivityIndicatorAnimation()
         let parameters = ["encrypted":encryptedString]
@@ -424,6 +419,7 @@ class ConfigNetworkViewController: BaseViewController {
         }
     }
     
+    //首配后登录
     func loginAction(userId:String,model:StationsInfoModel){
         ActivityIndicator.startActivityIndicatorAnimation()
         guard let user = self.user else {
@@ -493,12 +489,6 @@ class ConfigNetworkViewController: BaseViewController {
         sender.isHidden = true
         let param = ["action":"conn","ssid":ssidTxt,"password":passwordTxt]
         self.sendData(param)
-//        DispatchQueue.global(qos: .default).asyncAfter(deadline: DispatchTime.now() + 3) {
-//            DispatchQueue.main.async {
-//                 SVProgressHUD.dismiss()
-//
-//            }
-//        }
     }
     
     
@@ -561,15 +551,10 @@ class ConfigNetworkViewController: BaseViewController {
     @objc func progressHUDDisappear(_ note: Notification){
         guard let userInfo = note.userInfo else {return}
         guard let string = userInfo[SVProgressHUDStatusUserInfoKey] as? String else{return}
-//        let time = SVProgressHUD.displayDuration(for: string)
-
     }
     
     
      func timerFired(_ userInfo: [String:String]) {
-//        guard let userInfo = timer.userInfo as? [String:String] else{
-//            return
-//        }
         
         guard let ipString = userInfo["ip"] else{
             return
@@ -581,8 +566,6 @@ class ConfigNetworkViewController: BaseViewController {
         
         AppNetworkService.checkIP(address: ipString, { [weak self](success) in
             if success{
-//                timer.fireDate = Date.distantFuture
-//                timer.invalidate()
                 self?.stationBindAction(ipString: ipString, encryptedString:encryptedString)
             }else{
                 ActivityIndicator.stopActivityIndicatorAnimation()
@@ -595,8 +578,6 @@ class ConfigNetworkViewController: BaseViewController {
                     
                     let executionTime = methodFinish.timeIntervalSince(methodStart)
                     if executionTime > 30{
-//                        timer.fireDate = Date.distantFuture
-//                        timer.invalidate()
                     }
                 }
             }
@@ -928,9 +909,8 @@ extension ConfigNetworkViewController:LLBlueToothDelegate{
         }
     }
     
-
+    //获取对方蓝牙发送的数据
     func peripheralStationSPSCharacteristicDidUpdateValue(data:Data){
-        
         if let string = String.init(data: data, encoding: String.Encoding.utf8){
             wifiBLEDataArray.append(string)
             let bleString = wifiBLEDataArray.joined()

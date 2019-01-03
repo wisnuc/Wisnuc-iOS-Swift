@@ -11,6 +11,8 @@ import UIKit
    func shareBottomSheetContenttableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 }
 
+
+//旧设计（已废弃）
 class FilesShareBottomSheetContentTableViewController: UITableViewController {
     weak var delegate:ShareBottomSheetContentVCDelegte?
     override func viewDidLoad() {

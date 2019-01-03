@@ -8,6 +8,7 @@
 
 import Foundation
 extension UILabel{
+    //创建大标题Label
     class func initTitleLabel(color:UIColor,text:String) -> UILabel{
         let label = UILabel.init()
         label.text = text
@@ -15,7 +16,7 @@ extension UILabel{
         label.font = UIFont.boldSystemFont(ofSize: 21)
         return label
     }
-    
+    //创建副标题Label
     class func initDetailTitleLabel(text:String,color:UIColor? = nil) -> UILabel{
         let label = UILabel.init()
         label.text = text

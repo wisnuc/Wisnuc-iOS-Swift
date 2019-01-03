@@ -14,6 +14,7 @@ enum FilesOptionType:String{
     case rename
 }
 
+//文件操作
 class DirOprationAPI: BaseRequest {
     var driveUUID:String?
     var directoryUUID:String?
@@ -57,19 +58,6 @@ class DirOprationAPI: BaseRequest {
     override func requestEncoding() -> RequestParameterEncoding {
         return JSONEncoding.default
     }
-    
-//    override func requestParameters() -> RequestParameters? {
-//        switch AppNetworkService.networkState {
-//        case .normal?:
-//            let requstUrl = "/\(self.detailUrl!)"
-//            let param = [kRequestOpKey:op!,kRequestToNameKey:name!]
-//            return [kRequestUrlPathKey:requstUrl,kRequestVerbKey:RequestMethodValue.POST,kRequestImageParamsKey:param]
-//        case .local?:
-//            return nil
-//        default:
-//            return nil
-//        }
-//    }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
         switch AppNetworkService.networkState {

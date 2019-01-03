@@ -29,16 +29,14 @@ class UserService: NSObject,ServiceProtocol{
         super.init()
         load()
     }
-     
+    
+    //启动时验证是否登录
     func load(){
         if userDefaults.object(forKey: kCurrentUserUUID) != nil || !isNilString(userDefaults.object(forKey: kCurrentUserUUID) as? String)  {
             let uuid = userDefaults.object(forKey: kCurrentUserUUID) as! String
             self.currentUser = user(uuid: uuid)
             if self.currentUser == nil || self.currentUser?.isLocalLogin == nil || currentUser?.isSelectStation == nil{
                 self.isUserLogin = false
-             
-//                userDefaults.removeObject(forKey: kCurrentUserUUID)
-//                userDefaults.synchronize()
                 return
             }
             
@@ -49,11 +47,6 @@ class UserService: NSObject,ServiceProtocol{
             
             self.isUserLogin = true
             self.isStationSelected = true
-//            if let uuid = self.currentUser?.uuid{
-//                if let backupArray = userDefaults.array(forKey: "\(kBackupDrives)_\(uuid)") as? [DriveModel]{
-//                    self.backupArray = backupArray
-//                }
-//            }
         }else{
             self.currentUser = nil
             self.isStationSelected = false
@@ -70,6 +63,7 @@ class UserService: NSObject,ServiceProtocol{
         
     }
     
+//    User 信息赋值
     func synchronizedUserInLogin(_ model:SighInTokenModel,_ cookie:String)->User{
         let user = self.createUser(uuid: (model.data?.id)!)
         user.cloudToken = model.data?.token!
@@ -97,6 +91,7 @@ class UserService: NSObject,ServiceProtocol{
         return user
     }
 
+//    Current User
     func setCurrentUser(_ currentUser:User?){
         if(currentUser == nil || currentUser?.uuid == nil || isNilString((currentUser?.uuid)!)) {
             return logoutUser()
@@ -110,6 +105,8 @@ class UserService: NSObject,ServiceProtocol{
         self.isUserLogin = true
     }
     
+
+// 注销
     func logoutUser(){
         isUserLogin = false
         isStationSelected = false
@@ -123,6 +120,7 @@ class UserService: NSObject,ServiceProtocol{
         defaultNotificationCenter().removeObserver(self)
     }
     
+//    从云获取更新用户信息
     func updateCurrentUserInfo(complete:@escaping ()->()){
         UsersInfoAPI.init().startRequestDataCompletionHandler { (response) in
             if  response.error == nil{
@@ -168,6 +166,7 @@ class UserService: NSObject,ServiceProtocol{
         }
     }
     
+//    fectch user
     func user(uuid:String) ->User?{
         let predicate = NSPredicate(format: "uuid = %@", uuid)
         let user = User.mr_findFirst(with: predicate)

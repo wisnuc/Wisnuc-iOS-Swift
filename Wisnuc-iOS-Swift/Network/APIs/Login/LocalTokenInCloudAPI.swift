@@ -8,6 +8,7 @@
 
 import UIKit
 
+//云获取本地Token
 class LocalTokenInCloudAPI: BaseRequest {
     var cloudToken:String?
     var user:User?

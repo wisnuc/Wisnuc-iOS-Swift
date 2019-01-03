@@ -53,6 +53,7 @@ class AppService: NSObject,ServiceProtocol{
     deinit {
     }
     
+//    登录操作（已废弃）
     func loginAction(model:CloadLoginUserRemotModel,url:String,basicAuth:String,complete:@escaping ((_ error:Error?,_ user:User?)->())){
         if model.uuid == nil || isNilString(model.uuid){
             complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
@@ -92,6 +93,7 @@ class AppService: NSObject,ServiceProtocol{
         }
     }
     
+//    登录操作（已废弃）
     func loginAction(model:CloadLoginUserRemotModel,orginTokenUser:User,complete:@escaping ((_ error:Error?,_ user:User?)->())){
         if model.uuid == nil || isNilString(model.uuid){
             complete(LoginError(code: ErrorCode.Login.NoUUID, kind: LoginError.ErrorKind.LoginNoUUID, localizedDescription: LocalizedString(forKey: "UUID is not exist")), nil)
@@ -140,6 +142,7 @@ class AppService: NSObject,ServiceProtocol{
         }
     }
     
+//    登录操作
     func loginAction(stationModel:StationsInfoModel,orginTokenUser:User,complete:@escaping ((_ error:Error?,_ user:User?)->())){
     
         let resultUser = orginTokenUser
@@ -188,6 +191,7 @@ class AppService: NSObject,ServiceProtocol{
         }
     }
     
+//    登录后获取Drive 操作
     func nextStepForLogin(user:User,callback: @escaping (_ error:Error?,_ user:User?)->()) {
         self.networkService.getUserAllDrive(user: user) { [weak self] (userHomeError, driveModels) in
             if userHomeError != nil{
@@ -212,6 +216,7 @@ class AppService: NSObject,ServiceProtocol{
             return callback(nil, user)
         }
     }
+    
     
     func loginCreatBackupDriveStep(user:User){
         if self.userService.backupArray.count == 0 || !(self.userService.backupArray.contains(where: {$0.client?.id == getUniqueDevice()})){
@@ -245,6 +250,7 @@ class AppService: NSObject,ServiceProtocol{
         }
     }
     
+    // 自动备份失败后重试
     func rebuildAutoBackupManager(){
         if isRebuildingAutoBackupManager  {return}
         isRebuildingAutoBackupManager = false
@@ -272,23 +278,6 @@ class AppService: NSObject,ServiceProtocol{
     }
     
     func updateUserBackupDirectory(callback:@escaping (_ error:Error?,_ user:User?)->()){
-//        AppNetworkService.getUserHome { [weak AppNetworkService](error, userHome) in
-//            if error != nil{
-//                return callback(error,nil)
-//            }else{
-//                AppUserService.currentUser?.userHome = userHome
-//                AppUserService.synchronizedCurrentUser()
-//                AppNetworkService?.getUserBackupDir(name: kBackupDirectory, { (backupDirerror, entryUUID) in
-//                    if error != nil{
-//                      return callback(backupDirerror,nil)
-//                    }else{
-//                        AppUserService.currentUser?.backUpDirectoryUUID = entryUUID
-//                        AppUserService.synchronizedCurrentUser()
-//                        return callback(nil, AppUserService.currentUser)
-//                    }
-//                })
-//            }
-//        }
     }
     
     
@@ -299,6 +288,7 @@ class AppService: NSObject,ServiceProtocol{
         appDelegate.initRootVC()
     }
     
+//    询问用户是否打开自动备份
     func requestForBackupPhotos(callback: @escaping (_ shouldUpload:Bool)->()) {
         let alertTitle = LocalizedString(forKey: "backup_tips")
         let alertMessage = LocalizedString(forKey: "backup_alert_message")
@@ -307,35 +297,15 @@ class AppService: NSObject,ServiceProtocol{
         Alert.alert(title: alertTitle, message: alertMessage, action1Title: confirmTitle, action2Title: cancelTitle, handler1: { (action) in
 //            print("😁")
             callback(true)
-            //    [[NSNotificationCenter defaultCenter] postNotificationName:UserBackUpConfigChangeNotify object:@(1)];
         }) { (action) in
 //             print("👌")
             callback(false)
         }
-        
-        //    UIAlertAction *cancle = [UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-        //    NSLog(@"点击了取消按钮");
-        //    WB_UserService.currentUser.autoBackUp = NO;
-        //    [[NSNotificationCenter defaultCenter] postNotificationName:UserBackUpConfigChangeNotify object:@(0)];
-        //    [WB_UserService synchronizedCurrentUser];
-        //    callback(NO);
-        //    }];
-        //
-        //    UIAlertAction *confirm = [UIAlertAction actionWithTitle:WBLocalizedString(@"backup", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-        //    NSLog(@"点击了确定按钮");
-        //    WB_UserService.currentUser.autoBackUp = YES;
-        //    [[NSNotificationCenter defaultCenter] postNotificationName:UserBackUpConfigChangeNotify object:@(1)];
-        //    [WB_UserService synchronizedCurrentUser];
-        //    callback(YES);
-        //    }];
-        //    [alertVc addAction:cancle];
-        //    [alertVc addAction:confirm];
-        //    [MyAppDelegate.window.rootViewController presentViewController:alertVc animated:YES completion:^{
-        //    }];
     }
     
     var isStartingUpload = false
     var needRestart  = false
+//    开始备份
     func startAutoBackup(uuid:String,callBack:(()->())?){
         self.backupuuid = uuid
         self.autoBackupManager.uuid = uuid

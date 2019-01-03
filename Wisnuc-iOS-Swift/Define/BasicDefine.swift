@@ -15,7 +15,11 @@ public let kBackupDrives = "backupDrives"
 let appDelegate = UIApplication.shared.delegate as! AppDelegate
 public let userDefaults = UserDefaults.standard
 let infoDictionary = Bundle.main.infoDictionary
+
+//App当前版本
 let kCurrentAppVersion = infoDictionary!["CFBundleShortVersionString"] as! String
+
+//App Store AppId
 let kAppId = "1132191394"
 let kBackupClientType = "iOS-Mobile"
 let kCurrentSystemVersion = (UIDevice.current.systemVersion as NSString).doubleValue
