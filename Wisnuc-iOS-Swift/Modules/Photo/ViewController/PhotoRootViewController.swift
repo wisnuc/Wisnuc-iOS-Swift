@@ -130,7 +130,7 @@ class PhotoRootViewController: BaseViewController {
         appBar.appBarViewController.headerView.observesTrackingScrollViewScrollEvents = true
         appBar.headerViewController.preferredStatusBarStyle = .default
         appBar.headerViewController.setNeedsStatusBarAppearanceUpdate()
-        startPollingTimerSet()
+//        startPollingTimerSet()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -250,7 +250,7 @@ class PhotoRootViewController: BaseViewController {
                             return
                         }
                         if assetArray.count > 0{
-                            print("😈😈😈😈😈😈😈😈😈😈")
+//                            print("😈😈😈😈😈😈😈😈😈😈")
                             self?.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
                             if let  allAssets = AppAssetService.allAssets{
                                 self?.localAssetDataSources.append(contentsOf:allAssets)
@@ -289,7 +289,7 @@ class PhotoRootViewController: BaseViewController {
                         }
                         
                         if assetArray.count > 0{
-                            print("😈😈😈😈😈😈😈😈😈😈")
+//                            print("😈😈😈😈😈😈😈😈😈😈")
                             self.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
                             if let  allAssets = AppAssetService.allVideoAssets{
                                 self.localAssetDataSources.append(contentsOf:allAssets)
@@ -328,7 +328,7 @@ class PhotoRootViewController: BaseViewController {
                     }
                     
                     if assetArray.count > 0{
-                        print("😈😈😈😈😈😈😈😈😈😈")
+//                        print("😈😈😈😈😈😈😈😈😈😈")
                         self.netAssetDataSource.append(contentsOf: assetArray as! Array<NetAsset>)
                         self.sort(pollingSort:true,self.merge() )
                     }

@@ -250,20 +250,7 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         self.indicator.startAnimating()
         self.imageView?.image =  nil
         if let requestImageUrl = self.requestImageUrl(model: asset as! NetAsset){
-//           let retrieveImageDiskTask = ImageCache.default.retrieveImage(forKey: requestImageUrl, options: nil) { [weak self]
-//                image, cacheType in
-//                if let image = image {
-//                    self?.indicator.stopAnimating()
-//                    self?.loadOK = true
-//                    self?.imageView?.image = image
-//                    if asset.type == WSAssetType.GIF{
-//                        self?.resumeGif()
-//                    }
-//                    self?.resetSubviewSize(image)
-//                    print("Get image \(image), cacheType: \(cacheType).")
-////                    //In this code snippet, the `cacheType` is .disk
-//                }
-//                    else {
+
                     guard let imageUrl =  URL.init(string: requestImageUrl) else{
                         return
                     }
@@ -277,11 +264,9 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                             if let completeCallback = self?.loadCompleteCallback{
                                 completeCallback()
                             }
-//                            Message.message(text: "图片加载失败", duration: 1.4)
+
                         } else {
-//                            if self?.cleared == true{
-//                                return
-//                            }
+
                             self?.loadOK = true
                             
 //                            self?.imageView?.image =  nil
@@ -318,19 +303,6 @@ class WSPreviewImageAndGif: WSBasePreviewView {
         self.indicator.startAnimating()
       
         if let requestImageUrl = self.requestImageUrl(filesModel: filesModel){
-//           let retrieveImageDiskTask = ImageCache.default.retrieveImage(forKey: requestImageUrl, options: nil) { [weak self]
-//                image, cacheType in
-//                if let image = image {
-//                    self?.indicator.stopAnimating()
-//                    self?.loadOK = true
-//                    self?.imageView?.image = image
-//                    if(filesModel.metadata?.type?.caseInsensitiveCompare(FilesFormatType.GIF.rawValue) == .orderedSame){
-//                        self?.resumeGif()
-//                    }
-//                    self?.resetSubviewSize(image)
-//                    print("Get image \(image), cacheType: \(cacheType).")
-//                    //In this code snippet, the `cacheType` is .disk
-//                } else {
                     guard let imageUrl =  URL.init(string: requestImageUrl) else{
                         return
                     }
@@ -358,49 +330,12 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                             completeCallback()
                         }
                     })
-//                }
-//            }
-            
-//           self.retrieveImageDiskTask = retrieveImageDiskTask
         }else{
             self.indicator.stopAnimating()
 //            Message.message(text: "图片加载失败", duration: 1.4)
         }
     }
 
-//    func requestImageUrl(hash:String?)->URL?{
-//        guard let digest = hash else {
-//            return nil
-//        }
-//        let detailURL = "media"
-//        let resource = "/media/\(digest)"
-//        let param = "\(kRequestImageAltKey)=\(kRequestImageDataValue)"
-//        ImageDownloader.default.downloadTimeout = 20000
-//
-//        let params:[String:String] = [kRequestImageAltKey:kRequestImageDataValue]
-//        let dataDic = [kRequestUrlPathKey:resource,kRequestVerbKey:RequestMethodValue.GET,"params":params] as [String : Any]
-//        guard let data = jsonToData(jsonDic: dataDic as NSDictionary) else {
-//            return nil
-//        }
-//
-//        guard let dataString = String.init(data: data, encoding: .utf8) else {
-//            return nil
-//        }
-//
-//        guard let urlString = String.init(describing:"\(kCloudBaseURL)\(kCloudCommonPipeUrl)?data=\(dataString)").addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
-//            return nil
-//        }
-//
-//        guard  let normalUrl = URL.init(string:urlString) else {
-//            return nil
-//        }
-//        //                req.addValue(dataString, forHTTPHeaderField: kRequestImageDataValue)
-//        guard let url = AppNetworkService.networkState == .local ? URL.init(string: "\(RequestConfig.sharedInstance.baseURL!)/\(detailURL)/\(digest)?\(param)") : normalUrl else {
-//            return nil
-//        }
-//
-//        return url
-//    }
     
     func requestImageUrl(model:NetAsset) -> String?{
         guard let userHome = AppUserService.currentUser?.userHome else{
@@ -1080,18 +1015,9 @@ class WSPreviewVideo: WSBasePreviewView {
                         
                         self?.indicator.stopAnimating()
                         let playerManager = ZFAVPlayerManager()
-                        //    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
-                        //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
-                        /// 播放器相关
-//                        playerManager.play()
                 
                         let videoSize = self?.screenDisplaySize(size: size)
-                        //        let w: CGFloat = self.frame.width
-                        //
-                        //        let h: CGFloat = w * 9 / 16
-                        //        let x: CGFloat = 0
-                        //        let y: CGFloat = self.height/2 - h/2
-                        
+                   
                         self?.containerView?.frame = CGRect(x: 0, y: 0, width: (videoSize?.width)!, height: (videoSize?.height)!)
                         self?.player = ZFPlayerController.player(withPlayerManager: playerManager, containerView: (self?.containerView)!)
                         self?.player?.disableGestureTypes = ZFPlayerDisableGestureTypes.pan
@@ -1113,14 +1039,7 @@ class WSPreviewVideo: WSBasePreviewView {
                             if let replay = self?.player?.currentPlayerManager.replay{
                                 replay()
                             }
-                            //        [self.player playTheNext];
-                            //        if (!self.player.isLastAssetURL) {
-                            //            NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
-                            //            [self.controlView showTitle:title coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeLandscape];
-                            //        } else {
-                            //            [self.player stop];
-                            //        }
-                            //        [self.player stop];
+                 
                         }
                         self?.player?.playerPrepareToPlay = { asset, assetURL in
                             print("======开始播放了")
@@ -1130,19 +1049,6 @@ class WSPreviewVideo: WSBasePreviewView {
                         
                         self?.player?.playTheIndex(0)
 
-//                        let player = AVPlayer(url: url)
-//                        self?.playLayer.player = player
-//                        self?.switchVideoStatus()
-//                        self?.playLayer.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
-//                            do {
-//                                try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-//                            }catch{
-//
-//                            }
-//
-//                        self?.hasObserverStatus = true
-//                        NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-//                        NotificationCenter.default.addObserver(self, selector: #selector(playEnd(_:)), name: Notification.Name.mpmove, object: player)
 
                     }
                 }
@@ -1150,30 +1056,6 @@ class WSPreviewVideo: WSBasePreviewView {
                 print(response.error as Any)
             }
         }
-//        [[FMMediaRamdomKeyAPI apiWithHash:[(WBAsset *)self.jyAsset fmhash]] startWithCompletionBlockWithSuccess:^(__kindof JYBaseRequest *request) {
-//        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@media/random/%@", [JYRequestConfig sharedConfig].baseURL, request.responseJsonObject[@"key"]]];
-//        if(!weakSelf) return;
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//        jy_strongify(weakSelf);
-//        if (!request.responseJsonObject) {
-//        [self? initVideoLoadFailedFromiCloudUI];
-//        return;
-//        }
-//        AVPlayer *player = [AVPlayer playerWithURL:url];
-//        [self?.layer addSublayer:self?.playLayer];
-//        self?.playLayer.player = player;
-//        [self? switchVideoStatus];
-//        [self?.playLayer addObserver:self? forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
-//        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
-//        _hasObserverStatus = YES;
-//        [[NSNotificationCenter defaultCenter] addObserver:self? selector:@selector(playFinished:) name:AVPlayerItemDidPlayToEndTimeNotification object:player.currentItem];
-//        [[NSNotificationCenter defaultCenter] addObserver:self? selector:@selector(playEnd:) name:MPMoviePlayerPlaybackDidFinishNotification object:player];
-//        [self?.indicator stopAnimating];
-//        });
-//        } failure:^(__kindof JYBaseRequest *request) {
-//        [SXLoadingView showAlertHUD:WBLocalizedString(@"play_failed", nil) duration:1];
-//        [weakSelf.indicator stopAnimating];
-//        }];
     }
     
     func loadNetNormalImage(filesModel:EntriesModel){
@@ -1189,10 +1071,7 @@ class WSPreviewVideo: WSBasePreviewView {
 //        self.playBtn.isHidden = false
         self.icloudLoadFailedLabel.isHidden = true
         self.imageView?.isHidden = false
-//        if AppNetworkService.networkState == .normal{
-//            Message.message(text: LocalizedString(forKey: "Operation not support"))
-//        }
-        //
+
         self.indicator.startAnimating()
         guard let hash = filesModel.hash  else {
            return
@@ -1244,17 +1123,8 @@ class WSPreviewVideo: WSBasePreviewView {
                         
                         self?.indicator.stopAnimating()
                         let playerManager = ZFAVPlayerManager()
-                        //    KSMediaPlayerManager *playerManager = [[KSMediaPlayerManager alloc] init];
-                        //    ZFIJKPlayerManager *playerManager = [[ZFIJKPlayerManager alloc] init];
-                        /// 播放器相关
-                        //                        playerManager.play()
                         
                         let videoSize = self?.screenDisplaySize(size: size)
-                        //        let w: CGFloat = self.frame.width
-                        //
-                        //        let h: CGFloat = w * 9 / 16
-                        //        let x: CGFloat = 0
-                        //        let y: CGFloat = self.height/2 - h/2
                         
                         self?.containerView?.frame = CGRect(x: 0, y: 0, width: (videoSize?.width)!, height: (videoSize?.height)!)
                         self?.player = ZFPlayerController.player(withPlayerManager: playerManager, containerView: (self?.containerView)!)
@@ -1277,14 +1147,7 @@ class WSPreviewVideo: WSBasePreviewView {
                             if let replay = self?.player?.currentPlayerManager.replay{
                                 replay()
                             }
-                            //        [self.player playTheNext];
-                            //        if (!self.player.isLastAssetURL) {
-                            //            NSString *title = [NSString stringWithFormat:@"视频标题%zd",self.player.currentPlayIndex];
-                            //            [self.controlView showTitle:title coverURLString:kVideoCover fullScreenMode:ZFFullScreenModeLandscape];
-                            //        } else {
-                            //            [self.player stop];
-                            //        }
-                            //        [self.player stop];
+                            
                         }
                         self?.player?.playerPrepareToPlay = { asset, assetURL in
                             print("======开始播放了")
@@ -1294,19 +1157,6 @@ class WSPreviewVideo: WSBasePreviewView {
                         
                         self?.player?.playTheIndex(0)
                         
-                        //                        let player = AVPlayer(url: url)
-                        //                        self?.playLayer.player = player
-                        //                        self?.switchVideoStatus()
-                        //                        self?.playLayer.addObserver(self!, forKeyPath: "status", options: .new, context: nil)
-                        //                            do {
-                        //                                try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-                        //                            }catch{
-                        //
-                        //                            }
-                        //
-                        //                        self?.hasObserverStatus = true
-                        //                        NotificationCenter.default.addObserver(self!, selector: #selector(self?.playFinished(_:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-                        //                        NotificationCenter.default.addObserver(self, selector: #selector(playEnd(_:)), name: Notification.Name.mpmove, object: player)
                         
                     }
                 }
