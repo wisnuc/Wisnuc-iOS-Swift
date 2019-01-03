@@ -20,11 +20,6 @@ class MyBindEmailViewController: BaseViewController {
         // Do any additional setup after loading the view.
     }
     
-//    init(style: NavigationStyle,mail:String) {
-//        super.init(style: style)
-//
-//    }
-    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

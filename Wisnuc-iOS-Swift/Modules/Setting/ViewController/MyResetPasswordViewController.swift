@@ -60,7 +60,6 @@ class MyResetPasswordViewController: BaseViewController {
         self.newPasswordTextFieldController?.activeColor =  COR1
         self.newPasswordTextFieldController?.placeholderText = LocalizedString(forKey: "新密码")
         self.newPasswordTextFieldController?.floatingPlaceholderActiveColor = COR1
-//        newPasswordTextFieldController?.leadingUnderlineLabelTextColor = COR1
         self.confirmPasswordTextFieldController = MDCTextInputControllerUnderline.init(textInput: confirmPasswordInputTextField)
         self.confirmPasswordTextFieldController?.isFloatingEnabled = true
         self.confirmPasswordTextFieldController?.normalColor = Gray6Color
@@ -114,7 +113,6 @@ class MyResetPasswordViewController: BaseViewController {
                 self?.alertController(title: "密码重置成功", message: "请您重新登录",  okActionTitle: "重新登录", okActionHandler: { (alertController) in
                     AppService.sharedInstance().logoutAction()
                 })
-//                self?.alertController(title: "密码重置成功", message: "请您重新登录", okActionTitle: "重新登录",okhan
             }
         }
     }
