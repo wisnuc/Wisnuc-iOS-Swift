@@ -37,10 +37,17 @@ class LocalTokenInCloudAPI: BaseRequest {
     }
     
     override func requestHTTPHeaders() -> RequestHTTPHeaders? {
-        var dic = [kRequestAuthorizationKey:AppUserService.currentUser?.cloudToken!,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
-        if let token = self.cloudToken{
-            dic = [kRequestAuthorizationKey:token,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
+        
+        if let cloudToken = user?.cloudToken,let cookie = user?.cookie{
+            return [kRequestAuthorizationKey:cloudToken,kRequestSetCookieKey:cookie]
         }
-        return dic as? RequestHTTPHeaders
+        if let token = self.cloudToken{
+            return  [kRequestAuthorizationKey:token,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
+        }
+        
+        if let token = AppUserService.currentUser?.cloudToken{
+          return [kRequestAuthorizationKey:token,kRequestSetCookieKey:AppUserService.currentUser?.cookie ?? ""]
+        }
+        return nil
     }
 }

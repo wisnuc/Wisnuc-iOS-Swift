@@ -847,6 +847,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
                 dir = AppUserService.currentUser?.shareSpace
                 share = true
                 title = LocalizedString(forKey: "共享空间")
+                
             }
         }
         let filesRootViewController =  FilesRootViewController.init(style: NavigationStyle.white, srcDictionary: [kRequestTaskDriveKey : self.existDrive(),kRequestTaskDirKey:self.existDir()], moveModelArray:  [model], isCopy: true,isShare:share,driveUUID:drive,directoryUUID:dir)
@@ -854,7 +855,7 @@ extension FilesRootViewController:FilesBottomSheetContentVCDelegate{
         filesRootViewController.title = title
         self.registerNotification()
         filesRootViewController.isCopy = true
-        filesRootViewController.selfState = .movecopy
+//        filesRootViewController.selfState = .movecopy
         
         let navi = UINavigationController.init(rootViewController: filesRootViewController)
         self.present(navi, animated: true, completion: nil)

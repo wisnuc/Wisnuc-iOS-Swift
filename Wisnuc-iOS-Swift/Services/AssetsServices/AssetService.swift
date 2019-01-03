@@ -214,9 +214,10 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
         return asset
     }
     
+    
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         autoreleasepool {
-            if let currentAssets = lastResult{
+//            if let currentAssets = lastResult{
 //                var tmpDic = Dictionary<String,WSAsset>.init()
 //                for  asset in allAssets ?? [] {
 //                    tmpDic[asset.asset!.localIdentifier] = asset
@@ -225,7 +226,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
                 var changeDic = Dictionary<String,Array<WSAsset>>.init()
                 
                 if lastResult != nil {
-                    let detail = changeInstance.changeDetails(for: currentAssets)
+                    let detail = changeInstance.changeDetails(for: lastResult!)
                     if detail == nil || (detail!.removedObjects.count == 0 && detail!.insertedObjects.count == 0){
                         return
                     }
@@ -262,7 +263,7 @@ class AssetService: NSObject,ServiceProtocol,PHPhotoLibraryChangeObserver {
                 if assetChangeBlock != nil{
                     assetChangeBlock!(changeDic[kAssetsRemovedKey], changeDic[kAssetsInsertedKey])
                 }
-            }
+//            }
         }
     }
     

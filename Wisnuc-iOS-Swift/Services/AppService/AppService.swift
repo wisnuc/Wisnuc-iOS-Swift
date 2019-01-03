@@ -141,7 +141,7 @@ class AppService: NSObject,ServiceProtocol{
     }
     
     func loginAction(stationModel:StationsInfoModel,orginTokenUser:User,complete:@escaping ((_ error:Error?,_ user:User?)->())){
-        
+    
         let resultUser = orginTokenUser
         let callBackClosure = { (callBackError:Error? , callBackUser:User?)->() in
             if callBackError != nil{

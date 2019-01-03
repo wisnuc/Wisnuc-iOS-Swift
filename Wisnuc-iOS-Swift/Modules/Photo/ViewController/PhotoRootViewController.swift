@@ -601,8 +601,11 @@ class PhotoRootViewController: BaseViewController {
     }
 
     func photoRemoveOptionRequest(photo: NetAsset,closure:@escaping ()->()){
-        let drive = self.driveUUID != nil ? self.driveUUID! : photo.place == 0 ? AppUserService.currentUser?.userHome : AppUserService.currentUser?.shareSpace ?? ""
+        var drive = self.driveUUID != nil ? self.driveUUID! : photo.place == 0 ? AppUserService.currentUser?.userHome : AppUserService.currentUser?.shareSpace ?? ""
         let dir = photo.pdir ?? ""
+        if let backupDriveUUID = self.backupDriveUUID{
+            drive = backupDriveUUID
+        }
         DirOprationAPI.init(driveUUID: drive ?? "", directoryUUID: dir).startFormDataRequestJSONCompletionHandler(multipartFormData: { (formData) in
             var dic = [kRequestOpKey: FilesOptionType.remove.rawValue]
             if let uuid = photo.uuid,let hash = photo.fmhash{
@@ -680,19 +683,19 @@ class PhotoRootViewController: BaseViewController {
         
         defaultNotificationCenter().addObserver(forName:  Notification.Name.Change.AssetChangeNotiKey, object: nil, queue: nil) { [weak self] (noti) in
             let changeDic = noti.object
-//            let removeArray = (changeDic as! Dictionary<String,Array<WSAsset>>)[kAssetsRemovedKey]
-//            let insertArraay = (changeDic as! Dictionary<String,Array<WSAsset>>)[kAssetsInsertedKey]
-//            if removeArray != nil && removeArray?.count != 0{
-//                self?.localAssetDataSources = (self?.localAssetDataSources.filter { !(removeArray?.contains($0))! })!
-//            }
-//            if insertArraay != nil && insertArraay?.count != 0{
-//                self?.localAssetDataSources.append(contentsOf: insertArraay!)
-//            }
-            self?.localAssetDataSources = changeDic as! Array<WSAsset>
+            let removeArray = (changeDic as! Dictionary<String,Array<WSAsset>>)[kAssetsRemovedKey]
+            let insertArraay = (changeDic as! Dictionary<String,Array<WSAsset>>)[kAssetsInsertedKey]
+            if removeArray != nil && removeArray?.count != 0{
+                self?.localAssetDataSources = (self?.localAssetDataSources.filter { !(removeArray?.contains($0))! })!
+            }
+            if insertArraay != nil && insertArraay?.count != 0{
+                self?.localAssetDataSources.append(contentsOf: insertArraay!)
+            }
+//            self?.localAssetDataSources = changeDic as! Array<WSAsset>
             self?.sort((self?.merge())!)
-//            mainThreadSafe {
-//               self?.photoCollcectionViewController.collectionView?.reloadData()
-//            }
+            mainThreadSafe {
+               self?.photoCollcectionViewController.collectionView?.reloadData()
+            }
         }
     }
     

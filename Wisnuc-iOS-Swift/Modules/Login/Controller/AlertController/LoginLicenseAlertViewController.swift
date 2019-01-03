@@ -7,24 +7,44 @@
 //
 
 import UIKit
+import MaterialComponents.MDCButton
 
 class LoginLicenseAlertViewController: UIViewController {
-
+    @IBOutlet weak var webView: UIWebView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var confirmButton: MDCFlatButton!
+    
+    @IBAction func confirmButtonClick(_ sender: MDCFlatButton) {
+    self.presentingViewController?.dismiss(animated: true, completion: {
+            
+        })
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.title = LocalizedString(forKey: "用户许可使用协议")
+        self.confirmButton.setTitle(LocalizedString(forKey: "Confirm"), for: UIControlState.normal)
+        self.confirmButton.setTitleColor(COR1, for: UIControlState.normal)
+        webView.delegate = self
+        let rtfUrl = Bundle.main.path(forResource: "License", ofType: "rtf")
+        var request: URLRequest? = nil
+        if let url = rtfUrl {
+            let path = URL.init(fileURLWithPath: url)
+            request = URLRequest(url: path)
+            if let aRequest = request {
+                webView.loadRequest(aRequest)
+            }
+        }
         // Do any additional setup after loading the view.
     }
-    
+}
 
-    /*
-    // MARK: - Navigation
+extension LoginLicenseAlertViewController:UIWebViewDelegate{
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        webView.stringByEvaluatingJavaScript(from: "document.getElementsByTagName('body')[0].style.background='#FFFFFF'")
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
     }
-    */
-
+    
+    func webViewDidStartLoad(_ webView: UIWebView) {
+         webView.stringByEvaluatingJavaScript(from: "document.getElementsByTagName('body')[0].style.background='#FFFFFF'")
+    }
 }

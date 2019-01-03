@@ -170,25 +170,20 @@
     }
 
     @objc func agreementButtonClick () {
-        let messageString = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur " +
-            "ultricies diam libero, eget porta arcu feugiat sit amet. Maecenas placerat felis sed risus " +
-            "maximus tempus. Integer feugiat, augue in pellentesque dictum, justo erat ultricies leo, " +
-            "quis eleifend nisi eros dictum mi. In finibus vulputate eros, in luctus diam auctor in. " +
-            "Aliquam fringilla neque at augue dictum iaculis. Etiam ac pellentesque lectus. Aenean " +
-            "vestibulum, tortor nec cursus euismod, lectus tortor rhoncus massa, eu interdum lectus urna " +
-            "ut nulla. Phasellus elementum lorem sit amet sapien dictum, vel cursus est semper. Aenean " +
-            "vel turpis maximus, accumsan dui quis, cursus turpis. Nunc a tincidunt nunc, ut tempus " +
-            "libero. Morbi ut orci laoreet, luctus neque nec, rhoncus enim. Cras dui erat, blandit ac " +
-            "malesuada vitae, fringilla ac ante. Nullam dui diam, condimentum vitae mi et, dictum " +
-        "euismod libero. Aliquam commodo urna vitae massa convallis aliquet."
+        let bundle = Bundle.init(for: LoginLicenseAlertViewController.self)
+        let storyboard = UIStoryboard.init(name: "LoginLicenseAlertViewController", bundle: bundle)
+        let identifier = "LoginLicenseAlertViewController"
         
-        let materialAlertController = MDCAlertController(title: "用户协议", message: messageString)
-        ViewTools.setAlertControllerColor(alertController: materialAlertController)
-        let action = MDCAlertAction(title:"OK") { (_) in print("OK") }
-        
-        materialAlertController.addAction(action)
-        
-        self.present(materialAlertController, animated: true, completion: nil)
+        let viewController = storyboard.instantiateViewController(withIdentifier: identifier)
+        viewController.modalPresentationStyle = UIModalPresentationStyle.custom
+        viewController.transitioningDelegate = self.transitionController
+        self.present(viewController, animated: true, completion: {
+        })
+        let presentationController =
+            viewController.mdc_dialogPresentationController
+        if presentationController != nil{
+            presentationController?.dismissOnBackgroundTap = false
+        }
     }
     
     func oldWechatLogin(code:String){
@@ -269,7 +264,7 @@
                                         let user = AppUserService.synchronizedUserInLogin(model, cookie)
                                         LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure: { [weak self](userId,stationModel,models)  in
                                             self?.stationModels = models
-                                            self?.loginFinish(user: user, stationModel: stationModel)
+                                            self?.loginFinish(user: user, stationModel: stationModel, stationModels: models)
                                         })
                                     }
                             } catch {
@@ -643,6 +638,12 @@
         return view
     }()
     
+    lazy var transitionController: MDCDialogTransitionController = {
+        let controller = MDCDialogTransitionController.init()
+        return controller
+    }()
+    
+    
     lazy var agreementButton: UIView = { [weak self] in
         let bgView = UIView.init(frame: CGRect(x: MarginsWidth, y: (self?.creatNewAccoutButton.bottom)! + 32, width: __kWidth - MarginsWidth * 2, height: 48))
         let button = UIButton.init(frame: CGRect(x: 0, y: 0, width: bgView.bounds.width, height: 13))
@@ -872,7 +873,7 @@
  }
  
  extension LoginRootViewController:LoginSelectionDeviceViewControllerDelegte{
-    func loginFinish(user: User, stationModel: Any) {
+    func loginFinish(user: User, stationModel: Any, stationModels: [Any]?) {
         self.startActivityIndicator()
             let model = stationModel as! StationsInfoModel
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in

@@ -39,6 +39,7 @@ class DeviceAddDeviceViewController: BaseViewController {
         self.largeTitle = LocalizedString(forKey: "Add Device")
         prepareNavigationBar()
         self.state = .searching
+        infoSettingTableView.addSubview(errorLabel)
         self.view.addSubview(infoSettingTableView)
         self.view.bringSubview(toFront: appBar.appBarViewController.headerView)
       
@@ -73,18 +74,23 @@ class DeviceAddDeviceViewController: BaseViewController {
     
     func notFoundStateAction(){
         self.largeTitle = LocalizedString(forKey: "未发现设备")
+        confirmButton.isHidden = true
     }
     
     func foundStateAction(){
         self.largeTitle = LocalizedString(forKey: "发现设备")
+        confirmButton.isHidden = false
+        errorLabel.isHidden = true
         //        infoSettingTableView.removeAllSubviews()
     }
     
     func  bleNotOpenAction(){
+        dataPeripheralList.removeAll()
+        errorLabel.isHidden = false
+        confirmButton.isHidden = true
         dataSource.removeAll()
         self.largeTitle = LocalizedString(forKey: "未发现设备")
         infoSettingTableView.reloadData()
-        infoSettingTableView.addSubview(errorLabel)
         errorLabel.eventCallback = { () in
             if kCurrentSystemVersion <= 10.0 {
                 UIApplication.shared.openURL(URL.init(string: "prefs:root=Bluetooth")!)
@@ -174,6 +180,7 @@ class DeviceAddDeviceViewController: BaseViewController {
         let size = labelSizeToFit(title: LocalizedString(forKey: string), font: UIFont.systemFont(ofSize: 16))
         let label = AttributeTouchLabel.init(frame: CGRect(x: margin, y: __kHeight/2 - 50, width: __kWidth - margin*2, height: size.height + 4))
         label.content = string
+        label.isHidden = true
         return label
     }()
 }
@@ -316,6 +323,7 @@ extension DeviceAddDeviceViewController:LLBlueToothDelegate{
             case CBManagerState.poweredOff:
                 print("蓝牙关闭")
                 self.state = .bleNotOpen
+              
                 
             default:
                 print("未知状态")

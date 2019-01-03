@@ -899,11 +899,10 @@ class PhotoCollectionViewController: UICollectionViewController {
             model.indexPath = IndexPath(row: indexPath.row, section: indexPath.section)
             let vc = self.getMatchVC(model: model)
             if let presentVC = vc{
-                self.present(presentVC, animated: true) {
-                    
-                }
-                if let pollingCallback = self.pollingCallback{
-                    pollingCallback(true)
+                self.present(presentVC, animated: true) { [weak self] in
+                    if let pollingCallback = self?.pollingCallback{
+                        pollingCallback(true)
+                    }
                 }
             }
         }

@@ -177,16 +177,16 @@ class WSPreviewImageAndGif: WSBasePreviewView {
     }
     
     func removeContent(){
-        if let imageRequestID = self.imageRequestID {
-             PHCachingImageManager.default().cancelImageRequest(imageRequestID)
-        }
-        if let imageDownloadTask = self.imageDownloadTask{
-            imageDownloadTask.cancel()
-        }
-        self.imageView?.image = nil
-        retrieveImageDiskTask?.cancel()
-        self.imageView = nil
-        self.cleared = true
+//        if let imageRequestID = self.imageRequestID {
+//             PHCachingImageManager.default().cancelImageRequest(imageRequestID)
+//        }
+//        if let imageDownloadTask = self.imageDownloadTask{
+//            imageDownloadTask.cancel()
+//        }
+////        self.imageView?.image = nil
+//        retrieveImageDiskTask?.cancel()
+////        self.imageView = nil
+//        self.cleared = true
     }
     
     func loadGifImage(asset:WSAsset){
@@ -267,9 +267,9 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                     guard let imageUrl =  URL.init(string: requestImageUrl) else{
                         return
                     }
-                    if self.cleared == true{
-                        return
-                    }
+//                    if self.cleared == true{
+//                        return
+//                    }
                     self.imageDownloadTask = AppNetworkService.getHighWebImage(url: imageUrl, callback: { [weak self] (error, img) in
                         self?.indicator.stopAnimating()
                       
@@ -279,12 +279,16 @@ class WSPreviewImageAndGif: WSBasePreviewView {
                             }
 //                            Message.message(text: "图片加载失败", duration: 1.4)
                         } else {
-                            if self?.cleared == true{
-                                return
-                            }
+//                            if self?.cleared == true{
+//                                return
+//                            }
                             self?.loadOK = true
-                            self?.imageView?.image =  nil
+                            
+//                            self?.imageView?.image =  nil
                             self?.imageView?.image = img
+                            if self?.imageView == nil{
+                                print("🌶🌶🌶🌶🌶🌶🌶🌶🌶")
+                            }
                             if asset.type == WSAssetType.GIF{
                                 self?.resumeGif()
                             }

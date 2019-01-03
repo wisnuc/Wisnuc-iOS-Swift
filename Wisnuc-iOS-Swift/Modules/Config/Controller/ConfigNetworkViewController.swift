@@ -168,6 +168,7 @@ class ConfigNetworkViewController: BaseViewController {
     
     func  bleNotOpenAction(){
         dataSource.removeAll()
+        dataPeripheralList.removeAll()
         SVProgressHUD.showError(withStatus: LocalizedString(forKey: "蓝牙未开启"))
     }
 

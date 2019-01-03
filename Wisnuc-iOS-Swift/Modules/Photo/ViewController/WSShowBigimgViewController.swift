@@ -271,11 +271,11 @@ class WSShowBigimgViewController: UIViewController {
                     return
                 }
                 if finish{
-                    
-                    self.models?.remove(at: self.currentPage - 1)
-                    self.collectionView.deleteItems(at: [IndexPath(item: self.currentPage - 1, section: 0)])
+                    self.models?.removeAll(where: {($0 as? WSAsset)?.asset?.localIdentifier == localAssets.first?.localIdentifier })
+                    self.titleLabel.text = "\(self.currentPage)/\(String(describing: (self.models?.count)!))"
                     self.stopActivityIndicator()
-//                    self.collectionView.scrollToItem(at:  [IndexPath(item: self.currentPage - 2, section: 0)], at: UICollectionViewScrollPosition.centeredVertically, animated: true)
+                    self.collectionView.reloadData()
+//                    self.collectionView.scrollToItem(at:  IndexPath(item: self.currentPage + 1, section: 0), at: UICollectionViewScrollPosition.centeredVertically, animated: true)
                 }
             }
         }
@@ -398,7 +398,7 @@ class WSShowBigimgViewController: UIViewController {
             }
         }
       
-//        self.infoTableView.reloadData()
+        self.infoTableView.reloadData()
     }
 
     
@@ -492,6 +492,9 @@ class WSShowBigimgViewController: UIViewController {
         let cell:WSBigimgCollectionViewCell? = collectionView.cellForItem(at: indexP) as? WSBigimgCollectionViewCell
         
         if cell == nil{
+            self.dismiss(animated: true) {
+                
+            }
             return
         }
         let mainWindow = UIApplication.shared.keyWindow
@@ -673,9 +676,9 @@ class WSShowBigimgViewController: UIViewController {
         
         let scrollView = self.collectionView
         
-        var  firstX:CGFloat = self.view.width/2, firstY:CGFloat = 0
+        var  firstX:CGFloat = __kWidth/2, firstY:CGFloat = 0
         
-        let viewHeight = scrollView.height
+        let viewHeight = __kHeight
         let viewHalfHeight = viewHeight/2
         firstY = viewHalfHeight
         
@@ -683,7 +686,7 @@ class WSShowBigimgViewController: UIViewController {
 //        self.infoBrowser(translatedPoint: translatedPoint,gesture)
         let absX = CGFloat(fabs(translatedPoint.x))
         let absY = CGFloat(fabs(translatedPoint.y)) // 设置滑动有效距离
-        if max(absX, absY) < 10 {
+        if max(absX, absY) < 5 {
             return
         }
         
@@ -1092,18 +1095,19 @@ extension WSShowBigimgViewController:UIScrollViewDelegate{
             //!!!!!: change Title
             titleLabel.text = "\(currentPage)/\(String(describing: (self.models?.count)!))"
             if m is WSAsset{
-                if self.mapView != nil{
-                    self.mapView =  nil
-                }
+//                if self.mapView != nil{
+//                    self.mapView =  nil
+//                }
+              
+                let cell = collectionView.cellForItem(at: IndexPath.init(item: currentPage-1 , section: 0))
+                (cell as? WSBigimgCollectionViewCell)?.removeContent()
                 let assetModel = m as! WSAsset
                 if (assetModel.type == .GIF ||
                     assetModel.type == .LivePhoto ||
                     assetModel.type == .Video || assetModel.type == .NetVideo) {
-                    let cell = collectionView.cellForItem(at: IndexPath.init(item: currentPage-1 , section: 0))
+                   
                     if  cell != nil{
-                        (cell as! WSBigimgCollectionViewCell).pausePlay()
-                        (cell as! WSBigimgCollectionViewCell).removeContent()
-                        self.mapView = nil
+                        (cell as? WSBigimgCollectionViewCell)?.pausePlay()
                     }
                 }
             }
@@ -1293,7 +1297,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
                             let span: MKCoordinateSpan = MKCoordinateSpanMake(0.1, 0.1)
                             let region: MKCoordinateRegion = MKCoordinateRegionMake(centerCoordinate, span)
                             if self.mapView == nil{
-                                self.mapView = MKMapView.init()
+//                                self.mapView = MKMapView.init()
                             }
                             mapView?.region = region
                             mapView?.showsTraffic = true
@@ -1345,7 +1349,7 @@ extension WSShowBigimgViewController:UITableViewDelegate,UITableViewDataSource{
             if let exifDic = self.fetchAssetEXIFInfo(model: model as? WSAsset){
                 if  exifDic[kCGImagePropertyGPSDictionary] != nil {
                     if self.mapView == nil{
-                        self.mapView = MKMapView.init()
+//                        self.mapView = MKMapView.init()
                     }
                     self.mapView?.isZoomEnabled = false
                     self.mapView?.isScrollEnabled = false

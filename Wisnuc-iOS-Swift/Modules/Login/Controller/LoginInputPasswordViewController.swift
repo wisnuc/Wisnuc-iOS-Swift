@@ -224,7 +224,7 @@ class LoginInputPasswordViewController: BaseViewController {
                             LoginCommonHelper.instance.stationAction(token: token,user:user, viewController: self!, lastDeviceClosure:{ [weak self](user,stationModel,models)  in
                                 self?.stopActivityIndicator()
                                 self?.stationModels = models
-                                self?.loginFinish(user: user, stationModel: stationModel)
+                                self?.loginFinish(user: user, stationModel: stationModel, stationModels:models)
                             })
                         }
                     }else{
@@ -348,15 +348,15 @@ extension LoginInputPasswordViewController:UITextFieldDelegate{
 }
 
 extension LoginInputPasswordViewController:LoginSelectionDeviceViewControllerDelegte{
-    func loginFinish(user: User, stationModel: Any) {
-        guard let stationModels = self.stationModels else{
-            return
-        }
-        if !stationModels.contains(where: {$0.sn == user.stationId}){
-            Message.message(text: LocalizedString(forKey: "您不拥有该设备，请重新登录"))
-            AppUserService.logoutUser()
-            return
-        }
+    func loginFinish(user: User, stationModel: Any, stationModels: [Any]?) {
+//        guard let deviceModels = stationModels as? [StationsInfoModel] else{
+//            return
+//        }
+//        if !deviceModels.contains(where: {$0.sn == user.stationId}){
+//            Message.message(text: LocalizedString(forKey: "您不拥有该设备，请重新登录"))
+//            AppUserService.logoutUser()
+//            return
+//        }
         let model = stationModel as! StationsInfoModel
         self.startActivityIndicator()
         AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in

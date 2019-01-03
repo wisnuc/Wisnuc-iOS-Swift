@@ -170,9 +170,7 @@ class LLBlueTooth:NSObject {
     
     func disConnectPeripherals(_ peripherals:[CBPeripheral]) {
         for peripheral in peripherals{
-            if (peripheral.state == CBPeripheralState.connected) {
-                central?.cancelPeripheralConnection(peripheral)
-            }
+             central?.cancelPeripheralConnection(peripheral)
         }
     }
     

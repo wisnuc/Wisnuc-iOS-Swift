@@ -10,24 +10,28 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Login License Alert View Controller-->
         <scene sceneID="MU5-fH-eJg">
             <objects>
-                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="pZv-mA-abY" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginLicenseAlertViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="pZv-mA-abY" customClass="LoginLicenseAlertViewController" customModule="Wisnuc_iOS_Swift" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="58i-Pf-AjR">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="460"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="500"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QcF-SI-vSR" customClass="MDCFlatButton">
-                                <rect key="frame" x="313" y="410" width="46" height="30"/>
+                                <rect key="frame" x="309" y="448" width="50" height="32"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                                 <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="confirmButtonClick:" destination="pZv-mA-abY" eventType="touchUpInside" id="vWv-DM-whn"/>
+                                </connections>
                             </button>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AHW-xO-v0F">
-                                <rect key="frame" x="16" y="81.5" width="343" height="298.5"/>
+                                <rect key="frame" x="16" y="86.5" width="343" height="346.5"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </webView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="用户协议" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xXz-TE-kT1">
-                                <rect key="frame" x="16" y="25" width="89.5" height="26.5"/>
+                                <rect key="frame" x="16" y="45" width="89.5" height="26.5"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -36,9 +40,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="T1Y-5E-Ms1" firstAttribute="trailing" secondItem="AHW-xO-v0F" secondAttribute="trailing" constant="16" id="29j-7s-jx2"/>
-                            <constraint firstItem="QcF-SI-vSR" firstAttribute="top" secondItem="AHW-xO-v0F" secondAttribute="bottom" constant="30" id="DD4-3M-0RG"/>
+                            <constraint firstItem="AHW-xO-v0F" firstAttribute="top" secondItem="xXz-TE-kT1" secondAttribute="bottom" constant="15" id="6ok-OK-LA6"/>
+                            <constraint firstItem="QcF-SI-vSR" firstAttribute="top" secondItem="AHW-xO-v0F" secondAttribute="bottom" constant="15" id="DD4-3M-0RG"/>
                             <constraint firstItem="xXz-TE-kT1" firstAttribute="top" secondItem="T1Y-5E-Ms1" secondAttribute="top" constant="25" id="HVk-kl-cA7"/>
-                            <constraint firstItem="AHW-xO-v0F" firstAttribute="top" secondItem="xXz-TE-kT1" secondAttribute="bottom" constant="30" id="RzG-nW-JYi"/>
                             <constraint firstItem="T1Y-5E-Ms1" firstAttribute="trailing" secondItem="QcF-SI-vSR" secondAttribute="trailing" constant="16" id="fNv-jT-h4z"/>
                             <constraint firstItem="AHW-xO-v0F" firstAttribute="leading" secondItem="T1Y-5E-Ms1" secondAttribute="leading" constant="16" id="g9f-jS-tWg"/>
                             <constraint firstItem="xXz-TE-kT1" firstAttribute="leading" secondItem="T1Y-5E-Ms1" secondAttribute="leading" constant="16" id="p2Y-DQ-z53"/>
@@ -46,8 +50,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="T1Y-5E-Ms1"/>
                     </view>
-                    <value key="contentSizeForViewInPopover" type="size" width="375" height="667"/>
-                    <size key="freeformSize" width="375" height="460"/>
+                    <value key="contentSizeForViewInPopover" type="size" width="375" height="500"/>
+                    <size key="freeformSize" width="375" height="500"/>
+                    <connections>
+                        <outlet property="confirmButton" destination="QcF-SI-vSR" id="36m-SE-XIS"/>
+                        <outlet property="titleLabel" destination="xXz-TE-kT1" id="Ud7-YW-BKw"/>
+                        <outlet property="webView" destination="AHW-xO-v0F" id="va5-dT-otV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qyj-Af-7us" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

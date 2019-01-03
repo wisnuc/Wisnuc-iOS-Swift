@@ -356,7 +356,7 @@ extension LoginViewController:UINavigationControllerDelegate{
 }
 
 extension LoginViewController:LoginSelectionDeviceViewControllerDelegte{
-    func loginFinish(user: User, stationModel: Any) {
+    func loginFinish(user: User, stationModel: Any, stationModels: [Any]?) {
             self.startActivityIndicator()
             let model = stationModel as! StationsInfoModel
             AppService.sharedInstance().loginAction(stationModel: model, orginTokenUser: user) { (error, userData) in

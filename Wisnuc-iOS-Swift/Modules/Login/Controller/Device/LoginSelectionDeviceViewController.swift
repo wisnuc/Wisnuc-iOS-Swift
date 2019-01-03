@@ -8,7 +8,7 @@
 
 import UIKit
 @objc protocol LoginSelectionDeviceViewControllerDelegte {
-    func loginFinish(user:User,stationModel:Any)
+    func loginFinish(user:User,stationModel:Any,stationModels:[Any]?)
 }
 
 class LoginSelectionDeviceViewController: BaseViewController {
@@ -82,7 +82,7 @@ class LoginSelectionDeviceViewController: BaseViewController {
     @objc func confirmButtonTap(_ sender:UIButton){
         if let user = self.user ,let model = self.selectedModel{
             self.presentingViewController?.dismiss(animated: true, completion: { [weak self] in
-                self?.delegate?.loginFinish(user: user, stationModel: model)
+                self?.delegate?.loginFinish(user: user, stationModel: model, stationModels: self?.devices)
             }) 
         }else{
             Message.message(text: ErrorLocalizedDescription.Login.NoCurrentUser, duration: 2.0)
